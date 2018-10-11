@@ -1,8 +1,24 @@
 {
+  "scripts": {
+    "lint:js": "eslint .",
+    "lint:js:fix": "eslint . --fix",
+    "lint:sol": "solium -d .",
+    "lint:sol:fix": "solium -d . --fix",
+    "lint": "npm run lint:js && npm run lint:sol",
+    "lint:fix": "npm run lint:js:fix && npm run lint:sol:fix"
+  },
   "dependencies": {
     "chai": "^4.2.0",
     "chai-bignumber": "^2.0.2",
+    "eslint": "^5.6.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "openzeppelin-solidity": "^1.12.0",
-    "pify": "^4.0.0"
+    "pify": "^4.0.0",
+    "solium": "^1.1.8",
+    "truffle": "^4.1.14"
   }
 }
