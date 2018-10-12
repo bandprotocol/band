@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
@@ -11,7 +11,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
  * assumption that the end result must be within 256-bit unsigned integer
  * range. The intermediate steps can overflow up to ~2^(2^255) or underflow
  * down to ~2^(-2^255). Note that integer precision is maintained only up to
- * 128 bits of information.
+ * 128 bits of information for the sake of multiplication / division /
+ * square root simplicity.
  */
 library ApproxMath {
   using SafeMath for uint256;

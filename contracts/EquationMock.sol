@@ -1,4 +1,4 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 import "./Equation.sol";
 
@@ -6,8 +6,8 @@ contract EquationMock{
   using Equation for Equation.Data;
 
   Equation.Data equation;
-  
-  function init(uint256[] expressions) public { 
+
+  function init(uint256[] expressions) public {
     equation.init(expressions);
   }
 
