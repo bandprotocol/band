@@ -139,7 +139,7 @@ library ApproxMath {
    * @dev Converts the given ApproxMath data to have the specified power.
    */
   function toPower(Data _self, uint256 _power) private pure returns (Data) {
-    Data memory self = _self;
+    Data memory self = Data(_self.value, _self.power);
 
     while (self.power > _power) {
       self.value = self.value.mul(2);
@@ -159,7 +159,7 @@ library ApproxMath {
    * the 256 bits are used to represent the value.
    */
   function to256(Data _self) private pure returns (Data) {
-    Data memory self = _self;
+    Data memory self = Data(_self.value, _self.power);
 
     if (self.value == 0) {
       return self;
@@ -178,7 +178,7 @@ library ApproxMath {
    * Note that this guarantees that the top 128 bits must all be zeroes.
    */
   function to128(Data _self) private pure returns (Data) {
-    Data memory self = _self;
+    Data memory self = Data(_self.value, _self.power);
 
     if (self.value == 0) {
       return self;

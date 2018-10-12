@@ -50,12 +50,12 @@ contract ApproxMathTest {
 
     Assert.equal(
       170141183460469231731687303715884105728,
-      a.mul(a).mul(a).mul(a).sqrt().sqrt().sqrt().decode(),
+      a.mul(a).mul(a).mul(a).sqrt().sqrt().decode(),
       "sqrt ( sqrt (1e127 ^ 4) ) ) should be 2^127");
 
     Assert.equal(
       13043817825332782212,
-      a.mul(a).mul(a).mul(a).sqrt().sqrt().sqrt().sqrt().decode(),
+      a.mul(a).mul(a).mul(a).sqrt().sqrt().sqrt().decode(),
       "sqrt ( sqrt ( sqrt (1e127 ^ 4) ) ) should be approximately 2^(63.5)");
   }
 
