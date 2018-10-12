@@ -39,6 +39,26 @@ contract ApproxMathTest {
     Assert.equal(7, a.div(b).decode(), "888888 / 123456 should be 7");
   }
 
+  function testSqrtBasic() public {
+    ApproxMath.Data memory a = ApproxMath.encode(888888);
+    Assert.equal(942, a.sqrt().decode(), "sqrt(888888) should be 942");
+
+  }
+
+  function testSqrtOverflow() public {
+    ApproxMath.Data memory a = ApproxMath.encode(1 << 127);
+
+    Assert.equal(
+      170141183460469231731687303715884105728,
+      a.mul(a).mul(a).mul(a).sqrt().sqrt().sqrt().decode(),
+      "sqrt ( sqrt (1e127 ^ 4) ) ) should be 2^127");
+
+    Assert.equal(
+      13043817825332782212,
+      a.mul(a).mul(a).mul(a).sqrt().sqrt().sqrt().sqrt().decode(),
+      "sqrt ( sqrt ( sqrt (1e127 ^ 4) ) ) should be approximately 2^(63.5)");
+  }
+
   function testAddRoundDown() public {
     ApproxMath.Data memory a = ApproxMath.encode(2e25 ether);
     ApproxMath.Data memory b = ApproxMath.encode(5e25 szabo);

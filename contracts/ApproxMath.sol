@@ -9,8 +9,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
  *
  * @dev ApproxMath allows smart contracts to do arithmetrics under the
  * assumption that the end result must be within 256-bit unsigned integer
- * range. The intermediate steps can overflow up to 2^(2^255) or underflow
- * down to 2^(-2^255). Note that integer precision is maintained only up to
+ * range. The intermediate steps can overflow up to ~2^(2^255) or underflow
+ * down to ~2^(-2^255). Note that integer precision is maintained only up to
  * 128 bits of information.
  */
 library ApproxMath {
@@ -32,9 +32,9 @@ library ApproxMath {
   /**
    * @dev Encodes the given value to 128-bit of information ApproxMath data.
    */
-  function encode(uint256 value) internal pure returns (Data) {
+  function encode(uint256 _value) internal pure returns (Data) {
     Data memory data;
-    data.value = value;
+    data.value = _value;
     data.power = ZERO_POWER;
 
     return to128(data);
@@ -43,8 +43,8 @@ library ApproxMath {
   /**
    * @dev Decodes ApproxMath data back to uint256.
    */
-  function decode(Data self) internal pure returns (uint256) {
-    return toPower(self, ZERO_POWER).value;
+  function decode(Data _self) internal pure returns (uint256) {
+    return toPower(_self, ZERO_POWER).value;
   }
 
   /**
@@ -110,15 +110,42 @@ library ApproxMath {
   }
 
   /**
+   * @dev Computes the square root of the given ApproxMath number.
+   * @return the result in 128-bit form.
+   */
+  function sqrt(Data _a) internal pure returns (Data) {
+    Data memory a = to256(_a);
+
+    if (a.power % 2 == 1) {
+      a.value = a.value.div(2);
+      a.power = a.power.add(1);
+    }
+
+    uint256 temp = a.value.add(1).div(2);
+    uint256 result = a.value;
+
+    while (temp < result) {
+      result = temp;
+      temp = a.value.div(temp).add(temp).div(2);
+    }
+
+    a.value = result;
+    a.power = a.power.div(2).add(ZERO_POWER >> 1);
+    return to128(a);
+  }
+
+  /**
    * @dev Converts the given ApproxMath data to have the specified power.
    */
-  function toPower(Data self, uint256 power) private pure returns (Data) {
-    while (self.power > power) {
+  function toPower(Data _self, uint256 _power) private pure returns (Data) {
+    Data memory self = _self;
+
+    while (self.power > _power) {
       self.value = self.value.mul(2);
       self.power = self.power.sub(1);
     }
 
-    while (self.power < power) {
+    while (self.power < _power) {
       self.value = self.value.div(2);
       self.power = self.power.add(1);
     }
@@ -130,7 +157,9 @@ library ApproxMath {
    * @dev Converts the given ApproxMath data into another form where all of
    * the 256 bits are used to represent the value.
    */
-  function to256(Data self) private pure returns (Data) {
+  function to256(Data _self) private pure returns (Data) {
+    Data memory self = _self;
+
     if (self.value == 0) {
       return self;
     }
@@ -147,7 +176,9 @@ library ApproxMath {
    * @dev Similar to to256, but to the form where the bottom 128 bits are used.
    * Note that this guarantees that the top 128 bits must all be zeroes.
    */
-  function to128(Data self) private pure returns (Data) {
+  function to128(Data _self) private pure returns (Data) {
+    Data memory self = _self;
+
     if (self.value == 0) {
       return self;
     }
