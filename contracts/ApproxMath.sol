@@ -7,8 +7,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 /**
  * @title ApproxMath
  *
- * @dev ApproxMath allows smart contracts to do arithmetrics under the
- * assumption that the end result must be within 256-bit unsigned integer
+ * @dev ApproxMath allows smart contracts to do non-integral arithmetrics under
+ * the assumption that the end result must be within 256-bit unsigned integer
  * range. The intermediate steps can overflow up to ~2^(2^255) or underflow
  * down to ~2^(-2^255). Note that integer precision is maintained only up to
  * 128 bits of information for the sake of multiplication / division /
