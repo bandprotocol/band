@@ -4,6 +4,13 @@ import "openzeppelin-solidity/contracts/token/ERC20/MintableToken.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
 
 
+/**
+ * @title CommunityToken
+ *
+ * @dev Template for community token in Band ecosystem. It is essentially an
+ * ERC-20 contract with the ability for the "minter" to mint or burn tokens.
+ * The minter will be the community's Curve contract after it is deployed.
+ */
 contract CommunityToken is MintableToken, DetailedERC20 {
 
   event Burn(address indexed burner, uint256 value);
