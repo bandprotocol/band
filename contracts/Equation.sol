@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./ApproxMath.sol";
 
 /**
  * @title Equation library
@@ -9,7 +9,12 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
  */
 library Equation{
 
-  using SafeMath for uint256;
+  using ApproxMath for ApproxMath.Data;
+
+  uint8 constant noOpcode = 19;
+  uint8 constant op0 = 2;
+  uint8 constant op1 = 4;
+  uint8 constant op2 = 18;
 
   struct Node{
     uint8 opcode;
@@ -36,7 +41,7 @@ library Equation{
     for (i = 0; i < expressions.length; i++)
     {
       node.value = 0;
-      require(expressions[i] < 9);
+      require(expressions[i] < noOpcode);
       node.opcode = uint8(expressions[i]);
       if (expressions[i] == 0)
       {
@@ -45,7 +50,71 @@ library Equation{
       }
       data.tree.push(node);
     }
-    require(createTree(data, 0) == data.tree.length-1);
+    (uint8 noNode,) = createTree(data, 0);
+    require(noNode == data.tree.length-1);
+  }
+
+  /**
+   * @dev Recursively generate tree following prefix expression order.
+   * @param data storage pointer to Data.
+   * @param currentNode position of the current node.
+   * @return An (uint8, bool) representing the last node id of this subtree and expected result type true if it return value. 
+   */
+  function createTree(Data storage data, uint8 currentNode) private returns (uint8, bool){
+    Node storage node = data.tree[currentNode];
+    uint8 nodeId;
+    bool isMath;
+    if (node.opcode < op0){
+      return (currentNode, true);
+    }
+    else if (node.opcode < op1)
+    {
+      node.children.push(currentNode+1);
+      (nodeId, isMath) = createTree(data, currentNode+1);
+      if (node.opcode == 2) {
+        require(isMath, "Expect a real value.");
+        return (nodeId, isMath);
+      }
+      else if (node.opcode == 3){
+        require(!isMath, "Expect a bool value");
+        return (nodeId, isMath);
+      }
+    }
+    else if (node.opcode < op2){
+      node.children.push(currentNode + 1);
+      (nodeId, isMath) = createTree(data, currentNode + 1);
+      if(node.opcode == 16 || node.opcode == 17) {
+        require(!isMath, "Expect a bool value");
+      }
+      else {
+        require(isMath, "Expect a real value.");
+      }
+      node.children.push(nodeId + 1);
+      (nodeId, isMath) = createTree(data, nodeId + 1);
+      if(node.opcode == 16 || node.opcode == 17) {
+        require(!isMath, "Expect a bool value");
+      }
+      else {
+        require(isMath, "Expect a real value.");
+      }
+
+      // Arithmetic operator
+      if (node.opcode < 10) {
+        return (nodeId, true);
+      }
+      // Logical operator
+      else {
+        return (nodeId, false);
+      }
+    }
+    else{
+      node.children.push(currentNode + 1);
+      (nodeId, ) = createTree(data, currentNode + 1);
+      node.children.push(nodeId + 1);
+      (nodeId, ) = createTree(data, nodeId + 1);
+      node.children.push(nodeId + 1);
+      return createTree(data, nodeId + 1);
+    }
   }
 
   /**
@@ -54,96 +123,108 @@ library Equation{
    * @param x input variable in equation. 
    */
   function calculate(Data storage data, uint256 x) internal view returns (uint256){
-    return solveValueAtNode(data, 0, x);
+    return solveMath(data, 0, ApproxMath.encode(x)).decode();
   }
 
   /**
    * @dev Calculate value of this subtree.
    * @param data storage pointer to Data.
    * @param currentNode position of the current node.
-   * @param x input variable in equation.
-   * @return An uint8 representing the last node id of this subtree. 
+   * @param x input variable in ApproxMath format.
+   * @return An ApproxMath.Data the result of calculation. 
    */
-  function solveValueAtNode(Data storage data, uint8 currentNode, uint256 x) private view returns (uint256){
+  function solveMath(Data storage data, uint8 currentNode, ApproxMath.Data x) private view returns (ApproxMath.Data){
     Node storage node = data.tree[currentNode];
-    assert(node.opcode < 9);
     if (node.opcode == 0) {
-      return node.value;
+      return ApproxMath.encode(node.value);
     }
-    else if(node.opcode == 1) {
+    else if (node.opcode == 1) {
       return x;
     }
-    else if(node.opcode == 2) {
-      return sqrt(solveValueAtNode(data, node.children[0], x));
+    else if (node.opcode == 2) {
+      return solveMath(data, node.children[0], x).sqrt();
     }
-    else if(node.opcode == 3) {
-      return solveValueAtNode(data, node.children[0], x).add(solveValueAtNode(data, node.children[1], x));
+    else if (node.opcode == 4) {
+      return solveMath(data, node.children[0], x).add(solveMath(data, node.children[1], x));
     }
-    else if(node.opcode == 4) {
-      return solveValueAtNode(data, node.children[0], x).sub(solveValueAtNode(data, node.children[1], x));
+    else if (node.opcode == 5) {
+      return solveMath(data, node.children[0], x).sub(solveMath(data, node.children[1], x));
     }
-    else if(node.opcode == 5) {
-      return solveValueAtNode(data, node.children[0], x).mul(solveValueAtNode(data, node.children[1], x));
+    else if (node.opcode == 6) {
+      return solveMath(data, node.children[0], x).mul(solveMath(data, node.children[1], x));
     }
-    else if(node.opcode == 6) {
-      return solveValueAtNode(data, node.children[0], x).div(solveValueAtNode(data, node.children[1], x));
+    else if (node.opcode == 7) {
+      return solveMath(data, node.children[0], x).div(solveMath(data, node.children[1], x));
     }
-    else if(node.opcode == 8) {
-      return exp(solveValueAtNode(data, node.children[0], x), solveValueAtNode(data, node.children[1], x));
+    else if (node.opcode == 9) {
+      return exp(solveMath(data, node.children[0], x), solveMath(data, node.children[1], x).decode());
     }
-  }
-
-  /**
-   * @dev Recursively generate tree following prefix expression order.
-   * @param data storage pointer to Data.
-   * @param currentNode position of the current node.
-   * @return An uint8 representing the last node id of this subtree. 
-   */
-  function createTree(Data storage data, uint8 currentNode) private returns (uint8){
-    Node storage node = data.tree[currentNode];
-    if (node.opcode < 2){
-      return currentNode;
-    }
-    else if (node.opcode == 2 )
-    {
-      node.children.push(currentNode+1);
-      return createTree(data, currentNode+1);
+    else if (node.opcode == 18) {
+      return (solveBool(data, node.children[0], x)) ? 
+        solveMath(data, node.children[1], x) : solveMath(data, node.children[2], x);
     }
     else{
-      node.children.push(currentNode+1);
-      uint8 lastLeft = createTree(data, currentNode+1);
-      node.children.push(lastLeft+1);
-      return createTree(data, lastLeft+1);
+      assert(false);
     }
   }
 
   /**
-   * @dev Square root function will be moved to other library.
-   * @param x uint256 input x.
-   * @return An uint256 result of sqrt(x). 
+   * @dev Calculate value(true/false) of this subtree.
+   * @param data storage pointer to Data.
+   * @param currentNode position of the current node.
+   * @param x input variable in ApproxMath format.
+   * @return A bool the result of subtree. 
    */
-  function sqrt(uint256 x) internal pure returns (uint256) {
-    uint256 z = x.add(1).div(2);
-    uint256 y = x;
-    while (z < y) {
-      y = z;
-      z = x.div(z).add(z).div(2);
+  function solveBool(Data storage data, uint8 currentNode, ApproxMath.Data x) private view returns (bool){
+    Node storage node = data.tree[currentNode];
+    if (node.opcode == 3) {
+      return !solveBool(data, node.children[0], x);
     }
-    return y;
+    else if (node.opcode == 10) {
+      return solveMath(data, node.children[0], x).decode() == solveMath(data, node.children[1], x).decode();
+    }
+    else if (node.opcode == 11) {
+      return solveMath(data, node.children[0], x).decode() != solveMath(data, node.children[1], x).decode();
+    }
+    else if (node.opcode == 12) {
+      return solveMath(data, node.children[0], x).decode() < solveMath(data, node.children[1], x).decode();
+    }
+    else if (node.opcode == 13) {
+      return solveMath(data, node.children[0], x).decode() > solveMath(data, node.children[1], x).decode();
+    }
+    else if (node.opcode == 14) {
+      return solveMath(data, node.children[0], x).decode() <= solveMath(data, node.children[1], x).decode();
+    }
+    else if (node.opcode == 15) {
+      return solveMath(data, node.children[0], x).decode() >= solveMath(data, node.children[1], x).decode();
+    }
+    else if (node.opcode == 16) {
+      return solveBool(data, node.children[0], x) && solveBool(data, node.children[1], x);
+    }
+    else if (node.opcode == 17) {
+      return solveBool(data, node.children[0], x) || solveBool(data, node.children[1], x);
+    }
+    else if (node.opcode == 18) {
+      return solveBool(data, node.children[0], x) ? 
+        solveBool(data, node.children[1], x) : solveBool(data, node.children[2], x);
+    }
+    else{
+      assert(false);
+    }
   }
 
   /**
-   * @dev Exponential function will be moved to other library.
+   * @dev Exponential function.
    * @param a uint256 base number.
    * @param b uint256 power.
    * @return An uint256 result of a^b. 
    */
-  function exp(uint256 a, uint256 b) internal pure returns (uint256){
-    require(a != 0 || b != 0);
+  function exp(ApproxMath.Data a, uint256 b) internal pure returns (ApproxMath.Data){
+    require(a.decode() != 0 || b != 0);
     if ( b == 0 ){
-      return 1;
+      return ApproxMath.encode(1);
     }
-    uint256 ans = a;
+    ApproxMath.Data memory ans = a;
     for (uint256 i = 0; i < b - 1; i++)
     {
       ans = ans.mul(a);
