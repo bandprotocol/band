@@ -2,233 +2,373 @@ pragma solidity ^0.4.24;
 
 import "./ApproxMath.sol";
 
+
 /**
- * @title Equation library
+ * @title Equation
  *
- * @dev Implementation of equation is represented by expression tree.
+ * @dev Equation library abstracts the representation of mathematics equation.
+ * As of current, an equation is basically an expression tree of constants,
+ * one variable (X), and operators.
  */
-library Equation{
+library Equation {
 
   using ApproxMath for ApproxMath.Data;
 
-  uint8 constant noOpcode = 19;
-  uint8 constant op0 = 2;
-  uint8 constant op1 = 4;
-  uint8 constant op2 = 18;
-
-  struct Node{
+  /**
+   * @dev An expression tree is encoded as a set of nodes, with root node having
+   * index zero. Each node consists of 3 values:
+   *  1. opcode: the expression that the node represents. See table below.
+   * +--------+----------------------------------------+------+------------+
+   * | Opcode |              Description               | i.e. | # children |
+   * +--------+----------------------------------------+------+------------+
+   * |   00   | Integer Constant                       |   c  |      0     |
+   * |   01   | Variable                               |   X  |      0     |
+   * |   02   | Arithmetic Square Root                 |   √  |      1     |
+   * |   03   | Boolean Not Condition                  |   !  |      1     |
+   * |   04   | Arithmetic Addition                    |   +  |      2     |
+   * |   05   | Arithmetic Subtraction                 |   -  |      2     |
+   * |   06   | Arithmetic Multiplication              |   *  |      2     |
+   * |   07   | Arithmetic Division                    |   /  |      2     |
+   * |   08   | Arithmetic Exponentiation              |  **  |      2     |
+   * |   09   | Arithmetic Equal Comparison            |  ==  |      2     |
+   * |   10   | Arithmetic Non-Equal Comparison        |  !=  |      2     |
+   * |   11   | Arithmetic Less-Than Comparison        |  <   |      2     |
+   * |   12   | Arithmetic Greater-Than Comparison     |  >   |      2     |
+   * |   13   | Arithmetic Non-Greater-Than Comparison |  <=  |      2     |
+   * |   14   | Arithmetic Non-Less-Than Comparison    |  >=  |      2     |
+   * |   15   | Boolean And Condition                  |  &&  |      2     |
+   * |   16   | Boolean Or Condition                   |  ||  |      2     |
+   * |   17   | Ternary Operation                      |  ?:  |      3     |
+   * +--------+----------------------------------------+------+------------+
+   *  2. children: the list of node indices of this node's sub-expressions.
+   *  Different opcode nodes will have different number of children.
+   *  3. value: the value inside the node. Currently this is only relevant for
+   *  Integer Constant (Opcode 00).
+   */
+  struct Node {
     uint8 opcode;
-    uint256 value;
     uint8[] children;
-  }
-
-  struct Data{
-    Node[] tree;
+    uint256 value;
   }
 
   /**
-   * @dev Initialize equation by array of opcode in prefix order.
-   * @param data storage pointer to Data.
-   * @param expressions array of opcode in prefix order. 
+   * @dev An equation's data is a list of nodes. The nodes will link against
+   * each other using index as pointer. The root node of the expression tree
+   * is the first node in the list
    */
-  function init(Data storage data, uint256[] expressions) internal {
-    for (uint8 i = 0; i < data.tree.length; i++)
-    {
-      delete data.tree[i];
-    }
-    data.tree.length = 0;
-    Node memory node;
-    for (i = 0; i < expressions.length; i++)
-    {
-      node.value = 0;
-      require(expressions[i] < noOpcode);
-      node.opcode = uint8(expressions[i]);
-      if (expressions[i] == 0)
-      {
-        i++;
-        node.value = expressions[i];
-      }
-      data.tree.push(node);
-    }
-    (uint8 noNode,) = createTree(data, 0);
-    require(noNode == data.tree.length-1);
+  struct Data {
+    Node[] nodes;
   }
 
   /**
-   * @dev Recursively generate tree following prefix expression order.
-   * @param data storage pointer to Data.
-   * @param currentNode position of the current node.
-   * @return An (uint8, bool) representing the last node id of this subtree and expected result type true if it return value. 
+   * @dev An internal struct to keep track of expression type. This is to make
+   * sure than the given equation type-checks.
    */
-  function createTree(Data storage data, uint8 currentNode) private returns (uint8, bool){
-    Node storage node = data.tree[currentNode];
-    uint8 nodeId;
-    bool isMath;
-    if (node.opcode < op0){
-      return (currentNode, true);
-    }
-    else if (node.opcode < op1)
-    {
-      node.children.push(currentNode+1);
-      (nodeId, isMath) = createTree(data, currentNode+1);
-      if (node.opcode == 2) {
-        require(isMath, "Expect a real value.");
-        return (nodeId, isMath);
-      }
-      else if (node.opcode == 3){
-        require(!isMath, "Expect a bool value");
-        return (nodeId, isMath);
-      }
-    }
-    else if (node.opcode < op2){
-      node.children.push(currentNode + 1);
-      (nodeId, isMath) = createTree(data, currentNode + 1);
-      if(node.opcode == 16 || node.opcode == 17) {
-        require(!isMath, "Expect a bool value");
-      }
-      else {
-        require(isMath, "Expect a real value.");
-      }
-      node.children.push(nodeId + 1);
-      (nodeId, isMath) = createTree(data, nodeId + 1);
-      if(node.opcode == 16 || node.opcode == 17) {
-        require(!isMath, "Expect a bool value");
-      }
-      else {
-        require(isMath, "Expect a real value.");
+  enum ExprType {
+    Invalid,
+    Math,
+    Boolean
+  }
+
+  uint8 constant OPCODE_CONST = 0;
+  uint8 constant OPCODE_VAR = 1;
+  uint8 constant OPCODE_SQRT = 2;
+  uint8 constant OPCODE_NOT = 3;
+  uint8 constant OPCODE_ADD = 4;
+  uint8 constant OPCODE_SUB = 5;
+  uint8 constant OPCODE_MUL = 6;
+  uint8 constant OPCODE_DIV = 7;
+  uint8 constant OPCODE_EXP = 8;
+  uint8 constant OPCODE_EQ = 9;
+  uint8 constant OPCODE_NE = 10;
+  uint8 constant OPCODE_LT = 11;
+  uint8 constant OPCODE_GT = 12;
+  uint8 constant OPCODE_LE = 13;
+  uint8 constant OPCODE_GE = 14;
+  uint8 constant OPCODE_AND = 15;
+  uint8 constant OPCODE_OR = 16;
+  uint8 constant OPCODE_IF = 17;
+  uint8 constant OPCODE_INVALID = 18;
+
+
+  /**
+   * @dev Initialize equation by array of opcodes/values in prefix order. Array
+   * is read as if it is the *pre-order* traversal of the expression tree.
+   * For instance, expression x^2 - 3 is encoded as: [5, 8, 1, 0, 2, 0, 3]
+   *
+   *                 5 (Opcode -)
+   *                    /  \
+   *                   /     \
+   *                /          \
+   *         8 (Opcode **)       \
+   *             /   \             \
+   *           /       \             \
+   *         /           \             \
+   *  1 (Opcode X)  0 (Opcode c)  0 (Opcode c)
+   *                     |              |
+   *                     |              |
+   *                 2 (Value)     3 (Value)
+   *
+   * @param self storage pointer to equation data to initialize.
+   * @param _expressions array of opcodes/values to initialize.
+   */
+  function init(Data storage self, uint256[] _expressions) internal {
+    // Init should only be called when the equation is not yet initialized.
+    assert (self.nodes.length == 0);
+
+    // Limit expression length to < 256 to make sure gas cost is managable.
+    require (_expressions.length < 256);
+
+    for (uint8 idx = 0; idx < _expressions.length; ++idx) {
+      // Get the next opcode. Obviously it must be within the opcode range.
+      uint256 opcode = _expressions[idx];
+      require (opcode < OPCODE_INVALID);
+
+      Node memory node;
+      node.opcode = uint8(opcode);
+
+      // Get the node's value. Only applicable on Integer Constant case.
+      if (opcode == OPCODE_CONST) {
+        node.value = _expressions[++idx];
       }
 
-      // Arithmetic operator
-      if (node.opcode < 10) {
-        return (nodeId, true);
-      }
-      // Logical operator
-      else {
-        return (nodeId, false);
-      }
+      self.nodes.push(node);
     }
-    else{
-      node.children.push(currentNode + 1);
-      (nodeId, ) = createTree(data, currentNode + 1);
-      node.children.push(nodeId + 1);
-      (nodeId, ) = createTree(data, nodeId + 1);
-      node.children.push(nodeId + 1);
-      return createTree(data, nodeId + 1);
+
+    // Actual code to create the tree. We also assert and the end that all
+    // of the provided expressions are exhausted.
+    (uint8 lastNodeIndex,) = populateTree(self, 0);
+    require (lastNodeIndex == self.nodes.length - 1);
+  }
+
+  /**
+   * @dev Clear the existing equation. Must be called prior to init of the tree
+   * has already been initialized.
+   */
+  function clear(Data storage self) internal {
+    assert (self.nodes.length < 256);
+
+    for (uint8 idx = 0; idx < self.nodes.length; ++idx) {
+      delete self.nodes[idx];
+    }
+
+    self.nodes.length = 0;
+  }
+
+  /**
+   * @dev Calculate the Y position from the X position for this equation.
+   */
+  function calculate(Data storage self, uint256 xValue)
+    internal
+    view
+    returns (uint256)
+  {
+    return solveMath(self, 0, ApproxMath.encode(xValue)).decode();
+  }
+
+  /**
+   * @dev Return the number of children the given opcode node has.
+   */
+  function getChildrenCount(uint8 opcode) private pure returns (uint8) {
+    if (opcode <= OPCODE_VAR) {
+      return 0;
+    } else if (opcode <= OPCODE_NOT) {
+      return 1;
+    } else if (opcode <= OPCODE_OR) {
+      return 2;
+    } else if (opcode <= OPCODE_IF) {
+      return 3;
+    } else {
+      assert (false);
     }
   }
 
   /**
-   * @dev Calculate equation receive x from caller.
-   * @param data storage pointer to Data.
-   * @param x input variable in equation. 
+   * @dev Check whether the given opcode and list of expression types match.
+   * Execute revert EVM opcode on failure.
+   * @return The type of this expression itself.
    */
-  function calculate(Data storage data, uint256 x) internal view returns (uint256){
-    return solveMath(data, 0, ApproxMath.encode(x)).decode();
+  function checkExprType(uint8 opcode, ExprType[] types)
+    private
+    pure
+    returns (ExprType)
+  {
+    if (opcode <= OPCODE_VAR) {
+      return ExprType.Math;
+
+    } else if (opcode == OPCODE_SQRT) {
+      require (types[0] == ExprType.Math);
+      return ExprType.Math;
+
+    } else if (opcode == OPCODE_NOT) {
+      require (types[0] == ExprType.Boolean);
+      return ExprType.Boolean;
+
+    } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
+      require (types[0] == ExprType.Math);
+      require (types[1] == ExprType.Math);
+      return ExprType.Math;
+
+    } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
+      require (types[0] == ExprType.Math);
+      require (types[1] == ExprType.Math);
+      return ExprType.Boolean;
+
+    } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
+      require (types[0] == ExprType.Boolean);
+      require (types[1] == ExprType.Boolean);
+      return ExprType.Boolean;
+
+    } else if (opcode == OPCODE_IF) {
+      require (types[0] == ExprType.Boolean);
+      require (types[1] != ExprType.Invalid);
+      require (types[1] == types[2]);
+      return types[1];
+
+    }
   }
 
   /**
-   * @dev Calculate value of this subtree.
-   * @param data storage pointer to Data.
-   * @param currentNode position of the current node.
-   * @param x input variable in ApproxMath format.
-   * @return An ApproxMath.Data the result of calculation. 
+   * @dev Helper function to recursively populate node information following
+   * the given pre-order node list. It inspects the opcode and recursively
+   * call populateTree(s) accordingly.
+   *
+   * @param self storage pointer to equation data to build tree.
+   * @param currentNodeIndex the index of the current node to populate info.
+   * @return An (uint8, bool). The first value represents the last
+   * (highest/rightmost) node ndex of the current subtree. The second value
+   * indicates the type that one would get from evaluating this subtree.
    */
-  function solveMath(Data storage data, uint8 currentNode, ApproxMath.Data x) private view returns (ApproxMath.Data){
-    Node storage node = data.tree[currentNode];
-    if (node.opcode == 0) {
+  function populateTree(Data storage self, uint8 currentNodeIndex)
+    private
+    returns (uint8, ExprType)
+  {
+    Node storage node = self.nodes[currentNodeIndex];
+    uint8 opcode = node.opcode;
+    uint8 childrenCount = getChildrenCount(opcode);
+
+    ExprType[] memory childrenTypes = new ExprType[](childrenCount);
+    uint8 lastNodeIndex = currentNodeIndex;
+
+    for (uint8 idx = 0; idx < childrenCount; ++idx) {
+      node.children.push(lastNodeIndex + 1);
+
+      (uint8 newLastNodeIndex, ExprType childType) =
+          populateTree(self, lastNodeIndex + 1);
+
+      lastNodeIndex = newLastNodeIndex;
+      childrenTypes[idx] = childType;
+    }
+
+    ExprType exprType = checkExprType(opcode, childrenTypes);
+    return (lastNodeIndex, exprType);
+  }
+
+
+  /**
+   * @dev Calculate the arithmetic value of this sub-expression at the given
+   * X position.
+   */
+  function solveMath(Data storage self, uint8 nodeIdx, ApproxMath.Data xValue)
+    private
+    view
+    returns (ApproxMath.Data)
+  {
+    Node storage node = self.nodes[nodeIdx];
+    uint8 opcode = node.opcode;
+
+    if (opcode == OPCODE_CONST) {
       return ApproxMath.encode(node.value);
+    } else if (opcode == OPCODE_VAR) {
+      return xValue;
+    } else if (opcode == OPCODE_SQRT) {
+      return solveMath(self, node.children[0], xValue).sqrt();
+    } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
+
+      ApproxMath.Data memory leftValue =
+          solveMath(self, node.children[0], xValue);
+      ApproxMath.Data memory rightValue =
+          solveMath(self, node.children[1], xValue);
+
+      if (opcode == OPCODE_ADD) {
+        return leftValue.add(rightValue);
+      } else if (opcode == OPCODE_SUB) {
+        return leftValue.sub(rightValue);
+      } else if (opcode == OPCODE_MUL) {
+        return leftValue.mul(rightValue);
+      } else if (opcode == OPCODE_DIV) {
+        return leftValue.div(rightValue);
+      } else if (opcode == OPCODE_EXP) {
+        uint256 power = rightValue.decode();
+        ApproxMath.Data memory expResult = ApproxMath.encode(1);
+
+        for (uint256 idx = 0; idx < power; ++idx) {
+          expResult = expResult.mul(leftValue);
+        }
+        return expResult;
+      }
+    } else if (opcode == OPCODE_IF) {
+      bool condValue = solveBool(self, node.children[0], xValue);
+      if (condValue) {
+        return solveMath(self, node.children[1], xValue);
+      } else {
+        return solveMath(self, node.children[2], xValue);
+      }
     }
-    else if (node.opcode == 1) {
-      return x;
-    }
-    else if (node.opcode == 2) {
-      return solveMath(data, node.children[0], x).sqrt();
-    }
-    else if (node.opcode == 4) {
-      return solveMath(data, node.children[0], x).add(solveMath(data, node.children[1], x));
-    }
-    else if (node.opcode == 5) {
-      return solveMath(data, node.children[0], x).sub(solveMath(data, node.children[1], x));
-    }
-    else if (node.opcode == 6) {
-      return solveMath(data, node.children[0], x).mul(solveMath(data, node.children[1], x));
-    }
-    else if (node.opcode == 7) {
-      return solveMath(data, node.children[0], x).div(solveMath(data, node.children[1], x));
-    }
-    else if (node.opcode == 9) {
-      return exp(solveMath(data, node.children[0], x), solveMath(data, node.children[1], x).decode());
-    }
-    else if (node.opcode == 18) {
-      return (solveBool(data, node.children[0], x)) ? 
-        solveMath(data, node.children[1], x) : solveMath(data, node.children[2], x);
-    }
-    else{
-      assert(false);
-    }
+
+    assert (false);
   }
 
   /**
-   * @dev Calculate value(true/false) of this subtree.
-   * @param data storage pointer to Data.
-   * @param currentNode position of the current node.
-   * @param x input variable in ApproxMath format.
-   * @return A bool the result of subtree. 
+   * @dev Calculate the arithmetic value of this sub-expression.
    */
-  function solveBool(Data storage data, uint8 currentNode, ApproxMath.Data x) private view returns (bool){
-    Node storage node = data.tree[currentNode];
-    if (node.opcode == 3) {
-      return !solveBool(data, node.children[0], x);
-    }
-    else if (node.opcode == 10) {
-      return solveMath(data, node.children[0], x).decode() == solveMath(data, node.children[1], x).decode();
-    }
-    else if (node.opcode == 11) {
-      return solveMath(data, node.children[0], x).decode() != solveMath(data, node.children[1], x).decode();
-    }
-    else if (node.opcode == 12) {
-      return solveMath(data, node.children[0], x).decode() < solveMath(data, node.children[1], x).decode();
-    }
-    else if (node.opcode == 13) {
-      return solveMath(data, node.children[0], x).decode() > solveMath(data, node.children[1], x).decode();
-    }
-    else if (node.opcode == 14) {
-      return solveMath(data, node.children[0], x).decode() <= solveMath(data, node.children[1], x).decode();
-    }
-    else if (node.opcode == 15) {
-      return solveMath(data, node.children[0], x).decode() >= solveMath(data, node.children[1], x).decode();
-    }
-    else if (node.opcode == 16) {
-      return solveBool(data, node.children[0], x) && solveBool(data, node.children[1], x);
-    }
-    else if (node.opcode == 17) {
-      return solveBool(data, node.children[0], x) || solveBool(data, node.children[1], x);
-    }
-    else if (node.opcode == 18) {
-      return solveBool(data, node.children[0], x) ? 
-        solveBool(data, node.children[1], x) : solveBool(data, node.children[2], x);
-    }
-    else{
-      assert(false);
-    }
-  }
+  function solveBool(Data storage self, uint8 nodeIdx, ApproxMath.Data xValue)
+    private
+    view
+    returns (bool)
+  {
+    Node storage node = self.nodes[nodeIdx];
+    uint8 opcode = node.opcode;
 
-  /**
-   * @dev Exponential function.
-   * @param a uint256 base number.
-   * @param b uint256 power.
-   * @return An uint256 result of a^b. 
-   */
-  function exp(ApproxMath.Data a, uint256 b) internal pure returns (ApproxMath.Data){
-    require(a.decode() != 0 || b != 0);
-    if ( b == 0 ){
-      return ApproxMath.encode(1);
+    if (opcode == OPCODE_NOT) {
+      return !solveBool(self, node.children[0], xValue);
+    } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
+
+      uint256 leftValue = solveMath(self, node.children[0], xValue).decode();
+      uint256 rightValue = solveMath(self, node.children[1], xValue).decode();
+
+      if (opcode == OPCODE_EQ) {
+        return leftValue == rightValue;
+      } else if (opcode == OPCODE_NE) {
+        return leftValue != rightValue;
+      } else if (opcode == OPCODE_LT) {
+        return leftValue < rightValue;
+      } else if (opcode == OPCODE_GT) {
+        return leftValue > rightValue;
+      } else if (opcode == OPCODE_LE) {
+        return leftValue <= rightValue;
+      } else if (opcode == OPCODE_GE) {
+        return leftValue >= rightValue;
+      }
+    } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
+
+      bool leftBoolValue = solveBool(self, node.children[0], xValue);
+      bool rightBoolValue = solveBool(self, node.children[1], xValue);
+
+      if (opcode == OPCODE_AND) {
+        return leftBoolValue && rightBoolValue;
+      } else if (opcode == OPCODE_OR) {
+        return leftBoolValue || rightBoolValue;
+      }
+    } else if (opcode == OPCODE_IF) {
+      bool condValue = solveBool(self, node.children[0], xValue);
+      if (condValue) {
+        return solveBool(self, node.children[1], xValue);
+      } else {
+        return solveBool(self, node.children[2], xValue);
+      }
     }
-    ApproxMath.Data memory ans = a;
-    for (uint256 i = 0; i < b - 1; i++)
-    {
-      ans = ans.mul(a);
-    }
-    return ans;
+
+    assert (false);
   }
 }

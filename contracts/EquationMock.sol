@@ -8,6 +8,7 @@ contract EquationMock{
   Equation.Data equation;
 
   function init(uint256[] expressions) public {
+    equation.clear();
     equation.init(expressions);
   }
 

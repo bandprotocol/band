@@ -27,7 +27,7 @@ contract('EquationMock', ([_, owner]) => {
   context('Quadratic equation x^2 - 3', () => {
     beforeEach(async () => {
       this.contract = await EquationMock.new({ from: owner });
-      await this.contract.init([5, 9, 1, 0, 2, 0, 3]);
+      await this.contract.init([5, 8, 1, 0, 2, 0, 3]);
     });
 
     it('should return 97 if x equal 10', async () => {
@@ -77,7 +77,7 @@ contract('EquationMock', ([_, owner]) => {
   context('If-else equation y = 2*x if x < 10 else x^2 - 90', () => {
     beforeEach(async () =>{
       this.contract = await EquationMock.new({from: owner});
-      await this.contract.init([18, 12, 1, 0, 10, 6, 0, 2, 1, 5, 9, 1, 0, 2, 0, 90]);
+      await this.contract.init([17, 11, 1, 0, 10, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90]);
     });
 
     it('should return 16 if x equal 8', async () =>{
@@ -99,7 +99,7 @@ contract('EquationMock', ([_, owner]) => {
   context('If-else equation y = 2*x if x < 10 or x > 100 else x^2 - 90', () => {
     beforeEach(async () =>{
       this.contract = await EquationMock.new({from: owner});
-      await this.contract.init([18, 17, 12, 1, 0, 10, 13, 1, 0, 100, 6, 0, 2, 1, 5, 9, 1, 0, 2, 0, 90]);
+      await this.contract.init([17, 16, 11, 1, 0, 10, 12, 1, 0, 100, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90]);
     });
 
     it('should return 16 if x equal 8', async () =>{
@@ -120,7 +120,7 @@ contract('EquationMock', ([_, owner]) => {
 
   context('Wrong operator type ex. (x > 5) * 3', () => {
     it('should throw if use arithmetic operator on bool', async () => {
-      await expectThrow(this.contract.init([6, 13, 1, 0, 5, 0, 3]));
+      await expectThrow(this.contract.init([6, 12, 1, 0, 5, 0, 3]));
     });
   });
 });
