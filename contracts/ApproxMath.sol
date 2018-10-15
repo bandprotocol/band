@@ -59,7 +59,7 @@ library ApproxMath {
     a = toPower(a, Math.max256(a.power, b.power));
     b = toPower(b, Math.max256(a.power, b.power));
 
-    require (a.power == b.power);
+    require(a.power == b.power);
     a.value = a.value.add(b.value);
 
     return to128(a);
@@ -76,7 +76,7 @@ library ApproxMath {
     a = toPower(a, Math.max256(a.power, b.power));
     b = toPower(b, Math.max256(a.power, b.power));
 
-    require (a.power == b.power);
+    require(a.power == b.power);
     a.value = a.value.sub(b.value);
 
     return to128(a);

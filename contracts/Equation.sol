@@ -114,15 +114,15 @@ library Equation {
    */
   function init(Data storage self, uint256[] _expressions) internal {
     // Init should only be called when the equation is not yet initialized.
-    assert (self.nodes.length == 0);
+    assert(self.nodes.length == 0);
 
     // Limit expression length to < 256 to make sure gas cost is managable.
-    require (_expressions.length < 256);
+    require(_expressions.length < 256);
 
     for (uint8 idx = 0; idx < _expressions.length; ++idx) {
       // Get the next opcode. Obviously it must be within the opcode range.
       uint256 opcode = _expressions[idx];
-      require (opcode < OPCODE_INVALID);
+      require(opcode < OPCODE_INVALID);
 
       Node memory node;
       node.opcode = uint8(opcode);
@@ -138,7 +138,7 @@ library Equation {
     // Actual code to create the tree. We also assert and the end that all
     // of the provided expressions are exhausted.
     (uint8 lastNodeIndex,) = populateTree(self, 0);
-    require (lastNodeIndex == self.nodes.length - 1);
+    require(lastNodeIndex == self.nodes.length - 1);
   }
 
   /**
@@ -146,7 +146,7 @@ library Equation {
    * has already been initialized.
    */
   function clear(Data storage self) internal {
-    assert (self.nodes.length < 256);
+    assert(self.nodes.length < 256);
 
     for (uint8 idx = 0; idx < self.nodes.length; ++idx) {
       delete self.nodes[idx];
@@ -179,7 +179,7 @@ library Equation {
     } else if (opcode <= OPCODE_IF) {
       return 3;
     } else {
-      assert (false);
+      assert(false);
     }
   }
 
@@ -197,32 +197,32 @@ library Equation {
       return ExprType.Math;
 
     } else if (opcode == OPCODE_SQRT) {
-      require (types[0] == ExprType.Math);
+      require(types[0] == ExprType.Math);
       return ExprType.Math;
 
     } else if (opcode == OPCODE_NOT) {
-      require (types[0] == ExprType.Boolean);
+      require(types[0] == ExprType.Boolean);
       return ExprType.Boolean;
 
     } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
-      require (types[0] == ExprType.Math);
-      require (types[1] == ExprType.Math);
+      require(types[0] == ExprType.Math);
+      require(types[1] == ExprType.Math);
       return ExprType.Math;
 
     } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
-      require (types[0] == ExprType.Math);
-      require (types[1] == ExprType.Math);
+      require(types[0] == ExprType.Math);
+      require(types[1] == ExprType.Math);
       return ExprType.Boolean;
 
     } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
-      require (types[0] == ExprType.Boolean);
-      require (types[1] == ExprType.Boolean);
+      require(types[0] == ExprType.Boolean);
+      require(types[1] == ExprType.Boolean);
       return ExprType.Boolean;
 
     } else if (opcode == OPCODE_IF) {
-      require (types[0] == ExprType.Boolean);
-      require (types[1] != ExprType.Invalid);
-      require (types[1] == types[2]);
+      require(types[0] == ExprType.Boolean);
+      require(types[1] != ExprType.Invalid);
+      require(types[1] == types[2]);
       return types[1];
 
     }
@@ -316,7 +316,7 @@ library Equation {
       }
     }
 
-    assert (false);
+    assert(false);
   }
 
   /**
@@ -369,6 +369,6 @@ library Equation {
       }
     }
 
-    assert (false);
+    assert(false);
   }
 }
