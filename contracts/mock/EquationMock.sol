@@ -1,6 +1,7 @@
 pragma solidity ^0.4.24;
 
-import "./Equation.sol";
+import "../Equation.sol";
+
 
 contract EquationMock{
   using Equation for Equation.Data;
