@@ -67,7 +67,7 @@ contract('EquationMock', ([_, owner]) => {
 
     it('should return 49 if x equal 5', async () => {
       const value = await this.contract.getPrice(5);
-      value.should.be.bignumber.eq(49);
+      value.should.be.bignumber.eq(33);
     });
 
     it('should return 67 if x equal 6', async () => {
@@ -99,7 +99,7 @@ contract('EquationMock', ([_, owner]) => {
   });
 
   context('If-else equation y = 2*x if x < 10 or x > 100 else x^2 - 90', () => {
-    beforeEach(async () =>{
+    beforeEach(async () => {
       this.contract = await EquationMock.new({from: owner});
       await this.contract.init([17, 16, 11, 1, 0, 10, 12, 1, 0, 100, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90]);
     });

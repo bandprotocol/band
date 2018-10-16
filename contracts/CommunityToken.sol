@@ -24,17 +24,14 @@ contract CommunityToken is MintableToken, DetailedERC20 {
 
   /**
    * @dev Burns a specific amount of tokens. Must be called by the minter.
+   * @param _who The owner of the tokens that will be burned.
    * @param _value The amount of token to be burned.
    */
-  function burn(uint256 _value) public hasMintPermission returns (bool) {
-    _burn(msg.sender, _value);
-    return true;
-  }
-
-  /**
-   * @dev Implementation details of token burning logic.
-   */
-  function _burn(address _who, uint256 _value) internal {
+  function burn(address _who, uint256 _value)
+    public
+    hasMintPermission
+    returns (bool)
+  {
     require(_value <= balances[_who]);
     // no need to require value <= totalSupply, since that would imply the
     // sender's balance is greater than the totalSupply, which *should* be
@@ -44,5 +41,7 @@ contract CommunityToken is MintableToken, DetailedERC20 {
     totalSupply_ = totalSupply_.sub(_value);
     emit Burn(_who, _value);
     emit Transfer(_who, address(0), _value);
+
+    return true;
   }
 }

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "./ApproxMath.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
 /**
@@ -11,8 +11,7 @@ import "./ApproxMath.sol";
  * one variable (X), and operators.
  */
 library Equation {
-
-  using ApproxMath for ApproxMath.Data;
+  using SafeMath for uint256;
 
   /**
    * @dev An expression tree is encoded as a set of nodes, with root node having
@@ -163,7 +162,7 @@ library Equation {
     view
     returns (uint256)
   {
-    return solveMath(self, 0, ApproxMath.encode(xValue)).decode();
+    return solveMath(self, 0, xValue);
   }
 
   /**
@@ -269,26 +268,34 @@ library Equation {
    * @dev Calculate the arithmetic value of this sub-expression at the given
    * X position.
    */
-  function solveMath(Data storage self, uint8 nodeIdx, ApproxMath.Data xValue)
+  function solveMath(Data storage self, uint8 nodeIdx, uint256 xValue)
     private
     view
-    returns (ApproxMath.Data)
+    returns (uint256)
   {
     Node storage node = self.nodes[nodeIdx];
     uint8 opcode = node.opcode;
 
     if (opcode == OPCODE_CONST) {
-      return ApproxMath.encode(node.value);
+      return node.value;
     } else if (opcode == OPCODE_VAR) {
       return xValue;
     } else if (opcode == OPCODE_SQRT) {
-      return solveMath(self, node.children[0], xValue).sqrt();
+      uint256 childValue = solveMath(self, node.children[0], xValue);
+      uint256 temp = childValue.add(1).div(2);
+      uint256 result = childValue;
+
+      while (temp < result) {
+        result = temp;
+        temp = childValue.div(temp).add(temp).div(2);
+      }
+
+      return result;
+
     } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
 
-      ApproxMath.Data memory leftValue =
-          solveMath(self, node.children[0], xValue);
-      ApproxMath.Data memory rightValue =
-          solveMath(self, node.children[1], xValue);
+      uint256 leftValue = solveMath(self, node.children[0], xValue);
+      uint256 rightValue = solveMath(self, node.children[1], xValue);
 
       if (opcode == OPCODE_ADD) {
         return leftValue.add(rightValue);
@@ -299,9 +306,8 @@ library Equation {
       } else if (opcode == OPCODE_DIV) {
         return leftValue.div(rightValue);
       } else if (opcode == OPCODE_EXP) {
-        uint256 power = rightValue.decode();
-        ApproxMath.Data memory expResult = ApproxMath.encode(1);
-
+        uint256 power = rightValue;
+        uint256 expResult = 1;
         for (uint256 idx = 0; idx < power; ++idx) {
           expResult = expResult.mul(leftValue);
         }
@@ -322,7 +328,7 @@ library Equation {
   /**
    * @dev Calculate the arithmetic value of this sub-expression.
    */
-  function solveBool(Data storage self, uint8 nodeIdx, ApproxMath.Data xValue)
+  function solveBool(Data storage self, uint8 nodeIdx, uint256 xValue)
     private
     view
     returns (bool)
@@ -334,8 +340,8 @@ library Equation {
       return !solveBool(self, node.children[0], xValue);
     } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
 
-      uint256 leftValue = solveMath(self, node.children[0], xValue).decode();
-      uint256 rightValue = solveMath(self, node.children[1], xValue).decode();
+      uint256 leftValue = solveMath(self, node.children[0], xValue);
+      uint256 rightValue = solveMath(self, node.children[1], xValue);
 
       if (opcode == OPCODE_EQ) {
         return leftValue == rightValue;

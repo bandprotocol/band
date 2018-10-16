@@ -67,8 +67,8 @@ contract('CommunityToken', ([_, owner, alice, bob]) => {
     const owner1stBalance = await this.contract.balanceOf(owner);
     owner1stBalance.should.bignumber.eq(new BigNumber(1000000));
 
-    await expectThrow(this.contract.burn(10, { from: alice }));
-    await this.contract.burn(10, { from: owner });
+    await expectThrow(this.contract.burn(owner, 10, { from: alice }));
+    await this.contract.burn(owner, 10, { from: owner });
 
     const owner2ndBalance = await this.contract.balanceOf(owner);
     owner2ndBalance.should.bignumber.eq(new BigNumber(999990));
