@@ -1,6 +1,8 @@
 const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
+
 const EquationMock = artifacts.require('EquationMock');
 const BigNumber = web3.BigNumber;
+
 
 require('chai')
   .use(require('chai-bignumber')(BigNumber))

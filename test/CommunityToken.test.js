@@ -1,6 +1,8 @@
 const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
+
 const CommunityToken = artifacts.require('CommunityToken');
 const BigNumber = web3.BigNumber;
+
 
 require('chai')
   .use(require('chai-bignumber')(BigNumber))

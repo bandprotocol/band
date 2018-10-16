@@ -158,12 +158,10 @@ contract BandToken is StandardToken, Ownable {
     // limitted to 48, so the gas cost here is bounded to approximately 10k.
     uint8 currentMonth = 0;
 
-    while (currentMonth < end) {
+    while (currentMonth < end && eomTimestamps[currentMonth] <= now) {
       // Loop one-by-one until we find the first month that ends after the
       // current time.
-      if (eomTimestamps[currentMonth] >= now) {
-        currentMonth = currentMonth + 1;
-      }
+      currentMonth = currentMonth + 1;
     }
 
     uint8 start = lockInfo.start;
@@ -206,5 +204,4 @@ contract BandToken is StandardToken, Ownable {
     require(_value <= unlockedBalanceOf(_from));
     return super.transferFrom(_from, _to, _value);
   }
-
 }
