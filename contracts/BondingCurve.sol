@@ -1,6 +1,6 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./BandToken.sol";
@@ -10,34 +10,29 @@ import "./Equation.sol";
 
 /**
  * @title BondingCurve
- *
- * @dev TODO
  */
-contract BondingCurve is Pausable {
+contract BondingCurve is Ownable {
   using Equation for Equation.Data;
   using SafeMath for uint256;
 
-  //
   Equation.Data equation;
-
-  //
   BandToken public bandToken;
-
-  //
   CommunityToken public commToken;
 
-  //
+  // Denominator for inflation ratio below.
   uint256 public constant DENOMINATOR = 1e9;
 
-  //
+  // Inflation ratio allows the contract to inflate or deflate the community
+  // token supply without making the equation inconsistent with the number
+  // of collateralized Band tokens.
   uint256 public inflationRatio = DENOMINATOR;
 
 
   /**
-   * @dev TODO
-   * @param _bandToken TODO
-   * @param _commToken TODO
-   * @param _expressions TODO
+   * @dev Create bonding curve contract.
+   * @param _bandToken address of Band token contract.
+   * @param _commToken address of community token contract.
+   * @param _expressions pre-order traversal of equation expression tree.
    */
   constructor(address _bandToken, address _commToken, uint256[] _expressions)
     public
@@ -50,7 +45,8 @@ contract BondingCurve is Pausable {
   }
 
   /**
-   * @dev TODO
+   * @dev Buy some amount of tokens with Band. Revert if sender must pay more
+   * than price limit in order to make purchase.
    */
   function buy(uint256 _amount, uint256 _priceLimit) public {
     uint256 startSupply = commToken.totalSupply();
@@ -73,7 +69,8 @@ contract BondingCurve is Pausable {
   }
 
   /**
-   * @dev TODO
+   * @dev Sell some amount of tokens for Band. Revert if sender will receive
+   * less than price limit if the transaction go through.
    */
   function sell(uint256 _amount, uint256 _priceLimit) public
   {
@@ -97,7 +94,8 @@ contract BondingCurve is Pausable {
   }
 
   /**
-   * @dev TODO
+   * @dev Inflate the community token by minting _value tokens for _dest.
+   * inflationRatio will adjust down to make sure the equation is consistent.
    */
   function inflate(uint256 _value, address _dest) public onlyOwner {
     _adjustInflationRatio(commToken.totalSupply().add(_value));
@@ -105,7 +103,7 @@ contract BondingCurve is Pausable {
   }
 
   /**
-   * @dev TODO
+   * @dev Similar to inflate, but burn _value tokens from _src account.
    */
   function deflate(uint256 _value, address _src) public onlyOwner {
     _adjustInflationRatio(commToken.totalSupply().sub(_value));
@@ -113,7 +111,7 @@ contract BondingCurve is Pausable {
   }
 
   /**
-   * @dev TODO
+   * @dev Adjust the inflation ratio to match the new supply.
    */
   function _adjustInflationRatio(uint256 _newSupply) private {
     uint256 realCollateral = bandToken.balanceOf(this);
