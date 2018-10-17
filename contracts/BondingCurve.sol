@@ -5,13 +5,14 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./Equation.sol";
+import "./IBondingCurve.sol";
 import "./ICommunityToken.sol";
 
 
 /**
  * @title BondingCurve
  */
-contract BondingCurve is Ownable {
+contract BondingCurve is IBondingCurve, Ownable {
   using Equation for Equation.Data;
   using SafeMath for uint256;
 
