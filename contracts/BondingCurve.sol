@@ -1,11 +1,11 @@
 pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./BandToken.sol";
-import "./CommunityToken.sol";
 import "./Equation.sol";
+import "./ICommunityToken.sol";
 
 
 /**
@@ -16,8 +16,8 @@ contract BondingCurve is Ownable {
   using SafeMath for uint256;
 
   Equation.Data equation;
-  BandToken public bandToken;
-  CommunityToken public commToken;
+  IERC20 public bandToken;
+  ICommunityToken public commToken;
 
   // Denominator for inflation ratio below.
   uint256 public constant DENOMINATOR = 1e9;
@@ -37,8 +37,8 @@ contract BondingCurve is Ownable {
   constructor(address _bandToken, address _commToken, uint256[] _expressions)
     public
   {
-    bandToken = BandToken(_bandToken);
-    commToken = CommunityToken(_commToken);
+    bandToken = IERC20(_bandToken);
+    commToken = ICommunityToken(_commToken);
     equation.init(_expressions);
 
     require(commToken.totalSupply() == 0);
@@ -116,6 +116,9 @@ contract BondingCurve is Ownable {
   function _adjustInflationRatio(uint256 _newSupply) private {
     uint256 realCollateral = bandToken.balanceOf(this);
     uint256 eqCollateral = equation.calculate(_newSupply);
+
+    require(realCollateral != 0);
+    require(eqCollateral != 0);
 
     inflationRatio = DENOMINATOR.mul(realCollateral).div(eqCollateral);
     assert(eqCollateral.mul(inflationRatio).div(DENOMINATOR) <= realCollateral);

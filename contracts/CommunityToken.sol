@@ -23,11 +23,21 @@ contract CommunityToken is ERC20, Ownable {
     decimals = _decimals;
   }
 
-  function mint(address _account, uint256 _amount) public onlyOwner {
+  function mint(address _account, uint256 _amount)
+    public
+    onlyOwner
+    returns (bool)
+  {
     _mint(_account, _amount);
+    return true;
   }
 
-  function burn(address _account, uint256 _amount) public onlyOwner {
+  function burn(address _account, uint256 _amount)
+    public
+    onlyOwner
+    returns (bool)
+  {
     _burn(_account, _amount);
+    return true;
   }
 }
