@@ -1,7 +1,7 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
 
 /**
@@ -12,7 +12,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
  * means not all of their tokens are transferable. Locked tokens will reduce
  * monthly proportionally until they are fully unlocked.
  */
-contract BandToken is StandardToken, Ownable {
+contract BandToken is ERC20, Ownable {
 
   string public constant name = "BandToken";
   string public constant symbol = "BAND";
@@ -51,8 +51,7 @@ contract BandToken is StandardToken, Ownable {
    */
   constructor(uint256 _totalSupply) public {
     // Initially, all of the minted tokens belong to the contract creator.
-    balances[msg.sender] = _totalSupply;
-    totalSupply_ = _totalSupply;
+    _mint(msg.sender, _totalSupply);
 
     // Populate eomTimestamps for every month from the end of 2018/01
     // until the end of 2021/12, for the total of 4 years (48 months).
@@ -145,7 +144,7 @@ contract BandToken is StandardToken, Ownable {
   function unlockedBalanceOf(address _addr) public view returns (uint256) {
     TokenLockInfo storage lockInfo = locked[_addr];
 
-    uint256 totalBalance = balances[_addr];
+    uint256 totalBalance = balanceOf(_addr);
     uint8 end = lockInfo.end;
 
     if (end == 0) {
