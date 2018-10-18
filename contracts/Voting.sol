@@ -39,6 +39,10 @@ contract Voting {
     return 0;
   }
 
+  function getTotalVotingPower() public view returns (uint256) {
+    return x;
+  }
+
   function getVotingPowerSnapshot() public view returns (bytes32) {
     return bytes32(x);
   }
