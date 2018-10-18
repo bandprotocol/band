@@ -92,6 +92,30 @@ contract('VerifyMock', ([_, owner]) => {
 
       await expectThrow(this.contract.verify(rootHash, key, value, proofs));
     });
+
+    it('should proof key that have zero value', async() => {
+      const rootHash = "0x9c2824ba9d3851f13b272e3ae432b58011c529e88613fd54e75bf2388d2a6022";
+      const key = "0xa63ae0df6209c7514c18d6bf7f7e69460cd0d04a";
+      const value = "0x0000000000000000000000000000000000000000000000000000000000000000";
+      const proofs = [
+      "0x0000000000000000000000000007ffffffffffffffffffffffffffffffffffff",
+      "0x3f6101114395ab85f8d4d97b8a6e6d2c5118f48c563b7c7ced5489c47b84600c",
+      "0xdb60bf4f157f2f3a7420c281cb122d0b195dbdea13e151790aa54b9b5a97b6c5",
+      "0x2d6265473fb4ca3f0fc680407628f969377a6a31e31f650a189defe32822f9a3",
+      "0x9427bb5be4d93ac5849d8d14c51334c5930a2e4bc89a4f03cd2aa57bbe2f1619",
+      "0x6d7375ea40410c97a515a8dc4abf05793b45e33563907325e66d143484e94649",
+      "0xa8752a8101ad7c05f16201a7c91fa79796fd6c362cd0f5f34717e80f8c61f3c7",
+      "0xb09308b70bcd2e8a766945be976e9e71fa345ae659e1ada29b4e51e954715346",
+      "0x8e97d74ea0751a3d3367fa92bb1df4bd657f335b66cfd7a88937640d164d3a36",
+      "0x3a0948968179df0df8ab8cd3a8f6e5373f309d143dac56ec97659820ba03176c",
+      "0x708e995348326c04a7aba59fa4e7eadad23e693a7ef132902b19a547f2cfa475",
+      "0xeaa37fb3c7892adbd1d3def07a3a4ebe350c59ab75acc88e57458b92b0953685",
+      "0xf17d5104fc8d32b785f5c1f53f54840d457fa169eec2cd0ca854d2e98c092b0b",
+      "0x8ba718f28d7411d9a436cce986b0b5d9de9bf3e063b77b40efd9d0c1d7def178",
+      ];
+
+      await this.contract.verify(rootHash, key, value, proofs);
+    });
   });
 
 });
