@@ -65,8 +65,8 @@ contract BondingCurve is IBondingCurve, Ownable {
     require(adjustedPrice <= _priceLimit);
 
     // Get Band tokens from sender and mint community tokens for sender.
-    bandToken.transferFrom(msg.sender, this, adjustedPrice);
-    commToken.mint(msg.sender, _amount);
+    require(bandToken.transferFrom(msg.sender, this, adjustedPrice));
+    require(commToken.mint(msg.sender, _amount));
   }
 
   /**
@@ -90,8 +90,8 @@ contract BondingCurve is IBondingCurve, Ownable {
     require(adjustedPrice >= _priceLimit);
 
     // Burn community tokens of sender and send Band tokens to sender.
-    commToken.burn(msg.sender, _amount);
-    bandToken.transfer(msg.sender, adjustedPrice);
+    require(commToken.burn(msg.sender, _amount));
+    require(bandToken.transfer(msg.sender, adjustedPrice));
   }
 
   /**
@@ -100,7 +100,7 @@ contract BondingCurve is IBondingCurve, Ownable {
    */
   function inflate(uint256 _value, address _dest) public onlyOwner {
     _adjustInflationRatio(commToken.totalSupply().add(_value));
-    commToken.mint(_dest, _value);
+    require(commToken.mint(_dest, _value));
   }
 
   /**
@@ -108,7 +108,7 @@ contract BondingCurve is IBondingCurve, Ownable {
    */
   function deflate(uint256 _value, address _src) public onlyOwner {
     _adjustInflationRatio(commToken.totalSupply().sub(_value));
-    commToken.burn(_src, _value);
+    require(commToken.burn(_src, _value));
   }
 
   /**

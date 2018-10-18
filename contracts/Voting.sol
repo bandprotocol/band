@@ -47,23 +47,46 @@ contract Voting {
   // TODO
   IERC20 public token;
 
-  uint x;
 
   constructor(address _token) public {
     votingPowerRootHash = bytes32(0);
     token = IERC20(_token);
   }
 
-  function requestVotingPower() external {
-    x = 0;
+  function updateVotingPower(
+    uint256 newPower,
+    uint256 oldPower,
+    bytes32[] proof
+  )
+    external
+  {
+    address voter = msg.sender;
+
+    if (newPower < oldPower) {
+      uint256 lessPower = oldPower.sub(newPower);
+      require(token.transfer(voter, lessPower));
+      totalVotingPower = totalVotingPower.sub(lessPower);
+    } else {
+      uint256 morePower = newPower.sub(oldPower);
+      require(token.transferFrom(voter, this, newPower.sub(oldPower)));
+      totalVotingPower = totalVotingPower.add(morePower);
+    }
+
+    votingPowerRootHash = votingPowerRootHash.update(
+      voter,
+      bytes32(oldPower),
+      bytes32(newPower),
+      proof
+    );
   }
 
-  function withdrawVotingPower() external {
-    x = 0;
-  }
+  function commitVote(uint256 pollID, bytes32 commitValue) external {
+    Poll storage poll = polls[pollID];
 
-  function commitVote() external {
-    x = 0;
+    require(poll.commitEndTime != 0);
+    require(poll.commitEndTime > now);
+
+    poll.commits[msg.sender] = commitValue;
   }
 
   function revealVote(
@@ -78,12 +101,20 @@ contract Voting {
     Poll storage poll = polls[pollID];
     address voter = msg.sender;
 
+    require(poll.commitEndTime < now);
     require(poll.revealEndTime > now);
     require(poll.commits[voter] != bytes32(0));
     require(poll.weights[voter] == 0);
 
+    bytes32 powerSnapshot = poll.powerSnapshot;
+
+    if (powerSnapshot == bytes32(0)) {
+      powerSnapshot = votingPowerRootHash;
+      poll.powerSnapshot = powerSnapshot;
+    }
+
     require(keccak256(abi.encodePacked(isYes, salt)) == poll.commits[voter]);
-    require(poll.powerSnapshot.verifyProof(voter, bytes32(weight), proof));
+    require(powerSnapshot.verifyProof(voter, bytes32(weight), proof));
 
     poll.weights[voter] = weight;
     poll.commits[voter] = bytes32(0);
@@ -108,7 +139,8 @@ contract Voting {
   {
     require(yesThreshold <= 100);
     require(noThreshold <= 100);
-    require(commitEndTime <= revealEndTime);
+    require(commitEndTime != 0);
+    require(commitEndTime < revealEndTime);
 
     uint256 nonce = nextPollNonce;
     nextPollNonce = nonce + 1;
