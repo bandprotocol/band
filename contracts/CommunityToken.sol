@@ -3,6 +3,8 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
+import "./ICommunityToken.sol";
+
 
 /**
  * @title CommunityToken
@@ -11,7 +13,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
  * ERC-20 contract with the ability for the "minter" to mint or burn tokens.
  * The minter will be the community's Curve contract after it is deployed.
  */
-contract CommunityToken is ERC20, Ownable {
+contract CommunityToken is ICommunityToken, ERC20, Ownable {
 
   string public name;
   string public symbol;

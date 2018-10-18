@@ -62,9 +62,9 @@ contract Parameters is IParameters {
     proposals[nonce].expiration = now + get("proposal_expiration_time");
     proposals[nonce].key = key;
     proposals[nonce].value = value;
-    proposals[nonce].votingSnapshot = voting.getVotingPowerSnapshot();
+    proposals[nonce].votingSnapshot = voting.votingPowerRootHash();
     proposals[nonce].currentVoteCount = 0;
-    proposals[nonce].totalVoteCount = voting.getTotalVotingPower();
+    proposals[nonce].totalVoteCount = voting.totalVotingPower();
   }
 
   function vote(uint256 proposalID, uint256 weight, bytes32[] proof) external {
