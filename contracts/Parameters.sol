@@ -45,8 +45,8 @@ contract Parameters is IParameters {
       params[keys[idx]] = values[idx];
     }
 
-    require(get("proposal_expiration_time") > 0);
-    require(get("proposal_pass_percentage") <= 100);
+    require(get("core:proposal_expiration_time") > 0);
+    require(get("core:proposal_pass_percentage") <= 100);
   }
 
   function get(bytes32 key) public view returns (uint256) {
@@ -59,7 +59,7 @@ contract Parameters is IParameters {
     uint256 nonce = nextProposalNonce;
     nextProposalNonce = nonce + 1;
 
-    proposals[nonce].expiration = now + get("proposal_expiration_time");
+    proposals[nonce].expiration = now + get("core:proposal_expiration_time");
     proposals[nonce].key = key;
     proposals[nonce].value = value;
     proposals[nonce].votingSnapshot = voting.votingPowerRootHash();
@@ -87,7 +87,7 @@ contract Parameters is IParameters {
     require(proposal.expiration < now);
 
     require(proposal.currentVoteCount.mul(100) >=
-            proposal.totalVoteCount.mul(get("proposal_pass_percentage")));
+            proposal.totalVoteCount.mul(get("core:proposal_pass_percentage")));
 
     params[proposal.key] = proposal.value;
     proposals[proposalID].expiration = 0;

@@ -131,22 +131,20 @@ contract Voting {
   function startPoll(
     uint8 yesThreshold,
     uint8 noThreshold,
-    uint256 commitEndTime,
-    uint256 revealEndTime
+    uint256 commitTime,
+    uint256 revealTime
   )
     public
     returns (uint256)
   {
     require(yesThreshold <= 100);
     require(noThreshold <= 100);
-    require(commitEndTime != 0);
-    require(commitEndTime < revealEndTime);
 
     uint256 nonce = nextPollNonce;
     nextPollNonce = nonce + 1;
 
-    polls[nonce].commitEndTime = commitEndTime;
-    polls[nonce].revealEndTime = revealEndTime;
+    polls[nonce].commitEndTime = now + commitTime;
+    polls[nonce].revealEndTime = now + commitTime + revealTime;
     polls[nonce].yesThreshold = yesThreshold;
     polls[nonce].noThreshold = noThreshold;
   }
@@ -173,29 +171,37 @@ contract Voting {
     return VoteResult.Inconclusive;
   }
 
-  function getTotalVotes(uint256 pollID, bool isYes)
-    public
-    view
-    returns (uint256)
-  {
-    if (isYes) {
-      return polls[pollID].yesCount;
-    } else {
-      return polls[pollID].noCount;
-    }
-  }
-
-  function getUserWinningVotes(uint256 pollID, address voter, bool isYes)
+  function getTotalVotes(uint256 pollID, VoteResult result)
     public
     view
     returns (uint256)
   {
     Poll storage poll = polls[pollID];
-
-    if (isYes) {
-      require(poll.opinions[voter] == VoteResult.Yes);
+    if (result == VoteResult.Yes) {
+      return poll.yesCount;
+    } else if (result == VoteResult.No) {
+      return poll.noCount;
+    } else if (result == VoteResult.Inconclusive) {
+      return poll.yesCount + poll.noCount;
     } else {
+      assert(false);
+    }
+  }
+
+  function getUserVotes(uint256 pollID, address voter, VoteResult result)
+    public
+    view
+    returns (uint256)
+  {
+    Poll storage poll = polls[pollID];
+    if (result == VoteResult.Yes) {
+      require(poll.opinions[voter] == VoteResult.Yes);
+    } else if (result == VoteResult.No) {
       require(poll.opinions[voter] == VoteResult.No);
+    } else if (result == VoteResult.Inconclusive) {
+      // (:
+    } else {
+      assert(false);
     }
 
     return poll.weights[voter];
