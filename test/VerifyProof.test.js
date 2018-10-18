@@ -17,8 +17,9 @@ contract('VerifyMock', ([_, owner]) => {
       const rootHash = '0x177af3eea5434eff0056a742f6a968fc928eebe368569a4cbdf8ab6438bb54aa';
       const key = '0x0367100453a0e46792466c1ce9a0eb84fc04904e';
       const value = '0xbb0f12ed099c0606987849682f36f70731543a5ad15cdfd3d47159e1755c640c';
-      const mask = new BigNumber("83627794494489836780758943522431355647426559");
+      // const mask = new BigNumber("83627794494489836780758943522431355647426559");
       const proofs = [
+        "0x0000000000000000000000000003bfffffffffffffffffffffffffffffffffff",
         "0x6b9c4179ae8d162cdfc71c03982516aae9c7029d47a68dcf397b839bd0c064cb",
         "0x8e70110bfc970738a02265b8b4559b76e9a374f9fa89a6a1854429dc193f3a8b",
         "0x15ff933a76f0508a2d09d36945db177a07410fae948e1aeeb6602e2ad44c3de0",
@@ -36,15 +37,16 @@ contract('VerifyMock', ([_, owner]) => {
         "0x0a813fcf0468a8e617bfd031dea08b3c630afdd087bb57885918f1728d0f718a",
       ];
 
-      await this.contract.verify(rootHash, key, value, mask, proofs);
+      await this.contract.verify(rootHash, key, value, proofs);
     });
 
     it('should throw if not enough proofs', async () =>{
       const rootHash = '0x177af3eea5434eff0056a742f6a968fc928eebe368569a4cbdf8ab6438bb54aa';
       const key = '0x0367100453a0e46792466c1ce9a0eb84fc04904e';
       const value = '0xbb0f12ed099c0606987849682f36f70731543a5ad15cdfd3d47159e1755c640c';
-      const mask = new BigNumber("83627794494489836780758943522431355647426559");
+      // const mask = new BigNumber("83627794494489836780758943522431355647426559");
       const proofs = [
+        "0x0000000000000000000000000003bfffffffffffffffffffffffffffffffffff",
         "0x6b9c4179ae8d162cdfc71c03982516aae9c7029d47a68dcf397b839bd0c064cb",
         "0x8e70110bfc970738a02265b8b4559b76e9a374f9fa89a6a1854429dc193f3a8b",
         "0x15ff933a76f0508a2d09d36945db177a07410fae948e1aeeb6602e2ad44c3de0",
@@ -61,15 +63,16 @@ contract('VerifyMock', ([_, owner]) => {
         "0xd8bd275715d836fcd58ab0b33380b1ea3f3423bd806773c224b2c9798b8d892a",
       ];
 
-      await expectThrow(this.contract.verify(rootHash, key, value, mask, proofs));
+      await expectThrow(this.contract.verify(rootHash, key, value, proofs));
     });
 
     it('should proof incorrectly', async () =>{
       const rootHash = '0x177af3eea5434eff0056a742f6a968fc928eebe368569a4cbdf8ab6438bb54aa';
       const key = '0x0367100453a0e46792466c1ce9a0eb84fc04904e';
       const value = '0xbb0f12ed099c0606987849682f36f70731543a5ad15cdfd3d47159e1755c640c';
-      const mask = new BigNumber("83627794494489836780758943522431355647426559");
+      // const mask = new BigNumber("83627794494489836780758943522431355647426559");
       const proofs = [
+        "0x0000000000000000000000000003bfffffffffffffffffffffffffffffffffff",
         "0x6b9c4179ae8d162cdfc71c03982516aae9c7029d47a68dcf397b839bd0c064cb",
         "0x8e70110bfc970738a02265b8b4559b76e9a374f9fa89a6a1854429dc193f3a8b",
         "0x15ff933a76f0508a2d09d36945db177a07410fae948e1aeeb6602e2ad44c3de0",
@@ -87,7 +90,7 @@ contract('VerifyMock', ([_, owner]) => {
         "0x0a813fcf0468a8e617bfd031dea08b3c630afdd087bb57885918f0728d0f718a",
       ];
 
-      await expectThrow(this.contract.verify(rootHash, key, value, mask, proofs));
+      await expectThrow(this.contract.verify(rootHash, key, value, proofs));
     });
   });
 

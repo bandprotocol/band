@@ -61,11 +61,13 @@ class Merkle(object):
                     proof.append(left)
                 current_root = right
                 
-        return (mask, list(reversed(proof)))
+        return [mask] +list(reversed(proof))
     
-    def verify_proof(self, key, val, mask, proof):
+    def verify_proof(self, key, val, proof):
         current_leaf = val
-        proof_index = 0
+        proof_index = 1
+        
+        mask = proof[0]
         
         for level in range(160):
             if mask & (1 << level) > 0:
@@ -109,3 +111,4 @@ if __name__ == '__main__':
     # for _ in range(200000):
     # #   m.insert()
     pass
+    

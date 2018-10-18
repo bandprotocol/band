@@ -2,11 +2,12 @@ pragma solidity ^0.4.24;
 
 library SMTProofVerifier{
 
-  function verifyProof(bytes32 rootHash, address key, bytes32 value, uint mask, bytes32[] proof) internal pure returns (bool){
+  function verifyProof(bytes32 rootHash, address key, bytes32 value, bytes32[] proof) internal pure returns (bool){
     bytes32 currentLeaf = value;
     bytes32 anotherLeaf;
 
-    uint256 proofIndex = 0;
+    uint256 proofIndex = 1;
+    uint256 mask = uint256(proof[0]);
 
     for (uint256 i = 1; i < (1 << 160); i <<= 1)
     {
@@ -19,13 +20,20 @@ library SMTProofVerifier{
       }
 
       if ((uint(key) & i) == 0) {
-        currentLeaf = keccak256(currentLeaf, anotherLeaf);
+        currentLeaf = zeroHash(currentLeaf, anotherLeaf);
       }
       else {
-        currentLeaf = keccak256(anotherLeaf, currentLeaf);
+        currentLeaf = zeroHash(anotherLeaf, currentLeaf);
       }
     }
     require(currentLeaf == rootHash, "Invalid proof");
     return true;
+  }
+
+  function zeroHash(bytes32 left, bytes32 right) private pure returns(bytes32){
+    if(left == bytes32(0) && right == bytes32(0))
+      return bytes32(0);
+    
+    return keccak256(abi.encodePacked(left, right));
   }
 }
