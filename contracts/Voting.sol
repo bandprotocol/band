@@ -3,9 +3,12 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "./VerifyProof.sol";
+
 
 contract Voting {
   using SafeMath for uint256;
+  using SMTProofVerifier for bytes32;
 
   enum VoteResult {
     Invalid,
@@ -18,7 +21,7 @@ contract Voting {
     uint256 commitEndTime;
     uint256 revealEndTime;
 
-    bytes32 votingPowerSnapshot;
+    bytes32 powerSnapshot;
 
     uint8 yesThreshold;
     uint8 noThreshold;
@@ -63,8 +66,35 @@ contract Voting {
     x = 0;
   }
 
-  function revealVote() external {
-    x = 0;
+  function revealVote(
+    uint256 pollID,
+    bool isYes,
+    uint256 salt,
+    uint256 weight,
+    bytes32[] proof
+  )
+    external
+  {
+    Poll storage poll = polls[pollID];
+    address voter = msg.sender;
+
+    require(poll.revealEndTime > now);
+    require(poll.commits[voter] != bytes32(0));
+    require(poll.weights[voter] == 0);
+
+    require(keccak256(abi.encodePacked(isYes, salt)) == poll.commits[voter]);
+    require(poll.powerSnapshot.verifyProof(voter, bytes32(weight), proof));
+
+    poll.weights[voter] = weight;
+    poll.commits[voter] = bytes32(0);
+
+    if (isYes) {
+      poll.opinions[voter] = VoteResult.Yes;
+      poll.yesCount += weight;
+    } else {
+      poll.opinions[voter] = VoteResult.No;
+      poll.noCount += weight;
+    }
   }
 
   function startPoll(
@@ -76,7 +106,8 @@ contract Voting {
     public
     returns (uint256)
   {
-    require(noThreshold <= yesThreshold);
+    require(yesThreshold <= 100);
+    require(noThreshold <= 100);
     require(commitEndTime <= revealEndTime);
 
     uint256 nonce = nextPollNonce;
@@ -96,45 +127,45 @@ contract Voting {
     uint256 noCount = poll.noCount;
     uint256 totalCount = yesCount.add(noCount);
 
-    if (yesCount.mul(100) >= totalCount.mul(poll.yesThreshold)) {
+    bool isYes = yesCount.mul(100) >= totalCount.mul(poll.yesThreshold);
+    bool isNo = noCount.mul(100) >= totalCount.mul(poll.noThreshold);
+
+    if (isYes && !isNo) {
       return VoteResult.Yes;
     }
 
-    if (yesCount.mul(100) < totalCount.mul(poll.noThreshold)) {
+    if (!isYes && isNo) {
       return VoteResult.No;
     }
 
     return VoteResult.Inconclusive;
   }
 
-  function getTotalVotes(uint256 pollID, VoteResult opinion)
+  function getTotalVotes(uint256 pollID, bool isYes)
     public
     view
     returns (uint256)
   {
-    if (opinion == VoteResult.Yes) {
+    if (isYes) {
       return polls[pollID].yesCount;
-    }
-
-    if (opinion == VoteResult.No) {
+    } else {
       return polls[pollID].noCount;
     }
-
-    return 0;
   }
 
-  function getUserWinningVotes(
-    uint256 pollID,
-    address voter,
-    VoteResult opinion
-  )
+  function getUserWinningVotes(uint256 pollID, address voter, bool isYes)
     public
     view
     returns (uint256)
   {
     Poll storage poll = polls[pollID];
 
-    require(poll.opinions[voter] == opinion);
+    if (isYes) {
+      require(poll.opinions[voter] == VoteResult.Yes);
+    } else {
+      require(poll.opinions[voter] == VoteResult.No);
+    }
+
     return poll.weights[voter];
   }
 }
