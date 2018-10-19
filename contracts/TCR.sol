@@ -180,6 +180,10 @@ contract TCR {
     require(token.transfer(challenge.challenger, reward));
   }
 
+  function isEntryValid(bytes32 data) internal view returns (bool) {
+    return entries[data].pendingExpiration >= now;
+  }
+
   function deleteEntry(bytes32 data) internal {
     uint256 withdrawableDeposit = entries[data].withdrawableDeposit;
     if (withdrawableDeposit > 0) {
