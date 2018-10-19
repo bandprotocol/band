@@ -6,20 +6,22 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./IAdminTCR.sol";
 import "./IBondingCurve.sol";
 import "./IParameters.sol";
+import "./VerifyProof.sol";
 
 
 contract CommunityCore {
   using SafeMath for uint256;
+  using SMTProofVerifier for bytes32;
 
-  IAdminTCR admin;
-  IBondingCurve curve;
-  IERC20 bandToken;
-  IERC20 commToken;
-  IParameters params;
+  IAdminTCR public admin;
+  IBondingCurve public curve;
+  IERC20 public bandToken;
+  IERC20 public commToken;
+  IParameters public params;
 
-  uint256 currentRewardTime;
-  bytes32 currentRewardHash;
-  mapping (address => uint256) claimedRewards;
+  uint256 public currentRewardTime;
+  bytes32 public currentRewardHash;
+  mapping (address => uint256) public claimedRewards;
 
   // Denominator for max reward below
   uint256 public constant DENOMINATOR = 1e9;
@@ -61,5 +63,14 @@ contract CommunityCore {
     curve.inflate(inflatedTokens, this);
     currentRewardTime += rewardPeriod;
     currentRewardHash = rewardHash;
+  }
+
+  function claimReward(uint256 totalReward, bytes32[] proof) external {
+    address beneficiary = msg.sender;
+    require(currentRewardHash.verifyProof(beneficiary, bytes32(totalReward), proof));
+    uint256 claimedReward = claimedRewards[beneficiary];
+    require(claimedReward < totalReward);
+    claimedRewards[beneficiary] = totalReward;
+    commToken.transfer(beneficiary, totalReward - claimedReward);
   }
 }
