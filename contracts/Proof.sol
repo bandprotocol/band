@@ -1,8 +1,17 @@
 pragma solidity ^0.4.24;
 
-library SMTProofVerifier{
+library Proof {
 
-  function verifyProof(bytes32 rootHash, address key, bytes32 value, bytes32[] proof) internal pure returns(bool) {
+  function verify(
+    bytes32 rootHash,
+    address key,
+    bytes32 value,
+    bytes32[] proof
+  )
+    internal
+    pure
+    returns (bool)
+  {
     bytes32 currentLeaf = value;
     bytes32 anotherLeaf;
 
@@ -30,9 +39,19 @@ library SMTProofVerifier{
     return true;
   }
 
-  function update(bytes32 rootHash, address key, bytes32 oldValue, bytes32 newValue, bytes32[] proof) internal pure returns(bytes32 newRootHash){
+  function update(
+    bytes32 rootHash,
+    address key,
+    bytes32 oldValue,
+    bytes32 newValue,
+    bytes32[] proof
+  )
+    internal
+    pure
+    returns (bytes32)
+  {
     bytes32 currentLeaf = oldValue;
-    newRootHash = newValue;
+    bytes32 newRootHash = newValue;
     bytes32 anotherLeaf;
 
     uint256 proofIndex = 1;
@@ -57,13 +76,15 @@ library SMTProofVerifier{
         newRootHash = zeroHash(anotherLeaf, newRootHash);
       }
     }
+
     require(currentLeaf == rootHash, "Invalid proof");
+    return newRootHash;
   }
 
   function zeroHash(bytes32 left, bytes32 right) private pure returns(bytes32){
     if(left == bytes32(0) && right == bytes32(0))
       return bytes32(0);
-    
+
     return keccak256(abi.encodePacked(left, right));
   }
 }

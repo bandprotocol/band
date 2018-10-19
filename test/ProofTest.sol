@@ -2,23 +2,25 @@ pragma solidity ^0.4.24;
 
 import "truffle/Assert.sol";
 
-import "../contracts/VerifyProof.sol";
+import "../contracts/Proof.sol";
 
-contract VerifyProofTest {
+
+contract ProofTest {
+  using Proof for bytes32;
 
   function testThreeItemsVerifier() public {
     bytes32 rootHash = hex"0ac83193a113ebedc560e19442c55ef5afc7f22d0447df5d524f713fa19854fe";
-    address key = 0x0000000000000000000000000000000000000000000000000000000000000002;
+    address key = 0x0000000000000000000000000000000000000002;
     bytes32 value = hex"00000000000000000000000000000000000000000000000000000000000001f4";
     bytes32[] memory proof = new bytes32[](2);
     proof[0] = hex"000000000000000000000000fffffffffffffffffffffffffffffffffffffffd";
     proof[1] = hex"a2c523bfff3a3b38cbbf7b09282b1d4363a481878af2d26e6e2bf29fe7b38311";
-    Assert.isTrue(SMTProofVerifier.verifyProof(rootHash, key, value, proof), "Proof of 3 items");
+    Assert.isTrue(rootHash.verify(key, value, proof), "Proof of 3 items");
   }
 
   function test10kItemsVerifier() public {
     bytes32 rootHash = hex"177af3eea5434eff0056a742f6a968fc928eebe368569a4cbdf8ab6438bb54aa";
-    address key = 0x0367100453a0e46792466c1ce9a0eb84fc04904e;
+    address key = 0x0367100453A0e46792466C1CE9A0eb84fc04904E;
     bytes32 value = hex"bb0f12ed099c0606987849682f36f70731543a5ad15cdfd3d47159e1755c640c";
     bytes32[] memory proof = new bytes32[](16);
     proof[0] = hex"0000000000000000000000000003bfffffffffffffffffffffffffffffffffff";
@@ -37,7 +39,7 @@ contract VerifyProofTest {
     proof[13] = hex"ff51fa4781d2fdda34f01e43c75f55e638af35be04e83bbf952ae6090b18904e";
     proof[14] = hex"d8bd275715d836fcd58ab0b33380b1ea3f3423bd806773c224b2c9798b8d892a";
     proof[15] = hex"0a813fcf0468a8e617bfd031dea08b3c630afdd087bb57885918f1728d0f718a";
-    Assert.isTrue(SMTProofVerifier.verifyProof(rootHash, key, value, proof), "Proof of 10k items");
+    Assert.isTrue(rootHash.verify(key, value, proof), "Proof of 10k items");
   }
 
   function testKeccak() public {

@@ -26,7 +26,7 @@ contract BondingCurve is IBondingCurve, Ownable {
   // Inflation ratio allows the contract to inflate or deflate the community
   // token supply without making the equation inconsistent with the number
   // of collateralized Band tokens.
-  uint256 public inflationRatio = DENOMINATOR;
+  uint256 public curveMultiplier = DENOMINATOR;
 
 
   /**
@@ -59,7 +59,7 @@ contract BondingCurve is IBondingCurve, Ownable {
       equation.calculate(endSupply).sub(equation.calculate(startSupply));
 
     // Price after adjusting inflation in.
-    uint256 adjustedPrice = rawPrice.mul(inflationRatio).div(DENOMINATOR);
+    uint256 adjustedPrice = rawPrice.mul(curveMultiplier).div(DENOMINATOR);
 
     // Make sure that the sender does not overpay due to slow block / frontrun.
     require(adjustedPrice <= _priceLimit);
@@ -84,7 +84,7 @@ contract BondingCurve is IBondingCurve, Ownable {
       equation.calculate(startSupply).sub(equation.calculate(endSupply));
 
     // Price after adjusting inflation in.
-    uint256 adjustedPrice = rawPrice.mul(inflationRatio).div(DENOMINATOR);
+    uint256 adjustedPrice = rawPrice.mul(curveMultiplier).div(DENOMINATOR);
 
     // Make sure that the sender receive not less than his/her desired minimum.
     require(adjustedPrice >= _priceLimit);
@@ -96,10 +96,10 @@ contract BondingCurve is IBondingCurve, Ownable {
 
   /**
    * @dev Inflate the community token by minting _value tokens for _dest.
-   * inflationRatio will adjust down to make sure the equation is consistent.
+   * curveMultiplier will adjust down to make sure the equation is consistent.
    */
   function inflate(uint256 _value, address _dest) public onlyOwner {
-    _adjustInflationRatio(commToken.totalSupply().add(_value));
+    _adjustcurveMultiplier(commToken.totalSupply().add(_value));
     require(commToken.mint(_dest, _value));
   }
 
@@ -107,21 +107,21 @@ contract BondingCurve is IBondingCurve, Ownable {
    * @dev Similar to inflate, but burn _value tokens from _src account.
    */
   function deflate(uint256 _value, address _src) public onlyOwner {
-    _adjustInflationRatio(commToken.totalSupply().sub(_value));
+    _adjustcurveMultiplier(commToken.totalSupply().sub(_value));
     require(commToken.burn(_src, _value));
   }
 
   /**
    * @dev Adjust the inflation ratio to match the new supply.
    */
-  function _adjustInflationRatio(uint256 _newSupply) private {
+  function _adjustcurveMultiplier(uint256 _newSupply) private {
     uint256 realCollateral = bandToken.balanceOf(this);
     uint256 eqCollateral = equation.calculate(_newSupply);
 
     require(realCollateral != 0);
     require(eqCollateral != 0);
 
-    inflationRatio = DENOMINATOR.mul(realCollateral).div(eqCollateral);
-    assert(eqCollateral.mul(inflationRatio).div(DENOMINATOR) <= realCollateral);
+    curveMultiplier = DENOMINATOR.mul(realCollateral).div(eqCollateral);
+    assert(eqCollateral.mul(curveMultiplier).div(DENOMINATOR) <= realCollateral);
   }
 }

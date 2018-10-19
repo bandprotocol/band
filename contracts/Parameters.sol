@@ -3,13 +3,13 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./IParameters.sol";
+import "./Proof.sol";
 import "./Voting.sol";
-import "./VerifyProof.sol";
 
 
 contract Parameters is IParameters {
   using SafeMath for uint256;
-  using SMTProofVerifier for bytes32;
+  using Proof for bytes32;
 
   // TODO
   Voting public voting;
@@ -74,7 +74,7 @@ contract Parameters is IParameters {
     require(!proposal.voted[voter]);
 
     require(proposal.expiration > now);
-    require(proposal.votingSnapshot.verifyProof(voter, bytes32(weight), proof));
+    require(proposal.votingSnapshot.verify(voter, bytes32(weight), proof));
 
     proposal.voted[voter] = true;
     proposal.currentVoteCount = proposal.currentVoteCount.add(weight);

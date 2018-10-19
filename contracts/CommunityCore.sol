@@ -6,12 +6,12 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./IAdminTCR.sol";
 import "./IBondingCurve.sol";
 import "./IParameters.sol";
-import "./VerifyProof.sol";
+import "./Proof.sol";
 
 
 contract CommunityCore {
   using SafeMath for uint256;
-  using SMTProofVerifier for bytes32;
+  using Proof for bytes32;
 
   IAdminTCR public admin;
   IBondingCurve public curve;
@@ -67,7 +67,7 @@ contract CommunityCore {
 
   function claimReward(uint256 totalReward, bytes32[] proof) external {
     address beneficiary = msg.sender;
-    require(currentRewardHash.verifyProof(beneficiary, bytes32(totalReward), proof));
+    require(currentRewardHash.verify(beneficiary, bytes32(totalReward), proof));
     uint256 claimedReward = claimedRewards[beneficiary];
     require(claimedReward < totalReward);
     claimedRewards[beneficiary] = totalReward;

@@ -1,16 +1,16 @@
 const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
 
-const VerifyMock = artifacts.require('VerifyMock');
+const ProofMock = artifacts.require('ProofMock');
 const BigNumber = web3.BigNumber;
 
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('VerifyMock', ([_, owner]) => {
+contract('ProofMock', ([_, owner]) => {
   context('Check gas consumption', () => {
     beforeEach(async () => {
-      this.contract = await VerifyMock.new({ from: owner});
+      this.contract = await ProofMock.new({ from: owner });
     });
 
     it('should proof correctly', async () =>{

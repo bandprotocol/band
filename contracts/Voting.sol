@@ -3,12 +3,12 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./VerifyProof.sol";
+import "./Proof.sol";
 
 
 contract Voting {
   using SafeMath for uint256;
-  using SMTProofVerifier for bytes32;
+  using Proof for bytes32;
 
   enum VoteResult {
     Invalid,
@@ -114,7 +114,7 @@ contract Voting {
     }
 
     require(keccak256(abi.encodePacked(isYes, salt)) == poll.commits[voter]);
-    require(powerSnapshot.verifyProof(voter, bytes32(weight), proof));
+    require(powerSnapshot.verify(voter, bytes32(weight), proof));
 
     poll.weights[voter] = weight;
     poll.commits[voter] = bytes32(0);
