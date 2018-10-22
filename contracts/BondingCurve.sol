@@ -29,6 +29,14 @@ contract BondingCurve is IBondingCurve, Ownable {
   uint256 public curveMultiplier = DENOMINATOR;
 
 
+  function getBandToken() public view returns (IERC20) {
+    return bandToken;
+  }
+
+  function getCommToken() public view returns (IERC20) {
+    return commToken;
+  }
+
   /**
    * @dev Create bonding curve contract.
    * @param _bandToken address of Band token contract.

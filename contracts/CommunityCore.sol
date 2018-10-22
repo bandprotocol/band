@@ -35,8 +35,8 @@ contract CommunityCore {
   {
     admin = _admin;
     curve = _curve;
-    bandToken = _curve.bandToken();
-    commToken = _curve.commToken();
+    bandToken = _curve.getBandToken();
+    commToken = _curve.getCommToken();
     params = _params;
   }
 

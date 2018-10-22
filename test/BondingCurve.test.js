@@ -36,13 +36,13 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(90000));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(100));
-    (await this.curve.inflationRatio()).should.bignumber.eq(new BigNumber(1000000000));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000));
 
     await this.curve.buy(1, 10000, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(89799));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(101));
-    (await this.curve.inflationRatio()).should.bignumber.eq(new BigNumber(1000000000));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000));
 
     await expectThrow(this.curve.sell(10, 1900, { from: carol }));
     await expectThrow(this.curve.sell(10, 2000, { from: bob }));
@@ -66,7 +66,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(100));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(10));
-    (await this.curve.inflationRatio()).should.bignumber.eq(new BigNumber(826446280));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(826446280));
 
     await expectThrow(this.curve.deflate(1, bob, { from: bob }));
     await expectThrow(this.curve.deflate(100, bob, { from: owner }));
@@ -75,7 +75,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(100));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(5));
-    (await this.curve.inflationRatio()).should.bignumber.eq(new BigNumber(907029478));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(907029478));
 
     await this.curve.sell(50, 0, { from: owner });
     (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(997256));

@@ -1,7 +1,9 @@
 pragma solidity ^0.4.24;
 
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-interface ICommunityToken {
+
+contract /* interface */ ICommunityToken is IERC20 {
   /**
    * @dev see https://github.com/ethereum/EIPs/issues/20
    */
