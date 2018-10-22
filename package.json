@@ -19,6 +19,7 @@
     "openzeppelin-solidity": "next",
     "pify": "^4.0.0",
     "solium": "^1.1.8",
-    "truffle": "^4.1.14"
+    "truffle": "^4.1.14",
+    "truffle-flattener": "^1.2.9"
   }
 }
