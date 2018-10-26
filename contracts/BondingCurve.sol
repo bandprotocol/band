@@ -58,17 +58,7 @@ contract BondingCurve is IBondingCurve, Ownable {
    * than price limit in order to make purchase.
    */
   function buy(uint256 _amount, uint256 _priceLimit) public {
-    uint256 startSupply = commToken.totalSupply();
-    uint256 endSupply = startSupply.add(_amount);
-
-    // The raw price as calculated from the difference between the starting and
-    // ending positions.
-    uint256 rawPrice =
-      equation.calculate(endSupply).sub(equation.calculate(startSupply));
-
-    // Price after adjusting inflation in.
-    uint256 adjustedPrice = rawPrice.mul(curveMultiplier).div(DENOMINATOR);
-
+    uint256 adjustedPrice = getBuyPrice(_amount);
     // Make sure that the sender does not overpay due to slow block / frontrun.
     require(adjustedPrice <= _priceLimit);
 
@@ -83,16 +73,7 @@ contract BondingCurve is IBondingCurve, Ownable {
    */
   function sell(uint256 _amount, uint256 _priceLimit) public
   {
-    uint256 startSupply = commToken.totalSupply();
-    uint256 endSupply = startSupply.sub(_amount);
-
-    // The raw price as calcuated from the difference between the starting and
-    // ending positions.
-    uint256 rawPrice =
-      equation.calculate(startSupply).sub(equation.calculate(endSupply));
-
-    // Price after adjusting inflation in.
-    uint256 adjustedPrice = rawPrice.mul(curveMultiplier).div(DENOMINATOR);
+    uint256 adjustedPrice = getSellPrice(_amount);
 
     // Make sure that the sender receive not less than his/her desired minimum.
     require(adjustedPrice >= _priceLimit);
@@ -131,5 +112,37 @@ contract BondingCurve is IBondingCurve, Ownable {
 
     curveMultiplier = DENOMINATOR.mul(realCollateral).div(eqCollateral);
     assert(eqCollateral.mul(curveMultiplier).div(DENOMINATOR) <= realCollateral);
+  }
+
+  /**
+   * @dev Calculate buy price for some amounts of tokens in Band
+   */
+  function getBuyPrice(uint256 _amount) public view returns(uint256)
+  {
+    uint256 startSupply = commToken.totalSupply();
+    uint256 endSupply = startSupply.add(_amount);
+
+    // The raw price as calculated from the difference between the starting and
+    // ending positions.
+    uint256 rawPrice = equation.calculate(endSupply).sub(equation.calculate(startSupply));
+
+    // Price after adjusting inflation in.
+    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
+  }
+
+  /**
+   * @dev Calculate sell price for some amounts of tokens in Band
+   */
+  function getSellPrice(uint256 _amount) public view returns(uint256)
+  {
+    uint256 startSupply = commToken.totalSupply();
+    uint256 endSupply = startSupply.sub(_amount);
+
+    // The raw price as calcuated from the difference between the starting and
+    // ending positions.
+    uint256 rawPrice = equation.calculate(startSupply).sub(equation.calculate(endSupply));
+
+    // Price after adjusting inflation in.
+    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
   }
 }
