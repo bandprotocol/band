@@ -37,6 +37,9 @@ contract Parameters is IParameters {
   uint256 nextProposalNonce = 1;
   mapping (uint256 => Proposal) proposals;
 
+  event AddParameter(bytes32 key, uint256 value);
+  event RemoveParameter(bytes32 key, uint256 value);
+
   constructor(Voting _voting, bytes32[] keys, uint256[] values) public {
     voting = _voting;
 

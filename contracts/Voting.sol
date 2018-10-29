@@ -10,6 +10,8 @@ contract Voting {
   using SafeMath for uint256;
   using Proof for bytes32;
 
+  event UpdateVote(address indexed voter, uint256 newPower);
+
   enum VoteResult {
     Invalid,
     Yes,
@@ -78,6 +80,8 @@ contract Voting {
       bytes32(newPower),
       proof
     );
+
+    emit UpdateVote(voter, newPower);
   }
 
   function commitVote(uint256 pollID, bytes32 commitValue) external {
