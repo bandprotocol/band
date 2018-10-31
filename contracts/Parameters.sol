@@ -34,11 +34,10 @@ contract Parameters is IParameters {
     uint256 totalVoteCount;
   }
 
-  uint256 nextProposalNonce = 1;
-  mapping (uint256 => Proposal) proposals;
+  uint256 public nextProposalNonce = 1;
+  mapping (uint256 => Proposal) public proposals;
 
-  event AddParameter(bytes32 key, uint256 value);
-  event RemoveParameter(bytes32 key, uint256 value);
+  event ParameterChanged(bytes32 key, uint256 value);
 
   constructor(Voting _voting, bytes32[] keys, uint256[] values) public {
     voting = _voting;
@@ -46,6 +45,7 @@ contract Parameters is IParameters {
     require(keys.length == values.length);
     for (uint256 idx = 0; idx < keys.length; ++idx) {
       params[keys[idx]] = values[idx];
+      emit ParameterChanged(keys[idx], values[idx]);
     }
 
     require(get("params:proposal_expiration_time") > 0);
@@ -93,6 +93,7 @@ contract Parameters is IParameters {
             proposal.totalVoteCount.mul(get("core:proposal_pass_percentage")));
 
     params[proposal.key] = proposal.value;
+    emit ParameterChanged(proposal.key, proposal.value);
     proposals[proposalID].expiration = 0;
   }
 }
