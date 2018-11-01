@@ -37,7 +37,7 @@ contract Parameters is IParameters {
   uint256 public nextProposalNonce = 1;
   mapping (uint256 => Proposal) public proposals;
 
-  event ParameterChanged(bytes32 key, uint256 value);
+  event ParameterChanged(bytes32 indexed key, uint256 value);
 
   constructor(Voting _voting, bytes32[] keys, uint256[] values) public {
     voting = _voting;
@@ -81,19 +81,23 @@ contract Parameters is IParameters {
 
     proposal.voted[voter] = true;
     proposal.currentVoteCount = proposal.currentVoteCount.add(weight);
+
+    conclude(proposalID);
   }
 
-  function conclude(uint256 proposalID) external {
+  function conclude(uint256 proposalID) private {
     Proposal storage proposal = proposals[proposalID];
 
-    require(proposal.expiration != 0);
-    require(proposal.expiration < now);
+    if(proposal.currentVoteCount.mul(100) >=
+            proposal.totalVoteCount.mul(get("params:proposal_pass_percentage")))
+    {
+      params[proposal.key] = proposal.value;
+      emit ParameterChanged(proposal.key, proposal.value);
+      proposals[proposalID].expiration = 0;
+    }
+  }
 
-    require(proposal.currentVoteCount.mul(100) >=
-            proposal.totalVoteCount.mul(get("core:proposal_pass_percentage")));
-
-    params[proposal.key] = proposal.value;
-    emit ParameterChanged(proposal.key, proposal.value);
-    proposals[proposalID].expiration = 0;
+  function hasVoted(uint256 proposalID, address voter) external view returns(bool) {
+    return proposals[proposalID].voted[voter];
   }
 }

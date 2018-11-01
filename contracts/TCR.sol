@@ -10,6 +10,8 @@ import "./Voting.sol";
 contract TCR {
   using SafeMath for uint256;
 
+  event NewApplication(bytes32 data, address indexed proposer);
+  event NewChallenge(bytes32 data, uint256 challengeID, address indexed challenger);
   // TODO
   IERC20 public token;
 
@@ -29,7 +31,7 @@ contract TCR {
     uint256 challengeID;
   }
 
-  mapping (bytes32 => Entry) entries;
+  mapping (bytes32 => Entry) public entries;
 
   struct Challenge {
     address challenger;
@@ -40,7 +42,7 @@ contract TCR {
     mapping (address => bool) claims;
   }
 
-  mapping (uint256 => Challenge) challenges;
+  mapping (uint256 => Challenge) public challenges;
 
   constructor(
     bytes8 _prefix,
@@ -73,6 +75,7 @@ contract TCR {
     entry.proposer = msg.sender;
     entry.withdrawableDeposit = stake;
     entry.pendingExpiration = now + get("apply_stage_length");
+    emit NewApplication(data, msg.sender);
   }
 
   function deposit(bytes32 data, uint256 amount) public entryMustExist(data) {
@@ -120,6 +123,8 @@ contract TCR {
     entry.challengeID = challengeID;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
+
+    emit NewChallenge(data, challengeID, msg.sender);
   }
 
   function resolveChallenge(bytes32 data) public entryMustExist(data) {
@@ -194,5 +199,9 @@ contract TCR {
 
   function get(bytes24 key) internal view returns (uint256) {
     return params.get(bytes32(prefix) | (bytes32(key) >> 64));
+  }
+
+  function hasClaimed(uint256 challengeID, address voter) external view returns(bool){
+    return challenges[challengeID].claims[voter];
   }
 }
