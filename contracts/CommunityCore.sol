@@ -9,6 +9,11 @@ import "./IParameters.sol";
 import "./Proof.sol";
 
 
+/**
+ * @title CommunityCore
+ *
+ * @dev TODO
+ */
 contract CommunityCore {
   using SafeMath for uint256;
   using Proof for bytes32;

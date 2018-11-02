@@ -11,6 +11,12 @@ import "./ICommunityToken.sol";
 
 /**
  * @title BondingCurve
+ *
+ * @dev BondingCurve acts as the automated market maker for a particular
+ * community token. It maintains a curve between current coin supply and total
+ * band collatoralized. Anyone can buy/sell community tokens through this
+ * contract. It also allows the community core contract to inflate/deflate
+ * the community token supply.
  */
 contract BondingCurve is IBondingCurve, Ownable {
   using Equation for Equation.Data;
@@ -28,29 +34,70 @@ contract BondingCurve is IBondingCurve, Ownable {
   // of collateralized Band tokens.
   uint256 public curveMultiplier = DENOMINATOR;
 
-
-  function getBandToken() public view returns (IERC20) {
-    return bandToken;
-  }
-
-  function getCommToken() public view returns (IERC20) {
-    return commToken;
-  }
-
   /**
    * @dev Create bonding curve contract.
    * @param _bandToken address of Band token contract.
    * @param _commToken address of community token contract.
    * @param _expressions pre-order traversal of equation expression tree.
    */
-  constructor(address _bandToken, address _commToken, uint256[] _expressions)
+  constructor(
+    IERC20 _bandToken,
+    ICommunityToken _commToken,
+    uint256[] _expressions
+  )
     public
   {
-    bandToken = IERC20(_bandToken);
-    commToken = ICommunityToken(_commToken);
+    bandToken = _bandToken;
+    commToken = _commToken;
     equation.init(_expressions);
 
     require(commToken.totalSupply() == 0);
+  }
+
+  /**
+   * @dev TODO
+   */
+  function getBandToken() public view returns (IERC20) {
+    return bandToken;
+  }
+
+  /**
+   * @dev TODO
+   */
+  function getCommToken() public view returns (IERC20) {
+    return commToken;
+  }
+
+  /**
+   * @dev Calculate buy price for some amounts of tokens in Band
+   */
+  function getBuyPrice(uint256 _amount) public view returns (uint256)
+  {
+    uint256 startSupply = commToken.totalSupply();
+    uint256 endSupply = startSupply.add(_amount);
+
+    // The raw price as calculated from the difference between the starting and
+    // ending positions.
+    uint256 rawPrice = equation.calculate(endSupply).sub(equation.calculate(startSupply));
+
+    // Price after adjusting inflation in.
+    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
+  }
+
+  /**
+   * @dev Calculate sell price for some amounts of tokens in Band
+   */
+  function getSellPrice(uint256 _amount) public view returns (uint256)
+  {
+    uint256 startSupply = commToken.totalSupply();
+    uint256 endSupply = startSupply.sub(_amount);
+
+    // The raw price as calcuated from the difference between the starting and
+    // ending positions.
+    uint256 rawPrice = equation.calculate(startSupply).sub(equation.calculate(endSupply));
+
+    // Price after adjusting inflation in.
+    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
   }
 
   /**
@@ -112,37 +159,5 @@ contract BondingCurve is IBondingCurve, Ownable {
 
     curveMultiplier = DENOMINATOR.mul(realCollateral).div(eqCollateral);
     assert(eqCollateral.mul(curveMultiplier).div(DENOMINATOR) <= realCollateral);
-  }
-
-  /**
-   * @dev Calculate buy price for some amounts of tokens in Band
-   */
-  function getBuyPrice(uint256 _amount) public view returns(uint256)
-  {
-    uint256 startSupply = commToken.totalSupply();
-    uint256 endSupply = startSupply.add(_amount);
-
-    // The raw price as calculated from the difference between the starting and
-    // ending positions.
-    uint256 rawPrice = equation.calculate(endSupply).sub(equation.calculate(startSupply));
-
-    // Price after adjusting inflation in.
-    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
-  }
-
-  /**
-   * @dev Calculate sell price for some amounts of tokens in Band
-   */
-  function getSellPrice(uint256 _amount) public view returns(uint256)
-  {
-    uint256 startSupply = commToken.totalSupply();
-    uint256 endSupply = startSupply.sub(_amount);
-
-    // The raw price as calcuated from the difference between the starting and
-    // ending positions.
-    uint256 rawPrice = equation.calculate(startSupply).sub(equation.calculate(endSupply));
-
-    // Price after adjusting inflation in.
-    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
   }
 }

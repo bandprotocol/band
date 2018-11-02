@@ -58,6 +58,14 @@ contract Parameters is IParameters {
     return value;
   }
 
+  function hasVoted(uint256 proposalID, address voter)
+    external
+    view
+    returns (bool)
+  {
+    return proposals[proposalID].voted[voter];
+  }
+
   function propose(bytes32 key, uint256 value) external {
     uint256 nonce = nextProposalNonce;
     nextProposalNonce = nonce + 1;
@@ -82,22 +90,11 @@ contract Parameters is IParameters {
     proposal.voted[voter] = true;
     proposal.currentVoteCount = proposal.currentVoteCount.add(weight);
 
-    conclude(proposalID);
-  }
-
-  function conclude(uint256 proposalID) private {
-    Proposal storage proposal = proposals[proposalID];
-
     if(proposal.currentVoteCount.mul(100) >=
-            proposal.totalVoteCount.mul(get("params:proposal_pass_percentage")))
-    {
+       proposal.totalVoteCount.mul(get("params:proposal_pass_percentage"))) {
       params[proposal.key] = proposal.value;
       emit ParameterChanged(proposal.key, proposal.value);
       proposals[proposalID].expiration = 0;
     }
-  }
-
-  function hasVoted(uint256 proposalID, address voter) external view returns(bool) {
-    return proposals[proposalID].voted[voter];
   }
 }
