@@ -1,3 +1,5 @@
+const HDWalletProvider = require('truffle-hdwallet-provider');
+
 /*
  * NB: since truffle-hdwallet-provider 0.0.5 you must wrap HDWallet providers in a
  * function when declaring them. Failure to do so will cause commands to hang. ex:
@@ -15,4 +17,11 @@
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
   // to customize your Truffle configuration!
+  networks: {
+    rinkeby: {
+      provider: () => new HDWalletProvider(process.env.MNENOMIC, 'https://rinkeby.infura.io/v3/' + process.env.INFURA_API_KEY),
+      gasPrice: 1,
+      network_id: 4,
+    }
+  }
 };
