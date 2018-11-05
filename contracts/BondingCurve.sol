@@ -144,7 +144,7 @@ contract BondingCurve is IBondingCurve, Ownable {
   }
 
   /**
-   * @dev Inflate the community token by minting _value tokens for _dest.
+   * @dev Deflate the community token by burning _value tokens for _dest.
    * curveMultiplier will adjust up to make sure the equation is consistent.
    */
   function deflate(uint256 _value) public onlyOwner {
