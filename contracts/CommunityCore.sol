@@ -12,7 +12,9 @@ import "./Proof.sol";
 /**
  * @title CommunityCore
  *
- * @dev TODO
+ * @dev Community Core contract keeps custody of community reward pool. It
+ * allows community admins to report per period reward distribution. Anyone
+ * can send transaction here to withdraw rewards.
  */
 contract CommunityCore {
   using SafeMath for uint256;
@@ -23,10 +25,14 @@ contract CommunityCore {
   IERC20 public commToken;
   IParameters public params;
 
-  uint256 public lastRewardTime;
-  uint256 public unwithdrawnReward;
+  uint256 public lastRewardTime = 0;
+  uint256 public unwithdrawnReward = 0;
   uint256 public nextRewardNonce = 1;
 
+  /**
+   * @dev Reward struct to keep track of reward distribution/withdrawal for
+   * a particular time period.
+   */
   struct Reward {
     uint256 totalReward;
     uint256 totalPortion;
@@ -34,9 +40,12 @@ contract CommunityCore {
     mapping (address => bool) claims;
   }
 
-  //
   mapping (uint256 => Reward) public rewards;
 
+  /**
+   * @dev Create community core contract with the given addresses of admin TCR
+   * contract, bonding curve contract, and global parameters contract.
+   */
   constructor(
     IAdminTCR _admin,
     IBondingCurve _curve,
@@ -58,11 +67,22 @@ contract CommunityCore {
     _;
   }
 
-  function burnToken(uint256 amount) external onlyAdmin {
-    require(commToken.transferFrom(msg.sender, this, amount));
+  /**
+   * @dev Destroy the given amount of tokens from the given source. Bonding
+   * curve will get deflated appropriately, effectively bumping token price
+   * of all existing holders. Only to be called by admins.
+   */
+  function burnToken(uint256 amount, address source) external onlyAdmin {
+    require(commToken.transferFrom(source, this, amount));
     curve.deflate(amount);
   }
 
+  /**
+   * @dev Called by admins to report reward distribution over the past period.
+   * @param rewardPortionHash Merkle root of the distribution tree.
+   * @param totalPortion Total value of portion assignments (Merkle leaves)
+   * of all community participants.
+   */
   function distributeReward(bytes32 rewardPortionHash, uint256 totalPortion)
     external
     onlyAdmin
@@ -82,6 +102,12 @@ contract CommunityCore {
     unwithdrawnReward = currentBalance;
   }
 
+  /**
+   * @dev Called by anyone in the community to withdraw rewards.
+   * @param rewardNonce The reward to withdraw.
+   * @param rewardPortion The value at the leaf node of the sender.
+   * @param proof Merkle proof consistent with the reward's root hash.
+   */
   function claimReward(
     uint256 rewardNonce,
     uint256 rewardPortion,
@@ -89,14 +115,14 @@ contract CommunityCore {
   )
     external
   {
-    address beneficiary = msg.sender;
+    require(rewardNonce > 0 && rewardNonce < nextRewardNonce);
     Reward storage reward = rewards[rewardNonce];
 
-    require(!reward.claims[beneficiary]);
-    reward.claims[beneficiary] = true;
+    require(!reward.claims[msg.sender]);
+    reward.claims[msg.sender] = true;
 
     require(reward.rewardPortionRootHash.verify(
-      beneficiary,
+      msg.sender,
       bytes32(rewardPortion),
       proof
     ));
@@ -105,6 +131,6 @@ contract CommunityCore {
       reward.totalReward.mul(rewardPortion).div(reward.totalPortion);
 
     unwithdrawnReward = unwithdrawnReward.sub(userReward);
-    require(commToken.transfer(beneficiary, userReward));
+    require(commToken.transfer(msg.sender, userReward));
   }
 }
