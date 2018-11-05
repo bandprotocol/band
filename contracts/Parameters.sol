@@ -7,27 +7,38 @@ import "./Proof.sol";
 import "./Voting.sol";
 
 
+/*
+ * @title Parameters
+ *
+ * @dev Parameter contract is a one-per-community contract that maintains
+ * configuration of everything in the community, including inflation rate,
+ * vote quorums, proposal expiration timeout, etc.
+ */
 contract Parameters is IParameters {
   using SafeMath for uint256;
   using Proof for bytes32;
 
-  // TODO
   Voting public voting;
 
-  // TODO
   mapping (bytes32 => uint256) public params;
 
   /**
-   * @dev TODO
+   * @dev Proposal struct for each of the proposal change that is proposed to
+   * this contract.
    */
   struct Proposal {
     mapping (address => bool) voted;
 
+    // Only proposal with expiration > now is considered valid. Note that this
+    // means nonexistent proposal (with experiation default to 0) is never
+    // considered.
     uint256 expiration;
 
     bytes32 key;
     uint256 value;
 
+    // The snapshot (Merkle root) of voting powers at the time the proposal
+    // is proposed.
     bytes32 votingSnapshot;
 
     uint256 currentVoteCount;
@@ -37,8 +48,13 @@ contract Parameters is IParameters {
   uint256 public nextProposalNonce = 1;
   mapping (uint256 => Proposal) public proposals;
 
+  // An event to emit when a parameter proposal is approved by the community.
   event ParameterChanged(bytes32 indexed key, uint256 value);
 
+  /**
+   * @dev Create parameters contract. Initially set of key-value pairs can be
+   * given in this constructor.
+   */
   constructor(Voting _voting, bytes32[] keys, uint256[] values) public {
     voting = _voting;
 
@@ -52,12 +68,18 @@ contract Parameters is IParameters {
     require(get("params:proposal_pass_percentage") <= 100);
   }
 
+  /**
+   * @dev Return the value at the given key. Throw if the value is not set.
+   */
   function get(bytes32 key) public view returns (uint256) {
     uint256 value = params[key];
     require(value != 0);
     return value;
   }
 
+  /**
+   * @dev Similar to get function, but returns 0 instead of throwing.
+   */
   function getZeroable(bytes32 key) public view returns (uint256) {
     return params[key];
   }
@@ -70,6 +92,11 @@ contract Parameters is IParameters {
     return proposals[proposalID].voted[voter];
   }
 
+  /**
+   * @dev Propose a new key-value change. The proposal must be approved by
+   * more than `params:proposal_pass_percentage` of voting power in order to
+   * be adopted.
+   */
   function propose(bytes32 key, uint256 value) external {
     uint256 nonce = nextProposalNonce;
     nextProposalNonce = nonce + 1;
@@ -82,6 +109,10 @@ contract Parameters is IParameters {
     proposals[nonce].totalVoteCount = voting.totalVotingPower();
   }
 
+  /**
+   * @dev Called by token holders to express aggreement with a proposal. See
+   * function propose above.
+   */
   function vote(uint256 proposalID, uint256 weight, bytes32[] proof) external {
     Proposal storage proposal = proposals[proposalID];
     address voter = msg.sender;
