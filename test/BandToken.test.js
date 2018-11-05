@@ -1,6 +1,5 @@
 const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
 const { increaseTimeTo } = require('openzeppelin-solidity/test/helpers/increaseTime');
-const { latestTime } = require('openzeppelin-solidity/test/helpers/latestTime');
 
 const BandToken = artifacts.require('BandToken');
 const BigNumber = web3.BigNumber;

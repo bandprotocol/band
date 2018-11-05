@@ -28,7 +28,7 @@ contract BondingCurve is IBondingCurve, Ownable {
   ICommunityToken public commToken;
   IParameters public params;
 
-  // Denominator for inflation-related ratios.
+  // Denominator for inflation-related ratios and sales tax.
   uint256 public constant DENOMINATOR = 1e12;
 
   // Last time the auto-inflation was added to system. Auto-inflation happens
@@ -81,8 +81,7 @@ contract BondingCurve is IBondingCurve, Ownable {
   /**
    * @dev Calculate buy price for some amounts of tokens in Band
    */
-  function getBuyPrice(uint256 _amount) public view returns (uint256)
-  {
+  function getBuyPrice(uint256 _amount) public view returns (uint256) {
     uint256 startSupply = commToken.totalSupply();
     uint256 endSupply = startSupply.add(_amount);
 
@@ -98,8 +97,7 @@ contract BondingCurve is IBondingCurve, Ownable {
   /**
    * @dev Calculate sell price for some amounts of tokens in Band
    */
-  function getSellPrice(uint256 _amount) public view returns (uint256)
-  {
+  function getSellPrice(uint256 _amount) public view returns (uint256) {
     uint256 startSupply = commToken.totalSupply();
     uint256 endSupply = startSupply.sub(_amount);
 
@@ -130,15 +128,20 @@ contract BondingCurve is IBondingCurve, Ownable {
    * @dev Sell some amount of tokens for Band. Revert if sender will receive
    * less than price limit if the transaction go through.
    */
-  function sell(uint256 _amount, uint256 _priceLimit) public
-  {
+  function sell(uint256 _amount, uint256 _priceLimit) public {
     _adjustAutoInflation();
-    uint256 adjustedPrice = getSellPrice(_amount);
+    uint256 salesTax = params.getZeroable("bonding:sales_tax");
+    uint256 taxedAmount = _amount.mul(salesTax).div(DENOMINATOR);
+    uint256 adjustedPrice = getSellPrice(_amount.sub(taxedAmount));
     // Make sure that the sender receive not less than his/her desired minimum.
     require(adjustedPrice >= _priceLimit);
     // Burn community tokens of sender and send Band tokens to sender.
     require(commToken.burn(msg.sender, _amount));
     require(bandToken.transfer(msg.sender, adjustedPrice));
+
+    if (taxedAmount > 0) {
+      require(commToken.mint(owner(), taxedAmount));
+    }
   }
 
   /**

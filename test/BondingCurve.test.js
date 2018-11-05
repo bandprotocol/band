@@ -1,5 +1,6 @@
 const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
-const { increaseTimeTo } = require('openzeppelin-solidity/test/helpers/increaseTime');
+const { increaseTimeTo, duration } = require('openzeppelin-solidity/test/helpers/increaseTime');
+const { latestTime } = require('openzeppelin-solidity/test/helpers/latestTime');
 
 const BandToken = artifacts.require('BandToken');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -40,15 +41,13 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
   it('should auto-inflate properly', async () => {
     await this.band.transfer(bob, 100000, { from: owner });
     await this.band.approve(this.curve.address, 50000, { from: bob });
-
-    await increaseTimeTo(1546300800);
     await this.curve.buy(100, 20000, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(90000));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(100));
     (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
 
-    // Inflate 10% per month
+    // 10% per month inflation
     await this.comm.approve(this.voting.address, 100, { from: bob });
     await this.voting.updateVotingPower(
         80, 0, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
@@ -57,13 +56,37 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
         1, 80, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
 
     // One month has passed
-    await increaseTimeTo(1548892800);
+    await increaseTimeTo((await latestTime()) + duration.days(30));
     await this.curve.buy(10, 20000, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(88100));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(30));
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(10));
     (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(826446280991));
+  });
+
+  it('should collect tax properly', async () => {
+    await this.band.transfer(bob, 100000, { from: owner });
+    await this.band.approve(this.curve.address, 50000, { from: bob });
+    await this.curve.buy(100, 20000, { from: bob });
+
+    (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(90000));
+    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(100));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
+
+    // 20% sales tax
+    await this.comm.approve(this.voting.address, 100, { from: bob });
+    await this.voting.updateVotingPower(
+        80, 0, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
+    await this.params.propose("bonding:sales_tax", 200000000000, { from: bob });
+    await this.params.vote(
+        1, 80, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
+
+    await this.curve.sell(15, 1000, { from: bob });
+    (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(92256));
+    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(5));
+    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(3));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
   });
 
   it('should allow anyone to buy and sell community tokens', async () => {
