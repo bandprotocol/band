@@ -191,11 +191,17 @@ contract BandToken is ERC20, Ownable {
     }
   }
 
+  /**
+   * @dev Similar to ERC20 transfer, with extra token locking restriction.
+   */
   function transfer(address _to, uint256 _value) public returns (bool) {
     require(_value <= unlockedBalanceOf(msg.sender));
     return super.transfer(_to, _value);
   }
 
+  /**
+   * @dev Similar to ERC20 transferFrom, with extra token locking restriction.
+   */
   function transferFrom(address _from, address _to, uint256 _value)
     public
     returns (bool)
