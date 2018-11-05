@@ -58,6 +58,10 @@ contract Parameters is IParameters {
     return value;
   }
 
+  function getZeroable(bytes32 key) public view returns (uint256) {
+    return params[key];
+  }
+
   function hasVoted(uint256 proposalID, address voter)
     external
     view

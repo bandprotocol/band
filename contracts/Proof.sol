@@ -18,23 +18,21 @@ library Proof {
     uint256 proofIndex = 1;
     uint256 mask = uint256(proof[0]);
 
-    for (uint256 i = 1; i < (1 << 160); i <<= 1)
-    {
-      if((mask & i) > 0) {
+    for (uint256 i = 1; i < (1 << 160); i <<= 1) {
+      if ((mask & i) > 0) {
         anotherLeaf = bytes32(0);
-      }
-      else {
+      } else {
         anotherLeaf = proof[proofIndex];
         proofIndex++;
       }
 
       if ((uint(key) & i) == 0) {
         currentLeaf = zeroHash(currentLeaf, anotherLeaf);
-      }
-      else {
+      } else {
         currentLeaf = zeroHash(anotherLeaf, currentLeaf);
       }
     }
+
     require(currentLeaf == rootHash, "Invalid proof");
     return true;
   }
@@ -57,12 +55,10 @@ library Proof {
     uint256 proofIndex = 1;
     uint256 mask = uint256(proof[0]);
 
-    for (uint256 i = 1; i < (1 << 160); i <<= 1)
-    {
-      if((mask & i) > 0) {
+    for (uint256 i = 1; i < (1 << 160); i <<= 1) {
+      if ((mask & i) > 0) {
         anotherLeaf = bytes32(0);
-      }
-      else {
+      } else {
         anotherLeaf = proof[proofIndex];
         proofIndex++;
       }
@@ -70,8 +66,7 @@ library Proof {
       if ((uint(key) & i) == 0) {
         currentLeaf = zeroHash(currentLeaf, anotherLeaf);
         newRootHash = zeroHash(newRootHash, anotherLeaf);
-      }
-      else {
+      } else {
         currentLeaf = zeroHash(anotherLeaf, currentLeaf);
         newRootHash = zeroHash(anotherLeaf, newRootHash);
       }
@@ -82,8 +77,9 @@ library Proof {
   }
 
   function zeroHash(bytes32 left, bytes32 right) private pure returns(bytes32){
-    if(left == bytes32(0) && right == bytes32(0))
+    if (left == bytes32(0) && right == bytes32(0)) {
       return bytes32(0);
+    }
 
     return keccak256(abi.encodePacked(left, right));
   }

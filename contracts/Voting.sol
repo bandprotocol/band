@@ -50,9 +50,9 @@ contract Voting {
   IERC20 public token;
 
 
-  constructor(address _token) public {
+  constructor(IERC20 _token) public {
     votingPowerRootHash = bytes32(0);
-    token = IERC20(_token);
+    token = _token;
   }
 
   function updateVotingPower(
@@ -70,7 +70,7 @@ contract Voting {
       totalVotingPower = totalVotingPower.sub(lessPower);
     } else {
       uint256 morePower = newPower.sub(oldPower);
-      require(token.transferFrom(voter, this, newPower.sub(oldPower)));
+      require(token.transferFrom(voter, this, morePower));
       totalVotingPower = totalVotingPower.add(morePower);
     }
 
