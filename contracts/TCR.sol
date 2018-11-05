@@ -11,7 +11,7 @@ contract TCR {
   using SafeMath for uint256;
 
   event NewApplication(bytes32 data, address indexed proposer);
-  event NewChallenge(bytes32 data, uint256 challengeID, address indexed challenger);
+  event ChallengeResolved(bytes32 data, uint256 challengeID, Voting.VoteResult result);
   // TODO
   IERC20 public token;
 
@@ -123,8 +123,6 @@ contract TCR {
     entry.challengeID = challengeID;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
-
-    emit NewChallenge(data, challengeID, msg.sender);
   }
 
   function resolveChallenge(bytes32 data) public entryMustExist(data) {
@@ -141,6 +139,8 @@ contract TCR {
 
     require(challenge.result == Voting.VoteResult.Invalid);
     challenge.result = result;
+
+    emit ChallengeResolved(data, challengeID, result);
 
     if (result == Voting.VoteResult.Inconclusive) {
       // Inconclusive
@@ -197,7 +197,7 @@ contract TCR {
     delete entries[data];
   }
 
-  function get(bytes24 key) internal view returns (uint256) {
+  function get(bytes24 key) public view returns (uint256) {
     return params.get(bytes32(prefix) | (bytes32(key) >> 64));
   }
 

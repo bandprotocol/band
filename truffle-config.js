@@ -20,8 +20,8 @@ module.exports = {
   networks: {
     rinkeby: {
       provider: () => new HDWalletProvider(process.env.MNENOMIC, 'https://rinkeby.infura.io/v3/' + process.env.INFURA_API_KEY),
-      gasPrice: 1,
       network_id: 4,
+      gasPrice: 10000000000,
     }
   }
 };

@@ -11,6 +11,7 @@ contract Voting {
   using Proof for bytes32;
 
   event UpdateVote(address indexed voter, uint256 newPower);
+  event CommitVote(uint256 indexed pollID, address indexed voter);
 
   enum VoteResult {
     Invalid,
@@ -38,7 +39,7 @@ contract Voting {
 
 
   uint256 nextPollNonce = 1;
-  mapping (uint256 => Poll) polls;
+  mapping (uint256 => Poll) public polls;
 
   // TODO
   bytes32 public votingPowerRootHash;
@@ -91,6 +92,8 @@ contract Voting {
     require(poll.commitEndTime > now);
 
     poll.commits[msg.sender] = commitValue;
+
+    emit CommitVote(pollID, msg.sender);
   }
 
   function revealVote(
@@ -151,6 +154,8 @@ contract Voting {
     polls[nonce].revealEndTime = now + commitTime + revealTime;
     polls[nonce].yesThreshold = yesThreshold;
     polls[nonce].noThreshold = noThreshold;
+
+    return nonce;
   }
 
   function getResult(uint256 pollID) public view returns (VoteResult) {
