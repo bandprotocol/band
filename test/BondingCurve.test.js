@@ -119,33 +119,18 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(91));
   });
 
-  it('should allow only owner to inflate and deflate the system', async () => {
+  it('should allow only owner to deflate the system', async () => {
     this.band.approve(this.curve.address, 100000, { from: owner });
     await this.curve.buy(100, 10000, { from: owner });
 
     (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(100));
-    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(0));
 
-    await expectThrow(this.curve.inflate(10, bob, { from: bob }));
-    await this.curve.inflate(10, bob, { from: owner });
-
-    (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
-    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(100));
-    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(10));
-    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(826446280991));
-
-    await expectThrow(this.curve.deflate(1, bob, { from: bob }));
-    await expectThrow(this.curve.deflate(100, bob, { from: owner }));
-    await this.curve.deflate(5, bob, { from: owner });
+    await expectThrow(this.curve.deflate(200, { from: owner }));
+    await this.curve.deflate(5, { from: owner });
 
     (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
-    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(100));
-    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(5));
-    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(907029478458));
-
-    await this.curve.sell(50, 0, { from: owner });
-    (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(997256));
-    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(50));
+    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(95));
+    (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1108033240997));
   });
 });

@@ -20,16 +20,22 @@ contract CommunityCore {
 
   IAdminTCR public admin;
   IBondingCurve public curve;
-  IERC20 public bandToken;
   IERC20 public commToken;
   IParameters public params;
 
-  uint256 public currentRewardTime;
-  bytes32 public currentRewardHash;
-  mapping (address => uint256) public claimedRewards;
+  uint256 public lastRewardTime;
+  uint256 public unwithdrawnReward;
+  uint256 public nextRewardNonce = 1;
 
-  // Denominator for max reward below
-  uint256 public constant DENOMINATOR = 1e9;
+  struct Reward {
+    uint256 totalReward;
+    uint256 totalPortion;
+    bytes32 rewardPortionRootHash;
+    mapping (address => bool) claims;
+  }
+
+  //
+  mapping (uint256 => Reward) public rewards;
 
   constructor(
     IAdminTCR _admin,
@@ -40,7 +46,6 @@ contract CommunityCore {
   {
     admin = _admin;
     curve = _curve;
-    bandToken = _curve.getBandToken();
     commToken = _curve.getCommToken();
     params = _params;
   }
@@ -53,29 +58,53 @@ contract CommunityCore {
     _;
   }
 
-  function distributeReward(bytes32 rewardHash, uint256 inflatedTokens)
+  function burnToken(uint256 amount) external onlyAdmin {
+    require(commToken.transferFrom(msg.sender, this, amount));
+    curve.deflate(amount);
+  }
+
+  function distributeReward(bytes32 rewardPortionHash, uint256 totalPortion)
     external
     onlyAdmin
   {
     uint256 rewardPeriod = params.get("core:reward_period");
-    uint256 maxReward = params.get("core:max_reward_times_1e9");
+    require(now >= lastRewardTime.add(rewardPeriod));
 
-    require(now >= currentRewardTime.add(rewardPeriod));
-    require(
-      inflatedTokens <= commToken.totalSupply().mul(maxReward).div(DENOMINATOR)
-    );
+    uint256 nonce = nextRewardNonce;
+    nextRewardNonce = nonce + 1;
 
-    curve.inflate(inflatedTokens, this);
-    currentRewardTime += rewardPeriod;
-    currentRewardHash = rewardHash;
+    uint256 currentBalance = commToken.balanceOf(this);
+    rewards[nonce].totalReward = currentBalance.sub(unwithdrawnReward);
+    rewards[nonce].totalPortion = totalPortion;
+    rewards[nonce].rewardPortionRootHash = rewardPortionHash;
+
+    lastRewardTime = now;
+    unwithdrawnReward = currentBalance;
   }
 
-  function claimReward(uint256 totalReward, bytes32[] proof) external {
+  function claimReward(
+    uint256 rewardNonce,
+    uint256 rewardPortion,
+    bytes32[] proof
+  )
+    external
+  {
     address beneficiary = msg.sender;
-    require(currentRewardHash.verify(beneficiary, bytes32(totalReward), proof));
-    uint256 claimedReward = claimedRewards[beneficiary];
-    require(claimedReward < totalReward);
-    claimedRewards[beneficiary] = totalReward;
-    commToken.transfer(beneficiary, totalReward - claimedReward);
+    Reward storage reward = rewards[rewardNonce];
+
+    require(!reward.claims[beneficiary]);
+    reward.claims[beneficiary] = true;
+
+    require(reward.rewardPortionRootHash.verify(
+      beneficiary,
+      bytes32(rewardPortion),
+      proof
+    ));
+
+    uint256 userReward =
+      reward.totalReward.mul(rewardPortion).div(reward.totalPortion);
+
+    unwithdrawnReward = unwithdrawnReward.sub(userReward);
+    require(commToken.transfer(beneficiary, userReward));
   }
 }

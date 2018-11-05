@@ -16,8 +16,7 @@ import "./IParameters.sol";
  * @dev BondingCurve acts as the automated market maker for a particular
  * community token. It maintains a curve between current coin supply and total
  * band collatoralized. Anyone can buy/sell community tokens through this
- * contract. It also allows the community core contract to inflate/deflate
- * the community token supply.
+ * contract.
  */
 contract BondingCurve is IBondingCurve, Ownable {
   using Equation for Equation.Data;
@@ -146,19 +145,11 @@ contract BondingCurve is IBondingCurve, Ownable {
 
   /**
    * @dev Inflate the community token by minting _value tokens for _dest.
-   * curveMultiplier will adjust down to make sure the equation is consistent.
+   * curveMultiplier will adjust up to make sure the equation is consistent.
    */
-  function inflate(uint256 _value, address _dest) public onlyOwner {
-    _adjustcurveMultiplier(commToken.totalSupply().add(_value));
-    require(commToken.mint(_dest, _value));
-  }
-
-  /**
-   * @dev Similar to inflate, but burn _value tokens from _src account.
-   */
-  function deflate(uint256 _value, address _src) public onlyOwner {
+  function deflate(uint256 _value) public onlyOwner {
     _adjustcurveMultiplier(commToken.totalSupply().sub(_value));
-    require(commToken.burn(_src, _value));
+    require(commToken.burn(owner(), _value));
   }
 
   /**

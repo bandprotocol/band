@@ -175,6 +175,9 @@ contract TCR {
   function claimReward(uint256 challengeID) public {
     Challenge storage challenge = challenges[challengeID];
 
+    require(!challenge.claims[msg.sender]);
+    challenge.claims[msg.sender] = true;
+
     uint256 senderVotes =
       voting.getUserVotes(challengeID, msg.sender, challenge.result);
     uint256 reward =
