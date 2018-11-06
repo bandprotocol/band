@@ -200,7 +200,7 @@ contract TCR {
 
     challenge.remainingVotes -= senderVotes;
     challenge.rewardPool -= reward;
-    require(token.transfer(challenge.challenger, reward));
+    require(token.transfer(msg.sender, reward));
   }
 
   function isEntryValid(bytes32 data) internal view returns (bool) {
