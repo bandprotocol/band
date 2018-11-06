@@ -6,11 +6,21 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./Proof.sol";
 
 
+/**
+ * @title Voting
+ *
+ * @dev Voting contract maintains voting power allocations of community members
+ * as a Merkle tree. Anyone can send tokens to this contract to request voting
+ * power. TCR and Parameters contracts use this tree to determine voting power.
+ */
 contract Voting {
   using SafeMath for uint256;
   using Proof for bytes32;
 
+  // An event to emit when someone updates his/her voting power.
   event UpdateVote(address indexed voter, uint256 newPower);
+
+  // An event to emit when someone commits vote to a poll.
   event CommitVote(uint256 indexed pollID, address indexed voter);
 
   enum VoteResult {
@@ -21,16 +31,16 @@ contract Voting {
   }
 
   struct Poll {
-    uint256 commitEndTime;
-    uint256 revealEndTime;
+    uint256 commitEndTime;  // Experation timestamp of commit period
+    uint256 revealEndTime;  // Experation timestamp of reveal period
 
-    bytes32 powerSnapshot;
+    bytes32 powerSnapshot;  // Merkle hash of voting power at last commit
 
-    uint8 yesThreshold;
-    uint8 noThreshold;
+    uint8 yesThreshold;     // The percentage of votes for YES result
+    uint8 noThreshold;      // The percentage of votes for NO result
 
-    uint256 yesCount;
-    uint256 noCount;
+    uint256 yesCount;       // The current total number of YES votes
+    uint256 noCount;        // The current total number of NO votes
 
     mapping (address => bytes32) commits;
     mapping (address => uint256) weights;
@@ -41,13 +51,14 @@ contract Voting {
   uint256 nextPollNonce = 1;
   mapping (uint256 => Poll) public polls;
 
-  // TODO
+  // The Merkle root hash
   bytes32 public votingPowerRootHash;
 
-  // TODO
+  // The total voting power of all community members. That is, the total sum
+  // of all leaves in votingPowerRootHash Merkle tree.
   uint256 public totalVotingPower;
 
-  // TODO
+  // Community token address.
   IERC20 public token;
 
 
@@ -56,6 +67,10 @@ contract Voting {
     token = _token;
   }
 
+  /**
+   * @dev Update voting power from oldPower to newPower. Voting contract will
+   * update votingPowerRootHash accordingly.
+   */
   function updateVotingPower(
     uint256 newPower,
     uint256 oldPower,
@@ -85,6 +100,10 @@ contract Voting {
     emit UpdateVote(voter, newPower);
   }
 
+  /**
+   * @dev Commit vote to a particular poll, with commitValue. commitVote can
+   * be called repeatedly until the commit period ends.
+   */
   function commitVote(uint256 pollID, bytes32 commitValue) external {
     Poll storage poll = polls[pollID];
 
@@ -92,10 +111,15 @@ contract Voting {
     require(poll.commitEndTime > now);
 
     poll.commits[msg.sender] = commitValue;
+    poll.powerSnapshot = votingPowerRootHash;
 
     emit CommitVote(pollID, msg.sender);
   }
 
+  /**
+   * @dev Reveal vote with choice and secret salt used in generating commit
+   * earlier during the commit period.
+   */
   function revealVote(
     uint256 pollID,
     bool isYes,
@@ -113,13 +137,6 @@ contract Voting {
     require(poll.commits[voter] != bytes32(0));
     require(poll.weights[voter] == 0);
 
-    bytes32 powerSnapshot = poll.powerSnapshot;
-
-    if (powerSnapshot == bytes32(0)) {
-      powerSnapshot = votingPowerRootHash;
-      poll.powerSnapshot = powerSnapshot;
-    }
-
     require(keccak256(abi.encodePacked(isYes, salt)) == poll.commits[voter]);
     require(powerSnapshot.verify(voter, bytes32(weight), proof));
 
@@ -135,6 +152,10 @@ contract Voting {
     }
   }
 
+  /**
+   * @dev Start a new poll. This function is to be called by TCR contracts
+   * and will return the new poll's ID for future reference.
+   */
   function startPoll(
     uint8 yesThreshold,
     uint8 noThreshold,
@@ -158,6 +179,10 @@ contract Voting {
     return nonce;
   }
 
+  /**
+   * @dev Get the result of the given poll ID. Requires that the reveal period
+   * must already end. The result can be Yes, No, or Inconclusive.
+   */
   function getResult(uint256 pollID) public view returns (VoteResult) {
     Poll storage poll = polls[pollID];
 
@@ -180,6 +205,10 @@ contract Voting {
     return VoteResult.Inconclusive;
   }
 
+  /**
+   * @dev Called by TCR contracts to get the total vote count for the given
+   * vote result.
+   */
   function getTotalVotes(uint256 pollID, VoteResult result)
     public
     view
@@ -197,6 +226,10 @@ contract Voting {
     }
   }
 
+  /**
+   * @dev Called by TCR contracts to get the voting power contributed by
+   * the given voter for a particular vote result.
+   */
   function getUserVotes(uint256 pollID, address voter, VoteResult result)
     public
     view
@@ -208,7 +241,7 @@ contract Voting {
     } else if (result == VoteResult.No) {
       require(poll.opinions[voter] == VoteResult.No);
     } else if (result == VoteResult.Inconclusive) {
-      // (:
+      // No verification needed on this branch
     } else {
       assert(false);
     }
