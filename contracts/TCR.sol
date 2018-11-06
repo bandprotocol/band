@@ -7,18 +7,19 @@ import "./IParameters.sol";
 import "./Voting.sol";
 
 
+/**
+ * @title TCR
+ *
+ * @dev TODO
+ */
 contract TCR {
   using SafeMath for uint256;
 
   event NewApplication(bytes32 data, address indexed proposer);
   event ChallengeResolved(bytes32 data, uint256 challengeID, Voting.VoteResult result);
-  // TODO
+
   IERC20 public token;
-
-  // TODO
   Voting public voting;
-
-  // TODO
   IParameters public params;
 
   // TODO
@@ -159,11 +160,11 @@ contract TCR {
 
     if (result == Voting.VoteResult.Yes) {
       // Challenge success
-      entry.withdrawableDeposit += reward;
+      require(token.transfer(challenge.challenger, reward));
       deleteEntry(data);
     } else if (result == Voting.VoteResult.No) {
       // Challenge fail
-      require(token.transfer(challenge.challenger, reward));
+      entry.withdrawableDeposit += reward;
     } else {
       assert(false);
     }
