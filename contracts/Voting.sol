@@ -152,6 +152,22 @@ contract Voting {
     }
   }
 
+  function hasCommitted(uint256 pollID, address voter)
+    public
+    view
+    returns (bool)
+  {
+    return polls[pollID].commits[voter] != bytes32(0);
+  }
+
+  function hasRevealed(uint256 pollID, address voter)
+    public
+    view
+    returns (bool)
+  {
+    return polls[pollID].weights[voter] != 0;
+  }
+
   /**
    * @dev Start a new poll. This function is to be called by TCR contracts
    * and will return the new poll's ID for future reference.
@@ -247,21 +263,5 @@ contract Voting {
     }
 
     return poll.weights[voter];
-  }
-
-  function hasCommitted(uint256 pollID, address voter)
-    external
-    view
-    returns (bool)
-  {
-    return polls[pollID].commits[voter] != bytes32(0);
-  }
-
-  function hasRevealed(uint256 pollID, address voter)
-    external
-    view
-    returns (bool)
-  {
-    return polls[pollID].weights[voter] != 0;
   }
 }
