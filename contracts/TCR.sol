@@ -140,6 +140,8 @@ contract TCR {
 
     require(challenge.result == Voting.VoteResult.Invalid);
     challenge.result = result;
+    
+    uint256 rewardPool = challenge.rewardPool;
 
     emit ChallengeResolved(data, challengeID, result);
 
@@ -155,7 +157,7 @@ contract TCR {
     require(rewardPercentage <= 100);
     require(rewardPercentage >= 50);
 
-    uint256 rewardPool = challenge.rewardPool;
+    
     uint256 reward = rewardPool.mul(rewardPercentage).div(100);
 
     if (result == Voting.VoteResult.Yes) {

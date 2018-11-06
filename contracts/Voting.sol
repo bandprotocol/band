@@ -138,7 +138,7 @@ contract Voting {
     require(poll.weights[voter] == 0);
 
     require(keccak256(abi.encodePacked(isYes, salt)) == poll.commits[voter]);
-    require(powerSnapshot.verify(voter, bytes32(weight), proof));
+    require(poll.powerSnapshot.verify(voter, bytes32(weight), proof));
 
     poll.weights[voter] = weight;
     poll.commits[voter] = bytes32(0);
@@ -247,5 +247,21 @@ contract Voting {
     }
 
     return poll.weights[voter];
+  }
+
+  function hasCommitted(uint256 pollID, address voter)
+    external
+    view
+    returns (bool)
+  {
+    return polls[pollID].commits[voter] != bytes32(0);
+  }
+
+  function hasRevealed(uint256 pollID, address voter)
+    external
+    view
+    returns (bool)
+  {
+    return polls[pollID].weights[voter] != 0;
   }
 }
