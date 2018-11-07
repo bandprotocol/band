@@ -10,7 +10,7 @@ import "./Voting.sol";
 /**
  * @title TCR
  *
- * @dev TODO
+ * @dev TCR contract implements Token Curated Registry logic.
  */
 contract TCR {
   using SafeMath for uint256;
@@ -22,7 +22,8 @@ contract TCR {
   Voting public voting;
   IParameters public params;
 
-  // TODO
+  // Namespace prefix for all parameters (See Parameters.sol) for usage inside
+  // this TCR.
   bytes8 public prefix;
 
   struct Entry {
@@ -31,8 +32,6 @@ contract TCR {
     uint256 pendingExpiration;
     uint256 challengeID;
   }
-
-  mapping (bytes32 => Entry) public entries;
 
   struct Challenge {
     address challenger;
@@ -43,6 +42,7 @@ contract TCR {
     mapping (address => bool) claims;
   }
 
+  mapping (bytes32 => Entry) public entries;
   mapping (uint256 => Challenge) public challenges;
 
   constructor(
@@ -67,6 +67,18 @@ contract TCR {
   modifier entryMustNotExist(bytes32 data) {
     require(entries[data].pendingExpiration == 0);
     _;
+  }
+
+  function get(bytes24 key) public view returns (uint256) {
+    return params.get(bytes32(prefix) | (bytes32(key) >> 64));
+  }
+
+  function hasClaimed(uint256 challengeID, address voter)
+    public
+    view
+    returns (bool)
+  {
+    return challenges[challengeID].claims[voter];
   }
 
   function apply(bytes32 data, uint256 stake) public entryMustNotExist(data) {
@@ -201,13 +213,5 @@ contract TCR {
       require(token.transfer(entries[data].proposer, withdrawableDeposit));
     }
     delete entries[data];
-  }
-
-  function get(bytes24 key) public view returns (uint256) {
-    return params.get(bytes32(prefix) | (bytes32(key) >> 64));
-  }
-
-  function hasClaimed(uint256 challengeID, address voter) external view returns(bool){
-    return challenges[challengeID].claims[voter];
   }
 }
