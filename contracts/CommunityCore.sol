@@ -3,7 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./IAdminTCR.sol";
+import "./AdminTCR.sol";
 import "./IBondingCurve.sol";
 import "./IParameters.sol";
 import "./Proof.sol";
@@ -20,7 +20,7 @@ contract CommunityCore {
   using SafeMath for uint256;
   using Proof for bytes32;
 
-  IAdminTCR public admin;
+  AdminTCR public admin;
   IBondingCurve public curve;
   IERC20 public commToken;
   IParameters public params;
@@ -47,7 +47,7 @@ contract CommunityCore {
    * contract, bonding curve contract, and global parameters contract.
    */
   constructor(
-    IAdminTCR _admin,
+    AdminTCR _admin,
     IBondingCurve _curve,
     IParameters _params
   )

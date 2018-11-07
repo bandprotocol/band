@@ -4,9 +4,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "./CommunityToken.sol";
 import "./Equation.sol";
 import "./IBondingCurve.sol";
-import "./ICommunityToken.sol";
 import "./IParameters.sol";
 
 
@@ -24,7 +24,7 @@ contract BondingCurve is IBondingCurve, Ownable {
 
   Equation.Data equation;
   IERC20 public bandToken;
-  ICommunityToken public commToken;
+  CommunityToken public commToken;
   IParameters public params;
 
   // Denominator for inflation-related ratios and sales tax.
@@ -48,7 +48,7 @@ contract BondingCurve is IBondingCurve, Ownable {
    */
   constructor(
     IERC20 _bandToken,
-    ICommunityToken _commToken,
+    CommunityToken _commToken,
     IParameters _params,
     uint256[] _expressions
   )
