@@ -21,6 +21,18 @@ contract BondingCurve is Ownable {
   using Equation for Equation.Data;
   using SafeMath for uint256;
 
+  event Buy(  // Someone buys community token.
+    address indexed buyer,
+    uint256 amount,
+    uint256 price
+  );
+
+  event Sell(  // Someone sells community token.
+    address indexed seller,
+    uint256 amount,
+    uint256 price
+  );
+
   Equation.Data equation;
   IERC20 public bandToken;
   CommunityToken public commToken;
@@ -106,6 +118,8 @@ contract BondingCurve is Ownable {
     // Get Band tokens from sender and mint community tokens for sender.
     require(bandToken.transferFrom(msg.sender, this, adjustedPrice));
     require(commToken.mint(msg.sender, _amount));
+
+    emit Buy(msg.sender, _amount, adjustedPrice);
   }
 
   /**
@@ -126,6 +140,8 @@ contract BondingCurve is Ownable {
     if (taxedAmount > 0) {
       require(commToken.mint(owner(), taxedAmount));
     }
+
+    emit Sell(msg.sender, _amount, adjustedPrice);
   }
 
   /**
