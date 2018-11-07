@@ -47,7 +47,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
 
     // 10% per month inflation
     await this.params.propose("bonding:inflation_ratio", 38581, { from: bob });
-    await this.params.vote(1, 1, { from: bob });
+    await this.params.vote(1, 0, { from: bob });
 
     // One month has passed
     await increaseTimeTo((await latestTime()) + duration.days(30));
@@ -70,7 +70,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
 
     // 20% sales tax
     await this.params.propose("bonding:sales_tax", 200000000000, { from: bob });
-    await this.params.vote(1, 1, { from: bob });
+    await this.params.vote(1, 0, { from: bob });
 
     await this.curve.sell(15, 1000, { from: bob });
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(92256));

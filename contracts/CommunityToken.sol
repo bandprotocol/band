@@ -71,7 +71,8 @@ contract CommunityToken is IERC20, Ownable {
   /**
    * @dev Returns user balance at the given time. Note that for performance
    * reason, this function also takes the nonce that is expected to reflect
-   * the answer.
+   * the answer. If called with invalid nonce, the function will fall back to
+   * the slow variant.
    */
   function historicalBalanceAtTime(
     address owner,
@@ -83,12 +84,44 @@ contract CommunityToken is IERC20, Ownable {
     returns (uint256)
   {
     // The balance record must happen at or before the as-of time.
-    require(historicalTimeAtNonce(owner, nonce) <= asof);
-    if (nonce < _nonces[owner]) {
-      // The next balance record, if exists, must happen after the as-of time.
-      require(historicalTimeAtNonce(owner, nonce + 1) > asof);
+    if (historicalTimeAtNonce(owner, nonce) <= asof) {
+      return historicalBalanceAtTimeSlow(owner, asof);
     }
+
+    // The next balance record, if exists, must happen after the as-of time.
+    if (nonce < _nonces[owner] &&
+        historicalTimeAtNonce(owner, nonce + 1) > asof) {
+      return historicalBalanceAtTimeSlow(owner, asof);
+    }
+
     return historicalBalanceAtNonce(owner, nonce);
+  }
+
+  /**
+   * @dev Similar to above, but does binary search to look for nonce without
+   * the need to provide one. This is less efficient than the non-slow one.
+   */
+  function historicalBalanceAtTimeSlow(address owner, uint256 asof)
+    public
+    view
+    returns (uint256)
+  {
+    uint256 start = 0;
+    uint256 end = _nonces[owner];
+
+    while (start < end) {
+      // Doing ((start + end + 1) / 2) here to prevent infinite loop.
+      uint256 mid = start.add(end).add(1).div(2);
+      if (historicalTimeAtNonce(owner, mid) > asof) {
+        // If midTime > asof, this mid can possibly be the answer
+        end = mid.sub(1);
+      } else {
+        // Otherwise, search on the greater side, but still keep mid as option
+        start = mid;
+      }
+    }
+
+    return historicalBalanceAtNonce(owner, start);
   }
 
   /**
