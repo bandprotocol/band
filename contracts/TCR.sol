@@ -15,8 +15,65 @@ import "./Parameters.sol";
 contract TCR {
   using SafeMath for uint256;
 
-  event NewApplication(bytes32 data, address indexed proposer);
-  event ChallengeResolved(bytes32 data, uint256 challengeID, Vote result);
+  event NewApplication(  // A new entry is submitted to the TCR.
+    bytes32 indexed data,
+    address indexed proposer
+  );
+
+  event NewChallenge(  // An new challenge is initiated.
+    bytes32 indexed data,
+    uint256 indexed challengeID,
+    address indexed challenger
+  );
+
+  event EntryDeleted(  // An entry is removed from the TCR
+    bytes32 indexed data,
+    address indexed proposer
+  );
+
+  event ChallengeResolved(  // A challenge is resolved.
+    bytes32 indexed data,
+    uint256 indexed challengeID,
+    Vote indexed result,
+    uint256 rewardPool
+  );
+
+  event RewardClaimed(  // A reward is claimed by a user.
+    uint256 indexed challengeID,
+    address indexed voter,
+    uint256 reward
+  );
+
+  event VoteCommited(  // A vote is commited by a user.
+    uint256 indexed challengeID,
+    address indexed voter
+  );
+
+  event VoteRevealed(  // A vote is revealed by a user.
+    uint256 indexed challengeID,
+    address indexed voter,
+    bool indexed isYes,
+    uint256 weight,
+    uint256 salt
+  );
+
+  event Deposit(  // Someone deposits token to an entry
+    bytes32 indexed data,
+    address indexed proposer,
+    uint256 value
+  );
+
+  event Withdraw(  // Someone withdraws token from an entry
+    bytes32 indexed data,
+    address indexed proposer,
+    uint256 value
+  );
+
+  event Exit(  // Someone exits call an entry
+    bytes32 indexed data,
+    address indexed proposer
+  );
+
 
   CommunityToken public token;
   Parameters public params;
@@ -169,6 +226,7 @@ contract TCR {
     Entry storage entry = entries[data];
     require(entry.proposer == msg.sender);
     entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
+    emit Deposit(data, msg.sender, amount);
   }
 
   /**
@@ -180,6 +238,7 @@ contract TCR {
     require(entry.withdrawableDeposit >= amount);
     entry.withdrawableDeposit -= amount;
     require(token.transfer(msg.sender, amount));
+    emit Withdraw(data, msg.sender, amount);
   }
 
   /**
@@ -191,6 +250,7 @@ contract TCR {
     require(entry.proposer == msg.sender);
     require(entry.challengeID == 0);
     deleteEntry(data);
+    emit Exit(data, msg.sender);
   }
 
   /**
@@ -227,6 +287,8 @@ contract TCR {
 
     // Increment the nonce for the next challenge.
     nextChallengeNonce = challengeID + 1;
+
+    emit NewChallenge(data, challengeID, msg.sender);
   }
 
   /**
@@ -240,7 +302,7 @@ contract TCR {
     Challenge storage challenge = challenges[challengeID];
     require(now < challenge.commitEndTime);
     challenge.commits[msg.sender] = commitValue;
-    // emit CommitVote(challengeID, msg.sender);
+    emit VoteCommited(challengeID, msg.sender);
   }
 
   /**
@@ -282,6 +344,8 @@ contract TCR {
       challenge.opinions[msg.sender] = Vote.No;
       challenge.noCount += weight;
     }
+
+    emit VoteRevealed(challengeID, msg.sender, isYes, weight, salt);
   }
 
   /**
@@ -343,7 +407,7 @@ contract TCR {
       challenge.rewardPool = 0;
     }
 
-    emit ChallengeResolved(data, challengeID, challenge.result);
+    emit ChallengeResolved(data, challengeID, challenge.result, rewardPool);
   }
 
   /**
@@ -388,6 +452,8 @@ contract TCR {
 
     // Send reward to the claimer.
     require(token.transfer(msg.sender, reward));
+
+    emit RewardClaimed(challengeID, msg.sender, reward);
   }
 
   /**
@@ -395,9 +461,13 @@ contract TCR {
    */
   function deleteEntry(bytes32 data) internal {
     uint256 withdrawableDeposit = entries[data].withdrawableDeposit;
+    address proposer = entries[data].proposer;
+
     if (withdrawableDeposit > 0) {
-      require(token.transfer(entries[data].proposer, withdrawableDeposit));
+      require(token.transfer(proposer, withdrawableDeposit));
     }
+
+    emit EntryDeleted(data, proposer);
     delete entries[data];
   }
 }

@@ -1,6 +1,8 @@
+const BandToken = artifacts.require('./BandToken.sol');
+const BondingCurve = artifacts.require('./BondingCurve.sol');
 const CommunityToken = artifacts.require('./CommunityToken.sol');
 const ParameterContract = artifacts.require('./Parameters.sol');
-const TCRContract = artifacts.require('./TCR.sol');
+const AdminTCRContract = artifacts.require('./AdminTCR.sol');
 
 
 module.exports = function (deployer) {
