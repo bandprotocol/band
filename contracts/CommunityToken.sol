@@ -44,13 +44,61 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
+   * @dev Returns user balance at the given nonce, that is, as of the user's
+   * nonce^th balance change
+   */
+  function historicalBalanceAtNonce(address owner, uint256 nonce)
+    public
+    view
+    returns (uint256)
+  {
+    require(nonce <= _nonces[owner]);
+    return _balances[owner][nonce] & ((1 << 192) - 1);  // Lower 192 bits
+  }
+
+  /**
+   * @dev Returns the timestamp of user balance at the given nonce.
+   */
+  function historicalTimeAtNonce(address owner, uint256 nonce)
+    public
+    view
+    returns (uint256)
+  {
+    require(nonce <= _nonces[owner]);
+    return _balances[owner][nonce] >> 192;  // Lower 64 bits
+  }
+
+
+  /**
+   * @dev Returns user balance at the given time. Note that for performance
+   * reason, this function also takes the nonce that is expected to reflect
+   * the answer.
+   */
+  function historicalBalanceAtTime(
+    address owner,
+    uint256 asof,
+    uint256 nonce
+  )
+    public
+    view
+    returns (uint256)
+  {
+    // The balance record must happen at or before the as-of time.
+    require(historicalTimeAtNonce(owner, nonce) <= asof);
+    if (nonce < _nonces[owner]) {
+      // The next balance record, if exists, must happen after the as-of time.
+      require(historicalTimeAtNonce(owner, nonce + 1) > asof);
+    }
+    return historicalBalanceAtNonce(owner, nonce);
+  }
+
+  /**
    * @dev Gets the current balance of the specified address.
    * @param owner The address to query the the balance of.
    * @return An uint256 representing the amount owned by the passed address.
    */
   function balanceOf(address owner) public view returns (uint256) {
-    uint256 nonce = _nonces[owner];
-    return  _balances[owner][nonce] & ((1 << 192) - 1);  // Lower 192 bits
+    return historicalBalanceAtNonce(owner, _nonces[owner]);
   }
 
   /**
@@ -59,23 +107,6 @@ contract CommunityToken is IERC20, Ownable {
   function latestNonce(address owner) public view returns (uint256) {
     return _nonces[owner];
   }
-
-  /**
-   * @dev Returns user balance and time at the given nonce, that is, as of
-   * the user's nonce^th balance change
-   */
-  function balanceAndTimestampOf(address owner, uint256 nonce)
-    public
-    view
-    returns (uint256 balance, uint256 timestamp)
-  {
-    uint256 rawdata = _balances[owner][nonce];
-    return (
-      rawdata & ((1 << 192) - 1), // Lower 192 bits
-      rawdata >> 192              // Upper 64 bits
-    );
-  }
-
 
   /**
    * @dev Function to check the amount of tokens that an owner allowed to a spender.

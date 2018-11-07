@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
+import "./CommunityToken.sol";
 import "./IParameters.sol";
 import "./Proof.sol";
 import "./Voting.sol";
@@ -18,7 +19,10 @@ contract Parameters is IParameters {
   using SafeMath for uint256;
   using Proof for bytes32;
 
-  Voting public voting;
+  // An event to emit when a parameter proposal is approved by the community.
+  event ParameterChanged(bytes32 indexed key, uint256 value);
+
+  CommunityToken public token;
 
   mapping (bytes32 => uint256) public params;
 
@@ -29,6 +33,8 @@ contract Parameters is IParameters {
   struct Proposal {
     mapping (address => bool) voted;
 
+    uint256 proposedTime;
+
     // Only proposal with expiration > now is considered valid. Note that this
     // means nonexistent proposal (with experiation default to 0) is never
     // considered.
@@ -37,10 +43,6 @@ contract Parameters is IParameters {
     bytes32 key;
     uint256 value;
 
-    // The snapshot (Merkle root) of voting powers at the time the proposal
-    // is proposed.
-    bytes32 votingSnapshot;
-
     uint256 currentVoteCount;
     uint256 totalVoteCount;
   }
@@ -48,15 +50,12 @@ contract Parameters is IParameters {
   uint256 public nextProposalNonce = 1;
   mapping (uint256 => Proposal) public proposals;
 
-  // An event to emit when a parameter proposal is approved by the community.
-  event ParameterChanged(bytes32 indexed key, uint256 value);
-
   /**
    * @dev Create parameters contract. Initially set of key-value pairs can be
    * given in this constructor.
    */
   constructor(Voting _voting, bytes32[] keys, uint256[] values) public {
-    voting = _voting;
+    token = _voting.token();
 
     require(keys.length == values.length);
     for (uint256 idx = 0; idx < keys.length; ++idx) {
@@ -101,26 +100,30 @@ contract Parameters is IParameters {
     uint256 nonce = nextProposalNonce;
     nextProposalNonce = nonce + 1;
 
+    proposals[nonce].proposedTime = now;
     proposals[nonce].expiration = now + get("params:proposal_expiration_time");
     proposals[nonce].key = key;
     proposals[nonce].value = value;
-    proposals[nonce].votingSnapshot = voting.votingPowerRootHash();
     proposals[nonce].currentVoteCount = 0;
-    proposals[nonce].totalVoteCount = voting.totalVotingPower();
+    proposals[nonce].totalVoteCount = token.totalSupply();
   }
 
   /**
    * @dev Called by token holders to express aggreement with a proposal. See
    * function propose above.
    */
-  function vote(uint256 proposalID, uint256 weight, bytes32[] proof) external {
+  function vote(uint256 proposalID, uint256 tokenBalanceNonce) external {
     Proposal storage proposal = proposals[proposalID];
     address voter = msg.sender;
 
     require(!proposal.voted[voter]);
 
     require(proposal.expiration > now);
-    require(proposal.votingSnapshot.verify(voter, bytes32(weight), proof));
+    uint256 weight = token.historicalBalanceAtTime(
+      voter,
+      proposal.proposedTime,
+      tokenBalanceNonce
+    );
 
     proposal.voted[voter] = true;
     proposal.currentVoteCount = proposal.currentVoteCount.add(weight);

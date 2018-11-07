@@ -26,6 +26,8 @@ contract TCR {
   // this TCR.
   bytes8 public prefix;
 
+  // A TCR entry is considered to exist in 'entries' map iff its
+  // 'pendingExpiration' is nonzero.
   struct Entry {
     address proposer;
     uint256 withdrawableDeposit;

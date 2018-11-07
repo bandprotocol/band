@@ -3,6 +3,7 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "./CommunityToken.sol";
 import "./Proof.sol";
 
 
@@ -17,9 +18,6 @@ contract Voting {
   using SafeMath for uint256;
   using Proof for bytes32;
 
-  // An event to emit when someone updates his/her voting power.
-  event UpdateVote(address indexed voter, uint256 newPower);
-
   // An event to emit when someone commits vote to a poll.
   event CommitVote(uint256 indexed pollID, address indexed voter);
 
@@ -31,10 +29,8 @@ contract Voting {
   }
 
   struct Poll {
-    uint256 commitEndTime;  // Experation timestamp of commit period
-    uint256 revealEndTime;  // Experation timestamp of reveal period
-
-    bytes32 powerSnapshot;  // Merkle hash of voting power at last commit
+    uint256 commitEndTime;  // Expiration timestamp of commit period
+    uint256 revealEndTime;  // Expiration timestamp of reveal period
 
     uint8 yesThreshold;     // The percentage of votes for YES result
     uint8 noThreshold;      // The percentage of votes for NO result
@@ -47,57 +43,15 @@ contract Voting {
     mapping (address => VoteResult) opinions;
   }
 
-
   uint256 nextPollNonce = 1;
   mapping (uint256 => Poll) public polls;
 
-  // The Merkle root hash
-  bytes32 public votingPowerRootHash;
-
-  // The total voting power of all community members. That is, the total sum
-  // of all leaves in votingPowerRootHash Merkle tree.
-  uint256 public totalVotingPower;
-
   // Community token address.
-  IERC20 public token;
+  CommunityToken public token;
 
 
-  constructor(IERC20 _token) public {
-    votingPowerRootHash = bytes32(0);
+  constructor(CommunityToken _token) public {
     token = _token;
-  }
-
-  /**
-   * @dev Update voting power from oldPower to newPower. Voting contract will
-   * update votingPowerRootHash accordingly.
-   */
-  function updateVotingPower(
-    uint256 newPower,
-    uint256 oldPower,
-    bytes32[] proof
-  )
-    external
-  {
-    address voter = msg.sender;
-
-    if (newPower < oldPower) {
-      uint256 lessPower = oldPower.sub(newPower);
-      require(token.transfer(voter, lessPower));
-      totalVotingPower = totalVotingPower.sub(lessPower);
-    } else {
-      uint256 morePower = newPower.sub(oldPower);
-      require(token.transferFrom(voter, this, morePower));
-      totalVotingPower = totalVotingPower.add(morePower);
-    }
-
-    votingPowerRootHash = votingPowerRootHash.update(
-      voter,
-      bytes32(oldPower),
-      bytes32(newPower),
-      proof
-    );
-
-    emit UpdateVote(voter, newPower);
   }
 
   /**
@@ -111,8 +65,6 @@ contract Voting {
     require(poll.commitEndTime > now);
 
     poll.commits[msg.sender] = commitValue;
-    poll.powerSnapshot = votingPowerRootHash;
-
     emit CommitVote(pollID, msg.sender);
   }
 
@@ -124,8 +76,7 @@ contract Voting {
     uint256 pollID,
     bool isYes,
     uint256 salt,
-    uint256 weight,
-    bytes32[] proof
+    uint256 tokenBalanceNonce
   )
     external
   {
@@ -136,9 +87,13 @@ contract Voting {
     require(poll.revealEndTime > now);
     require(poll.commits[voter] != bytes32(0));
     require(poll.weights[voter] == 0);
-
     require(keccak256(abi.encodePacked(isYes, salt)) == poll.commits[voter]);
-    require(poll.powerSnapshot.verify(voter, bytes32(weight), proof));
+
+    uint256 weight = token.historicalBalanceAtTime(
+      voter,
+      poll.commitEndTime,
+      tokenBalanceNonce
+    );
 
     poll.weights[voter] = weight;
     poll.commits[voter] = bytes32(0);
