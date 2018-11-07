@@ -15,8 +15,23 @@ import "./CommunityToken.sol";
 contract Parameters {
   using SafeMath for uint256;
 
-  // An event to emit when a parameter proposal is approved by the community.
-  event ParameterChanged(bytes32 indexed key, uint256 value);
+  event NewProposal(  // A new parameter key-value is proposed.
+    uint256 indexed proposalID,
+    bytes32 indexed key,
+    uint256 value
+  );
+
+  event ProposalVoted(  // Someone endorses a proposal.
+    uint256 indexed proposalID,
+    address indexed voter,
+    uint256 weight
+  );
+
+  event ParameterChanged(  // A parameter is changed.
+    bytes32 indexed key,
+    uint256 value
+  );
+
 
   // The address of community token contract used to determine voting power.
   CommunityToken public token;
@@ -104,6 +119,8 @@ contract Parameters {
     proposals[nonce].value = value;
     proposals[nonce].currentVoteCount = 0;
     proposals[nonce].totalVoteCount = token.totalSupply();
+
+    emit NewProposal(nonce, key, value);
   }
 
   /**
@@ -114,9 +131,13 @@ contract Parameters {
     Proposal storage proposal = proposals[proposalID];
     address voter = msg.sender;
 
+    // Proposal must not yet expired. Note that if the proposal does not exist
+    // or is already applied, the expiration will be 0, failing this condition
+    require(proposal.expiration > now);
+
+    // Voter should not have already voted.
     require(!proposal.voted[voter]);
 
-    require(proposal.expiration > now);
     uint256 weight = token.historicalBalanceAtTime(
       voter,
       proposal.proposedTime,
@@ -125,12 +146,15 @@ contract Parameters {
 
     proposal.voted[voter] = true;
     proposal.currentVoteCount = proposal.currentVoteCount.add(weight);
+    emit ProposalVoted(proposalID, msg.sender, weight);
 
     if(proposal.currentVoteCount.mul(100) >=
        proposal.totalVoteCount.mul(get("params:proposal_pass_percentage"))) {
+
       params[proposal.key] = proposal.value;
-      emit ParameterChanged(proposal.key, proposal.value);
       proposals[proposalID].expiration = 0;
+
+      emit ParameterChanged(proposal.key, proposal.value);
     }
   }
 }

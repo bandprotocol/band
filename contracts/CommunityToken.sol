@@ -89,9 +89,10 @@ contract CommunityToken is IERC20, Ownable {
     }
 
     // The next balance record, if exists, must happen after the as-of time.
-    if (nonce < _nonces[owner] &&
-        historicalTimeAtNonce(owner, nonce + 1) > asof) {
-      return historicalBalanceAtTimeSlow(owner, asof);
+    if (nonce < _nonces[owner]) {
+      if (historicalTimeAtNonce(owner, nonce + 1) > asof) {
+        return historicalBalanceAtTimeSlow(owner, asof);
+      }
     }
 
     return historicalBalanceAtNonce(owner, nonce);
@@ -119,6 +120,12 @@ contract CommunityToken is IERC20, Ownable {
         // Otherwise, search on the greater side, but still keep mid as option
         start = mid;
       }
+    }
+
+    // Double check again that the binary search is correct.
+    assert(historicalTimeAtNonce(owner, start) <= asof);
+    if (start < _nonces[owner]) {
+      assert(historicalTimeAtNonce(owner, start + 1) > asof);
     }
 
     return historicalBalanceAtNonce(owner, start);
