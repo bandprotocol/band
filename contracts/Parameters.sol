@@ -3,9 +3,6 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./CommunityToken.sol";
-import "./IParameters.sol";
-import "./Proof.sol";
-import "./Voting.sol";
 
 
 /*
@@ -15,15 +12,16 @@ import "./Voting.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is IParameters {
+contract Parameters {
   using SafeMath for uint256;
-  using Proof for bytes32;
 
   // An event to emit when a parameter proposal is approved by the community.
   event ParameterChanged(bytes32 indexed key, uint256 value);
 
+  // The address of community token contract used to determine voting power.
   CommunityToken public token;
 
+  // Public map of all active parameters.
   mapping (bytes32 => uint256) public params;
 
   /**
@@ -54,8 +52,8 @@ contract Parameters is IParameters {
    * @dev Create parameters contract. Initially set of key-value pairs can be
    * given in this constructor.
    */
-  constructor(Voting _voting, bytes32[] keys, uint256[] values) public {
-    token = _voting.token();
+  constructor(CommunityToken _token, bytes32[] keys, uint256[] values) public {
+    token = _token;
 
     require(keys.length == values.length);
     for (uint256 idx = 0; idx < keys.length; ++idx) {

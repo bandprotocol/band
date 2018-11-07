@@ -68,7 +68,6 @@ contract CommunityToken is IERC20, Ownable {
     return _balances[owner][nonce] >> 192;  // Lower 64 bits
   }
 
-
   /**
    * @dev Returns user balance at the given time. Note that for performance
    * reason, this function also takes the nonce that is expected to reflect

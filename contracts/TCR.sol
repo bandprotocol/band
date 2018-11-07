@@ -3,8 +3,8 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./IParameters.sol";
-import "./Voting.sol";
+import "./CommunityToken.sol";
+import "./Parameters.sol";
 
 
 /**
@@ -16,11 +16,10 @@ contract TCR {
   using SafeMath for uint256;
 
   event NewApplication(bytes32 data, address indexed proposer);
-  event ChallengeResolved(bytes32 data, uint256 challengeID, Voting.VoteResult result);
+  event ChallengeResolved(bytes32 data, uint256 challengeID, Vote result);
 
-  IERC20 public token;
-  Voting public voting;
-  IParameters public params;
+  CommunityToken public token;
+  Parameters public params;
 
   // Namespace prefix for all parameters (See Parameters.sol) for usage inside
   // this TCR.
@@ -29,35 +28,67 @@ contract TCR {
   // A TCR entry is considered to exist in 'entries' map iff its
   // 'pendingExpiration' is nonzero.
   struct Entry {
-    address proposer;
-    uint256 withdrawableDeposit;
-    uint256 pendingExpiration;
-    uint256 challengeID;
+    address proposer;             // The entry proposer
+    uint256 withdrawableDeposit;  // Amount token that is not on challenge stake
+    uint256 pendingExpiration;    // Expiration time of entry's 'pending' status
+    uint256 challengeID;          // ID of challenge, applicable if not zero
   }
 
+  enum Vote {
+    Invalid,      // Invalid, default value
+    Yes,          // Vote Yes (agree on the side of challenger)
+    No,           // Vote No (agree on the side of entry proposer)
+    Inconclusive, // Vote result to be Inconclusive
+    YesClaimed,   // Vote Yes and already claim reward
+    NoClaimed     // Vote No and already claim reward
+  }
+
+  // A challenge represent a challenge for a TCR entry. All challenges ever
+  // existed are stored in 'challenges' map below.
   struct Challenge {
-    address challenger;
-    uint256 rewardPool;
-    uint256 remainingVotes;
+    address challenger;     // The challenger
+    uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
+    uint256 remainingVotes; // Remaining voting power that not yet claims reward
 
-    Voting.VoteResult result;
-    mapping (address => bool) claims;
+    uint256 commitEndTime;  // Expiration timestamp of commit period
+    uint256 revealEndTime;  // Expiration timestamp of reveal period
+
+    uint256 yesCount;       // The current total number of YES votes
+    uint256 noCount;        // The current total number of NO votes
+
+    mapping (address => bytes32) commits; // Each user's commited vote
+    mapping (address => uint256) weights; // Each user's vote weight
+
+    // Each user's vote opinion. Becomes Yes or No after the user reveals the
+    // vote, but not yet claims the reward. Becomes YesClaimed or NoClaimed
+    // after user claims the reward back.
+    mapping (address => Vote) opinions;
+
+    // Vote result. Relevant after this challenge is resolved.
+    // Can be Yes, No, or Inconclusive.
+    Vote result;
   }
 
+  // Mapping of entry to its metadata. An entry is considered exist if its
+  // 'pendingExpiration' is nonzero.
   mapping (bytes32 => Entry) public entries;
+
+  // Mapping of all changes ever exist in this contract.
   mapping (uint256 => Challenge) public challenges;
+
+  // The ID of the next challenge.
+  uint256 nextChallengeNonce = 1;
+
 
   constructor(
     bytes8 _prefix,
-    IERC20 _token,
-    Voting _voting,
-    IParameters _params
+    CommunityToken _token,
+    Parameters _params
   )
     public
   {
     prefix = _prefix;
     token = _token;
-    voting = _voting;
     params = _params;
   }
 
@@ -71,28 +102,68 @@ contract TCR {
     _;
   }
 
+  modifier challengeMustExist(uint256 challengeID) {
+    require(challengeID > 0 && challengeID < nextChallengeNonce);
+    _;
+  }
+
+  /**
+   * @dev Get parameter config on the given key. Note that it prepend the key
+   * with this contract's prefix to get the absolute key.
+   */
   function get(bytes24 key) public view returns (uint256) {
     return params.get(bytes32(prefix) | (bytes32(key) >> 64));
   }
 
-  function hasClaimed(uint256 challengeID, address voter)
+  /**
+   * @dev Return the commited value of the given user on the given challenge.
+   * or bytes32(0) if the user did not commit.
+   */
+  function commitedValue(uint256 challengeID, address voter)
     public
     view
-    returns (bool)
+    challengeMustExist(challengeID)
+    returns (bytes32)
   {
-    return challenges[challengeID].claims[voter];
+    require(challengeID > 0 && challengeID < nextChallengeNonce);
+    return challenges[challengeID].commits[voter];
   }
 
+  /**
+   * @dev Return the vote the user reveals. Or Invalid if the user has not
+   * yet done so. The result will be the 'Claimed' version if user already
+   * claims the reward.
+   */
+  function revealValue(uint256 challengeID, address voter)
+    public
+    view
+    challengeMustExist(challengeID)
+    returns (Vote)
+  {
+    return challenges[challengeID].opinions[voter];
+  }
+
+  /**
+   * @dev Apply a new entry to the TCR. The applicant must stake token at least
+   * 'min_deposit'. Application will get auto-approved if no challenge happens
+   * during the first 'apply_stage_length' seconds.
+   */
   function apply(bytes32 data, uint256 stake) public entryMustNotExist(data) {
-    require(stake >= get("min_deposit"));
     require(token.transferFrom(msg.sender, this, stake));
+    require(stake >= get("min_deposit"));
+
     Entry storage entry = entries[data];
     entry.proposer = msg.sender;
     entry.withdrawableDeposit = stake;
-    entry.pendingExpiration = now + get("apply_stage_length");
+    entry.pendingExpiration = now.add(get("apply_stage_length"));
+
     emit NewApplication(data, msg.sender);
   }
 
+  /**
+   * @dev Deposit more token to the given existing entry. The depositor must
+   * be the entry applicant.
+   */
   function deposit(bytes32 data, uint256 amount) public entryMustExist(data) {
     require(token.transferFrom(msg.sender, this, amount));
     Entry storage entry = entries[data];
@@ -100,6 +171,9 @@ contract TCR {
     entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
   }
 
+  /**
+   * @dev Withdraw token from the given existing entry to the applicant.
+   */
   function withdraw(bytes32 data, uint256 amount) public entryMustExist(data) {
     Entry storage entry = entries[data];
     require(entry.proposer == msg.sender);
@@ -108,6 +182,10 @@ contract TCR {
     require(token.transfer(msg.sender, amount));
   }
 
+  /**
+   * @dev Delete the entry and refund everything to entry applicant. The entry
+   * must not have an ongoing challenge.
+   */
   function exit(bytes32 data) public entryMustExist(data) {
     Entry storage entry = entries[data];
     require(entry.proposer == msg.sender);
@@ -115,100 +193,206 @@ contract TCR {
     deleteEntry(data);
   }
 
+  /**
+   * @dev Initiate a new challenge to the given existing entry. The entry must
+   * not already have ongoing challenge. If entry's deposit is less than
+   * 'min_deposit', it is automatically deleted.
+   */
   function initiateChallenge(bytes32 data) public entryMustExist(data) {
     uint256 stake = get("min_deposit");
     Entry storage entry = entries[data];
 
+    // There must not already be an ongoing challenge.
     require(entry.challengeID == 0);
+
     if (entry.withdrawableDeposit < stake) {
+      // If the deposit is too low, the entry is auto-removed.
       deleteEntry(data);
       return;
     }
 
+    // Take 'stake' tokens from both entry owner and challenger.
     require(token.transferFrom(msg.sender, this, stake));
     entry.withdrawableDeposit -= stake;
 
-    uint256 challengeID = voting.startPoll(
-      uint8(get("yes_threshold")),
-      uint8(get("no_threshold")),
-      get("commit_time"),
-      get("reveal_time")
-    );
+    uint256 challengeID = nextChallengeNonce;
+    uint256 commitTime = get("commit_time");
+    uint256 revealTime = get("reveal_time");
 
     entry.challengeID = challengeID;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
+    challenges[challengeID].commitEndTime = now + commitTime;
+    challenges[challengeID].revealEndTime = now + commitTime + revealTime;
+
+    // Increment the nonce for the next challenge.
+    nextChallengeNonce = challengeID + 1;
   }
 
+  /**
+   * @dev Commit vote to a particular challenge, with commitValue. commitVote
+   * can be called repeatedly until the commit period ends.
+   */
+  function commitVote(uint256 challengeID, bytes32 commitValue)
+    public
+    challengeMustExist(challengeID)
+  {
+    Challenge storage challenge = challenges[challengeID];
+    require(now < challenge.commitEndTime);
+    challenge.commits[msg.sender] = commitValue;
+    // emit CommitVote(challengeID, msg.sender);
+  }
+
+  /**
+   * @dev Reveal vote with choice and secret salt used in generating commit
+   * earlier during the commit period.
+   */
+  function revealVote(
+    uint256 challengeID,
+    bool isYes,
+    uint256 salt,
+    uint256 tokenBalanceNonce
+  )
+    public
+    challengeMustExist(challengeID)
+  {
+    Challenge storage challenge = challenges[challengeID];
+    // Must in reveal period.
+    require(now >= challenge.commitEndTime && now < challenge.revealEndTime);
+    // Must not already be revealed.
+    require(challenge.opinions[msg.sender] == Vote.Invalid);
+    // Must be consistent with prior commit value.
+    require(
+      keccak256(abi.encodePacked(isYes, salt)) == challenge.commits[msg.sender]
+    );
+
+    // Get the weight, which is the token balance at the end of commit time.
+    uint256 weight = token.historicalBalanceAtTime(
+      msg.sender,
+      challenge.commitEndTime,
+      tokenBalanceNonce
+    );
+
+    challenge.weights[msg.sender] = weight;
+
+    if (isYes) {
+      challenge.opinions[msg.sender] = Vote.Yes;
+      challenge.yesCount += weight;
+    } else {
+      challenge.opinions[msg.sender] = Vote.No;
+      challenge.noCount += weight;
+    }
+  }
+
+  /**
+   * @dev Resolve TCR challenge. If the challenge succeeds, the entry will be
+   * removed and the challenger gets the reward. Otherwise, the entry's
+   * 'withdrawableDeposit' gets bumped by the reward.
+   */
   function resolveChallenge(bytes32 data) public entryMustExist(data) {
     Entry storage entry = entries[data];
 
     uint256 challengeID = entry.challengeID;
+    // Entry must have an ongoing challenge.
     require(challengeID != 0);
+    // After the challenge is resolved, this entry won't have ongoing challenge.
     entry.challengeID = 0;
 
-    Voting.VoteResult result = voting.getResult(challengeID);
-    require(result != Voting.VoteResult.Invalid);
-
     Challenge storage challenge = challenges[challengeID];
+    require(challenge.result == Vote.Invalid);
+    require(now >= challenge.revealEndTime);
 
-    require(challenge.result == Voting.VoteResult.Invalid);
-    challenge.result = result;
+    uint256 yesCount = challenge.yesCount;
+    uint256 noCount = challenge.noCount;
+    uint256 totalCount = yesCount.add(noCount);
+
+    bool isYes = yesCount.mul(100) >= totalCount.mul(get("yes_threshold"));
+    bool isNo = noCount.mul(100) >= totalCount.mul(get("no_threshold"));
 
     uint256 rewardPool = challenge.rewardPool;
-
-    emit ChallengeResolved(data, challengeID, result);
-
-    if (result == Voting.VoteResult.Inconclusive) {
-      // Inconclusive
-      require(token.transfer(challenge.challenger, rewardPool.div(2)));
-      entry.withdrawableDeposit += rewardPool.div(2);
-      challenge.rewardPool = 0;
-      return;
-    }
-
     uint256 rewardPercentage = get("reward_percentage");
     require(rewardPercentage <= 100);
     require(rewardPercentage >= 50);
 
+    // The reward for winning side leader (challenger/entry owner) is the
+    // specified percentage of total reward pool.
+    uint256 leaderReward = rewardPool.mul(rewardPercentage).div(100);
 
-    uint256 reward = rewardPool.mul(rewardPercentage).div(100);
-
-    if (result == Voting.VoteResult.Yes) {
-      // Challenge success
-      require(token.transfer(challenge.challenger, reward));
+    if (isYes && !isNo) {
+      challenge.result = Vote.Yes;
+      // Challenge succeeds. Challenger gets reward. Entry gets removed.
+      require(token.transfer(challenge.challenger, leaderReward));
       deleteEntry(data);
-    } else if (result == Voting.VoteResult.No) {
-      // Challenge fail
-      entry.withdrawableDeposit += reward;
+      // The remaining reward is distributed among Yes voters.
+      challenge.rewardPool = rewardPool.sub(leaderReward);
+      challenge.remainingVotes = yesCount;
+    } else if (!isYes && isNo) {
+      challenge.result = Vote.No;
+      // Challenge fails. Entry deposit is added by reward.
+      entry.withdrawableDeposit += leaderReward;
+      // The remaining reward is distributed among No voters.
+      challenge.rewardPool = rewardPool.sub(leaderReward);
+      challenge.remainingVotes = noCount;
     } else {
-      assert(false);
+      challenge.result = Vote.Inconclusive;
+      // Inconclusive. Both challenger and entry owner get half of the pool
+      // back. The reward pool then becomes zero. Too bad for voters.
+      uint256 halfRewardPool = rewardPool.div(2);
+      require(token.transfer(challenge.challenger, halfRewardPool));
+      entry.withdrawableDeposit = entry.withdrawableDeposit.add(halfRewardPool);
+      challenge.rewardPool = 0;
     }
 
-    challenge.rewardPool -= reward;
-    challenge.remainingVotes = voting.getTotalVotes(challengeID, result);
+    emit ChallengeResolved(data, challengeID, challenge.result);
   }
 
-  function claimReward(uint256 challengeID) public {
+  /**
+   * @dev Claim reward for the given challenge. The claimer must already reveal
+   * the vote that is consistent with vote result.
+   */
+  function claimReward(uint256 challengeID)
+    public
+    challengeMustExist(challengeID)
+  {
     Challenge storage challenge = challenges[challengeID];
 
-    require(!challenge.claims[msg.sender]);
-    challenge.claims[msg.sender] = true;
+    Vote result = challenge.result;
+    Vote vote = challenge.opinions[msg.sender];
 
-    uint256 senderVotes =
-      voting.getUserVotes(challengeID, msg.sender, challenge.result);
-    uint256 reward =
-      challenge.rewardPool.mul(senderVotes).div(challenge.remainingVotes);
+    if (vote == Vote.Yes) {
+      // User that votes Yes can claim iff poll result is Yes.
+      require(result == Vote.Yes);
+      // Change user vote status to 'claimed' now that he/she already claims
+      challenge.opinions[msg.sender] = Vote.YesClaimed;
+    } else if (vote == Vote.No) {
+      // User that votes No can claim iff poll result is No.
+      require(result == Vote.No);
+      // Change user vote status to 'claimed' now that he/she already claims
+      challenge.opinions[msg.sender] = Vote.NoClaimed;
+    } else {
+      // If this hits, either user does not reveal or already claims. In either
+      // case, there's no reward to claim.
+      revert();
+    }
 
-    challenge.remainingVotes -= senderVotes;
-    challenge.rewardPool -= reward;
+    uint256 rewardPool = challenge.rewardPool;
+    uint256 claimerVotes = challenge.weights[msg.sender];
+    uint256 remainingVotes = challenge.remainingVotes;
+
+    // User reward is the portion of remaining reward based on the vote count
+    // of this user.
+    uint256 reward = rewardPool.mul(claimerVotes).div(remainingVotes);
+
+    challenge.remainingVotes = remainingVotes.sub(claimerVotes);
+    challenge.rewardPool = rewardPool.sub(reward);
+
+    // Send reward to the claimer.
     require(token.transfer(msg.sender, reward));
   }
 
-  function isEntryValid(bytes32 data) internal view returns (bool) {
-    return entries[data].pendingExpiration >= now;
-  }
-
+  /**
+   * @dev Delete the given TCR entry and refund the token to entry owner
+   */
   function deleteEntry(bytes32 data) internal {
     uint256 withdrawableDeposit = entries[data].withdrawableDeposit;
     if (withdrawableDeposit > 0) {

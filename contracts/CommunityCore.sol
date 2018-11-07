@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./AdminTCR.sol";
 import "./IBondingCurve.sol";
-import "./IParameters.sol";
+import "./Parameters.sol";
 import "./Proof.sol";
 
 
@@ -23,7 +23,7 @@ contract CommunityCore {
   AdminTCR public admin;
   IBondingCurve public curve;
   IERC20 public commToken;
-  IParameters public params;
+  Parameters public params;
 
   uint256 public lastRewardTime = 0;
   uint256 public unwithdrawnReward = 0;
@@ -49,7 +49,7 @@ contract CommunityCore {
   constructor(
     AdminTCR _admin,
     IBondingCurve _curve,
-    IParameters _params
+    Parameters _params
   )
     public
   {

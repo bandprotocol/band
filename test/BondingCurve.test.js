@@ -6,7 +6,6 @@ const BandToken = artifacts.require('BandToken');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const Voting = artifacts.require('Voting');
 const BigNumber = web3.BigNumber;
 
 
@@ -19,8 +18,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     this.band = await BandToken.new(1000000, { from: owner });
     this.comm = await CommunityToken.new(
       'CoinHatcher', 'XCH', 18, { from: owner });
-    this.voting = await Voting.new(this.comm.address, { from: owner });
-    this.params = await Parameters.new(this.voting.address,
+    this.params = await Parameters.new(this.comm.address,
       [
         "params:proposal_expiration_time",
         "params:proposal_pass_percentage",
@@ -48,19 +46,15 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
 
     // 10% per month inflation
-    await this.comm.approve(this.voting.address, 100, { from: bob });
-    await this.voting.updateVotingPower(
-        80, 0, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
     await this.params.propose("bonding:inflation_ratio", 38581, { from: bob });
-    await this.params.vote(
-        1, 80, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
+    await this.params.vote(1, 1, { from: bob });
 
     // One month has passed
     await increaseTimeTo((await latestTime()) + duration.days(30));
     await this.curve.buy(10, 20000, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(88100));
-    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(30));
+    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(110));
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(10));
     (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(826446280991));
   });
@@ -75,16 +69,12 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
 
     // 20% sales tax
-    await this.comm.approve(this.voting.address, 100, { from: bob });
-    await this.voting.updateVotingPower(
-        80, 0, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
     await this.params.propose("bonding:sales_tax", 200000000000, { from: bob });
-    await this.params.vote(
-        1, 80, ['0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff'], { from: bob });
+    await this.params.vote(1, 1, { from: bob });
 
     await this.curve.sell(15, 1000, { from: bob });
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(92256));
-    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(5));
+    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(85));
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(3));
     (await this.curve.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
   });
