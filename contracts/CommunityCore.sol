@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./AdminTCR.sol";
-import "./IBondingCurve.sol";
+import "./BondingCurve.sol";
 import "./Parameters.sol";
 import "./Proof.sol";
 
@@ -21,7 +21,7 @@ contract CommunityCore {
   using Proof for bytes32;
 
   AdminTCR public admin;
-  IBondingCurve public curve;
+  BondingCurve public curve;
   IERC20 public commToken;
   Parameters public params;
 
@@ -46,16 +46,10 @@ contract CommunityCore {
    * @dev Create community core contract with the given addresses of admin TCR
    * contract, bonding curve contract, and global parameters contract.
    */
-  constructor(
-    AdminTCR _admin,
-    IBondingCurve _curve,
-    Parameters _params
-  )
-    public
-  {
+  constructor(AdminTCR _admin, BondingCurve _curve, Parameters _params) public {
     admin = _admin;
     curve = _curve;
-    commToken = _curve.getCommToken();
+    commToken = _curve.commToken();
     params = _params;
   }
 

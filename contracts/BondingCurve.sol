@@ -7,7 +7,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./CommunityToken.sol";
 import "./Equation.sol";
 import "./Parameters.sol";
-import "./IBondingCurve.sol";
 
 
 /**
@@ -18,7 +17,7 @@ import "./IBondingCurve.sol";
  * band collatoralized. Anyone can buy/sell community tokens through this
  * contract.
  */
-contract BondingCurve is IBondingCurve, Ownable {
+contract BondingCurve is Ownable {
   using Equation for Equation.Data;
   using SafeMath for uint256;
 
@@ -61,20 +60,6 @@ contract BondingCurve is IBondingCurve, Ownable {
     lastInflationTime = now;
 
     require(commToken.totalSupply() == 0);
-  }
-
-  /**
-   * @dev Return band token address, required by IBondingCurve interface.
-   */
-  function getBandToken() public view returns (IERC20) {
-    return bandToken;
-  }
-
-  /**
-   * @dev Return community token address, required by IBondingCurve interface.
-   */
-  function getCommToken() public view returns (IERC20) {
-    return commToken;
   }
 
   /**
