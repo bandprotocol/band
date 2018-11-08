@@ -163,7 +163,11 @@ contract TCR {
    * with this contract's prefix to get the absolute key.
    */
   function get(bytes24 key) public view returns (uint256) {
-    return params.get(bytes32(prefix) | (bytes32(key) >> 64));
+    uint8 prefixSize = 0;
+    while (prefixSize < 8 && prefix[prefixSize] != byte(0)) {
+      ++prefixSize;
+    }
+    return params.get(bytes32(prefix) | (bytes32(key) >> (8 * prefixSize)));
   }
 
   /**
