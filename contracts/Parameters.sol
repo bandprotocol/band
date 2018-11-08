@@ -57,7 +57,9 @@ contract Parameters {
     // means nonexistent proposal (with experiation default to 0) is never
     // considered.
     uint256 expiration;
-    KeyValue[] changes;
+
+    uint256 changeCount;
+    mapping (uint256 => KeyValue) changes;
 
     uint256 currentVoteCount;
     uint256 totalVoteCount;
@@ -111,6 +113,18 @@ contract Parameters {
   }
 
   /**
+   * @dev Return the 'changeIndex'^th change of the given proposal.
+   */
+  function getProposalChange(uint256 proposalID, uint256 changeIndex)
+    public
+    view
+    returns (bytes32, uint256)
+  {
+    KeyValue memory keyValue = proposals[proposalID].changes[changeIndex];
+    return (keyValue.key, keyValue.value);
+  }
+
+  /**
    * @dev Propose a set of new key-value changes. The proposal must be approved
    * by more than `params:proposal_pass_percentage` of voting power in order to
    * be adopted.
@@ -123,9 +137,9 @@ contract Parameters {
 
     proposals[nonce].proposedTime = now;
     proposals[nonce].expiration = now.add(get("params:proposal_expiration_time"));
+    proposals[nonce].changeCount = keys.length;
     proposals[nonce].currentVoteCount = 0;
     proposals[nonce].totalVoteCount = token.totalSupply();
-    proposals[nonce].changes.length = keys.length;
 
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];
@@ -163,7 +177,7 @@ contract Parameters {
     if(proposal.currentVoteCount.mul(100) >=
        proposal.totalVoteCount.mul(get("params:proposal_pass_percentage"))) {
 
-      for (uint256 index = 0; index < proposal.changes.length; ++index) {
+      for (uint256 index = 0; index < proposal.changeCount; ++index) {
         bytes32 key = proposal.changes[index].key;
         uint256 value = proposal.changes[index].value;
 
