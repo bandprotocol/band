@@ -114,10 +114,10 @@ contract Parameters {
    */
   function propose(bytes32 key, uint256 value) external {
     uint256 nonce = nextProposalNonce;
-    nextProposalNonce = nonce + 1;
+    nextProposalNonce = nonce.add(1);
 
     proposals[nonce].proposedTime = now;
-    proposals[nonce].expiration = now + get("params:proposal_expiration_time");
+    proposals[nonce].expiration = now.add(get("params:proposal_expiration_time"));
     proposals[nonce].key = key;
     proposals[nonce].value = value;
     proposals[nonce].currentVoteCount = 0;
