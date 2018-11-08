@@ -46,7 +46,9 @@ library Equation {
    */
   struct Node {
     uint8 opcode;
-    uint8[] children;
+    uint8 child0;
+    uint8 child1;
+    uint8 child2;
     uint256 value;
   }
 
@@ -250,7 +252,15 @@ library Equation {
     uint8 lastNodeIndex = currentNodeIndex;
 
     for (uint8 idx = 0; idx < childrenCount; ++idx) {
-      node.children.push(lastNodeIndex + 1);
+      if (idx == 0) {
+        node.child0 = lastNodeIndex + 1;
+      } else if (idx == 1) {
+        node.child1 = lastNodeIndex + 1;
+      } else if (idx == 2) {
+        node.child2 = lastNodeIndex + 1;
+      } else {
+        assert(false);
+      }
 
       (uint8 newLastNodeIndex, ExprType childType) =
           populateTree(self, lastNodeIndex + 1);
@@ -281,7 +291,7 @@ library Equation {
     } else if (opcode == OPCODE_VAR) {
       return xValue;
     } else if (opcode == OPCODE_SQRT) {
-      uint256 childValue = solveMath(self, node.children[0], xValue);
+      uint256 childValue = solveMath(self, node.child0, xValue);
       uint256 temp = childValue.add(1).div(2);
       uint256 result = childValue;
 
@@ -294,8 +304,8 @@ library Equation {
 
     } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
 
-      uint256 leftValue = solveMath(self, node.children[0], xValue);
-      uint256 rightValue = solveMath(self, node.children[1], xValue);
+      uint256 leftValue = solveMath(self, node.child0, xValue);
+      uint256 rightValue = solveMath(self, node.child1, xValue);
 
       if (opcode == OPCODE_ADD) {
         return leftValue.add(rightValue);
@@ -314,11 +324,11 @@ library Equation {
         return expResult;
       }
     } else if (opcode == OPCODE_IF) {
-      bool condValue = solveBool(self, node.children[0], xValue);
+      bool condValue = solveBool(self, node.child0, xValue);
       if (condValue) {
-        return solveMath(self, node.children[1], xValue);
+        return solveMath(self, node.child1, xValue);
       } else {
-        return solveMath(self, node.children[2], xValue);
+        return solveMath(self, node.child2, xValue);
       }
     }
 
@@ -337,11 +347,11 @@ library Equation {
     uint8 opcode = node.opcode;
 
     if (opcode == OPCODE_NOT) {
-      return !solveBool(self, node.children[0], xValue);
+      return !solveBool(self, node.child0, xValue);
     } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
 
-      uint256 leftValue = solveMath(self, node.children[0], xValue);
-      uint256 rightValue = solveMath(self, node.children[1], xValue);
+      uint256 leftValue = solveMath(self, node.child0, xValue);
+      uint256 rightValue = solveMath(self, node.child1, xValue);
 
       if (opcode == OPCODE_EQ) {
         return leftValue == rightValue;
@@ -358,8 +368,8 @@ library Equation {
       }
     } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
 
-      bool leftBoolValue = solveBool(self, node.children[0], xValue);
-      bool rightBoolValue = solveBool(self, node.children[1], xValue);
+      bool leftBoolValue = solveBool(self, node.child0, xValue);
+      bool rightBoolValue = solveBool(self, node.child1, xValue);
 
       if (opcode == OPCODE_AND) {
         return leftBoolValue && rightBoolValue;
@@ -367,11 +377,11 @@ library Equation {
         return leftBoolValue || rightBoolValue;
       }
     } else if (opcode == OPCODE_IF) {
-      bool condValue = solveBool(self, node.children[0], xValue);
+      bool condValue = solveBool(self, node.child0, xValue);
       if (condValue) {
-        return solveBool(self, node.children[1], xValue);
+        return solveBool(self, node.child1, xValue);
       } else {
-        return solveBool(self, node.children[2], xValue);
+        return solveBool(self, node.child2, xValue);
       }
     }
 

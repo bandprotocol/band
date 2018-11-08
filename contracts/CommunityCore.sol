@@ -171,13 +171,12 @@ contract CommunityCore {
   }
 
   /**
-   * @dev Deflate the community token by burning tokens from source.
+   * @dev Deflate the community token by burning tokens from the given admin.
    * curveMultiplier will adjust up to make sure the equation is consistent.
    */
-  function deflate(address source, uint256 amount) public onlyAdmin {
+  function deflate(uint256 amount) public onlyAdmin {
     _adjustcurveMultiplier(commToken.totalSupply().sub(amount));
-    require(commToken.transferFrom(source, this, amount));
-    require(commToken.burn(this, amount));
+    require(commToken.burn(msg.sender, amount));
   }
 
   /**

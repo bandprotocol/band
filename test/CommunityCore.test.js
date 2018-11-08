@@ -29,7 +29,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         80,
       ],
       { from: owner });
-    this.admin = await AdminTCR.new(this.params.address);
+    this.admin = await AdminTCR.new(this.params.address, { from: owner });
 
     // X ^ 2 core
     this.core = await CommunityCore.new(
@@ -113,18 +113,22 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(91));
   });
 
-  // it('should allow only owner to deflate the system', async () => {
-  //   this.band.approve(this.core.address, 100000, { from: owner });
-  //   await this.core.buy(100, 10000, { from: owner });
-  //
-  //   (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
-  //   (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(100));
-  //
-  //   await expectThrow(this.core.deflate(200, { from: owner }));
-  //   await this.core.deflate(5, { from: owner });
-  //
-  //   (await this.band.balanceOf(owner)).should.bignumber.eq(new BigNumber(990000));
-  //   (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(95));
-  //   (await this.core.curveMultiplier()).should.bignumber.eq(new BigNumber(1108033240997));
-  // });
+  it('should allow only admin to deflate the system', async () => {
+    await this.band.transfer(bob, 50000, { from: owner });
+    this.band.approve(this.core.address, 100000, { from: owner });
+    this.band.approve(this.core.address, 100000, { from: bob });
+    await this.core.buy(50, 10000, { from: owner });
+    await this.core.buy(50, 10000, { from: bob });
+
+    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(50));
+    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(50));
+
+    await expectThrow(this.core.deflate(200, { from: owner }));
+    await expectThrow(this.core.deflate(5, { from: bob }));
+    await this.core.deflate(5, { from: owner });
+
+    (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(45));
+    (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(50));
+    (await this.core.curveMultiplier()).should.bignumber.eq(new BigNumber(1108033240997));
+  });
 });
