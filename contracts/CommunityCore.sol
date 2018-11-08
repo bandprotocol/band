@@ -235,7 +235,7 @@ contract CommunityCore {
    */
   function sell(uint256 amount, uint256 priceLimit) public {
     _adjustAutoInflation();
-    uint256 salesTax = params.getZeroable("bonding:sales_tax");
+    uint256 salesTax = params.getZeroable("core:sales_tax");
     uint256 taxedAmount = amount.mul(salesTax).div(DENOMINATOR);
     uint256 adjustedPrice = getSellPrice(amount.sub(taxedAmount));
     // Make sure that the sender receive not less than his/her desired minimum.
@@ -260,7 +260,7 @@ contract CommunityCore {
     uint256 currentSupply = commToken.totalSupply();
 
     if (currentSupply != 0) {
-      uint256 inflationRatio = params.getZeroable("bonding:inflation_ratio");
+      uint256 inflationRatio = params.getZeroable("core:inflation_ratio");
       uint256 pastSeconds = now.sub(lastInflationTime);
       uint256 inflatedSupply =
         currentSupply.mul(pastSeconds).mul(inflationRatio).div(DENOMINATOR);
