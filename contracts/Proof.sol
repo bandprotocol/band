@@ -27,9 +27,9 @@ library Proof {
       }
 
       if ((uint(key) & i) == 0) {
-        currentLeaf = zeroHash(currentLeaf, anotherLeaf);
+        currentLeaf = hash(currentLeaf, anotherLeaf);
       } else {
-        currentLeaf = zeroHash(anotherLeaf, currentLeaf);
+        currentLeaf = hash(anotherLeaf, currentLeaf);
       }
     }
 
@@ -64,11 +64,11 @@ library Proof {
       }
 
       if ((uint(key) & i) == 0) {
-        currentLeaf = zeroHash(currentLeaf, anotherLeaf);
-        newRootHash = zeroHash(newRootHash, anotherLeaf);
+        currentLeaf = hash(currentLeaf, anotherLeaf);
+        newRootHash = hash(newRootHash, anotherLeaf);
       } else {
-        currentLeaf = zeroHash(anotherLeaf, currentLeaf);
-        newRootHash = zeroHash(anotherLeaf, newRootHash);
+        currentLeaf = hash(anotherLeaf, currentLeaf);
+        newRootHash = hash(anotherLeaf, newRootHash);
       }
     }
 
@@ -76,7 +76,7 @@ library Proof {
     return newRootHash;
   }
 
-  function zeroHash(bytes32 left, bytes32 right) private pure returns(bytes32){
+  function hash(bytes32 left, bytes32 right) private pure returns(bytes32){
     if (left == bytes32(0) && right == bytes32(0)) {
       return bytes32(0);
     }

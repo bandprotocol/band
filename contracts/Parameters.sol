@@ -96,8 +96,11 @@ contract Parameters {
     return params[key];
   }
 
+  /**
+   * @dev Return whether the given user has voted on the given proposal.
+   */
   function hasVoted(uint256 proposalID, address voter)
-    external
+    public
     view
     returns (bool)
   {

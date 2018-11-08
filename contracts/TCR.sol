@@ -137,15 +137,9 @@ contract TCR {
   uint256 nextChallengeNonce = 1;
 
 
-  constructor(
-    bytes8 _prefix,
-    CommunityToken _token,
-    Parameters _params
-  )
-    public
-  {
+  constructor(bytes8 _prefix, Parameters _params) public {
     prefix = _prefix;
-    token = _token;
+    token = _params.token();
     params = _params;
   }
 

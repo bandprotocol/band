@@ -12,6 +12,8 @@ import "./TCR.sol";
  */
 contract AdminTCR is TCR {
 
+  constructor(Parameters _params) TCR("admin", _params) public {}
+
   /**
    * @dev Return whether the given address is an admin at the moment.
    */

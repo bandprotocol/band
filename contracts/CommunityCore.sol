@@ -4,7 +4,9 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./AdminTCR.sol";
-import "./BondingCurve.sol";
+import "./BandToken.sol";
+import "./CommunityToken.sol";
+import "./Equation.sol";
 import "./Parameters.sol";
 import "./Proof.sol";
 
@@ -14,19 +16,60 @@ import "./Proof.sol";
  *
  * @dev Community Core contract keeps custody of community reward pool. It
  * allows community admins to report per period reward distribution. Anyone
- * can send transaction here to withdraw rewards.
+ * can send transaction here to withdraw rewards. Community Core contract also
+ * acts as the automated market maker, allowing anyone to buy/sell community
+ * token with itself.
  */
 contract CommunityCore {
+  using Equation for Equation.Data;
   using SafeMath for uint256;
   using Proof for bytes32;
 
+  event Buy(  // Someone buys community token.
+    address indexed buyer,
+    uint256 amount,
+    uint256 price
+  );
+
+  event Sell(  // Someone sells community token.
+    address indexed seller,
+    uint256 amount,
+    uint256 price
+  );
+
+  Equation.Data equation;
+
   AdminTCR public admin;
-  BondingCurve public curve;
-  IERC20 public commToken;
+  BandToken public bandToken;
+  CommunityToken public commToken;
   Parameters public params;
 
+  // Denominator for inflation-related ratios and sales tax.
+  uint256 public constant DENOMINATOR = 1e12;
+
+  // Last time the auto-inflation was added to system. Auto-inflation happens
+  // automatically everytime someone buys or sells tokens through bonding curve.
+  uint256 public lastInflationTime;
+
+  // Curve multiplier indicate the coefficient in front of the curve equation.
+  // This allows contract to inflate or deflate the community token supply
+  // without making the equation inconsistent with the number of collateralized
+  // Band tokens.
+  uint256 public curveMultiplier = DENOMINATOR;
+
+  // Amount of Band that is currently collatoralized. Note that this may be
+  // different from 'bandToken.balanceOf(this)' since someboday can arbitrarily
+  // send Band to this contract. We don't want that to affect token price.
+  uint256 public currentBandCollatoralized = 0;
+
+  // Most recent time that reward allocation was submitted to the contract.
   uint256 public lastRewardTime = 0;
+
+  // Amount of token that is in this community core account, but is already
+  // entitled to some users as reward.
   uint256 public unwithdrawnReward = 0;
+
+  // ID of the next reward.
   uint256 public nextRewardNonce = 1;
 
   /**
@@ -43,14 +86,23 @@ contract CommunityCore {
   mapping (uint256 => Reward) public rewards;
 
   /**
-   * @dev Create community core contract with the given addresses of admin TCR
-   * contract, bonding curve contract, and global parameters contract.
+   * @dev Create community core contract.
    */
-  constructor(AdminTCR _admin, BondingCurve _curve, Parameters _params) public {
+  constructor(
+    AdminTCR _admin,
+    BandToken _bandToken,
+    Parameters _params,
+    uint256[] _expressions
+  ) public {
     admin = _admin;
-    curve = _curve;
-    commToken = _curve.commToken();
+    bandToken = _bandToken;
+    commToken = _params.token();
     params = _params;
+
+    equation.init(_expressions);
+    lastInflationTime = now;
+
+    require(commToken.totalSupply() == 0);
   }
 
   /**
@@ -62,13 +114,35 @@ contract CommunityCore {
   }
 
   /**
-   * @dev Destroy the given amount of tokens from the given source. Bonding
-   * curve will get deflated appropriately, effectively bumping token price
-   * of all existing holders. Only to be called by admins.
+   * @dev Calculate buy price for some amounts of tokens in Band
    */
-  function burnToken(uint256 amount, address source) external onlyAdmin {
-    require(commToken.transferFrom(source, this, amount));
-    curve.deflate(amount);
+  function getBuyPrice(uint256 amount) public view returns (uint256) {
+    uint256 startSupply = commToken.totalSupply();
+    uint256 endSupply = startSupply.add(amount);
+
+    // The raw price as calculated from the difference between the starting and
+    // ending positions.
+    uint256 rawPrice =
+      equation.calculate(endSupply).sub(equation.calculate(startSupply));
+
+    // Price after adjusting inflation in.
+    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
+  }
+
+  /**
+   * @dev Calculate sell price for some amounts of tokens in Band
+   */
+  function getSellPrice(uint256 amount) public view returns (uint256) {
+    uint256 startSupply = commToken.totalSupply();
+    uint256 endSupply = startSupply.sub(amount);
+
+    // The raw price as calcuated from the difference between the starting and
+    // ending positions.
+    uint256 rawPrice =
+      equation.calculate(startSupply).sub(equation.calculate(endSupply));
+
+    // Price after adjusting inflation in.
+    return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
   }
 
   /**
@@ -94,6 +168,16 @@ contract CommunityCore {
 
     lastRewardTime = now;
     unwithdrawnReward = currentBalance;
+  }
+
+  /**
+   * @dev Deflate the community token by burning tokens from source.
+   * curveMultiplier will adjust up to make sure the equation is consistent.
+   */
+  function deflate(address source, uint256 amount) public onlyAdmin {
+    _adjustcurveMultiplier(commToken.totalSupply().sub(amount));
+    require(commToken.transferFrom(source, this, amount));
+    require(commToken.burn(this, amount));
   }
 
   /**
@@ -126,5 +210,83 @@ contract CommunityCore {
 
     unwithdrawnReward = unwithdrawnReward.sub(userReward);
     require(commToken.transfer(msg.sender, userReward));
+  }
+
+  /**
+   * @dev Buy some amount of tokens with Band. Revert if sender must pay more
+   * than price limit in order to make purchase.
+   */
+  function buy(uint256 amount, uint256 priceLimit) public {
+    _adjustAutoInflation();
+    uint256 adjustedPrice = getBuyPrice(amount);
+    // Make sure that the sender does not overpay due to slow block / frontrun.
+    require(adjustedPrice <= priceLimit);
+    // Get Band tokens from sender and mint community tokens for sender.
+    require(bandToken.transferFrom(msg.sender, this, adjustedPrice));
+    require(commToken.mint(msg.sender, amount));
+
+    currentBandCollatoralized = currentBandCollatoralized.add(adjustedPrice);
+    emit Buy(msg.sender, amount, adjustedPrice);
+  }
+
+  /**
+   * @dev Sell some amount of tokens for Band. Revert if sender will receive
+   * less than price limit if the transaction go through.
+   */
+  function sell(uint256 amount, uint256 priceLimit) public {
+    _adjustAutoInflation();
+    uint256 salesTax = params.getZeroable("bonding:sales_tax");
+    uint256 taxedAmount = amount.mul(salesTax).div(DENOMINATOR);
+    uint256 adjustedPrice = getSellPrice(amount.sub(taxedAmount));
+    // Make sure that the sender receive not less than his/her desired minimum.
+    require(adjustedPrice >= priceLimit);
+    // Burn community tokens of sender and send Band tokens to sender.
+    require(commToken.burn(msg.sender, amount));
+    require(bandToken.transfer(msg.sender, adjustedPrice));
+
+    if (taxedAmount > 0) {
+      require(commToken.mint(this, taxedAmount));
+    }
+
+    currentBandCollatoralized = currentBandCollatoralized.sub(adjustedPrice);
+    emit Sell(msg.sender, amount, adjustedPrice);
+  }
+
+  /**
+   * @dev Auto inflate token supply per `inflation_ratio` parameter. This
+   * function is expected to be called prior to any buy/sll.
+   */
+  function _adjustAutoInflation() private {
+    uint256 currentSupply = commToken.totalSupply();
+
+    if (currentSupply != 0) {
+      uint256 inflationRatio = params.getZeroable("bonding:inflation_ratio");
+      uint256 pastSeconds = now.sub(lastInflationTime);
+      uint256 inflatedSupply =
+        currentSupply.mul(pastSeconds).mul(inflationRatio).div(DENOMINATOR);
+
+      _adjustcurveMultiplier(currentSupply.add(inflatedSupply));
+      require(commToken.mint(this, inflatedSupply));
+    }
+
+    lastInflationTime = now;
+  }
+
+  /**
+   * @dev Adjust the inflation ratio to match the new supply.
+   */
+  function _adjustcurveMultiplier(uint256 newSupply) private {
+    uint256 eqCollateral = equation.calculate(newSupply);
+
+    require(currentBandCollatoralized != 0);
+    require(eqCollateral != 0);
+
+    curveMultiplier =
+      DENOMINATOR.mul(currentBandCollatoralized).div(eqCollateral);
+
+    assert(
+      eqCollateral.mul(curveMultiplier).div(DENOMINATOR) <=
+      currentBandCollatoralized
+    );
   }
 }
