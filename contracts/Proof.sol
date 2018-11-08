@@ -1,7 +1,21 @@
 pragma solidity ^0.4.24;
 
+
+/**
+ * @title Proof
+ *
+ * @dev Proof library is a utility library for Merkle proof on sparse Merkle
+ * tree. See https://ethresear.ch/t/optimizing-sparse-merkle-trees/3751.
+ */
 library Proof {
 
+  /**
+   * @dev Verify that the given key-value belongs to the merkle tree.
+   * @param rootHash Merkle root hash
+   * @param key The key (address) in Merkle tree
+   * @param value The value that is claimed to be in the tree
+   * @param proof Merkle tree proof
+   */
   function verify(
     bytes32 rootHash,
     address key,
@@ -37,6 +51,11 @@ library Proof {
     return true;
   }
 
+  /**
+   * @dev Update the tree by changing the value at 'key' from 'oldValue' to
+   * 'newValue'. Note that this also requires the proof that 'oldValue' exists.
+   * @return The new root hash after chaning 'key' to map to 'newValue'
+   */
   function update(
     bytes32 rootHash,
     address key,
@@ -76,6 +95,9 @@ library Proof {
     return newRootHash;
   }
 
+  /**
+   * @dev Similar to keccak256, but optimize to return 0 when hashing (0, 0)
+   */
   function hash(bytes32 left, bytes32 right) private pure returns(bytes32){
     if (left == bytes32(0) && right == bytes32(0)) {
       return bytes32(0);
