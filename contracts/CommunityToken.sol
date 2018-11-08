@@ -84,13 +84,13 @@ contract CommunityToken is IERC20, Ownable {
     returns (uint256)
   {
     // The balance record must happen at or before the as-of time.
-    if (historicalTimeAtNonce(owner, nonce) <= asof) {
+    if (historicalTimeAtNonce(owner, nonce) > asof) {
       return historicalBalanceAtTimeSlow(owner, asof);
     }
 
     // The next balance record, if exists, must happen after the as-of time.
     if (nonce < _nonces[owner]) {
-      if (historicalTimeAtNonce(owner, nonce + 1) > asof) {
+      if (historicalTimeAtNonce(owner, nonce + 1) <= asof) {
         return historicalBalanceAtTimeSlow(owner, asof);
       }
     }
