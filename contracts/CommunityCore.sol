@@ -25,16 +25,41 @@ contract CommunityCore {
   using SafeMath for uint256;
   using Proof for bytes32;
 
-  event Buy(  // Someone buys community token.
+  event Buy(  // Someone buys community token
     address indexed buyer,
     uint256 amount,
     uint256 price
   );
 
-  event Sell(  // Someone sells community token.
+  event Sell(  // Someone sells community token
     address indexed seller,
     uint256 amount,
     uint256 price
+  );
+
+  event Deflate(  // An admin burns community token to deflate the system
+    address indexed admin,
+    uint256 amount
+  );
+
+  event RewardDistributionSubmitted(  // A new reward distribution is submitted
+    uint256 indexed rewardID,
+    address indexed submitter,
+    uint256 totalReward,
+    bytes32 rewardPortionRootHash
+  );
+
+  event RewardDistributionEditted( // An existing reward is modified
+    uint256 indexed rewardID,
+    address indexed editor,
+    uint256 totalReward,
+    bytes32 rewardPortionRootHash
+  );
+
+  event RewardClaimed(  // Someone claims reward
+    uint256 indexed rewardID,
+    address indexed member,
+    uint256 amount
   );
 
   Equation.Data equation;
@@ -60,6 +85,7 @@ contract CommunityCore {
   // Amount of Band that is currently collatoralized. Note that this may be
   // different from 'bandToken.balanceOf(this)' since someboday can arbitrarily
   // send Band to this contract. We don't want that to affect token price.
+  // EIP-777, if finalized, will help with this.
   uint256 public currentBandCollatoralized = 0;
 
   // Most recent time that reward allocation was submitted to the contract.
@@ -70,7 +96,7 @@ contract CommunityCore {
   uint256 public unwithdrawnReward = 0;
 
   // ID of the next reward.
-  uint256 public nextRewardNonce = 1;
+  uint256 public nextrewardID = 1;
 
   /**
    * @dev Reward struct to keep track of reward distribution/withdrawal for
@@ -80,6 +106,7 @@ contract CommunityCore {
     uint256 totalReward;
     uint256 totalPortion;
     bytes32 rewardPortionRootHash;
+    uint256 activeAt;
     mapping (address => bool) claims;
   }
 
@@ -147,53 +174,87 @@ contract CommunityCore {
 
   /**
    * @dev Called by admins to report reward distribution over the past period.
-   * @param rewardPortionHash Merkle root of the distribution tree.
+   * @param rewardPortionRootHash Merkle root of the distribution tree.
    * @param totalPortion Total value of portion assignments (Merkle leaves)
    * of all community participants.
    */
-  function distributeReward(bytes32 rewardPortionHash, uint256 totalPortion)
-    external
+  function addRewardDistribution(
+    bytes32 rewardPortionRootHash,
+    uint256 totalPortion
+  )
+    public
     onlyAdmin
   {
     uint256 rewardPeriod = params.get("core:reward_period");
     require(now >= lastRewardTime.add(rewardPeriod));
 
-    uint256 nonce = nextRewardNonce;
-    nextRewardNonce = nonce.add(1);
+    uint256 nonce = nextrewardID;
+    nextrewardID = nonce.add(1);
 
     uint256 currentBalance = commToken.balanceOf(this);
-    rewards[nonce].totalReward = currentBalance.sub(unwithdrawnReward);
+    uint256 totalReward = currentBalance.sub(unwithdrawnReward);
+
+    rewards[nonce].totalReward = totalReward;
     rewards[nonce].totalPortion = totalPortion;
-    rewards[nonce].rewardPortionRootHash = rewardPortionHash;
+    rewards[nonce].rewardPortionRootHash = rewardPortionRootHash;
+    rewards[nonce].activeAt = now.add(params.get("core:reward_edit_period"));
 
     lastRewardTime = now;
     unwithdrawnReward = currentBalance;
+
+    emit RewardDistributionSubmitted(
+      nonce,
+      msg.sender,
+      totalReward,
+      rewardPortionRootHash
+    );
   }
 
   /**
-   * @dev Deflate the community token by burning tokens from the given admin.
-   * curveMultiplier will adjust up to make sure the equation is consistent.
+   * @dev Called by admin to edit a not-yet-active reward distribution. After
+   * being editted, the distribution active time will get pushed back by
+   * 'reward_edit_period'.
    */
-  function deflate(uint256 amount) public onlyAdmin {
-    _adjustcurveMultiplier(commToken.totalSupply().sub(amount));
-    require(commToken.burn(msg.sender, amount));
+  function editRewardDistribution(
+    uint256 rewardID,
+    bytes32 rewardPortionRootHash,
+    uint256 totalPortion
+  )
+    public
+    onlyAdmin
+  {
+    require(rewardID > 0 && rewardID < nextrewardID);
+    Reward storage reward = rewards[rewardID];
+    require(now < reward.activeAt);
+    reward.totalPortion = totalPortion;
+    reward.rewardPortionRootHash = rewardPortionRootHash;
+    reward.activeAt = now.add(params.get("core:reward_edit_period"));
+
+    emit RewardDistributionSubmitted(
+      rewardID,
+      msg.sender,
+      reward.totalReward,
+      rewardPortionRootHash
+    );
   }
 
   /**
    * @dev Called by anyone in the community to withdraw rewards.
-   * @param rewardNonce The reward to withdraw.
+   * @param rewardID The reward to withdraw.
    * @param rewardPortion The value at the leaf node of the sender.
    * @param proof Merkle proof consistent with the reward's root hash.
    */
   function claimReward(
-    uint256 rewardNonce,
+    uint256 rewardID,
     uint256 rewardPortion,
     bytes32[] proof
   )
     external
   {
-    require(rewardNonce > 0 && rewardNonce < nextRewardNonce);
-    Reward storage reward = rewards[rewardNonce];
+    require(rewardID > 0 && rewardID < nextrewardID);
+    Reward storage reward = rewards[rewardID];
+
+    require(now >= reward.activeAt);
 
     require(!reward.claims[msg.sender]);
     reward.claims[msg.sender] = true;
@@ -209,6 +270,18 @@ contract CommunityCore {
 
     unwithdrawnReward = unwithdrawnReward.sub(userReward);
     require(commToken.transfer(msg.sender, userReward));
+
+    emit RewardClaimed(rewardID, msg.sender, userReward);
+  }
+
+  /**
+   * @dev Deflate the community token by burning tokens from the given admin.
+   * curveMultiplier will adjust up to make sure the equation is consistent.
+   */
+  function deflate(uint256 amount) public onlyAdmin {
+    _adjustcurveMultiplier(commToken.totalSupply().sub(amount));
+    require(commToken.burn(msg.sender, amount));
+    emit Deflate(msg.sender, amount);
   }
 
   /**
