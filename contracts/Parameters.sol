@@ -146,7 +146,6 @@ contract Parameters {
     // Proposal must not yet expired. Note that if the proposal does not exist
     // or is already applied, the expiration will be 0, failing this condition
     require(proposal.expiration > now);
-    proposals[proposalID].expiration = 0;
 
     // Voter should not have already voted.
     require(!proposal.voted[voter]);
@@ -171,6 +170,8 @@ contract Parameters {
         params[key] = value;
         emit ParameterChanged(key, value);
       }
+
+      proposals[proposalID].expiration = 0;
     }
   }
 }
