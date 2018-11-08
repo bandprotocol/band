@@ -280,11 +280,11 @@ contract TCR {
     entry.challengeID = challengeID;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
-    challenges[challengeID].commitEndTime = now + commitTime;
-    challenges[challengeID].revealEndTime = now + commitTime + revealTime;
+    challenges[challengeID].commitEndTime = now.add(commitTime);
+    challenges[challengeID].revealEndTime = now.add(commitTime).add(revealTime);
 
     // Increment the nonce for the next challenge.
-    nextChallengeNonce = challengeID + 1;
+    nextChallengeNonce = challengeID.add(1);
 
     emit NewChallenge(data, challengeID, msg.sender);
   }
@@ -337,10 +337,10 @@ contract TCR {
 
     if (isYes) {
       challenge.opinions[msg.sender] = Vote.Yes;
-      challenge.yesCount += weight;
+      challenge.yesCount = challenge.yesCount.add(weight);
     } else {
       challenge.opinions[msg.sender] = Vote.No;
-      challenge.noCount += weight;
+      challenge.noCount = challenge.noCount.add(weight);
     }
 
     emit VoteRevealed(challengeID, msg.sender, isYes, weight, salt);
@@ -391,7 +391,7 @@ contract TCR {
     } else if (!isYes && isNo) {
       challenge.result = Vote.No;
       // Challenge fails. Entry deposit is added by reward.
-      entry.withdrawableDeposit += leaderReward;
+      entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
       // The remaining reward is distributed among No voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = noCount;

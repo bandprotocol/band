@@ -159,7 +159,7 @@ contract CommunityCore {
     require(now >= lastRewardTime.add(rewardPeriod));
 
     uint256 nonce = nextRewardNonce;
-    nextRewardNonce = nonce + 1;
+    nextRewardNonce = nonce.add(1);
 
     uint256 currentBalance = commToken.balanceOf(this);
     rewards[nonce].totalReward = currentBalance.sub(unwithdrawnReward);
