@@ -71,7 +71,7 @@ contract CommunityToken is IERC20, Ownable {
   /**
    * @dev Returns user balance at the given time. Note that for performance
    * reason, this function also takes the nonce that is expected to reflect
-   * the answer. If called with invalid nonce, the function will fall back to
+   * the answer. If called with zero nonce, the function will fall back to
    * the slow variant.
    */
   function historicalBalanceAtTime(
@@ -83,16 +83,16 @@ contract CommunityToken is IERC20, Ownable {
     view
     returns (uint256)
   {
-    // The balance record must happen at or before the as-of time.
-    if (historicalTimeAtNonce(owner, nonce) > asof) {
+    if (nonce == 0) {
       return historicalBalanceAtTimeSlow(owner, asof);
     }
 
+    // The balance record must happen at or before the as-of time.
+    require(historicalTimeAtNonce(owner, nonce) <= asof);
+
     // The next balance record, if exists, must happen after the as-of time.
     if (nonce < _nonces[owner]) {
-      if (historicalTimeAtNonce(owner, nonce + 1) <= asof) {
-        return historicalBalanceAtTimeSlow(owner, asof);
-      }
+      require(historicalTimeAtNonce(owner, nonce + 1) > asof);
     }
 
     return historicalBalanceAtNonce(owner, nonce);
