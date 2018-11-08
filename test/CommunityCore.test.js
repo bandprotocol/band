@@ -50,7 +50,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     (await this.core.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
 
     // 10% per month inflation
-    await this.params.propose("bonding:inflation_ratio", 38581, { from: bob });
+    await this.params.propose(["bonding:inflation_ratio"], [38581], { from: bob });
     await this.params.vote(1, 0, { from: bob });
 
     // One month has passed
@@ -73,7 +73,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     (await this.core.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
 
     // 20% sales tax
-    await this.params.propose("bonding:sales_tax", 200000000000, { from: bob });
+    await this.params.propose(["bonding:sales_tax"], [200000000000], { from: bob });
     await this.params.vote(1, 0, { from: bob });
 
     await this.core.sell(15, 1000, { from: bob });

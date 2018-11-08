@@ -12,7 +12,14 @@ import "./TCR.sol";
  */
 contract AdminTCR is TCR {
 
-  constructor(Parameters _params) TCR("admin:", _params) public {}
+  constructor(Parameters _params) TCR("admin:", _params) public {
+    // Make the contract creator the admin. Note that this is without deposit,
+    // so any challenge will kick this admin out.
+    bytes32 data = bytes32(msg.sender);
+    entries[data].proposer = msg.sender;
+    entries[data].pendingExpiration = now;
+    emit NewApplication(data, msg.sender);
+  }
 
   /**
    * @dev Return whether the given address is an admin at the moment.

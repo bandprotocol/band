@@ -39,6 +39,11 @@ contract Parameters {
   // Public map of all active parameters.
   mapping (bytes32 => uint256) public params;
 
+  struct KeyValue {
+    bytes32 key;
+    uint256 value;
+  }
+
   /**
    * @dev Proposal struct for each of the proposal change that is proposed to
    * this contract.
@@ -52,9 +57,7 @@ contract Parameters {
     // means nonexistent proposal (with experiation default to 0) is never
     // considered.
     uint256 expiration;
-
-    bytes32 key;
-    uint256 value;
+    KeyValue[] changes;
 
     uint256 currentVoteCount;
     uint256 totalVoteCount;
@@ -108,22 +111,28 @@ contract Parameters {
   }
 
   /**
-   * @dev Propose a new key-value change. The proposal must be approved by
-   * more than `params:proposal_pass_percentage` of voting power in order to
+   * @dev Propose a set of new key-value changes. The proposal must be approved
+   * by more than `params:proposal_pass_percentage` of voting power in order to
    * be adopted.
    */
-  function propose(bytes32 key, uint256 value) external {
+  function propose(bytes32[] keys, uint256[] values) external {
+    require(keys.length == values.length);
+
     uint256 nonce = nextProposalNonce;
     nextProposalNonce = nonce.add(1);
 
     proposals[nonce].proposedTime = now;
     proposals[nonce].expiration = now.add(get("params:proposal_expiration_time"));
-    proposals[nonce].key = key;
-    proposals[nonce].value = value;
     proposals[nonce].currentVoteCount = 0;
     proposals[nonce].totalVoteCount = token.totalSupply();
+    proposals[nonce].changes.length = keys.length;
 
-    emit NewProposal(nonce, key, value);
+    for (uint256 index = 0; index < keys.length; ++index) {
+      bytes32 key = keys[index];
+      uint256 value = values[index];
+      proposals[nonce].changes[index] = KeyValue(key, value);
+      emit NewProposal(nonce, key, value);
+    }
   }
 
   /**
@@ -137,6 +146,7 @@ contract Parameters {
     // Proposal must not yet expired. Note that if the proposal does not exist
     // or is already applied, the expiration will be 0, failing this condition
     require(proposal.expiration > now);
+    proposals[proposalID].expiration = 0;
 
     // Voter should not have already voted.
     require(!proposal.voted[voter]);
@@ -154,10 +164,13 @@ contract Parameters {
     if(proposal.currentVoteCount.mul(100) >=
        proposal.totalVoteCount.mul(get("params:proposal_pass_percentage"))) {
 
-      params[proposal.key] = proposal.value;
-      proposals[proposalID].expiration = 0;
+      for (uint256 index = 0; index < proposal.changes.length; ++index) {
+        bytes32 key = proposal.changes[index].key;
+        uint256 value = proposal.changes[index].value;
 
-      emit ParameterChanged(proposal.key, proposal.value);
+        params[key] = value;
+        emit ParameterChanged(key, value);
+      }
     }
   }
 }
