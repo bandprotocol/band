@@ -114,7 +114,7 @@ contract CommunityToken is IERC20, Ownable {
       // Doing ((start + end + 1) / 2) here to prevent infinite loop.
       uint256 mid = start.add(end).add(1).div(2);
       if (historicalTimeAtNonce(owner, mid) > asof) {
-        // If midTime > asof, this mid can possibly be the answer
+        // If midTime > asof, this mid can't possibly be the answer
         end = mid.sub(1);
       } else {
         // Otherwise, search on the greater side, but still keep mid as option
