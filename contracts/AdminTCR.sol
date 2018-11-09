@@ -25,6 +25,6 @@ contract AdminTCR is TCR {
    * @dev Return whether the given address is an admin at the moment.
    */
   function isAdmin(address account) public view returns (bool) {
-    return entries[bytes32(account)].pendingExpiration > 0;
+    return entries[bytes32(account)].pendingExpiration > now;
   }
 }
