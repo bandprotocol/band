@@ -1,4 +1,5 @@
 pragma solidity ^0.4.24;
+pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -138,6 +139,13 @@ contract CommunityCore {
   modifier onlyAdmin() {
     require(admin.isAdmin(msg.sender));
     _;
+  }
+
+  /**
+   * @dev Return the node at the particular index of this community curve.
+   */
+  function getEquationNode(uint256 index) public view returns (Equation.Node) {
+    return equation.nodes[index];
   }
 
   /**
