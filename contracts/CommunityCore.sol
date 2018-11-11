@@ -260,8 +260,8 @@ contract CommunityCore {
     external
   {
     require(rewardID > 0 && rewardID < nextrewardID);
-    Reward storage reward = rewards[rewardID];
 
+    Reward storage reward = rewards[rewardID];
     require(now >= reward.activeAt);
 
     require(!reward.claims[msg.sender]);
@@ -287,8 +287,8 @@ contract CommunityCore {
    * curveMultiplier will adjust up to make sure the equation is consistent.
    */
   function deflate(uint256 amount) public onlyAdmin {
-    _adjustcurveMultiplier(commToken.totalSupply().sub(amount));
     require(commToken.burn(msg.sender, amount));
+    _adjustcurveMultiplier();
     emit Deflate(msg.sender, amount);
   }
 
@@ -345,18 +345,20 @@ contract CommunityCore {
       uint256 inflatedSupply =
         currentSupply.mul(pastSeconds).mul(inflationRatio).div(DENOMINATOR);
 
-      _adjustcurveMultiplier(currentSupply.add(inflatedSupply));
-      require(commToken.mint(this, inflatedSupply));
+      if (inflatedSupply != 0) {
+        require(commToken.mint(this, inflatedSupply));
+        _adjustcurveMultiplier();
+      }
     }
 
     lastInflationTime = now;
   }
 
   /**
-   * @dev Adjust the inflation ratio to match the new supply.
+   * @dev Adjust the inflation ratio to match the new comm token supply.
    */
-  function _adjustcurveMultiplier(uint256 newSupply) private {
-    uint256 eqCollateral = equation.calculate(newSupply);
+  function _adjustcurveMultiplier() private {
+    uint256 eqCollateral = equation.calculate(commToken.totalSupply());
 
     require(currentBandCollatoralized != 0);
     require(eqCollateral != 0);

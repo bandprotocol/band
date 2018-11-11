@@ -159,6 +159,15 @@ contract TCR {
   }
 
   /**
+   * @dev Return true iff the given entry is considered active in TCR at the
+   * moment.
+   */
+  function isEntryActive(bytes32 data) public view returns (bool) {
+    uint256 pendingExpiration = entries[data].pendingExpiration;
+    return pendingExpiration > 0 && now >= pendingExpiration;
+  }
+
+  /**
    * @dev Get parameter config on the given key. Note that it prepend the key
    * with this contract's prefix to get the absolute key.
    */
