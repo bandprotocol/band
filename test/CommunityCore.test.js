@@ -38,6 +38,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       this.params.address,
       [8, 1, 0, 2], { from: owner });
     await this.comm.transferOwnership(this.core.address, { from: owner });
+    await this.core.activate(0, { from: owner });
   });
 
   it('should auto-inflate properly', async () => {

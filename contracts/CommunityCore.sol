@@ -99,8 +99,10 @@ contract CommunityCore {
   // ID of the next reward.
   uint256 public nextrewardID = 1;
 
-  // Whether this contract has been migrated out.
-  bool migrated = false;
+  // True if the contract is currently active, which is when it is the sole
+  // owner of the community token contract. While active, users can buy/sell
+  // community tokens through this core contract.
+  bool public isActive = false;
 
   /**
    * @dev Reward struct to keep track of reward distribution/withdrawal for
@@ -131,9 +133,6 @@ contract CommunityCore {
     params = _params;
 
     equation.init(_expressions);
-    lastInflationTime = now;
-
-    require(commToken.totalSupply() == 0);
   }
 
   /**
@@ -145,12 +144,59 @@ contract CommunityCore {
   }
 
   /**
-   * @dev Throws if this contract has already been migrated out.
+   * @dev Throws if this contract is not active. This contract is considered
+   * active if it is the owner of the community token contract.
    */
-  modifier whenNotMigrated() {
-    require(!migrated);
+  modifier whenActive() {
+    require(isActive);
     _;
   }
+
+  /**
+   * @dev Activate this community core contract. Optionally take initialBand
+   * parameter to active curve while having nonzero comm token supply.
+   */
+  function activate(uint256 initialBand) public {
+    require(!isActive);
+    require(currentBandCollatoralized == 0);
+    require(commToken.owner() == address(this));
+
+    if (initialBand != 0) {
+      // If initialBand is set, this curve contract takes the tokens from
+      // contract activator. The curve is then adjusted to match token supply.
+      bandToken.transferFrom(msg.sender, this, initialBand);
+      currentBandCollatoralized = initialBand;
+      _adjustcurveMultiplier();
+    } else {
+      // Otherwise, it must be the case that the community token does not
+      // have any existing supply, e.g. new curve.
+      require(commToken.totalSupply() == 0);
+    }
+
+    // Set lastInflationTime to the current time. The time period when the
+    // contract is not active should be counted as inflation period.
+    lastInflationTime = now;
+
+    // Everything is ready. Let's activate this contract.
+    isActive = true;
+  }
+
+  /**
+   * @dev Called by the deactivator to deactivate this community core contract.
+   * When that happens, all Band tokens belonging to the curve will be
+   * transferred to the deactivator. Buying and selling is forever disabled.
+   * The migrator will be entitiled as the community token's owner.
+   */
+  function deactivate() public whenActive {
+    require(bytes32(msg.sender) == bytes32(params.get("core:deac")));
+    isActive = false;
+    if (currentBandCollatoralized != 0) {
+      require(bandToken.transfer(msg.sender, currentBandCollatoralized));
+      currentBandCollatoralized = 0;
+    }
+    commToken.transferOwnership(msg.sender);
+  }
+
 
   /**
    * @dev Return the node at the particular index of this community curve.
@@ -294,21 +340,10 @@ contract CommunityCore {
   }
 
   /**
-   * @dev Called by the migrator to migrate the community out of this contract.
-   * When that happens, all Band tokens belonging to the curve will be
-   * transferred to the migrator. Buying and selling is forever disabled.
-   */
-  function migrate() public whenNotMigrated {
-    require(bytes32(msg.sender) == bytes32(params.get("core:migrator")));
-    migrated = true;
-    require(bandToken.transfer(msg.sender, bandToken.balanceOf(this)));
-  }
-
-  /**
    * @dev Deflate the community token by burning tokens from the given admin.
    * curveMultiplier will adjust up to make sure the equation is consistent.
    */
-  function deflate(uint256 amount) public onlyAdmin whenNotMigrated {
+  function deflate(uint256 amount) public onlyAdmin whenActive {
     require(commToken.burn(msg.sender, amount));
     _adjustcurveMultiplier();
     emit Deflate(msg.sender, amount);
@@ -318,7 +353,7 @@ contract CommunityCore {
    * @dev Buy some amount of tokens with Band. Revert if sender must pay more
    * than price limit in order to make purchase.
    */
-  function buy(uint256 amount, uint256 priceLimit) public whenNotMigrated {
+  function buy(uint256 amount, uint256 priceLimit) public whenActive {
     _adjustAutoInflation();
     uint256 adjustedPrice = getBuyPrice(amount);
     // Make sure that the sender does not overpay due to slow block / frontrun.
@@ -335,7 +370,7 @@ contract CommunityCore {
    * @dev Sell some amount of tokens for Band. Revert if sender will receive
    * less than price limit if the transaction go through.
    */
-  function sell(uint256 amount, uint256 priceLimit) public whenNotMigrated {
+  function sell(uint256 amount, uint256 priceLimit) public whenActive {
     _adjustAutoInflation();
     uint256 salesTax = params.getZeroable("core:sales_tax");
     uint256 taxedAmount = amount.mul(salesTax).div(DENOMINATOR);
