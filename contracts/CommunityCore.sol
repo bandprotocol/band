@@ -99,6 +99,9 @@ contract CommunityCore {
   // ID of the next reward.
   uint256 public nextrewardID = 1;
 
+  // Whether this contract has been migrated out.
+  bool migrated = false;
+
   /**
    * @dev Reward struct to keep track of reward distribution/withdrawal for
    * a particular time period.
@@ -138,6 +141,14 @@ contract CommunityCore {
    */
   modifier onlyAdmin() {
     require(admin.isAdmin(msg.sender));
+    _;
+  }
+
+  /**
+   * @dev Throws if this contract has already been migrated out.
+   */
+  modifier whenNotMigrated() {
+    require(!migrated);
     _;
   }
 
@@ -283,10 +294,21 @@ contract CommunityCore {
   }
 
   /**
+   * @dev Called by the migrator to migrate the community out of this contract.
+   * When that happens, all Band tokens belonging to the curve will be
+   * transferred to the migrator. Buying and selling is forever disabled.
+   */
+  function migrate() public whenNotMigrated {
+    require(bytes32(msg.sender) == bytes32(params.get("core:migrator")));
+    migrated = true;
+    require(bandToken.transfer(msg.sender, bandToken.balanceOf(this)));
+  }
+
+  /**
    * @dev Deflate the community token by burning tokens from the given admin.
    * curveMultiplier will adjust up to make sure the equation is consistent.
    */
-  function deflate(uint256 amount) public onlyAdmin {
+  function deflate(uint256 amount) public onlyAdmin whenNotMigrated {
     require(commToken.burn(msg.sender, amount));
     _adjustcurveMultiplier();
     emit Deflate(msg.sender, amount);
@@ -296,7 +318,7 @@ contract CommunityCore {
    * @dev Buy some amount of tokens with Band. Revert if sender must pay more
    * than price limit in order to make purchase.
    */
-  function buy(uint256 amount, uint256 priceLimit) public {
+  function buy(uint256 amount, uint256 priceLimit) public whenNotMigrated {
     _adjustAutoInflation();
     uint256 adjustedPrice = getBuyPrice(amount);
     // Make sure that the sender does not overpay due to slow block / frontrun.
@@ -313,7 +335,7 @@ contract CommunityCore {
    * @dev Sell some amount of tokens for Band. Revert if sender will receive
    * less than price limit if the transaction go through.
    */
-  function sell(uint256 amount, uint256 priceLimit) public {
+  function sell(uint256 amount, uint256 priceLimit) public whenNotMigrated {
     _adjustAutoInflation();
     uint256 salesTax = params.getZeroable("core:sales_tax");
     uint256 taxedAmount = amount.mul(salesTax).div(DENOMINATOR);
