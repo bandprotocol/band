@@ -32,6 +32,10 @@ contract Parameters {
     uint256 value
   );
 
+  event ProposalResolved( // A proposol is resolved
+    uint256 indexed proposalID
+  );
+
 
   // The address of community token contract used to determine voting power.
   CommunityToken public token;
@@ -184,7 +188,7 @@ contract Parameters {
         params[key] = value;
         emit ParameterChanged(key, value);
       }
-
+      emit ProposalResolved(proposalID);
       proposals[proposalID].expiration = 0;
     }
   }
