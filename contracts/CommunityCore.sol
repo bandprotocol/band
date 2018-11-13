@@ -188,7 +188,7 @@ contract CommunityCore {
    * The migrator will be entitiled as the community token's owner.
    */
   function deactivate() public whenActive {
-    require(bytes32(msg.sender) == bytes32(params.get("core:deac")));
+    require(bytes32(msg.sender) == bytes32(params.get("core:deactivator")));
     isActive = false;
     if (currentBandCollatoralized != 0) {
       require(bandToken.transfer(msg.sender, currentBandCollatoralized));
