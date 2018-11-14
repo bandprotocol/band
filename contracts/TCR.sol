@@ -44,9 +44,10 @@ contract TCR {
     uint256 reward
   );
 
-  event VoteCommited(  // A vote is commited by a user.
+  event VoteCommitted(  // A vote is committed by a user.
     uint256 indexed challengeID,
-    address indexed voter
+    address indexed voter,
+    bytes32 voteHash
   );
 
   event VoteRevealed(  // A vote is revealed by a user.
@@ -113,7 +114,7 @@ contract TCR {
     uint256 yesCount;       // The current total number of YES votes
     uint256 noCount;        // The current total number of NO votes
 
-    mapping (address => bytes32) commits; // Each user's commited vote
+    mapping (address => bytes32) commits; // Each user's committed vote
     mapping (address => uint256) weights; // Each user's vote weight
 
     // Each user's vote opinion. Becomes Yes or No after the user reveals the
@@ -180,10 +181,10 @@ contract TCR {
   }
 
   /**
-   * @dev Return the commited value of the given user on the given challenge.
+   * @dev Return the committed value of the given user on the given challenge.
    * or bytes32(0) if the user did not commit.
    */
-  function commitedValue(uint256 challengeID, address voter)
+  function committedValue(uint256 challengeID, address voter)
     public
     view
     challengeMustExist(challengeID)
@@ -309,7 +310,7 @@ contract TCR {
     Challenge storage challenge = challenges[challengeID];
     require(now < challenge.commitEndTime);
     challenge.commits[msg.sender] = commitValue;
-    emit VoteCommited(challengeID, msg.sender);
+    emit VoteCommitted(challengeID, msg.sender, commitValue);
   }
 
   /**
