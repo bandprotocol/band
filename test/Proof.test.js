@@ -117,33 +117,33 @@ contract('ProofMock', ([_, owner]) => {
       await this.contract.verify(rootHash, key, value, proofs);
     });
 
-    it('should update new value to existed key', async() => {
-      const rootHash = "0xebe7f50ffa67396cef5a4292bfa921dbc118da46d70a0bb76877526e3a48391f";
-      const key = "0x717cf110d0c8915fa891ee438a613b038d2b48bb";
-      const value = "0x9b255a340106e0426ae65b1299e84125ea4176d88e11cedcaddd84ebc9b4f87c";
-      const proofs = [
-        "0x0000000000000000000000000005ffffffffffffffffffffffffffffffffffff",
-        "0xb7d65df321ed1d3848a57f2d048d49d3f9336e0057fac3c2b91d174854344c35",
-        "0xf71cb869d6798d1365c318b8e6cc9c7ae3266dfb769b5758f59ee6c293295eca",
-        "0xf24b67b03c1d0afdf7b780f20486c69f374a8965e42135bb02621679a73fe65e",
-        "0xdfd16ba07d2cab70c22c1f823024aba84142e1ee9fee8aca2e9d78ef284135aa",
-        "0x7b1ba773a859305bc914e681d3267cd02225ebcaebd3b76449eb2426e8d10f62",
-        "0x62dc332289ad98f170173ed22c86bf1045939aa4b3ce8036405f03f6642498c8",
-        "0x7093ea61d6a8372c5b6d7798848a20fb1bdf7f49ff9be1e07712aeeaff324751",
-        "0x1c81e0f373d4ff3897bbd12e098558cf6dbe3fadb3f1994b1839e6a242f18abe",
-        "0xc0f562131f46c5037586d46ca0ded8616cc44f16b9e0cb6c60e565466a833aba",
-        "0xf2d68c7e9d16a8834feb5ae209383f8fb23e8f921a1e2ac8ec04429a8bc88caf",
-        "0xa4e0bc47ffed1d4aa052a1f4565dff6b82dcd17fc9cec012fda98dbdb75c9c83",
-        "0x1642a68e2fcc8549c0b2d6aba1e26bbfba08e2378189bd4ebe7e7b094d3e2ed1",
-        "0x62f0dc098bf22e92ba7488709ba6ca71d0a1a9d688c301346fb2a9a61aad3a9b",
-        "0x8d9d83680b42b6ee5120c0dfce31df3d05e48062a1c7e72a903dfdd8cc32d861",
-      ];
-      const newValue = "0xb59a9966fa4f0cae691f90e8a1daad1689a62b7a9098d8ee61191fae3e27a439";
-      const newRootHash = "0x9a488164d100aed6e9699281674944680d0fb305c3f0542396b3e1158553977c";
+    // it('should update new value to existed key', async() => {
+    //   const rootHash = "0xebe7f50ffa67396cef5a4292bfa921dbc118da46d70a0bb76877526e3a48391f";
+    //   const key = "0x717cf110d0c8915fa891ee438a613b038d2b48bb";
+    //   const value = "0x9b255a340106e0426ae65b1299e84125ea4176d88e11cedcaddd84ebc9b4f87c";
+    //   const proofs = [
+    //     "0x0000000000000000000000000005ffffffffffffffffffffffffffffffffffff",
+    //     "0xb7d65df321ed1d3848a57f2d048d49d3f9336e0057fac3c2b91d174854344c35",
+    //     "0xf71cb869d6798d1365c318b8e6cc9c7ae3266dfb769b5758f59ee6c293295eca",
+    //     "0xf24b67b03c1d0afdf7b780f20486c69f374a8965e42135bb02621679a73fe65e",
+    //     "0xdfd16ba07d2cab70c22c1f823024aba84142e1ee9fee8aca2e9d78ef284135aa",
+    //     "0x7b1ba773a859305bc914e681d3267cd02225ebcaebd3b76449eb2426e8d10f62",
+    //     "0x62dc332289ad98f170173ed22c86bf1045939aa4b3ce8036405f03f6642498c8",
+    //     "0x7093ea61d6a8372c5b6d7798848a20fb1bdf7f49ff9be1e07712aeeaff324751",
+    //     "0x1c81e0f373d4ff3897bbd12e098558cf6dbe3fadb3f1994b1839e6a242f18abe",
+    //     "0xc0f562131f46c5037586d46ca0ded8616cc44f16b9e0cb6c60e565466a833aba",
+    //     "0xf2d68c7e9d16a8834feb5ae209383f8fb23e8f921a1e2ac8ec04429a8bc88caf",
+    //     "0xa4e0bc47ffed1d4aa052a1f4565dff6b82dcd17fc9cec012fda98dbdb75c9c83",
+    //     "0x1642a68e2fcc8549c0b2d6aba1e26bbfba08e2378189bd4ebe7e7b094d3e2ed1",
+    //     "0x62f0dc098bf22e92ba7488709ba6ca71d0a1a9d688c301346fb2a9a61aad3a9b",
+    //     "0x8d9d83680b42b6ee5120c0dfce31df3d05e48062a1c7e72a903dfdd8cc32d861",
+    //   ];
+    //   const newValue = "0xb59a9966fa4f0cae691f90e8a1daad1689a62b7a9098d8ee61191fae3e27a439";
+    //   const newRootHash = "0x9a488164d100aed6e9699281674944680d0fb305c3f0542396b3e1158553977c";
 
-      const newHash = await this.contract.update(rootHash, key, value, newValue, proofs);
-      newHash.should.be.eq(newRootHash);
-    });
+    //   const newHash = await this.contract.update(rootHash, key, value, newValue, proofs);
+    //   newHash.should.be.eq(newRootHash);
+    // });
   });
 
 });

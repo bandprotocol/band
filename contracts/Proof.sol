@@ -52,50 +52,6 @@ library Proof {
   }
 
   /**
-   * @dev Update the tree by changing the value at 'key' from 'oldValue' to
-   * 'newValue'. Note that this also requires the proof that 'oldValue' exists.
-   * @return The new root hash after chaning 'key' to map to 'newValue'
-   */
-  function update(
-    bytes32 rootHash,
-    address key,
-    bytes32 oldValue,
-    bytes32 newValue,
-    bytes32[] proof
-  )
-    internal
-    pure
-    returns (bytes32)
-  {
-    bytes32 currentLeaf = oldValue;
-    bytes32 newRootHash = newValue;
-    bytes32 anotherLeaf;
-
-    uint256 proofIndex = 1;
-    uint256 mask = uint256(proof[0]);
-
-    for (uint256 i = 1; i < (1 << 160); i <<= 1) {
-      if ((mask & i) > 0) {
-        anotherLeaf = bytes32(0);
-      } else {
-        anotherLeaf = proof[proofIndex];
-        proofIndex++;
-      }
-
-      if ((uint(key) & i) == 0) {
-        currentLeaf = hash(currentLeaf, anotherLeaf);
-        newRootHash = hash(newRootHash, anotherLeaf);
-      } else {
-        currentLeaf = hash(anotherLeaf, currentLeaf);
-        newRootHash = hash(anotherLeaf, newRootHash);
-      }
-    }
-
-    require(currentLeaf == rootHash, "Invalid proof");
-    return newRootHash;
-  }
-
-  /**
    * @dev Similar to keccak256, but optimize to return 0 when hashing (0, 0)
    */
   function hash(bytes32 left, bytes32 right) private pure returns(bytes32){
