@@ -102,7 +102,7 @@ contract BandToken is ERC20, Ownable {
     eomTimestamps[44] = 1633046400;  // End of 2021/09
     eomTimestamps[45] = 1635724800;  // End of 2021/10
     eomTimestamps[46] = 1638316800;  // End of 2021/11
-    eomTimestamps[47] = 1638316800;  // End of 2021/12
+    eomTimestamps[47] = 1640995200;  // End of 2021/12
   }
 
   /**
