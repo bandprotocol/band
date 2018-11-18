@@ -3,15 +3,15 @@ const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
 const CommunityToken = artifacts.require('CommunityToken');
 const BigNumber = web3.BigNumber;
 
-
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
 contract('CommunityToken', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
-    this.contract = await CommunityToken.new(
-      'CoinHatcher', 'XCH', 36, { from: owner });
+    this.contract = await CommunityToken.new('CoinHatcher', 'XCH', 36, {
+      from: owner,
+    });
   });
 
   it('should contain correct token detail', async () => {

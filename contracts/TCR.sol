@@ -70,7 +70,7 @@ contract TCR {
     uint256 value
   );
 
-  event Exit(  // Someone exits call an entry
+  event Exit(  // An entry is exited
     bytes32 indexed data,
     address indexed proposer
   );

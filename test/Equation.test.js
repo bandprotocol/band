@@ -1,8 +1,10 @@
-const { reverting, throwing } = require('openzeppelin-solidity/test/helpers/shouldFail');
+const {
+  reverting,
+  throwing,
+} = require('openzeppelin-solidity/test/helpers/shouldFail');
 
 const EquationMock = artifacts.require('EquationMock');
 const BigNumber = web3.BigNumber;
-
 
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
@@ -62,7 +64,26 @@ contract('EquationMock', ([_, owner]) => {
   context('Square root equation 4x(sqrt(x+3)) + 2x - 17', () => {
     beforeEach(async () => {
       this.contract = await EquationMock.new({ from: owner });
-      await this.contract.init([5, 4, 6, 6, 0, 4, 1, 2, 4, 1, 0, 3, 6, 0, 2, 1, 0, 17]);
+      await this.contract.init([
+        5,
+        4,
+        6,
+        6,
+        0,
+        4,
+        1,
+        2,
+        4,
+        1,
+        0,
+        3,
+        6,
+        0,
+        2,
+        1,
+        0,
+        17,
+      ]);
     });
 
     it('should return 49 if x equal 5', async () => {
@@ -77,22 +98,39 @@ contract('EquationMock', ([_, owner]) => {
   });
 
   context('If-else equation y = 2*x if x < 10 else x^2 - 90', () => {
-    beforeEach(async () =>{
-      this.contract = await EquationMock.new({from: owner});
-      await this.contract.init([17, 11, 1, 0, 10, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90]);
+    beforeEach(async () => {
+      this.contract = await EquationMock.new({ from: owner });
+      await this.contract.init([
+        17,
+        11,
+        1,
+        0,
+        10,
+        6,
+        0,
+        2,
+        1,
+        5,
+        8,
+        1,
+        0,
+        2,
+        0,
+        90,
+      ]);
     });
 
-    it('should return 16 if x equal 8', async () =>{
+    it('should return 16 if x equal 8', async () => {
       const value = await this.contract.getPrice(8);
       value.should.be.bignumber.eq(16);
     });
 
-    it('should return 10 if x equal 10', async () =>{
+    it('should return 10 if x equal 10', async () => {
       const value = await this.contract.getPrice(10);
       value.should.be.bignumber.eq(10);
     });
 
-    it('should return 249910 if x equal 500', async () =>{
+    it('should return 249910 if x equal 500', async () => {
       const value = await this.contract.getPrice(500);
       value.should.be.bignumber.eq(249910);
     });
@@ -100,21 +138,43 @@ contract('EquationMock', ([_, owner]) => {
 
   context('If-else equation y = 2*x if x < 10 or x > 100 else x^2 - 90', () => {
     beforeEach(async () => {
-      this.contract = await EquationMock.new({from: owner});
-      await this.contract.init([17, 16, 11, 1, 0, 10, 12, 1, 0, 100, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90]);
+      this.contract = await EquationMock.new({ from: owner });
+      await this.contract.init([
+        17,
+        16,
+        11,
+        1,
+        0,
+        10,
+        12,
+        1,
+        0,
+        100,
+        6,
+        0,
+        2,
+        1,
+        5,
+        8,
+        1,
+        0,
+        2,
+        0,
+        90,
+      ]);
     });
 
-    it('should return 16 if x equal 8', async () =>{
+    it('should return 16 if x equal 8', async () => {
       const value = await this.contract.getPrice(8);
       value.should.be.bignumber.eq(16);
     });
 
-    it('should return 10 if x equal 10', async () =>{
+    it('should return 10 if x equal 10', async () => {
       const value = await this.contract.getPrice(10);
       value.should.be.bignumber.eq(10);
     });
 
-    it('should return 1000 if x equal 500', async () =>{
+    it('should return 1000 if x equal 500', async () => {
       const value = await this.contract.getPrice(500);
       value.should.be.bignumber.eq(1000);
     });
