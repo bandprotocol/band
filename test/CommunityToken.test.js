@@ -1,4 +1,4 @@
-const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
+const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
 
 const CommunityToken = artifacts.require('CommunityToken');
 const BigNumber = web3.BigNumber;
@@ -36,7 +36,7 @@ contract('CommunityToken', ([_, owner, alice, bob]) => {
   });
 
   it('should allow only minter to mint tokens', async () => {
-    await expectThrow(this.contract.mint(alice, 1000000, { from: alice }));
+    await reverting(this.contract.mint(alice, 1000000, { from: alice }));
     await this.contract.mint(alice, 1000000, { from: owner });
 
     const totalSupply = await this.contract.totalSupply();
@@ -50,7 +50,7 @@ contract('CommunityToken', ([_, owner, alice, bob]) => {
   });
 
   it('should allow transfer of minter', async () => {
-    await expectThrow(this.contract.mint(alice, 1000000, { from: alice }));
+    await reverting(this.contract.mint(alice, 1000000, { from: alice }));
     await this.contract.transferOwnership(alice, { from: owner });
     await this.contract.mint(alice, 1000000, { from: alice });
 
@@ -67,7 +67,7 @@ contract('CommunityToken', ([_, owner, alice, bob]) => {
     const owner1stBalance = await this.contract.balanceOf(owner);
     owner1stBalance.should.bignumber.eq(new BigNumber(1000000));
 
-    await expectThrow(this.contract.burn(owner, 10, { from: alice }));
+    await reverting(this.contract.burn(owner, 10, { from: alice }));
     await this.contract.burn(owner, 10, { from: owner });
 
     const owner2ndBalance = await this.contract.balanceOf(owner);

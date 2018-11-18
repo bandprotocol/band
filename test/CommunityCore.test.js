@@ -1,6 +1,5 @@
-const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
-const { increaseTimeTo, duration } = require('openzeppelin-solidity/test/helpers/increaseTime');
-const { latestTime } = require('openzeppelin-solidity/test/helpers/latestTime');
+const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
+const { increaseTo, duration, latest } = require('openzeppelin-solidity/test/helpers/time');
 
 const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
@@ -55,7 +54,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     await this.params.vote(1, 0, { from: bob });
 
     // One month has passed
-    await increaseTimeTo((await latestTime()) + duration.days(30));
+    await increaseTo((await latest()) + duration.days(30));
     await this.core.buy(10, 20000, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(88100));
@@ -85,15 +84,15 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
   });
 
   it('should allow anyone to buy and sell community tokens', async () => {
-    await expectThrow(this.core.buy(100,  9000, { from: bob }));
-    await expectThrow(this.core.buy(100, 11000, { from: bob }));
+    await reverting(this.core.buy(100,  9000, { from: bob }));
+    await reverting(this.core.buy(100, 11000, { from: bob }));
 
     await this.band.transfer(bob, 100000, { from: owner });
-    await expectThrow(this.core.buy(100,  9000, { from: bob }));
-    await expectThrow(this.core.buy(100, 11000, { from: bob }));
+    await reverting(this.core.buy(100,  9000, { from: bob }));
+    await reverting(this.core.buy(100, 11000, { from: bob }));
 
     await this.band.approve(this.core.address, 100000, { from: bob });
-    await expectThrow(this.core.buy(100,  9000, { from: bob }));
+    await reverting(this.core.buy(100,  9000, { from: bob }));
     await this.core.buy(100, 11000, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(90000));
@@ -106,8 +105,8 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(101));
     (await this.core.curveMultiplier()).should.bignumber.eq(new BigNumber(1000000000000));
 
-    await expectThrow(this.core.sell(10, 1900, { from: carol }));
-    await expectThrow(this.core.sell(10, 2000, { from: bob }));
+    await reverting(this.core.sell(10, 1900, { from: carol }));
+    await reverting(this.core.sell(10, 2000, { from: bob }));
     await this.core.sell(10, 1900, { from: bob });
 
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(91719));
@@ -124,8 +123,8 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(50));
     (await this.comm.balanceOf(bob)).should.bignumber.eq(new BigNumber(50));
 
-    await expectThrow(this.core.deflate(200, { from: owner }));
-    await expectThrow(this.core.deflate(5, { from: bob }));
+    await reverting(this.core.deflate(200, { from: owner }));
+    await reverting(this.core.deflate(5, { from: bob }));
     await this.core.deflate(5, { from: owner });
 
     (await this.comm.balanceOf(owner)).should.bignumber.eq(new BigNumber(45));

@@ -3141,9 +3141,9 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-openzeppelin-solidity@next:
-  version "2.0.0-rc.3"
-  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-2.0.0-rc.3.tgz#2a75455b8b33a4552fb0e93a12590b4d7d0d1d18"
+openzeppelin-solidity@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-2.0.0.tgz#b45dddbdae090f89577598c1a7e7518df61b7ba2"
 
 optionator@^0.8.2:
   version "0.8.2"

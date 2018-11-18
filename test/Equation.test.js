@@ -1,4 +1,4 @@
-const { expectThrow } = require('openzeppelin-solidity/test/helpers/expectThrow');
+const { reverting, throwing } = require('openzeppelin-solidity/test/helpers/shouldFail');
 
 const EquationMock = artifacts.require('EquationMock');
 const BigNumber = web3.BigNumber;
@@ -43,19 +43,19 @@ contract('EquationMock', ([_, owner]) => {
     });
 
     it('should throw if value less than 0', async () => {
-      await expectThrow(this.contract.getPrice(1));
+      await reverting(this.contract.getPrice(1));
     });
   });
 
   context('Incomplete equation x + ', () => {
     it('should throw if operand miss', async () => {
-      await expectThrow(this.contract.init([4, 1]));
+      await throwing(this.contract.init([4, 1]));
     });
   });
 
   context('Incomplete equation 4 * x 3', () => {
     it('should throw if operand exceed', async () => {
-      await expectThrow(this.contract.init([6, 0, 4, 1, 0, 3]));
+      await reverting(this.contract.init([6, 0, 4, 1, 0, 3]));
     });
   });
 
@@ -122,7 +122,7 @@ contract('EquationMock', ([_, owner]) => {
 
   context('Wrong operator type ex. (x > 5) * 3', () => {
     it('should throw if use arithmetic operator on bool', async () => {
-      await expectThrow(this.contract.init([6, 12, 1, 0, 5, 0, 3]));
+      await reverting(this.contract.init([6, 12, 1, 0, 5, 0, 3]));
     });
   });
 });
