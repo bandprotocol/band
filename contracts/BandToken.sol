@@ -55,16 +55,16 @@ contract BandToken is ERC20, Ownable {
 
     // Populate eomTimestamps for every month from the end of 2018/01
     // until the end of 2021/12, for the total of 4 years (48 months).
-    eomTimestamps[ 0] = 1517443200;  // End of 2018/01
-    eomTimestamps[ 1] = 1519862400;  // End of 2018/02
-    eomTimestamps[ 2] = 1522540800;  // End of 2018/03
-    eomTimestamps[ 3] = 1525132800;  // End of 2018/04
-    eomTimestamps[ 4] = 1527811200;  // End of 2018/05
-    eomTimestamps[ 5] = 1530403200;  // End of 2018/06
-    eomTimestamps[ 6] = 1533081600;  // End of 2018/07
-    eomTimestamps[ 7] = 1535760000;  // End of 2018/08
-    eomTimestamps[ 8] = 1538352000;  // End of 2018/09
-    eomTimestamps[ 9] = 1541030400;  // End of 2018/10
+    eomTimestamps[0] = 1517443200;   // End of 2018/01
+    eomTimestamps[1] = 1519862400;   // End of 2018/02
+    eomTimestamps[2] = 1522540800;   // End of 2018/03
+    eomTimestamps[3] = 1525132800;   // End of 2018/04
+    eomTimestamps[4] = 1527811200;   // End of 2018/05
+    eomTimestamps[5] = 1530403200;   // End of 2018/06
+    eomTimestamps[6] = 1533081600;   // End of 2018/07
+    eomTimestamps[7] = 1535760000;   // End of 2018/08
+    eomTimestamps[8] = 1538352000;   // End of 2018/09
+    eomTimestamps[9] = 1541030400;   // End of 2018/10
     eomTimestamps[10] = 1543622400;  // End of 2018/11
     eomTimestamps[11] = 1546300800;  // End of 2018/12
     eomTimestamps[12] = 1548979200;  // End of 2019/01
@@ -120,9 +120,9 @@ contract BandToken is ERC20, Ownable {
     onlyOwner
     returns (bool)
   {
-    require (_start < _cliff);
-    require (_cliff <= _end);
-    require (_end > 0 && _end <= 48);
+    require(_start < _cliff);
+    require(_cliff <= _end);
+    require(_end > 0 && _end <= 48);
 
     locked[_addr] = TokenLockInfo({
       start: _start,
