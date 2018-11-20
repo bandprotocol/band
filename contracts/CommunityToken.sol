@@ -21,14 +21,33 @@ contract CommunityToken is IERC20, Ownable {
   string public symbol;
   uint256 public decimals;
 
+  /**
+   * @dev IMPORTANT: balances in CommunityToken are kept as a linked
+   * list of ALL historical changes of account balance in timestamps and number.
+   *
+   * For instance, if an address has the following balance list:
+   *  (0, 0) -> (1000, 100) -> (1010, 90) -> (1010, 89) -> (1020, 94)
+   * It means the historical activity of the address is:
+   *    [at t=1000] Receive 100 mini-tokens
+   *    [at t=1010] Spend 10 mini-tokens
+   *    [at t=1010] Spend 1 mini-token
+   *    [at t=1020] Receive 5 mini-tokens
+   *
+   * This allows the contract to figure out balance of the address at any
+   * timestamp `t`, by searching for the node that has the biggest timestamp
+   * that is not greater than `t`.
+   *
+   * For efficiency, timestamp and balance are packed into one uint256 integer,
+   * with the top 64 bits representing timestamp, and the bottom 192 bits
+   * representing time balance.
+   */
   mapping (address => mapping (uint256 => uint256)) _balances;
-
+  // Mapping to keep track of the last used nonce for each of the address.
   mapping (address => uint256) _nonces;
-
+  // Amount of tokens allowed in transferFrom, similar to ERC-20 standard.
   mapping (address => mapping (address => uint256)) _allowed;
 
   uint256 private _totalSupply;
-
 
   constructor(string _name, string _symbol, uint8 _decimals) public {
     name = _name;
@@ -37,7 +56,7 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
-   * @dev Total number of tokens in existence
+   * @dev Returns total number of tokens in existence
    */
   function totalSupply() public view returns (uint256) {
     return _totalSupply;
@@ -57,75 +76,38 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
-   * @dev Returns the timestamp of user balance at the given nonce.
+   * @dev Returns user balance at the given time. Under the hood, this
+   * performs binary search to look for the largest nonce at which the
+   * timestamp is not greater than 'asof'. The balance at that nonce is the
+   * returning value.
    */
-  function historicalTimeAtNonce(address owner, uint256 nonce)
+  function historicalBalanceAtTime(address owner, uint256 asof)
     public
     view
     returns (uint256)
   {
-    require(nonce <= _nonces[owner]);
-    return _balances[owner][nonce] >> 192;  // Lower 64 bits
-  }
-
-  /**
-   * @dev Returns user balance at the given time. Note that for performance
-   * reason, this function also takes the nonce that is expected to reflect
-   * the answer. If called with zero nonce, the function will fall back to
-   * the slow variant.
-   */
-  function historicalBalanceAtTime(
-    address owner,
-    uint256 asof,
-    uint256 nonce
-  )
-    public
-    view
-    returns (uint256)
-  {
-    if (nonce == 0) {
-      return historicalBalanceAtTimeSlow(owner, asof);
-    }
-
-    // The balance record must happen at or before the as-of time.
-    require(historicalTimeAtNonce(owner, nonce) <= asof);
-
-    // The next balance record, if exists, must happen after the as-of time.
-    if (nonce < _nonces[owner]) {
-      require(historicalTimeAtNonce(owner, nonce + 1) > asof);
-    }
-
-    return historicalBalanceAtNonce(owner, nonce);
-  }
-
-  /**
-   * @dev Similar to above, but does binary search to look for nonce without
-   * the need to provide one. This is less efficient than the non-slow one.
-   */
-  function historicalBalanceAtTimeSlow(address owner, uint256 asof)
-    public
-    view
-    returns (uint256)
-  {
+    uint256 lastNonce = _nonces[owner];
     uint256 start = 0;
-    uint256 end = _nonces[owner];
+    uint256 end = lastNonce;
 
+    // The gas cost of this binary search is approximately 200 * log2(lastNonce)
     while (start < end) {
       // Doing ((start + end + 1) / 2) here to prevent infinite loop.
       uint256 mid = start.add(end).add(1).div(2);
-      if (historicalTimeAtNonce(owner, mid) > asof) {
+      if ((_balances[owner][mid] >> 192) > asof) {  // Upper 64 bits timestamp
         // If midTime > asof, this mid can't possibly be the answer
         end = mid.sub(1);
       } else {
-        // Otherwise, search on the greater side, but still keep mid as option
+        // Otherwise, search on the greater side, but still keep mid as a
+        // possible option.
         start = mid;
       }
     }
 
     // Double check again that the binary search is correct.
-    assert(historicalTimeAtNonce(owner, start) <= asof);
-    if (start < _nonces[owner]) {
-      assert(historicalTimeAtNonce(owner, start + 1) > asof);
+    assert((_balances[owner][start] >> 192) <= asof);
+    if (start < lastNonce) {
+      assert((_balances[owner][start + 1] >> 192) > asof);
     }
 
     return historicalBalanceAtNonce(owner, start);

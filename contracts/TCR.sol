@@ -317,12 +317,7 @@ contract TCR {
    * @dev Reveal vote with choice and secret salt used in generating commit
    * earlier during the commit period.
    */
-  function revealVote(
-    uint256 challengeID,
-    bool isYes,
-    uint256 salt,
-    uint256 tokenBalanceNonce
-  )
+  function revealVote(uint256 challengeID, bool isYes, uint256 salt)
     public
     challengeMustExist(challengeID)
   {
@@ -339,8 +334,7 @@ contract TCR {
     // Get the weight, which is the token balance at the end of commit time.
     uint256 weight = token.historicalBalanceAtTime(
       msg.sender,
-      challenge.commitEndTime,
-      tokenBalanceNonce
+      challenge.commitEndTime
     );
 
     challenge.weights[msg.sender] = weight;

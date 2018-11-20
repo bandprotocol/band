@@ -56,7 +56,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
     // 10% per month inflation
     await this.params.propose(['core:inflation_ratio'], [38581], { from: bob });
-    await this.params.vote(1, 0, { from: bob });
+    await this.params.vote(1, { from: bob });
 
     // One month has passed
     await increaseTo((await latest()) + duration.days(30));
@@ -85,7 +85,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     await this.params.propose(['core:sales_tax'], [200000000000], {
       from: bob,
     });
-    await this.params.vote(1, 0, { from: bob });
+    await this.params.vote(1, { from: bob });
 
     await this.core.sell(15, 1000, { from: bob });
     (await this.band.balanceOf(bob)).should.bignumber.eq(new BigNumber(92256));

@@ -157,7 +157,7 @@ contract Parameters {
    * @dev Called by token holders to express aggreement with a proposal. See
    * function propose above.
    */
-  function vote(uint256 proposalID, uint256 tokenBalanceNonce) external {
+  function vote(uint256 proposalID) external {
     Proposal storage proposal = proposals[proposalID];
     address voter = msg.sender;
 
@@ -170,8 +170,7 @@ contract Parameters {
 
     uint256 weight = token.historicalBalanceAtTime(
       voter,
-      proposal.proposedTime,
-      tokenBalanceNonce
+      proposal.proposedTime
     );
 
     proposal.voted[voter] = true;

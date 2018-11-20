@@ -8,25 +8,27 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('BandToken', ([_, owner, alice, bob, carol]) => {
+contract('BandToken', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
     this.contract = await BandToken.new(1000000, { from: owner });
     await this.contract.transfer(alice, 1000, { from: owner });
   });
 
-  context('Without token locking', async () => {
+  it('should have correct information', async () => {
+    (await this.contract.name()).should.eq('BandToken');
+    (await this.contract.symbol()).should.eq('BAND');
+    (await this.contract.decimals()).should.bignumber.eq(18);
+  });
+
+  context('Without token locking', () => {
     it('should only allow valid token transfer', async () => {
       // Alice sends 100 tokens to Bob.
       await this.contract.transfer(bob, 100, { from: alice });
       // Alice sends another 1000 tokens. Should fail since Alice only has 900.
       await reverting(this.contract.transfer(bob, 1000, { from: alice }));
 
-      (await this.contract.balanceOf(alice)).should.bignumber.eq(
-        new BigNumber(900),
-      );
-      (await this.contract.balanceOf(bob)).should.bignumber.eq(
-        new BigNumber(100),
-      );
+      (await this.contract.balanceOf(alice)).should.bignumber.eq(900);
+      (await this.contract.balanceOf(bob)).should.bignumber.eq(100);
     });
 
     it('should only allow valid transferFrom', async () => {
@@ -43,18 +45,14 @@ contract('BandToken', ([_, owner, alice, bob, carol]) => {
       // Bob withdraws 100 tokens from Alice successfully now.
       await this.contract.transferFrom(alice, bob, 100, { from: bob });
 
-      (await this.contract.balanceOf(alice)).should.bignumber.eq(
-        new BigNumber(900),
-      );
-      (await this.contract.balanceOf(bob)).should.bignumber.eq(
-        new BigNumber(100),
-      );
+      (await this.contract.balanceOf(alice)).should.bignumber.eq(900);
+      (await this.contract.balanceOf(bob)).should.bignumber.eq(100);
     });
   });
 
   context(
     'With one year token locking, starting 2019/02, with 3 month cliff',
-    async () => {
+    () => {
       beforeEach(async () => {
         // The owner sets Alice's balance to be locked for 1000 tokens,
         // starting from 2019/02/01 for 1 year with 3 months cliff.
@@ -71,26 +69,18 @@ contract('BandToken', ([_, owner, alice, bob, carol]) => {
         await increaseTo(1555286400); // 2019/04/15 (2.5 months)
         await reverting(this.contract.transfer(bob, 1, { from: alice }));
         await increaseTo(1557878400); // 2019/05/15 (3.5 months) - 1/4 vested
-        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(
-          new BigNumber(250),
-        );
+        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(250);
         // Alice sends 150 of the vested tokens to Bob.
         await this.contract.transfer(bob, 150, { from: alice });
-        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(
-          new BigNumber(100),
-        );
+        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(100);
         // Sending another 150 should fail as only 250 total is available.
         await reverting(this.contract.transfer(bob, 150, { from: alice }));
         await increaseTo(1579046400); // 2020/01/15 (11.5 months)
         // 11/12 vested - locked balance should be floor(1/12*1000).
-        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(
-          new BigNumber(767),
-        );
+        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(767);
         await increaseTo(1580515200); // 2020/02/01
         // All fully vested. 1000 - 150 = 850 should be available!
-        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(
-          new BigNumber(850),
-        );
+        (await this.contract.unlockedBalanceOf(alice)).should.bignumber.eq(850);
       });
     },
   );
