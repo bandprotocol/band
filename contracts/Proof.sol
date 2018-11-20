@@ -36,6 +36,7 @@ library Proof {
       if ((mask & i) > 0) {
         anotherLeaf = bytes32(0);
       } else {
+        require(proofIndex < proof.length);
         anotherLeaf = proof[proofIndex];
         proofIndex++;
       }
@@ -47,7 +48,8 @@ library Proof {
       }
     }
 
-    require(currentLeaf == rootHash, "Invalid proof");
+    require(currentLeaf == rootHash);
+    require(proofIndex == proof.length);
     return true;
   }
 
@@ -58,7 +60,6 @@ library Proof {
     if (left == bytes32(0) && right == bytes32(0)) {
       return bytes32(0);
     }
-
     return keccak256(abi.encodePacked(left, right));
   }
 }
