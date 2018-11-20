@@ -91,7 +91,6 @@ library Equation {
   uint8 constant OPCODE_IF = 17;
   uint8 constant OPCODE_INVALID = 18;
 
-
   /**
    * @dev Initialize equation by array of opcodes/values in prefix order. Array
    * is read as if it is the *pre-order* traversal of the expression tree.
@@ -244,7 +243,9 @@ library Equation {
     private
     returns (uint8, ExprType)
   {
+    require(currentNodeIndex < self.nodes.length);
     Node storage node = self.nodes[currentNodeIndex];
+
     uint8 opcode = node.opcode;
     uint8 childrenCount = getChildrenCount(opcode);
 
@@ -262,11 +263,7 @@ library Equation {
         assert(false);
       }
 
-      (uint8 newLastNodeIndex, ExprType childType) =
-          populateTree(self, lastNodeIndex + 1);
-
-      lastNodeIndex = newLastNodeIndex;
-      childrenTypes[idx] = childType;
+      (lastNodeIndex, childrenTypes[idx]) = populateTree(self, lastNodeIndex + 1);
     }
 
     ExprType exprType = checkExprType(opcode, childrenTypes);

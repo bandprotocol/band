@@ -12,7 +12,7 @@ import "./TCR.sol";
  */
 contract AdminTCR is TCR {
 
-  constructor(Parameters _params) TCR("admin:", _params) public {
+  constructor(Parameters params) TCR("admin:", params) public {
     // Make the contract creator the admin. Note that this is without deposit,
     // so any challenge will kick this admin out.
     bytes32 data = bytes32(msg.sender);

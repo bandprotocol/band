@@ -49,9 +49,9 @@ contract BandToken is ERC20, Ownable {
    * @dev BandToken constructor. All of the available tokens are minted to the
    * token creator.
    */
-  constructor(uint256 _totalSupply) public {
+  constructor(uint256 totalSupply) public {
     // Initially, all of the minted tokens belong to the contract creator.
-    _mint(msg.sender, _totalSupply);
+    _mint(msg.sender, totalSupply);
 
     // Populate eomTimestamps for every month from the end of 2018/01
     // until the end of 2021/12, for the total of 4 years (48 months).
@@ -110,25 +110,25 @@ contract BandToken is ERC20, Ownable {
    * for the descriptions of the function arguments.
    */
   function setTokenLock(
-    address _addr,
-    uint8 _start,
-    uint8 _cliff,
-    uint8 _end,
-    uint256 _value
+    address addr,
+    uint8 start,
+    uint8 cliff,
+    uint8 end,
+    uint256 value
   )
     public
     onlyOwner
     returns (bool)
   {
-    require(_start < _cliff);
-    require(_cliff <= _end);
-    require(_end > 0 && _end <= 48);
+    require(start < cliff);
+    require(cliff <= end);
+    require(end > 0 && end <= 48);
 
-    locked[_addr] = TokenLockInfo({
-      start: _start,
-      cliff: _cliff,
-      end: _end,
-      totalValue: _value
+    locked[addr] = TokenLockInfo({
+      start: start,
+      cliff: cliff,
+      end: end,
+      totalValue: value
     });
 
     return true;
@@ -136,15 +136,15 @@ contract BandToken is ERC20, Ownable {
 
   /**
    * @dev Get the unlocked balance of the specified address.
-   * @param _addr The address to query
+   * @param addr The address to query
    * @return The unlocked balance, which is the total balance subtracted by
    * the number of tokens yet remained to be unlocked for this address. See
    * TokenLockInfo above for details.
    */
-  function unlockedBalanceOf(address _addr) public view returns (uint256) {
-    TokenLockInfo storage lockInfo = locked[_addr];
+  function unlockedBalanceOf(address addr) public view returns (uint256) {
+    TokenLockInfo storage lockInfo = locked[addr];
 
-    uint256 totalBalance = balanceOf(_addr);
+    uint256 totalBalance = balanceOf(addr);
     uint8 end = lockInfo.end;
 
     if (end == 0) {
@@ -194,19 +194,19 @@ contract BandToken is ERC20, Ownable {
   /**
    * @dev Similar to ERC20 transfer, with extra token locking restriction.
    */
-  function transfer(address _to, uint256 _value) public returns (bool) {
-    require(_value <= unlockedBalanceOf(msg.sender));
-    return super.transfer(_to, _value);
+  function transfer(address to, uint256 value) public returns (bool) {
+    require(value <= unlockedBalanceOf(msg.sender));
+    return super.transfer(to, value);
   }
 
   /**
    * @dev Similar to ERC20 transferFrom, with extra token locking restriction.
    */
-  function transferFrom(address _from, address _to, uint256 _value)
+  function transferFrom(address from, address to, uint256 value)
     public
     returns (bool)
   {
-    require(_value <= unlockedBalanceOf(_from));
-    return super.transferFrom(_from, _to, _value);
+    require(value <= unlockedBalanceOf(from));
+    return super.transferFrom(from, to, value);
   }
 }
