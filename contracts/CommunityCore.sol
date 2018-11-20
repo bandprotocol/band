@@ -1,5 +1,4 @@
 pragma solidity ^0.4.24;
-pragma experimental ABIEncoderV2;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -22,7 +21,7 @@ import "./Proof.sol";
  * token with itself.
  */
 contract CommunityCore {
-  using Equation for Equation.Data;
+  using Equation for Equation.Node[];
   using SafeMath for uint256;
   using Proof for bytes32;
 
@@ -63,7 +62,7 @@ contract CommunityCore {
     uint256 amount
   );
 
-  Equation.Data equation;
+  Equation.Node[] public equation;
 
   AdminTCR public admin;
   BandToken public bandToken;
@@ -195,14 +194,6 @@ contract CommunityCore {
       currentBandCollatoralized = 0;
     }
     commToken.transferOwnership(msg.sender);
-  }
-
-
-  /**
-   * @dev Return the node at the particular index of this community curve.
-   */
-  function getEquationNode(uint256 index) public view returns (Equation.Node) {
-    return equation.nodes[index];
   }
 
   /**

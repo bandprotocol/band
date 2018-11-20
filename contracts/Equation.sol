@@ -43,6 +43,10 @@ library Equation {
    *  Different opcode nodes will have different number of children.
    *  3. value: the value inside the node. Currently this is only relevant for
    *  Integer Constant (Opcode 00).
+   *
+   * An equation's data is a list of nodes. The nodes will link against
+   * each other using index as pointer. The root node of the expression tree
+   * is the first node in the list
    */
   struct Node {
     uint8 opcode;
@@ -50,15 +54,6 @@ library Equation {
     uint8 child1;
     uint8 child2;
     uint256 value;
-  }
-
-  /**
-   * @dev An equation's data is a list of nodes. The nodes will link against
-   * each other using index as pointer. The root node of the expression tree
-   * is the first node in the list
-   */
-  struct Data {
-    Node[] nodes;
   }
 
   /**
@@ -112,9 +107,9 @@ library Equation {
    * @param self storage pointer to equation data to initialize.
    * @param _expressions array of opcodes/values to initialize.
    */
-  function init(Data storage self, uint256[] _expressions) internal {
+  function init(Node[] storage self, uint256[] _expressions) internal {
     // Init should only be called when the equation is not yet initialized.
-    assert(self.nodes.length == 0);
+    assert(self.length == 0);
 
     // Limit expression length to < 256 to make sure gas cost is managable.
     require(_expressions.length < 256);
@@ -132,33 +127,33 @@ library Equation {
         node.value = _expressions[++idx];
       }
 
-      self.nodes.push(node);
+      self.push(node);
     }
 
     // Actual code to create the tree. We also assert and the end that all
     // of the provided expressions are exhausted.
     (uint8 lastNodeIndex,) = populateTree(self, 0);
-    require(lastNodeIndex == self.nodes.length - 1);
+    require(lastNodeIndex == self.length - 1);
   }
 
   /**
    * @dev Clear the existing equation. Must be called prior to init of the tree
    * has already been initialized.
    */
-  function clear(Data storage self) internal {
-    assert(self.nodes.length < 256);
+  function clear(Node[] storage self) internal {
+    assert(self.length < 256);
 
-    for (uint8 idx = 0; idx < self.nodes.length; ++idx) {
-      delete self.nodes[idx];
+    for (uint8 idx = 0; idx < self.length; ++idx) {
+      delete self[idx];
     }
 
-    self.nodes.length = 0;
+    self.length = 0;
   }
 
   /**
    * @dev Calculate the Y position from the X position for this equation.
    */
-  function calculate(Data storage self, uint256 xValue)
+  function calculate(Node[] storage self, uint256 xValue)
     internal
     view
     returns (uint256)
@@ -239,12 +234,12 @@ library Equation {
    * (highest/rightmost) node ndex of the current subtree. The second value
    * indicates the type that one would get from evaluating this subtree.
    */
-  function populateTree(Data storage self, uint8 currentNodeIndex)
+  function populateTree(Node[] storage self, uint8 currentNodeIndex)
     private
     returns (uint8, ExprType)
   {
-    require(currentNodeIndex < self.nodes.length);
-    Node storage node = self.nodes[currentNodeIndex];
+    require(currentNodeIndex < self.length);
+    Node storage node = self[currentNodeIndex];
 
     uint8 opcode = node.opcode;
     uint8 childrenCount = getChildrenCount(opcode);
@@ -275,12 +270,12 @@ library Equation {
    * @dev Calculate the arithmetic value of this sub-expression at the given
    * X position.
    */
-  function solveMath(Data storage self, uint8 nodeIdx, uint256 xValue)
+  function solveMath(Node[] storage self, uint8 nodeIdx, uint256 xValue)
     private
     view
     returns (uint256)
   {
-    Node storage node = self.nodes[nodeIdx];
+    Node storage node = self[nodeIdx];
     uint8 opcode = node.opcode;
 
     if (opcode == OPCODE_CONST) {
@@ -335,12 +330,12 @@ library Equation {
   /**
    * @dev Calculate the arithmetic value of this sub-expression.
    */
-  function solveBool(Data storage self, uint8 nodeIdx, uint256 xValue)
+  function solveBool(Node[] storage self, uint8 nodeIdx, uint256 xValue)
     private
     view
     returns (bool)
   {
-    Node storage node = self.nodes[nodeIdx];
+    Node storage node = self[nodeIdx];
     uint8 opcode = node.opcode;
 
     if (opcode == OPCODE_NOT) {
