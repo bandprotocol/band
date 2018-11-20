@@ -1,4 +1,11 @@
 {
+  "name": "bandprotocol-contracts",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bandprotocol/contracts"
+  },
+  "license": ""Apache-2.0",
   "scripts": {
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
