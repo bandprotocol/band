@@ -56,7 +56,7 @@ library Proof {
   /**
    * @dev Similar to keccak256, but optimize to return 0 when hashing (0, 0)
    */
-  function hash(bytes32 left, bytes32 right) private pure returns(bytes32){
+  function hash(bytes32 left, bytes32 right) private pure returns (bytes32) {
     if (left == bytes32(0) && right == bytes32(0)) {
       return bytes32(0);
     }

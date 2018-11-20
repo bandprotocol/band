@@ -173,6 +173,9 @@ contract Parameters {
       proposal.proposedTime
     );
 
+    // Weight should not be zero.
+    require(weight != 0);
+
     proposal.voted[voter] = true;
     proposal.currentVoteCount = proposal.currentVoteCount.add(weight);
     emit ProposalVoted(proposalID, msg.sender, weight);

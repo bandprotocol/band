@@ -28,4 +28,10 @@ contract AdminTCR is TCR {
     return isEntryActive(bytes32(account));
   }
 
+  /**
+   * @dev Helper function for sender proposing himself/herself to be an admin.
+   */
+  function applyAdmin(uint256 stake) public {
+    apply(bytes32(msg.sender), stake);
+  }
 }

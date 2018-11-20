@@ -1,4 +1,6 @@
+const randomhex = require('randomhex');
 const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
+const { Merkle, bigNumberToHex } = require('../lib/merkle');
 
 const ProofMock = artifacts.require('ProofMock');
 const BigNumber = web3.BigNumber;
@@ -8,15 +10,57 @@ require('chai')
   .should();
 
 contract('ProofMock', ([_, owner]) => {
-  context('Mapping to nonzero key', () => {
+  beforeEach(async () => {
+    this.contract = await ProofMock.new({ from: owner });
+  });
+
+  context('Randomly generated', () => {
     beforeEach(async () => {
-      this.contract = await ProofMock.new({ from: owner });
+      this.merkle = new Merkle();
+      this.keys = [];
+
+      while (this.keys.length < 16) {
+        // Insert 1204 key-value arbitrarily
+        const key = randomhex(20);
+        const value = Math.floor(Math.random() * 1000);
+        this.keys.push(key);
+        this.merkle.insert(key, value);
+      }
+    });
+
+    it('should accept correct proof', async () => {
+      const key = this.keys[8];
+      const [value, proof] = this.merkle.getProof(key);
+      await this.contract.verify(
+        this.merkle.root,
+        key,
+        bigNumberToHex(value),
+        proof,
+      );
+    });
+
+    it('should not accept incorrect value', async () => {
+      const key = this.keys[8];
+      const [value, proof] = this.merkle.getProof(key);
+      await reverting(
+        this.contract.verify(
+          this.merkle.root,
+          key,
+          bigNumberToHex(value + 1),
+          proof,
+        ),
+      );
+    });
+  });
+
+  context('Manually created - mapping to nonzero key', () => {
+    beforeEach(async () => {
       this.rootHash =
         '0x177af3eea5434eff0056a742f6a968fc928eebe368569a4cbdf8ab6438bb54aa';
       this.key = '0x0367100453a0e46792466c1ce9a0eb84fc04904e';
       this.value =
         '0xbb0f12ed099c0606987849682f36f70731543a5ad15cdfd3d47159e1755c640c';
-      this.proofs = [
+      this.proof = [
         '0x0000000000000000000000000003bfffffffffffffffffffffffffffffffffff',
         '0x6b9c4179ae8d162cdfc71c03982516aae9c7029d47a68dcf397b839bd0c064cb',
         '0x8e70110bfc970738a02265b8b4559b76e9a374f9fa89a6a1854429dc193f3a8b',
@@ -41,7 +85,7 @@ contract('ProofMock', ([_, owner]) => {
         this.rootHash,
         this.key,
         this.value,
-        this.proofs,
+        this.proof,
       );
     });
 
@@ -51,7 +95,7 @@ contract('ProofMock', ([_, owner]) => {
           this.rootHash,
           '0x0367100453a0e46792466c1ce9a0eb84fc04904f',
           this.value,
-          this.proofs,
+          this.proof,
         ),
       );
     });
@@ -62,7 +106,7 @@ contract('ProofMock', ([_, owner]) => {
           this.rootHash,
           this.key,
           '0xbb0f12ed099c0606987849682f36f70731543a5ad15cdfd3d47159e1755c640d',
-          this.proofs,
+          this.proof,
         ),
       );
     });
@@ -73,7 +117,7 @@ contract('ProofMock', ([_, owner]) => {
           this.rootHash,
           this.key,
           this.value,
-          this.proofs.slice(0, -1),
+          this.proof.slice(0, -1),
         ),
       );
     });
@@ -84,7 +128,7 @@ contract('ProofMock', ([_, owner]) => {
           this.rootHash,
           this.key,
           this.value,
-          this.proofs.concat([
+          this.proof.concat([
             '0x0000000000000000000000000000000000000000000000000000000000000000',
           ]),
         ),
@@ -92,15 +136,14 @@ contract('ProofMock', ([_, owner]) => {
     });
   });
 
-  context('Mapping to zero key', () => {
+  context('Manually created - Mapping to zero key', () => {
     beforeEach(async () => {
-      this.contract = await ProofMock.new({ from: owner });
       this.rootHash =
         '0x9c2824ba9d3851f13b272e3ae432b58011c529e88613fd54e75bf2388d2a6022';
       this.key = '0xa63ae0df6209c7514c18d6bf7f7e69460cd0d04a';
       this.value =
         '0x0000000000000000000000000000000000000000000000000000000000000000';
-      this.proofs = [
+      this.proof = [
         '0x0000000000000000000000000007ffffffffffffffffffffffffffffffffffff',
         '0x3f6101114395ab85f8d4d97b8a6e6d2c5118f48c563b7c7ced5489c47b84600c',
         '0xdb60bf4f157f2f3a7420c281cb122d0b195dbdea13e151790aa54b9b5a97b6c5',
@@ -123,7 +166,7 @@ contract('ProofMock', ([_, owner]) => {
         this.rootHash,
         this.key,
         this.value,
-        this.proofs,
+        this.proof,
       );
     });
   });
