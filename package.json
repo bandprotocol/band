@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/bandprotocol/contracts"
   },
-  "license": ""Apache-2.0",
+  "license": "Apache-2.0",
   "scripts": {
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
