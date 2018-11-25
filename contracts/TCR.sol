@@ -332,7 +332,7 @@ contract TCR {
     );
 
     // Get the weight, which is the token balance at the end of commit time.
-    uint256 weight = token.historicalBalanceAtTime(
+    uint256 weight = token.historicalVotingPowerAtTime(
       msg.sender,
       challenge.commitEndTime
     );

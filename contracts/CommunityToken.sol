@@ -21,33 +21,45 @@ contract CommunityToken is IERC20, Ownable {
   string public symbol;
   uint256 public decimals;
 
-  /**
-   * @dev IMPORTANT: balances in CommunityToken are kept as a linked
-   * list of ALL historical changes of account balance in timestamps and number.
-   *
-   * For instance, if an address has the following balance list:
-   *  (0, 0) -> (1000, 100) -> (1010, 90) -> (1010, 89) -> (1020, 94)
-   * It means the historical activity of the address is:
-   *    [at t=1000] Receive 100 mini-tokens
-   *    [at t=1010] Spend 10 mini-tokens
-   *    [at t=1010] Spend 1 mini-token
-   *    [at t=1020] Receive 5 mini-tokens
-   *
-   * This allows the contract to figure out balance of the address at any
-   * timestamp `t`, by searching for the node that has the biggest timestamp
-   * that is not greater than `t`.
-   *
-   * For efficiency, timestamp and balance are packed into one uint256 integer,
-   * with the top 64 bits representing timestamp, and the bottom 192 bits
-   * representing time balance.
-   */
-  mapping (address => mapping (uint256 => uint256)) _balances;
-  // Mapping to keep track of the last used nonce for each of the address.
-  mapping (address => uint256) _nonces;
+  uint256 private _totalSupply;
+
+  mapping (address => uint256) _balances;
   // Amount of tokens allowed in transferFrom, similar to ERC-20 standard.
   mapping (address => mapping (address => uint256)) _allowed;
 
-  uint256 private _totalSupply;
+  /**
+   * @dev IMPORTANT: voting in CommunityToken are kept as a linked
+   * list of ALL historical changes of voting power in timestamps and number.
+   *
+   * For instance, if an address has the following balance list:
+   *  (0, 0) -> (1000, 100) -> (1010, 90) -> (1010, 89) -> (1020, 94)
+   * It means the historical voting power of the address is:
+   *    [at t=1000] Receive 100 voting power
+   *    [at t=1010] Lose 10 voting power
+   *    [at t=1010] Lose 1 voting power
+   *    [at t=1020] Receive 5 voting power
+   *
+   * Voting power of A can change if either:
+   *  1. A new address chooses A as his delegator.
+   *  2. One of A's delegating members decide to stop the delegation.
+   *  3. One of A's delegating members balance changes.
+   *
+   * This allows the contract to figure out voting power of the address at any
+   * timestamp `t`, by searching for the node that has the biggest timestamp
+   * that is not greater than `t`.
+   *
+   * For efficiency, timestamp and power are packed into one uint256 integer,
+   * with the top 64 bits representing timestamp, and the bottom 192 bits
+   * representing voting power.
+   */
+  mapping (address => mapping(uint256 => uint256)) _votingPower;
+  mapping (address => uint256) public votingPowerNonces;
+
+  // Mapping of voting delegator. All voting power of an address is
+  // automatically transfered to to its delegator, until delegation is revoked.
+  // Map to address(0) if an address is the delegator of itself.
+  mapping (address => address) _delegators;
+
 
   constructor(string _name, string _symbol, uint8 _decimals) public {
     name = _name;
@@ -63,38 +75,37 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
-   * @dev Returns user balance at the given nonce, that is, as of the user's
-   * nonce^th balance change
+   * @dev Returns user voting power at the given nonce, that is, as of the
+   * user's nonce^th voting power change
    */
-  function historicalBalanceAtNonce(address owner, uint256 nonce)
+  function historicalVotingPowerAtNonce(address owner, uint256 nonce)
     public
     view
     returns (uint256)
   {
-    require(nonce <= _nonces[owner]);
-    return _balances[owner][nonce] & ((1 << 192) - 1);  // Lower 192 bits
+    require(nonce <= votingPowerNonces[owner]);
+    return _votingPower[owner][nonce] & ((1 << 192) - 1);  // Lower 192 bits
   }
 
   /**
-   * @dev Returns user balance at the given time. Under the hood, this
+   * @dev Returns user voting power at the given time. Under the hood, this
    * performs binary search to look for the largest nonce at which the
-   * timestamp is not greater than 'asof'. The balance at that nonce is the
-   * returning value.
+   * timestamp is not greater than 'asof'. The voting power at that nonce is
+   * the returning value.
    */
-  function historicalBalanceAtTime(address owner, uint256 asof)
+  function historicalVotingPowerAtTime(address owner, uint256 asof)
     public
     view
     returns (uint256)
   {
-    uint256 lastNonce = _nonces[owner];
     uint256 start = 0;
-    uint256 end = lastNonce;
+    uint256 end = votingPowerNonces[owner];
 
     // The gas cost of this binary search is approximately 200 * log2(lastNonce)
     while (start < end) {
       // Doing ((start + end + 1) / 2) here to prevent infinite loop.
       uint256 mid = start.add(end).add(1).div(2);
-      if ((_balances[owner][mid] >> 192) > asof) {  // Upper 64 bits timestamp
+      if ((_votingPower[owner][mid] >> 192) > asof) {  // Upper 64 bits timestamp
         // If midTime > asof, this mid can't possibly be the answer
         end = mid.sub(1);
       } else {
@@ -105,12 +116,31 @@ contract CommunityToken is IERC20, Ownable {
     }
 
     // Double check again that the binary search is correct.
-    assert((_balances[owner][start] >> 192) <= asof);
-    if (start < lastNonce) {
-      assert((_balances[owner][start + 1] >> 192) > asof);
+    assert((_votingPower[owner][start] >> 192) <= asof);
+    if (start < votingPowerNonces[owner]) {
+      assert((_votingPower[owner][start + 1] >> 192) > asof);
     }
 
-    return historicalBalanceAtNonce(owner, start);
+    return historicalVotingPowerAtNonce(owner, start);
+  }
+
+  /**
+   * @dev Gets the voting delegator of the specified address.
+   */
+  function delegatorOf(address owner) public view returns (address) {
+    address delegator = _delegators[owner];
+    if (delegator == address(0)) {
+      // If no mapping is specified, then it is the delegator of itself
+      return owner;
+    }
+    return delegator;
+  }
+
+  /**
+   * @dev Gets the current voting power of the specified address.
+   */
+  function votingPowerOf(address owner) public view returns (uint256) {
+    return historicalVotingPowerAtNonce(owner, votingPowerNonces[owner]);
   }
 
   /**
@@ -119,14 +149,7 @@ contract CommunityToken is IERC20, Ownable {
    * @return An uint256 representing the amount owned by the passed address.
    */
   function balanceOf(address owner) public view returns (uint256) {
-    return historicalBalanceAtNonce(owner, _nonces[owner]);
-  }
-
-  /**
-   * @dev Returns the latest nonce of the specified address.
-   */
-  function latestNonce(address owner) public view returns (uint256) {
-    return _nonces[owner];
+    return _balances[owner];
   }
 
   /**
@@ -141,6 +164,39 @@ contract CommunityToken is IERC20, Ownable {
     returns (uint256)
   {
     return _allowed[owner][spender];
+  }
+
+  /**
+   * @dev Assign the given delegator to the transaction sender. The delegator
+   * can vote on this account's behalf. Note that delegator assignments are
+   * NOT recursive.
+   */
+  function delegateVote(address delegator) public returns (bool) {
+    require(delegatorOf(msg.sender) == msg.sender);
+    require(delegator != msg.sender);
+    // Update delegator of this sender
+    _delegators[msg.sender] = delegator;
+    // Update voting power of involved parties
+    uint256 balance = balanceOf(msg.sender);
+    _changeVotingPower(msg.sender, votingPowerOf(msg.sender).sub(balance));
+    _changeVotingPower(delegator, votingPowerOf(delegator).add(balance));
+    return true;
+  }
+
+  /**
+   * @dev TODO
+   */
+  function revokeDelegateVote(address previousDelegator) public returns (bool) {
+    require(delegatorOf(msg.sender) == previousDelegator);
+    require(previousDelegator != msg.sender);
+    // Update delegator of this sender
+    _delegators[msg.sender] = address(0);
+    // Update voting power of involved parties
+    uint256 balance = balanceOf(msg.sender);
+    _changeVotingPower(msg.sender, votingPowerOf(msg.sender).add(balance));
+    _changeVotingPower(
+      previousDelegator, votingPowerOf(previousDelegator).sub(balance));
+    return true;
   }
 
   /**
@@ -274,8 +330,8 @@ contract CommunityToken is IERC20, Ownable {
     require(from != to);
     require(to != address(0));
 
-    _addBalance(from, balanceOf(from).sub(value));
-    _addBalance(to, balanceOf(to).add(value));
+    _changeBalance(from, balanceOf(from).sub(value));
+    _changeBalance(to, balanceOf(to).add(value));
 
     emit Transfer(from, to, value);
   }
@@ -291,7 +347,7 @@ contract CommunityToken is IERC20, Ownable {
     require(account != 0);
 
     _totalSupply = _totalSupply.add(amount);
-    _addBalance(account, balanceOf(account).add(amount));
+    _changeBalance(account, balanceOf(account).add(amount));
 
     emit Transfer(address(0), account, amount);
   }
@@ -307,23 +363,41 @@ contract CommunityToken is IERC20, Ownable {
     require(amount <= balanceOf(account));
 
     _totalSupply = _totalSupply.sub(amount);
-    _addBalance(account, balanceOf(account).sub(amount));
+    _changeBalance(account, balanceOf(account).sub(amount));
 
     emit Transfer(account, address(0), amount);
   }
 
   /**
-   * @dev Add new balance to the given account. The added balance will be
-   * paired with current block timestamp.
+   * @dev Change balance of the given account to a new value. The new balance
+   * will be reflected both in `_balances` of this account and in `votingPower`
+   * of this account's delegator.
    */
-  function _addBalance(address owner, uint256 balance) internal {
-    uint256 currentTime = block.timestamp;
+  function _changeBalance(address owner, uint256 newBalance) internal {
+    uint256 oldBalance = balanceOf(owner);
+    require(oldBalance != newBalance);
 
-    require(balance < (1 << 192));
+    // Update `_balances` with new balances
+    _balances[owner] = newBalance;
+
+    // Compute new voting power of the address's delegator (can be itself).
+    address delegator = delegatorOf(owner);
+    uint256 previousPower = votingPowerOf(delegator);
+    uint256 newPower = previousPower.add(newBalance).sub(oldBalance);
+
+    _changeVotingPower(delegator, newPower);
+  }
+
+  /**
+   * @dev Change voting power of the given (potentially delegated) account
+   * to a new value.
+   */
+  function _changeVotingPower(address owner, uint256 newPower) internal {
+    uint256 currentTime = block.timestamp;
+    require(newPower < (1 << 192));
     require(currentTime < (1 << 64));
 
-    uint256 nonce = _nonces[owner] + 1;
-    _balances[owner][nonce] = (currentTime << 192) | balance;
-    _nonces[owner] = nonce;
+    uint256 nextNonce = ++votingPowerNonces[owner];
+    _votingPower[owner][nextNonce] = (currentTime << 192) | newPower;
   }
 }

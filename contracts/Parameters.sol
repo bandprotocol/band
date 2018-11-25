@@ -168,7 +168,7 @@ contract Parameters {
     // Voter should not have already voted.
     require(!proposal.voted[voter]);
 
-    uint256 weight = token.historicalBalanceAtTime(
+    uint256 weight = token.historicalVotingPowerAtTime(
       voter,
       proposal.proposedTime
     );

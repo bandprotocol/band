@@ -8,7 +8,7 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-contract('CommunityToken', ([_, owner, alice, bob]) => {
+contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.contract = await CommunityToken.new('CoinHatcher', 'XCH', 36, {
       from: owner,
@@ -77,17 +77,17 @@ contract('CommunityToken', ([_, owner, alice, bob]) => {
     });
   });
 
-  context('Historical balance snapshot features', () => {
+  context('Historical voting power snapshot features', () => {
     it('should give zero balance if account has no activity', async () => {
-      await reverting(this.contract.historicalBalanceAtNonce(alice, 1));
-      await reverting(this.contract.historicalBalanceAtNonce(alice, 10));
+      await reverting(this.contract.historicalVotingPowerAtNonce(alice, 1));
+      await reverting(this.contract.historicalVotingPowerAtNonce(alice, 10));
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         await latest(),
       )).should.bignumber.eq(0);
 
-      (await this.contract.historicalBalanceAtNonce(
+      (await this.contract.historicalVotingPowerAtNonce(
         alice,
         0,
       )).should.bignumber.eq(0);
@@ -103,62 +103,119 @@ contract('CommunityToken', ([_, owner, alice, bob]) => {
       await this.contract.transfer(alice, 5, { from: bob });
       const thirdTxTime = await latest();
 
-      (await this.contract.historicalBalanceAtNonce(
+      (await this.contract.historicalVotingPowerAtNonce(
         alice,
         0,
       )).should.bignumber.eq(0);
 
-      (await this.contract.historicalBalanceAtNonce(
+      (await this.contract.historicalVotingPowerAtNonce(
         alice,
         1,
       )).should.bignumber.eq(100);
 
-      (await this.contract.historicalBalanceAtNonce(
+      (await this.contract.historicalVotingPowerAtNonce(
         alice,
         2,
       )).should.bignumber.eq(90);
 
-      (await this.contract.historicalBalanceAtNonce(
+      (await this.contract.historicalVotingPowerAtNonce(
         alice,
         3,
       )).should.bignumber.eq(95);
 
-      await reverting(this.contract.historicalBalanceAtNonce(alice, 4));
+      await reverting(this.contract.historicalVotingPowerAtNonce(alice, 4));
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         firstTxTime - 1,
       )).should.bignumber.eq(0);
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         firstTxTime,
       )).should.bignumber.eq(100);
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         firstTxTime + 1,
       )).should.bignumber.eq(100);
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         secondTxTime,
       )).should.bignumber.eq(90);
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         secondTxTime + 1,
       )).should.bignumber.eq(90);
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         thirdTxTime,
       )).should.bignumber.eq(95);
 
-      (await this.contract.historicalBalanceAtTime(
+      (await this.contract.historicalVotingPowerAtTime(
         alice,
         thirdTxTime + 1,
       )).should.bignumber.eq(95);
+    });
+  });
+
+  context('Vote delegation feature', async () => {
+    beforeEach(async () => {
+      await this.contract.mint(alice, 1, { from: owner });
+      await this.contract.mint(bob, 10, { from: owner });
+      await this.contract.mint(carol, 100, { from: owner });
+    });
+
+    it('should delegate vote one level correct', async () => {
+      await this.contract.delegateVote(bob, { from: alice });
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(11);
+
+      await this.contract.mint(alice, 2, { from: owner });
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(13);
+    });
+
+    it('should not delegate recursively', async () => {
+      await this.contract.delegateVote(bob, { from: alice });
+      await this.contract.delegateVote(carol, { from: bob });
+
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(1);
+      (await this.contract.votingPowerOf(carol)).should.bignumber.eq(110);
+    });
+
+    it('should change delegated voting power upon balance change', async () => {
+      await this.contract.delegateVote(bob, { from: alice });
+      await this.contract.transfer(alice, 50, { from: carol });
+      await this.contract.transfer(bob, 5, { from: carol });
+      await this.contract.transfer(carol, 1, { from: bob });
+
+      (await this.contract.balanceOf(alice)).should.bignumber.eq(51);
+      (await this.contract.balanceOf(bob)).should.bignumber.eq(14);
+      (await this.contract.balanceOf(carol)).should.bignumber.eq(46);
+
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(65);
+      (await this.contract.votingPowerOf(carol)).should.bignumber.eq(46);
+    });
+
+    it('should revoke delegate vote correctly', async () => {
+      await this.contract.delegateVote(bob, { from: alice });
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(11);
+
+      await this.contract.transfer(alice, 50, { from: carol });
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(61);
+
+      await reverting(this.contract.revokeDelegateVote(carol, { from: alice }));
+      await this.contract.revokeDelegateVote(bob, { from: alice });
+      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(51);
+      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(10);
     });
   });
 });
