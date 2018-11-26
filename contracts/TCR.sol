@@ -53,8 +53,8 @@ contract TCR {
   event VoteRevealed(  // A vote is revealed by a user.
     uint256 indexed challengeID,
     address indexed voter,
-    bool indexed isYes,
-    uint256 weight,
+    uint256 yesWieght,
+    uint256 noWeight,
     uint256 salt
   );
 
@@ -96,9 +96,14 @@ contract TCR {
     Invalid,      // Invalid, default value
     Yes,          // Vote Yes (agree on the side of challenger)
     No,           // Vote No (agree on the side of entry proposer)
-    Inconclusive, // Vote result to be Inconclusive
-    YesClaimed,   // Vote Yes and already claim reward
-    NoClaimed     // Vote No and already claim reward
+    Inconclusive  // Vote result to be Inconclusive
+  }
+
+  enum VoteState {
+    Invalid,      // Invalid, default value
+    Committed,    // The vote has been committed, but not yet revealed.
+    Revealed,     // The vote has been revealed, but not yet claimed.
+    Claimed       // The reward has been collected.
   }
 
   // A challenge represent a challenge for a TCR entry. All challenges ever
@@ -108,19 +113,17 @@ contract TCR {
     uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
     uint256 remainingVotes; // Remaining voting power that not yet claims reward
 
+    uint256 startTime;      // The time the challenge is initiated
     uint256 commitEndTime;  // Expiration timestamp of commit period
     uint256 revealEndTime;  // Expiration timestamp of reveal period
 
     uint256 yesCount;       // The current total number of YES votes
     uint256 noCount;        // The current total number of NO votes
 
-    mapping (address => bytes32) commits; // Each user's committed vote
-    mapping (address => uint256) weights; // Each user's vote weight
-
-    // Each user's vote opinion. Becomes Yes or No after the user reveals the
-    // vote, but not yet claims the reward. Becomes YesClaimed or NoClaimed
-    // after user claims the reward back.
-    mapping (address => Vote) opinions;
+    mapping (address => bytes32) commits;       // Each user's committed vote
+    mapping (address => uint256) yesWeights;    // Each user's yes vote weight
+    mapping (address => uint256) noWeights;     // Each user's no vote weight
+    mapping (address => VoteState) voteStates;  // Each user's vote state
 
     // Vote result. Relevant after this challenge is resolved.
     // Can be Yes, No, or Inconclusive.
@@ -181,31 +184,19 @@ contract TCR {
   }
 
   /**
-   * @dev Return the committed value of the given user on the given challenge.
-   * or bytes32(0) if the user did not commit.
+   * @dev Return the summary of user vote status on a particular challenge.
+   * See function signature for the values this function returns.
    */
-  function committedValue(uint256 challengeID, address voter)
+  function voteSummary(uint256 challengeID, address voter)
     public
     view
     challengeMustExist(challengeID)
-    returns (bytes32)
+    returns (VoteState state, bytes32 commit, uint256 yesWeight, uint256 noWeight)
   {
-    require(challengeID > 0 && challengeID < nextChallengeNonce);
-    return challenges[challengeID].commits[voter];
-  }
-
-  /**
-   * @dev Return the vote the user reveals. Or Invalid if the user has not
-   * yet done so. The result will be the 'Claimed' version if user already
-   * claims the reward.
-   */
-  function revealValue(uint256 challengeID, address voter)
-    public
-    view
-    challengeMustExist(challengeID)
-    returns (Vote)
-  {
-    return challenges[challengeID].opinions[voter];
+    commit = challenges[challengeID].commits[voter];
+    yesWeight = challenges[challengeID].yesWeights[voter];
+    noWeight = challenges[challengeID].noWeights[voter];
+    state = challenges[challengeID].voteStates[voter];
   }
 
   /**
@@ -216,12 +207,10 @@ contract TCR {
   function apply(bytes32 data, uint256 stake) public entryMustNotExist(data) {
     require(token.transferFrom(msg.sender, this, stake));
     require(stake >= get("min_deposit"));
-
     Entry storage entry = entries[data];
     entry.proposer = msg.sender;
     entry.withdrawableDeposit = stake;
     entry.pendingExpiration = now.add(get("apply_stage_length"));
-
     emit NewApplication(data, msg.sender);
   }
 
@@ -290,12 +279,12 @@ contract TCR {
     entry.challengeID = challengeID;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
+    challenges[challengeID].startTime = now;
     challenges[challengeID].commitEndTime = now.add(commitTime);
     challenges[challengeID].revealEndTime = now.add(commitTime).add(revealTime);
 
     // Increment the nonce for the next challenge.
     nextChallengeNonce = challengeID.add(1);
-
     emit NewChallenge(data, challengeID, msg.sender);
   }
 
@@ -310,6 +299,7 @@ contract TCR {
     Challenge storage challenge = challenges[challengeID];
     require(now < challenge.commitEndTime);
     challenge.commits[msg.sender] = commitValue;
+    challenge.voteStates[msg.sender] = VoteState.Committed;
     emit VoteCommitted(challengeID, msg.sender, commitValue);
   }
 
@@ -317,7 +307,12 @@ contract TCR {
    * @dev Reveal vote with choice and secret salt used in generating commit
    * earlier during the commit period.
    */
-  function revealVote(uint256 challengeID, bool isYes, uint256 salt)
+  function revealVote(
+    uint256 challengeID,
+    uint256 yesWeight,
+    uint256 noWeight,
+    uint256 salt
+  )
     public
     challengeMustExist(challengeID)
   {
@@ -325,29 +320,29 @@ contract TCR {
     // Must in reveal period.
     require(now >= challenge.commitEndTime && now < challenge.revealEndTime);
     // Must not already be revealed.
-    require(challenge.opinions[msg.sender] == Vote.Invalid);
+    require(challenge.voteStates[msg.sender] == VoteState.Committed);
+    challenge.voteStates[msg.sender] = VoteState.Revealed;
     // Must be consistent with prior commit value.
     require(
-      keccak256(abi.encodePacked(isYes, salt)) == challenge.commits[msg.sender]
+      keccak256(abi.encodePacked(yesWeight, noWeight, salt)) ==
+      challenge.commits[msg.sender]
     );
 
     // Get the weight, which is the token balance at the end of commit time.
-    uint256 weight = token.historicalVotingPowerAtTime(
+    uint256 totalWeight = token.historicalVotingPowerAtTime(
       msg.sender,
-      challenge.commitEndTime
+      challenge.startTime
     );
 
-    challenge.weights[msg.sender] = weight;
+    require(yesWeight.add(noWeight) <= totalWeight);
 
-    if (isYes) {
-      challenge.opinions[msg.sender] = Vote.Yes;
-      challenge.yesCount = challenge.yesCount.add(weight);
-    } else {
-      challenge.opinions[msg.sender] = Vote.No;
-      challenge.noCount = challenge.noCount.add(weight);
-    }
+    challenge.yesWeights[msg.sender] = yesWeight;
+    challenge.yesCount = challenge.yesCount.add(yesWeight);
 
-    emit VoteRevealed(challengeID, msg.sender, isYes, weight, salt);
+    challenge.noWeights[msg.sender] = noWeight;
+    challenge.noCount = challenge.noCount.add(noWeight);
+
+    emit VoteRevealed(challengeID, msg.sender, yesWeight, noWeight, salt);
   }
 
   /**
@@ -422,27 +417,27 @@ contract TCR {
   {
     Challenge storage challenge = challenges[challengeID];
 
-    Vote result = challenge.result;
-    Vote vote = challenge.opinions[msg.sender];
+    // User must already revealed their vote
+    require(challenge.voteStates[msg.sender] == VoteState.Revealed);
+    challenge.voteStates[msg.sender] = VoteState.Claimed;
 
-    if (vote == Vote.Yes) {
-      // User that votes Yes can claim iff poll result is Yes.
-      require(result == Vote.Yes);
-      // Change user vote status to 'claimed' now that he/she already claims
-      challenge.opinions[msg.sender] = Vote.YesClaimed;
-    } else if (vote == Vote.No) {
-      // User that votes No can claim iff poll result is No.
-      require(result == Vote.No);
-      // Change user vote status to 'claimed' now that he/she already claims
-      challenge.opinions[msg.sender] = Vote.NoClaimed;
+    Vote result = challenge.result;
+    uint256 claimerVotes = 0;
+
+    if (result == Vote.Yes) {
+      claimerVotes = challenge.yesWeights[msg.sender];
+    } else if (result == Vote.No) {
+      claimerVotes = challenge.noWeights[msg.sender];
     } else {
-      // If this hits, either user does not reveal or already claims. In either
-      // case, there's no reward to claim.
+      // If this hits, either the challenge is not finalized yet, or the result
+      // is inconclusive. In either case, there's no reward to claim.
       revert();
     }
 
+    // User must have nonzero vote on the side that wins the challenge.
+    require(claimerVotes != 0);
+
     uint256 rewardPool = challenge.rewardPool;
-    uint256 claimerVotes = challenge.weights[msg.sender];
     uint256 remainingVotes = challenge.remainingVotes;
 
     // User reward is the portion of remaining reward based on the vote count
@@ -454,7 +449,6 @@ contract TCR {
 
     // Send reward to the claimer.
     require(token.transfer(msg.sender, reward));
-
     emit RewardClaimed(challengeID, msg.sender, reward);
   }
 
