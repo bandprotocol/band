@@ -11,8 +11,8 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
  * @dev Template for community token in Band ecosystem. It is essentially an
  * ERC20 contract with the ability for the "owner" to mint or burn tokens.
  * The owner will be the community's core contract after it is deployed.
- * Additionally, this contract keeps track of every user's historical balance
- * to help prevent double voting in Parameters and TCR contracts.
+ * Additionally, the contract has builtin voting power features, including
+ * vote delegation and historical power tracking.
  */
 contract CommunityToken is IERC20, Ownable {
   using SafeMath for uint256;
