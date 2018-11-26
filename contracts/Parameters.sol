@@ -145,9 +145,11 @@ contract Parameters {
     proposals[nonce].expiration = now.add(get("params:proposal_expiration_time"));
     proposals[nonce].changeCount = keys.length;
 
-    // NOTE: It is possible that this does not precisely match `snapshotBlockno`
-    // since there could be mint/burn transactions in this block prior to
-    // this transaction.
+    // NOTE: This could possibliy slightly mismatch with `snapshotBlockno`
+    // if there are be mint/burn transactions in this block prior to
+    // this transaction. The effect, however, should be minimal as
+    // `minimum_quorum` is primarily used to ensure minimal number of vote
+    // participants. The primary decision factor should be `support_required`.
     proposals[nonce].totalPossibleVoteCount = token.totalSupply();
 
     for (uint256 index = 0; index < keys.length; ++index) {

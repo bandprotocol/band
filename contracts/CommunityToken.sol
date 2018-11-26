@@ -24,6 +24,11 @@ contract CommunityToken is IERC20, Ownable {
     address indexed delegator
   );
 
+  event VotingPowerUpdate(
+    address indexed owner,
+    uint256 votingPower
+  );
+
   string public name;
   string public symbol;
   uint256 public decimals;
@@ -440,5 +445,6 @@ contract CommunityToken is IERC20, Ownable {
     }
 
     _votingPower[owner][currentNonce] = (currentBlockno << 192) | newPower;
+    emit VotingPowerUpdate(owner, newPower);
   }
 }
