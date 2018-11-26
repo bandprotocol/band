@@ -200,10 +200,10 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
-  * @dev Transfer token for a specified address
-  * @param to The address to transfer to.
-  * @param value The amount to be transferred.
-  */
+   * @dev Transfer token for a specified address
+   * @param to The address to transfer to.
+   * @param value The amount to be transferred.
+   */
   function transfer(address to, uint256 value) public returns (bool) {
     _transfer(msg.sender, to, value);
     return true;
@@ -223,6 +223,21 @@ contract CommunityToken is IERC20, Ownable {
 
     _allowed[msg.sender][spender] = value;
     emit Approval(msg.sender, spender, value);
+    return true;
+  }
+
+  /**
+   * @dev Similar to Approve, but for multiple addresses at once. This function
+   * is useful for approving all community-related contracts to withdraw tokens
+   * on user's behalf.
+   */
+  function batchApprove(address[] spenders, uint256 value)
+    public
+    returns (bool)
+  {
+    for (uint256 idx = 0; idx < spenders.length; ++idx) {
+      require(approve(spenders[idx], value));
+    }
     return true;
   }
 
