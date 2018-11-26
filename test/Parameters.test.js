@@ -21,8 +21,12 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     });
     this.params = await Parameters.new(
       this.comm.address,
-      ['params:proposal_expiration_time', 'params:proposal_pass_percentage'],
-      [86400, 60],
+      [
+        'params:proposal_expiration_time',
+        'params:support_required',
+        'params:minimum_quorum',
+      ],
+      [86400, 60, 60],
       { from: owner },
     );
 
@@ -53,7 +57,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         from: owner,
       });
       await increase(duration.hours(10));
-      await this.params.vote(1, { from: owner });
+      await this.params.vote(1, 100, 0, { from: owner });
     });
 
     it('should not allow voting on expired proposal', async () => {
@@ -61,23 +65,26 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         from: owner,
       });
       await increase(duration.hours(25));
-      await reverting(this.params.vote(1, { from: owner }));
+      await reverting(this.params.vote(1, 100, 0, { from: owner }));
     });
 
-    it('should the contraints during which the proposal is proposed', async () => {
-      await this.params.propose(['example_proposal'], [1000000], {
-        from: owner,
-      });
+    it('should use the contraints during which the proposal is proposed', async () => {
       await this.params.propose(['params:proposal_expiration_time'], [100], {
         from: owner,
       });
-      await this.params.vote(2, { from: owner });
-      await this.params.vote(2, { from: alice });
+      await increase(86350);
+      await this.params.propose(['example_proposal'], [1000000], {
+        from: owner,
+      });
+      await this.params.vote(1, 100, 0, { from: owner });
+      await this.params.vote(1, 100, 0, { from: alice });
+      await increase(500);
+      await this.params.resolve(1, { from: owner });
       (await this.params.get(
         'params:proposal_expiration_time',
       )).should.bignumber.eq(100);
-      await increase(duration.hours(10));
-      await this.params.vote(1, { from: owner });
+      await increase(duration.hours(8));
+      await this.params.vote(2, 100, 0, { from: owner });
     });
   });
 
@@ -92,38 +99,45 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       (await this.params.get(
         'params:proposal_expiration_time',
       )).should.bignumber.eq(86400);
-      this.params.vote(1, { from: owner });
+      await this.params.vote(1, 100, 0, { from: owner });
       (await this.params.get(
         'params:proposal_expiration_time',
       )).should.bignumber.eq(86400);
-      this.params.vote(1, { from: alice });
+      await this.params.vote(1, 100, 0, { from: alice });
+      await increase(86400);
+      await this.params.resolve(1, { from: owner });
       (await this.params.get(
         'params:proposal_expiration_time',
       )).should.bignumber.eq(100);
     });
 
     it('should not allow people with 0 tokens to vote', async () => {
-      await reverting(this.params.vote(1, { from: carol }));
+      await reverting(this.params.vote(1, 0, 0, { from: carol }));
     });
 
     it('should not allow people to re-vote', async () => {
-      await this.params.vote(1, { from: owner });
-      await reverting(this.params.vote(1, { from: owner }));
+      await this.params.vote(1, 100, 0, { from: owner });
+      await reverting(this.params.vote(1, 100, 0, { from: owner }));
     });
 
     it('should not allow voting on accepted proposal', async () => {
-      await this.params.vote(1, { from: owner });
-      await this.params.vote(1, { from: alice });
-      await reverting(this.params.vote(1, { from: bob }));
+      await this.params.vote(1, 100, 0, { from: owner });
+      await this.params.vote(1, 100, 0, { from: alice });
+      await increase(86400);
+      await this.params.resolve(1, { from: owner });
+      await reverting(this.params.vote(1, 100, 0, { from: bob }));
     });
 
     it('should use tokens held during the proposed time as voting power', async () => {
       await increase(10);
-      await this.comm.mint(owner, 10000, { from: owner });
-      (await this.comm.balanceOf(owner)).should.bignumber.eq(10100);
-      await this.params.vote(1, { from: owner });
-      (await this.params.proposals(1))[3].should.bignumber.eq(100); // currentVoteCount
-      (await this.params.proposals(1))[4].should.bignumber.eq(300); // totalVoteCount
+      await this.comm.mint(owner, 2, { from: owner });
+      (await this.comm.balanceOf(owner)).should.bignumber.eq(102);
+      await reverting(this.params.vote(1, 102, 0, { from: owner }));
+      await this.params.vote(1, 100, 0, { from: owner });
+      await this.params.vote(1, 10, 10, { from: alice });
+      (await this.params.proposals(1))[3].should.bignumber.eq(110); // currentYesCount
+      (await this.params.proposals(1))[4].should.bignumber.eq(10);  // currentNoCount
+      (await this.params.proposals(1))[5].should.bignumber.eq(300); // totalVoteCount
     });
   });
 });

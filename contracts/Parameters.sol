@@ -24,7 +24,8 @@ contract Parameters {
   event ProposalVoted(  // Someone endorses a proposal.
     uint256 indexed proposalID,
     address indexed voter,
-    uint256 weight
+    uint256 yesCount,
+    uint256 noCount
   );
 
   event ParameterChanged(  // A parameter is changed.
@@ -55,7 +56,7 @@ contract Parameters {
   struct Proposal {
     mapping (address => bool) voted;
 
-    uint256 proposedTime;
+    uint256 snapshotBlockno;
 
     // Only proposal with expiration > now is considered valid. Note that this
     // means nonexistent proposal (with experiation default to 0) is never
@@ -65,8 +66,10 @@ contract Parameters {
     uint256 changeCount;
     mapping (uint256 => KeyValue) changes;
 
-    uint256 currentVoteCount;
-    uint256 totalVoteCount;
+    uint256 currentYesCount;
+    uint256 currentNoCount;
+
+    uint256 totalPossibleVoteCount;
   }
 
   uint256 public nextProposalNonce = 1;
@@ -86,7 +89,8 @@ contract Parameters {
     }
 
     require(get("params:proposal_expiration_time") > 0);
-    require(get("params:proposal_pass_percentage") <= 100);
+    require(get("params:support_required") <= 100);
+    require(get("params:minimum_quorum") <= get("params:support_required"));
   }
 
   /**
@@ -129,9 +133,7 @@ contract Parameters {
   }
 
   /**
-   * @dev Propose a set of new key-value changes. The proposal must be approved
-   * by more than `params:proposal_pass_percentage` of voting power in order to
-   * be adopted.
+   * @dev Propose a set of new key-value changes.
    */
   function propose(bytes32[] keys, uint256[] values) external {
     require(keys.length == values.length);
@@ -139,11 +141,14 @@ contract Parameters {
     uint256 nonce = nextProposalNonce;
     nextProposalNonce = nonce.add(1);
 
-    proposals[nonce].proposedTime = now;
+    proposals[nonce].snapshotBlockno = block.number.sub(1);
     proposals[nonce].expiration = now.add(get("params:proposal_expiration_time"));
     proposals[nonce].changeCount = keys.length;
-    proposals[nonce].currentVoteCount = 0;
-    proposals[nonce].totalVoteCount = token.totalSupply();
+
+    // NOTE: It is possible that this does not precisely match `snapshotBlockno`
+    // since there could be mint/burn transactions in this block prior to
+    // this transaction.
+    proposals[nonce].totalPossibleVoteCount = token.totalSupply();
 
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];
@@ -157,41 +162,60 @@ contract Parameters {
    * @dev Called by token holders to express aggreement with a proposal. See
    * function propose above.
    */
-  function vote(uint256 proposalID) external {
+  function vote(uint256 proposalID, uint256 yesCount, uint256 noCount) external {
     Proposal storage proposal = proposals[proposalID];
-    address voter = msg.sender;
+
+    require(yesCount > 0 || noCount > 0);
 
     // Proposal must not yet expired. Note that if the proposal does not exist
-    // or is already applied, the expiration will be 0, failing this condition
+    // or is already applied, the expiration will be 0, failing this condition.
     require(proposal.expiration > now);
 
     // Voter should not have already voted.
-    require(!proposal.voted[voter]);
+    require(!proposal.voted[msg.sender]);
+    proposal.voted[msg.sender] = true;
 
-    uint256 weight = token.historicalVotingPowerAtTime(
-      voter,
-      proposal.proposedTime
+    uint256 totalWeight = token.historicalVotingPowerAtBlock(
+      msg.sender,
+      proposal.snapshotBlockno
     );
 
-    // Weight should not be zero.
-    require(weight != 0);
+    require(yesCount.add(noCount) <= totalWeight);
 
-    proposal.voted[voter] = true;
-    proposal.currentVoteCount = proposal.currentVoteCount.add(weight);
-    emit ProposalVoted(proposalID, msg.sender, weight);
+    proposal.currentYesCount = proposal.currentYesCount.add(yesCount);
+    proposal.currentNoCount = proposal.currentNoCount.add(noCount);
+    emit ProposalVoted(proposalID, msg.sender, yesCount, noCount);
+  }
 
-    if(proposal.currentVoteCount.mul(100) >=
-       proposal.totalVoteCount.mul(get("params:proposal_pass_percentage"))) {
+  /**
+   * @dev Called by anyone to resolve the parameter proposal. If >=
+   * `params:support_required` % of participating voters and  >=
+   * `params:minimum_quorum` % of all supply vote YES for this proposal,
+   * then the change is considered approved.
+   */
+  function resolve(uint256 proposalID) external {
+    Proposal storage proposal = proposals[proposalID];
+    // Proposal must already expire
+    require(proposal.expiration != 0 && now >= proposal.expiration);
+    proposals[proposalID].expiration = 0;
 
-      for (uint256 index = 0; index < proposal.changeCount; ++index) {
-        bytes32 key = proposal.changes[index].key;
-        uint256 value = proposal.changes[index].value;
+    require(
+      proposal.currentYesCount.mul(100) >=
+      proposal.currentYesCount.add(proposal.currentNoCount).mul(get("params:support_required"))
+    );
 
-        params[key] = value;
-        emit ParameterChanged(key, value);
-      }
-      emit ProposalResolved(proposalID);
-      proposals[proposalID].expiration = 0;
+    require(
+      proposal.currentYesCount.mul(100) >=
+      proposal.totalPossibleVoteCount.mul(get("params:minimum_quorum"))
+    );
+
+    for (uint256 index = 0; index < proposal.changeCount; ++index) {
+      bytes32 key = proposal.changes[index].key;
+      uint256 value = proposal.changes[index].value;
+
+      params[key] = value;
+      emit ParameterChanged(key, value);
     }
+    emit ProposalResolved(proposalID);
   }
 }

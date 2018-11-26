@@ -113,9 +113,9 @@ contract TCR {
     uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
     uint256 remainingVotes; // Remaining voting power that not yet claims reward
 
-    uint256 startTime;      // The time the challenge is initiated
-    uint256 commitEndTime;  // Expiration timestamp of commit period
-    uint256 revealEndTime;  // Expiration timestamp of reveal period
+    uint256 snapshotBlockno;  // The block number to count voting power
+    uint256 commitEndTime;    // Expiration timestamp of commit period
+    uint256 revealEndTime;    // Expiration timestamp of reveal period
 
     uint256 yesCount;       // The current total number of YES votes
     uint256 noCount;        // The current total number of NO votes
@@ -279,7 +279,7 @@ contract TCR {
     entry.challengeID = challengeID;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
-    challenges[challengeID].startTime = now;
+    challenges[challengeID].snapshotBlockno = block.number.sub(1);
     challenges[challengeID].commitEndTime = now.add(commitTime);
     challenges[challengeID].revealEndTime = now.add(commitTime).add(revealTime);
 
@@ -328,10 +328,11 @@ contract TCR {
       challenge.commits[msg.sender]
     );
 
-    // Get the weight, which is the token balance at the end of commit time.
-    uint256 totalWeight = token.historicalVotingPowerAtTime(
+    // Get the weight, which is the voting power at the block before the TCR
+    // challenge is initiated.
+    uint256 totalWeight = token.historicalVotingPowerAtBlock(
       msg.sender,
-      challenge.startTime
+      challenge.snapshotBlockno
     );
 
     require(yesWeight.add(noWeight) <= totalWeight);

@@ -3,7 +3,6 @@ const {
   increase,
   increaseTo,
   duration,
-  latest,
 } = require('openzeppelin-solidity/test/helpers/time');
 const { Merkle } = require('../lib/merkle');
 
@@ -26,8 +25,12 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
     });
     this.params = await Parameters.new(
       this.comm.address,
-      ['params:proposal_expiration_time', 'params:proposal_pass_percentage'],
-      [86400, 80],
+      [
+        'params:proposal_expiration_time',
+        'params:support_required',
+        'params:minimum_quorum',
+      ],
+      [60, 80, 80],
       { from: owner },
     );
     this.admin = await AdminTCR.new(this.params.address, { from: owner });
@@ -103,8 +106,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       await this.params.propose(['core:inflation_ratio'], [38581], {
         from: owner,
       });
-      await this.params.vote(1, { from: alice });
-      await increaseTo((await latest()) + duration.days(30));
+      await this.params.vote(1, 100, 0, { from: alice });
+      await increase(duration.days(30));
+      await this.params.resolve(1, { from: alice });
       await this.core.buy(10, 20000, { from: alice });
       (await this.band.balanceOf(alice)).should.bignumber.eq(88100);
       (await this.comm.balanceOf(alice)).should.bignumber.eq(110);
@@ -114,13 +118,15 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
     });
 
     it('should inflate 10% per hour properly after a sale', async () => {
-      // 10% per month inflation
+      // 10% per hour inflation
       await this.params.propose(['core:inflation_ratio'], [27777778], {
         from: owner,
       });
-      await this.params.vote(1, { from: alice });
+      await this.params.vote(1, 100, 0, { from: alice });
+      await increase(duration.hours(1));
+      await this.params.resolve(1, { from: alice });
       // First sale
-      await increaseTo((await latest()) + duration.hours(10));
+      await increase(duration.hours(9));
       await this.core.sell(10, 0, { from: alice });
       (await this.band.balanceOf(alice)).should.bignumber.eq(90975);
       (await this.comm.balanceOf(alice)).should.bignumber.eq(90);
@@ -128,7 +134,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       (await this.comm.totalSupply()).should.bignumber.eq(190);
       (await this.core.curveMultiplier()).should.bignumber.eq(250000000000);
       // Second sale
-      await increaseTo((await latest()) + duration.hours(10));
+      await increase( duration.hours(10));
       await this.core.sell(10, 0, { from: alice });
       (await this.band.balanceOf(alice)).should.bignumber.eq(91443);
       (await this.comm.balanceOf(alice)).should.bignumber.eq(80);
@@ -146,7 +152,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       await this.params.propose(['core:sales_tax'], [200000000000], {
         from: alice,
       });
-      await this.params.vote(1, { from: alice });
+      await this.params.vote(1, 100, 0, { from: alice });
+      await increase(86400);
+      await this.params.resolve(1, { from: alice });
     });
 
     it('should not impose taxes on purchases', async () => {
@@ -194,13 +202,16 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
           from: owner,
         },
       );
-      await this.params.vote(1, { from: owner });
-      await this.params.vote(1, { from: alice });
+
+      await this.params.vote(1, 100, 0, { from: alice });
+      await this.params.vote(1, 90, 0, { from: owner });
+      await increase(86400);
+      await this.params.resolve(1, { from: alice });
 
       // Alice applies to be an admin.
       await this.comm.approve(this.admin.address, 100000, { from: alice });
       await this.admin.applyAdmin(10, { from: alice });
-      // The apply stage has not passed yet. TCR application still pending.
+      // The apply stage has not passed yet. TCR application is still pending.
       await reverting(this.core.deflate(10, { from: alice }));
       // 100 seconds have passed, and no one challenges, so now Alice is good to go.
       await increase(100);
@@ -226,8 +237,10 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
         await this.params.propose(['core:deactivator'], [deactivator], {
           from: alice,
         });
-        await this.params.vote(1, { from: alice });
-        await this.params.vote(1, { from: owner });
+        await this.params.vote(1, 100, 0, { from: alice });
+        await this.params.vote(1, 100, 0, { from: owner });
+        await increase(86400);
+        await this.params.resolve(1, { from: alice });
         await this.core.deactivate({ from: deactivator });
       });
 
@@ -277,7 +290,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
           from: owner,
         },
       );
-      await this.params.vote(1, { from: owner });
+      await this.params.vote(1, 100, 0, { from: owner });
+      await increase(86400);
+      await this.params.resolve(1, { from: alice });
       // Owner sends some revenue to the contract
       await this.comm.transfer(this.core.address, 10, { from: owner });
 

@@ -1,5 +1,6 @@
 const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
-const { increase, latest } = require('openzeppelin-solidity/test/helpers/time');
+const { increase } = require('openzeppelin-solidity/test/helpers/time');
+const { ethGetBlock } = require('openzeppelin-solidity/test/helpers/web3');
 
 const CommunityToken = artifacts.require('CommunityToken');
 const BigNumber = web3.BigNumber;
@@ -82,9 +83,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       await reverting(this.contract.historicalVotingPowerAtNonce(alice, 1));
       await reverting(this.contract.historicalVotingPowerAtNonce(alice, 10));
 
-      (await this.contract.historicalVotingPowerAtTime(
+      (await this.contract.historicalVotingPowerAtBlock(
         alice,
-        await latest(),
+        (await ethGetBlock('latest')).number,
       )).should.bignumber.eq(0);
 
       (await this.contract.historicalVotingPowerAtNonce(
@@ -95,13 +96,13 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
     it('should give correct historical balance at each time', async () => {
       await this.contract.mint(alice, 100, { from: owner });
-      const firstTxTime = await latest();
+      const firstTxBlockno = (await ethGetBlock('latest')).number;
       await increase(100);
       await this.contract.transfer(bob, 10, { from: alice });
-      const secondTxTime = await latest();
+      const secondTxBlockno = (await ethGetBlock('latest')).number;
       await increase(100);
       await this.contract.transfer(alice, 5, { from: bob });
-      const thirdTxTime = await latest();
+      const thirdTxBlockno = (await ethGetBlock('latest')).number;
 
       (await this.contract.historicalVotingPowerAtNonce(
         alice,
@@ -125,39 +126,24 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
       await reverting(this.contract.historicalVotingPowerAtNonce(alice, 4));
 
-      (await this.contract.historicalVotingPowerAtTime(
+      (await this.contract.historicalVotingPowerAtBlock(
         alice,
-        firstTxTime - 1,
+        firstTxBlockno - 1,
       )).should.bignumber.eq(0);
 
-      (await this.contract.historicalVotingPowerAtTime(
+      (await this.contract.historicalVotingPowerAtBlock(
         alice,
-        firstTxTime,
+        firstTxBlockno,
       )).should.bignumber.eq(100);
 
-      (await this.contract.historicalVotingPowerAtTime(
+      (await this.contract.historicalVotingPowerAtBlock(
         alice,
-        firstTxTime + 1,
-      )).should.bignumber.eq(100);
-
-      (await this.contract.historicalVotingPowerAtTime(
-        alice,
-        secondTxTime,
+        secondTxBlockno,
       )).should.bignumber.eq(90);
 
-      (await this.contract.historicalVotingPowerAtTime(
+      (await this.contract.historicalVotingPowerAtBlock(
         alice,
-        secondTxTime + 1,
-      )).should.bignumber.eq(90);
-
-      (await this.contract.historicalVotingPowerAtTime(
-        alice,
-        thirdTxTime,
-      )).should.bignumber.eq(95);
-
-      (await this.contract.historicalVotingPowerAtTime(
-        alice,
-        thirdTxTime + 1,
+        thirdTxBlockno,
       )).should.bignumber.eq(95);
     });
   });

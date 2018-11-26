@@ -19,7 +19,8 @@ module.exports = deployer => {
         CommunityToken.address,
         [
           'params:proposal_expiration_time',
-          'params:proposal_pass_percentage',
+          'params:support_required',
+          'params:minimum_quorum',
           'admin:min_deposit',
           'admin:apply_stage_length',
           'admin:yes_threshold',
@@ -28,7 +29,7 @@ module.exports = deployer => {
           'admin:reveal_time',
           'admin:reward_percentage',
         ],
-        [3600, 10, 100, 60, 30, 70, 360, 360, 50],
+        [3600, 10, 10, 100, 60, 30, 70, 360, 360, 50],
       );
 
       await deployer.deploy(AdminTCR, Parameters.address);

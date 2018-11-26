@@ -29,27 +29,28 @@ contract CommunityToken is IERC20, Ownable {
 
   /**
    * @dev IMPORTANT: voting in CommunityToken are kept as a linked
-   * list of ALL historical changes of voting power in timestamps and number.
+   * list of ALL historical changes of voting power in block number and power.
    *
    * For instance, if an address has the following balance list:
-   *  (0, 0) -> (1000, 100) -> (1010, 90) -> (1010, 89) -> (1020, 94)
+   *  (0, 0) -> (1000, 100) -> (1010, 90) -> (1020, 95)
    * It means the historical voting power of the address is:
-   *    [at t=1000] Receive 100 voting power
-   *    [at t=1010] Lose 10 voting power
-   *    [at t=1010] Lose 1 voting power
-   *    [at t=1020] Receive 5 voting power
+   *    [at height=1000] Receive 100 voting power
+   *    [at height=1010] Lose 10 voting power
+   *    [at height=1020] Receive 5 voting power
    *
    * Voting power of A can change if either:
    *  1. A new address chooses A as his delegator.
    *  2. One of A's delegating members decide to stop the delegation.
    *  3. One of A's delegating members balance changes.
+   * If multiple changes occur at the same block, only the last one will be
+   * kept on the linked list data structure.
    *
    * This allows the contract to figure out voting power of the address at any
-   * timestamp `t`, by searching for the node that has the biggest timestamp
+   * blockno `t`, by searching for the node that has the biggest blockno
    * that is not greater than `t`.
    *
-   * For efficiency, timestamp and power are packed into one uint256 integer,
-   * with the top 64 bits representing timestamp, and the bottom 192 bits
+   * For efficiency, blockno and power are packed into one uint256 integer,
+   * with the top 64 bits representing blockno, and the bottom 192 bits
    * representing voting power.
    */
   mapping (address => mapping(uint256 => uint256)) _votingPower;
@@ -58,7 +59,7 @@ contract CommunityToken is IERC20, Ownable {
   // Mapping of voting delegator. All voting power of an address is
   // automatically transfered to to its delegator, until delegation is revoked.
   // Map to address(0) if an address is the delegator of itself.
-  mapping (address => address) _delegators;
+  mapping (address => address) delegators;
 
 
   constructor(string _name, string _symbol, uint8 _decimals) public {
@@ -90,14 +91,19 @@ contract CommunityToken is IERC20, Ownable {
   /**
    * @dev Returns user voting power at the given time. Under the hood, this
    * performs binary search to look for the largest nonce at which the
-   * timestamp is not greater than 'asof'. The voting power at that nonce is
+   * blockno is not greater than 'blockno'. The voting power at that nonce is
    * the returning value.
    */
-  function historicalVotingPowerAtTime(address owner, uint256 asof)
+  function historicalVotingPowerAtBlock(address owner, uint256 blockno)
     public
     view
     returns (uint256)
   {
+    // Data in the current block is not yet finalized. This method only works
+    // for past blocks.
+    require(blockno < block.number);
+    require(blockno < (1 << 64));
+
     uint256 start = 0;
     uint256 end = votingPowerNonces[owner];
 
@@ -105,8 +111,8 @@ contract CommunityToken is IERC20, Ownable {
     while (start < end) {
       // Doing ((start + end + 1) / 2) here to prevent infinite loop.
       uint256 mid = start.add(end).add(1).div(2);
-      if ((_votingPower[owner][mid] >> 192) > asof) {  // Upper 64 bits timestamp
-        // If midTime > asof, this mid can't possibly be the answer
+      if ((_votingPower[owner][mid] >> 192) > blockno) { // Upper 64 bits blockno
+        // If midTime > blockno, this mid can't possibly be the answer
         end = mid.sub(1);
       } else {
         // Otherwise, search on the greater side, but still keep mid as a
@@ -116,9 +122,9 @@ contract CommunityToken is IERC20, Ownable {
     }
 
     // Double check again that the binary search is correct.
-    assert((_votingPower[owner][start] >> 192) <= asof);
+    assert((_votingPower[owner][start] >> 192) <= blockno);
     if (start < votingPowerNonces[owner]) {
-      assert((_votingPower[owner][start + 1] >> 192) > asof);
+      assert((_votingPower[owner][start + 1] >> 192) > blockno);
     }
 
     return historicalVotingPowerAtNonce(owner, start);
@@ -128,7 +134,7 @@ contract CommunityToken is IERC20, Ownable {
    * @dev Gets the voting delegator of the specified address.
    */
   function delegatorOf(address owner) public view returns (address) {
-    address delegator = _delegators[owner];
+    address delegator = delegators[owner];
     if (delegator == address(0)) {
       // If no mapping is specified, then it is the delegator of itself
       return owner;
@@ -175,7 +181,7 @@ contract CommunityToken is IERC20, Ownable {
     require(delegatorOf(msg.sender) == msg.sender);
     require(delegator != msg.sender);
     // Update delegator of this sender
-    _delegators[msg.sender] = delegator;
+    delegators[msg.sender] = delegator;
     // Update voting power of involved parties
     uint256 balance = balanceOf(msg.sender);
     _changeVotingPower(msg.sender, votingPowerOf(msg.sender).sub(balance));
@@ -190,7 +196,7 @@ contract CommunityToken is IERC20, Ownable {
     require(delegatorOf(msg.sender) == previousDelegator);
     require(previousDelegator != msg.sender);
     // Update delegator of this sender
-    _delegators[msg.sender] = address(0);
+    delegators[msg.sender] = address(0);
     // Update voting power of involved parties
     uint256 balance = balanceOf(msg.sender);
     _changeVotingPower(msg.sender, votingPowerOf(msg.sender).add(balance));
@@ -408,11 +414,20 @@ contract CommunityToken is IERC20, Ownable {
    * to a new value.
    */
   function _changeVotingPower(address owner, uint256 newPower) internal {
-    uint256 currentTime = block.timestamp;
-    require(newPower < (1 << 192));
-    require(currentTime < (1 << 64));
+    uint256 currentBlockno = block.number;
+    uint256 currentNonce = votingPowerNonces[owner];
 
-    uint256 nextNonce = ++votingPowerNonces[owner];
-    _votingPower[owner][nextNonce] = (currentTime << 192) | newPower;
+    require(newPower < (1 << 192));
+    require(currentBlockno < (1 << 64));
+
+    if ((_votingPower[owner][currentNonce] >> 192) != currentBlockno) {
+      // If the current blockno is not equal to the last one on the linked list,
+      // we append a new entry to the list. Otherwise, we simply rewrite the
+      // last node's power to newPower.
+      currentNonce = currentNonce.add(1);
+      votingPowerNonces[owner] = currentNonce;
+    }
+
+    _votingPower[owner][currentNonce] = (currentBlockno << 192) | newPower;
   }
 }
