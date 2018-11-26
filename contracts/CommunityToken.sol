@@ -17,6 +17,13 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 contract CommunityToken is IERC20, Ownable {
   using SafeMath for uint256;
 
+  // `owner` chooses to delegate its voting power to `delegator`. Delegator
+  // is address(0) if owner chooses to revoke previous delegation.
+  event Delegate(
+    address indexed owner,
+    address indexed delegator
+  );
+
   string public name;
   string public symbol;
   uint256 public decimals;
@@ -186,6 +193,8 @@ contract CommunityToken is IERC20, Ownable {
     uint256 balance = balanceOf(msg.sender);
     _changeVotingPower(msg.sender, votingPowerOf(msg.sender).sub(balance));
     _changeVotingPower(delegator, votingPowerOf(delegator).add(balance));
+
+    emit Delegate(msg.sender, delegator);
     return true;
   }
 
@@ -202,6 +211,8 @@ contract CommunityToken is IERC20, Ownable {
     _changeVotingPower(msg.sender, votingPowerOf(msg.sender).add(balance));
     _changeVotingPower(
       previousDelegator, votingPowerOf(previousDelegator).sub(balance));
+
+    emit Delegate(msg.sender, address(0));
     return true;
   }
 
