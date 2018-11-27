@@ -96,7 +96,7 @@ contract CommunityCore {
   uint256 public unwithdrawnReward = 0;
 
   // ID of the next reward.
-  uint256 public nextrewardID = 1;
+  uint256 public nextRewardID = 1;
 
   // True if the contract is currently active, which is when it is the sole
   // owner of the community token contract. While active, users can buy/sell
@@ -244,8 +244,8 @@ contract CommunityCore {
     uint256 rewardPeriod = params.get("core:reward_period");
     require(now >= lastRewardTime.add(rewardPeriod));
 
-    uint256 nonce = nextrewardID;
-    nextrewardID = nonce.add(1);
+    uint256 nonce = nextRewardID;
+    nextRewardID = nonce.add(1);
 
     uint256 currentBalance = commToken.balanceOf(this);
     uint256 totalReward = currentBalance.sub(unwithdrawnReward);
@@ -279,7 +279,7 @@ contract CommunityCore {
     public
     onlyAdmin
   {
-    require(rewardID > 0 && rewardID < nextrewardID);
+    require(rewardID > 0 && rewardID < nextRewardID);
     Reward storage reward = rewards[rewardID];
     require(now < reward.activeAt);
     reward.totalPortion = totalPortion;
@@ -307,7 +307,7 @@ contract CommunityCore {
   )
     external
   {
-    require(rewardID > 0 && rewardID < nextrewardID);
+    require(rewardID > 0 && rewardID < nextRewardID);
 
     Reward storage reward = rewards[rewardID];
     require(now >= reward.activeAt);

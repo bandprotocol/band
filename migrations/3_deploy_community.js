@@ -29,7 +29,7 @@ module.exports = deployer => {
           'admin:reveal_time',
           'admin:reward_percentage',
         ],
-        [3600, 10, 10, 100, 60, 30, 70, 360, 360, 50],
+        [3600, 70, 10, 100, 60, 30, 70, 360, 360, 50],
       );
 
       await deployer.deploy(AdminTCR, Parameters.address);
@@ -39,7 +39,7 @@ module.exports = deployer => {
         AdminTCR.address,
         BandToken.address,
         Parameters.address,
-        [8, 1, 0, 2],
+        [8, 7, 1, 0, 44721359549996, 0, 4],
       );
 
       await communtiyToken.transferOwnership(CommunityCore.address);
