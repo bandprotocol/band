@@ -22,6 +22,12 @@ module.exports = {
       provider: () => new HDWalletProvider(process.env.MNENOMIC, 'https://rinkeby.infura.io/v3/' + process.env.INFURA_API_KEY),
       network_id: 4,
       gasPrice: 10000000000,
-    }
-  }
+    },
+  },
+  solc: {
+    optimizer: {
+      enabled: true,
+      runs: 200,
+    },
+  },
 };

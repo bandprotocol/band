@@ -39,7 +39,7 @@ module.exports = deployer => {
         AdminTCR.address,
         BandToken.address,
         Parameters.address,
-        [8, 7, 1, 0, 44721359549996, 0, 4],
+        [8, 7, 8, 1, 0, 2, 0, 2000000000000000000000000000000000000, 0, 2],
       );
 
       await communtiyToken.transferOwnership(CommunityCore.address);

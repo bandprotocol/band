@@ -348,7 +348,7 @@ contract CommunityCore {
     _adjustAutoInflation();
     uint256 adjustedPrice = getBuyPrice(amount);
     // Make sure that the sender does not overpay due to slow block / frontrun.
-    require(adjustedPrice <= priceLimit);
+    require(adjustedPrice != 0 && adjustedPrice <= priceLimit);
     // Get Band tokens from sender and mint community tokens for sender.
     require(bandToken.transferFrom(msg.sender, this, adjustedPrice));
     require(commToken.mint(msg.sender, amount));
@@ -367,7 +367,7 @@ contract CommunityCore {
     uint256 taxedAmount = amount.mul(salesTax).div(DENOMINATOR);
     uint256 adjustedPrice = getSellPrice(amount.sub(taxedAmount));
     // Make sure that the sender receive not less than his/her desired minimum.
-    require(adjustedPrice >= priceLimit);
+    require(adjustedPrice != 0 && adjustedPrice >= priceLimit);
     // Burn community tokens of sender and send Band tokens to sender.
     require(commToken.burn(msg.sender, amount));
     require(bandToken.transfer(msg.sender, adjustedPrice));
