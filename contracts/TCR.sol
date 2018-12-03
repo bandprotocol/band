@@ -15,20 +15,37 @@ import "./Parameters.sol";
 contract TCR {
   using SafeMath for uint256;
 
-  event NewApplication(  // A new entry is submitted to the TCR.
+  event ApplicationSubmitted(  // A new entry is submitted to the TCR.
     bytes32 indexed data,
     address indexed proposer
-  );
-
-  event NewChallenge(  // An new challenge is initiated.
-    bytes32 indexed data,
-    uint256 indexed challengeID,
-    address indexed challenger
   );
 
   event EntryDeleted(  // An entry is removed from the TCR
     bytes32 indexed data,
     address indexed proposer
+  );
+
+  event EntryDeposited(  // Someone deposits token to an entry
+    bytes32 indexed data,
+    address indexed proposer,
+    uint256 value
+  );
+
+  event EntryWithdrawn(  // Someone withdraws token from an entry
+    bytes32 indexed data,
+    address indexed proposer,
+    uint256 value
+  );
+
+  event EntryExited(  // An entry is exited
+    bytes32 indexed data,
+    address indexed proposer
+  );
+
+  event ChallengeInitiated(  // An new challenge is initiated.
+    bytes32 indexed data,
+    uint256 indexed challengeID,
+    address indexed challenger
   );
 
   event ChallengeResolved(  // A challenge is resolved.
@@ -38,43 +55,25 @@ contract TCR {
     uint256 rewardPool
   );
 
-  event RewardClaimed(  // A reward is claimed by a user.
+  event ChallengeRewardClaimed(  // A reward is claimed by a user.
     uint256 indexed challengeID,
     address indexed voter,
     uint256 reward
   );
 
-  event VoteCommitted(  // A vote is committed by a user.
+  event ChallengeVoteCommitted(  // A vote is committed by a user.
     uint256 indexed challengeID,
     address indexed voter,
     bytes32 voteHash
   );
 
-  event VoteRevealed(  // A vote is revealed by a user.
+  event ChallengeVoteRevealed(  // A vote is revealed by a user.
     uint256 indexed challengeID,
     address indexed voter,
     uint256 yesWieght,
     uint256 noWeight,
     uint256 salt
   );
-
-  event Deposit(  // Someone deposits token to an entry
-    bytes32 indexed data,
-    address indexed proposer,
-    uint256 value
-  );
-
-  event Withdraw(  // Someone withdraws token from an entry
-    bytes32 indexed data,
-    address indexed proposer,
-    uint256 value
-  );
-
-  event Exit(  // An entry is exited
-    bytes32 indexed data,
-    address indexed proposer
-  );
-
 
   CommunityToken public token;
   Parameters public params;
@@ -211,7 +210,7 @@ contract TCR {
     entry.proposer = msg.sender;
     entry.withdrawableDeposit = stake;
     entry.pendingExpiration = now.add(get("apply_stage_length"));
-    emit NewApplication(data, msg.sender);
+    emit ApplicationSubmitted(data, msg.sender);
   }
 
   /**
@@ -223,7 +222,7 @@ contract TCR {
     Entry storage entry = entries[data];
     require(entry.proposer == msg.sender);
     entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
-    emit Deposit(data, msg.sender, amount);
+    emit EntryDeposited(data, msg.sender, amount);
   }
 
   /**
@@ -235,7 +234,7 @@ contract TCR {
     require(entry.withdrawableDeposit >= amount);
     entry.withdrawableDeposit -= amount;
     require(token.transfer(msg.sender, amount));
-    emit Withdraw(data, msg.sender, amount);
+    emit EntryWithdrawn(data, msg.sender, amount);
   }
 
   /**
@@ -247,7 +246,7 @@ contract TCR {
     require(entry.proposer == msg.sender);
     require(entry.challengeID == 0);
     deleteEntry(data);
-    emit Exit(data, msg.sender);
+    emit EntryExited(data, msg.sender);
   }
 
   /**
@@ -285,7 +284,7 @@ contract TCR {
 
     // Increment the nonce for the next challenge.
     nextChallengeNonce = challengeID.add(1);
-    emit NewChallenge(data, challengeID, msg.sender);
+    emit ChallengeInitiated(data, challengeID, msg.sender);
   }
 
   /**
@@ -300,7 +299,7 @@ contract TCR {
     require(now < challenge.commitEndTime);
     challenge.commits[msg.sender] = commitValue;
     challenge.voteStates[msg.sender] = VoteState.Committed;
-    emit VoteCommitted(challengeID, msg.sender, commitValue);
+    emit ChallengeVoteCommitted(challengeID, msg.sender, commitValue);
   }
 
   /**
@@ -343,7 +342,7 @@ contract TCR {
     challenge.noWeights[msg.sender] = noWeight;
     challenge.noCount = challenge.noCount.add(noWeight);
 
-    emit VoteRevealed(challengeID, msg.sender, yesWeight, noWeight, salt);
+    emit ChallengeVoteRevealed(challengeID, msg.sender, yesWeight, noWeight, salt);
   }
 
   /**
@@ -450,7 +449,7 @@ contract TCR {
 
     // Send reward to the claimer.
     require(token.transfer(msg.sender, reward));
-    emit RewardClaimed(challengeID, msg.sender, reward);
+    emit ChallengeRewardClaimed(challengeID, msg.sender, reward);
   }
 
   /**

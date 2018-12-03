@@ -18,7 +18,7 @@ contract AdminTCR is TCR {
     bytes32 data = bytes32(msg.sender);
     entries[data].proposer = msg.sender;
     entries[data].pendingExpiration = now;
-    emit NewApplication(data, msg.sender);
+    emit ApplicationSubmitted(data, msg.sender);
   }
 
   /**

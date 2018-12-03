@@ -15,10 +15,8 @@ import "./CommunityToken.sol";
 contract Parameters {
   using SafeMath for uint256;
 
-  event NewProposal(  // A new parameter key-value is proposed.
-    uint256 indexed proposalID,
-    bytes32 indexed key,
-    uint256 value
+  event NewProposal(  // A new proposal is proposed.
+    uint256 indexed proposalID
   );
 
   event ProposalVoted(  // Someone endorses a proposal.
@@ -156,8 +154,9 @@ contract Parameters {
       bytes32 key = keys[index];
       uint256 value = values[index];
       proposals[nonce].changes[index] = KeyValue(key, value);
-      emit NewProposal(nonce, key, value);
     }
+
+    emit NewProposal(nonce);
   }
 
   /**
