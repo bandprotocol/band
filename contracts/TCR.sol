@@ -108,6 +108,7 @@ contract TCR {
   // A challenge represent a challenge for a TCR entry. All challenges ever
   // existed are stored in 'challenges' map below.
   struct Challenge {
+    bytes32 entryData;      // The data that is in question
     address challenger;     // The challenger
     uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
     uint256 remainingVotes; // Remaining voting power that not yet claims reward
@@ -276,6 +277,7 @@ contract TCR {
     uint256 revealTime = get("reveal_time");
 
     entry.challengeID = challengeID;
+    challenges[challengeID].entryData = data;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
     challenges[challengeID].snapshotBlockno = block.number.sub(1);
@@ -350,18 +352,19 @@ contract TCR {
    * removed and the challenger gets the reward. Otherwise, the entry's
    * 'withdrawableDeposit' gets bumped by the reward.
    */
-  function resolveChallenge(bytes32 data) public entryMustExist(data) {
-    Entry storage entry = entries[data];
-
-    uint256 challengeID = entry.challengeID;
-    // Entry must have an ongoing challenge.
-    require(challengeID != 0);
-    // After the challenge is resolved, this entry won't have ongoing challenge.
-    entry.challengeID = 0;
-
+  function resolveChallenge(uint256 challengeID)
+    public
+    challengeMustExist(challengeID)
+  {
     Challenge storage challenge = challenges[challengeID];
     require(challenge.result == Vote.Invalid);
     require(now >= challenge.revealEndTime);
+
+    bytes32 data = challenge.entryData;
+    Entry storage entry = entries[data];
+    assert(entry.challengeID == challengeID);
+    // After the challenge is resolved, this entry won't have ongoing challenge.
+    entry.challengeID = 0;
 
     uint256 yesCount = challenge.yesCount;
     uint256 noCount = challenge.noCount;
