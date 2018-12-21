@@ -3,7 +3,7 @@ pragma solidity 0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./AdminTCR.sol";
+import "./AdminInterface.sol";
 import "./BandToken.sol";
 import "./CommunityToken.sol";
 import "./Equation.sol";
@@ -65,7 +65,6 @@ contract CommunityCore {
 
   Equation.Node[] public equation;
 
-  AdminTCR public admin;
   BandToken public bandToken;
   CommunityToken public commToken;
   Parameters public params;
@@ -122,12 +121,10 @@ contract CommunityCore {
    * @dev Create community core contract.
    */
   constructor(
-    AdminTCR _admin,
     BandToken _bandToken,
     Parameters _params,
     uint256[] _expressions
   ) public {
-    admin = _admin;
     bandToken = _bandToken;
     commToken = _params.token();
     params = _params;
@@ -136,9 +133,10 @@ contract CommunityCore {
   }
 
   /**
-   * @dev Throws if called by any account other than the owner.
+   * @dev Throws if called by any account other than the admin.
    */
   modifier onlyAdmin() {
+    AdminInterface admin = AdminInterface(params.get("core:admin_contract"));
     require(admin.isAdmin(msg.sender));
     _;
   }
@@ -244,6 +242,8 @@ contract CommunityCore {
   {
     uint256 rewardPeriod = params.get("core:reward_period");
     require(now >= lastRewardTime.add(rewardPeriod));
+
+    _adjustAutoInflation();
 
     uint256 nonce = nextRewardID;
     nextRewardID = nonce.add(1);
@@ -360,7 +360,7 @@ contract CommunityCore {
 
   /**
    * @dev Sell some amount of tokens for Band. Revert if sender will receive
-   * less than price limit if the transaction go through.
+   * less than price limit if the transaction goes through.
    */
   function sell(uint256 amount, uint256 priceLimit) public whenActive {
     _adjustAutoInflation();
@@ -383,7 +383,7 @@ contract CommunityCore {
 
   /**
    * @dev Auto inflate token supply per `inflation_ratio` parameter. This
-   * function is expected to be called prior to any buy/sll.
+   * function is expected to be called prior to any buy/sell/rewardDistribution.
    */
   function _adjustAutoInflation() private {
     uint256 currentSupply = commToken.totalSupply();

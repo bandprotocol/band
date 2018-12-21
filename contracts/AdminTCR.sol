@@ -1,5 +1,6 @@
 pragma solidity 0.4.24;
 
+import "./AdminInterface.sol";
 import "./TCR.sol";
 
 
@@ -7,10 +8,10 @@ import "./TCR.sol";
  * @title AdminTCR
  *
  * @dev Admin TCR contract is a Token Curated Registry contract to keep track
- * of a particular community's admins. That is, the each data in TCR is an
- * Ethereum address.
+ * of a particular community's admins. That is, each data in TCR is an Ethereum
+ * address.
  */
-contract AdminTCR is TCR {
+contract AdminTCR is AdminInterface, TCR {
 
   constructor(Parameters params) TCR("admin:", params) public {
     // Make the contract creator the admin. Note that this is without deposit,

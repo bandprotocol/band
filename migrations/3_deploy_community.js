@@ -1,4 +1,4 @@
-const AdminTCR = artifacts.require('./AdminTCR.sol');
+const AdminSimple = artifacts.require('./AdminSimple.sol');
 const BandToken = artifacts.require('./BandToken.sol');
 const CommunityCore = artifacts.require('./CommunityCore.sol');
 const CommunityToken = artifacts.require('./CommunityToken.sol');
@@ -18,6 +18,7 @@ module.exports = deployer => {
         Parameters,
         CommunityToken.address,
         [
+          'core:admin_contract',
           'params:proposal_expiration_time',
           'params:support_required',
           'params:minimum_quorum',
@@ -29,14 +30,11 @@ module.exports = deployer => {
           'admin:reveal_time',
           'admin:reward_percentage',
         ],
-        [3600, 70, 10, 100, 60, 30, 70, 360, 360, 50],
+        [AdminSimple.address, 3600, 70, 10, 100, 60, 30, 70, 360, 360, 50],
       );
-
-      await deployer.deploy(AdminTCR, Parameters.address);
 
       const coreContract = await deployer.deploy(
         CommunityCore,
-        AdminTCR.address,
         BandToken.address,
         Parameters.address,
         [8, 7, 8, 1, 0, 2, 0, 2000000000000000000000000000000000000, 0, 2],

@@ -15,8 +15,12 @@ import "./CommunityToken.sol";
 contract Parameters {
   using SafeMath for uint256;
 
-  event NewProposal(  // A new proposal is proposed.
-    uint256 indexed proposalID
+  event ProposalProposed(  // A new proposal is proposed.
+    uint256 indexed proposalID,
+    address indexed proposer,
+    uint256 expiration,
+    uint256 snapshotBlockNo,
+    uint256 totalPossibleVoteCount
   );
 
   event ProposalVoted(  // Someone endorses a proposal.
@@ -26,13 +30,19 @@ contract Parameters {
     uint256 noCount
   );
 
-  event ParameterChanged(  // A parameter is changed.
+  event ProposalResolved( // A proposol is resolved.
+    uint256 indexed proposalID
+  );
+
+  event ParameterInit(  // A parameter is initiated during contract creation.
     bytes32 indexed key,
     uint256 value
   );
 
-  event ProposalResolved( // A proposol is resolved
-    uint256 indexed proposalID
+  event ParameterProposed(  // A parameter change is proposed.
+    uint256 indexed proposalID,
+    bytes32 indexed key,
+    uint256 value
   );
 
 
@@ -54,7 +64,7 @@ contract Parameters {
   struct Proposal {
     mapping (address => bool) voted;
 
-    uint256 snapshotBlockno;
+    uint256 snapshotBlockNo;
 
     // Only proposal with expiration > now is considered valid. Note that this
     // means nonexistent proposal (with experiation default to 0) is never
@@ -83,7 +93,7 @@ contract Parameters {
     require(keys.length == values.length);
     for (uint256 idx = 0; idx < keys.length; ++idx) {
       params[keys[idx]] = values[idx];
-      emit ParameterChanged(keys[idx], values[idx]);
+      emit ParameterInit(keys[idx], values[idx]);
     }
 
     require(get("params:proposal_expiration_time") > 0);
@@ -136,27 +146,34 @@ contract Parameters {
   function propose(bytes32[] keys, uint256[] values) external {
     require(keys.length == values.length);
 
-    uint256 nonce = nextProposalNonce;
-    nextProposalNonce = nonce.add(1);
+    uint256 proposalID = nextProposalNonce;
+    nextProposalNonce = proposalID.add(1);
 
-    proposals[nonce].snapshotBlockno = block.number.sub(1);
-    proposals[nonce].expiration = now.add(get("params:proposal_expiration_time"));
-    proposals[nonce].changeCount = keys.length;
+    proposals[proposalID].snapshotBlockNo = block.number.sub(1);
+    proposals[proposalID].expiration = now.add(get("params:proposal_expiration_time"));
+    proposals[proposalID].changeCount = keys.length;
 
-    // NOTE: This could possibliy slightly mismatch with `snapshotBlockno`
+    // NOTE: This could possibliy slightly mismatch with `snapshotBlockNo`
     // if there are be mint/burn transactions in this block prior to
     // this transaction. The effect, however, should be minimal as
     // `minimum_quorum` is primarily used to ensure minimal number of vote
     // participants. The primary decision factor should be `support_required`.
-    proposals[nonce].totalPossibleVoteCount = token.totalSupply();
+    proposals[proposalID].totalPossibleVoteCount = token.totalSupply();
 
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];
       uint256 value = values[index];
-      proposals[nonce].changes[index] = KeyValue(key, value);
+      emit ParameterProposed(proposalID, key, value);
+      proposals[proposalID].changes[index] = KeyValue(key, value);
     }
 
-    emit NewProposal(nonce);
+    emit ProposalProposed(
+      proposalID,
+      msg.sender,
+      proposals[proposalID].expiration,
+      proposals[proposalID].snapshotBlockNo,
+      proposals[proposalID].totalPossibleVoteCount
+    );
   }
 
   /**
@@ -178,7 +195,7 @@ contract Parameters {
 
     uint256 totalWeight = token.historicalVotingPowerAtBlock(
       msg.sender,
-      proposal.snapshotBlockno
+      proposal.snapshotBlockNo
     );
 
     require(yesCount.add(noCount) <= totalWeight);
@@ -190,7 +207,7 @@ contract Parameters {
 
   /**
    * @dev Called by anyone to resolve the parameter proposal. If >=
-   * `params:support_required` % of participating voters and  >=
+   * `params:support_required` % of participating voters and >=
    * `params:minimum_quorum` % of all supply vote YES for this proposal,
    * then the change is considered approved.
    */
@@ -213,9 +230,7 @@ contract Parameters {
     for (uint256 index = 0; index < proposal.changeCount; ++index) {
       bytes32 key = proposal.changes[index].key;
       uint256 value = proposal.changes[index].value;
-
       params[key] = value;
-      emit ParameterChanged(key, value);
     }
     emit ProposalResolved(proposalID);
   }
