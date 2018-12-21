@@ -34,7 +34,8 @@ contract CommunityCore {
   event Sell(  // Someone sells community token
     address indexed seller,
     uint256 amount,
-    uint256 price
+    uint256 price,
+    uint256 commissionCost
   );
 
   event Deflate(  // An admin burns community token to deflate the system
@@ -363,21 +364,21 @@ contract CommunityCore {
    */
   function sell(uint256 amount, uint256 priceLimit) public whenActive {
     _adjustAutoInflation();
-    uint256 salesTax = params.getZeroable("core:sales_tax");
-    uint256 taxedAmount = amount.mul(salesTax).div(DENOMINATOR);
-    uint256 adjustedPrice = getSellPrice(amount.sub(taxedAmount));
+    uint256 salesCommission = params.getZeroable("core:sales_commission");
+    uint256 commissionCost = amount.mul(salesCommission).div(DENOMINATOR);
+    uint256 adjustedPrice = getSellPrice(amount.sub(commissionCost));
     // Make sure that the sender receive not less than his/her desired minimum.
     require(adjustedPrice != 0 && adjustedPrice >= priceLimit);
     // Burn community tokens of sender and send Band tokens to sender.
     require(commToken.burn(msg.sender, amount));
     require(bandToken.transfer(msg.sender, adjustedPrice));
 
-    if (taxedAmount > 0) {
-      require(commToken.mint(this, taxedAmount));
+    if (commissionCost > 0) {
+      require(commToken.mint(this, commissionCost));
     }
 
     currentBandCollatoralized = currentBandCollatoralized.sub(adjustedPrice);
-    emit Sell(msg.sender, amount, adjustedPrice);
+    emit Sell(msg.sender, amount, adjustedPrice, commissionCost);
   }
 
   /**
