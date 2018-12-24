@@ -16,19 +16,19 @@
   },
   "dependencies": {
     "chai": "^4.2.0",
-    "chai-bignumber": "^2.0.2",
+    "chai-bignumber": "^3.0.0",
     "eslint": "^5.6.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "openzeppelin-solidity": "^2.0.0",
     "pify": "^4.0.0",
     "randomhex": "^0.1.5",
     "solium": "^1.1.8",
-    "truffle": "^4.1.14",
+    "truffle": "^5.0.0",
     "truffle-flattener": "^1.2.9",
-    "truffle-hdwallet-provider": "^0.0.6"
+    "truffle-hdwallet-provider": "^1.0.0-web3one.5"
   }
 }

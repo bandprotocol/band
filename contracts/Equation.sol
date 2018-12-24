@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
@@ -107,7 +107,7 @@ library Equation {
    * @param self storage pointer to equation data to initialize.
    * @param _expressions array of opcodes/values to initialize.
    */
-  function init(Node[] storage self, uint256[] _expressions) internal {
+  function init(Node[] storage self, uint256[] memory _expressions) internal {
     // Init should only be called when the equation is not yet initialized.
     assert(self.length == 0);
 
@@ -183,7 +183,7 @@ library Equation {
    * Execute revert EVM opcode on failure.
    * @return The type of this expression itself.
    */
-  function checkExprType(uint8 opcode, ExprType[] types)
+  function checkExprType(uint8 opcode, ExprType[] memory types)
     private
     pure
     returns (ExprType)

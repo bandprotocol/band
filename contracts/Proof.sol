@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 
 /**
@@ -20,7 +20,7 @@ library Proof {
     bytes32 rootHash,
     address key,
     bytes32 value,
-    bytes32[] proof
+    bytes32[] memory proof
   )
     internal
     pure

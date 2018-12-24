@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -123,8 +123,10 @@ contract CommunityCore {
   constructor(
     BandToken _bandToken,
     Parameters _params,
-    uint256[] _expressions
-  ) public {
+    uint256[] memory _expressions
+  )
+    public
+  {
     bandToken = _bandToken;
     commToken = _params.token();
     params = _params;
@@ -162,7 +164,7 @@ contract CommunityCore {
     if (initialBand != 0) {
       // If initialBand is set, this curve contract takes the tokens from
       // contract activator. The curve is then adjusted to match token supply.
-      bandToken.transferFrom(msg.sender, this, initialBand);
+      bandToken.transferFrom(msg.sender, address(this), initialBand);
       currentBandCollatoralized = initialBand;
       _adjustcurveMultiplier();
     } else {
@@ -186,7 +188,7 @@ contract CommunityCore {
    * The migrator will be entitiled as the community token's owner.
    */
   function deactivate() public whenActive {
-    require(bytes32(msg.sender) == bytes32(params.get("core:deactivator")));
+    require(uint256(msg.sender) == params.get("core:deactivator"));
     isActive = false;
     if (currentBandCollatoralized != 0) {
       require(bandToken.transfer(msg.sender, currentBandCollatoralized));
@@ -248,7 +250,7 @@ contract CommunityCore {
     uint256 nonce = nextRewardID;
     nextRewardID = nonce.add(1);
 
-    uint256 currentBalance = commToken.balanceOf(this);
+    uint256 currentBalance = commToken.balanceOf(address(this));
     uint256 totalReward = currentBalance.sub(unwithdrawnReward);
 
     rewards[nonce].totalReward = totalReward;
@@ -304,7 +306,7 @@ contract CommunityCore {
   function claimReward(
     uint256 rewardID,
     uint256 rewardPortion,
-    bytes32[] proof
+    bytes32[] calldata proof
   )
     external
   {
@@ -351,7 +353,7 @@ contract CommunityCore {
     // Make sure that the sender does not overpay due to slow block / frontrun.
     require(adjustedPrice != 0 && adjustedPrice <= priceLimit);
     // Get Band tokens from sender and mint community tokens for sender.
-    require(bandToken.transferFrom(msg.sender, this, adjustedPrice));
+    require(bandToken.transferFrom(msg.sender, address(this), adjustedPrice));
     require(commToken.mint(msg.sender, amount));
 
     currentBandCollatoralized = currentBandCollatoralized.add(adjustedPrice);
@@ -374,7 +376,7 @@ contract CommunityCore {
     require(bandToken.transfer(msg.sender, adjustedPrice));
 
     if (commissionCost > 0) {
-      require(commToken.mint(this, commissionCost));
+      require(commToken.mint(address(this), commissionCost));
     }
 
     currentBandCollatoralized = currentBandCollatoralized.sub(adjustedPrice);
@@ -395,7 +397,7 @@ contract CommunityCore {
         currentSupply.mul(pastSeconds).mul(inflationRatio).div(DENOMINATOR);
 
       if (inflatedSupply != 0) {
-        require(commToken.mint(this, inflatedSupply));
+        require(commToken.mint(address(this), inflatedSupply));
         _adjustcurveMultiplier();
       }
     }

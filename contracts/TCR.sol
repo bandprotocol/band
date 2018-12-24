@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -204,8 +204,11 @@ contract TCR {
    * 'min_deposit'. Application will get auto-approved if no challenge happens
    * during the first 'apply_stage_length' seconds.
    */
-  function apply(bytes32 data, uint256 stake) public entryMustNotExist(data) {
-    require(token.transferFrom(msg.sender, this, stake));
+  function applyEntry(bytes32 data, uint256 stake)
+    public
+    entryMustNotExist(data)
+  {
+    require(token.transferFrom(msg.sender, address(this), stake));
     require(stake >= get("min_deposit"));
     Entry storage entry = entries[data];
     entry.proposer = msg.sender;
@@ -219,7 +222,7 @@ contract TCR {
    * be the entry applicant.
    */
   function deposit(bytes32 data, uint256 amount) public entryMustExist(data) {
-    require(token.transferFrom(msg.sender, this, amount));
+    require(token.transferFrom(msg.sender, address(this), amount));
     Entry storage entry = entries[data];
     require(entry.proposer == msg.sender);
     entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
@@ -269,7 +272,7 @@ contract TCR {
     }
 
     // Take 'stake' tokens from both entry owner and challenger.
-    require(token.transferFrom(msg.sender, this, stake));
+    require(token.transferFrom(msg.sender, address(this), stake));
     entry.withdrawableDeposit -= stake;
 
     uint256 challengeID = nextChallengeNonce;

@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
@@ -87,7 +87,13 @@ contract Parameters {
    * @dev Create parameters contract. Initially set of key-value pairs can be
    * given in this constructor.
    */
-  constructor(CommunityToken _token, bytes32[] keys, uint256[] values) public {
+  constructor(
+    CommunityToken _token,
+    bytes32[] memory keys,
+    uint256[] memory values
+  )
+    public
+  {
     token = _token;
 
     require(keys.length == values.length);
@@ -143,7 +149,7 @@ contract Parameters {
   /**
    * @dev Propose a set of new key-value changes.
    */
-  function propose(bytes32[] keys, uint256[] values) external {
+  function propose(bytes32[] calldata keys, uint256[] calldata values) external {
     require(keys.length == values.length);
 
     uint256 proposalID = nextProposalNonce;
@@ -160,13 +166,6 @@ contract Parameters {
     // participants. The primary decision factor should be `support_required`.
     proposals[proposalID].totalPossibleVoteCount = token.totalSupply();
 
-    for (uint256 index = 0; index < keys.length; ++index) {
-      bytes32 key = keys[index];
-      uint256 value = values[index];
-      emit ParameterProposed(proposalID, key, value);
-      proposals[proposalID].changes[index] = KeyValue(key, value);
-    }
-
     emit ProposalProposed(
       proposalID,
       msg.sender,
@@ -174,6 +173,13 @@ contract Parameters {
       proposals[proposalID].snapshotBlockNo,
       proposals[proposalID].totalPossibleVoteCount
     );
+
+    for (uint256 index = 0; index < keys.length; ++index) {
+      bytes32 key = keys[index];
+      uint256 value = values[index];
+      emit ParameterProposed(proposalID, key, value);
+      proposals[proposalID].changes[index] = KeyValue(key, value);
+    }
   }
 
   /**

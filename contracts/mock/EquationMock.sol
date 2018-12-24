@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 import "../Equation.sol";
 
@@ -9,7 +9,7 @@ contract EquationMock {
   using Equation for Equation.Node[];
   Equation.Node[] equation;
 
-  constructor(uint256[] expressions) public {
+  constructor(uint256[] memory expressions) public {
     equation.init(expressions);
   }
 

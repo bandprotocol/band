@@ -1,4 +1,4 @@
-pragma solidity 0.4.24;
+pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
@@ -74,7 +74,13 @@ contract CommunityToken is IERC20, Ownable {
   mapping (address => address) delegators;
 
 
-  constructor(string _name, string _symbol, uint8 _decimals) public {
+  constructor(
+    string memory _name,
+    string memory _symbol,
+    uint8 _decimals
+  )
+    public
+  {
     name = _name;
     symbol = _symbol;
     decimals = _decimals;
@@ -253,7 +259,7 @@ contract CommunityToken is IERC20, Ownable {
    * is useful for approving all community-related contracts to withdraw tokens
    * on user's behalf.
    */
-  function batchApprove(address[] spenders, uint256 value)
+  function batchApprove(address[] memory spenders, uint256 value)
     public
     returns (bool)
   {
@@ -381,7 +387,7 @@ contract CommunityToken is IERC20, Ownable {
    * @param amount The amount that will be created.
    */
   function _mint(address account, uint256 amount) internal {
-    require(account != 0);
+    require(account != address(0));
 
     _totalSupply = _totalSupply.add(amount);
     _changeBalance(account, balanceOf(account).add(amount));
@@ -396,7 +402,7 @@ contract CommunityToken is IERC20, Ownable {
    * @param amount The amount that will be burnt.
    */
   function _burn(address account, uint256 amount) internal {
-    require(account != 0);
+    require(account != address(0));
     require(amount <= balanceOf(account));
 
     _totalSupply = _totalSupply.sub(amount);
