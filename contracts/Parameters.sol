@@ -45,7 +45,6 @@ contract Parameters {
     uint256 value
   );
 
-
   // The address of community token contract used to determine voting power.
   CommunityToken public token;
 
@@ -160,7 +159,7 @@ contract Parameters {
     proposals[proposalID].changeCount = keys.length;
 
     // NOTE: This could possibliy slightly mismatch with `snapshotBlockNo`
-    // if there are be mint/burn transactions in this block prior to
+    // if there are mint/burn transactions in this block prior to
     // this transaction. The effect, however, should be minimal as
     // `minimum_quorum` is primarily used to ensure minimal number of vote
     // participants. The primary decision factor should be `support_required`.
