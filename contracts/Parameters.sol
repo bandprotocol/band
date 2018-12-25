@@ -127,23 +127,14 @@ contract Parameters is ResolveListener {
    */
   function propose(bytes32[] calldata keys, uint256[] calldata values) external {
     require(keys.length == values.length);
-
     uint256 proposalID = nextProposalNonce;
     nextProposalNonce = proposalID.add(1);
-
-    // NOTE: This could possibliy slightly mismatch with `snapshotBlockNo`
-    // if there are mint/burn transactions in this block prior to
-    // this transaction. The effect, however, should be minimal as
-    // `minimum_quorum` is primarily used to ensure minimal number of vote
-    // participants. The primary decision factor should be `support_required`.
-    // proposals[proposalID].totalPossibleVoteCount = token.totalSupply();
-    proposals[proposalID].changeCount = keys.length;
 
     emit ProposalProposed(
       proposalID,
       msg.sender
     );
-
+    proposals[proposalID].changeCount = keys.length;
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];
       uint256 value = values[index];
