@@ -47,6 +47,7 @@ contract CommunityCore {
     uint256 indexed rewardID,
     address indexed submitter,
     uint256 totalReward,
+    uint256 totalPortion,
     bytes32 rewardPortionRootHash
   );
 
@@ -54,6 +55,7 @@ contract CommunityCore {
     uint256 indexed rewardID,
     address indexed editor,
     uint256 totalReward,
+    uint256 totalPortion,
     bytes32 rewardPortionRootHash
   );
 
@@ -265,6 +267,7 @@ contract CommunityCore {
       nonce,
       msg.sender,
       totalReward,
+      totalPortion,
       rewardPortionRootHash
     );
   }
@@ -293,6 +296,7 @@ contract CommunityCore {
       rewardID,
       msg.sender,
       reward.totalReward,
+      totalPortion,
       rewardPortionRootHash
     );
   }

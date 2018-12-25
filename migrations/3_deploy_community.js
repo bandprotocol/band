@@ -19,9 +19,11 @@ module.exports = deployer => {
 
       await deployer.deploy(
         Parameters,
-        CommunityToken.address,
+        Voting.address,
         [
           web3.utils.fromAscii('core:admin_contract'),
+          web3.utils.fromAscii('core:reward_period'),
+          web3.utils.fromAscii('core:reward_edit_period'),
           web3.utils.fromAscii('params:commit_time'),
           web3.utils.fromAscii('params:reveal_time'),
           web3.utils.fromAscii('params:support_required_pct'),
@@ -36,6 +38,8 @@ module.exports = deployer => {
         ],
         [
           AdminSimple.address,
+          '120',
+          '120',
           '60',
           '60',
           '70',

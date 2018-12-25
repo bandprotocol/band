@@ -90,8 +90,8 @@ contract Parameters is ResolveListener {
 
     require(get("params:commit_time") > 0);
     require(get("params:reveal_time") > 0);
-    require(get("params:min_participation") <= 100);
-    require(get("params:support_required") <= 100);
+    require(get("params:min_participation_pct") <= 100);
+    require(get("params:support_required_pct") <= 100);
   }
 
   /**
