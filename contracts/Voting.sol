@@ -12,6 +12,21 @@ import "./ResolveListener.sol";
 contract Voting {
   using SafeMath for uint256;
 
+  event PollCreated(  // A poll is created.
+    address indexed pollContract,
+    uint256 indexed pollID,
+    uint256 commitEndTime,
+    uint256 revealEndTime,
+    uint256 voteMinParticipation,
+    uint256 voteSupportRequired
+  );
+
+  event PollResolved(  // A poll is resolved.
+    address indexed pollContract,
+    uint256 indexed pollID,
+    ResolveListener.PollState pollState
+  );
+
   event VoteCommitted(  // A vote is committed by a user.
     address indexed pollContract,
     uint256 indexed pollID,
@@ -28,37 +43,29 @@ contract Voting {
     uint256 salt
   );
 
-  event PollResolved(  // A poll is resolved.
-    address indexed pollContract,
-    uint256 indexed pollID
-  );
-
   enum VoteState {
     Invalid,      // Invalid, default value
     Committed,    // The vote has been committed, but not yet revealed.
     Revealed      // The vote has been revealed.
   }
 
-  enum PollState {
-    Invalid,      // Invalid, no poll at this address/ID.
-    Active,       // The poll is accepting commit/reveal.
-    Resolved      // The poll is archived.
-  }
-
   struct Poll {
     uint256 snapshotBlockNo;  // The block number to count voting power
-    uint256 commitEndTime;    // Expiration timestamp of commit period
-    uint256 revealEndTime;    // Expiration timestamp of reveal period
 
-    uint256 yesCount;       // The current total number of YES votes
-    uint256 noCount;        // The current total number of NO votes
+    uint256 commitEndTime;          // Expiration timestamp of commit period
+    uint256 revealEndTime;          // Expiration timestamp of reveal period
+    uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
+
+    uint256 voteMinParticipation; // The minimum # of votes required
+    uint256 yesCount;             // The current total number of YES votes
+    uint256 noCount;              // The current total number of NO votes
 
     mapping (address => bytes32) commits;       // Each user's committed vote
     mapping (address => uint256) yesWeights;    // Each user's yes vote weight
     mapping (address => uint256) noWeights;     // Each user's no vote weight
     mapping (address => VoteState) voteStates;  // Each user's vote state
 
-    PollState pollState;    // The state of this poll.
+    ResolveListener.PollState pollState;  // The state of this poll.
   }
 
   // The address of community token contract for voting power reference.
@@ -68,12 +75,12 @@ contract Voting {
   mapping (address => mapping (uint256 => Poll)) public polls;
 
   modifier pollMustNotExist(address pollContract, uint256 pollID) {
-    require(polls[pollContract][pollID].pollState == PollState.Invalid);
+    require(polls[pollContract][pollID].pollState == ResolveListener.PollState.Invalid);
     _;
   }
 
   modifier pollMustBeActive(address pollContract, uint256 pollID) {
-    require(polls[pollContract][pollID].pollState == PollState.Active);
+    require(polls[pollContract][pollID].pollState == ResolveListener.PollState.Active);
     _;
   }
 
@@ -81,19 +88,97 @@ contract Voting {
     token = _token;
   }
 
+  function getPollTotalVote(address pollContract, uint256 pollID)
+    public
+    view
+    returns (uint256 yesCount, uint256 noCount)
+  {
+    Poll storage poll = polls[pollContract][pollID];
+    return (poll.yesCount, poll.noCount);
+  }
+
+  function getPollUserVoteOnWinningSide(
+    address pollContract,
+    uint256 pollID,
+    address voter
+  )
+    public
+    view
+    returns (uint256)
+  {
+    Poll storage poll = polls[pollContract][pollID];
+    if (poll.pollState == ResolveListener.PollState.Yes) {
+      return poll.yesWeights[voter];
+    } else if (poll.pollState == ResolveListener.PollState.No) {
+      return poll.noWeights[voter];
+    } else {
+      return 0;
+    }
+  }
+
+  function getPollUserVote(address pollContract, uint256 pollID, address voter)
+    public
+    view
+    returns (uint256 yesWeight, uint256 noWeight)
+  {
+    Poll storage poll = polls[pollContract][pollID];
+    return (poll.yesWeights[voter], poll.noWeights[voter]);
+  }
+
+  function getPollUserState(address pollContract, uint256 pollID, address voter)
+    public
+    view
+    returns (VoteState)
+  {
+    Poll storage poll = polls[pollContract][pollID];
+    return poll.voteStates[voter];
+  }
+
+  function getPollUserCommit(address pollContract, uint256 pollID, address voter)
+    public
+    view
+    returns (bytes32)
+  {
+    Poll storage poll = polls[pollContract][pollID];
+    return poll.commits[voter];
+  }
+
   function startPoll(
     uint256 pollID,
     uint256 commitEndTime,
-    uint256 revealEndTime
+    uint256 revealEndTime,
+    uint256 voteMinParticipationPct,
+    uint256 voteSupportRequiredPct
   )
     public
     pollMustNotExist(msg.sender, pollID)
     returns (bool)
   {
+    require(revealEndTime < 2 ** 64);
+    require(commitEndTime < revealEndTime);
+    require(voteMinParticipationPct <= 100);
+    require(voteSupportRequiredPct <= 100);
+
     Poll storage poll = polls[msg.sender][pollID];
     poll.snapshotBlockNo = block.number.sub(1);
     poll.commitEndTime = commitEndTime;
     poll.revealEndTime = revealEndTime;
+    poll.voteSupportRequiredPct = voteSupportRequiredPct;
+    // NOTE: This could possibliy slightly mismatch with `snapshotBlockNo`
+    // if there are mint/burn transactions in this block prior to
+    // this transaction. The effect, however, should be minimal as
+    // `minimum_quorum` is primarily used to ensure minimal number of vote
+    // participants. The primary decision factor should be `support_required`.
+    poll.voteMinParticipation = voteMinParticipationPct.mul(token.totalSupply());
+
+    emit PollCreated(
+      msg.sender,
+      pollID,
+      commitEndTime,
+      revealEndTime,
+      poll.voteMinParticipation,
+      voteSupportRequiredPct
+    );
     return true;
   }
 
@@ -156,8 +241,22 @@ contract Voting {
   {
     Poll storage poll = polls[pollContract][pollID];
     require(now >= poll.revealEndTime);
-    poll.pollState = PollState.Resolved;
-    emit PollResolved(pollContract, pollID);
-    require(ResolveListener(pollContract).onResolved(pollID));
+
+    uint256 yesCount = poll.yesCount;
+    uint256 noCount = poll.noCount;
+    uint256 totalCount = yesCount.add(noCount);
+
+    ResolveListener.PollState pollState;
+    if (totalCount < poll.voteMinParticipation) {
+      pollState = ResolveListener.PollState.Inconclusive;
+    } else if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(totalCount)) {
+      pollState = ResolveListener.PollState.Yes;
+    } else {
+      pollState = ResolveListener.PollState.No;
+    }
+
+    poll.pollState = pollState;
+    emit PollResolved(pollContract, pollID, pollState);
+    require(ResolveListener(pollContract).onResolved(pollID, pollState));
   }
 }

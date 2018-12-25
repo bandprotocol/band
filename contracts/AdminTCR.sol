@@ -13,7 +13,10 @@ import "./TCR.sol";
  */
 contract AdminTCR is AdminInterface, TCR {
 
-  constructor(Parameters params) TCR("admin:", params) public {
+  constructor(CommunityToken token, Voting voting, Parameters params)
+    TCR("admin:", token, voting, params)
+    public
+  {
     // Make the contract creator the admin. Note that this is without deposit,
     // so any challenge will kick this admin out.
     bytes32 data = bytes32(uint256(msg.sender));

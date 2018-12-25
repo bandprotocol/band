@@ -122,15 +122,15 @@ contract CommunityCore {
    */
   constructor(
     BandToken _bandToken,
+    CommunityToken _commToken,
     Parameters _params,
     uint256[] memory _expressions
   )
     public
   {
     bandToken = _bandToken;
-    commToken = _params.token();
+    commToken = _commToken;
     params = _params;
-
     equation.init(_expressions);
   }
 

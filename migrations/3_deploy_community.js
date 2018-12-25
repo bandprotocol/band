@@ -3,6 +3,7 @@ const BandToken = artifacts.require('./BandToken.sol');
 const CommunityCore = artifacts.require('./CommunityCore.sol');
 const CommunityToken = artifacts.require('./CommunityToken.sol');
 const Parameters = artifacts.require('./Parameters.sol');
+const Voting = artifacts.require('./Voting.sol');
 
 module.exports = deployer => {
   deployer
@@ -14,33 +15,37 @@ module.exports = deployer => {
         18,
       );
 
+      await deployer.deploy(Voting, CommunityToken.address);
+
       await deployer.deploy(
         Parameters,
         CommunityToken.address,
         [
           web3.utils.fromAscii('core:admin_contract'),
-          web3.utils.fromAscii('params:proposal_expiration_time'),
-          web3.utils.fromAscii('params:support_required'),
-          web3.utils.fromAscii('params:minimum_quorum'),
+          web3.utils.fromAscii('params:commit_time'),
+          web3.utils.fromAscii('params:reveal_time'),
+          web3.utils.fromAscii('params:support_required_pct'),
+          web3.utils.fromAscii('params:min_participation_pct'),
           web3.utils.fromAscii('admin:min_deposit'),
           web3.utils.fromAscii('admin:apply_stage_length'),
-          web3.utils.fromAscii('admin:yes_threshold'),
-          web3.utils.fromAscii('admin:no_threshold'),
+          web3.utils.fromAscii('admin:support_required_pct'),
+          web3.utils.fromAscii('admin:min_participation_pct'),
           web3.utils.fromAscii('admin:commit_time'),
           web3.utils.fromAscii('admin:reveal_time'),
           web3.utils.fromAscii('admin:reward_percentage'),
         ],
         [
           AdminSimple.address,
-          '120',
+          '60',
+          '60',
           '70',
           '10',
           '100',
           '60',
-          '30',
-          '70',
-          '360',
-          '360',
+          '50',
+          '10',
+          '60',
+          '60',
           '50',
         ],
       );
@@ -48,6 +53,7 @@ module.exports = deployer => {
       const coreContract = await deployer.deploy(
         CommunityCore,
         BandToken.address,
+        CommunityToken.address,
         Parameters.address,
         [
           '8',
