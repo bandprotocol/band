@@ -165,7 +165,7 @@ contract Voting {
     // `minimum_quorum` is primarily used to ensure minimum number of vote
     // participants. The primary decision factor should be `support_required`.
     uint256 voteMinParticipation
-      = voteMinParticipationPct.mul(token.totalSupply());
+      = voteMinParticipationPct.mul(token.totalSupply()).div(100);
 
     Poll storage poll = polls[msg.sender][pollID];
     poll.snapshotBlockNo = block.number.sub(1);

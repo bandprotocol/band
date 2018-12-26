@@ -30,7 +30,7 @@ contract Parameters is ParametersInterface, ResolveListener {
     uint256 indexed proposalID
   );
 
-  event ParameterInit(  // A parameter is initiated during contract creation.
+  event ParameterInit(  // A parameter is initialized during contract creation.
     bytes32 indexed key,
     uint256 value
   );
