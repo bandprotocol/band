@@ -7,7 +7,7 @@ import "./AdminInterface.sol";
 import "./BandToken.sol";
 import "./CommunityToken.sol";
 import "./Equation.sol";
-import "./Parameters.sol";
+import "./ParametersInterface.sol";
 import "./Proof.sol";
 
 
@@ -69,7 +69,7 @@ contract CommunityCore {
 
   BandToken public bandToken;
   CommunityToken public commToken;
-  Parameters public params;
+  ParametersInterface public params;
 
   // Denominator for inflation-related ratios and sales tax.
   uint256 public constant DENOMINATOR = 1e12;
@@ -125,7 +125,7 @@ contract CommunityCore {
   constructor(
     BandToken _bandToken,
     CommunityToken _commToken,
-    Parameters _params,
+    ParametersInterface _params,
     uint256[] memory _expressions
   )
     public

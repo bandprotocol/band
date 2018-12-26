@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./CommunityToken.sol";
-import "./Parameters.sol";
+import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
 import "./Voting.sol";
 
@@ -50,10 +50,21 @@ contract TCR is ResolveListener {
     address indexed challenger
   );
 
-  event ChallengeResolved(  // A challenge is resolved.
+  event ChallengeSuccess(  // A challenge is successful.
     bytes32 indexed data,
     uint256 indexed challengeID,
     uint256 rewardPool
+  );
+
+  event ChallengeFailed(  // A challenge has failed.
+    bytes32 indexed data,
+    uint256 indexed challengeID,
+    uint256 rewardPool
+  );
+
+  event ChallengeInconclusive(  // A challenge is not conclusive
+    bytes32 indexed data,
+    uint256 indexed challengeID
   );
 
   event ChallengeRewardClaimed(  // A reward is claimed by a user.
@@ -64,7 +75,7 @@ contract TCR is ResolveListener {
 
   CommunityToken public token;
   Voting public voting;
-  Parameters public params;
+  ParametersInterface public params;
 
   // Namespace prefix for all parameters (See Parameters.sol) for usage inside
   // this TCR.
@@ -77,13 +88,6 @@ contract TCR is ResolveListener {
     uint256 withdrawableDeposit;  // Amount token that is not on challenge stake
     uint256 pendingExpiration;    // Expiration time of entry's 'pending' status
     uint256 challengeID;          // ID of challenge, applicable if not zero
-  }
-
-  enum VoteResult {
-    Invalid,      // Invalid, default value
-    Yes,          // Vote Yes (agree on the side of challenger)
-    No,           // Vote No (agree on the side of entry proposer)
-    Inconclusive  // Vote result to be Inconclusive
   }
 
   // A challenge represent a challenge for a TCR entry. All challenges ever
@@ -112,7 +116,7 @@ contract TCR is ResolveListener {
     bytes8 _prefix,
     CommunityToken _token,
     Voting _voting,
-    Parameters _params
+    ParametersInterface _params
   ) public {
     prefix = _prefix;
     token = _token;
@@ -306,12 +310,14 @@ contract TCR is ResolveListener {
       // The remaining reward is distributed among Yes voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = yesCount;
+      emit ChallengeSuccess(data, challengeID, rewardPool);
     } else if (pollState == PollState.No) {
       // Challenge fails. Entry deposit is added by reward.
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
       // The remaining reward is distributed among No voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = noCount;
+      emit ChallengeFailed(data, challengeID, rewardPool);
     } else if (pollState == PollState.Inconclusive) {
       // Inconclusive. Both challenger and entry owner get half of the pool
       // back. The reward pool then becomes zero. Too bad for voters.
@@ -319,11 +325,11 @@ contract TCR is ResolveListener {
       require(token.transfer(challenge.challenger, halfRewardPool));
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(halfRewardPool);
       challenge.rewardPool = 0;
+      emit ChallengeInconclusive(data, challengeID);
     } else {
       revert();
     }
 
-    emit ChallengeResolved(data, challengeID, rewardPool);
     return true;
   }
 

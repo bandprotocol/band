@@ -2,6 +2,7 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
+import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
 import "./Voting.sol";
 
@@ -13,7 +14,7 @@ import "./Voting.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is ResolveListener {
+contract Parameters is ParametersInterface, ResolveListener {
   using SafeMath for uint256;
 
   event ProposalProposed(  // A new proposal is proposed.
@@ -21,7 +22,7 @@ contract Parameters is ResolveListener {
     address indexed proposer
   );
 
-  event ProposalResolved( // A proposol is resolved.
+  event ProposalAccepted( // A proposol is accepted.
     uint256 indexed proposalID
   );
 
@@ -118,7 +119,9 @@ contract Parameters is ResolveListener {
   /**
    * @dev Propose a set of new key-value changes.
    */
-  function propose(bytes32[] calldata keys, uint256[] calldata values) external {
+  function propose(bytes32[] calldata keys, uint256[] calldata values)
+    external
+  {
     require(keys.length == values.length);
     uint256 proposalID = nextProposalNonce;
     nextProposalNonce = proposalID.add(1);
@@ -165,9 +168,10 @@ contract Parameters is ResolveListener {
         uint256 value = proposal.changes[index].value;
         params[key] = value;
       }
-      emit ProposalResolved(proposalID);
+      emit ProposalAccepted(proposalID);
     } else {
       emit ProposalRejected(proposalID);
     }
+    return true;
   }
 }

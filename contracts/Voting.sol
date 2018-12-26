@@ -159,24 +159,28 @@ contract Voting {
     require(voteMinParticipationPct <= 100);
     require(voteSupportRequiredPct <= 100);
 
+    // NOTE: This could possibliy be slightly mismatched with `snapshotBlockNo`
+    // if there are mint/burn transactions in this block prior to
+    // this transaction. The effect, however, should be minimal as
+    // `minimum_quorum` is primarily used to ensure minimum number of vote
+    // participants. The primary decision factor should be `support_required`.
+    uint256 voteMinParticipation
+      = voteMinParticipationPct.mul(token.totalSupply());
+
     Poll storage poll = polls[msg.sender][pollID];
     poll.snapshotBlockNo = block.number.sub(1);
     poll.commitEndTime = commitEndTime;
     poll.revealEndTime = revealEndTime;
     poll.voteSupportRequiredPct = voteSupportRequiredPct;
-    // NOTE: This could possibliy slightly mismatch with `snapshotBlockNo`
-    // if there are mint/burn transactions in this block prior to
-    // this transaction. The effect, however, should be minimal as
-    // `minimum_quorum` is primarily used to ensure minimal number of vote
-    // participants. The primary decision factor should be `support_required`.
-    poll.voteMinParticipation = voteMinParticipationPct.mul(token.totalSupply());
+    poll.voteMinParticipation = voteMinParticipation;
+    poll.pollState = ResolveListener.PollState.Active;
 
     emit PollCreated(
       msg.sender,
       pollID,
       commitEndTime,
       revealEndTime,
-      poll.voteMinParticipation,
+      voteMinParticipation,
       voteSupportRequiredPct
     );
     return true;

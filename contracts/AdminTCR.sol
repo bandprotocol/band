@@ -13,7 +13,7 @@ import "./TCR.sol";
  */
 contract AdminTCR is AdminInterface, TCR {
 
-  constructor(CommunityToken token, Voting voting, Parameters params)
+  constructor(CommunityToken token, Voting voting, ParametersInterface params)
     TCR("admin:", token, voting, params)
     public
   {
