@@ -21,13 +21,6 @@ contract Parameters is ResolveListener {
     address indexed proposer
   );
 
-  event ProposalVoted(  // Someone endorses a proposal.
-    uint256 indexed proposalID,
-    address indexed voter,
-    uint256 yesCount,
-    uint256 noCount
-  );
-
   event ProposalResolved( // A proposol is resolved.
     uint256 indexed proposalID
   );
