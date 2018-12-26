@@ -64,6 +64,7 @@ contract CommunityCore {
   event RewardClaimed(  // Someone claims reward
     uint256 indexed rewardID,
     address indexed member,
+    uint256 rewardPortion,
     uint256 amount
   );
 
@@ -256,11 +257,12 @@ contract CommunityCore {
 
     uint256 currentBalance = commToken.balanceOf(address(this));
     uint256 totalReward = currentBalance.sub(unwithdrawnReward);
+    uint256 activeAt = now.add(params.get("core:reward_edit_period"));
 
     rewards[nonce].totalReward = totalReward;
     rewards[nonce].totalPortion = totalPortion;
     rewards[nonce].rewardPortionRootHash = rewardPortionRootHash;
-    rewards[nonce].activeAt = now.add(params.get("core:reward_edit_period"));
+    rewards[nonce].activeAt = activeAt;
 
     lastRewardTime = now;
     unwithdrawnReward = currentBalance;
@@ -270,7 +272,8 @@ contract CommunityCore {
       msg.sender,
       totalReward,
       totalPortion,
-      rewardPortionRootHash
+      rewardPortionRootHash,
+      activeAt
     );
   }
 
@@ -290,16 +293,18 @@ contract CommunityCore {
     require(rewardID > 0 && rewardID < nextRewardID);
     Reward storage reward = rewards[rewardID];
     require(now < reward.activeAt);
+    uint256 activeAt = now.add(params.get("core:reward_edit_period"));
     reward.totalPortion = totalPortion;
     reward.rewardPortionRootHash = rewardPortionRootHash;
-    reward.activeAt = now.add(params.get("core:reward_edit_period"));
+    reward.activeAt = activeAt;
 
     emit RewardDistributionSubmitted(
       rewardID,
       msg.sender,
       reward.totalReward,
       totalPortion,
-      rewardPortionRootHash
+      rewardPortionRootHash,
+      activeAt
     );
   }
 
@@ -336,7 +341,7 @@ contract CommunityCore {
     unwithdrawnReward = unwithdrawnReward.sub(userReward);
     require(commToken.transfer(msg.sender, userReward));
 
-    emit RewardClaimed(rewardID, msg.sender, userReward);
+    emit RewardClaimed(rewardID, msg.sender, rewardPortion, userReward);
   }
 
   /**
