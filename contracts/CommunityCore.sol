@@ -48,7 +48,8 @@ contract CommunityCore {
     address indexed submitter,
     uint256 totalReward,
     uint256 totalPortion,
-    bytes32 rewardPortionRootHash
+    bytes32 rewardPortionRootHash,
+    uint256 activeAt
   );
 
   event RewardDistributionEditted( // An existing reward is modified
@@ -56,7 +57,8 @@ contract CommunityCore {
     address indexed editor,
     uint256 totalReward,
     uint256 totalPortion,
-    bytes32 rewardPortionRootHash
+    bytes32 rewardPortionRootHash,
+    uint256 activeAt
   );
 
   event RewardClaimed(  // Someone claims reward
