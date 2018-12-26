@@ -210,7 +210,7 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
-   * @dev TODO
+   * @dev Revoke voting power delegation from the previously assigned delegator.
    */
   function revokeDelegateVote(address previousDelegator) public returns (bool) {
     require(delegatorOf(msg.sender) == previousDelegator);
@@ -238,6 +238,32 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
+   * @dev Similar to Transfer, but for multiple addresses at once.
+   */
+  function batchTransfer(address[] calldata tos, uint256[] calldata values)
+    external
+    returns (bool)
+  {
+    require(tos.length == values.length);
+    uint256 senderBalance = balanceOf(msg.sender);
+
+    for (uint256 idx = 0; idx < tos.length; ++idx) {
+      address to = tos[idx];
+      uint256 value = values[idx];
+
+      require(value <= senderBalance);
+      require(msg.sender != to);
+      require(to != address(0));
+
+      senderBalance = senderBalance.sub(value);
+      _changeBalance(to, balanceOf(to).add(value));
+    }
+
+    _changeBalance(msg.sender, senderBalance);
+    return true;
+  }
+
+  /**
    * @dev Approve the passed address to spend the specified amount of tokens on behalf of msg.sender.
    * Beware that changing an allowance with this method brings the risk that someone may use both the old
    * and the new allowance by unfortunate transaction ordering. One possible solution to mitigate this
@@ -259,12 +285,12 @@ contract CommunityToken is IERC20, Ownable {
    * is useful for approving all community-related contracts to withdraw tokens
    * on user's behalf.
    */
-  function batchApprove(address[] memory spenders, uint256 value)
-    public
+  function batchApprove(address[] calldata spenders, uint256 value)
+    external
     returns (bool)
   {
     for (uint256 idx = 0; idx < spenders.length; ++idx) {
-      require(approve(spenders[idx], value));
+      approve(spenders[idx], value);
     }
     return true;
   }
@@ -420,7 +446,7 @@ contract CommunityToken is IERC20, Ownable {
     uint256 oldBalance = balanceOf(owner);
     require(oldBalance != newBalance);
 
-    // Update `_balances` with new balances
+    // Update `_balances` with new balance.
     _balances[owner] = newBalance;
 
     // Compute new voting power of the address's delegator (can be itself).

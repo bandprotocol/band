@@ -322,10 +322,8 @@ contract CommunityCore {
     external
   {
     require(rewardID > 0 && rewardID < nextRewardID);
-
     Reward storage reward = rewards[rewardID];
     require(now >= reward.activeAt);
-
     require(!reward.claims[msg.sender]);
     reward.claims[msg.sender] = true;
 
@@ -340,7 +338,6 @@ contract CommunityCore {
 
     unwithdrawnReward = unwithdrawnReward.sub(userReward);
     require(commToken.transfer(msg.sender, userReward));
-
     emit RewardClaimed(rewardID, msg.sender, rewardPortion, userReward);
   }
 
