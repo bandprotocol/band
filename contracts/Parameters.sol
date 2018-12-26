@@ -135,8 +135,8 @@ contract Parameters is ResolveListener {
       proposals[proposalID].changes[index] = KeyValue(key, value);
     }
 
-    uint256 commitTime = get("commit_time");
-    uint256 revealTime = get("reveal_time");
+    uint256 commitTime = get("params:commit_time");
+    uint256 revealTime = get("params:reveal_time");
 
     require(
       voting.startPoll(
