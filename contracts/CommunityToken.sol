@@ -73,7 +73,6 @@ contract CommunityToken is IERC20, Ownable {
   // Map to address(0) if an address is the delegator of itself.
   mapping (address => address) delegators;
 
-
   constructor(
     string memory _name,
     string memory _symbol,
@@ -204,7 +203,6 @@ contract CommunityToken is IERC20, Ownable {
     uint256 balance = balanceOf(msg.sender);
     _changeVotingPower(msg.sender, votingPowerOf(msg.sender).sub(balance));
     _changeVotingPower(delegator, votingPowerOf(delegator).add(balance));
-
     emit Delegate(msg.sender, delegator);
     return true;
   }
@@ -220,9 +218,7 @@ contract CommunityToken is IERC20, Ownable {
     // Update voting power of involved parties
     uint256 balance = balanceOf(msg.sender);
     _changeVotingPower(msg.sender, votingPowerOf(msg.sender).add(balance));
-    _changeVotingPower(
-      previousDelegator, votingPowerOf(previousDelegator).sub(balance));
-
+    _changeVotingPower(previousDelegator, votingPowerOf(previousDelegator).sub(balance));
     emit Delegate(msg.sender, address(0));
     return true;
   }
@@ -234,32 +230,6 @@ contract CommunityToken is IERC20, Ownable {
    */
   function transfer(address to, uint256 value) public returns (bool) {
     _transfer(msg.sender, to, value);
-    return true;
-  }
-
-  /**
-   * @dev Similar to Transfer, but for multiple addresses at once.
-   */
-  function batchTransfer(address[] calldata tos, uint256[] calldata values)
-    external
-    returns (bool)
-  {
-    require(tos.length == values.length);
-    uint256 senderBalance = balanceOf(msg.sender);
-
-    for (uint256 idx = 0; idx < tos.length; ++idx) {
-      address to = tos[idx];
-      uint256 value = values[idx];
-
-      require(value <= senderBalance);
-      require(msg.sender != to);
-      require(to != address(0));
-
-      senderBalance = senderBalance.sub(value);
-      _changeBalance(to, balanceOf(to).add(value));
-    }
-
-    _changeBalance(msg.sender, senderBalance);
     return true;
   }
 
@@ -281,21 +251,6 @@ contract CommunityToken is IERC20, Ownable {
   }
 
   /**
-   * @dev Similar to Approve, but for multiple addresses at once. This function
-   * is useful for approving all community-related contracts to withdraw tokens
-   * on user's behalf.
-   */
-  function batchApprove(address[] calldata spenders, uint256 value)
-    external
-    returns (bool)
-  {
-    for (uint256 idx = 0; idx < spenders.length; ++idx) {
-      approve(spenders[idx], value);
-    }
-    return true;
-  }
-
-  /**
    * @dev Transfer tokens from one address to another
    * @param from address The address which you want to send tokens from
    * @param to address The address which you want to transfer to
@@ -310,7 +265,6 @@ contract CommunityToken is IERC20, Ownable {
     returns (bool)
   {
     require(value <= _allowed[from][msg.sender]);
-
     _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(value);
     _transfer(from, to, value);
     return true;
@@ -333,9 +287,7 @@ contract CommunityToken is IERC20, Ownable {
     returns (bool)
   {
     require(spender != address(0));
-
-    _allowed[msg.sender][spender] = (
-      _allowed[msg.sender][spender].add(addedValue));
+    _allowed[msg.sender][spender] = (_allowed[msg.sender][spender].add(addedValue));
     emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
     return true;
   }
@@ -398,10 +350,8 @@ contract CommunityToken is IERC20, Ownable {
     require(value <= balanceOf(from));
     require(from != to);
     require(to != address(0));
-
     _changeBalance(from, balanceOf(from).sub(value));
     _changeBalance(to, balanceOf(to).add(value));
-
     emit Transfer(from, to, value);
   }
 
@@ -414,10 +364,8 @@ contract CommunityToken is IERC20, Ownable {
    */
   function _mint(address account, uint256 amount) internal {
     require(account != address(0));
-
     _totalSupply = _totalSupply.add(amount);
     _changeBalance(account, balanceOf(account).add(amount));
-
     emit Transfer(address(0), account, amount);
   }
 
@@ -430,10 +378,8 @@ contract CommunityToken is IERC20, Ownable {
   function _burn(address account, uint256 amount) internal {
     require(account != address(0));
     require(amount <= balanceOf(account));
-
     _totalSupply = _totalSupply.sub(amount);
     _changeBalance(account, balanceOf(account).sub(amount));
-
     emit Transfer(account, address(0), amount);
   }
 
@@ -445,15 +391,12 @@ contract CommunityToken is IERC20, Ownable {
   function _changeBalance(address owner, uint256 newBalance) internal {
     uint256 oldBalance = balanceOf(owner);
     require(oldBalance != newBalance);
-
     // Update `_balances` with new balance.
     _balances[owner] = newBalance;
-
     // Compute new voting power of the address's delegator (can be itself).
     address delegator = delegatorOf(owner);
     uint256 previousPower = votingPowerOf(delegator);
     uint256 newPower = previousPower.add(newBalance).sub(oldBalance);
-
     _changeVotingPower(delegator, newPower);
   }
 
@@ -464,10 +407,8 @@ contract CommunityToken is IERC20, Ownable {
   function _changeVotingPower(address owner, uint256 newPower) internal {
     uint256 currentBlockno = block.number;
     uint256 currentNonce = votingPowerNonces[owner];
-
     require(newPower < (1 << 192));
     require(currentBlockno < (1 << 64));
-
     if ((_votingPower[owner][currentNonce] >> 192) != currentBlockno) {
       // If the current blockno is not equal to the last one on the linked list,
       // we append a new entry to the list. Otherwise, we simply rewrite the
@@ -475,7 +416,6 @@ contract CommunityToken is IERC20, Ownable {
       currentNonce = currentNonce.add(1);
       votingPowerNonces[owner] = currentNonce;
     }
-
     _votingPower[owner][currentNonce] = (currentBlockno << 192) | newPower;
     emit VotingPowerUpdate(owner, newPower);
   }

@@ -208,12 +208,10 @@ contract CommunityCore {
   function getBuyPrice(uint256 amount) public view returns (uint256) {
     uint256 startSupply = commToken.totalSupply();
     uint256 endSupply = startSupply.add(amount);
-
     // The raw price as calculated from the difference between the starting and
     // ending positions.
     uint256 rawPrice =
       equation.calculate(endSupply).sub(equation.calculate(startSupply));
-
     // Price after adjusting inflation in.
     return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
   }
@@ -224,12 +222,10 @@ contract CommunityCore {
   function getSellPrice(uint256 amount) public view returns (uint256) {
     uint256 startSupply = commToken.totalSupply();
     uint256 endSupply = startSupply.sub(amount);
-
     // The raw price as calcuated from the difference between the starting and
     // ending positions.
     uint256 rawPrice =
       equation.calculate(startSupply).sub(equation.calculate(endSupply));
-
     // Price after adjusting inflation in.
     return rawPrice.mul(curveMultiplier).div(DENOMINATOR);
   }
@@ -259,10 +255,12 @@ contract CommunityCore {
     uint256 totalReward = currentBalance.sub(unwithdrawnReward);
     uint256 activeAt = now.add(params.get("core:reward_edit_period"));
 
-    rewards[nonce].totalReward = totalReward;
-    rewards[nonce].totalPortion = totalPortion;
-    rewards[nonce].rewardPortionRootHash = rewardPortionRootHash;
-    rewards[nonce].activeAt = activeAt;
+    rewards[nonce] = Reward({
+      totalReward: totalReward,
+      totalPortion: totalPortion,
+      rewardPortionRootHash: rewardPortionRootHash,
+      activeAt: activeAt
+    });
 
     lastRewardTime = now;
     unwithdrawnReward = currentBalance;
@@ -310,11 +308,13 @@ contract CommunityCore {
 
   /**
    * @dev Called by anyone in the community to withdraw rewards.
+   * @param beneficiary The address to receive the rewards.
    * @param rewardID The reward to withdraw.
    * @param rewardPortion The value at the leaf node of the sender.
    * @param proof Merkle proof consistent with the reward's root hash.
    */
   function claimReward(
+    address beneficiary,
     uint256 rewardID,
     uint256 rewardPortion,
     bytes32[] calldata proof
@@ -324,11 +324,11 @@ contract CommunityCore {
     require(rewardID > 0 && rewardID < nextRewardID);
     Reward storage reward = rewards[rewardID];
     require(now >= reward.activeAt);
-    require(!reward.claims[msg.sender]);
-    reward.claims[msg.sender] = true;
+    require(!reward.claims[beneficiary]);
+    reward.claims[beneficiary] = true;
 
     require(reward.rewardPortionRootHash.verify(
-      msg.sender,
+      beneficiary,
       bytes32(rewardPortion),
       proof
     ));
@@ -337,8 +337,8 @@ contract CommunityCore {
       reward.totalReward.mul(rewardPortion).div(reward.totalPortion);
 
     unwithdrawnReward = unwithdrawnReward.sub(userReward);
-    require(commToken.transfer(msg.sender, userReward));
-    emit RewardClaimed(rewardID, msg.sender, rewardPortion, userReward);
+    require(commToken.transfer(beneficiary, userReward));
+    emit RewardClaimed(rewardID, beneficiary, rewardPortion, userReward);
   }
 
   /**
