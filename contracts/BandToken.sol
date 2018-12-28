@@ -23,7 +23,7 @@ contract BandToken is ERC20, Ownable {
    * @dev TokenLock struct represents the token locking information. This is
    * only relevant to Band investors that have token locking aggrements. It
    * consists of four fields. Note that the i^th month, mean the i^th month
-   * since 2019/01, counting 2019/01 as the zeroth month.
+   * since 2019/04, counting 2019/04 as the zeroth month.
    *
    * start: token locking starts at the beginning of the start^th month.
    * cliff: at the beginning of the cliff^th month, the amount of locked tokens
@@ -43,7 +43,7 @@ contract BandToken is ERC20, Ownable {
 
   // Array of epoch timestamps generated in constructor. The i^th index
   // represents the end of the i^th month after Band mainnet launch, which is
-  // the beginning of 2019.
+  // the beginning of Q2 2019.
   uint256[48] private eomTimestamps;
 
   /**
@@ -54,56 +54,56 @@ contract BandToken is ERC20, Ownable {
     // Initially, all of the minted tokens belong to the contract creator.
     _mint(msg.sender, totalSupply);
 
-    // Populate eomTimestamps for every month from the end of 2018/01
-    // until the end of 2021/12, for the total of 4 years (48 months).
-    eomTimestamps[0] = 1517443200;   // End of 2018/01
-    eomTimestamps[1] = 1519862400;   // End of 2018/02
-    eomTimestamps[2] = 1522540800;   // End of 2018/03
-    eomTimestamps[3] = 1525132800;   // End of 2018/04
-    eomTimestamps[4] = 1527811200;   // End of 2018/05
-    eomTimestamps[5] = 1530403200;   // End of 2018/06
-    eomTimestamps[6] = 1533081600;   // End of 2018/07
-    eomTimestamps[7] = 1535760000;   // End of 2018/08
-    eomTimestamps[8] = 1538352000;   // End of 2018/09
-    eomTimestamps[9] = 1541030400;   // End of 2018/10
-    eomTimestamps[10] = 1543622400;  // End of 2018/11
-    eomTimestamps[11] = 1546300800;  // End of 2018/12
-    eomTimestamps[12] = 1548979200;  // End of 2019/01
-    eomTimestamps[13] = 1551398400;  // End of 2019/02
-    eomTimestamps[14] = 1554076800;  // End of 2019/03
-    eomTimestamps[15] = 1556668800;  // End of 2019/04
-    eomTimestamps[16] = 1559347200;  // End of 2019/05
-    eomTimestamps[17] = 1561939200;  // End of 2019/06
-    eomTimestamps[18] = 1564617600;  // End of 2019/07
-    eomTimestamps[19] = 1567296000;  // End of 2019/08
-    eomTimestamps[20] = 1569888000;  // End of 2019/09
-    eomTimestamps[21] = 1572566400;  // End of 2019/10
-    eomTimestamps[22] = 1575158400;  // End of 2019/11
-    eomTimestamps[23] = 1577836800;  // End of 2019/12
-    eomTimestamps[24] = 1580515200;  // End of 2020/01
-    eomTimestamps[25] = 1583020800;  // End of 2020/02
-    eomTimestamps[26] = 1585699200;  // End of 2020/03
-    eomTimestamps[27] = 1588291200;  // End of 2020/04
-    eomTimestamps[28] = 1590969600;  // End of 2020/05
-    eomTimestamps[29] = 1593561600;  // End of 2020/06
-    eomTimestamps[30] = 1596240000;  // End of 2020/07
-    eomTimestamps[31] = 1598918400;  // End of 2020/08
-    eomTimestamps[32] = 1601510400;  // End of 2020/09
-    eomTimestamps[33] = 1604188800;  // End of 2020/10
-    eomTimestamps[34] = 1606780800;  // End of 2020/11
-    eomTimestamps[35] = 1609459200;  // End of 2020/12
-    eomTimestamps[36] = 1612137600;  // End of 2021/01
-    eomTimestamps[37] = 1614556800;  // End of 2021/02
-    eomTimestamps[38] = 1617235200;  // End of 2021/03
-    eomTimestamps[39] = 1619827200;  // End of 2021/04
-    eomTimestamps[40] = 1622505600;  // End of 2021/05
-    eomTimestamps[41] = 1625097600;  // End of 2021/06
-    eomTimestamps[42] = 1627776000;  // End of 2021/07
-    eomTimestamps[43] = 1630454400;  // End of 2021/08
-    eomTimestamps[44] = 1633046400;  // End of 2021/09
-    eomTimestamps[45] = 1635724800;  // End of 2021/10
-    eomTimestamps[46] = 1638316800;  // End of 2021/11
-    eomTimestamps[47] = 1640995200;  // End of 2021/12
+    // Populate eomTimestamps for every month from the start of Q2 2019.
+    // until the end of Q1 2023, for the total of 4 years (48 months).
+    eomTimestamps[0] = 1556668800;   // End of 2019/04
+    eomTimestamps[1] = 1559347200;   // End of 2019/05
+    eomTimestamps[2] = 1561939200;   // End of 2019/06
+    eomTimestamps[3] = 1564617600;   // End of 2019/07
+    eomTimestamps[4] = 1567296000;   // End of 2019/08
+    eomTimestamps[5] = 1569888000;   // End of 2019/09
+    eomTimestamps[6] = 1572566400;   // End of 2019/10
+    eomTimestamps[7] = 1575158400;   // End of 2019/11
+    eomTimestamps[8] = 1577836800;   // End of 2020/00
+    eomTimestamps[9] = 1580515200;   // End of 2020/01
+    eomTimestamps[10] = 1583020800;  // End of 2020/02
+    eomTimestamps[11] = 1585699200;  // End of 2020/03
+    eomTimestamps[12] = 1588291200;  // End of 2020/04
+    eomTimestamps[13] = 1590969600;  // End of 2020/05
+    eomTimestamps[14] = 1593561600;  // End of 2020/06
+    eomTimestamps[15] = 1596240000;  // End of 2020/07
+    eomTimestamps[16] = 1598918400;  // End of 2020/08
+    eomTimestamps[17] = 1601510400;  // End of 2020/09
+    eomTimestamps[18] = 1604188800;  // End of 2020/10
+    eomTimestamps[19] = 1606780800;  // End of 2020/11
+    eomTimestamps[20] = 1609459200;  // End of 2021/00
+    eomTimestamps[21] = 1612137600;  // End of 2021/01
+    eomTimestamps[22] = 1614556800;  // End of 2021/02
+    eomTimestamps[23] = 1617235200;  // End of 2021/03
+    eomTimestamps[24] = 1619827200;  // End of 2021/04
+    eomTimestamps[25] = 1622505600;  // End of 2021/05
+    eomTimestamps[26] = 1625097600;  // End of 2021/06
+    eomTimestamps[27] = 1627776000;  // End of 2021/07
+    eomTimestamps[28] = 1630454400;  // End of 2021/08
+    eomTimestamps[29] = 1633046400;  // End of 2021/09
+    eomTimestamps[30] = 1635724800;  // End of 2021/10
+    eomTimestamps[31] = 1638316800;  // End of 2021/11
+    eomTimestamps[32] = 1640995200;  // End of 2022/00
+    eomTimestamps[33] = 1643673600;  // End of 2022/01
+    eomTimestamps[34] = 1646092800;  // End of 2022/02
+    eomTimestamps[35] = 1648771200;  // End of 2022/03
+    eomTimestamps[36] = 1651363200;  // End of 2022/04
+    eomTimestamps[37] = 1654041600;  // End of 2022/05
+    eomTimestamps[38] = 1656633600;  // End of 2022/06
+    eomTimestamps[39] = 1659312000;  // End of 2022/07
+    eomTimestamps[40] = 1661990400;  // End of 2022/08
+    eomTimestamps[41] = 1664582400;  // End of 2022/09
+    eomTimestamps[42] = 1667260800;  // End of 2022/10
+    eomTimestamps[43] = 1669852800;  // End of 2022/11
+    eomTimestamps[44] = 1672531200;  // End of 2023/00
+    eomTimestamps[45] = 1675209600;  // End of 2023/01
+    eomTimestamps[46] = 1677628800;  // End of 2023/02
+    eomTimestamps[47] = 1680307200;  // End of 2023/03
   }
 
   /**
