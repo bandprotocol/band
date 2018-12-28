@@ -136,7 +136,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       await this.params.vote(1, 100, 0, { from: owner });
       await this.params.vote(1, 10, 10, { from: alice });
       (await this.params.proposals(1))[3].should.bignumber.eq(110); // currentYesCount
-      (await this.params.proposals(1))[4].should.bignumber.eq(10);  // currentNoCount
+      (await this.params.proposals(1))[4].should.bignumber.eq(10); // currentNoCount
       (await this.params.proposals(1))[5].should.bignumber.eq(300); // totalVoteCount
     });
   });

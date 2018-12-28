@@ -1,11 +1,8 @@
 const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
 
 const EquationMock = artifacts.require('EquationMock');
-const BigNumber = web3.BigNumber;
 
-require('chai')
-  .use(require('chai-bignumber')(BigNumber))
-  .should();
+require('chai').should();
 
 contract('EquationMock', ([_, owner]) => {
   context('Invalid equation', () => {
@@ -31,12 +28,12 @@ contract('EquationMock', ([_, owner]) => {
 
     it('should compute f(5) = 12', async () => {
       const value = await this.contract.getPrice(5);
-      value.should.be.bignumber.eq(12);
+      value.toString().should.eq('12');
     });
 
     it('should compute f(10) = 17', async () => {
       const value = await this.contract.getPrice(10);
-      value.should.be.bignumber.eq(17);
+      value.toString().should.be.eq('17');
     });
   });
 
@@ -49,12 +46,12 @@ contract('EquationMock', ([_, owner]) => {
 
     it('should compute f(10) = 97', async () => {
       const value = await this.contract.getPrice(10);
-      value.should.be.bignumber.eq(97);
+      value.toString().should.eq('97');
     });
 
     it('should compute f(56) = 3133', async () => {
       const value = await this.contract.getPrice(56);
-      value.should.be.bignumber.eq(3133);
+      value.toString().should.be.eq('3133');
     });
 
     it('should fail on f(1) < 0', async () => {
@@ -74,12 +71,12 @@ contract('EquationMock', ([_, owner]) => {
 
       it('should compute f(5) = 33', async () => {
         const value = await this.contract.getPrice(5);
-        value.should.be.bignumber.eq(33);
+        value.toString().should.eq('33');
       });
 
       it('should compute f(6) = 67', async () => {
         const value = await this.contract.getPrice(6);
-        value.should.be.bignumber.eq(67);
+        value.toString().should.eq('67');
       });
     },
   );
@@ -94,17 +91,17 @@ contract('EquationMock', ([_, owner]) => {
 
     it('should compute f(8) = 16', async () => {
       const value = await this.contract.getPrice(8);
-      value.should.be.bignumber.eq(16);
+      value.toString().should.eq('16');
     });
 
     it('should compute f(10) = 10', async () => {
       const value = await this.contract.getPrice(10);
-      value.should.be.bignumber.eq(10);
+      value.toString().should.eq('10');
     });
 
     it('should compute f(500) = 249910', async () => {
       const value = await this.contract.getPrice(500);
-      value.should.be.bignumber.eq(249910);
+      value.toString().should.eq('249910');
     });
   });
 
@@ -142,17 +139,17 @@ contract('EquationMock', ([_, owner]) => {
 
       it('should compute f(8) = 16', async () => {
         const value = await this.contract.getPrice(8);
-        value.should.be.bignumber.eq(16);
+        value.toString().should.eq('16');
       });
 
       it('should compute f(10) = 10', async () => {
         const value = await this.contract.getPrice(10);
-        value.should.be.bignumber.eq(10);
+        value.toString().should.eq('10');
       });
 
       it('should compute f(500) = 1000', async () => {
         const value = await this.contract.getPrice(500);
-        value.should.be.bignumber.eq(1000);
+        value.toString().should.eq('1000');
       });
     },
   );

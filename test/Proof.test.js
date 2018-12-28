@@ -3,11 +3,8 @@ const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
 const { Merkle, bigNumberToHex } = require('../lib/merkle');
 
 const ProofMock = artifacts.require('ProofMock');
-const BigNumber = web3.BigNumber;
 
-require('chai')
-  .use(require('chai-bignumber')(BigNumber))
-  .should();
+require('chai').should();
 
 contract('ProofMock', ([_, owner]) => {
   beforeEach(async () => {
@@ -31,6 +28,8 @@ contract('ProofMock', ([_, owner]) => {
     it('should accept correct proof', async () => {
       const key = this.keys[8];
       const [value, proof] = this.merkle.getProof(key);
+      console.log(value.toString());
+      console.log(bigNumberToHex(value));
       await this.contract.verify(
         this.merkle.root,
         key,
@@ -46,7 +45,7 @@ contract('ProofMock', ([_, owner]) => {
         this.contract.verify(
           this.merkle.root,
           key,
-          bigNumberToHex(value + 1),
+          bigNumberToHex(value.addn(1)),
           proof,
         ),
       );
