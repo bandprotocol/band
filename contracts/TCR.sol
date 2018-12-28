@@ -1,5 +1,6 @@
 pragma solidity 0.5.0;
 
+import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
@@ -14,7 +15,7 @@ import "./Voting.sol";
  *
  * @dev TCR contract implements Token Curated Registry logic.
  */
-contract TCR is ResolveListener {
+contract TCR is ERC165, ResolveListener {
   using SafeMath for uint256;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
@@ -111,13 +112,17 @@ contract TCR is ResolveListener {
   // The ID of the next challenge.
   uint256 nextChallengeNonce = 1;
 
-
   constructor(
     bytes8 _prefix,
     CommunityToken _token,
     Voting _voting,
     ParametersInterface _params
-  ) public {
+  )
+    public
+  {
+    _registerInterface(this.applyEntry.selector);
+    _registerInterface(this.deposit.selector);
+    _registerInterface(this.initiateChallenge.selector);
     prefix = _prefix;
     token = _token;
     voting = _voting;
@@ -231,36 +236,33 @@ contract TCR is ResolveListener {
    * not already have ongoing challenge. If entry's deposit is less than
    * 'min_deposit', it is automatically deleted.
    */
-  function initiateChallenge(bytes32 data) public entryMustExist(data) {
+  function initiateChallenge(bytes32 data)
+    public
+    entryMustExist(data)
+    returns (uint256)
+  {
     uint256 stake = get("min_deposit");
     Entry storage entry = entries[data];
-
     // There must not already be an ongoing challenge.
     require(entry.challengeID == 0);
-
     if (entry.withdrawableDeposit < stake) {
       // If the deposit is too low, the entry is auto-removed.
       deleteEntry(data);
-      return;
+      return 0;
     }
-
     // Take 'stake' tokens from both entry owner and challenger.
     require(token.transferFrom(msg.sender, address(this), stake));
     entry.withdrawableDeposit -= stake;
-
     uint256 challengeID = nextChallengeNonce;
     uint256 commitTime = get("commit_time");
     uint256 revealTime = get("reveal_time");
-
     entry.challengeID = challengeID;
     challenges[challengeID].entryData = data;
     challenges[challengeID].challenger = msg.sender;
     challenges[challengeID].rewardPool = stake.mul(2);
-
     // Increment the nonce for the next challenge.
     nextChallengeNonce = challengeID.add(1);
     emit ChallengeInitiated(data, challengeID, msg.sender);
-
     require(
       voting.startPoll(
         challengeID,
@@ -270,6 +272,7 @@ contract TCR is ResolveListener {
         get("support_required_pct")
       )
     );
+    return challengeID;
   }
 
   /**
@@ -381,11 +384,9 @@ contract TCR is ResolveListener {
   function deleteEntry(bytes32 data) internal {
     uint256 withdrawableDeposit = entries[data].withdrawableDeposit;
     address proposer = entries[data].proposer;
-
     if (withdrawableDeposit > 0) {
       require(token.transfer(proposer, withdrawableDeposit));
     }
-
     emit EntryDeleted(data, proposer);
     delete entries[data];
   }

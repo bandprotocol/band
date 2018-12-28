@@ -2,6 +2,7 @@ pragma solidity 0.5.0;
 
 import "../Proof.sol";
 
+
 /**
  * @dev Mock contract for testing Proof library using JavaScript tests
  */

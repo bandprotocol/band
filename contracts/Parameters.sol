@@ -121,6 +121,7 @@ contract Parameters is ParametersInterface, ResolveListener {
    */
   function propose(bytes32[] calldata keys, uint256[] calldata values)
     external
+    returns (uint256)
   {
     require(keys.length == values.length);
     uint256 proposalID = nextProposalNonce;
@@ -137,10 +138,8 @@ contract Parameters is ParametersInterface, ResolveListener {
       emit ParameterProposed(proposalID, key, value);
       proposals[proposalID].changes[index] = KeyValue(key, value);
     }
-
     uint256 commitTime = get("params:commit_time");
     uint256 revealTime = get("params:reveal_time");
-
     require(
       voting.startPoll(
         proposalID,
@@ -150,6 +149,7 @@ contract Parameters is ParametersInterface, ResolveListener {
         get("params:support_required_pct")
       )
     );
+    return proposalID;
   }
 
   /**

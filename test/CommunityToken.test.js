@@ -3,11 +3,8 @@ const { increase } = require('openzeppelin-solidity/test/helpers/time');
 const { ethGetBlock } = require('openzeppelin-solidity/test/helpers/web3');
 
 const CommunityToken = artifacts.require('CommunityToken');
-const BigNumber = web3.BigNumber;
 
-require('chai')
-  .use(require('chai-bignumber')(BigNumber))
-  .should();
+require('chai').should();
 
 contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
@@ -23,19 +20,19 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
     name.should.eq('CoinHatcher');
     symbol.should.eq('XCH');
-    decimals.should.bignumber.eq(36);
+    decimals.toString().should.eq('36');
   });
 
   context('ERC-20 mint/burn features', () => {
     it('should start with zero supply', async () => {
       const totalSupply = await this.contract.totalSupply();
-      totalSupply.should.bignumber.eq(0);
+      totalSupply.toString().should.eq('0');
 
       const ownerBalance = await this.contract.balanceOf(owner);
-      ownerBalance.should.bignumber.eq(0);
+      ownerBalance.toString().should.eq('0');
 
       const aliceBalance = await this.contract.balanceOf(alice);
-      aliceBalance.should.bignumber.eq(0);
+      aliceBalance.toString().should.eq('0');
     });
 
     it('should allow only owner to mint tokens', async () => {
@@ -43,13 +40,13 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       await this.contract.mint(alice, 1000000, { from: owner });
 
       const totalSupply = await this.contract.totalSupply();
-      totalSupply.should.bignumber.eq(1000000);
+      totalSupply.toString().should.eq('1000000');
 
       const ownerBalance = await this.contract.balanceOf(owner);
-      ownerBalance.should.bignumber.eq(0);
+      ownerBalance.toString().should.eq('0');
 
       const aliceBalance = await this.contract.balanceOf(alice);
-      aliceBalance.should.bignumber.eq(1000000);
+      aliceBalance.toString().should.eq('1000000');
     });
 
     it('should allow transfer of ownership', async () => {
@@ -58,23 +55,23 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       await this.contract.mint(alice, 1000000, { from: alice });
 
       const totalSupply = await this.contract.totalSupply();
-      totalSupply.should.bignumber.eq(1000000);
+      totalSupply.toString().should.eq('1000000');
 
       const aliceBalance = await this.contract.balanceOf(alice);
-      aliceBalance.should.bignumber.eq(1000000);
+      aliceBalance.toString().should.eq('1000000');
     });
 
     it('should allow only contract owner to burn tokens', async () => {
       await this.contract.mint(owner, 1000000, { from: owner });
 
       const owner1stBalance = await this.contract.balanceOf(owner);
-      owner1stBalance.should.bignumber.eq(1000000);
+      owner1stBalance.toString().should.eq('1000000');
 
       await reverting(this.contract.burn(owner, 10, { from: alice }));
       await this.contract.burn(owner, 10, { from: owner });
 
       const owner2ndBalance = await this.contract.balanceOf(owner);
-      owner2ndBalance.should.bignumber.eq(999990);
+      owner2ndBalance.toString().should.eq('999990');
     });
   });
 
@@ -86,12 +83,13 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       (await this.contract.historicalVotingPowerAtBlock(
         alice,
         (await ethGetBlock('latest')).number,
-      )).should.bignumber.eq(0);
+      ))
+        .toString()
+        .should.eq('0');
 
-      (await this.contract.historicalVotingPowerAtNonce(
-        alice,
-        0,
-      )).should.bignumber.eq(0);
+      (await this.contract.historicalVotingPowerAtNonce(alice, 0))
+        .toString()
+        .should.eq('0');
     });
 
     it('should give correct historical balance at each time', async () => {
@@ -104,47 +102,42 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       await this.contract.transfer(alice, 5, { from: bob });
       const thirdTxBlockno = (await ethGetBlock('latest')).number;
 
-      (await this.contract.historicalVotingPowerAtNonce(
-        alice,
-        0,
-      )).should.bignumber.eq(0);
+      (await this.contract.historicalVotingPowerAtNonce(alice, 0))
+        .toString()
+        .should.eq('0');
 
-      (await this.contract.historicalVotingPowerAtNonce(
-        alice,
-        1,
-      )).should.bignumber.eq(100);
+      (await this.contract.historicalVotingPowerAtNonce(alice, 1))
+        .toString()
+        .should.eq('100');
 
-      (await this.contract.historicalVotingPowerAtNonce(
-        alice,
-        2,
-      )).should.bignumber.eq(90);
+      (await this.contract.historicalVotingPowerAtNonce(alice, 2))
+        .toString()
+        .should.eq('90');
 
-      (await this.contract.historicalVotingPowerAtNonce(
-        alice,
-        3,
-      )).should.bignumber.eq(95);
+      (await this.contract.historicalVotingPowerAtNonce(alice, 3))
+        .toString()
+        .should.eq('95');
 
       await reverting(this.contract.historicalVotingPowerAtNonce(alice, 4));
 
       (await this.contract.historicalVotingPowerAtBlock(
         alice,
         firstTxBlockno - 1,
-      )).should.bignumber.eq(0);
+      ))
+        .toString()
+        .should.eq('0');
 
-      (await this.contract.historicalVotingPowerAtBlock(
-        alice,
-        firstTxBlockno,
-      )).should.bignumber.eq(100);
+      (await this.contract.historicalVotingPowerAtBlock(alice, firstTxBlockno))
+        .toString()
+        .should.eq('100');
 
-      (await this.contract.historicalVotingPowerAtBlock(
-        alice,
-        secondTxBlockno,
-      )).should.bignumber.eq(90);
+      (await this.contract.historicalVotingPowerAtBlock(alice, secondTxBlockno))
+        .toString()
+        .should.eq('90');
 
-      (await this.contract.historicalVotingPowerAtBlock(
-        alice,
-        thirdTxBlockno,
-      )).should.bignumber.eq(95);
+      (await this.contract.historicalVotingPowerAtBlock(alice, thirdTxBlockno))
+        .toString()
+        .should.eq('95');
     });
   });
 
@@ -157,21 +150,21 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
     it('should delegate vote one level correct', async () => {
       await this.contract.delegateVote(bob, { from: alice });
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(11);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
 
       await this.contract.mint(alice, 2, { from: owner });
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(13);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('13');
     });
 
     it('should not delegate recursively', async () => {
       await this.contract.delegateVote(bob, { from: alice });
       await this.contract.delegateVote(carol, { from: bob });
 
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(1);
-      (await this.contract.votingPowerOf(carol)).should.bignumber.eq(110);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('1');
+      (await this.contract.votingPowerOf(carol)).toString().should.eq('110');
     });
 
     it('should change delegated voting power upon balance change', async () => {
@@ -180,28 +173,28 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       await this.contract.transfer(bob, 5, { from: carol });
       await this.contract.transfer(carol, 1, { from: bob });
 
-      (await this.contract.balanceOf(alice)).should.bignumber.eq(51);
-      (await this.contract.balanceOf(bob)).should.bignumber.eq(14);
-      (await this.contract.balanceOf(carol)).should.bignumber.eq(46);
+      (await this.contract.balanceOf(alice)).toString().should.eq('51');
+      (await this.contract.balanceOf(bob)).toString().should.eq('14');
+      (await this.contract.balanceOf(carol)).toString().should.eq('46');
 
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(65);
-      (await this.contract.votingPowerOf(carol)).should.bignumber.eq(46);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('65');
+      (await this.contract.votingPowerOf(carol)).toString().should.eq('46');
     });
 
     it('should revoke delegate vote correctly', async () => {
       await this.contract.delegateVote(bob, { from: alice });
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(11);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
 
       await this.contract.transfer(alice, 50, { from: carol });
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(0);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(61);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('61');
 
       await reverting(this.contract.revokeDelegateVote(carol, { from: alice }));
       await this.contract.revokeDelegateVote(bob, { from: alice });
-      (await this.contract.votingPowerOf(alice)).should.bignumber.eq(51);
-      (await this.contract.votingPowerOf(bob)).should.bignumber.eq(10);
+      (await this.contract.votingPowerOf(alice)).toString().should.eq('51');
+      (await this.contract.votingPowerOf(bob)).toString().should.eq('10');
     });
   });
 });

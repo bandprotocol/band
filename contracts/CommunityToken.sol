@@ -1,5 +1,6 @@
 pragma solidity 0.5.0;
 
+import "openzeppelin-solidity/contracts/introspection/ERC165Checker.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -230,6 +231,26 @@ contract CommunityToken is IERC20, Ownable {
    */
   function transfer(address to, uint256 value) public returns (bool) {
     _transfer(msg.sender, to, value);
+    return true;
+  }
+
+  /**
+   * @dev Transfer tokens and call the reciver's given function with supplied
+   * data, using ERC165 to determine interoperability.
+   */
+  function transferAndCall(
+    address to,
+    uint256 value,
+    bytes4 sig,
+    bytes calldata data
+  )
+    external
+    returns (bool)
+  {
+    _transfer(msg.sender, to, value);
+    require(ERC165Checker._supportsInterface(to, sig));
+    (bool success,) = to.call(abi.encodePacked(sig, uint256(msg.sender), value, data));
+    require(success);
     return true;
   }
 

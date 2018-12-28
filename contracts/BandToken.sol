@@ -1,5 +1,6 @@
 pragma solidity 0.5.0;
 
+import "openzeppelin-solidity/contracts/introspection/ERC165Checker.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
@@ -143,34 +144,27 @@ contract BandToken is ERC20, Ownable {
    */
   function unlockedBalanceOf(address addr) public view returns (uint256) {
     TokenLockInfo storage lockInfo = locked[addr];
-
     uint256 totalBalance = balanceOf(addr);
     uint8 end = lockInfo.end;
-
     if (end == 0) {
       // Most of the time, the address will not have token locking logic.
       // We can simply return totalBalance in this case.
       return totalBalance;
     }
-
     // Calculate the current month using a simple loop. The array size is
     // limitted to 48, so the gas cost here is bounded to approximately 10k.
     uint8 currentMonth = 0;
-
     while (currentMonth < end && eomTimestamps[currentMonth] <= now) {
       // Loop one-by-one until we find the first month that ends after the
       // current time.
       currentMonth = currentMonth + 1;
     }
-
     uint8 start = lockInfo.start;
     uint8 cliff = lockInfo.cliff;
     uint256 totalLocked = lockInfo.totalValue;
-
     // This variable will be initialized in one of the three conditions below.
     // It will indicate the effective amount of locked tokens at this moment.
     uint256 currentlyLocked = 0;
-
     if (currentMonth < cliff) {
       // The cliff has not passed yet. All of the tokens are locked.
       currentlyLocked = totalLocked;
@@ -183,7 +177,6 @@ contract BandToken is ERC20, Ownable {
       // The duration has passed. None of the tokens are locked.
       currentlyLocked = 0;
     }
-
     if (currentlyLocked > totalBalance) {
       return 0;
     } else {
@@ -197,6 +190,27 @@ contract BandToken is ERC20, Ownable {
   function transfer(address to, uint256 value) public returns (bool) {
     require(value <= unlockedBalanceOf(msg.sender));
     return super.transfer(to, value);
+  }
+
+  /**
+  * @dev Transfer tokens and call the reciver's given function with supplied
+  * data, using ERC165 to determine interoperability.
+  */
+  function transferAndCall(
+    address to,
+    uint256 value,
+    bytes4 sig,
+    bytes calldata data
+  )
+    external
+    returns (bool)
+  {
+    require(value <= unlockedBalanceOf(msg.sender));
+    super.transfer(to, value);
+    require(ERC165Checker._supportsInterface(to, sig));
+    (bool success,) = to.call(abi.encodePacked(sig, uint256(msg.sender), value, data));
+    require(success);
+    return true;
   }
 
   /**

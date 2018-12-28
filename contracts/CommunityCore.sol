@@ -1,5 +1,6 @@
 pragma solidity 0.5.0;
 
+import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
@@ -20,7 +21,7 @@ import "./Proof.sol";
  * acts as the automated market maker, allowing anyone to buy/sell community
  * token with itself.
  */
-contract CommunityCore {
+contract CommunityCore is ERC165 {
   using Equation for Equation.Node[];
   using SafeMath for uint256;
   using Proof for bytes32;
@@ -133,6 +134,8 @@ contract CommunityCore {
   )
     public
   {
+    _registerInterface(this.buy.selector);
+    _registerInterface(this.sell.selector);
     bandToken = _bandToken;
     commToken = _commToken;
     params = _params;
@@ -343,7 +346,7 @@ contract CommunityCore {
 
   /**
    * @dev Deflate the community token by burning tokens from the given admin.
-   * curveMultiplier will adjust up to make sure the equation is consistent.
+   * curveMultiplier will adjust up to make the equation is consistent.
    */
   function deflate(uint256 amount) public onlyAdmin whenActive {
     require(commToken.burn(msg.sender, amount));
@@ -352,43 +355,50 @@ contract CommunityCore {
   }
 
   /**
-   * @dev Buy some amount of tokens with Band. Revert if sender must pay more
-   * than price limit in order to make purchase.
+   * @dev Buy some amount of tokens with Band. Must be called by BandToken
+   * contract after `bandAmount` BANDs have been transferred to this contract.
+   * Revert if bandAmount is not sufficient. Return extra BANDs back to buyer
+   * if the buyer pays too much.
    */
-  function buy(uint256 amount, uint256 priceLimit) public whenActive {
+  function buy(address buyer, uint256 priceLimit, uint256 commAmount)
+    external
+    whenActive
+  {
+    require(msg.sender == address(bandToken));
     _adjustAutoInflation();
-    uint256 adjustedPrice = getBuyPrice(amount);
-    // Make sure that the sender does not overpay due to slow block / frontrun.
+    uint256 adjustedPrice = getBuyPrice(commAmount);
     require(adjustedPrice != 0 && adjustedPrice <= priceLimit);
-    // Get Band tokens from sender and mint community tokens for sender.
-    require(bandToken.transferFrom(msg.sender, address(this), adjustedPrice));
-    require(commToken.mint(msg.sender, amount));
-
+    require(commToken.mint(buyer, commAmount));
+    if (priceLimit > adjustedPrice) {
+      require(bandToken.transfer(buyer, priceLimit.sub(adjustedPrice)));
+    }
     currentBandCollatoralized = currentBandCollatoralized.add(adjustedPrice);
-    emit Buy(msg.sender, amount, adjustedPrice);
+    emit Buy(buyer, commAmount, adjustedPrice);
   }
 
   /**
-   * @dev Sell some amount of tokens for Band. Revert if sender will receive
-   * less than price limit if the transaction goes through.
+   * @dev Sell some amount of tokens for Band. Must be called by CommToken
+   * contract after `commAmount` tokens have been transferred to this contract.
+   * Revert if sell price is less than `priceLimit`. Some tokens are treated
+   * as `commissions` and stay with this contract; the remaining get burnt.
    */
-  function sell(uint256 amount, uint256 priceLimit) public whenActive {
+  function sell(address seller, uint256 commAmount, uint256 priceLimit)
+    external
+    whenActive
+  {
+    require(msg.sender == address(commToken));
     _adjustAutoInflation();
     uint256 salesCommission = params.getZeroable("core:sales_commission");
-    uint256 commissionCost = amount.mul(salesCommission).div(DENOMINATOR);
-    uint256 adjustedPrice = getSellPrice(amount.sub(commissionCost));
-    // Make sure that the sender receive not less than his/her desired minimum.
+    require(salesCommission <= DENOMINATOR);
+    uint256 commissionCost = commAmount.mul(salesCommission).div(DENOMINATOR);
+    uint256 adjustedPrice = getSellPrice(commAmount.sub(commissionCost));
     require(adjustedPrice != 0 && adjustedPrice >= priceLimit);
-    // Burn community tokens of sender and send Band tokens to sender.
-    require(commToken.burn(msg.sender, amount));
-    require(bandToken.transfer(msg.sender, adjustedPrice));
-
-    if (commissionCost > 0) {
-      require(commToken.mint(address(this), commissionCost));
+    if (commissionCost != commAmount) {
+      require(commToken.burn(address(this), commAmount.sub(commissionCost)));
     }
-
+    require(bandToken.transfer(seller, adjustedPrice));
     currentBandCollatoralized = currentBandCollatoralized.sub(adjustedPrice);
-    emit Sell(msg.sender, amount, adjustedPrice, commissionCost);
+    emit Sell(seller, commAmount, adjustedPrice, commissionCost);
   }
 
   /**

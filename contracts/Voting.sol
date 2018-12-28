@@ -186,7 +186,7 @@ contract Voting {
     return true;
   }
 
-  function commitvote(
+  function commitVote(
     address pollContract,
     uint256 pollID,
     bytes32 commitValue
