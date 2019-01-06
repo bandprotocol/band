@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./AdminInterface.sol";
+import "./BandContractBase.sol";
 import "./BandToken.sol";
 import "./CommunityToken.sol";
 import "./Equation.sol";
@@ -21,7 +22,7 @@ import "./Proof.sol";
  * acts as the automated market maker, allowing anyone to buy/sell community
  * token with itself.
  */
-contract CommunityCore is ERC165 {
+contract CommunityCore is BandContractBase, ERC165 {
   using Equation for Equation.Node[];
   using SafeMath for uint256;
   using Proof for bytes32;
@@ -362,9 +363,9 @@ contract CommunityCore is ERC165 {
    */
   function buy(address buyer, uint256 priceLimit, uint256 commAmount)
     external
+    onlyFrom(address(bandToken))
     whenActive
   {
-    require(msg.sender == address(bandToken));
     _adjustAutoInflation();
     uint256 adjustedPrice = getBuyPrice(commAmount);
     require(adjustedPrice != 0 && adjustedPrice <= priceLimit);
@@ -384,9 +385,9 @@ contract CommunityCore is ERC165 {
    */
   function sell(address seller, uint256 commAmount, uint256 priceLimit)
     external
+    onlyFrom(address(commToken))
     whenActive
   {
-    require(msg.sender == address(commToken));
     _adjustAutoInflation();
     uint256 salesCommission = params.getZeroable("core:sales_commission");
     require(salesCommission <= DENOMINATOR);
@@ -407,7 +408,6 @@ contract CommunityCore is ERC165 {
    */
   function _adjustAutoInflation() private {
     uint256 currentSupply = commToken.totalSupply();
-
     if (currentSupply != 0) {
       uint256 inflationRatio = params.getZeroable("core:inflation_ratio");
       uint256 pastSeconds = now.sub(lastInflationTime);
@@ -419,7 +419,6 @@ contract CommunityCore is ERC165 {
         _adjustcurveMultiplier();
       }
     }
-
     lastInflationTime = now;
   }
 
@@ -428,13 +427,10 @@ contract CommunityCore is ERC165 {
    */
   function _adjustcurveMultiplier() private {
     uint256 eqCollateral = equation.calculate(commToken.totalSupply());
-
     require(currentBandCollatoralized != 0);
     require(eqCollateral != 0);
-
     curveMultiplier =
       DENOMINATOR.mul(currentBandCollatoralized).div(eqCollateral);
-
     assert(
       eqCollateral.mul(curveMultiplier).div(DENOMINATOR) <=
       currentBandCollatoralized

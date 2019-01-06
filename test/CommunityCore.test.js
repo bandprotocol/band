@@ -400,13 +400,22 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
       // Alice applies to be an admin.
-      await this.comm.approve(this.admin.address, 100000, { from: alice });
-      await this.admin.applyAdmin(10, { from: alice });
+      const calldata = this.admin.contract.methods
+        .applyEntry(_, 0, await this.admin.toTCREntry(alice))
+        .encodeABI();
+      await this.comm.transferAndCall(
+        this.admin.address,
+        10,
+        '0x' + calldata.slice(2, 10),
+        '0x' + calldata.slice(138),
+        { from: alice },
+      );
+
       // The apply stage has not passed yet. TCR application is still pending.
       await reverting(this.core.deflate(10, { from: alice }));
       // 100 seconds have passed, and no one challenges, so now Alice is good.
       await increase(100);
-      this.core.deflate(10, { from: alice });
+      await this.core.deflate(10, { from: alice });
       (await this.core.curveMultiplier()).toString().should.eq('1234567901234');
     });
   });
@@ -468,28 +477,34 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       });
 
       it('should transfer band and comm ownership to deactivator', async () => {
-        (await this.band.balanceOf(this.core.address)).toString().should.eq('0');
+        (await this.band.balanceOf(this.core.address))
+          .toString()
+          .should.eq('0');
         (await this.band.balanceOf(deactivator)).toString().should.eq('40000');
         (await this.comm.owner()).should.eq(deactivator);
       });
 
       it('should not allow buy or sell or deflate or deactivate', async () => {
         const calldata1 = this.core.contract.methods.buy(_, 0, 10).encodeABI();
-        await reverting(this.band.transferAndCall(
-          this.core.address,
-          100000,
-          '0x' + calldata1.slice(2, 10),
-          '0x' + calldata1.slice(138),
-          { from: owner },
-        ));
+        await reverting(
+          this.band.transferAndCall(
+            this.core.address,
+            100000,
+            '0x' + calldata1.slice(2, 10),
+            '0x' + calldata1.slice(138),
+            { from: owner },
+          ),
+        );
         const calldata2 = this.core.contract.methods.sell(_, 0, 10).encodeABI();
-        await reverting(this.comm.transferAndCall(
-          this.core.address,
-          0,
-          '0x' + calldata2.slice(2, 10),
-          '0x' + calldata2.slice(138),
-          { from: owner },
-        ));
+        await reverting(
+          this.comm.transferAndCall(
+            this.core.address,
+            0,
+            '0x' + calldata2.slice(2, 10),
+            '0x' + calldata2.slice(138),
+            { from: owner },
+          ),
+        );
         await reverting(this.core.deflate(10, { from: owner }));
         await reverting(this.core.deactivate({ from: deactivator }));
       });
@@ -584,17 +599,29 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
 
       it('should allow withdraw reward after edit period', async () => {
         await increase(duration.days(1.5));
-        await this.core.claimReward(alice, 1, 10, this.merkle.getProof(alice)[1], {
-          from: alice,
-        });
+        await this.core.claimReward(
+          alice,
+          1,
+          10,
+          this.merkle.getProof(alice)[1],
+          {
+            from: alice,
+          },
+        );
         (await this.comm.balanceOf(alice)).toString().should.eq('2');
       });
 
       it('should not allow members to withdraw with invalid value', async () => {
         await increase(duration.days(1.5));
-        await this.core.claimReward(alice, 1, 10, this.merkle.getProof(alice)[1], {
-          from: alice,
-        });
+        await this.core.claimReward(
+          alice,
+          1,
+          10,
+          this.merkle.getProof(alice)[1],
+          {
+            from: alice,
+          },
+        );
         (await this.comm.balanceOf(alice)).toString().should.eq('2');
         (await this.core.unwithdrawnReward()).toString().should.eq('8');
       });
@@ -612,9 +639,15 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
           }),
         );
         await increase(duration.days(0.75));
-        await this.core.claimReward(alice, 1, 60, this.merkle.getProof(alice)[1], {
-          from: alice,
-        });
+        await this.core.claimReward(
+          alice,
+          1,
+          60,
+          this.merkle.getProof(alice)[1],
+          {
+            from: alice,
+          },
+        );
         (await this.comm.balanceOf(alice)).toString().should.eq('6');
         (await this.core.unwithdrawnReward()).toString().should.eq('4');
       });
@@ -624,9 +657,15 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
         // Owner sends some revenue to the contract for the next period
         await this.comm.transfer(this.core.address, 10, { from: owner });
         // Alice claims reward of first period
-        await this.core.claimReward(alice, 1, 10, this.merkle.getProof(alice)[1], {
-          from: alice,
-        });
+        await this.core.claimReward(
+          alice,
+          1,
+          10,
+          this.merkle.getProof(alice)[1],
+          {
+            from: alice,
+          },
+        );
         (await this.comm.balanceOf(alice)).toString().should.eq('2');
         (await this.core.unwithdrawnReward()).toString().should.eq('8');
 
@@ -645,9 +684,15 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
 
         // Alice claims reward of second period
         await increase(duration.days(2));
-        await this.core.claimReward(alice, 2, 60, this.merkle.getProof(alice)[1], {
-          from: alice,
-        });
+        await this.core.claimReward(
+          alice,
+          2,
+          60,
+          this.merkle.getProof(alice)[1],
+          {
+            from: alice,
+          },
+        );
         (await this.comm.balanceOf(alice)).toString().should.eq('8');
         (await this.core.unwithdrawnReward()).toString().should.eq('12');
       });

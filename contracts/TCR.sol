@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "./BandContractBase.sol";
 import "./CommunityToken.sol";
 import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
@@ -15,11 +16,11 @@ import "./Voting.sol";
  *
  * @dev TCR contract implements Token Curated Registry logic.
  */
-contract TCR is ERC165, ResolveListener {
+contract TCR is BandContractBase, ERC165, ResolveListener {
   using SafeMath for uint256;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
-    bytes32 indexed data,
+    bytes32 data,
     address indexed proposer
   );
 
@@ -182,29 +183,32 @@ contract TCR is ERC165, ResolveListener {
    * 'min_deposit'. Application will get auto-approved if no challenge happens
    * during the first 'apply_stage_length' seconds.
    */
-  function applyEntry(bytes32 data, uint256 stake)
-    public
+  function applyEntry(address proposer, uint256 stake, bytes32 data)
+    external
+    onlyFrom(address(token))
     entryMustNotExist(data)
   {
-    require(token.transferFrom(msg.sender, address(this), stake));
     require(stake >= get("min_deposit"));
     Entry storage entry = entries[data];
-    entry.proposer = msg.sender;
+    entry.proposer = proposer;
     entry.withdrawableDeposit = stake;
     entry.pendingExpiration = now.add(get("apply_stage_length"));
-    emit ApplicationSubmitted(data, msg.sender);
+    emit ApplicationSubmitted(data, proposer);
   }
 
   /**
    * @dev Deposit more token to the given existing entry. The depositor must
    * be the entry applicant.
    */
-  function deposit(bytes32 data, uint256 amount) public entryMustExist(data) {
-    require(token.transferFrom(msg.sender, address(this), amount));
+  function deposit(address depositor, uint256 amount, bytes32 data)
+    external
+    onlyFrom(address(token))
+    entryMustExist(data)
+  {
     Entry storage entry = entries[data];
-    require(entry.proposer == msg.sender);
+    require(entry.proposer == depositor);
     entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
-    emit EntryDeposited(data, msg.sender, amount);
+    emit EntryDeposited(data, depositor, amount);
   }
 
   /**
@@ -232,37 +236,49 @@ contract TCR is ERC165, ResolveListener {
   }
 
   /**
+   * @dev Force a TCR entry to exit this registry. This can happen when
+   * min_deposit parameter increases, but the nentry proposer does not deposit.
+   */
+  function forceExit(bytes32 data) public entryMustExist(data) {
+    Entry storage entry = entries[data];
+    require(entry.challengeID == 0);
+    require(entry.withdrawableDeposit < get("min_deposit"));
+    deleteEntry(data);
+  }
+
+  /**
    * @dev Initiate a new challenge to the given existing entry. The entry must
    * not already have ongoing challenge. If entry's deposit is less than
    * 'min_deposit', it is automatically deleted.
    */
-  function initiateChallenge(bytes32 data)
+  function initiateChallenge(
+    address challenger,
+    uint256 challengeDeposit,
+    bytes32 data
+  )
     public
+    onlyFrom(address(token))
     entryMustExist(data)
     returns (uint256)
   {
     uint256 stake = get("min_deposit");
     Entry storage entry = entries[data];
-    // There must not already be an ongoing challenge.
     require(entry.challengeID == 0);
-    if (entry.withdrawableDeposit < stake) {
-      // If the deposit is too low, the entry is auto-removed.
-      deleteEntry(data);
-      return 0;
-    }
-    // Take 'stake' tokens from both entry owner and challenger.
-    require(token.transferFrom(msg.sender, address(this), stake));
+    require(entry.withdrawableDeposit >= stake);
+    // Take 'stake' tokens from the entry ('stake' tokens from challenger are
+    // already taken by the caller).
+    require(challengeDeposit == stake);
     entry.withdrawableDeposit -= stake;
     uint256 challengeID = nextChallengeNonce;
     uint256 commitTime = get("commit_time");
     uint256 revealTime = get("reveal_time");
     entry.challengeID = challengeID;
     challenges[challengeID].entryData = data;
-    challenges[challengeID].challenger = msg.sender;
+    challenges[challengeID].challenger = challenger;
     challenges[challengeID].rewardPool = stake.mul(2);
     // Increment the nonce for the next challenge.
     nextChallengeNonce = challengeID.add(1);
-    emit ChallengeInitiated(data, challengeID, msg.sender);
+    emit ChallengeInitiated(data, challengeID, challenger);
     require(
       voting.startPoll(
         challengeID,
@@ -282,12 +298,11 @@ contract TCR is ERC165, ResolveListener {
    */
   function onResolved(uint256 challengeID, PollState pollState)
     public
+    onlyFrom(address(voting))
     challengeMustExist(challengeID)
     returns (bool)
   {
     Challenge storage challenge = challenges[challengeID];
-    require(msg.sender == address(voting));
-
     bytes32 data = challenge.entryData;
     Entry storage entry = entries[data];
     assert(entry.challengeID == challengeID);

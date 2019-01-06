@@ -25,17 +25,14 @@ contract AdminTCR is AdminInterface, TCR {
     emit ApplicationSubmitted(data, msg.sender);
   }
 
+  function toTCREntry(address account) public pure returns (bytes32) {
+    return bytes32(uint256(account));
+  }
+
   /**
    * @dev Return whether the given address is an admin at the moment.
    */
   function isAdmin(address account) public view returns (bool) {
-    return isEntryActive(bytes32(uint256(account)));
-  }
-
-  /**
-   * @dev Helper function for sender proposing himself/herself to be an admin.
-   */
-  function applyAdmin(uint256 stake) public {
-    applyEntry(bytes32(uint256(msg.sender)), stake);
+    return isEntryActive(toTCREntry(account));
   }
 }
