@@ -4,14 +4,14 @@ const {
   duration,
 } = require('openzeppelin-solidity/test/helpers/time');
 
+const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
+const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const BigNumber = web3.BigNumber;
+const Voting = artifacts.require('Voting');
 
-require('chai')
-  .use(require('chai-bignumber')(BigNumber))
-  .should();
+require('chai').should();
 
 contract('Parameters', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
@@ -19,125 +19,256 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
     });
+    this.voting = await Voting.new(this.comm.address, { from: owner });
     this.params = await Parameters.new(
-      this.comm.address,
+      this.voting.address,
       [
-        'params:proposal_expiration_time',
-        'params:support_required',
-        'params:minimum_quorum',
+        web3.utils.fromAscii('params:commit_time'),
+        web3.utils.fromAscii('params:reveal_time'),
+        web3.utils.fromAscii('params:support_required_pct'),
+        web3.utils.fromAscii('params:min_participation_pct'),
       ],
-      [86400, 60, 60],
+      [60, 60, 80, 60],
       { from: owner },
     );
+    this.admin = await AdminTCR.new(
+      this.comm.address,
+      this.voting.address,
+      this.params.address,
+      { from: owner },
+    );  
+    this.core = await CommunityCore.new(
+      this.band.address,
+      this.comm.address,
+      this.params.address,
+      [8, 1, 0, 2],
+      {
+        from: owner,
+      },
+    );
+    await this.params.propose(
+      [web3.utils.fromAscii('core:admin_contract')],
+      [this.admin.address],
+      {
+        from: owner,
+      },
+    );
+    await increase(duration.days(30));
+    await this.voting.resolvePoll(this.params.address, 1, { from: owner });
+    await this.band.transfer(alice, 100000, { from: owner });
+    await this.band.transfer(bob, 100000, { from: owner });
+    await this.comm.transferOwnership(this.core.address, { from: owner });
+    await this.core.activate(0, { from: owner });
 
-    this.comm.mint(owner, 100, { from: owner });
-    this.comm.mint(alice, 100, { from: owner });
-    this.comm.mint(bob, 100, { from: owner });
+    // alice buy 100 XCH
+    const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+    await this.band.transferAndCall(
+      this.core.address,
+      11000,
+      '0x' + calldata1.slice(2, 10),
+      '0x' + calldata1.slice(138),
+      { from: alice },
+    );
+
+    // bob buy 100 XCH
+    const calldata2 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+    await this.band.transferAndCall(
+      this.core.address,
+      30000,
+      '0x' + calldata2.slice(2, 10),
+      '0x' + calldata2.slice(138),
+      { from: bob },
+    );
   });
 
   context('Checking basic functionalities', () => {
     it('should allow getting existing parameters', async () => {
       (await this.params.get(
-        'params:proposal_expiration_time',
-      )).should.bignumber.eq(86400);
+        web3.utils.fromAscii('params:support_required_pct'),
+      )).toString().should.eq('80');
       (await this.params.getZeroable(
-        'params:proposal_expiration_time',
-      )).should.bignumber.eq(86400);
+        web3.utils.fromAscii('params:support_required_pct'),
+      )).toString().should.eq('80');
     });
 
     it('should only allow getting zero if called via getZeroable', async () => {
-      await reverting(this.params.get('xxxxxx'));
-      (await this.params.getZeroable('xxxxxx')).should.bignumber.eq(0);
+      await reverting(this.params.get(web3.utils.fromAscii('xxxxxx')));
+      (await this.params.getZeroable(web3.utils.fromAscii('xxxxxx'))).toString().should.eq('0');
     });
   });
 
-  context('Checking expiration contraints', () => {
-    it('should allow voting on unexpired proposal', async () => {
-      await this.params.propose(['example_proposal'], [1000000], {
-        from: owner,
+  context('Checking parameter requirements', () => {
+    it('should be Inconclusive case(participants less than minimum participation)', async () => {
+      await this.params.propose(
+        [web3.utils.fromAscii('example_proposal')],
+        [1000000], 
+        { 
+          from: owner,
+        }
+      );
+
+      // commitvote
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(20, 0, 42),
+        { from: alice },
+      );
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(10, 0, 42),
+        { from: bob },
+      )
+      await increase(duration.seconds(60));
+
+      // reveal vote
+      await this.voting.revealVote(this.params.address, 2, 20, 0, 42, {
+        from: alice,
       });
-      await increase(duration.hours(10));
-      await this.params.vote(1, 100, 0, { from: owner });
+      await this.voting.revealVote(this.params.address, 2, 10, 0, 42, {
+        from: bob,
+      });
+      await increase(duration.seconds(60));
+
+      // resolvePoll
+      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+
+      // assertion
+      (await this.voting.polls(this.params.address, 2)).pollState.toString().should.be.eq('4');
     });
 
-    it('should not allow voting on expired proposal', async () => {
-      await this.params.propose(['example_proposal'], [1000000], {
-        from: owner,
+    it('should be Yes case(participants more than minimum participation)', async () => {
+      await this.params.propose(
+        [web3.utils.fromAscii('example_proposal')],
+        [1000000], 
+        { 
+          from: owner,
+        }
+      );
+
+      // commitvote
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(60, 0, 42),
+        { from: alice },
+      );
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(60, 0, 42),
+        { from: bob },
+      );
+    
+      await increase(duration.seconds(60));
+
+      // reveal vote
+      await this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        from: alice,
       });
-      await increase(duration.hours(25));
-      await reverting(this.params.vote(1, 100, 0, { from: owner }));
+      await this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        from: bob,
+      });
+
+      await increase(duration.seconds(60));
+
+      // resolvePoll
+      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+
+      //assertion
+      (await this.voting.polls(this.params.address, 2)).pollState.toString().should.be.eq('2');
     });
 
-    it('should use the contraints during which the proposal is proposed', async () => {
-      await this.params.propose(['params:proposal_expiration_time'], [100], {
-        from: owner,
+    it('should be No case(votes Yes less than support_required_pct)', async () => {
+      await this.params.propose(
+        [web3.utils.fromAscii('example_proposal')],
+        [1000000], 
+        { 
+          from: owner,
+        }
+      );
+
+      // commitvote
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(10, 70, 42),
+        { from: alice },
+      );
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(40, 20, 42),
+        { from: bob },
+      );
+    
+      await increase(duration.seconds(60));
+
+      // reveal vote
+      await this.voting.revealVote(this.params.address, 2, 10, 70, 42, {
+        from: alice,
       });
-      await increase(86350);
-      await this.params.propose(['example_proposal'], [1000000], {
-        from: owner,
+      await this.voting.revealVote(this.params.address, 2, 40, 20, 42, {
+        from: bob,
       });
-      await this.params.vote(1, 100, 0, { from: owner });
-      await this.params.vote(1, 100, 0, { from: alice });
-      await increase(500);
-      await this.params.resolve(1, { from: owner });
+
+      await increase(duration.seconds(60));
+
+      // resolvePoll
+      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+
+      //assertion
+      (await this.voting.polls(this.params.address, 2)).pollState.toString().should.be.eq('3');
+    });
+
+    it('should change params:support_required_pct to 60', async () => {
+      await this.params.propose(
+        [web3.utils.fromAscii('params:support_required_pct')],
+        [60], 
+        { 
+          from: owner,
+        }
+      );
+
+      // commitvote
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(100, 0, 42),
+        { from: alice },
+      );
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(100, 0, 42),
+        { from: bob },
+      );
+    
+      await increase(duration.seconds(60));
+
+      // reveal vote
+      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+        from: alice,
+      });
+      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+        from: bob,
+      });
+
+      await increase(duration.seconds(60));
+
+      // resolvePoll
+      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+
+      //assertion
+      (await this.voting.polls(
+        this.params.address, 
+        2,
+        )).pollState.toString().should.be.eq('2');
+
       (await this.params.get(
-        'params:proposal_expiration_time',
-      )).should.bignumber.eq(100);
-      await increase(duration.hours(8));
-      await this.params.vote(2, 100, 0, { from: owner });
-    });
-  });
-
-  context('Checking voting constraints', () => {
-    beforeEach(async () => {
-      await this.params.propose(['params:proposal_expiration_time'], [100], {
-        from: owner,
-      });
-    });
-
-    it('should accept proposal only after enough holders accept', async () => {
-      (await this.params.get(
-        'params:proposal_expiration_time',
-      )).should.bignumber.eq(86400);
-      await this.params.vote(1, 100, 0, { from: owner });
-      (await this.params.get(
-        'params:proposal_expiration_time',
-      )).should.bignumber.eq(86400);
-      await this.params.vote(1, 100, 0, { from: alice });
-      await increase(86400);
-      await this.params.resolve(1, { from: owner });
-      (await this.params.get(
-        'params:proposal_expiration_time',
-      )).should.bignumber.eq(100);
-    });
-
-    it('should not allow people with 0 tokens to vote', async () => {
-      await reverting(this.params.vote(1, 0, 0, { from: carol }));
-    });
-
-    it('should not allow people to re-vote', async () => {
-      await this.params.vote(1, 100, 0, { from: owner });
-      await reverting(this.params.vote(1, 100, 0, { from: owner }));
-    });
-
-    it('should not allow voting on accepted proposal', async () => {
-      await this.params.vote(1, 100, 0, { from: owner });
-      await this.params.vote(1, 100, 0, { from: alice });
-      await increase(86400);
-      await this.params.resolve(1, { from: owner });
-      await reverting(this.params.vote(1, 100, 0, { from: bob }));
-    });
-
-    it('should use tokens held during the proposed time as voting power', async () => {
-      await increase(10);
-      await this.comm.mint(owner, 2, { from: owner });
-      (await this.comm.balanceOf(owner)).should.bignumber.eq(102);
-      await reverting(this.params.vote(1, 102, 0, { from: owner }));
-      await this.params.vote(1, 100, 0, { from: owner });
-      await this.params.vote(1, 10, 10, { from: alice });
-      (await this.params.proposals(1))[3].should.bignumber.eq(110); // currentYesCount
-      (await this.params.proposals(1))[4].should.bignumber.eq(10); // currentNoCount
-      (await this.params.proposals(1))[5].should.bignumber.eq(300); // totalVoteCount
+        web3.utils.fromAscii('params:support_required_pct'),
+      )).toString().should.eq('60');
     });
   });
 });
