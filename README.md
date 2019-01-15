@@ -1,6 +1,6 @@
 # Contract
 
-> Curated contents on everything crypto: from most up-to-date market news to in-depth project info. Whether you are a veteran or a newbie, we have you covered!
+> Band protocol smart contracts.
 
 
 ## Installation
