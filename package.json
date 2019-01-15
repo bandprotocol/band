@@ -8,6 +8,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "truffle": "truffle",
+    "truffle-flattener": "truffle-flattener",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
     "lint:sol": "solium -d .",

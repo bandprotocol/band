@@ -16,7 +16,7 @@ require('chai').should();
 
 contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
   beforeEach(async () => {
-    this.band = await BandToken.new(1000000, { from: owner });
+    this.band = await BandToken.new(1000000, owner, { from: owner });
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
     });

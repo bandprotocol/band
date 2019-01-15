@@ -50,9 +50,10 @@ contract BandToken is ERC20, Ownable {
    * @dev BandToken constructor. All of the available tokens are minted to the
    * token creator.
    */
-  constructor(uint256 totalSupply) public {
+  constructor(uint256 totalSupply, address creator) public {
     // Initially, all of the minted tokens belong to the contract creator.
-    _mint(msg.sender, totalSupply);
+    _mint(creator, totalSupply);
+    transferOwnership(creator);
 
     // Populate eomTimestamps for every month from the start of Q2 2019.
     // until the end of Q1 2023, for the total of 4 years (48 months).
