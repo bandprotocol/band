@@ -142,16 +142,12 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
       emit ParameterProposed(proposalID, key, value);
       proposals[proposalID].changes[index] = KeyValue(key, value);
     }
-    uint256 commitTime = get("params:commit_time");
-    uint256 revealTime = get("params:reveal_time");
     require(
       voting.startPoll(
         token,
         proposalID,
-        now.add(commitTime),
-        now.add(commitTime).add(revealTime),
-        get("params:min_participation_pct"),
-        get("params:support_required_pct")
+        "params:",
+        this
       )
     );
     return proposalID;

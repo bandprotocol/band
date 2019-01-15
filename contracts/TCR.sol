@@ -270,8 +270,6 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
     require(challengeDeposit == stake);
     entry.withdrawableDeposit -= stake;
     uint256 challengeID = nextChallengeNonce;
-    uint256 commitTime = get("commit_time");
-    uint256 revealTime = get("reveal_time");
     entry.challengeID = challengeID;
     challenges[challengeID].entryData = data;
     challenges[challengeID].challenger = challenger;
@@ -283,10 +281,8 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
       voting.startPoll(
         token,
         challengeID,
-        now.add(commitTime),
-        now.add(commitTime).add(revealTime),
-        get("min_participation_pct"),
-        get("support_required_pct")
+        prefix,
+        params
       )
     );
     return challengeID;

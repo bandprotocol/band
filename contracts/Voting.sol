@@ -3,6 +3,7 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./CommunityToken.sol";
+import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
 
 
@@ -142,15 +143,19 @@ contract Voting {
   function startPoll(
     CommunityToken token,
     uint256 pollID,
-    uint256 commitEndTime,
-    uint256 revealEndTime,
-    uint256 voteMinParticipationPct,
-    uint256 voteSupportRequiredPct
+    bytes8 prefix,
+    ParametersInterface params
   )
     public
     pollMustNotExist(msg.sender, pollID)
     returns (bool)
   {
+
+    uint256 commitEndTime = now.add(get(params, prefix, "commit_time"));
+    uint256 revealEndTime = commitEndTime.add(get(params, prefix, "reveal_time"));
+    uint256 voteMinParticipationPct = get(params, prefix, "min_participation_pct");
+    uint256 voteSupportRequiredPct = get(params, prefix, "support_required_pct");
+
     require(revealEndTime < 2 ** 64);
     require(commitEndTime < revealEndTime);
     require(voteMinParticipationPct <= 100);
@@ -261,5 +266,17 @@ contract Voting {
     poll.pollState = pollState;
     emit PollResolved(pollContract, pollID, pollState);
     require(ResolveListener(pollContract).onResolved(pollID, pollState));
+  }
+
+  function get(ParametersInterface params, bytes8 prefix, bytes24 key)
+    internal
+    view
+    returns (uint256)
+  {
+    uint8 prefixSize = 0;
+    while (prefixSize < 8 && prefix[prefixSize] != byte(0)) {
+      ++prefixSize;
+    }
+    return params.get(bytes32(prefix) | (bytes32(key) >> (8 * prefixSize)));
   }
 }
