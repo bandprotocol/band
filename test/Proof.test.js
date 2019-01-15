@@ -28,8 +28,6 @@ contract('ProofMock', ([_, owner]) => {
     it('should accept correct proof', async () => {
       const key = this.keys[8];
       const [value, proof] = this.merkle.getProof(key);
-      console.log(value.toString());
-      console.log(bigNumberToHex(value));
       await this.contract.verify(
         this.merkle.root,
         key,
