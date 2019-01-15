@@ -15,6 +15,7 @@ contract Voting {
   event PollCreated(  // A poll is created.
     address indexed pollContract,
     uint256 indexed pollID,
+    address indexed tokenContract,
     uint256 commitEndTime,
     uint256 revealEndTime,
     uint256 voteMinParticipation,
@@ -50,6 +51,8 @@ contract Voting {
   }
 
   struct Poll {
+    CommunityToken token; // The address of community token contract for voting power reference
+
     uint256 snapshotBlockNo;  // The block number to count voting power
 
     uint256 commitEndTime;          // Expiration timestamp of commit period
@@ -68,9 +71,6 @@ contract Voting {
     ResolveListener.PollState pollState;  // The state of this poll.
   }
 
-  // The address of community token contract for voting power reference.
-  CommunityToken public token;
-
   // Mapping of all polls ever existed, for each of the poll creators.
   mapping (address => mapping (uint256 => Poll)) public polls;
 
@@ -82,10 +82,6 @@ contract Voting {
   modifier pollMustBeActive(address pollContract, uint256 pollID) {
     require(polls[pollContract][pollID].pollState == ResolveListener.PollState.Active);
     _;
-  }
-
-  constructor(CommunityToken _token) public {
-    token = _token;
   }
 
   function getPollTotalVote(address pollContract, uint256 pollID)
@@ -144,6 +140,7 @@ contract Voting {
   }
 
   function startPoll(
+    CommunityToken token,
     uint256 pollID,
     uint256 commitEndTime,
     uint256 revealEndTime,
@@ -174,10 +171,12 @@ contract Voting {
     poll.voteSupportRequiredPct = voteSupportRequiredPct;
     poll.voteMinParticipation = voteMinParticipation;
     poll.pollState = ResolveListener.PollState.Active;
+    poll.token = token;
 
     emit PollCreated(
       msg.sender,
       pollID,
+      address(token),
       commitEndTime,
       revealEndTime,
       voteMinParticipation,
@@ -226,7 +225,7 @@ contract Voting {
 
     // Get the weight, which is the voting power at the block before the
     // poll is initiated.
-    uint256 totalWeight = token.historicalVotingPowerAtBlock(
+    uint256 totalWeight = poll.token.historicalVotingPowerAtBlock(
       msg.sender,
       poll.snapshotBlockNo
     );

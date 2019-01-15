@@ -281,6 +281,7 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
     emit ChallengeInitiated(data, challengeID, challenger);
     require(
       voting.startPoll(
+        token,
         challengeID,
         now.add(commitTime),
         now.add(commitTime).add(revealTime),

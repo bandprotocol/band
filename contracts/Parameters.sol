@@ -42,6 +42,7 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
     uint256 value
   );
 
+  CommunityToken public token;
   Voting public voting;
 
   // Public map of all active parameters.
@@ -69,12 +70,14 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
    * given in this constructor.
    */
   constructor(
+    CommunityToken _token,
     Voting _voting,
     bytes32[] memory keys,
     uint256[] memory values
   )
     public
   {
+    token = _token;
     voting = _voting;
 
     require(keys.length == values.length);
@@ -143,6 +146,7 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
     uint256 revealTime = get("params:reveal_time");
     require(
       voting.startPoll(
+        token,
         proposalID,
         now.add(commitTime),
         now.add(commitTime).add(revealTime),

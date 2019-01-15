@@ -15,10 +15,11 @@ module.exports = deployer => {
         18,
       );
 
-      await deployer.deploy(Voting, CommunityToken.address);
+      await deployer.deploy(Voting);
 
       await deployer.deploy(
         Parameters,
+        CommunityToken.address,
         Voting.address,
         [
           web3.utils.fromAscii('core:admin_contract'),

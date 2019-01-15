@@ -19,8 +19,9 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
     });
-    this.voting = await Voting.new(this.comm.address, { from: owner });
+    this.voting = await Voting.new({ from: owner });
     this.params = await Parameters.new(
+      this.comm.address,
       this.voting.address,
       [
         web3.utils.fromAscii('params:commit_time'),
@@ -36,7 +37,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       this.voting.address,
       this.params.address,
       { from: owner },
-    );  
+    );
     this.core = await CommunityCore.new(
       this.band.address,
       this.comm.address,
@@ -85,15 +86,21 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     it('should allow getting existing parameters', async () => {
       (await this.params.get(
         web3.utils.fromAscii('params:support_required_pct'),
-      )).toString().should.eq('80');
+      ))
+        .toString()
+        .should.eq('80');
       (await this.params.getZeroable(
         web3.utils.fromAscii('params:support_required_pct'),
-      )).toString().should.eq('80');
+      ))
+        .toString()
+        .should.eq('80');
     });
 
     it('should only allow getting zero if called via getZeroable', async () => {
       await reverting(this.params.get(web3.utils.fromAscii('xxxxxx')));
-      (await this.params.getZeroable(web3.utils.fromAscii('xxxxxx'))).toString().should.eq('0');
+      (await this.params.getZeroable(web3.utils.fromAscii('xxxxxx')))
+        .toString()
+        .should.eq('0');
     });
   });
 
@@ -101,10 +108,10 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     it('should be Inconclusive case(participants less than minimum participation)', async () => {
       await this.params.propose(
         [web3.utils.fromAscii('example_proposal')],
-        [1000000], 
-        { 
+        [1000000],
+        {
           from: owner,
-        }
+        },
       );
 
       // commitvote
@@ -119,7 +126,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         2,
         web3.utils.soliditySha3(10, 0, 42),
         { from: bob },
-      )
+      );
       await increase(duration.seconds(60));
 
       // reveal vote
@@ -135,16 +142,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
       // assertion
-      (await this.voting.polls(this.params.address, 2)).pollState.toString().should.be.eq('4');
+      (await this.voting.polls(this.params.address, 2)).pollState
+        .toString()
+        .should.be.eq('4');
     });
 
     it('should be Yes case(participants more than minimum participation)', async () => {
       await this.params.propose(
         [web3.utils.fromAscii('example_proposal')],
-        [1000000], 
-        { 
+        [1000000],
+        {
           from: owner,
-        }
+        },
       );
 
       // commitvote
@@ -160,7 +169,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         web3.utils.soliditySha3(60, 0, 42),
         { from: bob },
       );
-    
+
       await increase(duration.seconds(60));
 
       // reveal vote
@@ -177,16 +186,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
       //assertion
-      (await this.voting.polls(this.params.address, 2)).pollState.toString().should.be.eq('2');
+      (await this.voting.polls(this.params.address, 2)).pollState
+        .toString()
+        .should.be.eq('2');
     });
 
     it('should be No case(votes Yes less than support_required_pct)', async () => {
       await this.params.propose(
         [web3.utils.fromAscii('example_proposal')],
-        [1000000], 
-        { 
+        [1000000],
+        {
           from: owner,
-        }
+        },
       );
 
       // commitvote
@@ -202,7 +213,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         web3.utils.soliditySha3(40, 20, 42),
         { from: bob },
       );
-    
+
       await increase(duration.seconds(60));
 
       // reveal vote
@@ -219,16 +230,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
       //assertion
-      (await this.voting.polls(this.params.address, 2)).pollState.toString().should.be.eq('3');
+      (await this.voting.polls(this.params.address, 2)).pollState
+        .toString()
+        .should.be.eq('3');
     });
 
     it('should change params:support_required_pct to 60', async () => {
       await this.params.propose(
         [web3.utils.fromAscii('params:support_required_pct')],
-        [60], 
-        { 
+        [60],
+        {
           from: owner,
-        }
+        },
       );
 
       // commitvote
@@ -244,7 +257,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         web3.utils.soliditySha3(100, 0, 42),
         { from: bob },
       );
-    
+
       await increase(duration.seconds(60));
 
       // reveal vote
@@ -261,14 +274,15 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
       //assertion
-      (await this.voting.polls(
-        this.params.address, 
-        2,
-        )).pollState.toString().should.be.eq('2');
+      (await this.voting.polls(this.params.address, 2)).pollState
+        .toString()
+        .should.be.eq('2');
 
       (await this.params.get(
         web3.utils.fromAscii('params:support_required_pct'),
-      )).toString().should.eq('60');
+      ))
+        .toString()
+        .should.eq('60');
     });
   });
 });

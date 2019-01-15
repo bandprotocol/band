@@ -20,8 +20,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
     });
-    this.voting = await Voting.new(this.comm.address, { from: owner });
+    this.voting = await Voting.new({ from: owner });
     this.params = await Parameters.new(
+      this.comm.address,
       this.voting.address,
       [
         web3.utils.fromAscii('params:commit_time'),
@@ -67,7 +68,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       await reverting(this.core.buy(alice, 100, 11000, { from: alice }));
     });
 
-    it('should not allow buying if buy doesn\'t have enough band', async () => {
+    it("should not allow buying if buy doesn't have enough band", async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await reverting(
         this.band.transferAndCall(
