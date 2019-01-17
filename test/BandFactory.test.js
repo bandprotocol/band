@@ -8,7 +8,7 @@ const Parameters = artifacts.require('Parameters');
 const CommunityCore = artifacts.require('CommunityCore');
 
 const AdminSimple = artifacts.require('./AdminSimple.sol');
-const Voting = artifacts.require('Voting');
+const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
 
@@ -29,7 +29,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
         'CoinHatcher',
         'XCH',
         18,
-        Voting.address,
+        CommitRevealVoting.address,
         [
           web3.utils.fromAscii('core:admin_contract'),
           web3.utils.fromAscii('core:reward_period'),
@@ -114,7 +114,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
       (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
     });
     it('should revert if use new voting address', async () => {
-      const newVote = await Voting.new({ from: alice });
+      const newVote = await CommitRevealVoting.new({ from: alice });
       await reverting(
         this.contract.createNewCommunity(
           'CoinHatcher2',
@@ -159,7 +159,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
       );
     });
     it('should create new community if add new voting address to factory', async () => {
-      const newVote = await Voting.new({ from: alice });
+      const newVote = await CommitRevealVoting.new({ from: alice });
       await this.contract.addVotingContract(newVote.address);
 
       const x = await this.contract.createNewCommunity(

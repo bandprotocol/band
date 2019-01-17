@@ -10,7 +10,7 @@ const BandToken = artifacts.require('BandToken');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const Voting = artifacts.require('Voting');
+const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
 
@@ -20,7 +20,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
     });
-    this.voting = await Voting.new({ from: owner });
+    this.voting = await CommitRevealVoting.new({ from: owner });
     this.params = await Parameters.new(
       this.comm.address,
       this.voting.address,

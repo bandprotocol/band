@@ -7,7 +7,7 @@ import "../Parameters.sol";
 library LibParametersFactory{
   function create(
     CommunityToken _token,
-    Voting _voting,
+    VotingInterface _voting,
     bytes32[] calldata _keys,
     uint256[] calldata _values
   )

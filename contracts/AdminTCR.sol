@@ -1,7 +1,7 @@
 pragma solidity 0.5.0;
 
 import "./AdminInterface.sol";
-import "./TCR.sol";
+import "./SimpleTCR.sol";
 
 
 /**
@@ -11,10 +11,14 @@ import "./TCR.sol";
  * of a particular community's admins. That is, each data in TCR is an Ethereum
  * address.
  */
-contract AdminTCR is AdminInterface, TCR {
+contract AdminTCR is AdminInterface, SimpleTCR {
 
-  constructor(CommunityToken token, Voting voting, ParametersInterface params)
-    TCR("admin:", token, voting, params)
+  constructor(
+    CommunityToken token,
+    VotingInterface voting,
+    ParametersInterface params
+  )
+    SimpleTCR("admin:", token, voting, params)
     public
   {
     // Make the contract creator the admin. Note that this is without deposit,

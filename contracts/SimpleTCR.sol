@@ -8,15 +8,16 @@ import "./BandContractBase.sol";
 import "./CommunityToken.sol";
 import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
-import "./Voting.sol";
+import "./VotingInterface.sol";
 
 
 /**
- * @title TCR
+ * @title SimpleTCR
  *
- * @dev TCR contract implements Token Curated Registry logic.
+ * @dev TCR contract implements Token Curated Registry logic, with reward
+ * distribution allocated equally to both winning and losing sides.
  */
-contract TCR is BandContractBase, ERC165, ResolveListener {
+contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
   using SafeMath for uint256;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
@@ -76,7 +77,7 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
   );
 
   CommunityToken public token;
-  Voting public voting;
+  VotingInterface public voting;
   ParametersInterface public params;
 
   // Namespace prefix for all parameters (See Parameters.sol) for usage inside
@@ -98,7 +99,7 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
     bytes32 entryData;      // The data that is in question
     address challenger;     // The challenger
     uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
-    uint256 remainingVotes; // Remaining voting power that not yet claims rewards.
+    uint256 remainingVotes; // Remaining voting power to claim rewards.
 
     mapping (address => bool) claims;  // Whether the user has claimed rewards.
   }
@@ -116,7 +117,7 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
   constructor(
     bytes8 _prefix,
     CommunityToken _token,
-    Voting _voting,
+    VotingInterface _voting,
     ParametersInterface _params
   )
     public
@@ -311,8 +312,7 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
 
     uint256 rewardPool = challenge.rewardPool;
     uint256 rewardPercentage = get("reward_percentage");
-    require(rewardPercentage <= 100);
-    require(rewardPercentage >= 50);
+    require(rewardPercentage >= 50 && rewardPercentage <= 100);
 
     // The reward for winning side leader (challenger/entry owner) is the
     // specified percentage of total reward pool.
@@ -324,14 +324,14 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
       deleteEntry(data);
       // The remaining reward is distributed among Yes voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
-      challenge.remainingVotes = yesCount;
+      challenge.remainingVotes = yesCount.add(noCount);
       emit ChallengeSuccess(data, challengeID, rewardPool);
     } else if (pollState == PollState.No) {
       // Challenge fails. Entry deposit is added by reward.
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
       // The remaining reward is distributed among No voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
-      challenge.remainingVotes = noCount;
+      challenge.remainingVotes = yesCount.add(noCount);
       emit ChallengeFailed(data, challengeID, rewardPool);
     } else if (pollState == PollState.Inconclusive) {
       // Inconclusive. Both challenger and entry owner get half of the pool
@@ -357,32 +357,18 @@ contract TCR is BandContractBase, ERC165, ResolveListener {
     challengeMustExist(challengeID)
   {
     Challenge storage challenge = challenges[challengeID];
+    // A challenge must already be resolved with reward pending to be withdrawn
+    require(challenge.remainingVotes > 0);
 
-    // User must already have reveal their vote and not claimed rewards.
-    require(
-      voting.getPollUserState(address(this), challengeID, msg.sender) ==
-      Voting.VoteState.Revealed
-    );
-    require(!challenge.claims[msg.sender]);
-    challenge.claims[msg.sender] = true;
-
-    uint256 claimerVotes = voting.getPollUserVoteOnWinningSide(
-      address(this),
-      challengeID,
-      msg.sender
-    );
-
-    // User must have nonzero vote on the side that wins the challenge.
-    require(claimerVotes != 0);
+    (uint256 yesCount, uint256 noCount) =
+      voting.getPollUserVote(address(this), challengeID, msg.sender);
+    uint256 totalCount = yesCount.add(noCount);
 
     uint256 rewardPool = challenge.rewardPool;
     uint256 remainingVotes = challenge.remainingVotes;
+    uint256 reward = rewardPool.mul(totalCount).div(remainingVotes);
 
-    // User reward is the portion of remaining reward based on the vote count
-    // of this user.
-    uint256 reward = rewardPool.mul(claimerVotes).div(remainingVotes);
-
-    challenge.remainingVotes = remainingVotes.sub(claimerVotes);
+    challenge.remainingVotes = remainingVotes.sub(totalCount);
     challenge.rewardPool = rewardPool.sub(reward);
 
     // Send reward to the claimer.

@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./BandContractBase.sol";
 import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
-import "./Voting.sol";
+import "./VotingInterface.sol";
 
 
 /*
@@ -43,7 +43,7 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
   );
 
   CommunityToken public token;
-  Voting public voting;
+  VotingInterface public voting;
 
   // Public map of all active parameters.
   mapping (bytes32 => uint256) public params;
@@ -71,7 +71,7 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
    */
   constructor(
     CommunityToken _token,
-    Voting _voting,
+    VotingInterface _voting,
     bytes32[] memory keys,
     uint256[] memory values
   )

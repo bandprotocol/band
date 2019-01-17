@@ -6,7 +6,7 @@ import "./BandToken.sol";
 import "./CommunityCore.sol";
 import "./CommunityToken.sol";
 import "./Parameters.sol";
-import "./Voting.sol";
+import "./VotingInterface.sol";
 
 import "./lib/LibTokenFactory.sol";
 import "./lib/LibParametersFactory.sol";
@@ -42,7 +42,6 @@ contract BandFactory is Ownable {
 
   constructor(uint256 totalSupply) public {
     band = new BandToken(totalSupply, msg.sender);
-
     emit BandCreated(address(band), msg.sender, totalSupply);
   }
 
@@ -50,7 +49,7 @@ contract BandFactory is Ownable {
     string calldata _name,
     string calldata _symbol,
     uint8 _decimals,
-    Voting _voting,
+    VotingInterface _voting,
     bytes32[] calldata _keys,
     uint256[] calldata _values,
     uint256[] calldata _expressions
@@ -74,7 +73,7 @@ contract BandFactory is Ownable {
     return true;
   }
 
-  function addVotingContract(Voting _voting)
+  function addVotingContract(VotingInterface _voting)
     public
     onlyOwner
     returns(bool)
@@ -85,7 +84,7 @@ contract BandFactory is Ownable {
     return true;
   }
 
-  function removeVotingContract(Voting _voting)
+  function removeVotingContract(VotingInterface _voting)
     public
     onlyOwner
     returns(bool)

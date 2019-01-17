@@ -2,73 +2,42 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./CommunityToken.sol";
-import "./ParametersInterface.sol";
-import "./ResolveListener.sol";
+import "./VotingInterface.sol";
 
 
 /**
- * @title Voting
+ * @title SimpleVoting
  */
-contract Voting {
+contract SimpleVoting is VotingInterface {
   using SafeMath for uint256;
 
-  event PollCreated(  // A poll is created.
+  event SimplePollCreated(  // A poll is created.
     address indexed pollContract,
     uint256 indexed pollID,
     address indexed tokenContract,
-    uint256 commitEndTime,
-    uint256 revealEndTime,
+    uint256 pollEndTime,
     uint256 voteMinParticipation,
     uint256 voteSupportRequired
   );
 
-  event PollResolved(  // A poll is resolved.
-    address indexed pollContract,
-    uint256 indexed pollID,
-    ResolveListener.PollState pollState
-  );
-
-  event VoteCommitted(  // A vote is committed by a user.
-    address indexed pollContract,
-    uint256 indexed pollID,
-    address indexed voter,
-    bytes32 voteHash
-  );
-
-  event VoteRevealed(  // A vote is revealed by a user.
+  event SimpleVoteCasted(  // A vote is casted by a user.
     address indexed pollContract,
     uint256 indexed pollID,
     address indexed voter,
     uint256 yesWeight,
-    uint256 noWeight,
-    uint256 salt
+    uint256 noWeight
   );
 
-  enum VoteState {
-    Invalid,      // Invalid, default value
-    Committed,    // The vote has been committed, but not yet revealed.
-    Revealed      // The vote has been revealed.
-  }
-
   struct Poll {
-    CommunityToken token; // The address of community token contract for voting power reference
-
-    uint256 snapshotBlockNo;  // The block number to count voting power
-
-    uint256 commitEndTime;          // Expiration timestamp of commit period
-    uint256 revealEndTime;          // Expiration timestamp of reveal period
+    CommunityToken token;
+    uint256 snapshotBlockNo;        // The block number to count voting power
+    uint256 pollEndTime;            // Expiration timestamp of commit period
     uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
-
-    uint256 voteMinParticipation; // The minimum # of votes required
-    uint256 yesCount;             // The current total number of YES votes
-    uint256 noCount;              // The current total number of NO votes
-
-    mapping (address => bytes32) commits;       // Each user's committed vote
+    uint256 voteMinParticipation;   // The minimum # of votes required
+    uint256 yesCount;               // The current total number of YES votes
+    uint256 noCount;                // The current total number of NO votes
     mapping (address => uint256) yesWeights;    // Each user's yes vote weight
     mapping (address => uint256) noWeights;     // Each user's no vote weight
-    mapping (address => VoteState) voteStates;  // Each user's vote state
-
     ResolveListener.PollState pollState;  // The state of this poll.
   }
 
@@ -94,25 +63,6 @@ contract Voting {
     return (poll.yesCount, poll.noCount);
   }
 
-  function getPollUserVoteOnWinningSide(
-    address pollContract,
-    uint256 pollID,
-    address voter
-  )
-    public
-    view
-    returns (uint256)
-  {
-    Poll storage poll = polls[pollContract][pollID];
-    if (poll.pollState == ResolveListener.PollState.Yes) {
-      return poll.yesWeights[voter];
-    } else if (poll.pollState == ResolveListener.PollState.No) {
-      return poll.noWeights[voter];
-    } else {
-      return 0;
-    }
-  }
-
   function getPollUserVote(address pollContract, uint256 pollID, address voter)
     public
     view
@@ -120,24 +70,6 @@ contract Voting {
   {
     Poll storage poll = polls[pollContract][pollID];
     return (poll.yesWeights[voter], poll.noWeights[voter]);
-  }
-
-  function getPollUserState(address pollContract, uint256 pollID, address voter)
-    public
-    view
-    returns (VoteState)
-  {
-    Poll storage poll = polls[pollContract][pollID];
-    return poll.voteStates[voter];
-  }
-
-  function getPollUserCommit(address pollContract, uint256 pollID, address voter)
-    public
-    view
-    returns (bytes32)
-  {
-    Poll storage poll = polls[pollContract][pollID];
-    return poll.commits[voter];
   }
 
   function startPoll(
@@ -150,14 +82,11 @@ contract Voting {
     pollMustNotExist(msg.sender, pollID)
     returns (bool)
   {
-
-    uint256 commitEndTime = now.add(get(params, prefix, "commit_time"));
-    uint256 revealEndTime = commitEndTime.add(get(params, prefix, "reveal_time"));
+    uint256 pollEndTime = now.add(get(params, prefix, "expiration_time"));
     uint256 voteMinParticipationPct = get(params, prefix, "min_participation_pct");
     uint256 voteSupportRequiredPct = get(params, prefix, "support_required_pct");
 
-    require(revealEndTime < 2 ** 64);
-    require(commitEndTime < revealEndTime);
+    require(pollEndTime < 2 ** 64);
     require(voteMinParticipationPct <= 100);
     require(voteSupportRequiredPct <= 100);
 
@@ -169,64 +98,39 @@ contract Voting {
     uint256 voteMinParticipation
       = voteMinParticipationPct.mul(token.totalSupply()).div(100);
 
-    Poll storage poll = polls[msg.sender][pollID];
-    poll.snapshotBlockNo = block.number.sub(1);
-    poll.commitEndTime = commitEndTime;
-    poll.revealEndTime = revealEndTime;
-    poll.voteSupportRequiredPct = voteSupportRequiredPct;
-    poll.voteMinParticipation = voteMinParticipation;
-    poll.pollState = ResolveListener.PollState.Active;
-    poll.token = token;
+    polls[msg.sender][pollID] = Poll({
+      token: token,
+      snapshotBlockNo: block.number.sub(1),
+      pollEndTime: pollEndTime,
+      voteSupportRequiredPct: voteSupportRequiredPct,
+      voteMinParticipation: voteMinParticipation,
+      yesCount: 0,
+      noCount: 0,
+      pollState: ResolveListener.PollState.Active
+    });
 
-    emit PollCreated(
+    emit SimplePollCreated(
       msg.sender,
       pollID,
       address(token),
-      commitEndTime,
-      revealEndTime,
+      pollEndTime,
       voteMinParticipation,
       voteSupportRequiredPct
     );
     return true;
   }
 
-  function commitVote(
-    address pollContract,
-    uint256 pollID,
-    bytes32 commitValue
-  )
-    public
-    pollMustBeActive(pollContract, pollID)
-  {
-    Poll storage poll = polls[pollContract][pollID];
-    // Must be in commit period.
-    require(now < poll.commitEndTime);
-    poll.commits[msg.sender] = commitValue;
-    poll.voteStates[msg.sender] = VoteState.Committed;
-    emit VoteCommitted(pollContract, pollID, msg.sender, commitValue);
-  }
-
-  function revealVote(
+  function castVote(
     address pollContract,
     uint256 pollID,
     uint256 yesWeight,
-    uint256 noWeight,
-    uint256 salt
+    uint256 noWeight
   )
     public
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-    // Must be in reveal period.
-    require(now >= poll.commitEndTime && now < poll.revealEndTime);
-    // Must not already be revealed.
-    require(poll.voteStates[msg.sender] == VoteState.Committed);
-    poll.voteStates[msg.sender] = VoteState.Revealed;
-    // Must be consistent with the prior commit value.
-    require(
-      keccak256(abi.encodePacked(yesWeight, noWeight, salt)) ==
-      poll.commits[msg.sender]
-    );
+    require(now < poll.pollEndTime);
 
     // Get the weight, which is the voting power at the block before the
     // poll is initiated.
@@ -234,13 +138,16 @@ contract Voting {
       msg.sender,
       poll.snapshotBlockNo
     );
-
     require(yesWeight.add(noWeight) <= totalWeight);
+
+    uint256 previousYesWeight = poll.yesWeights[msg.sender];
+    uint256 previousNoWeight = poll.noWeights[msg.sender];
+
+    poll.yesCount = poll.yesCount.sub(previousYesWeight).add(yesWeight);
+    poll.noCount = poll.noCount.sub(previousNoWeight).add(noWeight);
     poll.yesWeights[msg.sender] = yesWeight;
-    poll.yesCount = poll.yesCount.add(yesWeight);
     poll.noWeights[msg.sender] = noWeight;
-    poll.noCount = poll.noCount.add(noWeight);
-    emit VoteRevealed(pollContract, pollID, msg.sender, yesWeight, noWeight, salt);
+    emit SimpleVoteCasted(pollContract, pollID, msg.sender, yesWeight, noWeight);
   }
 
   function resolvePoll(address pollContract, uint256 pollID)
@@ -248,7 +155,7 @@ contract Voting {
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-    require(now >= poll.revealEndTime);
+    require(now >= poll.pollEndTime);
 
     uint256 yesCount = poll.yesCount;
     uint256 noCount = poll.noCount;
