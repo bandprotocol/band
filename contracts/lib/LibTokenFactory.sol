@@ -1,9 +1,10 @@
 pragma solidity 0.5.0;
 
-import "./CommunityToken.sol";
+import "../CommunityToken.sol";
+
 
 library LibTokenFactory{
-  function createNewToken(
+  function create(
     string calldata _name,
     string calldata _symbol,
     uint8 _decimals

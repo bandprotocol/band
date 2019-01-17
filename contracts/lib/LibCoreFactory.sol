@@ -1,11 +1,12 @@
 pragma solidity 0.5.0;
 
-import "./CommunityToken.sol";
-import "./Parameters.sol";
-import "./CommunityCore.sol";
+import "../CommunityToken.sol";
+import "../Parameters.sol";
+import "../CommunityCore.sol";
+
 
 library LibCoreFactory{
-  function createNewCore(
+  function create(
     BandToken _bandToken,
     CommunityToken _commToken,
     ParametersInterface _params,

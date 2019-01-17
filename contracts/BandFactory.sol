@@ -8,9 +8,10 @@ import "./CommunityToken.sol";
 import "./Parameters.sol";
 import "./Voting.sol";
 
-import "./LibTokenFactory.sol";
-import "./LibParametersFactory.sol";
-import "./LibCoreFactory.sol";
+import "./lib/LibTokenFactory.sol";
+import "./lib/LibParametersFactory.sol";
+import "./lib/LibCoreFactory.sol";
+
 
 contract BandFactory is Ownable {
   event BandCreated(
@@ -58,9 +59,9 @@ contract BandFactory is Ownable {
     returns(bool)
   {
     require(verifiedVotingContracts[address(_voting)]);
-    CommunityToken token = LibTokenFactory.createNewToken(_name, _symbol, _decimals);
-    Parameters params = LibParametersFactory.createNewParameters(token, _voting, _keys, _values);
-    CommunityCore core = LibCoreFactory.createNewCore(band, token, params, _expressions);
+    CommunityToken token = LibTokenFactory.create(_name, _symbol, _decimals);
+    Parameters params = LibParametersFactory.create(token, _voting, _keys, _values);
+    CommunityCore core = LibCoreFactory.create(band, token, params, _expressions);
 
     token.transferOwnership(address(core));
     core.activate(0);
