@@ -64,7 +64,6 @@ contract BandFactory is Ownable {
     CommunityCore core = LibCoreFactory.create(band, token, params, _expressions);
 
     token.transferOwnership(address(core));
-    core.activate(0);
     cores.push(core);
 
     emit CommunityCreated(
@@ -82,7 +81,6 @@ contract BandFactory is Ownable {
   {
     require(!verifiedVotingContracts[address(_voting)]);
     verifiedVotingContracts[address(_voting)] = true;
-
     emit NewVotingContractRegistered(address(_voting));
     return true;
   }
@@ -94,7 +92,6 @@ contract BandFactory is Ownable {
   {
     require(verifiedVotingContracts[address(_voting)]);
     verifiedVotingContracts[address(_voting)] = false;
-
     emit VotingContractRemoved(address(_voting));
     return true;
   }

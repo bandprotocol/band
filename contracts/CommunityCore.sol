@@ -105,11 +105,6 @@ contract CommunityCore is BandContractBase, ERC165 {
   // ID of the next reward.
   uint256 public nextRewardID = 1;
 
-  // True if the contract is currently active, which is when it is the sole
-  // owner of the community token contract. While active, users can buy/sell
-  // community tokens through this core contract.
-  bool public isActive = false;
-
   /**
    * @dev Reward struct to keep track of reward distribution/withdrawal for
    * a particular time period.
@@ -141,6 +136,7 @@ contract CommunityCore is BandContractBase, ERC165 {
     commToken = _commToken;
     params = _params;
     equation.init(_expressions);
+    lastInflationTime = now;
   }
 
   /**
@@ -150,60 +146,6 @@ contract CommunityCore is BandContractBase, ERC165 {
     AdminInterface admin = AdminInterface(params.get("core:admin_contract"));
     require(admin.isAdmin(msg.sender));
     _;
-  }
-
-  /**
-   * @dev Throws if this contract is not active. This contract is considered
-   * active if it is the owner of the community token contract.
-   */
-  modifier whenActive() {
-    require(isActive);
-    _;
-  }
-
-  /**
-   * @dev Activate this community core contract. Optionally take initialBand
-   * parameter to active curve while having nonzero comm token supply.
-   */
-  function activate(uint256 initialBand) public {
-    require(!isActive);
-    require(currentBandCollatoralized == 0);
-    require(commToken.owner() == address(this));
-
-    if (initialBand != 0) {
-      // If initialBand is set, this curve contract takes the tokens from
-      // contract activator. The curve is then adjusted to match token supply.
-      bandToken.transferFrom(msg.sender, address(this), initialBand);
-      currentBandCollatoralized = initialBand;
-      _adjustcurveMultiplier();
-    } else {
-      // Otherwise, it must be the case that the community token does not
-      // have any existing supply, e.g. new curve.
-      require(commToken.totalSupply() == 0);
-    }
-
-    // Set lastInflationTime to the current time. The time period when the
-    // contract is not active should be counted as inflation period.
-    lastInflationTime = now;
-
-    // Everything is ready. Let's activate this contract.
-    isActive = true;
-  }
-
-  /**
-   * @dev Called by the deactivator to deactivate this community core contract.
-   * When that happens, all Band tokens belonging to the curve will be
-   * transferred to the deactivator. Buying and selling is forever disabled.
-   * The migrator will be entitiled as the community token's owner.
-   */
-  function deactivate() public whenActive {
-    require(uint256(msg.sender) == params.get("core:deactivator"));
-    isActive = false;
-    if (currentBandCollatoralized != 0) {
-      require(bandToken.transfer(msg.sender, currentBandCollatoralized));
-      currentBandCollatoralized = 0;
-    }
-    commToken.transferOwnership(msg.sender);
   }
 
   /**
@@ -349,7 +291,7 @@ contract CommunityCore is BandContractBase, ERC165 {
    * @dev Deflate the community token by burning tokens from the given admin.
    * curveMultiplier will adjust up to make the equation is consistent.
    */
-  function deflate(uint256 amount) public onlyAdmin whenActive {
+  function deflate(uint256 amount) public onlyAdmin {
     require(commToken.burn(msg.sender, amount));
     _adjustcurveMultiplier();
     emit Deflate(msg.sender, amount);
@@ -364,7 +306,6 @@ contract CommunityCore is BandContractBase, ERC165 {
   function buy(address buyer, uint256 priceLimit, uint256 commAmount)
     external
     onlyFrom(address(bandToken))
-    whenActive
   {
     _adjustAutoInflation();
     uint256 adjustedPrice = getBuyPrice(commAmount);
@@ -386,7 +327,6 @@ contract CommunityCore is BandContractBase, ERC165 {
   function sell(address seller, uint256 commAmount, uint256 priceLimit)
     external
     onlyFrom(address(commToken))
-    whenActive
   {
     _adjustAutoInflation();
     uint256 salesCommission = params.getZeroable("core:sales_commission");

@@ -59,7 +59,6 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
     await this.comm.transferOwnership(this.core.address, { from: owner });
-    await this.core.activate(0, { from: owner });
 
     // alice buy 100 XCH
     const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
@@ -185,7 +184,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       // resolvePoll
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
-      //assertion
+      // assertion
       (await this.voting.polls(this.params.address, 2)).pollState
         .toString()
         .should.be.eq('2');
@@ -229,7 +228,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       // resolvePoll
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
-      //assertion
+      // assertion
       (await this.voting.polls(this.params.address, 2)).pollState
         .toString()
         .should.be.eq('3');
@@ -273,7 +272,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       // resolvePoll
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
-      //assertion
+      // assertion
       (await this.voting.polls(this.params.address, 2)).pollState
         .toString()
         .should.be.eq('2');

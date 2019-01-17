@@ -14,7 +14,7 @@ const Voting = artifacts.require('Voting');
 
 require('chai').should();
 
-contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
+contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.band = await BandToken.new(1000000, owner, { from: owner });
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
@@ -60,7 +60,6 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
     await this.comm.transferOwnership(this.core.address, { from: owner });
-    await this.core.activate(0, { from: owner });
   });
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
@@ -68,7 +67,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       await reverting(this.core.buy(alice, 100, 11000, { from: alice }));
     });
 
-    it("should not allow buying if buy doesn't have enough band", async () => {
+    it('should not allow buying if buy doesn\'t have enough band', async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await reverting(
         this.band.transferAndCall(
@@ -418,116 +417,6 @@ contract('CommunityCore', ([_, owner, alice, bob, carol, deactivator]) => {
       await increase(100);
       await this.core.deflate(10, { from: alice });
       (await this.core.curveMultiplier()).toString().should.eq('1234567901234');
-    });
-  });
-
-  context('Checking migration feature', () => {
-    beforeEach(async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
-      await this.band.transferAndCall(
-        this.core.address,
-        100000,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138),
-        { from: owner },
-      );
-      await this.band.transferAndCall(
-        this.core.address,
-        100000,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138),
-        { from: alice },
-      );
-    });
-
-    it('should not allow non-deactivator to deactivate', async () => {
-      await reverting(this.core.deactivate({ from: deactivator }));
-    });
-
-    context('After the contract is deactivated', () => {
-      beforeEach(async () => {
-        await this.params.propose(
-          [web3.utils.fromAscii('core:deactivator')],
-          [deactivator],
-          {
-            from: alice,
-          },
-        );
-        await this.voting.commitVote(
-          this.params.address,
-          2,
-          web3.utils.soliditySha3(100, 0, 42),
-          { from: owner },
-        );
-        await this.voting.commitVote(
-          this.params.address,
-          2,
-          web3.utils.soliditySha3(100, 0, 42),
-          { from: alice },
-        );
-        await increase(duration.seconds(60));
-        await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
-          from: owner,
-        });
-        await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
-          from: alice,
-        });
-        await increase(duration.seconds(60));
-        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
-        await this.core.deactivate({ from: deactivator });
-      });
-
-      it('should transfer band and comm ownership to deactivator', async () => {
-        (await this.band.balanceOf(this.core.address))
-          .toString()
-          .should.eq('0');
-        (await this.band.balanceOf(deactivator)).toString().should.eq('40000');
-        (await this.comm.owner()).should.eq(deactivator);
-      });
-
-      it('should not allow buy or sell or deflate or deactivate', async () => {
-        const calldata1 = this.core.contract.methods.buy(_, 0, 10).encodeABI();
-        await reverting(
-          this.band.transferAndCall(
-            this.core.address,
-            100000,
-            '0x' + calldata1.slice(2, 10),
-            '0x' + calldata1.slice(138),
-            { from: owner },
-          ),
-        );
-        const calldata2 = this.core.contract.methods.sell(_, 0, 10).encodeABI();
-        await reverting(
-          this.comm.transferAndCall(
-            this.core.address,
-            0,
-            '0x' + calldata2.slice(2, 10),
-            '0x' + calldata2.slice(138),
-            { from: owner },
-          ),
-        );
-        await reverting(this.core.deflate(10, { from: owner }));
-        await reverting(this.core.deactivate({ from: deactivator }));
-      });
-
-      it('should allow creating new community core with new equation', async () => {
-        const core = await CommunityCore.new(
-          this.band.address,
-          this.comm.address,
-          this.params.address,
-          [8, 1, 0, 3], // f(x) = x ^ 3
-          {
-            from: deactivator,
-          },
-        );
-
-        await this.band.approve(core.address, 100000, { from: deactivator });
-        await this.comm.transferOwnership(core.address, { from: deactivator });
-        await core.activate(40000, { from: deactivator });
-
-        (await core.currentBandCollatoralized()).toString().should.eq('40000');
-        (await core.curveMultiplier()).toString().should.eq('5000000000');
-      });
     });
   });
 
