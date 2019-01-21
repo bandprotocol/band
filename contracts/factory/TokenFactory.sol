@@ -3,7 +3,7 @@ pragma solidity 0.5.0;
 import "../CommunityToken.sol";
 
 
-library LibTokenFactory{
+contract TokenFactory{
   function create(
     string calldata _name,
     string calldata _symbol,
@@ -12,7 +12,9 @@ library LibTokenFactory{
     external
     returns(CommunityToken)
   {
-    return new CommunityToken(_name, _symbol, _decimals);
+    CommunityToken token = new CommunityToken(_name, _symbol, _decimals);
+    token.transferOwnership(msg.sender);
+    return token;
   }
 }
 

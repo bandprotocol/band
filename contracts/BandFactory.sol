@@ -8,9 +8,9 @@ import "./CommunityToken.sol";
 import "./Parameters.sol";
 import "./VotingInterface.sol";
 
-import "./lib/LibTokenFactory.sol";
-import "./lib/LibParametersFactory.sol";
-import "./lib/LibCoreFactory.sol";
+import "./factory/TokenFactory.sol";
+import "./factory/ParametersFactory.sol";
+import "./factory/CoreFactory.sol";
 
 
 contract BandFactory is Ownable {
@@ -38,11 +38,26 @@ contract BandFactory is Ownable {
   BandToken public band;
   CommunityCore[] public cores;
 
+  TokenFactory public tokenFactory;
+  ParametersFactory public parametersFactory;
+  CoreFactory public coreFactory;
+
   mapping (address => bool) public verifiedVotingContracts;
 
-  constructor(uint256 totalSupply) public {
-    band = new BandToken(totalSupply, msg.sender);
-    emit BandCreated(address(band), msg.sender, totalSupply);
+  constructor(
+    uint256 _totalSupply,
+    TokenFactory _tokenFactory,
+    ParametersFactory _parametersFactory,
+    CoreFactory _coreFactory
+  )
+    public
+  {
+    band = new BandToken(_totalSupply, msg.sender);
+    tokenFactory = _tokenFactory;
+    parametersFactory = _parametersFactory;
+    coreFactory = _coreFactory;
+
+    emit BandCreated(address(band), msg.sender, _totalSupply);
   }
 
   function createNewCommunity(
@@ -58,9 +73,9 @@ contract BandFactory is Ownable {
     returns(bool)
   {
     require(verifiedVotingContracts[address(_voting)]);
-    CommunityToken token = LibTokenFactory.create(_name, _symbol, _decimals);
-    Parameters params = LibParametersFactory.create(token, _voting, _keys, _values);
-    CommunityCore core = LibCoreFactory.create(band, token, params, _expressions);
+    CommunityToken token = tokenFactory.create(_name, _symbol, _decimals);
+    Parameters params = parametersFactory.create(token, _voting, _keys, _values);
+    CommunityCore core = coreFactory.create(band, token, params, _expressions);
 
     token.transferOwnership(address(core));
     cores.push(core);

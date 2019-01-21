@@ -4,7 +4,7 @@ import "../CommunityToken.sol";
 import "../Parameters.sol";
 
 
-library LibParametersFactory{
+contract ParametersFactory{
   function create(
     CommunityToken _token,
     VotingInterface _voting,

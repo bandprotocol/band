@@ -5,7 +5,7 @@ import "../Parameters.sol";
 import "../CommunityCore.sol";
 
 
-library LibCoreFactory{
+contract CoreFactory{
   function create(
     BandToken _bandToken,
     CommunityToken _commToken,
