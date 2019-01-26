@@ -44,6 +44,16 @@ const BandApp = ({ name, src, link, author, description, children }) => (
             lineHeight={2}
           >
             {name}
+
+            {link && (
+              <AbsoluteLink
+                href={link}
+                style={{ marginLeft: 10, fontSize: '0.9em' }}
+                dark
+              >
+                <i class="fas fa-external-link-alt" />
+              </AbsoluteLink>
+            )}
           </Text>
         </Flex>
         <Text fontSize={14} color={colors.text.normal} fontWeight="500">
@@ -66,6 +76,7 @@ export default class CommunityPage extends React.Component {
           <Flex pt={[3, 4]} flexWrap="wrap">
             <BandApp
               name="CoinHatcher"
+              link="https://coinhatcher.com"
               src={CoinHatcherSrc}
               author="Band Protocol"
               description="The Bloomberg of Crypto. Coinhatcher is a decentralized data curation with a mission to provide trusted and reliable…"
@@ -84,6 +95,7 @@ export default class CommunityPage extends React.Component {
             </BandApp>
             <BandApp
               name="Shitcoin Survivors"
+              link="https://shitcoinsurvivors.com"
               src={ShitcoinSurvivorsSrc}
               author="Band Protocol"
               description="A fast-paced crypto-themed card game to mark the 204 capitulation. Buy their game and earn Survivorcoin from their…"
