@@ -22,7 +22,14 @@ import ShitcoinSurvivorsSrc from 'images/shitcoin-survivors.png'
 import WorkWithUsSrc from 'images/work-with-us.svg'
 
 const BandApp = ({ name, src, link, author, description, children }) => (
-  <Card variant="primary" flex={['', '0 0 340px']} p="14px" bg="#fff" m={2}>
+  <Card
+    variant="primary"
+    flex={['', '0 0 340px']}
+    p="14px"
+    bg="#fff"
+    m={2}
+    style={{ alignSelf: 'flex-start' }}
+  >
     <Flex
       flexDirection={['column-reverse', 'row']}
       alignItems="flex-start"
@@ -79,7 +86,7 @@ export default class CommunityPage extends React.Component {
               link="https://coinhatcher.com"
               src={CoinHatcherSrc}
               author="Band Protocol"
-              description="The Bloomberg of Crypto. Coinhatcher is a decentralized data curation with a mission to provide trusted and reliable…"
+              description="The Bloomberg of Crypto. Coinhatcher is a decentralized data curation with a mission to provide trusted and reliable information in blockchain industry."
             >
               <Flex p={2} justifyContent={['flex-start', 'center']}>
                 <Box bg="#eff2ff" p={2} my={1} style={{ borderRadius: '4px' }}>
@@ -98,7 +105,7 @@ export default class CommunityPage extends React.Component {
               link="https://shitcoinsurvivors.com"
               src={ShitcoinSurvivorsSrc}
               author="Band Protocol"
-              description="A fast-paced crypto-themed card game to mark the 204 capitulation. Buy their game and earn Survivorcoin from their…"
+              description="A fast-paced crypto-themed card game to mark the 2018 capitulation. Buy their game and earn Survivorcoin from their bonding curve."
             >
               <Flex p={2} justifyContent={['flex-start', 'center']}>
                 <Box bg="#eff2ff" p={2} my={1} style={{ borderRadius: '4px' }}>
@@ -116,7 +123,7 @@ export default class CommunityPage extends React.Component {
               name="Work with us"
               src={WorkWithUsSrc}
               author="Band Protocol"
-              description="A fast-paced crypto-themed card game to mark the 2018 capitulation. Buy their game and earn Survivorcoin from their…"
+              description="Already have an idea or working app. Want to incorporate Band protocol, contact us for help or grant query."
             >
               <Flex p={2} justifyContent={['flex-start', 'center']}>
                 <AbsoluteLink
