@@ -56,7 +56,7 @@ const BandApp = ({ name, src, link, author, description, children }) => (
             )}
           </Text>
         </Flex>
-        <Text fontSize={14} color={colors.text.normal} fontWeight="500">
+        <Text fontSize={13} color={colors.text.normal} fontWeight="500">
           By {author}
         </Text>
         <Text lineHeight={1.5} fontSize={12} my={3}>
@@ -116,10 +116,13 @@ export default class CommunityPage extends React.Component {
               name="Work with us"
               src={WorkWithUsSrc}
               author="Band Protocol"
-              description="A fast-paced crypto-themed card game to mark the 204 capitulation. Buy their game and earn Survivorcoin from their…"
+              description="A fast-paced crypto-themed card game to mark the 2018 capitulation. Buy their game and earn Survivorcoin from their…"
             >
               <Flex p={2} justifyContent={['flex-start', 'center']}>
-                <AbsoluteLink href="https://bandprotocol.typeform.com/to/A39Zgd">
+                <AbsoluteLink
+                  style={{ fontSize: 14 }}
+                  href="https://bandprotocol.typeform.com/to/A39Zgd"
+                >
                   <Button variant="primary">Apply Now!</Button>
                 </AbsoluteLink>
               </Flex>
