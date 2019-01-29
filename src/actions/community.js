@@ -4,6 +4,7 @@ export const SAVE_COMMUNITY_CLIENT = 'SAVE_COMMUNITY_CLIENT'
 export const saveCommunityInfo = (
   name,
   address,
+  author,
   logo,
   description,
   website,
@@ -14,6 +15,7 @@ export const saveCommunityInfo = (
   type: SAVE_COMMUNITY_INFO,
   name,
   address,
+  author,
   logo,
   description,
   website,

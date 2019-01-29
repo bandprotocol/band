@@ -22,6 +22,7 @@ function* baseInitialize() {
       saveCommunityInfo(
         dapp.name,
         dapp.address,
+        dapp.author,
         dapp.logo,
         dapp.description,
         dapp.website,
