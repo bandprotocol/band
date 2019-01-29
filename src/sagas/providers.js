@@ -1,21 +1,55 @@
-import { takeEvery, put } from 'redux-saga/effects'
-import { UPDATE_PROVIDER, setUserAddress, saveClient } from 'actions'
-
 import BandProtocolClient from 'band.js'
 
-function* handleUpdateProvider({ web3 }) {
-  if (web3) {
-    yield put(setUserAddress(web3.eth.accounts[0]))
+import { takeEvery, put, select, all } from 'redux-saga/effects'
+import {
+  UPDATE_PROVIDER,
+  setUserAddress,
+  saveBandClient,
+  saveCommunityClient,
+  removeBalance,
+  reloadBandBalance,
+  reloadCTBalance,
+} from 'actions'
+
+import { nameAndAddressCommunitySelector } from 'selectors/communities'
+import { currentBandClientSelector } from 'selectors/current'
+
+function* handleUpdateProvider({ address, provider }) {
+  if (address) {
+    yield put(setUserAddress(address))
     yield put(
-      saveClient(
+      saveBandClient(
         yield BandProtocolClient.make({
-          provider: window.web3.currentProvider,
+          provider,
         }),
       ),
     )
+    yield put(reloadBandBalance())
   } else {
     yield put(setUserAddress(null))
-    yield put(saveClient(yield BandProtocolClient.make({})))
+    yield put(saveBandClient(yield BandProtocolClient.make({})))
+    yield put(removeBalance())
+  }
+
+  const bandClient = yield select(currentBandClientSelector)
+  const dapps = yield select(nameAndAddressCommunitySelector)
+
+  for (const dapp of dapps.valueSeq()) {
+    yield put(
+      saveCommunityClient(
+        dapp.get('name'),
+        yield bandClient.at(dapp.get('address')),
+      ),
+    )
+  }
+
+  if (address) {
+    yield all(
+      dapps
+        .map(dapp => put(reloadCTBalance(dapp.get('name'))))
+        .valueSeq()
+        .toJS(),
+    )
   }
 }
 

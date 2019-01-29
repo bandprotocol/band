@@ -1,4 +1,7 @@
 import { combineReducers } from 'redux-immutable'
-import current from './current'
 
-export default combineReducers({ current })
+import band from 'reducers/band'
+import community from 'reducers/community'
+import current from 'reducers/current'
+
+export default combineReducers({ band, community, current })

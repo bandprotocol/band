@@ -1,12 +1,21 @@
-import createReducer from './creator'
+import createReducer from 'reducers/creator'
 
-import { SET_USER_ADDRESS, SAVE_CLIENT } from 'actions'
+import {
+  SET_USER_ADDRESS,
+  SAVE_BAND_CLIENT,
+  SAVE_COMMUNITY_CLIENT,
+} from 'actions'
 
 const handleSetUserAddress = (state, { address }) => state.set('user', address)
 
-const handleSaveClient = (state, { client }) => state.set('bandClient', client)
+const handleSaveBandClient = (state, { client }) =>
+  state.setIn(['client', 'band'], client)
+
+const handleSaveCommunityClient = (state, { name, client }) =>
+  state.setIn(['client', 'communities', name], client)
 
 export default createReducer({
   [SET_USER_ADDRESS]: handleSetUserAddress,
-  [SAVE_CLIENT]: handleSaveClient,
+  [SAVE_BAND_CLIENT]: handleSaveBandClient,
+  [SAVE_COMMUNITY_CLIENT]: handleSaveCommunityClient,
 })

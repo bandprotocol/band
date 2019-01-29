@@ -1,12 +1,22 @@
 export const UPDATE_PROVIDER = 'UPDATE_PROVIDER'
-export const SAVE_CLIENT = 'SAVE_CLIENT'
+export const SAVE_BAND_CLIENT = 'SAVE_BAND_CLIENT'
+export const SAVE_BAND_INFO = 'SAVE_BAND_INFO'
 
-export const updateProvider = web3 => ({
+export const updateProvider = (address, provider) => ({
   type: UPDATE_PROVIDER,
-  web3,
+  address,
+  provider,
 })
 
-export const saveClient = client => ({
-  type: SAVE_CLIENT,
+export const saveBandClient = client => ({
+  type: SAVE_BAND_CLIENT,
   client,
+})
+
+export const saveBandInfo = (address, totalSupply, latestPrice, last24hr) => ({
+  type: SAVE_BAND_INFO,
+  address,
+  totalSupply,
+  latestPrice,
+  last24hr,
 })

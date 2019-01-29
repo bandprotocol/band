@@ -1,32 +1,36 @@
-import BigNumber from 'utils/bignumber'
+import BN from 'utils/bignumber'
 
 export const SET_USER_ADDRESS = 'SET_USER_ADDRESS'
 
-export const RELOAD_MY_BAND_BALANCE = 'RELOAD_MY_BAND_BALANCE'
-export const RELOAD_MY_CT_BALANCE = 'RELOAD_MY_CT_BALANCE'
+export const RELOAD_BAND_BALANCE = 'RELOAD_BAND_BALANCE'
+export const RELOAD_CT_BALANCE = 'RELOAD_CT_BALANCE'
 
-export const SAVE_MY_BAND_BALANCE = 'SAVE_MY_BAND_BALANCE'
-export const SAVE_MY_CT_BALANCE = 'SAVE_MY_CT_BALANCE'
+export const SAVE_BAND_BALANCE = 'SAVE_BAND_BALANCE'
+export const SAVE_CT_BALANCE = 'SAVE_CT_BALANCE'
+
+export const REMOVE_BALANCE = 'REMOVE_BALANCE'
 
 export const setUserAddress = address => ({
   type: SET_USER_ADDRESS,
   address,
 })
 
-export const reloadMyBandBalance = () => ({ type: RELOAD_MY_BAND_BALANCE })
+export const reloadBandBalance = () => ({ type: RELOAD_BAND_BALANCE })
 
-export const reloadMyCTBalance = address => ({
-  type: RELOAD_MY_CT_BALANCE,
-  address,
+export const reloadCTBalance = communityName => ({
+  type: RELOAD_CT_BALANCE,
+  communityName,
 })
 
-export const saveMyBandBalance = balance => ({
-  type: SAVE_MY_BAND_BALANCE,
-  balance: BigNumber(balance),
+export const saveBandBalance = balance => ({
+  type: SAVE_BAND_BALANCE,
+  balance: BN(balance),
 })
 
-export const saveMyCTBalance = (address, balance) => ({
-  type: SAVE_MY_CT_BALANCE,
-  address,
-  balance: BigNumber(balance),
+export const saveCTBalance = (communityName, balance) => ({
+  type: SAVE_CT_BALANCE,
+  communityName,
+  balance: BN(balance),
 })
+
+export const removeBalance = () => ({ type: REMOVE_BALANCE })

@@ -1568,9 +1568,9 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
-band.js@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.3.tgz#dc85a14ce60c3cdf1e03eaba7f229bfe604d4dee"
+band.js@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.4.tgz#443dfc8bf872492c4da439d7a7a20774241ac2e5"
   dependencies:
     axios "^0.18.0"
     bignumber.js "^8.0.1"
