@@ -15,6 +15,7 @@ import { nameAndAddressCommunitySelector } from 'selectors/communities'
 import { currentBandClientSelector } from 'selectors/current'
 
 function* handleUpdateProvider({ address, provider }) {
+  yield put(removeBalance())
   if (address) {
     yield put(setUserAddress(address))
     yield put(
@@ -28,7 +29,6 @@ function* handleUpdateProvider({ address, provider }) {
   } else {
     yield put(setUserAddress(null))
     yield put(saveBandClient(yield BandProtocolClient.make({})))
-    yield put(removeBalance())
   }
 
   const bandClient = yield select(currentBandClientSelector)

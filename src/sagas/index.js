@@ -9,11 +9,11 @@ import BandProtocolClient from 'band.js'
 
 function* baseInitialize() {
   const tempBandClient = yield BandProtocolClient.make({})
-  const bandAddress = (yield tempBandClient.getBand()).address
+  const { address, price, last24Hrs } = yield tempBandClient.getBand()
 
   yield put(
     // TODO: Mock on price and last24hr
-    saveBandInfo(bandAddress, '1000000000000000000000000', '1.00', '+1.0%'),
+    saveBandInfo(address, '1000000000000000000000000', price, last24Hrs),
   )
 
   const dapps = yield tempBandClient.getDApps()
@@ -25,6 +25,9 @@ function* baseInitialize() {
         dapp.logo,
         dapp.description,
         dapp.website,
+        dapp.marketCap,
+        dapp.price,
+        dapp.last24Hrs,
       ),
     )
   }

@@ -4,13 +4,13 @@ import { SAVE_BAND_INFO, SAVE_BAND_BALANCE, REMOVE_BALANCE } from 'actions'
 
 const handleSaveBandInfo = (
   state,
-  { address, totalSupply, latestPrice, last24hr },
+  { address, totalSupply, latestPrice, last24Hrs },
 ) =>
   state
     .set('address', address)
     .set('totalSupply', totalSupply)
     .set('latestPrice', latestPrice)
-    .set('last24hrChange', last24hr)
+    .set('last24Hrs', last24Hrs)
 
 const handleSaveBandBalance = (state, { balance }) =>
   state.set('balance', balance)

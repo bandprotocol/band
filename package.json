@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "band.js": "^1.0.4",
+    "band.js": "^1.0.5",
     "bignumber.js": "^8.0.2",
     "immutable": "^4.0.0-rc.12",
     "react": "^16.7.0",

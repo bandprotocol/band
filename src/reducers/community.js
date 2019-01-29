@@ -5,8 +5,12 @@ import { Map } from 'immutable'
 
 const handleSaveCommunityInfo = (
   state,
-  { name, address, logo, description, website },
-) => state.set(name, Map({ address, logo, description, website }))
+  { name, address, logo, description, website, marketCap, price, last24Hrs },
+) =>
+  state.set(
+    name,
+    Map({ address, logo, description, website, marketCap, price, last24Hrs }),
+  )
 
 const handleSaveCTBalance = (state, { communityName, balance }) =>
   state.setIn([communityName, 'balance'], balance)

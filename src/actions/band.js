@@ -13,10 +13,10 @@ export const saveBandClient = client => ({
   client,
 })
 
-export const saveBandInfo = (address, totalSupply, latestPrice, last24hr) => ({
+export const saveBandInfo = (address, totalSupply, latestPrice, last24Hrs) => ({
   type: SAVE_BAND_INFO,
   address,
   totalSupply,
   latestPrice,
-  last24hr,
+  last24Hrs,
 })
