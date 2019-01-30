@@ -6,6 +6,11 @@ export const currentUserSelector = createSelector(
   current => current.get('user'),
 )
 
+export const currentModalSelector = createSelector(
+  currentSelector,
+  current => current.get('modalName'),
+)
+
 export const currentBandClientSelector = createSelector(
   currentSelector,
   current => current.getIn(['client', 'band']),

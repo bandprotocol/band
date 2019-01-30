@@ -9,6 +9,7 @@ export default {
     light: '#f4f6fe',
   },
   text: {
+    grey: '#7c84a6',
     normal: '#4a4a4a',
   },
 }

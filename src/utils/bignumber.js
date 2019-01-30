@@ -1,10 +1,14 @@
 import BigNumber from 'bignumber.js'
-// import { web3 } from '../web3'
 
 const DIVISOR = BigNumber(10).pow(18)
 
 BigNumber.prototype.pretty = function() {
-  return this.div(DIVISOR).toFixed(2)
+  return this.div(DIVISOR)
+    .toNumber()
+    .toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximunFractionDigits: 2,
+    })
 }
 
 // BigNumber.prototype.hex = function() {

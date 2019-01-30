@@ -3,7 +3,8 @@ import './App.css'
 import { ThemeProvider } from 'styled-components'
 import theme from 'ui/theme'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Navbar from 'components/Navbar'
+import Navbar from 'containers/Navbar'
+import ModalEntry from 'containers/ModalEntry'
 
 import Routes from 'Routes'
 
@@ -15,6 +16,7 @@ class App extends Component {
           <React.Fragment>
             <Navbar />
             <Route component={Routes} />
+            <ModalEntry />
           </React.Fragment>
         </Router>
       </ThemeProvider>
