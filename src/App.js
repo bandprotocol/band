@@ -5,8 +5,7 @@ import theme from 'ui/theme'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Navbar from 'components/Navbar'
 
-/** Pages */
-import CommunitiesPage from './pages/Communities'
+import Routes from 'Routes'
 
 class App extends Component {
   render() {
@@ -15,7 +14,7 @@ class App extends Component {
         <Router>
           <React.Fragment>
             <Navbar />
-            <Route exact path="/" component={CommunitiesPage} />
+            <Route component={Routes} />
           </React.Fragment>
         </Router>
       </ThemeProvider>

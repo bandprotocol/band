@@ -15,7 +15,15 @@ const Description = styled(Text)`
   -webkit-box-orient: vertical;
 `
 
-const BandApp = ({ name, src, link, author, description, children }) => (
+const BandApp = ({
+  name,
+  src,
+  link,
+  author,
+  description,
+  children,
+  onClick,
+}) => (
   <Card
     variant="primary"
     flex={['', '0 0 340px']}
@@ -23,6 +31,7 @@ const BandApp = ({ name, src, link, author, description, children }) => (
     bg="#fff"
     m={2}
     style={{ alignSelf: 'flex-start' }}
+    onClick={onClick}
   >
     <Flex
       flexDirection={['column-reverse', 'row']}
@@ -79,7 +88,7 @@ const CommingSoon = () => (
   </Flex>
 )
 
-const CommunityPage = ({ communities }) => (
+const CommunityPage = ({ communities, history }) => (
   <React.Fragment>
     <PageContainer>
       <Flex pt={[3, 4]} flexWrap="wrap">
@@ -91,6 +100,7 @@ const CommunityPage = ({ communities }) => (
             description={description}
             author={author}
             link={website}
+            onClick={() => history.push(`/community/${name}/detail`)}
           >
             <CommingSoon />
           </BandApp>
