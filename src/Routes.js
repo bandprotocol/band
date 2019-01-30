@@ -11,9 +11,40 @@ export default ({ match, location }) => (
     <ScrollToTop />
     <Switch location={location}>
       <Route
-        path="/community/:community/detail"
-        render={({ match, history }) => (
-          <CommunityDetail communityName={match.params.community} />
+        path="/community/:community"
+        render={({ match, history, location }) => (
+          <React.Fragment>
+            {/* Sidebar here */}
+            <Switch>
+              <Route
+                path="/community/:community/detail"
+                render={({ match }) => (
+                  <CommunityDetail communityName={match.params.community} />
+                )}
+              />
+              <Route
+                path="/community/:community/reward"
+                render={({ match }) => <div>reward</div>}
+              />
+              <Route
+                path="/community/:community/governance"
+                render={({ match }) => <div>governance</div>}
+              />
+              <Route
+                path="/community/:community/proposal"
+                render={({ match }) => <div>proposal</div>}
+              />
+              <Route
+                path="/community/:community"
+                exact
+                render={({ match }) => (
+                  <Redirect
+                    to={`/community/${match.params.community}/detail`}
+                  />
+                )}
+              />
+            </Switch>
+          </React.Fragment>
         )}
       />
       <Route exact path="/" component={CommunitiesPage} />
