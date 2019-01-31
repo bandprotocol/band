@@ -1,4 +1,5 @@
 import createReducer from 'reducers/creator'
+import { Map } from 'immutable'
 
 import {
   SET_USER_ADDRESS,
@@ -16,10 +17,16 @@ const handleSaveBandClient = (state, { client }) =>
 const handleSaveCommunityClient = (state, { name, client }) =>
   state.setIn(['client', 'communities', name], client)
 
-const handleShowModal = (state, { modalName }) =>
-  state.set('modalName', modalName)
+const handleShowModal = (state, { modalName, communityName }) =>
+  state.set(
+    'modal',
+    Map({
+      name: modalName,
+      community: communityName,
+    }),
+  )
 
-const handleHideModal = (state, _) => state.delete('modalName')
+const handleHideModal = (state, _) => state.delete('modal')
 
 export default createReducer({
   [SET_USER_ADDRESS]: handleSetUserAddress,

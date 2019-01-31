@@ -8,7 +8,7 @@ export const currentUserSelector = createSelector(
 
 export const currentModalSelector = createSelector(
   currentSelector,
-  current => current.get('modalName'),
+  current => current.get('modal'),
 )
 
 export const currentBandClientSelector = createSelector(

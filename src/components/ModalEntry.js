@@ -1,7 +1,10 @@
 import React from 'react'
 import Modal from 'react-modal'
-import LoginModal from 'containers/LoginModal'
 import { Box } from 'ui/common'
+
+// modal
+import LoginModal from 'containers/LoginModal'
+import BuySellModal from 'containers/BuySellModal'
 
 const modalStyle = {
   overlay: {
@@ -16,24 +19,26 @@ const modalStyle = {
     position: 'absolute',
     top: '120px',
     width: '477px',
-    height: '469px',
-    border: '1px solid #ccc',
+    height: '489px',
+    border: '0px solid #ccc',
     background: '#fff',
     overflow: 'auto',
     WebkitOverflowScrolling: 'touch',
-    borderRadius: '4px',
+    borderRadius: '6px',
     outline: 'none',
-    padding: '20px',
+    padding: '0px',
     margin: '0 auto',
   },
 }
 
-export default ({ modalName }) => (
+export default ({ modalName, communityName }) => (
   <Modal style={modalStyle} isOpen={!!modalName} contentLabel={modalName}>
     {modalName == 'LOGIN' ? (
       <LoginModal />
-    ) : modalName === 'BUY' || modalName === 'SELL' ? (
-      <Box />
+    ) : modalName === 'BUY' ? (
+      <BuySellModal type="BUY" communityName={communityName} />
+    ) : modalName === 'SELL' ? (
+      <BuySellModal type="SELL" communityName={communityName} />
     ) : (
       <Box />
     )}

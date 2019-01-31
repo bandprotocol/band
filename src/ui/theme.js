@@ -47,6 +47,34 @@ export default {
         backgroundColor: '#FFFBFB',
       },
     },
+    submit: {
+      fontFamily: 'Montserrat, sans-serif',
+      fontWeight: 400,
+      fontSize: '0.85em',
+      padding: '0.9em 3em',
+      cursor: 'pointer',
+      color: '#fff',
+      backgroundColor: colors.green.normal,
+      border: `solid 1px ${colors.green.normal}`,
+      transition: 'all 250ms',
+      '&:hover': {
+        backgroundColor: '#0eb23f',
+      },
+    },
+    cancel: {
+      fontFamily: 'Montserrat, sans-serif',
+      fontWeight: 400,
+      fontSize: '0.85em',
+      padding: '0.9em 3em',
+      cursor: 'pointer',
+      color: '#fff',
+      backgroundColor: colors.red.normal,
+      border: `solid 1px ${colors.red.normal}`,
+      transition: 'all 250ms',
+      '&:hover': {
+        backgroundColor: '#d61330',
+      },
+    },
   },
   cards: {
     primary: {

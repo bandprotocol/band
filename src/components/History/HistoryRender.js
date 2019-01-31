@@ -43,6 +43,9 @@ export default ({ options, selectedOption, onChange }) => (
     height="560px"
     width="870px"
     bg="#fff"
+    mx="auto"
+    mt="10px"
+    mb="10px"
     style={{ alignSelf: 'flex-start' }}
   >
     <Flex flexDirection="column" py={3}>
