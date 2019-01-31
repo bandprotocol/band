@@ -1,10 +1,7 @@
 import { connect } from 'react-redux'
-
-import { withRouter } from 'react-router-dom'
+import SideBar from 'components/Sidebar'
 
 import { communityDetailSelector } from 'selectors/communities'
-
-import CommunityDesciption from 'components/CommunityDescriptionRender'
 
 const mapStateToProps = (state, { communityName }) => {
   const community = communityDetailSelector(state, { name: communityName })
@@ -12,10 +9,9 @@ const mapStateToProps = (state, { communityName }) => {
   return {
     name: communityName,
     src: community.get('logo'),
-    link: community.get('website'),
-    author: community.get('author'),
-    description: community.get('description'),
+    balance: community.get('balance'),
+    symbol: 'RRR', // TODO: redux-saga
   }
 }
 
-export default withRouter(connect(mapStateToProps)(CommunityDesciption))
+export default connect(mapStateToProps)(SideBar)

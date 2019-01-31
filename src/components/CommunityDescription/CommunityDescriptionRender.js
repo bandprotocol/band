@@ -5,10 +5,10 @@ import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
 export default ({ name, src, link, author, description }) => (
   <Card
     variant="detail"
-    flex={['', '0 0 340px']}
     p="25px"
     bg="#fff"
     style={{ alignSelf: 'flex-start' }}
+    m="20px auto"
   >
     <Flex
       flexDirection={['column-reverse', 'row']}
