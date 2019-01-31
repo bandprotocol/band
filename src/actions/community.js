@@ -3,6 +3,7 @@ export const SAVE_COMMUNITY_CLIENT = 'SAVE_COMMUNITY_CLIENT'
 
 export const saveCommunityInfo = (
   name,
+  symbol,
   address,
   author,
   logo,
@@ -14,6 +15,7 @@ export const saveCommunityInfo = (
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
+  symbol,
   address,
   author,
   logo,

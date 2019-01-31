@@ -7,6 +7,7 @@ const handleSaveCommunityInfo = (
   state,
   {
     name,
+    symbol,
     address,
     logo,
     description,
@@ -21,6 +22,7 @@ const handleSaveCommunityInfo = (
     name,
     Map({
       address,
+      symbol,
       logo,
       description,
       website,

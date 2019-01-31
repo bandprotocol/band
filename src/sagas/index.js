@@ -23,6 +23,7 @@ function* baseInitialize() {
     yield put(
       saveCommunityInfo(
         dapp.name,
+        dapp.symbol,
         dapp.address,
         dapp.author,
         dapp.logo,

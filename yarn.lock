@@ -4944,6 +4944,16 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.yarnpkg.com/hex-color-regex/-/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha512-l9sfDFsuqtOqKDsQdqrMRk0U85RZc0RtOR9yPI7mRVOa4FsR/BVnZ0shmQRM96Ji99kYZP/7hn1cedc1+ApsTQ==
 
+highcharts-react-official@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/highcharts-react-official/-/highcharts-react-official-2.0.0.tgz#3e4a8a2cd9a894a55f72ff7967b6573e47ec30c1"
+  integrity sha512-pEf1HBCmkJlIY6lAkjKXjjxaqZWUwcNcKrEIM2CFhXtLcl5VntiSgiVXe/pkDXyZG94mM90c72Z+8rnJ8ua6Dw==
+
+highcharts@^7.0.2:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-7.0.2.tgz#18a59814d3ca61efa593e3141941147327e9eafb"
+  integrity sha512-0PnX/pzhpoZiLkQ3uN1FgXFM4Y5DFfN58mtTxh1me6sJ3eX+b0/asDgF17yOe4BfQat4xnE9TvgsJwYESTB3XA==
+
 history@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/history/-/history-4.7.2.tgz#22b5c7f31633c5b8021c7f4a8a954ac139ee8d5b"
@@ -6980,6 +6990,11 @@ mock-fs@^4.1.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.7.0.tgz#9f17e219cacb8094f4010e0a8c38589e2b33c299"
   integrity sha512-WlQNtUlzMRpvLHf8dqeUmNqfdPjGY29KrJF50Ldb4AcL+vQeR8QH3wQcFMgrhTwb1gHjZn9xggho+84tBskLgA==
+
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 move-concurrently@^1.0.1:
   version "1.0.1"

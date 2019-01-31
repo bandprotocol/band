@@ -19,7 +19,7 @@ import {
 
 const HistoryRow = ({ time, price, amount, type }) => (
   <Flex flexDirection="row" py={4}>
-    <Text pl="56.5px" color={colors.text} fontSize={0}>
+    <Text pl="56.5px" color={colors.text} fontSize={0} letterSpacing="0.5px">
       {time}
     </Text>
     <Text pl="83.5px" color={colors.text} fontSize={0}>
@@ -42,7 +42,7 @@ export default ({ items }) => (
   <React.Fragment>
     {items.map(({ time, price, amount, type }) => (
       <HistoryRow
-        time={time}
+        time={time.formal()}
         price={price.pretty()}
         amount={amount.pretty()}
         type={type}

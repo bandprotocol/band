@@ -1,5 +1,6 @@
 import createReducer from 'reducers/creator'
 
+import moment from 'utils/moment'
 import { ADD_ORDERS } from 'actions'
 import { Map } from 'immutable'
 
@@ -11,7 +12,7 @@ const handleAddOrders = (state, { name, orders }) => {
       acc.set(
         order.tx_hash,
         Map({
-          time: order.block_time,
+          time: moment(order.block_time),
           price: BN(order.price),
           amount: BN(order.value),
           type: order.order_type,

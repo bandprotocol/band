@@ -5,7 +5,10 @@
   "dependencies": {
     "band.js": "^1.0.12",
     "bignumber.js": "^8.0.2",
+    "highcharts": "^7.0.2",
+    "highcharts-react-official": "^2.0.0",
     "immutable": "^4.0.0-rc.12",
+    "moment": "^2.24.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-mailchimp-subscribe": "^2.0.2",

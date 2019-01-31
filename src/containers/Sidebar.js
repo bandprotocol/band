@@ -10,7 +10,7 @@ const mapStateToProps = (state, { communityName }) => {
     name: communityName,
     src: community.get('logo'),
     balance: community.get('balance'),
-    symbol: 'RRR', // TODO: redux-saga
+    symbol: community.get('symbol'),
   }
 }
 
