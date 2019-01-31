@@ -4,6 +4,7 @@ import { updateProvider, saveBandInfo, saveCommunityInfo } from 'actions'
 
 import balancesSaga from 'sagas/balances'
 import providersSaga from 'sagas/providers'
+import transactionsSaga from 'sagas/transaction'
 
 import BandProtocolClient from 'band.js'
 
@@ -49,6 +50,6 @@ function* checkProvider() {
 }
 
 export default function*() {
-  yield all([fork(providersSaga), fork(balancesSaga)])
+  yield all([fork(providersSaga), fork(balancesSaga), fork(transactionsSaga)])
   yield* baseInitialize()
 }
