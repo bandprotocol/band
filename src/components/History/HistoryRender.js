@@ -1,7 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
+
+import HistoryBody from 'containers/HistoryBody'
+
 import Select from 'react-select'
-import { colors } from 'ui'
 import {
   Flex,
   Text,
@@ -16,6 +17,8 @@ import {
   Link,
   Card,
 } from 'ui/common'
+
+import { colors } from 'ui'
 
 const HistoryHeader = () => (
   <Flex flexDirection="row" py={3} bg="#f5f7ff" mt={3}>
@@ -34,61 +37,38 @@ const HistoryHeader = () => (
   </Flex>
 )
 
-const HistoryRow = ({ time, price, amount, type }) => (
-  <Flex flexDirection="row" py={4}>
-    <Text pl="56.5px" color={colors.text} fontSize={0}>
-      {time}
-    </Text>
-    <Text pl="83.5px" color={colors.text} fontSize={0}>
-      {price}
-    </Text>
-    <Text pl="73px" color={colors.text} fontSize={0}>
-      {amount}
-    </Text>
-    <Text
-      pl="95px"
-      color={type === 'buy' ? colors.green : colors.red}
-      fontSize={0}
-    >
-      {type}
-    </Text>
-  </Flex>
-)
-
-export default ({ items, options, selectedOption, onChange }) =>
-  console.log(items) || (
-    <Card
-      variant="primary"
-      height="560px"
-      width="870px"
-      bg="#fff"
-      style={{ alignSelf: 'flex-start' }}
-    >
-      <Flex flexDirection="column" py={3}>
-        <Flex flexDirection={'row'} alignItems="flex-start">
-          <Text
-            color={colors.purple.dark}
-            fontSize={2}
-            fontWeight="bold"
-            p={3}
-            pl={4}
-          >
-            Order History
-          </Text>
-          <Box ml="auto" mr={5} width="200px" mt={2}>
-            <Select
-              value={selectedOption}
-              onChange={onChange}
-              options={options}
-            />
-          </Box>
-        </Flex>
-        {/* Table Head */}
-        <HistoryHeader />
-        {/* Table Body */}
-        {items.map(({ time, price, amount, type }) => (
-          <HistoryRow time={time} price={price} amount={amount} type={type} />
-        ))}
+export default ({ options, selectedOption, onChange }) => (
+  <Card
+    variant="primary"
+    height="560px"
+    width="870px"
+    bg="#fff"
+    style={{ alignSelf: 'flex-start' }}
+  >
+    <Flex flexDirection="column" py={3}>
+      <Flex flexDirection={'row'} alignItems="flex-start">
+        <Text
+          color={colors.purple.dark}
+          fontSize={2}
+          fontWeight="bold"
+          p={3}
+          pl={4}
+        >
+          Order History
+        </Text>
+        <Box ml="auto" mr={5} width="200px" mt={2}>
+          <Select
+            value={selectedOption}
+            onChange={onChange}
+            options={options}
+          />
+        </Box>
       </Flex>
-    </Card>
-  )
+      <HistoryHeader />
+      <HistoryBody
+        communityName="CoinHatcher"
+        isAll={selectedOption.value === 'all'}
+      />
+    </Flex>
+  </Card>
+)

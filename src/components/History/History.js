@@ -1,4 +1,5 @@
 import React from 'react'
+
 import HistoryRender from './HistoryRender'
 
 export default class History extends React.Component {
@@ -6,9 +7,18 @@ export default class History extends React.Component {
     selectedOption: { value: 'all', label: 'All Orders' },
   }
 
+  componentDidMount() {
+    this.props.loadOrderHistory(this.state.selectedOption.value === 'all')
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.selectedOption.value !== this.state.selectedOption.value) {
+      this.props.loadOrderHistory(this.state.selectedOption.value === 'all')
+    }
+  }
+
   onChange(selectedOption) {
     this.setState({ selectedOption })
-    console.log(`Option selected:`, selectedOption)
   }
 
   render() {
@@ -20,7 +30,6 @@ export default class History extends React.Component {
 
     return (
       <HistoryRender
-        items={this.props.items}
         options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}

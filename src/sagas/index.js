@@ -3,6 +3,7 @@ import { currentUserSelector } from 'selectors/current'
 import { updateProvider, saveBandInfo, saveCommunityInfo } from 'actions'
 
 import balancesSaga from 'sagas/balances'
+import ordersSaga from 'sagas/orders'
 import providersSaga from 'sagas/providers'
 import transactionsSaga from 'sagas/transaction'
 
@@ -50,6 +51,11 @@ function* checkProvider() {
 }
 
 export default function*() {
-  yield all([fork(providersSaga), fork(balancesSaga), fork(transactionsSaga)])
+  yield all([
+    fork(providersSaga),
+    fork(balancesSaga),
+    fork(transactionsSaga),
+    fork(ordersSaga),
+  ])
   yield* baseInitialize()
 }

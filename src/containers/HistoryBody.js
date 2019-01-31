@@ -2,18 +2,24 @@ import { connect } from 'react-redux'
 
 import { withRouter } from 'react-router-dom'
 
-// import { historySelector } from 'selectors/communities'
-
-import History from 'components/History'
+import HistoryBody from 'components/HistoryBody'
 
 import { loadOrderHistory } from 'actions'
+import { orderHistorySelector } from 'selectors/order'
+
+const mapStateToProps = (state, { communityName, isAll }) => ({
+  items: orderHistorySelector(state, {
+    name: communityName,
+    type: isAll,
+  }).toJS(),
+})
 
 const mapDispatchToProps = (dispatch, { communityName }) => ({
   loadOrderHistory: isAll => dispatch(loadOrderHistory(communityName, isAll)),
 })
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
-  )(History),
+  )(HistoryBody),
 )
