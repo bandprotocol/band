@@ -16,12 +16,16 @@ contract AdminSimple is AdminInterface {
 
   function addAdmin(address account) public returns (bool) {
     require(isAdmin(msg.sender));
+    require(!isAdmin(account));
+
     admins[account] = true;
     return true;
   }
 
   function removeAdmin(address account) public returns (bool) {
     require(isAdmin(msg.sender));
+    require(isAdmin(account));
+
     admins[account] = false;
     return true;
   }
