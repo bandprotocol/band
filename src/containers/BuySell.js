@@ -8,6 +8,7 @@ import { showModal } from 'actions'
 const mapDispatchToProps = (dispatch, { communityName }) => ({
   showBuy: () => dispatch(showModal('BUY', { communityName })),
   showSell: () => dispatch(showModal('SELL', { communityName })),
+  communityName,
 })
 
 export default withRouter(

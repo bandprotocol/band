@@ -38,7 +38,6 @@ BN.parse = function(value) {
 }
 
 BN.prototype.calculatePrice = function(amount) {
-  console.log(this.toString())
   return new BN(
     BigNumber(this.toString())
       .div(BigNumber(amount.toString()))

@@ -3,22 +3,7 @@ import styled from 'styled-components'
 import { Flex, Text, Button, Card } from 'ui/common'
 import Graph from 'containers/PriceGraph'
 
-// Mock Price data for 1 year
-const mockData = () => {
-  const startTime = 1483228800000
-  const data = [[startTime, Math.random() * 5000]]
-  for (let i = 0; i < 370; i++) {
-    data.push([
-      startTime + i * 1000 * 60 * 60 * 24,
-      Math.abs(
-        data[data.length - 1][1] + Math.floor(Math.random() * 1000 - 500),
-      ),
-    ])
-  }
-  return data
-}
-
-export default ({ showBuy, showSell }) => (
+export default ({ showBuy, showSell, communityName }) => (
   <Card
     variant="primary"
     height="560px"
@@ -32,8 +17,7 @@ export default ({ showBuy, showSell }) => (
   >
     <Flex flexDirection="column">
       {/* Price Chart here*/}
-      {/* TODO: just hack for demo, it will be fixed asap  */}
-      <Graph communityName="CoinHatcher" />
+      <Graph communityName={communityName} />
       {/* Buy Sell Button */}
       <Flex
         flexDirection="row"
