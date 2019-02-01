@@ -3,37 +3,32 @@ import React from 'react'
 import HistoryBody from 'containers/HistoryBody'
 
 import Select from 'react-select'
-import {
-  Flex,
-  Text,
-  BackgroundCard,
-  H1,
-  Button,
-  Image,
-  Box,
-  H3,
-  H4,
-  AbsoluteLink,
-  Link,
-  Card,
-} from 'ui/common'
+import { Flex, Text, Box, Card } from 'ui/common'
 
 import { colors } from 'ui'
 
 const HistoryHeader = () => (
   <Flex flexDirection="row" py={3} bg="#f5f7ff" mt={3}>
-    <Text pl="56.5px" color={colors.purple.dark} fontSize={0} fontWeight="bold">
-      Time
-    </Text>
-    <Text pl="172px" color={colors.purple.dark} fontSize={0} fontWeight="bold">
-      Price(BAND)
-    </Text>
-    <Text pl="73px" color={colors.purple.dark} fontSize={0} fontWeight="bold">
-      Amount
-    </Text>
-    <Text pl="108px" color={colors.purple.dark} fontSize={0} fontWeight="bold">
-      Type
-    </Text>
+    <Box flex="0 0 270px" pl="55px">
+      <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
+        Time
+      </Text>
+    </Box>
+    <Box flex="0 0 180px">
+      <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
+        Price(BAND)
+      </Text>
+    </Box>
+    <Box flex="0 0 180px">
+      <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
+        Amount
+      </Text>
+    </Box>
+    <Box flex={1}>
+      <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
+        Type
+      </Text>
+    </Box>
   </Flex>
 )
 

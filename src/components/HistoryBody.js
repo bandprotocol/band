@@ -19,22 +19,26 @@ import {
 
 const HistoryRow = ({ time, price, amount, type }) => (
   <Flex flexDirection="row" py={4}>
-    <Text pl="56.5px" color={colors.text} fontSize={0} letterSpacing="0.5px">
-      {time}
-    </Text>
-    <Text pl="83.5px" color={colors.text} fontSize={0}>
-      {price}
-    </Text>
-    <Text pl="73px" color={colors.text} fontSize={0}>
-      {amount}
-    </Text>
-    <Text
-      pl="95px"
-      color={type === 'Buy' ? colors.green : colors.red}
-      fontSize={0}
-    >
-      {type}
-    </Text>
+    <Box flex="0 0 270px" pl="55px">
+      <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
+        {time}
+      </Text>
+    </Box>
+    <Box flex="0 0 180px">
+      <Text color={colors.text} fontSize={0}>
+        {price}
+      </Text>
+    </Box>
+    <Box flex="0 0 180px">
+      <Text color={colors.text} fontSize={0}>
+        {amount}
+      </Text>
+    </Box>
+    <Box flex={1}>
+      <Text color={type === 'Buy' ? colors.green : colors.red} fontSize={0}>
+        {type}
+      </Text>
+    </Box>
   </Flex>
 )
 

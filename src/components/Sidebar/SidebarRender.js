@@ -16,24 +16,72 @@ const Left = styled.div`
   flex-direction: column;
   background: #ffffff;
   position: sticky;
+  top: 80px;
 `
 const FocusStyle = {
   background: '#eaeeff',
   borderLeft: '4px solid #8868ff',
 }
 
-export default ({ name, src, balance, symbol }) => (
+const TextClickable = styled(Text)`
+  cursor: pointer;
+`
+
+const HighlightSymbolOrUSD = ({ symbol, isSymbol, toggle }) => {
+  return (
+    <Flex ml={1}>
+      {isSymbol ? (
+        <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="11px">
+          {symbol}
+        </Text>
+      ) : (
+        <TextClickable
+          color={colors.text.grey}
+          onClick={toggle}
+          fontSize="11px"
+        >
+          {symbol}
+        </TextClickable>
+      )}
+      <Text px={0} color={colors.text.grey} fontSize="11px">
+        /
+      </Text>
+      {isSymbol ? (
+        <TextClickable
+          color={colors.text.grey}
+          onClick={toggle}
+          fontSize="11px"
+        >
+          USD
+        </TextClickable>
+      ) : (
+        <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="11px">
+          USD
+        </Text>
+      )}
+    </Flex>
+  )
+}
+
+export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
       <Image src={src} width="70px" height="70px" m={3} borderRadius="50%" />
-      <Text py={1} color={colors.text.grey} fontSize="16px">
+      <Text py={1} color={colors.text.grey} fontSize="16px" fontWeight="bold">
         {name}
       </Text>
-      {balance !== undefined ? (
-        <Text py={1}>
-          {balance.pretty()} {symbol} / USD
-        </Text>
-      ) : null}
+      <Flex flexDirection="row" alignItems="center" py={1}>
+        {balance !== undefined ? (
+          <Text color={colors.text.grey} fontSize={2}>
+            {balance.pretty()}
+          </Text>
+        ) : null}
+        <HighlightSymbolOrUSD
+          symbol={symbol}
+          isSymbol={isSymbol}
+          toggle={toggleBalance}
+        />
+      </Flex>
       <Flex flexDirection="column" py={5}>
         <Text fontWeight="bold" px={4} pb={3}>
           MENU
