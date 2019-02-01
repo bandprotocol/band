@@ -15,9 +15,11 @@ export default class Sidebar extends React.Component {
   }
 
   render() {
-    const { name, src, balance, symbol } = this.props
+    const { name, src, balance, symbol, communityPrice, bandPrice } = this.props
     const balanceToggled =
-      this.state.isSymbol || !balance ? balance : balance.mul(new BN('31.24')) //TODO: HardCode BND to USD Convertion rate
+      this.state.isSymbol || !balance
+        ? balance
+        : balance.communityToBand(communityPrice).bandToUSD(bandPrice)
 
     return (
       <SidebarRender

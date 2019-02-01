@@ -13,6 +13,22 @@ BN.prototype.pretty = function() {
     })
 }
 
+BN.prototype.communityToBand = function(communityPrice) {
+  return new BN(
+    BigNumber(this.toString())
+      .multipliedBy(BigNumber(communityPrice.toString()).dividedBy(DIVISOR))
+      .toFixed(0),
+  )
+}
+
+BN.prototype.bandToUSD = function(bandPrice) {
+  return new BN(
+    BigNumber(this.toString())
+      .multipliedBy(BigNumber(bandPrice))
+      .toFixed(0),
+  )
+}
+
 BN.parse = function(value) {
   if (BN.isBN(value)) {
     return value
