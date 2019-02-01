@@ -2,6 +2,8 @@ import { connect } from 'react-redux'
 
 import { currentModalSelector } from 'selectors/current'
 
+import { hideModal } from 'actions'
+
 import ModalEntry from 'components/ModalEntry'
 
 const mapStateToProps = (state, props) => {
@@ -13,4 +15,11 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-export default connect(mapStateToProps)(ModalEntry)
+const mapDispatchToProps = (dispatch, props) => ({
+  hideModal: () => dispatch(hideModal()),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ModalEntry)

@@ -9,7 +9,12 @@ const AmountInput = styled.input`
   border: 0px;
   font-size: 16px;
 `
-
+const BoxStyle = {
+  width: '370px',
+  height: '45px',
+  border: '1px solid #cbcfe3',
+  borderRadius: '2px',
+}
 const BuySellHeader = ({ type, setType }) => (
   <Flex
     flexDirection="row"
@@ -57,16 +62,7 @@ const BuySellHeader = ({ type, setType }) => (
 )
 
 const TokenIndex = ({ name, logo }) => (
-  <Box
-    bg="#f4f6ff"
-    my={3}
-    width="370px"
-    style={{
-      height: '45px',
-      border: '1px solid #cbcfe3',
-      borderRadius: '2px',
-    }}
-  >
+  <Box bg="#f4f6ff" my={3} mx="auto" style={BoxStyle}>
     <Flex flexDirection="row">
       <Image
         src={logo}
@@ -84,16 +80,7 @@ const TokenIndex = ({ name, logo }) => (
 )
 
 const Amount = ({ handleChange }) => (
-  <Box
-    bg="#ffffff"
-    my={3}
-    width="370px"
-    style={{
-      height: '45px',
-      border: '1px solid #cbcfe3',
-      borderRadius: '2px',
-    }}
-  >
+  <Box bg="#ffffff" my={3} mx="auto" style={BoxStyle}>
     <Flex flexDirection="row">
       <AmountInput
         type="number"
@@ -109,6 +96,7 @@ const Advance = ({ handleChange, showAdvance, toggleAdvance }) => (
   <Box
     bg="#ffffff"
     my={3}
+    mx="auto"
     width="370px"
     style={{
       border: '1px solid #cbcfe3',
@@ -163,14 +151,23 @@ const Advance = ({ handleChange, showAdvance, toggleAdvance }) => (
 )
 
 const BuySellButton = ({ name, type }) => (
-  <Button variant={type === 'BUY' ? 'submit' : 'cancel'} mt={3} width="395px">
-    <Flex flexDirection="row" width="100%">
+  <Button
+    variant={type === 'BUY' ? 'submit' : 'cancel'}
+    my={3}
+    width="395px"
+    style={{ height: '60px' }}
+    mx={3}
+  >
+    <Flex flexDirection="row" alignItems="center">
       {type === 'BUY' ? (
-        <Text>Buy {name} Token</Text>
+        <Text fontSize={2}>Buy {name} Token</Text>
       ) : (
-        <Text>Sell {name} Token</Text>
+        <Text fontSize={2}>Sell {name} Token</Text>
       )}
-      <Text ml="auto">1000 CHT</Text>
+      <Text fontSize={2} ml="auto">
+        1000{' '}
+      </Text>
+      <Text pl={2}>CHT</Text>
     </Flex>
   </Button>
 )
@@ -202,6 +199,7 @@ export default ({
         fontSize={0}
         color={colors.purple.dark}
         fontWeight="bold"
+        ml={4}
         letterSpacing="-0.16px"
       >
         Amount
@@ -211,6 +209,7 @@ export default ({
         fontSize={0}
         color={colors.purple.dark}
         fontWeight="bold"
+        ml={4}
         letterSpacing="-0.16px"
       >
         Estimate Price
@@ -218,6 +217,7 @@ export default ({
       <Box
         bg="#f4f6ff"
         my={3}
+        mx="auto"
         width="370px"
         style={{
           height: '45px',

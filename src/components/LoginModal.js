@@ -34,6 +34,7 @@ export default ({ showModal, hideLogin }) => (
     alignItems="center"
     justifyContent="center"
     py={1}
+    mb={3}
   >
     <BackgroundCard
       width="487px"
