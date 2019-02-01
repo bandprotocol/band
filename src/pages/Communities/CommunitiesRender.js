@@ -88,43 +88,99 @@ const CommingSoon = () => (
   </Flex>
 )
 
-const CommunityPage = ({ communities, history }) => (
-  <React.Fragment>
-    <PageContainer>
-      <Flex pt={[3, 4]} flexWrap="wrap">
-        {communities.map(({ name, logo, description, website, author }) => (
-          <BandApp
-            key={name}
-            name={name}
-            src={logo}
-            description={description}
-            author={author}
-            link={website}
-            onClick={() => history.push(`/community/${name}/detail`)}
-          >
-            <CommingSoon />
-          </BandApp>
-        ))}
-        <BandApp
-          name="Work with us"
-          src={WorkWithUsSrc}
-          author="Band Protocol"
-          description="Already have an idea or working app. Want to incorporate Band protocol, contact us for help or grant query."
-        >
-          <Flex p={2} justifyContent={['flex-start', 'center']}>
-            <AbsoluteLink
-              style={{ fontSize: 14 }}
-              href="https://bandprotocol.typeform.com/to/A39Zgd"
-            >
-              <Button variant="primary" my={1}>
-                Apply Now!
-              </Button>
-            </AbsoluteLink>
-          </Flex>
-        </BandApp>
-      </Flex>
-    </PageContainer>
-  </React.Fragment>
+const PriceDetail = ({ marketCap, price, last24Hrs }) => (
+  <Flex
+    flexDirection="row"
+    pt={3}
+    pb={1}
+    justifyContent="space-around"
+    alignItems="center"
+  >
+    <Flex flexDirection="column" justifyContent="center" alignItems="center">
+      <Text fontSize="12px" fontWeight="bold" px={3}>
+        Market Cap
+      </Text>
+      <Text color={colors.purple.normal} fontSize={1} fontWeight="bold" py={2}>
+        $ 5M
+      </Text>
+    </Flex>
+    <Flex
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      px={3}
+    >
+      <Text fontSize="12px" fontWeight="bold" px={3}>
+        Price
+      </Text>
+      <Text color={colors.purple.normal} fontSize={1} fontWeight="bold" py={2}>
+        $ {price.pretty()}
+      </Text>
+    </Flex>
+    <Flex flexDirection="column" justifyContent="center" alignItems="center">
+      <Text fontSize="12px" fontWeight="bold" px={3}>
+        Last 24 hrs.
+      </Text>
+      <Text color={colors.purple.normal} fontSize={1} fontWeight="bold" py={2}>
+        {last24Hrs}
+      </Text>
+    </Flex>
+  </Flex>
 )
+
+const CommunityPage = ({ communities, history }) =>
+  console.log(communities) || (
+    <React.Fragment>
+      <PageContainer>
+        <Flex pt={[3, 4]} flexWrap="wrap">
+          {communities.map(
+            ({
+              name,
+              logo,
+              description,
+              website,
+              author,
+              marketCap,
+              price,
+              last24Hrs,
+            }) => (
+              <BandApp
+                key={name}
+                name={name}
+                src={logo}
+                description={description}
+                author={author}
+                link={website}
+                onClick={() => history.push(`/community/${name}/detail`)}
+              >
+                <PriceDetail
+                  marketCap={marketCap}
+                  price={price}
+                  last24Hrs={last24Hrs}
+                />
+              </BandApp>
+            ),
+          )}
+          <BandApp
+            name="Work with us"
+            src={WorkWithUsSrc}
+            author="Band Protocol"
+            description="Already have an idea or working app. Want to incorporate Band protocol, contact us for help or grant query."
+          >
+            <Flex p={2} justifyContent={['flex-start', 'center']}>
+              <AbsoluteLink
+                style={{ fontSize: 14 }}
+                href="https://bandprotocol.typeform.com/to/A39Zgd"
+              >
+                <Button variant="primary" my={1}>
+                  Apply Now!
+                </Button>
+              </AbsoluteLink>
+            </Flex>
+          </BandApp>
+        </Flex>
+      </PageContainer>
+    </React.Fragment>
+  )
 
 export default CommunityPage
