@@ -12,8 +12,8 @@ export const orderHistorySelector = createSelector(
       .filter(order => isAll || order.get('user') === user)
       .valueSeq()
       .sort((a, b) => {
-        if (a.block_time > b.block_time) return -1
-        if (a.block_time < b.block_time) return 1
+        if (a.get('time') > b.get('time')) return -1
+        if (a.get('time') < b.get('time')) return 1
         return 0
       })
   },
