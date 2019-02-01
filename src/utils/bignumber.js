@@ -37,5 +37,15 @@ BN.parse = function(value) {
   }
 }
 
+BN.prototype.calculatePrice = function(amount) {
+  console.log(this.toString())
+  return new BN(
+    BigNumber(this.toString())
+      .div(BigNumber(amount.toString()))
+      .times(DIVISOR)
+      .toFixed(0),
+  ).pretty()
+}
+
 window.BN = BN
 export default BN

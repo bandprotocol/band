@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Button, Card } from 'ui/common'
-import Graph from 'components/PriceGraph'
+import Graph from 'containers/PriceGraph'
 
 // Mock Price data for 1 year
 const mockData = () => {
@@ -32,7 +32,8 @@ export default ({ showBuy, showSell }) => (
   >
     <Flex flexDirection="column">
       {/* Price Chart here*/}
-      <Graph data={mockData()} />
+      {/* TODO: just hack for demo, it will be fixed asap  */}
+      <Graph communityName="CoinHatcher" />
       {/* Buy Sell Button */}
       <Flex
         flexDirection="row"

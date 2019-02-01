@@ -18,7 +18,7 @@ function* handleLoadHistory({ name, isAll }) {
 
   // TODO: Limit 10 hardcode
   const orders = yield client.getOrderHistory({
-    limit: 10,
+    limit: 100,
     user: isAll ? undefined : yield select(currentUserSelector),
   })
   yield put(addOrders(name, orders))
