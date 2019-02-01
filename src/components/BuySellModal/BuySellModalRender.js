@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, Flex, Box, Button, Text } from 'ui/common'
 import { colors } from 'ui'
 import styled from 'styled-components'
+import BN from 'utils/bignumber'
 
 const AmountInput = styled.input`
   width: 100%;
@@ -85,7 +86,7 @@ const Amount = ({ handleChange }) => (
       <AmountInput
         type="number"
         name="amount"
-        placeholder="0"
+        placeholder="ex.100"
         onChange={e => handleChange(e)}
       />
     </Flex>
@@ -150,9 +151,12 @@ const Advance = ({ handleChange, showAdvance, toggleAdvance }) => (
   </Box>
 )
 
-const BuySellButton = ({ name, type }) => (
+const BuySellButton = ({ name, type, amount }) => (
   <Button
-    variant={type === 'BUY' ? 'submit' : 'cancel'}
+    variant={
+      // submit is green, cancel is red
+      amount.eq(new BN('0')) ? 'disable' : type === 'BUY' ? 'submit' : 'cancel'
+    }
     my={3}
     width="395px"
     style={{ height: '60px' }}
@@ -176,6 +180,8 @@ export default ({
   name,
   logo,
   type,
+  price,
+  amount,
   handleChange,
   setType,
   showAdvance,
@@ -204,7 +210,7 @@ export default ({
       >
         Amount
       </Text>
-      <Amount handleChange={handleChange} />
+      <Amount handleChange={handleChange.bind(null, 'amount')} />
       <Text
         fontSize={0}
         color={colors.purple.dark}
@@ -212,7 +218,7 @@ export default ({
         ml={4}
         letterSpacing="-0.16px"
       >
-        Estimate Price
+        Estimated Price
       </Text>
       <Box
         bg="#f4f6ff"
@@ -229,16 +235,16 @@ export default ({
         <Flex flexDirection="row">
           {/* <Image src={} /> */}
           <Text fontSize={0} color={colors.purple.dark} pl={3} py={3}>
-            1209.23
+            {console.log(price) || price.pretty()}
           </Text>
         </Flex>
       </Box>
       <Advance
-        handleChange={handleChange}
+        handleChange={handleChange.bind(null, 'priceLimit')}
         showAdvance={showAdvance}
         toggleAdvance={toggleAdvance}
       />
-      <BuySellButton type={type} name={name} />
+      <BuySellButton type={type} name={name} amount={amount} />
     </Flex>
   </Flex>
 )

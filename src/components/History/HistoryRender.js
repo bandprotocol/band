@@ -64,6 +64,7 @@ export default ({ options, selectedOption, onChange }) => (
             value={selectedOption}
             onChange={onChange}
             options={options}
+            isSearchable={false}
           />
         </Box>
       </Flex>

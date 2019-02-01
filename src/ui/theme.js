@@ -75,6 +75,15 @@ export default {
         backgroundColor: '#d61330',
       },
     },
+    disable: {
+      fontFamily: 'Montserrat, sans-serif',
+      fontWeight: 400,
+      fontSize: '0.85em',
+      padding: '0.9em 3em',
+      cursor: 'pointer',
+      color: '#b1b8e7',
+      backgroundColor: '#e8ebfd',
+    },
   },
   cards: {
     primary: {

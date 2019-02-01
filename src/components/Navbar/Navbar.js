@@ -17,9 +17,7 @@ export default class Navbar extends React.Component {
   render() {
     const { balance, showLogin } = this.props
     const balanceToggled =
-      this.state.isBND || !balance
-        ? balance
-        : balance.multipliedBy(new BN('31.24')) //TODO: HardCode BND to USD Convertion rate
+      this.state.isBND || !balance ? balance : balance.mul(new BN('31.24')) //TODO: HardCode BND to USD Convertion rate
 
     return (
       <NavbarRender
