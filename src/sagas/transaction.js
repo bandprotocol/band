@@ -1,23 +1,73 @@
-import { takeEvery, put } from 'redux-saga/effects'
+import { takeEvery, put, select } from 'redux-saga/effects'
 import { channel } from 'redux-saga'
-import { TRACK_TRANSACTION, updateConfimation } from 'actions'
+import {
+  TRACK_TRANSACTION,
+  updateConfimation,
+  BUY_TOKEN,
+  SELL_TOKEN,
+  trackTransaction,
+  showModal,
+  hideModal,
+} from 'actions'
+
+import { currentCommunityClientSelector } from 'selectors/current'
+
+const UPDATE_CONFIRMATION = 'UPDATE_CONFIRMATION'
+const NEW_TRANSACTION = 'NEW_TRANSACTION'
 
 const confirmationChannel = channel()
 
 function handleTrackTransaction({ emitter }) {
-  emitter.on('confirmation', (confirmationNumber, receipt) => {
-    confirmationChannel.put({
-      txHash: receipt.transactionHash,
-      confirmationNumber,
+  emitter
+    .on('confirmation', (confirmationNumber, receipt) => {
+      confirmationChannel.put({
+        type: UPDATE_CONFIRMATION,
+        txHash: receipt.transactionHash,
+        confirmationNumber,
+      })
     })
-  })
+    .on('transactionHash', txHash => {
+      confirmationChannel.put({
+        type: NEW_TRANSACTION,
+        txHash,
+      })
+    })
 }
 
-function* handleConfirmChannel({ txHash, confirmationNumber }) {
-  yield put(updateConfimation(txHash, confirmationNumber))
+function* handleConfirmChannel({ type, txHash, confirmationNumber }) {
+  switch (type) {
+    case UPDATE_CONFIRMATION:
+      yield put(updateConfimation(txHash, confirmationNumber))
+      if (confirmationNumber === 12) {
+        yield put(hideModal())
+      }
+      return
+    case NEW_TRANSACTION:
+      yield put(updateConfimation(txHash, 0))
+      yield put(showModal('CONFIRMATION', { txHash }))
+      return
+    default:
+      return
+  }
+}
+
+function* handleBuyToken({ name, amount, priceLimit }) {
+  const client = yield select(currentCommunityClientSelector, { name })
+  const transaction = yield client.createBuyTransaction(amount, priceLimit)
+  const emitter = transaction.send()
+  yield put(trackTransaction(emitter))
+}
+
+function* handleSellToken({ name, amount, priceLimit }) {
+  const client = yield select(currentCommunityClientSelector, { name })
+  const transaction = yield client.createSellTransaction(amount, priceLimit)
+  const emitter = transaction.send()
+  yield put(trackTransaction(emitter))
 }
 
 export default function*() {
   yield takeEvery(confirmationChannel, handleConfirmChannel)
   yield takeEvery(TRACK_TRANSACTION, handleTrackTransaction)
+  yield takeEvery(BUY_TOKEN, handleBuyToken)
+  yield takeEvery(SELL_TOKEN, handleSellToken)
 }

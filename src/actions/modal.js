@@ -1,10 +1,10 @@
 export const SHOW_MODAL = 'SHOW_MODAL'
 export const HIDE_MODAL = 'HIDE_MODAL'
 
-export const showModal = (modalName, communityName) => ({
+export const showModal = (modalName, data) => ({
   type: SHOW_MODAL,
   modalName,
-  communityName,
+  data,
 })
 
 export const hideModal = () => ({

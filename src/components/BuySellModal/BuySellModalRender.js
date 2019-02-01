@@ -151,7 +151,7 @@ const Advance = ({ handleChange, showAdvance, toggleAdvance }) => (
   </Box>
 )
 
-const BuySellButton = ({ name, type, amount }) => (
+const BuySellButton = ({ name, type, amount, onClick }) => (
   <Button
     variant={
       // submit is green, cancel is red
@@ -161,6 +161,7 @@ const BuySellButton = ({ name, type, amount }) => (
     width="395px"
     style={{ height: '60px' }}
     mx={3}
+    onClick={onClick}
   >
     <Flex flexDirection="row" alignItems="center">
       {type === 'BUY' ? (
@@ -169,7 +170,7 @@ const BuySellButton = ({ name, type, amount }) => (
         <Text fontSize={2}>Sell {name} Token</Text>
       )}
       <Text fontSize={2} ml="auto">
-        1000{' '}
+        {amount.pretty()}
       </Text>
       <Text pl={2}>CHT</Text>
     </Flex>
@@ -186,6 +187,7 @@ export default ({
   setType,
   showAdvance,
   toggleAdvance,
+  onButtonClick,
 }) => (
   <Flex flexDirection="column" alignItems="center" justifyContent="center">
     {/* Header */}
@@ -235,7 +237,7 @@ export default ({
         <Flex flexDirection="row">
           {/* <Image src={} /> */}
           <Text fontSize={0} color={colors.purple.dark} pl={3} py={3}>
-            {console.log(price) || price.pretty()}
+            {price.pretty()}
           </Text>
         </Flex>
       </Box>
@@ -244,7 +246,12 @@ export default ({
         showAdvance={showAdvance}
         toggleAdvance={toggleAdvance}
       />
-      <BuySellButton type={type} name={name} amount={amount} />
+      <BuySellButton
+        type={type}
+        name={name}
+        amount={amount}
+        onClick={onButtonClick}
+      />
     </Flex>
   </Flex>
 )

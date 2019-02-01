@@ -6,6 +6,7 @@ import styled from 'styled-components'
 // modal
 import LoginModal from 'containers/LoginModal'
 import BuySellModal from 'containers/BuySellModal'
+import ConfirmModal from 'containers/ConfirmModal'
 
 const Overlay = styled.div`
   position: fixed;
@@ -30,7 +31,7 @@ const Content = styled.div`
   z-index: 3;
 `
 
-export default ({ modalName, communityName, hideModal }) =>
+export default ({ modalName, data, hideModal }) =>
   modalName !== undefined ? (
     <Overlay onClick={hideModal}>
       <Flex alignItems="center" justifyContent="center" pl="280px">
@@ -38,9 +39,11 @@ export default ({ modalName, communityName, hideModal }) =>
           {modalName == 'LOGIN' ? (
             <LoginModal />
           ) : modalName === 'BUY' ? (
-            <BuySellModal type="BUY" communityName={communityName} />
+            <BuySellModal type="BUY" communityName={data.communityName} />
           ) : modalName === 'SELL' ? (
-            <BuySellModal type="SELL" communityName={communityName} />
+            <BuySellModal type="SELL" communityName={data.communityName} />
+          ) : modalName === 'CONFIRMATION' ? (
+            <ConfirmModal txHash={data.txHash} />
           ) : (
             <Box />
           )}

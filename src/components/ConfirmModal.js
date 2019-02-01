@@ -26,7 +26,7 @@ const CloseButton = styled(Button)`
   font-weight: 500;
 `
 
-export default ({ confirmNumber, txLink, onClose }) => (
+export default ({ confirmationNumber, txLink, onClose }) => (
   <Flex
     flexDirection="column"
     alignItems="center"
@@ -57,7 +57,9 @@ export default ({ confirmNumber, txLink, onClose }) => (
       <br /> the blockchain. This operation may take up to 5 minutes.
     </Text>
     <AbsoluteLink href={txLink}>
-      <ConfirmationText>{confirmNumber}/12 blocks confirmed</ConfirmationText>
+      <ConfirmationText>
+        {confirmationNumber}/12 blocks confirmed
+      </ConfirmationText>
     </AbsoluteLink>
     <CloseButton variant="primary" mt="40px" onClick={onClose}>
       OK

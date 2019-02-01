@@ -1,5 +1,5 @@
 import createReducer from 'reducers/creator'
-import { Map } from 'immutable'
+import { fromJS } from 'immutable'
 
 import {
   SET_USER_ADDRESS,
@@ -17,12 +17,12 @@ const handleSaveBandClient = (state, { client }) =>
 const handleSaveCommunityClient = (state, { name, client }) =>
   state.setIn(['client', 'communities', name], client)
 
-const handleShowModal = (state, { modalName, communityName }) =>
+const handleShowModal = (state, { modalName, data }) =>
   state.set(
     'modal',
-    Map({
+    fromJS({
       name: modalName,
-      community: communityName,
+      data,
     }),
   )
 

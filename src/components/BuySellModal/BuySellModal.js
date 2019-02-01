@@ -7,30 +7,34 @@ export default class BuySellModal extends React.Component {
     amount: new BN('0'),
     price: new BN('0'),
     priceLimit: null,
-    type: null,
+    type: 'BUY',
     showAdvance: false,
   }
 
-  getType() {
-    if (this.state.type) {
-      return this.state.type
-    } else {
-      return this.props.type
-    }
+  componentDidMount() {
+    this.setState({ type: this.props.type })
   }
 
   setType(type) {
     this.setState({
-      ...this.state,
-      type: type,
+      type,
     })
   }
 
   toggleAdvance() {
     this.setState({
-      ...this.state,
       showAdvance: !this.state.showAdvance,
     })
+  }
+
+  onButtonClick() {
+    const { type, amount, priceLimit, price } = this.state
+    const { onBuy, onSell } = this.props
+    if (type === 'BUY') {
+      onBuy(amount, priceLimit || price)
+    } else {
+      onSell(amount, priceLimit || price)
+    }
   }
 
   async updatePrice(amount) {
@@ -38,11 +42,10 @@ export default class BuySellModal extends React.Component {
     // balance is not enough
     // limit input amount
     const price =
-      this.getType() === 'BUY'
+      this.state.type === 'BUY'
         ? await this.props.communityClient.getBuyPrice(amount)
         : await this.props.communityClient.getSellPrice(amount)
     this.setState({
-      ...this.state,
       amount: amount,
       price: price,
     })
@@ -53,6 +56,8 @@ export default class BuySellModal extends React.Component {
       const amount =
         e.target.value === '' ? new BN('0') : BN.parse(e.target.value)
       this.updatePrice(amount)
+    } else if (what === 'priceLimit') {
+      this.setState({ priceLimit: BN.parse(e.target.value) })
     }
   }
 
@@ -62,13 +67,14 @@ export default class BuySellModal extends React.Component {
       <BuySellModalRender
         name={name}
         logo={logo}
-        type={this.getType()}
+        type={this.state.type}
         price={this.state.price}
         amount={this.state.amount}
         handleChange={this.handleChange.bind(this)}
         setType={this.setType.bind(this)}
         showAdvance={this.state.showAdvance}
         toggleAdvance={this.toggleAdvance.bind(this)}
+        onButtonClick={this.onButtonClick.bind(this)}
       />
     )
   }
