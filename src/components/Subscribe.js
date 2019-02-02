@@ -80,7 +80,7 @@ export default class Subscribe extends React.Component {
                     borderBottomLeftRadius: 0,
                     borderTopLeftRadius: 0,
                     padding: large ? '1em 2em' : '0.8em 1em',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     marginLeft: 'auto',
                   }}
                   onClick={() => subscribe({ EMAIL: this.state.value })}

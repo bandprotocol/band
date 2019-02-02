@@ -6,7 +6,7 @@ import { Link as RouterLink } from 'react-router-dom'
 
 export const Bold = styled(Text)`
   display: inline-block;
-  font-weight: 700;
+  font-weight: 600;
 `
 
 export const SemiBold = styled(Text)`
@@ -25,7 +25,7 @@ export const H1 = styled(Text).attrs({
   fontSize: [20, 30],
 })`
   line-height: 1.6em;
-  font-weight: ${p => (p.slim ? 700 : 900)};
+  font-weight: ${p => (p.slim ? 600 : 900)};
   letter-spacing: 0.03em;
   color: ${p =>
     p.color || (p.dark ? colors.purple.dark : colors.purple.normal)};
@@ -36,7 +36,7 @@ export const H2 = styled(H1).attrs({
   fontSize: 24,
 })`
   letter-spacing: 0.02em;
-  font-weight: 700;
+  font-weight: 600;
 `
 
 export const H3 = styled(H2).attrs({

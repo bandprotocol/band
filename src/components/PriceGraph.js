@@ -51,7 +51,7 @@ const options = {
     },
     inputStyle: {
       color: colors.purple.normal,
-      fontWeight: 'bold',
+      fontWeight: '600',
       fontSize: '11px',
       fontFamily: 'Montserrat',
     },

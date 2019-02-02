@@ -51,7 +51,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
   return (
     <Flex mr={3}>
       {isBND ? (
-        <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="16px">
+        <Text mr={0} color="#8868ff" fontSize="16px">
           BND
         </Text>
       ) : (
@@ -67,7 +67,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
           USD
         </TextClickable>
       ) : (
-        <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="16px">
+        <Text mr={0} color="#8868ff" fontSize="16px">
           USD
         </Text>
       )}
@@ -86,7 +86,7 @@ export default ({ balance, isBND, toggleBalance, showLogin }) => (
         <Flex ml="auto">
           {balance !== undefined ? (
             <Flex flexDirection="row" mr={4} alignItems="center">
-              <Text mr={2} fontWeight="bold" color="#8868ff" fontSize="16px">
+              <Text mr={2} color="#8868ff" fontSize="16px">
                 My Balance:
               </Text>
               <Text mr={2} fontSize="16px" color={colors.text.grey}>

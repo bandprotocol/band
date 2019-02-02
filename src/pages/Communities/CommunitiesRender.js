@@ -1,16 +1,25 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
-import { Flex, Text, Button, Image, Box, AbsoluteLink, Card } from 'ui/common'
+import {
+  Flex,
+  Text,
+  Button,
+  Image,
+  Box,
+  AbsoluteLink,
+  Card,
+  Bold,
+} from 'ui/common'
 
 import WorkWithUsSrc from 'images/work-with-us.svg'
 
 const Description = styled(Text)`
-  height: 72px;
+  height: 54px;
   overflow: hidden;
   text-overflow: ellipsis;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   display: -webkit-box;
   -webkit-box-orient: vertical;
 `
@@ -26,11 +35,22 @@ const BandApp = ({
 }) => (
   <Card
     variant="primary"
-    flex={['', '0 0 340px']}
+    flex={['', '0 0 400px']}
     p="14px"
     bg="#fff"
     m={2}
-    style={{ alignSelf: 'flex-start' }}
+    css={{
+      alignSelf: 'flex-start',
+      ...(onClick
+        ? {
+            cursor: 'pointer',
+            transition: 'all 200ms',
+            '&:hover': {
+              border: `solid 1px ${colors.purple.light}`,
+            },
+          }
+        : {}),
+    }}
     onClick={onClick}
   >
     <Flex
@@ -41,9 +61,9 @@ const BandApp = ({
       <Image
         mt={[0, 1]}
         mb={[2, 0]}
-        width={[100, 80]}
+        width={[100, 110]}
         src={src}
-        style={{ borderRadius: 4 }}
+        style={{ borderRadius: 2 }}
       />
       <Box flex={1} ml={[0, '20px']}>
         <Flex>
@@ -66,7 +86,7 @@ const BandApp = ({
             )}
           </Text>
         </Flex>
-        <Text fontSize={13} color={colors.text.normal} fontWeight="500">
+        <Text fontSize={12} color={colors.text.normal} fontWeight="500">
           By {author}
         </Text>
         <Description lineHeight={1.5} fontSize={12} my={3}>
@@ -78,29 +98,22 @@ const BandApp = ({
   </Card>
 )
 
-const CommingSoon = () => (
-  <Flex p={2} justifyContent={['flex-start', 'center']}>
-    <Box bg="#eff2ff" p={2} my={1} style={{ borderRadius: '4px' }}>
-      <Text fontSize={'14px'} color="#a2b0ea" style={{ fontStyle: 'italic' }}>
-        Coming soon
-      </Text>
-    </Box>
-  </Flex>
-)
-
 const PriceDetail = ({ marketCap, price, last24Hrs }) => (
   <Flex
     flexDirection="row"
-    pt={3}
+    pt={2}
     pb={1}
     justifyContent="space-around"
     alignItems="center"
   >
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Text fontSize="12px" fontWeight="bold" px={3}>
-        Market Cap
-      </Text>
-      <Text color={colors.purple.normal} fontSize={1} fontWeight="bold" py={2}>
+      <Bold fontSize={12}>Market Cap.</Bold>
+      <Text
+        color={colors.purple.normal}
+        fontSize={1}
+        fontWeight="bold"
+        py="12px"
+      >
         $ 5M
       </Text>
     </Flex>
@@ -110,18 +123,24 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
       alignItems="center"
       px={3}
     >
-      <Text fontSize="12px" fontWeight="bold" px={3}>
-        Price
-      </Text>
-      <Text color={colors.purple.normal} fontSize={1} fontWeight="bold" py={2}>
+      <Bold fontSize={12}>Price</Bold>
+      <Text
+        color={colors.purple.normal}
+        fontSize={1}
+        fontWeight="bold"
+        py="12px"
+      >
         $ {price.pretty()}
       </Text>
     </Flex>
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Text fontSize="12px" fontWeight="bold" px={3}>
-        Last 24 hrs.
-      </Text>
-      <Text color={colors.purple.normal} fontSize={1} fontWeight="bold" py={2}>
+      <Bold fontSize={12}>Last 24 hrs.</Bold>
+      <Text
+        color={colors.purple.normal}
+        fontSize={1}
+        fontWeight="bold"
+        py="12px"
+      >
         {last24Hrs}
       </Text>
     </Flex>
@@ -132,7 +151,7 @@ const CommunityPage = ({ communities, history }) =>
   console.log(communities) || (
     <React.Fragment>
       <PageContainer>
-        <Flex pt={[3, 4]} flexWrap="wrap">
+        <Flex pt={[3, 4]} justifyContent="center" flexWrap="wrap">
           {communities.map(
             ({
               name,
@@ -172,7 +191,14 @@ const CommunityPage = ({ communities, history }) =>
                 style={{ fontSize: 14 }}
                 href="https://bandprotocol.typeform.com/to/A39Zgd"
               >
-                <Button variant="primary" my={1}>
+                <Button
+                  variant="primary"
+                  my={1}
+                  style={{
+                    fontSize: 14,
+                    boxShadow: '0 4px 5px 0 rgba(136, 104, 255, 0.26)',
+                  }}
+                >
                   Apply Now!
                 </Button>
               </AbsoluteLink>
