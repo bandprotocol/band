@@ -1,1 +1,1 @@
-export { default } from 'pages/Communities/Communities'
+export { default } from './Communities'

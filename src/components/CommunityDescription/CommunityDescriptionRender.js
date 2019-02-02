@@ -43,16 +43,10 @@ export default ({ name, src, link, author, description }) => (
             )}
           </Text>
         </Flex>
-        <Text fontSize={12} color={colors.text.normal} fontWeight="600" my={2}>
+        <Text fontSize={12} color={colors.text.normal} fontWeight="500">
           By {author}
         </Text>
-        <Text
-          width="585px"
-          lineHeight={1.64}
-          color={colors.text.normal}
-          fontWeight="400"
-          fontSize={14}
-        >
+        <Text lineHeight={1.5} fontSize={12} my={3}>
           {description}
         </Text>
       </Box>

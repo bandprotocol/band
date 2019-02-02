@@ -150,7 +150,7 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
 const CommunityPage = ({ communities, history }) => (
   <React.Fragment>
     <PageContainer>
-      <Flex pt={[3, 4]} justifyContent="center" flexWrap="wrap">
+      <Flex justifyContent="center" flexWrap="wrap">
         {communities && communities.length ? (
           <React.Fragment>
             {communities.map(

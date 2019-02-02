@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box } from 'rebass'
 import styled from 'styled-components'
+import { media } from 'ui'
 
 const PageContainer = styled(Box)`
   margin: 0 auto;
@@ -10,9 +11,13 @@ const PageContainer = styled(Box)`
   ${p =>
     !p.fullWidth &&
     `
-    padding: 0 18px;
-    max-width: 1440px;
-  `};
+    padding: 32px 18px;
+    max-width: ${p.withSidebar ? '860px' : '1440px'};
+
+    ${media.mobile} {
+      padding: 24px 12px;
+    }
+  `}
 `
 
 export default PageContainer

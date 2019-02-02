@@ -5,8 +5,8 @@ import { Flex } from 'ui/common'
 
 import ScrollToTop from 'ScrollToTop'
 import Sidebar from 'containers/Sidebar'
-import CommunityDetail from 'pages/Detail/CommunityDetail'
 import CommunitiesPage from 'pages/Communities'
+import CommunityDetailPage from 'pages/CommunityDetail'
 
 export default ({ match, location }) => (
   <React.Fragment>
@@ -22,7 +22,9 @@ export default ({ match, location }) => (
                 <Route
                   path="/community/:community/detail"
                   render={({ match }) => (
-                    <CommunityDetail communityName={match.params.community} />
+                    <CommunityDetailPage
+                      communityName={match.params.community}
+                    />
                   )}
                 />
                 <Route
