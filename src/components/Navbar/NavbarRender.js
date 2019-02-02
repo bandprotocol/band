@@ -51,11 +51,11 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
   return (
     <Flex mr={3}>
       {isBND ? (
-        <Text mr={0} color="#8868ff" fontSize="16px">
+        <Text mr={0} color={colors.purple.normal} fontSize={0}>
           BND
         </Text>
       ) : (
-        <TextClickable color={colors.text.grey} onClick={toggle}>
+        <TextClickable color={colors.text.grey} onClick={toggle} fontSize={0}>
           BND
         </TextClickable>
       )}
@@ -63,11 +63,11 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
         /
       </Text>
       {isBND ? (
-        <TextClickable color={colors.text.grey} onClick={toggle}>
+        <TextClickable color={colors.text.grey} onClick={toggle} fontSize={0}>
           USD
         </TextClickable>
       ) : (
-        <Text mr={0} color="#8868ff" fontSize="16px">
+        <Text mr={0} color={colors.purple.normal} fontSize={0}>
           USD
         </Text>
       )}
@@ -81,15 +81,15 @@ export default ({ balance, isBND, toggleBalance, showLogin }) => (
       <Flex alignItems="center">
         <Link dark to="/">
           <Image src={LogoSrc} width={16} ml={4} />
-          <Bold ml={[0, 2]}>Band Protocol</Bold>
+          <Bold ml={[0, 3]}>Band Protocol</Bold>
         </Link>
         <Flex ml="auto">
           {balance !== undefined ? (
             <Flex flexDirection="row" mr={4} alignItems="center">
-              <Text mr={2} color="#8868ff" fontSize="16px">
+              <Text mr={2} color="#8868ff" fontSize={0}>
                 My Balance:
               </Text>
-              <Text mr={2} fontSize="16px" color={colors.text.grey}>
+              <Text mr={2} fontSize={0} color={colors.text.grey}>
                 {balance.pretty()}
               </Text>
               <HighlightBNDOrUSD isBND={isBND} toggle={toggleBalance} />

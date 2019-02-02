@@ -91,10 +91,11 @@ export default {
       borderRadius: 5,
       boxShadow: '0 12px 12px 0 #f3f5ff;',
     },
+
     detail: {
-      border: `solid 1.5px #e7ecff`,
+      border: `solid 1px #e7ecff`,
       borderRadius: 4,
-      width: '870px',
+      width: '100%',
     },
   },
 }

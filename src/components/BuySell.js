@@ -5,11 +5,8 @@ import Graph from 'containers/PriceGraph'
 
 export default ({ showBuy, showSell, communityName }) => (
   <Card
-    variant="primary"
-    height="560px"
-    width="870px"
+    variant="detail"
     bg="#fff"
-    mx="auto"
     mt="10px"
     p="20px"
     mb="10px"

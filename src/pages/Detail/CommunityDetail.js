@@ -6,7 +6,7 @@ import History from 'containers/History'
 import BuySell from 'containers/BuySell'
 
 export default ({ communityName }) => (
-  <Flex flexDirection="column" m="0 auto">
+  <Flex flexDirection="column" m="0 auto" pt={4}>
     <CommunityDescription communityName={communityName} />
     <BuySell communityName={communityName} />
     <History communityName={communityName} />

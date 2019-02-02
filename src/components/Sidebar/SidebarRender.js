@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Image, Flex, Text } from 'ui/common'
+import { Image, Flex, Text, Bold } from 'ui/common'
 
 // Images
 import DetailSrc from 'images/detail.svg'
@@ -10,13 +10,14 @@ import GovernanceSrc from 'images/governance.svg'
 import ProposalSrc from 'images/vote.svg'
 
 const Left = styled.div`
-  width: 280px;
+  width: 275px;
   height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   background: #ffffff;
   position: sticky;
   top: 80px;
+  box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
 `
 const FocusStyle = {
   background: '#eaeeff',
@@ -29,7 +30,7 @@ const TextClickable = styled(Text)`
 
 const HighlightSymbolOrUSD = ({ symbol, isSymbol, toggle }) => {
   return (
-    <Flex ml={1}>
+    <Flex ml={1} style={{ lineHeight: '15px' }}>
       {isSymbol ? (
         <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="11px">
           {symbol}
@@ -66,26 +67,37 @@ const HighlightSymbolOrUSD = ({ symbol, isSymbol, toggle }) => {
 export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
-      <Image src={src} width="70px" height="70px" m={3} borderRadius="50%" />
-      <Text py={1} color={colors.text.grey} fontSize="16px" fontWeight="bold">
+      <Image src={src} width="80px" height="80px" m={3} borderRadius="50%" />
+      <Text
+        py={1}
+        fontSize={0}
+        fontWeight={500}
+        style={{ textTransform: 'uppercase' }}
+      >
         {name}
       </Text>
-      <Flex flexDirection="row" alignItems="center" py={1}>
-        {balance !== undefined ? (
-          <Text color={colors.text.grey} fontSize={2}>
-            {balance.pretty()}
+      <Flex flexDirection="row" alignItems="flex-end" py={1}>
+        {balance === undefined ? (
+          <Text color={colors.text.grey} fontSize={1}>
+            Loading price ...
           </Text>
-        ) : null}
-        <HighlightSymbolOrUSD
-          symbol={symbol}
-          isSymbol={isSymbol}
-          toggle={toggleBalance}
-        />
+        ) : (
+          <React.Fragment>
+            <Text color={colors.text.grey} fontSize={2}>
+              {balance.pretty()}
+            </Text>
+            <HighlightSymbolOrUSD
+              symbol={symbol}
+              isSymbol={isSymbol}
+              toggle={toggleBalance}
+            />
+          </React.Fragment>
+        )}
       </Flex>
       <Flex flexDirection="column" py={5}>
-        <Text fontWeight="bold" px={4} pb={3}>
+        <Bold px={4} pb={3} fontSize={0}>
           MENU
-        </Text>
+        </Bold>
         <Flex
           flexDirection="row"
           alignItems="center"
@@ -95,25 +107,30 @@ export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
           style={FocusStyle}
         >
           <Image src={DetailSrc} width="25px" height="25px" />
-          <Text fontWeight="bold" color={colors.purple.normal} px={3}>
+          <Text
+            fontWeight="600"
+            color={colors.purple.normal}
+            px={3}
+            fontSize={0}
+          >
             Detail
           </Text>
         </Flex>
         <Flex flexDirection="row" alignItems="center" py={3} pl={4}>
           <Image src={RewardSrc} width="25px" height="25px" />
-          <Text color={colors.text} px={3}>
+          <Text color={colors.text} px={3} fontSize={0}>
             Reward
           </Text>
         </Flex>
         <Flex flexDirection="row" alignItems="center" py={3} pl={4}>
           <Image src={GovernanceSrc} width="25px" height="25px" />
-          <Text color={colors.text} px={3}>
+          <Text color={colors.text} px={3} fontSize={0}>
             Governance
           </Text>
         </Flex>
         <Flex flexDirection="row" alignItems="center" py={3} px={4}>
           <Image src={ProposalSrc} width="25px" height="25px" />
-          <Text color={colors.text} px={3}>
+          <Text color={colors.text} px={3} fontSize={0}>
             Proposal
           </Text>
         </Flex>

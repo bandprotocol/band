@@ -34,9 +34,7 @@ const HistoryHeader = () => (
 
 export default ({ options, selectedOption, onChange }) => (
   <Card
-    variant="primary"
-    height="560px"
-    width="870px"
+    variant="detail"
     bg="#fff"
     mx="auto"
     mt="10px"

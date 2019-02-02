@@ -8,8 +8,6 @@ export default ({ name, src, link, author, description }) => (
     p="25px"
     bg="#fff"
     style={{ alignSelf: 'flex-start' }}
-    mx="auto"
-    mt="20px"
     mb="10px"
   >
     <Flex
