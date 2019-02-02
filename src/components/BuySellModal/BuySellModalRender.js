@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Flex, Box, Button, Text } from 'ui/common'
+import { Image, Flex, Box, Button, Text, Card } from 'ui/common'
 import { colors } from 'ui'
 import styled from 'styled-components'
 import BN from 'utils/bignumber'
@@ -189,12 +189,13 @@ export default ({
   toggleAdvance,
   onButtonClick,
 }) => (
-  <Flex flexDirection="column" alignItems="center" justifyContent="center">
-    {/* Header */}
-    <BuySellHeader type={type} setType={setType} />
-    {/* Content */}
-    <Flex flexDirection="column" justifyContent="flex-start" mt={3}>
-      {/* <Text
+  <Card variant="modal">
+    <Flex flexDirection="column" alignItems="center" justifyContent="center">
+      {/* Header */}
+      <BuySellHeader type={type} setType={setType} />
+      {/* Content */}
+      <Flex flexDirection="column" justifyContent="flex-start" mt={3}>
+        {/* <Text
         fontSize={0}
         color={colors.purple.dark}
         fontWeight="bold"
@@ -202,56 +203,57 @@ export default ({
       >
         Token Index
       </Text> */}
-      <TokenIndex name={name} logo={logo} />
-      <Text
-        fontSize={0}
-        color={colors.purple.dark}
-        fontWeight="bold"
-        ml={4}
-        letterSpacing="-0.16px"
-      >
-        Amount
-      </Text>
-      <Amount handleChange={handleChange.bind(null, 'amount')} />
-      <Text
-        fontSize={0}
-        color={colors.purple.dark}
-        fontWeight="bold"
-        ml={4}
-        letterSpacing="-0.16px"
-      >
-        Estimated Price
-      </Text>
-      <Box
-        bg="#f4f6ff"
-        my={3}
-        mx="auto"
-        width="370px"
-        style={{
-          height: '45px',
-          border: '1px solid #cbcfe3',
-          borderRadius: '2px',
-        }}
-      >
-        {/* TODO: auto filled price */}
-        <Flex flexDirection="row">
-          {/* <Image src={} /> */}
-          <Text fontSize={0} color={colors.purple.dark} pl={3} py={3}>
-            {price.pretty()}
-          </Text>
-        </Flex>
-      </Box>
-      <Advance
-        handleChange={handleChange.bind(null, 'priceLimit')}
-        showAdvance={showAdvance}
-        toggleAdvance={toggleAdvance}
-      />
-      <BuySellButton
-        type={type}
-        name={name}
-        amount={amount}
-        onClick={onButtonClick}
-      />
+        <TokenIndex name={name} logo={logo} />
+        <Text
+          fontSize={0}
+          color={colors.purple.dark}
+          fontWeight="bold"
+          ml={4}
+          letterSpacing="-0.16px"
+        >
+          Amount
+        </Text>
+        <Amount handleChange={handleChange.bind(null, 'amount')} />
+        <Text
+          fontSize={0}
+          color={colors.purple.dark}
+          fontWeight="bold"
+          ml={4}
+          letterSpacing="-0.16px"
+        >
+          Estimated Price
+        </Text>
+        <Box
+          bg="#f4f6ff"
+          my={3}
+          mx="auto"
+          width="370px"
+          style={{
+            height: '45px',
+            border: '1px solid #cbcfe3',
+            borderRadius: '2px',
+          }}
+        >
+          {/* TODO: auto filled price */}
+          <Flex flexDirection="row">
+            {/* <Image src={} /> */}
+            <Text fontSize={0} color={colors.purple.dark} pl={3} py={3}>
+              {price.pretty()}
+            </Text>
+          </Flex>
+        </Box>
+        <Advance
+          handleChange={handleChange.bind(null, 'priceLimit')}
+          showAdvance={showAdvance}
+          toggleAdvance={toggleAdvance}
+        />
+        <BuySellButton
+          type={type}
+          name={name}
+          amount={amount}
+          onClick={onButtonClick}
+        />
+      </Flex>
     </Flex>
-  </Flex>
+  </Card>
 )
