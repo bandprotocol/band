@@ -33,6 +33,7 @@ BN.parse = function(value) {
   if (BN.isBN(value)) {
     return value
   } else {
+    if (value === '') throw new Error('Cannot parse empty string.')
     return new BN(DIVISOR.times(BigNumber(value)).toFixed(0))
   }
 }

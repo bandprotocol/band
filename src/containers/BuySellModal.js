@@ -13,6 +13,7 @@ const mapStateToProps = (state, { type, communityName }) => {
   return {
     name: communityName,
     logo: community.get('logo'),
+    symbol: community.get('symbol'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {
       name: communityName,

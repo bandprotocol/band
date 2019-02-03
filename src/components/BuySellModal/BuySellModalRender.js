@@ -10,12 +10,23 @@ const AmountInput = styled.input`
   border: 0px;
   font-size: 16px;
 `
+const SymbolType = styled.input`
+  -webkit-appearance: none !important;
+  color: ${colors.text.grey};
+  font-size: 15px;
+  text-align: right;
+  width: 75px;
+  border: 0px;
+  padding-right: 14px;
+`
+
 const BoxStyle = {
   width: '370px',
   height: '45px',
   border: '1px solid #cbcfe3',
   borderRadius: '2px',
 }
+
 const BuySellHeader = ({ type, setType }) => (
   <Flex
     flexDirection="row"
@@ -80,7 +91,7 @@ const TokenIndex = ({ name, logo }) => (
   </Box>
 )
 
-const Amount = ({ handleChange }) => (
+const Amount = ({ symbol, handleChange }) => (
   <Box bg="#ffffff" my={3} mx="auto" style={BoxStyle}>
     <Flex flexDirection="row">
       <AmountInput
@@ -89,6 +100,7 @@ const Amount = ({ handleChange }) => (
         placeholder="ex.100"
         onChange={e => handleChange(e)}
       />
+      <SymbolType type="text" value={symbol} disabled />
     </Flex>
   </Box>
 )
@@ -155,7 +167,7 @@ const BuySellButton = ({ name, type, amount, onClick }) => (
   <Button
     variant={
       // submit is green, cancel is red
-      amount.eq(new BN('0')) ? 'disable' : type === 'BUY' ? 'submit' : 'cancel'
+      amount.isZero() ? 'disable' : type === 'BUY' ? 'submit' : 'cancel'
     }
     my={3}
     width="395px"
@@ -180,6 +192,7 @@ const BuySellButton = ({ name, type, amount, onClick }) => (
 export default ({
   name,
   logo,
+  symbol,
   type,
   price,
   amount,
@@ -213,7 +226,10 @@ export default ({
         >
           Amount
         </Text>
-        <Amount handleChange={handleChange.bind(null, 'amount')} />
+        <Amount
+          symbol={symbol}
+          handleChange={handleChange.bind(null, 'amount')}
+        />
         <Text
           fontSize={0}
           color={colors.purple.dark}

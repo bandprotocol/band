@@ -15,7 +15,8 @@ export default class BuySellModal extends React.Component {
     this.setState({ type: this.props.type })
   }
 
-  setType(type) {
+  async setType(type) {
+    this.updatePrice(type, this.state.amount)
     this.setState({
       type,
     })
@@ -30,19 +31,21 @@ export default class BuySellModal extends React.Component {
   onButtonClick() {
     const { type, amount, priceLimit, price } = this.state
     const { onBuy, onSell } = this.props
-    if (type === 'BUY') {
-      onBuy(amount, priceLimit || price)
-    } else {
-      onSell(amount, priceLimit || price)
+    if (!amount.isZero()) {
+      if (type === 'BUY') {
+        onBuy(amount, priceLimit || price)
+      } else {
+        onSell(amount, priceLimit || price)
+      }
     }
   }
 
-  async updatePrice(amount) {
+  async updatePrice(type, amount) {
     // TODO: if sellAmount is excced total supply
     // balance is not enough
     // limit input amount
     const price =
-      this.state.type === 'BUY'
+      type === 'BUY'
         ? await this.props.communityClient.getBuyPrice(amount)
         : await this.props.communityClient.getSellPrice(amount)
     this.setState({
@@ -52,27 +55,34 @@ export default class BuySellModal extends React.Component {
   }
 
   async handleChange(what, e) {
+    const { value } = e.target
+    const { type, price } = this.state
     if (what === 'amount') {
-      const amount =
-        e.target.value === '' ? new BN('0') : BN.parse(e.target.value)
-      this.updatePrice(amount)
+      const amount = value === '' ? new BN('0') : BN.parse(value)
+      this.updatePrice(type, amount)
     } else if (what === 'priceLimit') {
-      this.setState({ priceLimit: BN.parse(e.target.value) })
+      if (type === 'BUY' && value >= price) {
+        this.setState({ priceLimit: value !== '' ? BN.parse(value) : null })
+      } else if (type === 'SELL' && value <= price) {
+        this.setState({ priceLimit: value !== '' ? BN.parse(value) : null })
+      }
     }
   }
 
   render() {
-    const { name, logo } = this.props
+    const { name, logo, symbol } = this.props
+    const { type, price, amount, showAdvance } = this.state
     return (
       <BuySellModalRender
         name={name}
         logo={logo}
-        type={this.state.type}
-        price={this.state.price}
-        amount={this.state.amount}
+        symbol={symbol}
+        type={type}
+        price={price}
+        amount={amount}
         handleChange={this.handleChange.bind(this)}
         setType={this.setType.bind(this)}
-        showAdvance={this.state.showAdvance}
+        showAdvance={showAdvance}
         toggleAdvance={this.toggleAdvance.bind(this)}
         onButtonClick={this.onButtonClick.bind(this)}
       />
