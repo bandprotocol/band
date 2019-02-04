@@ -70,6 +70,10 @@ contract CommunityCore is BandContractBase, ERC165 {
     uint256 amount
   );
 
+  event CurveMultiplierChanged(
+    uint256 curveMultiplier
+  );
+
   Equation.Node[] public equation;
 
   BandToken public bandToken;
@@ -137,6 +141,8 @@ contract CommunityCore is BandContractBase, ERC165 {
     params = _params;
     equation.init(_expressions);
     lastInflationTime = now;
+
+    emit CurveMultiplierChanged(curveMultiplier);
   }
 
   /**
@@ -375,5 +381,6 @@ contract CommunityCore is BandContractBase, ERC165 {
       eqCollateral.mul(curveMultiplier).div(DENOMINATOR) <=
       currentBandCollatoralized
     );
+    emit CurveMultiplierChanged(curveMultiplier);
   }
 }
