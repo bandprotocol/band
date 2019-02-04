@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./VotingInterface.sol";
 
-
 /**
  * @title CommitRevealVoting
  */
@@ -116,6 +115,20 @@ contract CommitRevealVoting is VotingInterface {
   {
     Poll storage poll = polls[pollContract][pollID];
     return poll.commits[voter];
+  }
+
+  function verifyVotingParams() public returns(bool) {
+    uint256 commitEndTime = getParams("params:commit_time");
+    uint256 revealEndTime = getParams("params:reveal_time");
+    uint256 voteMinParticipationPct = getParams("params:min_participation_pct");
+    uint256 voteSupportRequiredPct = getParams("params:support_required_pct");
+
+    require(commitEndTime > 0);
+    require(revealEndTime > 0);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= 100);
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= 100);
+
+    return true;
   }
 
   function startPoll(

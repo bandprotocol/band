@@ -7,7 +7,6 @@ import "./ParametersInterface.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
 
-
 /*
  * @title Parameters
  *
@@ -17,6 +16,13 @@ import "./VotingInterface.sol";
  */
 contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
   using SafeMath for uint256;
+
+  /**
+   * Public map of all active parameters.
+   * This variable have to be declared first,
+   * if not "delegatecall" will use another variable instead.
+   */
+  mapping (bytes32 => uint256) public params;
 
   event ProposalProposed(  // A new proposal is proposed.
     uint256 indexed proposalID,
@@ -44,9 +50,6 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
 
   CommunityToken public token;
   VotingInterface public voting;
-
-  // Public map of all active parameters.
-  mapping (bytes32 => uint256) public params;
 
   struct KeyValue {
     bytes32 key;
@@ -86,10 +89,9 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
       emit ParameterInit(keys[idx], values[idx]);
     }
 
-    require(get("params:commit_time") > 0);
-    require(get("params:reveal_time") > 0);
-    require(get("params:min_participation_pct") <= 100);
-    require(get("params:support_required_pct") <= 100);
+    (bool ok,) = address(voting).delegatecall(abi.encodePacked(bytes4(keccak256("verifyVotingParams()"))));
+    require(ok);
+
   }
 
   /**

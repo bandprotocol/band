@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./VotingInterface.sol";
 
-
 /**
  * @title SimpleVoting
  */
@@ -15,7 +14,7 @@ contract SimpleVoting is VotingInterface {
     address indexed pollContract,
     uint256 indexed pollID,
     address indexed tokenContract,
-    uint256 pollEndTime,
+    uint256 expirationTime,
     uint256 voteMinParticipation,
     uint256 voteSupportRequired
   );
@@ -31,7 +30,7 @@ contract SimpleVoting is VotingInterface {
   struct Poll {
     CommunityToken token;
     uint256 snapshotBlockNo;        // The block number to count voting power
-    uint256 pollEndTime;            // Expiration timestamp of commit period
+    uint256 expirationTime;            // Expiration timestamp of commit period
     uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
     uint256 voteMinParticipation;   // The minimum # of votes required
     uint256 yesCount;               // The current total number of YES votes
@@ -72,6 +71,18 @@ contract SimpleVoting is VotingInterface {
     return (poll.yesWeights[voter], poll.noWeights[voter]);
   }
 
+  function verifyVotingParams() public returns(bool) {
+    uint256 expirationTime = getParams("params:expiration_time");
+    uint256 voteMinParticipationPct = getParams("params:min_participation_pct");
+    uint256 voteSupportRequiredPct = getParams("params:support_required_pct");
+
+    require(expirationTime > 0);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= 100);
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= 100);
+
+    return true;
+  }
+
   function startPoll(
     CommunityToken token,
     uint256 pollID,
@@ -82,11 +93,11 @@ contract SimpleVoting is VotingInterface {
     pollMustNotExist(msg.sender, pollID)
     returns (bool)
   {
-    uint256 pollEndTime = now.add(get(params, prefix, "expiration_time"));
+    uint256 expirationTime = now.add(get(params, prefix, "expiration_time"));
     uint256 voteMinParticipationPct = get(params, prefix, "min_participation_pct");
     uint256 voteSupportRequiredPct = get(params, prefix, "support_required_pct");
 
-    require(pollEndTime < 2 ** 64);
+    require(expirationTime < 2 ** 64);
     require(voteMinParticipationPct <= 100);
     require(voteSupportRequiredPct <= 100);
 
@@ -101,7 +112,7 @@ contract SimpleVoting is VotingInterface {
     polls[msg.sender][pollID] = Poll({
       token: token,
       snapshotBlockNo: block.number.sub(1),
-      pollEndTime: pollEndTime,
+      expirationTime: expirationTime,
       voteSupportRequiredPct: voteSupportRequiredPct,
       voteMinParticipation: voteMinParticipation,
       yesCount: 0,
@@ -113,7 +124,7 @@ contract SimpleVoting is VotingInterface {
       msg.sender,
       pollID,
       address(token),
-      pollEndTime,
+      expirationTime,
       voteMinParticipation,
       voteSupportRequiredPct
     );
@@ -130,7 +141,7 @@ contract SimpleVoting is VotingInterface {
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-    require(now < poll.pollEndTime);
+    require(now < poll.expirationTime);
 
     // Get the weight, which is the voting power at the block before the
     // poll is initiated.
@@ -155,7 +166,7 @@ contract SimpleVoting is VotingInterface {
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-    require(now >= poll.pollEndTime);
+    require(now >= poll.expirationTime);
 
     uint256 yesCount = poll.yesCount;
     uint256 noCount = poll.noCount;

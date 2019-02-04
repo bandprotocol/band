@@ -7,13 +7,33 @@ import "./ResolveListener.sol";
 /**
  * @title VotingInterface
  */
-interface VotingInterface {
+contract VotingInterface {
 
   event PollResolved(  // A poll is resolved.
     address indexed pollContract,
     uint256 indexed pollID,
     ResolveListener.PollState pollState
   );
+
+  /**
+   * Mimic the parameters in Parameters.sol and make it private.
+   * So no one can write this params.
+   */
+  mapping (bytes32 => uint256) private params;
+
+  /**
+   * Make these params readable via internal call.
+   */
+  function getParams(bytes32 key) internal view returns(uint256) {
+    return params[key];
+  }
+
+  /**
+   * Verify voting parameters
+   */
+  function verifyVotingParams()
+    public 
+    returns (bool);
 
   /**
    * Start a new poll for the function caller.
@@ -24,14 +44,14 @@ interface VotingInterface {
     bytes8 prefix,
     ParametersInterface params
   )
-    external
+    public
     returns (bool);
 
   /**
    * Return the current vote score for a specific poll.
    */
   function getPollTotalVote(address pollContract, uint256 pollID)
-    external
+    public
     view
     returns (uint256 yesCount, uint256 noCount);
 
@@ -39,7 +59,7 @@ interface VotingInterface {
    * Return the vote allocation for the given voter.
    */
   function getPollUserVote(address pollContract, uint256 pollID, address voter)
-    external
+    public
     view
     returns (uint256 yesCount, uint256 noCount);
 }
