@@ -3,30 +3,14 @@ import { colors } from 'ui'
 import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
 
 export default ({ name, src, link, author, description }) => (
-  <Card
-    variant="detail"
-    p="25px"
-    bg="#fff"
-    style={{ alignSelf: 'flex-start' }}
-    mb="10px"
-  >
-    <Flex
-      flexDirection={['column-reverse', 'row']}
-      alignItems="flex-start"
-      pl={2}
-    >
-      <Image
-        mt={[0, 1]}
-        mb={[2, 0]}
-        width={[200, 180]}
-        src={src}
-        style={{ borderRadius: 4 }}
-      />
-      <Box flex={1} ml={[0, '30px']}>
+  <Card variant="detail" p="25px" bg="#fff" style={{ alignSelf: 'flex-start' }}>
+    <Flex alignItems="flex-start">
+      <Image width={[200, 180]} src={src} style={{ borderRadius: 4 }} />
+      <Box flex={1} ml="30px">
         <Flex>
           <Text
             color={colors.purple.dark}
-            size={20}
+            fontSize={3}
             fontWeight="500"
             lineHeight={2}
           >
@@ -46,7 +30,7 @@ export default ({ name, src, link, author, description }) => (
         <Text fontSize={12} color={colors.text.normal} fontWeight="500">
           By {author}
         </Text>
-        <Text lineHeight={1.5} fontSize={12} my={3}>
+        <Text lineHeight={1.6} fontSize={0} my={3}>
           {description}
         </Text>
       </Box>

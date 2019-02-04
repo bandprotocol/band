@@ -14,31 +14,30 @@ const HistoryHeader = () => (
         Time
       </Text>
     </Box>
-    <Box flex="0 0 180px">
+    <Box flex="0 0 160px">
       <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
         Price(BAND)
       </Text>
     </Box>
-    <Box flex="0 0 180px">
+    <Box flex="0 0 160px">
       <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
         Amount
       </Text>
     </Box>
-    <Box flex={1}>
+    <Flex flex={1}>
       <Text color={colors.purple.dark} fontSize={0} fontWeight="bold">
         Type
       </Text>
-    </Box>
+    </Flex>
+    <Flex flex={1} />
   </Flex>
 )
 
-export default ({ options, selectedOption, onChange }) => (
+export default ({ options, selectedOption, onChange, communityName }) => (
   <Card
     variant="detail"
     bg="#fff"
     mx="auto"
-    mt="10px"
-    mb="10px"
     style={{ alignSelf: 'flex-start' }}
   >
     <Flex flexDirection="column" py={3}>
@@ -63,7 +62,7 @@ export default ({ options, selectedOption, onChange }) => (
       </Flex>
       <HistoryHeader />
       <HistoryBody
-        communityName="CoinHatcher"
+        communityName={communityName}
         isAll={selectedOption.value === 'all'}
       />
     </Flex>

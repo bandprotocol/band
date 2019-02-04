@@ -93,9 +93,10 @@ export default {
     },
 
     detail: {
-      border: `solid 1px #e7ecff`,
+      border: `solid 1.5px #e7ecff`,
       borderRadius: 4,
       width: '100%',
+      marginBottom: '20px',
     },
 
     modal: {

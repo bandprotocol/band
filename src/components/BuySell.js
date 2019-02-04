@@ -1,17 +1,9 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Flex, Text, Button, Card } from 'ui/common'
 import Graph from 'containers/PriceGraph'
 
 export default ({ showBuy, showSell, communityName }) => (
-  <Card
-    variant="detail"
-    bg="#fff"
-    mt="10px"
-    p="20px"
-    mb="10px"
-    style={{ alignSelf: 'flex-start' }}
-  >
+  <Card variant="detail" bg="#fff" p="20px" style={{ alignSelf: 'flex-start' }}>
     <Flex flexDirection="column">
       {/* Price Chart here*/}
       <Graph communityName={communityName} />

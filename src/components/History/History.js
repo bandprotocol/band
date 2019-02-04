@@ -33,6 +33,7 @@ export default class History extends React.Component {
         options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
+        communityName={this.props.communityName}
       />
     )
   }

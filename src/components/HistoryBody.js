@@ -15,41 +15,53 @@ import {
   AbsoluteLink,
   Link,
   Card,
+  Bold,
 } from 'ui/common'
 
-const HistoryRow = ({ time, price, amount, type }) => (
+const HistoryRow = ({ time, price, amount, type, txLink }) => (
   <Flex flexDirection="row" py={4}>
     <Box flex="0 0 270px" pl="55px">
       <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
         {time}
       </Text>
     </Box>
-    <Box flex="0 0 180px">
+    <Box flex="0 0 160px">
       <Text color={colors.text} fontSize={0}>
         {price}
       </Text>
     </Box>
-    <Box flex="0 0 180px">
+    <Box flex="0 0 160px">
       <Text color={colors.text} fontSize={0}>
         {amount}
       </Text>
     </Box>
-    <Box flex={1}>
-      <Text color={type === 'Buy' ? colors.green : colors.red} fontSize={0}>
+    <Flex flex={1}>
+      <Bold color={type === 'Buy' ? colors.green : colors.red} fontSize={0}>
         {type}
-      </Text>
-    </Box>
+      </Bold>
+    </Flex>
+    <Flex flex={1}>
+      <AbsoluteLink
+        href={txLink}
+        style={{ marginLeft: 10, fontSize: '0.9em' }}
+        dark
+      >
+        <i className="fas fa-external-link-alt" />
+      </AbsoluteLink>
+    </Flex>
   </Flex>
 )
 
 export default ({ items }) => (
   <React.Fragment>
-    {items.map(({ time, price, amount, type }) => (
+    {items.map(({ time, price, amount, type, txHash }) => (
       <HistoryRow
         time={time.formal()}
         price={price.pretty()}
         amount={amount.pretty()}
         type={type}
+        // TODO: Change hardcode link depend to networkID
+        txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
       />
     ))}
   </React.Fragment>
