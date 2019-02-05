@@ -325,5 +325,116 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         from: bob,
       }));
     });
+    it('should revert, try to reveal after reveal time has end', async () => {
+      await increase(duration.seconds(120));
+      await reverting(this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        from: alice,
+      }));
+      await reverting(this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        from: bob,
+      }));
+    });
+  });
+
+  context('resolvePoll : should revert if condition not met', () => {
+    it('correctly resolve, enough voting power, pollState should be Yes', async () => {
+      // commit
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(60, 0, 42),
+        '0x00',
+        60,
+        0,
+        { from: alice },
+      );
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(60, 0, 42),
+        '0x00',
+        60,
+        0,
+        { from: bob },
+      );
+      await increase(duration.seconds(60));
+      // reveal vote with correct params
+      await this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        from: alice,
+      });
+      await this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        from: bob,
+      });
+      // quickly end reveal time
+      await increase(duration.seconds(60));
+      await this.voting.resolvePoll(this.params.address, 2, {
+        from: bob,
+      });
+      (await this.voting.polls(
+        this.params.address,
+        2
+      )).pollState.toString().should.eq('2');
+    });
+    it('correctly resolve, lack of voting power, pollState should be Inconclusive', async () => {
+      // commit
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(1, 0, 42),
+        '0x00',
+        1,
+        0,
+        { from: alice },
+      );
+      // waiting for commit period to end
+      await increase(duration.seconds(60));
+      await this.voting.resolvePoll(this.params.address, 2, {
+        from: bob,
+      });
+      (await this.voting.polls(
+        this.params.address,
+        2
+      )).pollState.toString().should.eq('4');
+    });
+    it('should revert, lack of voting power but try to resolve too zoon', async () => {
+      // commit
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(1, 0, 42),
+        '0x00',
+        1,
+        0,
+        { from: alice },
+      );
+      await reverting(this.voting.resolvePoll(this.params.address, 2, {
+        from: bob,
+      }));
+    });
+    it('should revert, enough voting power but try to resolve too zoon', async () => {
+      // commit
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(60, 0, 42),
+        '0x00',
+        60,
+        0,
+        { from: alice },
+      );
+      await this.voting.commitVote(
+        this.params.address,
+        2,
+        web3.utils.soliditySha3(60, 0, 42),
+        '0x00',
+        60,
+        0,
+        { from: bob },
+      );
+      await increase(duration.seconds(60));
+      await reverting(this.voting.resolvePoll(this.params.address, 2, {
+        from: bob,
+      }));
+    });
   });
 });

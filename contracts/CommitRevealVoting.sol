@@ -266,18 +266,24 @@ contract CommitRevealVoting is VotingInterface {
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-    require(now >= poll.revealEndTime);
 
-    uint256 yesCount = poll.yesCount;
-    uint256 noCount = poll.noCount;
+    require(now >= poll.commitEndTime);
 
     ResolveListener.PollState pollState;
+
     if (poll.totalCount < poll.voteMinParticipation) {
       pollState = ResolveListener.PollState.Inconclusive;
-    } else if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
-      pollState = ResolveListener.PollState.Yes;
     } else {
-      pollState = ResolveListener.PollState.No;
+      require(now >= poll.revealEndTime);
+
+      uint256 yesCount = poll.yesCount;
+      uint256 noCount = poll.noCount;
+
+      if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
+        pollState = ResolveListener.PollState.Yes;
+      } else {
+        pollState = ResolveListener.PollState.No;
+      }
     }
 
     poll.pollState = pollState;
