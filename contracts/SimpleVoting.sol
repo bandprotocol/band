@@ -30,7 +30,7 @@ contract SimpleVoting is VotingInterface {
   struct Poll {
     CommunityToken token;
     uint256 snapshotBlockNo;        // The block number to count voting power
-    uint256 expirationTime;            // Expiration timestamp of commit period
+    uint256 expirationTime;         // Expiration timestamp of commit period
     uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
     uint256 voteMinParticipation;   // The minimum # of votes required
     uint256 yesCount;               // The current total number of YES votes
@@ -72,9 +72,9 @@ contract SimpleVoting is VotingInterface {
   }
 
   function verifyVotingParams() public returns(bool) {
-    uint256 expirationTime = getParams("params:expiration_time");
-    uint256 voteMinParticipationPct = getParams("params:min_participation_pct");
-    uint256 voteSupportRequiredPct = getParams("params:support_required_pct");
+    uint256 expirationTime = getParam("params:expiration_time");
+    uint256 voteMinParticipationPct = getParam("params:min_participation_pct");
+    uint256 voteSupportRequiredPct = getParam("params:support_required_pct");
 
     require(expirationTime > 0);
     require(voteMinParticipationPct > 0 && voteMinParticipationPct <= 100);

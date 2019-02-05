@@ -118,10 +118,10 @@ contract CommitRevealVoting is VotingInterface {
   }
 
   function verifyVotingParams() public returns(bool) {
-    uint256 commitEndTime = getParams("params:commit_time");
-    uint256 revealEndTime = getParams("params:reveal_time");
-    uint256 voteMinParticipationPct = getParams("params:min_participation_pct");
-    uint256 voteSupportRequiredPct = getParams("params:support_required_pct");
+    uint256 commitEndTime = getParam("params:commit_time");
+    uint256 revealEndTime = getParam("params:reveal_time");
+    uint256 voteMinParticipationPct = getParam("params:min_participation_pct");
+    uint256 voteSupportRequiredPct = getParam("params:support_required_pct");
 
     require(commitEndTime > 0);
     require(revealEndTime > 0);

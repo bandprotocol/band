@@ -24,7 +24,7 @@ contract VotingInterface {
   /**
    * Make these params readable via internal call.
    */
-  function getParams(bytes32 key) internal view returns(uint256) {
+  function getParam(bytes32 key) internal view returns(uint256) {
     return params[key];
   }
 
