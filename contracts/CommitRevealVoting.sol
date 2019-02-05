@@ -59,11 +59,11 @@ contract CommitRevealVoting is VotingInterface {
     uint256 voteMinParticipation; // The minimum # of votes required
     uint256 yesCount;             // The current total number of YES votes
     uint256 noCount;              // The current total number of NO votes
+    uint256 totalCount;           // The current total number of Yes+No votes
 
     mapping (address => bytes32) commits;       // Each user's committed vote
     mapping (address => uint256) yesWeights;    // Each user's yes vote weight
     mapping (address => uint256) noWeights;     // Each user's no vote weight
-    mapping (address => VoteState) voteStates;  // Each user's vote state
 
     ResolveListener.PollState pollState;  // The state of this poll.
   }
@@ -105,7 +105,12 @@ contract CommitRevealVoting is VotingInterface {
     returns (VoteState)
   {
     Poll storage poll = polls[pollContract][pollID];
-    return poll.voteStates[voter];
+    if (poll.commits[voter] == 0) {
+      return VoteState.Invalid;
+    } else if (poll.yesWeights[voter] == 0 && poll.noWeights[voter] == 0) {
+      return VoteState.Committed;
+    }
+    return VoteState.Revealed;
   }
 
   function getPollUserCommit(address pollContract, uint256 pollID, address voter)
@@ -184,17 +189,43 @@ contract CommitRevealVoting is VotingInterface {
   function commitVote(
     address pollContract,
     uint256 pollID,
-    bytes32 commitValue
+    bytes32 commitValue,
+    bytes32 prevCommitValue,
+    uint256 totalWeight,
+    uint256 prevTotalWeight
   )
     public
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
+    
     // Must be in commit period.
     require(now < poll.commitEndTime);
-    poll.commits[msg.sender] = commitValue;
-    poll.voteStates[msg.sender] = VoteState.Committed;
-    emit VoteCommitted(pollContract, pollID, msg.sender, commitValue);
+    // commitValue should look like hash
+    require(commitValue != 0);
+
+    uint256 senderVotingPower = poll.token.historicalVotingPowerAtBlock(
+      msg.sender,
+      poll.snapshotBlockNo
+    );
+
+    // totalWeight = 0 is pointless
+    require(totalWeight > 0);
+    // totalWeight will not exceed voting power of msg.sender
+    require(totalWeight <= senderVotingPower);
+
+    // caculate current commit by hashing prev totalWeight and commitValue
+    bytes32 prevCommitValWithTW = getHash(prevTotalWeight, prevCommitValue);
+    require(poll.commits[msg.sender] == prevCommitValWithTW);
+
+    // calculate new commit by hashing totalWeight and commitValue
+    bytes32 commitValWithTW = getHash(totalWeight, commitValue);
+    poll.commits[msg.sender] = commitValWithTW;
+
+    // remove prevTotalWeight from poll.totalCount before adding new totalWeight
+    poll.totalCount = poll.totalCount.sub(prevTotalWeight).add(totalWeight);
+
+    emit VoteCommitted(pollContract, pollID, msg.sender, commitValWithTW);
   }
 
   function revealVote(
@@ -210,27 +241,23 @@ contract CommitRevealVoting is VotingInterface {
     Poll storage poll = polls[pollContract][pollID];
     // Must be in reveal period.
     require(now >= poll.commitEndTime && now < poll.revealEndTime);
+    // pointless if yesWeight and noWeight are 0
+    require(yesWeight > 0 || noWeight > 0);
     // Must not already be revealed.
-    require(poll.voteStates[msg.sender] == VoteState.Committed);
-    poll.voteStates[msg.sender] = VoteState.Revealed;
+    require(getPollUserState(pollContract, pollID, msg.sender) == VoteState.Committed);
     // Must be consistent with the prior commit value.
     require(
-      keccak256(abi.encodePacked(yesWeight, noWeight, salt)) ==
+      getHash(yesWeight.add(noWeight),
+        keccak256(abi.encodePacked(yesWeight, noWeight, salt))
+      ) ==
       poll.commits[msg.sender]
     );
 
-    // Get the weight, which is the voting power at the block before the
-    // poll is initiated.
-    uint256 totalWeight = poll.token.historicalVotingPowerAtBlock(
-      msg.sender,
-      poll.snapshotBlockNo
-    );
-
-    require(yesWeight.add(noWeight) <= totalWeight);
     poll.yesWeights[msg.sender] = yesWeight;
     poll.yesCount = poll.yesCount.add(yesWeight);
     poll.noWeights[msg.sender] = noWeight;
     poll.noCount = poll.noCount.add(noWeight);
+
     emit VoteRevealed(pollContract, pollID, msg.sender, yesWeight, noWeight, salt);
   }
 
@@ -243,12 +270,11 @@ contract CommitRevealVoting is VotingInterface {
 
     uint256 yesCount = poll.yesCount;
     uint256 noCount = poll.noCount;
-    uint256 totalCount = yesCount.add(noCount);
 
     ResolveListener.PollState pollState;
-    if (totalCount < poll.voteMinParticipation) {
+    if (poll.totalCount < poll.voteMinParticipation) {
       pollState = ResolveListener.PollState.Inconclusive;
-    } else if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(totalCount)) {
+    } else if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
       pollState = ResolveListener.PollState.Yes;
     } else {
       pollState = ResolveListener.PollState.No;
@@ -257,6 +283,17 @@ contract CommitRevealVoting is VotingInterface {
     poll.pollState = pollState;
     emit PollResolved(pollContract, pollID, pollState);
     require(ResolveListener(pollContract).onResolved(pollID, pollState));
+  }
+
+  function getHash(uint256 weight, bytes32 commit)
+    private
+    pure
+    returns (bytes32)
+  {
+    if (commit == 0 && weight == 0) {
+      return 0;
+    }
+    return keccak256(abi.encodePacked(weight, commit));
   }
 
   function get(ParametersInterface params, bytes8 prefix, bytes24 key)

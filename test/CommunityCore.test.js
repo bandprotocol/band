@@ -189,6 +189,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
+        '0x00',
+        100,
+        0,
         { from: alice },
       );
       await increase(duration.seconds(60));
@@ -226,6 +229,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
+        '0x00',
+        100,
+        0,
         { from: alice },
       );
       await increase(duration.seconds(60));
@@ -293,6 +299,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
+        '0x00',
+        100,
+        0,
         { from: alice },
       );
       await increase(duration.seconds(60));
@@ -381,12 +390,18 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         this.params.address,
         2,
         web3.utils.soliditySha3(90, 0, 42),
+        '0x00',
+        90,
+        0,
         { from: owner },
       );
       await this.voting.commitVote(
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
+        '0x00',
+        100,
+        0,
         { from: alice },
       );
       await increase(duration.seconds(60));
@@ -445,6 +460,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
+        '0x00',
+        100,
+        0,
         { from: owner },
       );
       await increase(duration.seconds(60));

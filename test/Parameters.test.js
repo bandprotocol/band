@@ -156,12 +156,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           this.params.address,
           2,
           web3.utils.soliditySha3(20, 0, 42),
+          '0x00',
+          20,
+          0,
           { from: alice },
         );
         await this.voting.commitVote(
           this.params.address,
           2,
           web3.utils.soliditySha3(10, 0, 42),
+          '0x00',
+          10,
+          0,
           { from: bob },
         );
         await increase(duration.seconds(60));
@@ -198,12 +204,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           this.params.address,
           2,
           web3.utils.soliditySha3(60, 0, 42),
+          '0x00',
+          60,
+          0,
           { from: alice },
         );
         await this.voting.commitVote(
           this.params.address,
           2,
           web3.utils.soliditySha3(60, 0, 42),
+          '0x00',
+          60,
+          0,
           { from: bob },
         );
 
@@ -242,12 +254,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           this.params.address,
           2,
           web3.utils.soliditySha3(10, 70, 42),
+          '0x00',
+          80,
+          0,
           { from: alice },
         );
         await this.voting.commitVote(
           this.params.address,
           2,
           web3.utils.soliditySha3(40, 20, 42),
+          '0x00',
+          60,
+          0,
           { from: bob },
         );
 
@@ -286,12 +304,18 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           this.params.address,
           2,
           web3.utils.soliditySha3(100, 0, 42),
+          '0x00',
+          100,
+          0,
           { from: alice },
         );
         await this.voting.commitVote(
           this.params.address,
           2,
           web3.utils.soliditySha3(100, 0, 42),
+          '0x00',
+          100,
+          0,
           { from: bob },
         );
 
