@@ -3,6 +3,7 @@ import SideBar from 'components/Sidebar'
 
 import { communityDetailSelector } from 'selectors/communities'
 import { bandSelector } from 'selectors/basic'
+import { bandPriceSelector } from 'selectors/bandPrice'
 
 const mapStateToProps = (state, { communityName }) => {
   const band = bandSelector(state)
@@ -14,7 +15,7 @@ const mapStateToProps = (state, { communityName }) => {
     balance: community.get('balance'),
     symbol: community.get('symbol'),
     communityPrice: community.get('price'),
-    bandPrice: band.get('latestPrice'),
+    bandPrice: bandPriceSelector(state),
   }
 }
 

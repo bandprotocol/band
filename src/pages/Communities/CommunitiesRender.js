@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
+import BN from 'utils/bignumber'
 import {
   Flex,
   Text,
@@ -115,7 +116,7 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
         fontWeight="bold"
         py="12px"
       >
-        $ 5M
+        $ {marketCap.shortPretty()}
       </Text>
     </Flex>
     <Flex
@@ -131,40 +132,32 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
         fontWeight="bold"
         py="12px"
       >
-        $ {price.pretty()}
+        $ {price.shortPretty()}
       </Text>
     </Flex>
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <Bold fontSize={12}>Last 24 hrs.</Bold>
       <Text
-        color={colors.purple.normal}
+        color={last24Hrs >= 0.0 ? colors.green.normal : colors.red.normal}
         fontSize={1}
         fontWeight="bold"
         py="12px"
       >
-        {last24Hrs}
+        {last24Hrs >= 0.0 ? '+' : null}
+        {last24Hrs} %
       </Text>
     </Flex>
   </Flex>
 )
 
-const CommunityPage = ({ communities, history }) => (
+const CommunityPage = ({ communities, bandPrice, history }) => (
   <React.Fragment>
     <PageContainer>
       <Flex justifyContent="center" flexWrap="wrap">
         {communities && communities.length ? (
           <React.Fragment>
             {communities.map(
-              ({
-                name,
-                logo,
-                description,
-                website,
-                author,
-                marketCap,
-                price,
-                last24Hrs,
-              }) => (
+              ({ name, logo, description, website, author, last24Hrs }) => (
                 <BandApp
                   key={name}
                   name={name}
@@ -175,8 +168,8 @@ const CommunityPage = ({ communities, history }) => (
                   onClick={() => history.push(`/community/${name}/detail`)}
                 >
                   <PriceDetail
-                    marketCap={marketCap}
-                    price={price}
+                    marketCap={BN.parse(100000).bandToUSD(bandPrice)} // Market Cap is TotalSupply in Band Unit
+                    price={BN.parse(1.23).bandToUSD(bandPrice)} // TODO: hardcode for testing, (1.23 BAND / 1 TOKEN)
                     last24Hrs={last24Hrs}
                   />
                 </BandApp>

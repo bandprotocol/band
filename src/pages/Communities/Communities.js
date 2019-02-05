@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 
 import CommunityPage from 'pages/Communities/CommunitiesRender'
 import { communitySelector } from 'selectors/basic'
+import { bandPriceSelector } from 'selectors/bandPrice'
 
 const parseProps = communities => {
   return communities
@@ -12,13 +13,7 @@ const parseProps = communities => {
 }
 const mapStateToProps = (state, props) => ({
   communities: parseProps(communitySelector(state)),
+  bandPrice: bandPriceSelector(state),
 })
 
-const mapDispathToProps = (state, props) => ({})
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispathToProps,
-  )(CommunityPage),
-)
+export default withRouter(connect(mapStateToProps)(CommunityPage))

@@ -2,6 +2,9 @@ import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 
 const DIVISOR = BigNumber(10).pow(18)
+const THOUSAND = BigNumber(10).pow(3)
+const MILLION = BigNumber(10).pow(6)
+const BILLION = BigNumber(10).pow(9)
 
 BN.prototype.pretty = function() {
   return BigNumber(this.toString())
@@ -11,6 +14,26 @@ BN.prototype.pretty = function() {
       minimumFractionDigits: 2,
       maximunFractionDigits: 2,
     })
+}
+
+BN.prototype.shortPretty = function() {
+  const value = BigNumber(this.toString()).div(DIVISOR)
+  if (value.gte(BILLION))
+    return value
+      .div(BILLION)
+      .toFixed(2)
+      .concat(' B')
+  else if (value.gte(MILLION))
+    return value
+      .div(MILLION)
+      .toFixed(2)
+      .concat(' M')
+  else if (value.gte(THOUSAND))
+    return value
+      .div(THOUSAND)
+      .toFixed(2)
+      .concat(' K')
+  else return value.toFixed(2)
 }
 
 BN.prototype.communityToBand = function(communityPrice) {
