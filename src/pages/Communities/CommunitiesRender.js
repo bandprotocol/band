@@ -35,10 +35,11 @@ const BandApp = ({
 }) => (
   <Card
     variant="primary"
-    flex={['', '0 0 400px']}
+    flex={['', '0 0 395px']}
     p="14px"
     bg="#fff"
-    m={2}
+    mx={2}
+    mb={3}
     css={{
       alignSelf: 'flex-start',
       ...(onClick
