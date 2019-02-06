@@ -5,6 +5,7 @@ import HistoryRender from './HistoryRender'
 export default class History extends React.Component {
   state = {
     selectedOption: { value: 'all', label: 'All Orders' },
+    currentPage: 1,
   }
 
   componentDidMount() {
@@ -21,12 +22,18 @@ export default class History extends React.Component {
     this.setState({ selectedOption })
   }
 
+  onChangePage(selectedPage) {
+    this.setState({
+      currentPage: selectedPage,
+    })
+  }
+
   render() {
     const options = [
       { value: 'all', label: 'All Orders' },
       { value: 'mine', label: 'My Orders' },
     ]
-    const { selectedOption } = this.state
+    const { selectedOption, currentPage } = this.state
 
     return (
       <HistoryRender
@@ -34,6 +41,9 @@ export default class History extends React.Component {
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
         communityName={this.props.communityName}
+        numberOfPages={this.props.numberOfPages}
+        currentPage={currentPage}
+        onChangePage={this.onChangePage.bind(this)}
       />
     )
   }

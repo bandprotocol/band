@@ -1,6 +1,7 @@
 import React from 'react'
 
 import HistoryBody from 'containers/HistoryBody'
+import Pagination from 'components/Pagination'
 
 import Select from 'react-select'
 import { Flex, Text, Box, Card } from 'ui/common'
@@ -33,7 +34,15 @@ const HistoryHeader = () => (
   </Flex>
 )
 
-export default ({ options, selectedOption, onChange, communityName }) => (
+export default ({
+  options,
+  selectedOption,
+  onChange,
+  communityName,
+  numberOfPages,
+  currentPage,
+  onChangePage,
+}) => (
   <Card
     variant="detail"
     bg="#fff"
@@ -64,6 +73,11 @@ export default ({ options, selectedOption, onChange, communityName }) => (
       <HistoryBody
         communityName={communityName}
         isAll={selectedOption.value === 'all'}
+      />
+      <Pagination
+        numberOfPages={numberOfPages}
+        currentPage={currentPage}
+        onChangePage={onChangePage}
       />
     </Flex>
   </Card>
