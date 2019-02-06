@@ -50,6 +50,9 @@ const options = {
     },
   },
   plotOptions: {
+    line: {
+      animation: false,
+    },
     spline: {
       marker: {
         enabled: true,
