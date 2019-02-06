@@ -1,8 +1,6 @@
 import { takeEvery, put, select, delay } from 'redux-saga/effects'
 import { LOAD_ORDER_HISTORY, addOrders } from 'actions'
 
-import { orderHistorySelector } from 'selectors/order'
-
 import {
   currentCommunityClientSelector,
   currentUserSelector,

@@ -2,22 +2,26 @@ import { connect } from 'react-redux'
 
 import PriceGraph from 'components/PriceGraph'
 
-import { orderHistorySelector } from 'selectors/order'
+import { priceHistorySelector } from 'selectors/price'
+
+import { loadPriceHistory } from 'actions'
 
 const transformData = rawData => {
   return rawData
-    .map(data => [
-      data.get('time').valueOf(),
-      parseFloat(data.get('price').calculatePrice(data.get('amount'))),
-    ])
-    .sortBy(data => data[0])
+    .map(data => [data.get(0).valueOf(), data.get(1)])
+    .reverse()
     .toJS()
 }
 
 const mapStateToProps = (state, { communityName }) => ({
-  data: transformData(
-    orderHistorySelector(state, { name: communityName, type: true }),
-  ),
+  data: transformData(priceHistorySelector(state, { name: communityName })),
 })
 
-export default connect(mapStateToProps)(PriceGraph)
+const mapDispatchToProps = (dispatch, { communityName }) => ({
+  loadPrice: () => dispatch(loadPriceHistory(communityName)),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PriceGraph)

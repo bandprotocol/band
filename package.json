@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "band.js": "^1.0.13",
+    "band.js": "^1.0.14",
     "bignumber.js": "^8.0.2",
     "highcharts": "^7.0.2",
     "highcharts-react-official": "^2.0.0",

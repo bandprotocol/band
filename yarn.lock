@@ -1864,10 +1864,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-band.js@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.12.tgz#fa86bb47744c28a0da08c399a4364f0057acbad7"
-  integrity sha512-QR3Juo7jFhpMfdO14xiJ+dNLZIJU0zO+Yhe79nRop4TQ+BYPhgi3PvU6l092TXA2hlc+SQH/E3pZpC5NEtUuBg==
+band.js@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.14.tgz#6d7aa2b323a105383b21ed4b80b9496f33c2be6f"
+  integrity sha512-0+fdaIkf4iGLeG/Il5xmSX0T/p0dar2VUZYUTaDldkf8AGQjKPPzI/RuL8t3QMJESts5ZgULb4oW/DSOpboIJA==
   dependencies:
     axios "^0.18.0"
     bignumber.js "^8.0.1"

@@ -4,6 +4,7 @@ import { updateProvider, saveBandInfo, saveCommunityInfo } from 'actions'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
+import priceSaga from 'sagas/prices'
 import providersSaga from 'sagas/providers'
 import transactionsSaga from 'sagas/transaction'
 
@@ -57,6 +58,7 @@ export default function*() {
     fork(balancesSaga),
     fork(transactionsSaga),
     fork(ordersSaga),
+    fork(priceSaga),
   ])
   yield* baseInitialize()
 }
