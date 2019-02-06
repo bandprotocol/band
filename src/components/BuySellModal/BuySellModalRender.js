@@ -3,6 +3,7 @@ import { Image, Flex, Box, Button, Text, Card } from 'ui/common'
 import { colors } from 'ui'
 import styled from 'styled-components'
 import BN from 'utils/bignumber'
+import DotLoading from 'components/DotLoading'
 
 const AmountInput = styled.input`
   width: 100%;
@@ -128,7 +129,7 @@ const Amount = ({ amountStatus, symbol, amount, handleChange }) => (
   </Box>
 )
 
-const EstimatedPrice = ({ price, priceStatus }) => (
+const EstimatedPrice = ({ price, priceStatus, loading }) => (
   <Box>
     <Text
       fontSize={0}
@@ -147,22 +148,28 @@ const EstimatedPrice = ({ price, priceStatus }) => (
         borderRadius: '2px',
       }}
     >
-      <Flex flexDirection="row">
-        <Text
-          flex={1}
-          fontSize={0}
-          color={colors.purple.dark}
-          pl={3}
-          py={3}
-          style={{
-            width: '300px',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-          }}
-        >
-          {BN.isBN(price) ? price.pretty() : price}
-        </Text>
+      <Flex flexDirection="row" alignItems="center">
+        {loading ? (
+          <Box flex={1} pl={2} py="20px">
+            <DotLoading color="#b1b8e7" size="6px" />
+          </Box>
+        ) : (
+          <Text
+            flex={1}
+            fontSize={0}
+            color={colors.purple.dark}
+            pl={3}
+            py={3}
+            style={{
+              width: '300px',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {BN.isBN(price) ? price.pretty() : price}
+          </Text>
+        )}
         <SymbolType>BAND</SymbolType>
       </Flex>
     </Box>
@@ -318,6 +325,7 @@ export default ({
   amountStatus,
   priceStatus,
   priceLimitStatus,
+  loading,
   handleChange,
   setType,
   showAdvance,
@@ -343,7 +351,11 @@ export default ({
             amountStatus={amountStatus}
             handleChange={handleChange.bind(null, 'amount')}
           />
-          <EstimatedPrice price={price} priceStatus={priceStatus} />
+          <EstimatedPrice
+            price={price}
+            priceStatus={priceStatus}
+            loading={loading}
+          />
           <Advance
             showAdvance={showAdvance}
             toggleAdvance={toggleAdvance}

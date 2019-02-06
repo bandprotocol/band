@@ -2,6 +2,7 @@ import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
 import { Image, Flex, Text, Bold } from 'ui/common'
+import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 // Images
 import DetailSrc from 'images/detail.svg'
@@ -78,9 +79,7 @@ export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
       </Text>
       <Flex flexDirection="row" alignItems="flex-end" py={1}>
         {balance === undefined ? (
-          <Text color={colors.text.grey} fontSize={1}>
-            Loading price ...
-          </Text>
+          <CircleLoadingSpinner radius="16px" />
         ) : (
           <React.Fragment>
             <Text color={colors.text.grey} fontSize={2}>

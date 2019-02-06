@@ -13,6 +13,7 @@ import {
   Card,
   Bold,
 } from 'ui/common'
+import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 import WorkWithUsSrc from 'images/work-with-us.svg'
 
@@ -211,9 +212,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
           </React.Fragment>
         ) : (
           <Flex style={{ height: 225 }} alignItems="center">
-            <Text color={colors.text.grey} fontSize={1}>
-              Loading communities ...
-            </Text>
+            <CircleLoadingSpinner radius="20" />
           </Flex>
         )}
       </Flex>

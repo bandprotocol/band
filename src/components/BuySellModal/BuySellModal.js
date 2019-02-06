@@ -79,6 +79,7 @@ export default class BuySellModal extends React.Component {
               ? 'INSUFFICIENT_TOKEN'
               : 'OK',
         },
+        loading: true,
       })
       await this.updatePrice()
       return null
@@ -89,6 +90,7 @@ export default class BuySellModal extends React.Component {
         ...this.state[type],
         amountStatus: 'INVALID_AMOUNT',
       },
+      loading: false,
     })
   }
 
@@ -146,6 +148,7 @@ export default class BuySellModal extends React.Component {
               ? 'INSUFFICIENT_BAND'
               : 'OK',
         },
+        loading: false,
       })
     } catch {
       this.setState({
@@ -153,6 +156,7 @@ export default class BuySellModal extends React.Component {
           ...this.state[type],
           amountStatus: 'INVALID_AMOUNT',
         },
+        loading: false,
       })
     }
   }
@@ -198,6 +202,7 @@ export default class BuySellModal extends React.Component {
         amountStatus={currentType.amountStatus}
         priceStatus={currentType.priceStatus}
         priceLimitStatus={currentType.priceLimitStatus}
+        loading={loading}
         handleChange={this.handleChange.bind(this)}
         setType={this.setType.bind(this)}
         showAdvance={showAdvance}
