@@ -39,7 +39,7 @@ BN.prototype.shortPretty = function() {
 BN.prototype.communityToBand = function(communityPrice) {
   return new BN(
     BigNumber(this.toString())
-      .multipliedBy(BigNumber(communityPrice.toString()).dividedBy(DIVISOR))
+      .multipliedBy(BigNumber(communityPrice))
       .toFixed(0),
   )
 }

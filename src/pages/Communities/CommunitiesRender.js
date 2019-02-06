@@ -157,7 +157,16 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
         {communities && communities.length ? (
           <React.Fragment>
             {communities.map(
-              ({ name, logo, description, website, author, last24Hrs }) => (
+              ({
+                name,
+                logo,
+                description,
+                website,
+                author,
+                marketCap,
+                price,
+                last24Hrs,
+              }) => (
                 <BandApp
                   key={name}
                   name={name}
@@ -168,9 +177,9 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
                   onClick={() => history.push(`/community/${name}/detail`)}
                 >
                   <PriceDetail
-                    marketCap={BN.parse(100000).bandToUSD(bandPrice)} // Market Cap is TotalSupply in Band Unit
-                    price={BN.parse(1.23).bandToUSD(bandPrice)} // TODO: hardcode for testing, (1.23 BAND / 1 TOKEN)
-                    last24Hrs={last24Hrs}
+                    marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
+                    price={BN.parse(price).bandToUSD(bandPrice)}
+                    last24Hrs={last24Hrs.toFixed(2)}
                   />
                 </BandApp>
               ),
