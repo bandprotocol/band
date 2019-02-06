@@ -15,9 +15,9 @@ export default ({ modalName, data, hideModal }) => (
     {modalName == 'LOGIN' ? (
       <LoginModal />
     ) : modalName === 'BUY' ? (
-      <BuySellModal type="BUY" communityName={data.communityName} />
+      <BuySellModal type="buy" communityName={data.communityName} />
     ) : modalName === 'SELL' ? (
-      <BuySellModal type="SELL" communityName={data.communityName} />
+      <BuySellModal type="sell" communityName={data.communityName} />
     ) : modalName === 'CONFIRMATION' ? (
       <ConfirmModal txHash={data.txHash} />
     ) : null}

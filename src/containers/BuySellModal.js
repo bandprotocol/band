@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 
 import BuySellModal from 'components/BuySellModal'
 
+import { bandBalanceSelector } from 'selectors/balances'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentCommunityClientSelector } from 'selectors/current'
 
@@ -14,6 +15,8 @@ const mapStateToProps = (state, { type, communityName }) => {
     name: communityName,
     logo: community.get('logo'),
     symbol: community.get('symbol'),
+    bandBalance: bandBalanceSelector(state),
+    tokenBalance: community.get('balance'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {
       name: communityName,
