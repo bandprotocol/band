@@ -3,35 +3,88 @@ import styled from 'styled-components'
 import { Flex, Box, Text } from 'ui/common'
 import colors from 'ui/colors'
 
-const TextClickable = styled(Text).attrs({
-  px: '7px',
-  py: '12px',
-  fontSize: '13px',
-  color: colors.purple.normal,
+const LeftRight = styled(Text).attrs({
+  mx: '2px',
+  fontSize: '25px',
+  color: colors.purple.dark,
 })`
   cursor: pointer;
+  border-radius: 3px;
+  width: 30px;
+  height: 25px;
+  text-align: center;
+  background-color: #ffffff;
+  transition: background-color 300ms linear;
+
+  &: hover {
+    background-color: #dcdee8;
+    transition: background-color 300ms linear;
+  }
 
   pointer-events: ${p => (p.disabled ? 'none' : 'auto')};
   opacity: ${p => (p.disabled ? '0.4' : '1')};
 `
 
-const LessThan = ({ currentPage, numberOfPages, onChangePage }) =>
-  [...Array(numberOfPages).keys()].map(i => (
-    <TextClickable
-      onClick={() => onChangePage(i + 1)}
-      disabled={currentPage === i + 1}
-    >
-      {i + 1}
-    </TextClickable>
-  ))
+const TextClickable = styled(Text).attrs({
+  fontSize: '13px',
+  mx: '6px',
+})`
+  cursor: pointer;
+  border-radius: 3px;
+  height: 25px;
+  min-width: 30px;
+  text-align: center;
+  line-height: 27px;
+  background-color: #ffffff;
+  transition: background-color 300ms linear;
 
-const MoreThan = ({ currentPage, numberOfPages, onChangePage }) => {
-  // case1 currentPage = 1
-  if (currentPage === 1) {
+  &: hover {
+    background-color: #dcdee8;
+    transition: background-color 300ms linear;
+  }
+
+  color: ${p => (p.disabled ? '#ffffff' : colors.purple.dark)};
+  background: ${p => (p.disabled ? colors.purple.dark : '#ffffff')};
+  pointer-events: ${p => (p.disabled ? 'none' : 'auto')};
+`
+
+const DoubleLeftArrow = ({ color, transform }) => (
+  <svg viewBox="-10 0 49 24" style={{ transform }}>
+    <path
+      style={{ fill: color }}
+      d="M14 24c-.2 0-.5-.1-.6-.2l-13-11c-.3-.2-.4-.5-.4-.8 0-.3.1-.6.4-.8l13-11c.4-.4 1.1-.3 1.4.1.4.4.3 1.1-.1 1.4L2.5 12l12.1 10.2c.4.4.5 1 .1 1.4-.1.3-.4.4-.7.4z"
+    />
+    <path
+      style={{ fill: color }}
+      d="M26 24c-.2 0-.5-.1-.6-.2l-13-11c-.3-.2-.4-.5-.4-.8 0-.3.1-.6.4-.8l13-11c.4-.4 1.1-.3 1.4.1.4.4.3 1.1-.1 1.4L14.5 12l12.1 10.2c.4.4.5 1 .1 1.4-.1.3-.4.4-.7.4z"
+    />
+  </svg>
+)
+
+const LeftArrow = ({ color, transform }) => (
+  <svg viewBox="-14 0 49 24" style={{ transform }}>
+    <path
+      style={{ fill: color }}
+      d="M14 24c-.2 0-.5-.1-.6-.2l-13-11c-.3-.2-.4-.5-.4-.8 0-.3.1-.6.4-.8l13-11c.4-.4 1.1-.3 1.4.1.4.4.3 1.1-.1 1.4L2.5 12l12.1 10.2c.4.4.5 1 .1 1.4-.1.3-.4.4-.7.4z"
+    />
+  </svg>
+)
+
+const DoubleRightArrow = ({ color }) => (
+  <DoubleLeftArrow color={color} transform={'rotate(180deg)'} />
+)
+
+const RightArrow = ({ color }) => (
+  <LeftArrow color={color} transform={'rotate(180deg)'} />
+)
+
+const NumberPage = ({ currentPage, numberOfPages, onChangePage }) => {
+  // case1 currentPage <= 3
+  if (currentPage <= 3) {
     return (
       <React.Fragment>
         {[...Array(numberOfPages).keys()]
-          .filter(page => page <= 3)
+          .filter(page => page <= 4)
           .map(i => (
             <TextClickable
               onClick={() => onChangePage(i + 1)}
@@ -40,26 +93,16 @@ const MoreThan = ({ currentPage, numberOfPages, onChangePage }) => {
               {i + 1}
             </TextClickable>
           ))}
-        <Text px="5px" py="9px" fontSize={3}>
-          ...
-        </Text>
-        <TextClickable
-          disabled={currentPage === numberOfPages}
-          onClick={() => onChangePage(numberOfPages)}
-        >
-          {numberOfPages}
-        </TextClickable>
       </React.Fragment>
     )
   }
 
-  // show lastIndex - 5 to lastIndex
-  if (currentPage >= numberOfPages - 3 && currentPage <= numberOfPages) {
-    const startIndex = numberOfPages - 6
+  // case2 currentPage >= numberOfPages - 2
+  if (currentPage >= numberOfPages - 2) {
     return (
       <React.Fragment>
         {[...Array(numberOfPages).keys()]
-          .filter(page => page >= startIndex)
+          .filter(page => page >= numberOfPages - 5)
           .map(i => (
             <TextClickable
               onClick={() => onChangePage(i + 1)}
@@ -72,77 +115,67 @@ const MoreThan = ({ currentPage, numberOfPages, onChangePage }) => {
     )
   }
 
+  // case3 currentPage > 3 && currentPage < numberOfPages - 2
   return (
     <React.Fragment>
       {[...Array(numberOfPages).keys()]
-        .filter(page => page <= currentPage + 2 && page >= currentPage - 1)
+        .filter(page => page <= currentPage + 1 && page >= currentPage - 3)
         .map(i => (
           <TextClickable
-            onClick={() => onChangePage(i)}
-            disabled={currentPage === i}
+            onClick={() => onChangePage(i + 1)}
+            disabled={currentPage === i + 1}
           >
-            {i}
+            {i + 1}
           </TextClickable>
         ))}
-      <Text px="5px" py="9px" fontSize={3}>
-        ...
-      </Text>
-      <TextClickable
-        disabled={currentPage === numberOfPages}
-        onClick={() => onChangePage(numberOfPages)}
-      >
-        {numberOfPages}
-      </TextClickable>
     </React.Fragment>
   )
 }
 
 export default ({ currentPage, numberOfPages, onChangePage }) => (
-  <Flex flexDirectio="row" alignItem="center" justifyContent="center">
-    <TextClickable
+  <Flex flexDirectio="row" alignItem="center" justifyContent="center" mr="0px">
+    <LeftRight
       disabled={currentPage === 1}
       onClick={() => onChangePage(1)}
       left
     >
-      <i class="fas fa-angle-left" />
-    </TextClickable>
-    <TextClickable
+      <DoubleLeftArrow color={colors.purple.dark} />
+    </LeftRight>
+    <LeftRight
       disabled={currentPage === 1}
       onClick={() => onChangePage(currentPage - 1)}
       left
     >
-      Previous
-    </TextClickable>
+      <LeftArrow color={colors.purple.dark} />
+    </LeftRight>
     {/* inside */}
-    {/* Less than 6 */}
-    {numberOfPages <= 6 && (
-      <LessThan
-        currentPage={currentPage}
-        numberOfPages={numberOfPages}
-        onChangePage={onChangePage}
-      />
-    )}
-    {/* More than 6 */}
-    {numberOfPages > 6 && (
-      <MoreThan
-        currentPage={currentPage}
-        numberOfPages={numberOfPages}
-        onChangePage={onChangePage}
-      />
-    )}
-    <TextClickable
+    <NumberPage
+      currentPage={currentPage}
+      numberOfPages={numberOfPages}
+      onChangePage={onChangePage}
+    />
+    <LeftRight
       disabled={currentPage === numberOfPages}
       onClick={() => onChangePage(currentPage + 1)}
       right
     >
-      Next
-    </TextClickable>
-    <TextClickable
+      <RightArrow color={colors.purple.dark} />
+    </LeftRight>
+    <LeftRight
       disabled={currentPage === numberOfPages}
       onClick={() => onChangePage(numberOfPages)}
       right
     >
-      <i class="fas fa-angle-right" />
-    </TextClickable>
+      <DoubleRightArrow color={colors.purple.dark} />
+    </LeftRight>
+    <Text
+      fontSize="12px"
+      lineHeight="25px"
+      color="#a7a9b2"
+      letterSpacing="-0.16px"
+      px="3px"
+    >
+      {numberOfPages} PAGE{numberOfPages === 1 ? '' : 'S'}
+    </Text>
   </Flex>
 )
