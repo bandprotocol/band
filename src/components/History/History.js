@@ -19,7 +19,9 @@ export default class History extends React.Component {
   }
 
   onChange(selectedOption) {
-    this.setState({ selectedOption })
+    if (selectedOption.value !== this.state.selectedOption.value)
+      this.setState({ selectedOption, currentPage: 1 })
+    else this.setState({ selectedOption })
   }
 
   onChangePage(selectedPage) {
@@ -34,16 +36,16 @@ export default class History extends React.Component {
       { value: 'mine', label: 'My Orders' },
     ]
     const { selectedOption, currentPage } = this.state
-
+    const { communityName, pageSize } = this.props
     return (
       <HistoryRender
         options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
-        communityName={this.props.communityName}
-        numberOfPages={this.props.numberOfPages}
+        communityName={communityName}
         currentPage={currentPage}
         onChangePage={this.onChangePage.bind(this)}
+        pageSize={pageSize}
       />
     )
   }

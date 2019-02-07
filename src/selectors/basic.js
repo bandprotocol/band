@@ -7,3 +7,5 @@ export const transactionSelector = state => state.get('transaction')
 export const nameSelector = (_, { name }) => name
 export const typeSelector = (_, { type }) => type
 export const txHashSelector = (_, { txHash }) => txHash
+export const pageSelector = (_, { page }) => page
+export const pageSizeSelector = (_, { pageSize }) => pageSize

@@ -11,6 +11,6 @@ export default ({ communityName }) => (
   <PageContainer withSidebar>
     <CommunityDescription communityName={communityName} />
     <BuySell communityName={communityName} />
-    <History communityName={communityName} />
+    <History communityName={communityName} pageSize={10} />
   </PageContainer>
 )

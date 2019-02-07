@@ -7,10 +7,15 @@ import HistoryBody from 'components/HistoryBody'
 import { loadOrderHistory } from 'actions'
 import { orderHistorySelector } from 'selectors/order'
 
-const mapStateToProps = (state, { communityName, isAll }) => ({
+const mapStateToProps = (
+  state,
+  { communityName, isAll, currentPage, pageSize },
+) => ({
   items: orderHistorySelector(state, {
     name: communityName,
     type: isAll,
+    page: currentPage,
+    pageSize,
   }).toJS(),
 })
 

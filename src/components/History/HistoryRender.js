@@ -1,7 +1,7 @@
 import React from 'react'
 
 import HistoryBody from 'containers/HistoryBody'
-import Pagination from 'components/Pagination'
+import OrderPagination from 'containers/OrderPagination'
 
 import Select from 'react-select'
 import { Flex, Text, Box, Card } from 'ui/common'
@@ -39,9 +39,9 @@ export default ({
   selectedOption,
   onChange,
   communityName,
-  numberOfPages,
   currentPage,
   onChangePage,
+  pageSize,
 }) => (
   <Card
     variant="detail"
@@ -73,9 +73,13 @@ export default ({
       <HistoryBody
         communityName={communityName}
         isAll={selectedOption.value === 'all'}
+        currentPage={currentPage}
+        pageSize={pageSize}
       />
-      <Pagination
-        numberOfPages={numberOfPages}
+      <OrderPagination
+        communityName={communityName}
+        isAll={selectedOption.value === 'all'}
+        pageSize={pageSize}
         currentPage={currentPage}
         onChangePage={onChangePage}
       />
