@@ -196,22 +196,37 @@ contract BandToken is ERC20, Ownable, Feeless {
   }
 
   /**
+   * @dev Similar to transfer, with extra parameter sender.
+   */
+  function transferFeeless(address sender, address to, uint256 value) 
+    public
+    feeless(sender)
+    returns (bool)
+  {
+    require(value <= unlockedBalanceOf(sender));
+    _transfer(sender, to, value);
+    return true;
+  }
+
+  /**
   * @dev Transfer tokens and call the reciver's given function with supplied
   * data, using ERC165 to determine interoperability.
   */
   function transferAndCall(
+    address sender,
     address to,
     uint256 value,
     bytes4 sig,
     bytes calldata data
   )
     external
+    feeless(sender)
     returns (bool)
   {
-    require(value <= unlockedBalanceOf(msg.sender));
-    super.transfer(to, value);
+    require(value <= unlockedBalanceOf(sender));
+    _transfer(sender, to, value);
     require(ERC165Checker._supportsInterface(to, sig));
-    (bool success,) = to.call(abi.encodePacked(sig, uint256(msg.sender), value, data));
+    (bool success,) = to.call(abi.encodePacked(sig, uint256(sender), value, data));
     require(success);
     return true;
   }

@@ -22,15 +22,11 @@ contract Feeless {
 
   /**
   * @dev A function for setting the state variable execDelegator.
-  * If there is no execDelegator then anyone can set execDelegator is himself.
-  * If there is an existing execDelegator then only him can use this function.
+  * Can only be set onece.
   * @param nextExecDelegator address of new execDelegator
   */
   function setExecDelegator(address nextExecDelegator) public {
-    require(
-      execDelegator == address(0)||
-      msg.sender == execDelegator
-    );
+    require(execDelegator == address(0));
     execDelegator = nextExecDelegator;
   }
 }

@@ -17,6 +17,16 @@ contract('BandFactory', ([owner, alice, bob]) => {
     this.contract = await BandFactory.deployed();
     this.band = await BandToken.at(await this.contract.band());
   });
+  afterEach(async () => {
+    const aliceBalance = await this.band.balanceOf(alice);
+    const bobBalance = await this.band.balanceOf(bob);
+    if (!aliceBalance.isZero()) {
+      await this.band.transfer(owner, aliceBalance, { from: alice });
+    }
+    if (!bobBalance.isZero()) {
+      await this.band.transfer(owner, bobBalance, { from: bob });
+    }
+  });
   it('should create band contract', async () => {
     (await this.band.name()).should.eq('BandToken');
     (await this.band.symbol()).should.eq('BAND');
@@ -24,6 +34,69 @@ contract('BandFactory', ([owner, alice, bob]) => {
   });
   it('should be recognized by BandToken', async () => {
     (await this.band.execDelegator()).should.eq(this.contract.address);
+  });
+
+  it('should be able to transfer feelessly', async () => {
+    const transferData = this.band.contract.methods.transferFeeless(
+      owner, alice, 100000
+    ).encodeABI();
+    const nonce = 0;
+    const dataNoFuncSig = '0x' + transferData.slice(10 + 64);
+    const sig = await web3.eth.sign(
+      web3.utils.soliditySha3(nonce, dataNoFuncSig),
+      owner
+    );
+    await this.contract.sendDelegatedExecution(
+      owner,
+      this.band.address,
+      '0x' + transferData.slice(2, 10),
+      dataNoFuncSig,
+      sig,
+      { from: bob },
+    );
+    (await this.band.balanceOf(alice)).toString().should.eq('100000');
+  });
+
+  it('should revert, did not use latest nonce of this user', async () => {
+    const transferData = this.band.contract.methods.transferFeeless(
+      owner, alice, 100000
+    ).encodeABI();
+    let nonce = 1;
+    const dataNoFuncSig = '0x' + transferData.slice(10 + 64);
+    let sig = await web3.eth.sign(
+      web3.utils.soliditySha3(nonce, dataNoFuncSig),
+      owner
+    );
+    await this.contract.sendDelegatedExecution(
+      owner,
+      this.band.address,
+      '0x' + transferData.slice(2, 10),
+      dataNoFuncSig,
+      sig,
+      { from: bob },
+    );
+    (await this.band.balanceOf(alice)).toString().should.eq('100000');
+    await reverting(this.contract.sendDelegatedExecution(
+      owner,
+      this.band.address,
+      '0x' + transferData.slice(2, 10),
+      dataNoFuncSig,
+      sig,
+      { from: bob },
+    ));
+    nonce = 13;
+    sig = await web3.eth.sign(
+      web3.utils.soliditySha3(nonce, dataNoFuncSig),
+      owner
+    );
+    await reverting(this.contract.sendDelegatedExecution(
+      owner,
+      this.band.address,
+      '0x' + transferData.slice(2, 10),
+      dataNoFuncSig,
+      sig,
+      { from: bob },
+    ));
   });
 
   context('Create new community', () => {
@@ -105,6 +178,40 @@ contract('BandFactory', ([owner, alice, bob]) => {
         .should.eq('0');
     });
 
+    it('should be able to transferAndCall feelessly', async () => {
+      await this.band.transfer(alice, 100000, { from: owner });
+
+      const calldata = this.core.contract.methods
+        .buy(alice, 0, 100)
+        .encodeABI();
+      const transferData = this.band.contract.methods.transferAndCall(
+        alice,
+        this.core.address,
+        11000,
+        '0x' + calldata.slice(2, 10),
+        '0x' + calldata.slice(138)
+      ).encodeABI();
+
+      const nonce = 0;
+      const dataNoFuncSig = '0x' + transferData.slice(10 + 64);
+      const sig = await web3.eth.sign(
+        web3.utils.soliditySha3(nonce, dataNoFuncSig),
+        alice
+      );
+
+      await this.contract.sendDelegatedExecution(
+        alice,
+        this.band.address,
+        '0x' + transferData.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: bob },
+      );
+      (await this.band.balanceOf(alice)).toString().should.eq('90000');
+      (await this.token.balanceOf(alice)).toString().should.eq('100');
+      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+    });
+
     it('should allow buying tokens if calling via band tokens', async () => {
       await this.band.transfer(alice, 100000, { from: owner });
       await this.band.transfer(bob, 100000, { from: owner });
@@ -112,14 +219,15 @@ contract('BandFactory', ([owner, alice, bob]) => {
         .buy(alice, 0, 100)
         .encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
-        11000,
+        30000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
         { from: alice },
       );
-      (await this.band.balanceOf(alice)).toString().should.eq('90000');
-      (await this.token.balanceOf(alice)).toString().should.eq('100');
+      (await this.band.balanceOf(alice)).toString().should.eq('70000');
+      (await this.token.balanceOf(alice)).toString().should.eq('200');
       (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
     });
     it('should revert if use new voting address', async () => {
@@ -211,7 +319,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
         [8, 1, 0, 2],
         { from: alice },
       );
-      const addressCore = await this.contract.cores(7);
+      const addressCore = await this.contract.cores(8);
       const currentCore = await CommunityCore.at(addressCore);
       const currentToken = await CommunityToken.at(
         await currentCore.commToken(),

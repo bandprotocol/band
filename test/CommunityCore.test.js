@@ -71,6 +71,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await reverting(
         this.band.transferAndCall(
+          alice,
           this.core.address,
           110000,
           '0x' + calldata.slice(2, 10),
@@ -84,6 +85,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await reverting(
         this.band.transferAndCall(
+          alice,
           this.core.address,
           9000,
           '0x' + calldata.slice(2, 10),
@@ -96,6 +98,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should allow buying tokens if calling via band tokens', async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         11000,
         '0x' + calldata.slice(2, 10),
@@ -110,6 +113,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should increase price for subsequent purchases', async () => {
       const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         11000,
         '0x' + calldata1.slice(2, 10),
@@ -118,6 +122,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       const calldata2 = this.core.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
+        bob,
         this.core.address,
         11000,
         '0x' + calldata2.slice(2, 10),
@@ -132,6 +137,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should allow selling with correct price drop', async () => {
       const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         11000,
         '0x' + calldata1.slice(2, 10),
@@ -168,6 +174,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     beforeEach(async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         20000,
         '0x' + calldata.slice(2, 10),
@@ -202,6 +209,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
       const calldata = this.core.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         20000,
         '0x' + calldata.slice(2, 10),
@@ -280,6 +288,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     beforeEach(async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         20000,
         '0x' + calldata.slice(2, 10),
@@ -315,6 +324,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should not impose commission on purchases', async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 15).encodeABI();
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         10000,
         '0x' + calldata.slice(2, 10),
@@ -347,6 +357,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     beforeEach(async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        owner,
         this.core.address,
         100000,
         '0x' + calldata.slice(2, 10),
@@ -354,6 +365,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
       await this.band.transferAndCall(
+        alice,
         this.core.address,
         100000,
         '0x' + calldata.slice(2, 10),
@@ -439,6 +451,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     beforeEach(async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
+        owner,
         this.core.address,
         20000,
         '0x' + calldata.slice(2, 10),

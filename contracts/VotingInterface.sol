@@ -19,13 +19,13 @@ contract VotingInterface {
    * Mimic the parameters in Parameters.sol and make it private.
    * So no one can write this params.
    */
-  mapping (bytes32 => uint256) private params;
+  mapping (bytes32 => uint256) private _params;
 
   /**
    * Make these params readable via internal call.
    */
   function getParam(bytes32 key) internal view returns(uint256) {
-    return params[key];
+    return _params[key];
   }
 
   /**

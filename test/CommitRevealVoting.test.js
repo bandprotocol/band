@@ -64,6 +64,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     // alice buy 100 XCH
     const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
     await this.band.transferAndCall(
+      alice,
       this.core.address,
       11000,
       '0x' + calldata1.slice(2, 10),
@@ -74,6 +75,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     // bob buy 100 XCH
     const calldata2 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
     await this.band.transferAndCall(
+      bob,
       this.core.address,
       30000,
       '0x' + calldata2.slice(2, 10),
