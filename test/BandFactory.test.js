@@ -22,6 +22,9 @@ contract('BandFactory', ([owner, alice, bob]) => {
     (await this.band.symbol()).should.eq('BAND');
     (await this.band.decimals()).toString().should.eq('18');
   });
+  it('should be recognized by BandToken', async () => {
+    (await this.band.execDelegator()).should.eq(this.contract.address);
+  });
 
   context('Create new community', () => {
     beforeEach(async () => {
@@ -74,6 +77,12 @@ contract('BandFactory', ([owner, alice, bob]) => {
       (await this.token.name()).should.eq('CoinHatcher');
       (await this.token.symbol()).should.eq('XCH');
       (await this.token.decimals()).toString().should.eq('18');
+    });
+
+    it('should be recognized by core, params, token', async () => {
+      (await this.core.execDelegator()).should.eq(this.contract.address);
+      (await this.params.execDelegator()).should.eq(this.contract.address);
+      (await this.token.execDelegator()).should.eq(this.contract.address);
     });
 
     it('should allow getting existing parameters', async () => {
@@ -162,7 +171,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
       const newVote = await CommitRevealVoting.new({ from: alice });
       await this.contract.addVotingContract(newVote.address);
 
-      const x = await this.contract.createNewCommunity(
+      await this.contract.createNewCommunity(
         'CoinHatcher2',
         'XC2',
         18,
@@ -202,7 +211,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
         [8, 1, 0, 2],
         { from: alice },
       );
-      const addressCore = await this.contract.cores(6);
+      const addressCore = await this.contract.cores(7);
       const currentCore = await CommunityCore.at(addressCore);
       const currentToken = await CommunityToken.at(
         await currentCore.commToken(),

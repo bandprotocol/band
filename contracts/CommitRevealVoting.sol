@@ -3,11 +3,12 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./VotingInterface.sol";
+import "./Feeless.sol";
 
 /**
  * @title CommitRevealVoting
  */
-contract CommitRevealVoting is VotingInterface {
+contract CommitRevealVoting is VotingInterface, Feeless {
   using SafeMath for uint256;
 
   event PollCreated(  // A poll is created.
@@ -140,7 +141,7 @@ contract CommitRevealVoting is VotingInterface {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    ParametersInterface params
+    ParametersBase params
   )
     public
     pollMustNotExist(msg.sender, pollID)
@@ -302,7 +303,7 @@ contract CommitRevealVoting is VotingInterface {
     return keccak256(abi.encodePacked(weight, commit));
   }
 
-  function get(ParametersInterface params, bytes8 prefix, bytes24 key)
+  function get(ParametersBase params, bytes8 prefix, bytes24 key)
     internal
     view
     returns (uint256)

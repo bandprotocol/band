@@ -3,11 +3,12 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./VotingInterface.sol";
+import "./Feeless.sol";
 
 /**
  * @title SimpleVoting
  */
-contract SimpleVoting is VotingInterface {
+contract SimpleVoting is VotingInterface, Feeless {
   using SafeMath for uint256;
 
   event SimplePollCreated(  // A poll is created.
@@ -87,7 +88,7 @@ contract SimpleVoting is VotingInterface {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    ParametersInterface params
+    ParametersBase params
   )
     public
     pollMustNotExist(msg.sender, pollID)
@@ -186,7 +187,7 @@ contract SimpleVoting is VotingInterface {
     require(ResolveListener(pollContract).onResolved(pollID, pollState));
   }
 
-  function get(ParametersInterface params, bytes8 prefix, bytes24 key)
+  function get(ParametersBase params, bytes8 prefix, bytes24 key)
     internal
     view
     returns (uint256)

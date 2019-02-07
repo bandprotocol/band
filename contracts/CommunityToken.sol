@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
+import "./Feeless.sol";
 
 /**
  * @title CommunityToken
@@ -15,7 +16,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
  * Additionally, the contract has builtin voting power features, including
  * vote delegation and historical power tracking.
  */
-contract CommunityToken is IERC20, Ownable {
+contract CommunityToken is IERC20, Ownable, Feeless {
   using SafeMath for uint256;
 
   // `owner` chooses to delegate its voting power to `delegator`. Delegator

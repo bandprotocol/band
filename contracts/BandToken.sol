@@ -4,6 +4,8 @@ import "openzeppelin-solidity/contracts/introspection/ERC165Checker.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
+import "./Feeless.sol";
+
 
 /**
  * @title BandToken
@@ -13,7 +15,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
  * means not all of their tokens are transferable. Locked tokens will reduce
  * monthly proportionally until they are fully unlocked.
  */
-contract BandToken is ERC20, Ownable {
+contract BandToken is ERC20, Ownable, Feeless {
 
   string public constant name = "BandToken";
   string public constant symbol = "BAND";

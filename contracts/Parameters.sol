@@ -3,9 +3,10 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./BandContractBase.sol";
-import "./ParametersInterface.sol";
+import "./ParametersBase.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
+import "./Feeless.sol";
 
 /*
  * @title Parameters
@@ -14,15 +15,8 @@ import "./VotingInterface.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
+contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeless {
   using SafeMath for uint256;
-
-  /**
-   * Public map of all active parameters.
-   * This variable have to be declared first,
-   * if not "delegatecall" will use another variable instead.
-   */
-  mapping (bytes32 => uint256) public params;
 
   event ProposalProposed(  // A new proposal is proposed.
     uint256 indexed proposalID,
@@ -92,22 +86,6 @@ contract Parameters is BandContractBase, ParametersInterface, ResolveListener {
     (bool ok,) = address(voting).delegatecall(abi.encodePacked(bytes4(keccak256("verifyVotingParams()"))));
     require(ok);
 
-  }
-
-  /**
-   * @dev Return the value at the given key. Throw if the value is not set.
-   */
-  function get(bytes32 key) public view returns (uint256) {
-    uint256 value = params[key];
-    require(value != 0);
-    return value;
-  }
-
-  /**
-   * @dev Similar to get function, but returns 0 instead of throwing.
-   */
-  function getZeroable(bytes32 key) public view returns (uint256) {
-    return params[key];
   }
 
   /**

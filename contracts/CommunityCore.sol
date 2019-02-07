@@ -9,9 +9,9 @@ import "./BandContractBase.sol";
 import "./BandToken.sol";
 import "./CommunityToken.sol";
 import "./Equation.sol";
-import "./ParametersInterface.sol";
+import "./ParametersBase.sol";
 import "./Proof.sol";
-
+import "./Feeless.sol";
 
 /**
  * @title CommunityCore
@@ -22,7 +22,7 @@ import "./Proof.sol";
  * acts as the automated market maker, allowing anyone to buy/sell community
  * token with itself.
  */
-contract CommunityCore is BandContractBase, ERC165 {
+contract CommunityCore is BandContractBase, ERC165, Feeless {
   using Equation for Equation.Node[];
   using SafeMath for uint256;
   using Proof for bytes32;
@@ -78,7 +78,7 @@ contract CommunityCore is BandContractBase, ERC165 {
 
   BandToken public bandToken;
   CommunityToken public commToken;
-  ParametersInterface public params;
+  ParametersBase public params;
 
   // Denominator for inflation-related ratios and sales tax.
   uint256 public constant DENOMINATOR = 1e12;
@@ -129,7 +129,7 @@ contract CommunityCore is BandContractBase, ERC165 {
   constructor(
     BandToken _bandToken,
     CommunityToken _commToken,
-    ParametersInterface _params,
+    ParametersBase _params,
     uint256[] memory _expressions
   )
     public

@@ -6,7 +6,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./BandContractBase.sol";
 import "./CommunityToken.sol";
-import "./ParametersInterface.sol";
+import "./ParametersBase.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
 
@@ -78,7 +78,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
 
   CommunityToken public token;
   VotingInterface public voting;
-  ParametersInterface public params;
+  ParametersBase public params;
 
   // Namespace prefix for all parameters (See Parameters.sol) for usage inside
   // this TCR.
@@ -118,7 +118,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
     bytes8 _prefix,
     CommunityToken _token,
     VotingInterface _voting,
-    ParametersInterface _params
+    ParametersBase _params
   )
     public
   {

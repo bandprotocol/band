@@ -7,13 +7,14 @@ import "./CommunityCore.sol";
 import "./CommunityToken.sol";
 import "./Parameters.sol";
 import "./VotingInterface.sol";
+import "./ExecutionDelegator.sol";
 
 import "./factory/TokenFactory.sol";
 import "./factory/ParametersFactory.sol";
 import "./factory/CoreFactory.sol";
 
 
-contract BandFactory is Ownable {
+contract BandFactory is Ownable, ExecutionDelegator {
   event BandCreated(
     address bandAddress,
     address indexed owner,
@@ -57,6 +58,8 @@ contract BandFactory is Ownable {
     parametersFactory = _parametersFactory;
     coreFactory = _coreFactory;
 
+    band.setExecDelegator(address(this));
+
     emit BandCreated(address(band), msg.sender, _totalSupply);
   }
 
@@ -73,9 +76,14 @@ contract BandFactory is Ownable {
     returns(bool)
   {
     require(verifiedVotingContracts[address(_voting)]);
+
     CommunityToken token = tokenFactory.create(_name, _symbol, _decimals);
     Parameters params = parametersFactory.create(token, _voting, _keys, _values);
     CommunityCore core = coreFactory.create(band, token, params, _expressions);
+
+    token.setExecDelegator(address(this));
+    params.setExecDelegator(address(this));
+    core.setExecDelegator(address(this));
 
     token.transferOwnership(address(core));
     cores.push(core);

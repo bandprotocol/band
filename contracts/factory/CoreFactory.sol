@@ -9,7 +9,7 @@ contract CoreFactory{
   function create(
     BandToken _bandToken,
     CommunityToken _commToken,
-    ParametersInterface _params,
+    ParametersBase _params,
     uint256[] calldata _expressions
   )
     external

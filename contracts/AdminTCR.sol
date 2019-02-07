@@ -16,7 +16,7 @@ contract AdminTCR is AdminInterface, SimpleTCR {
   constructor(
     CommunityToken token,
     VotingInterface voting,
-    ParametersInterface params
+    ParametersBase params
   )
     SimpleTCR("admin:", token, voting, params)
     public
