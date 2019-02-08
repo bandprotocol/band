@@ -4,7 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { Flex } from 'ui/common'
 
 import ScrollToTop from 'ScrollToTop'
-import Sidebar from 'containers/Sidebar'
+import Sidebar from 'components/Sidebar'
 import CommunitiesPage from 'pages/Communities'
 import CommunityDetailPage from 'pages/CommunityDetail'
 

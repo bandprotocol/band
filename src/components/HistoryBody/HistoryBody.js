@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 
 import { withRouter } from 'react-router-dom'
 
-import HistoryBody from 'components/HistoryBody'
+import HistoryBodyRender from './HistoryBodyRender'
 
 import { loadOrderHistory } from 'actions'
 import { orderHistorySelector } from 'selectors/order'
@@ -26,5 +26,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(HistoryBody),
+  )(HistoryBodyRender),
 )

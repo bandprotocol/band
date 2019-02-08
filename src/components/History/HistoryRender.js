@@ -1,7 +1,7 @@
 import React from 'react'
 
-import HistoryBody from 'containers/HistoryBody'
-import OrderPagination from 'containers/OrderPagination'
+import HistoryBody from 'components/HistoryBody'
+import { OrderPagination } from 'components/Pagination'
 
 import Select from 'react-select'
 import { Flex, Text, Box, Card } from 'ui/common'

@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 
 import { noOrderSelector } from 'selectors/order'
 
-import Pagination from 'components/Pagination'
+import PaginationRender from './PaginationRender'
 
 const mapStateToProps = (state, { communityName, pageSize, isAll }) => ({
   numberOfPages: Math.ceil(
@@ -15,4 +15,4 @@ const mapStateToProps = (state, { communityName, pageSize, isAll }) => ({
   ),
 })
 
-export default withRouter(connect(mapStateToProps)(Pagination))
+export default withRouter(connect(mapStateToProps)(PaginationRender))

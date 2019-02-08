@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import BuySell from 'components/BuySell'
+import BuySellRender from './BuySellRender'
 
 import { showModal } from 'actions'
 
@@ -15,5 +15,5 @@ export default withRouter(
   connect(
     null,
     mapDispatchToProps,
-  )(BuySell),
+  )(BuySellRender),
 )

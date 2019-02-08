@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import LoginModal from 'components/LoginModal'
+import LoginModalRender from './LoginModalRender'
 import { hideModal } from 'actions'
 
 const mapDispatchToProps = (dispatch, props) => ({
@@ -10,4 +10,4 @@ const mapDispatchToProps = (dispatch, props) => ({
 export default connect(
   null,
   mapDispatchToProps,
-)(LoginModal)
+)(LoginModalRender)

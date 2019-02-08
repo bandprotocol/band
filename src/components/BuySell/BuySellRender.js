@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Text, Button, Card } from 'ui/common'
-import Graph from 'containers/PriceGraph'
+import Graph from 'components/PriceGraph'
 
 export default ({ showBuy, showSell, communityName }) => (
   <Card variant="detail" bg="#fff" p="20px" style={{ alignSelf: 'flex-start' }}>

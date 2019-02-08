@@ -1,11 +1,10 @@
 import React from 'react'
-import { Flex } from 'ui/common'
 
 import PageContainer from 'components/PageContainer'
 
-import CommunityDescription from 'components/CommunityDescription/CommunityDescription'
-import History from 'containers/History'
-import BuySell from 'containers/BuySell'
+import CommunityDescription from 'components/CommunityDescription'
+import History from 'components/History'
+import BuySell from 'components/BuySell'
 
 export default ({ communityName }) => (
   <PageContainer withSidebar>

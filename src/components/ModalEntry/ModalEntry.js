@@ -3,7 +3,7 @@ import { currentModalSelector } from 'selectors/current'
 
 import { hideModal } from 'actions'
 
-import ModalEntry from 'components/ModalEntry'
+import ModalEntryRender from './ModalEntryRender'
 
 const mapStateToProps = state => {
   const modal = currentModalSelector(state)
@@ -21,4 +21,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ModalEntry)
+)(ModalEntryRender)

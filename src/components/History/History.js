@@ -2,7 +2,13 @@ import React from 'react'
 
 import HistoryRender from './HistoryRender'
 
-export default class History extends React.Component {
+import { connect } from 'react-redux'
+
+import { withRouter } from 'react-router-dom'
+
+import { loadOrderHistory } from 'actions'
+
+class History extends React.Component {
   state = {
     selectedOption: { value: 'all', label: 'All Orders' },
     currentPage: 1,
@@ -50,3 +56,13 @@ export default class History extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch, { communityName }) => ({
+  loadOrderHistory: isAll => dispatch(loadOrderHistory(communityName, isAll)),
+})
+export default withRouter(
+  connect(
+    null,
+    mapDispatchToProps,
+  )(History),
+)

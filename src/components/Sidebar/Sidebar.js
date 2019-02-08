@@ -1,9 +1,12 @@
 import React from 'react'
-import BN from 'utils/bignumber'
+import { connect } from 'react-redux'
 
 import SidebarRender from 'components/Sidebar/SidebarRender'
 
-export default class Sidebar extends React.Component {
+import { communityDetailSelector } from 'selectors/communities'
+import { bandPriceSelector } from 'selectors/bandPrice'
+
+class SideBar extends React.Component {
   state = {
     isSymbol: true,
   }
@@ -33,3 +36,18 @@ export default class Sidebar extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state, { communityName }) => {
+  const community = communityDetailSelector(state, { name: communityName })
+  if (!community) return {}
+  return {
+    name: communityName,
+    src: community.get('logo'),
+    balance: community.get('balance'),
+    symbol: community.get('symbol'),
+    communityPrice: community.get('price'),
+    bandPrice: bandPriceSelector(state),
+  }
+}
+
+export default connect(mapStateToProps)(SideBar)

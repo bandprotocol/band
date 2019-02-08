@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 
-import ConfirmModal from 'components/ConfirmModal'
+import ConfirmModalRender from './ConfirmModalRender'
 import { txConfirmationSelector } from 'selectors/transaction'
 
 import { hideModal } from 'actions'
@@ -20,4 +20,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ConfirmModal)
+)(ConfirmModalRender)

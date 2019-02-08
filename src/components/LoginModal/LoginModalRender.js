@@ -28,7 +28,7 @@ const openMetaMask = () => {
   window.open('https://metamask.io/', '_blank')
 }
 
-export default ({ showModal, hideLogin }) => (
+export default ({ hideLogin }) => (
   <Card variant="modal">
     <Flex
       flexDirection="column"

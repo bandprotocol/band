@@ -1,14 +1,11 @@
 import React from 'react'
-import Modal from 'react-modal'
-import { Flex, Box } from 'ui/common'
-import styled from 'styled-components'
 
 import ModalContainer from 'components/ModalContainer'
 
 // modal
-import LoginModal from 'containers/LoginModal'
-import BuySellModal from 'containers/BuySellModal'
-import ConfirmModal from 'containers/ConfirmModal'
+import LoginModal from 'components/LoginModal'
+import BuySellModal from 'components/BuySellModal'
+import ConfirmModal from 'components/ConfirmModal'
 
 export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
