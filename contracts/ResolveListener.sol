@@ -11,7 +11,7 @@ interface ResolveListener {
     Active,       // The poll is accepting commit/reveal.
     Yes,          // The poll is resolved, with result Yes.
     No,           // The poll is resolved, with result No.
-    Inconclusive  // The poll is resolved, with result No.
+    Inconclusive  // The poll is resolved, with result Inconclusive.
   }
 
   /**
