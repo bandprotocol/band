@@ -6,6 +6,7 @@ const {
 
 const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
+const BandFactory = artifacts.require('BandFactory');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
@@ -53,6 +54,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
   context('After successful initialization', () => {
     beforeEach(async () => {
+      this.factory = await BandFactory.deployed();
       this.band = await BandToken.new(1000000, owner, { from: owner });
       this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
         from: owner,
@@ -70,6 +72,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         [60, 60, 80, 60],
         { from: owner },
       );
+      await this.params.setExecDelegator(this.factory.address);
       this.admin = await AdminTCR.new(
         this.comm.address,
         this.voting.address,
@@ -86,6 +89,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         },
       );
       await this.params.propose(
+        owner,
         [web3.utils.fromAscii('core:admin_contract')],
         [this.admin.address],
         {
@@ -146,6 +150,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
     context('Checking parameter requirements', () => {
       it('should be Inconclusive case(participants less than minimum participation)', async () => {
         await this.params.propose(
+          owner,
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
           {
@@ -155,6 +160,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
         // commitvote
         await this.voting.commitVote(
+          alice,
           this.params.address,
           2,
           web3.utils.soliditySha3(20, 0, 42),
@@ -164,6 +170,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         );
         await this.voting.commitVote(
+          bob,
           this.params.address,
           2,
           web3.utils.soliditySha3(10, 0, 42),
@@ -175,10 +182,10 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await increase(duration.seconds(60));
 
         // reveal vote
-        await this.voting.revealVote(this.params.address, 2, 20, 0, 42, {
+        await this.voting.revealVote(alice, this.params.address, 2, 20, 0, 42, {
           from: alice,
         });
-        await this.voting.revealVote(this.params.address, 2, 10, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 2, 10, 0, 42, {
           from: bob,
         });
         await increase(duration.seconds(60));
@@ -194,6 +201,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
       it('should be Yes case(participants more than minimum participation)', async () => {
         await this.params.propose(
+          owner,
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
           {
@@ -203,6 +211,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
         // commitvote
         await this.voting.commitVote(
+          alice,
           this.params.address,
           2,
           web3.utils.soliditySha3(60, 0, 42),
@@ -212,6 +221,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         );
         await this.voting.commitVote(
+          bob,
           this.params.address,
           2,
           web3.utils.soliditySha3(60, 0, 42),
@@ -224,10 +234,10 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await increase(duration.seconds(60));
 
         // reveal vote
-        await this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
           from: alice,
         });
-        await this.voting.revealVote(this.params.address, 2, 60, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
           from: bob,
         });
 
@@ -244,6 +254,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
       it('should be No case(votes Yes less than support_required_pct)', async () => {
         await this.params.propose(
+          owner,
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
           {
@@ -253,6 +264,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
         // commitvote
         await this.voting.commitVote(
+          alice,
           this.params.address,
           2,
           web3.utils.soliditySha3(10, 70, 42),
@@ -262,6 +274,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         );
         await this.voting.commitVote(
+          bob,
           this.params.address,
           2,
           web3.utils.soliditySha3(40, 20, 42),
@@ -274,10 +287,10 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await increase(duration.seconds(60));
 
         // reveal vote
-        await this.voting.revealVote(this.params.address, 2, 10, 70, 42, {
+        await this.voting.revealVote(alice, this.params.address, 2, 10, 70, 42, {
           from: alice,
         });
-        await this.voting.revealVote(this.params.address, 2, 40, 20, 42, {
+        await this.voting.revealVote(bob, this.params.address, 2, 40, 20, 42, {
           from: bob,
         });
 
@@ -294,6 +307,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
       it('should change params:support_required_pct to 60', async () => {
         await this.params.propose(
+          owner,
           [web3.utils.fromAscii('params:support_required_pct')],
           [60],
           {
@@ -303,6 +317,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
 
         // commitvote
         await this.voting.commitVote(
+          alice,
           this.params.address,
           2,
           web3.utils.soliditySha3(100, 0, 42),
@@ -312,6 +327,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         );
         await this.voting.commitVote(
+          bob,
           this.params.address,
           2,
           web3.utils.soliditySha3(100, 0, 42),
@@ -324,10 +340,10 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await increase(duration.seconds(60));
 
         // reveal vote
-        await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+        await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
           from: alice,
         });
-        await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 2, 100, 0, 42, {
           from: bob,
         });
 
@@ -346,6 +362,113 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         ))
           .toString()
           .should.eq('60');
+      });
+
+      it('should support feeless execution', async () => {
+        const nonce = {
+          alice: (await this.factory.execNonces(alice)).toNumber(),
+          bob: (await this.factory.execNonces(bob)).toNumber(),
+          owner: (await this.factory.execNonces(owner)).toNumber(),
+        };
+        let data = await this.params.contract.methods.propose(
+          owner,
+          [web3.utils.fromAscii('params:support_required_pct')],
+          [60]
+        ).encodeABI();
+        let dataNoFuncSig = '0x' + data.slice(10 + 64);
+        let sig = await web3.eth.sign(
+          web3.utils.soliditySha3(nonce.owner++, dataNoFuncSig),
+          owner
+        );
+        await this.factory.sendDelegatedExecution(
+          owner,
+          this.params.address,
+          '0x' + data.slice(2, 10),
+          dataNoFuncSig,
+          sig,
+          { from: alice },
+        );
+        // set voting's execDelegator to factory.
+        await this.voting.setExecDelegator(this.factory.address);
+        // alice commit vote
+        data = await this.voting.contract.methods.commitVote(
+          alice,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(100, 0, 42),
+          '0x00',
+          100,
+          0
+        ).encodeABI();
+        dataNoFuncSig = '0x' + data.slice(10 + 64);
+        sig = await web3.eth.sign(
+          web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+          alice
+        );
+        await this.factory.sendDelegatedExecution(
+          alice,
+          this.voting.address,
+          '0x' + data.slice(2, 10),
+          dataNoFuncSig,
+          sig,
+          { from: owner },
+        );
+        // bob commit vote
+        data = await this.voting.contract.methods.commitVote(
+          bob,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(100, 0, 42),
+          '0x00',
+          100,
+          0
+        ).encodeABI();
+        dataNoFuncSig = '0x' + data.slice(10 + 64);
+        sig = await web3.eth.sign(
+          web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+          bob
+        );
+        await this.factory.sendDelegatedExecution(
+          bob,
+          this.voting.address,
+          '0x' + data.slice(2, 10),
+          dataNoFuncSig,
+          sig,
+          { from: owner },
+        );
+
+        await increase(duration.seconds(60));
+
+        // reveal vote
+        await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
+          from: owner,
+        });
+        await this.voting.revealVote(bob, this.params.address, 2, 100, 0, 42, {
+          from: owner,
+        });
+
+        await increase(duration.seconds(60));
+
+        // resolvePoll
+        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+
+        // assertion
+        (await this.voting.polls(this.params.address, 2)).pollState
+          .toString()
+          .should.be.eq('2');
+
+        (await this.params.get(
+          web3.utils.fromAscii('params:support_required_pct'),
+        ))
+          .toString()
+          .should.eq('60');
+        // check nonce of each user
+        (await this.factory.execNonces(alice)
+        ).toNumber().should.eq(nonce.alice);
+        (await this.factory.execNonces(bob)
+        ).toNumber().should.eq(nonce.bob);
+        (await this.factory.execNonces(owner)
+        ).toNumber().should.eq(nonce.owner);
       });
     });
   });

@@ -103,8 +103,9 @@ contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeles
   /**
    * @dev Propose a set of new key-value changes.
    */
-  function propose(bytes32[] calldata keys, uint256[] calldata values)
+  function propose(address sender, bytes32[] calldata keys, uint256[] calldata values)
     external
+    feeless(sender)
     returns (uint256)
   {
     require(keys.length == values.length);
@@ -113,7 +114,7 @@ contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeles
 
     emit ProposalProposed(
       proposalID,
-      msg.sender
+      sender
     );
     proposals[proposalID].changeCount = keys.length;
     for (uint256 index = 0; index < keys.length; ++index) {

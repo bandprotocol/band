@@ -3,6 +3,7 @@ const { increase } = require('openzeppelin-solidity/test/helpers/time');
 const { ethGetBlock } = require('openzeppelin-solidity/test/helpers/web3');
 
 const CommunityToken = artifacts.require('CommunityToken');
+const BandFactory = artifacts.require('BandFactory');
 
 require('chai').should();
 
@@ -11,6 +12,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     this.contract = await CommunityToken.new('CoinHatcher', 'XCH', 36, {
       from: owner,
     });
+    this.factory = await BandFactory.deployed();
   });
 
   it('should contain correct token detail', async () => {
@@ -73,6 +75,65 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       const owner2ndBalance = await this.contract.balanceOf(owner);
       owner2ndBalance.toString().should.eq('999990');
     });
+  });
+
+  it('should be able to transfer feelessly', async () => {
+    await this.contract.setExecDelegator(this.factory.address);
+
+    await this.contract.mint(alice, 100, { from: owner });
+    await this.contract.mint(bob, 100, { from: owner });
+    await this.contract.mint(carol, 100, { from: owner });
+
+    const cap = {
+      alice: (await this.contract.balanceOf(alice)).toNumber(),
+      bob: (await this.contract.balanceOf(bob)).toNumber(),
+      carol: (await this.contract.balanceOf(carol)).toNumber(),
+    };
+    const nonce = {
+      alice: (await this.factory.execNonces(alice)).toNumber(),
+      bob: (await this.factory.execNonces(bob)).toNumber(),
+      carol: (await this.factory.execNonces(owner)).toNumber(),
+    };
+
+    let data = this.contract.contract.methods.transferFeeless(
+      alice, carol, 20
+    ).encodeABI();
+    let dataNoFuncSig = '0x' + data.slice(10 + 64);
+    let sig = await web3.eth.sign(
+      web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+      alice
+    );
+    await this.factory.sendDelegatedExecution(
+      alice,
+      this.contract.address,
+      '0x' + data.slice(2, 10),
+      dataNoFuncSig,
+      sig,
+      { from: bob },
+    );
+    (await this.contract.balanceOf(alice)).toNumber().should.eq(cap.alice -= 20);
+    (await this.contract.balanceOf(carol)).toNumber().should.eq(cap.carol += 20);
+    (await this.factory.execNonces(alice)).toNumber().should.eq(nonce.alice);
+
+    data = this.contract.contract.methods.transferFeeless(
+      bob, carol, 30
+    ).encodeABI();
+    dataNoFuncSig = '0x' + data.slice(10 + 64);
+    sig = await web3.eth.sign(
+      web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+      bob
+    );
+    await this.factory.sendDelegatedExecution(
+      bob,
+      this.contract.address,
+      '0x' + data.slice(2, 10),
+      dataNoFuncSig,
+      sig,
+      { from: owner },
+    );
+    (await this.contract.balanceOf(bob)).toNumber().should.eq(cap.bob -= 30);
+    (await this.contract.balanceOf(carol)).toNumber().should.eq(cap.carol += 30);
+    (await this.factory.execNonces(bob)).toNumber().should.eq(nonce.bob);
   });
 
   context('Historical voting power snapshot features', () => {
@@ -149,7 +210,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should delegate vote one level correct', async () => {
-      await this.contract.delegateVote(bob, { from: alice });
+      await this.contract.delegateVote(alice, bob, { from: alice });
       (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
       (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
 
@@ -159,8 +220,8 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should not delegate recursively', async () => {
-      await this.contract.delegateVote(bob, { from: alice });
-      await this.contract.delegateVote(carol, { from: bob });
+      await this.contract.delegateVote(alice, bob, { from: alice });
+      await this.contract.delegateVote(bob, carol, { from: bob });
 
       (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
       (await this.contract.votingPowerOf(bob)).toString().should.eq('1');
@@ -168,7 +229,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should change delegated voting power upon balance change', async () => {
-      await this.contract.delegateVote(bob, { from: alice });
+      await this.contract.delegateVote(alice, bob, { from: alice });
       await this.contract.transfer(alice, 50, { from: carol });
       await this.contract.transfer(bob, 5, { from: carol });
       await this.contract.transfer(carol, 1, { from: bob });
@@ -183,7 +244,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should revoke delegate vote correctly', async () => {
-      await this.contract.delegateVote(bob, { from: alice });
+      await this.contract.delegateVote(alice, bob, { from: alice });
       (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
       (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
 
@@ -191,10 +252,116 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
       (await this.contract.votingPowerOf(bob)).toString().should.eq('61');
 
-      await reverting(this.contract.revokeDelegateVote(carol, { from: alice }));
-      await this.contract.revokeDelegateVote(bob, { from: alice });
+      await reverting(this.contract.revokeDelegateVote(alice, carol, { from: alice }));
+      await this.contract.revokeDelegateVote(alice, bob, { from: alice });
       (await this.contract.votingPowerOf(alice)).toString().should.eq('51');
       (await this.contract.votingPowerOf(bob)).toString().should.eq('10');
+    });
+
+    it('should be able to delegateVote feelessly', async () => {
+      await this.contract.setExecDelegator(this.factory.address);
+      const power = {
+        alice: (await this.contract.votingPowerOf(alice)).toNumber(),
+        bob: (await this.contract.votingPowerOf(bob)).toNumber(),
+        carol: (await this.contract.votingPowerOf(carol)).toNumber(),
+      };
+      const nonce = {
+        alice: (await this.factory.execNonces(alice)).toNumber(),
+        bob: (await this.factory.execNonces(bob)).toNumber(),
+        carol: (await this.factory.execNonces(owner)).toNumber(),
+      };
+      let data = this.contract.contract.methods.delegateVote(
+        alice, carol
+      ).encodeABI();
+      let dataNoFuncSig = '0x' + data.slice(10 + 64);
+      let sig = await web3.eth.sign(
+        web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+        alice
+      );
+      await this.factory.sendDelegatedExecution(
+        alice,
+        this.contract.address,
+        '0x' + data.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: bob },
+      );
+      data = this.contract.contract.methods.delegateVote(
+        bob, carol
+      ).encodeABI();
+      dataNoFuncSig = '0x' + data.slice(10 + 64);
+      sig = await web3.eth.sign(
+        web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+        bob
+      );
+      await this.factory.sendDelegatedExecution(
+        bob,
+        this.contract.address,
+        '0x' + data.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: carol },
+      );
+      (await this.contract.votingPowerOf(carol)
+      ).toNumber().should.eq(
+        power.alice + power.bob + power.carol
+      );
+    });
+
+    it('should be able to revokeDelegateVote feelessly', async () => {
+      await this.contract.setExecDelegator(this.factory.address);
+      const power = {
+        alice: (await this.contract.votingPowerOf(alice)).toNumber(),
+        bob: (await this.contract.votingPowerOf(bob)).toNumber(),
+        carol: (await this.contract.votingPowerOf(carol)).toNumber(),
+      };
+      const nonce = {
+        alice: (await this.factory.execNonces(alice)).toNumber(),
+        bob: (await this.factory.execNonces(bob)).toNumber(),
+        carol: (await this.factory.execNonces(owner)).toNumber(),
+      };
+
+      await this.contract.delegateVote(alice, carol, { from: alice });
+      await this.contract.delegateVote(bob, carol, { from: bob });
+      (await this.contract.votingPowerOf(carol)
+      ).toNumber().should.eq(
+        power.alice + power.bob + power.carol
+      );
+
+      let data = this.contract.contract.methods.revokeDelegateVote(
+        alice, carol
+      ).encodeABI();
+      let dataNoFuncSig = '0x' + data.slice(10 + 64);
+      let sig = await web3.eth.sign(
+        web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+        alice
+      );
+      await this.factory.sendDelegatedExecution(
+        alice,
+        this.contract.address,
+        '0x' + data.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: bob },
+      );
+      data = this.contract.contract.methods.revokeDelegateVote(
+        bob, carol
+      ).encodeABI();
+      dataNoFuncSig = '0x' + data.slice(10 + 64);
+      sig = await web3.eth.sign(
+        web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+        bob
+      );
+      await this.factory.sendDelegatedExecution(
+        bob,
+        this.contract.address,
+        '0x' + data.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: carol },
+      );
+      (await this.contract.votingPowerOf(carol)
+      ).toNumber().should.eq(power.carol);
     });
   });
 });

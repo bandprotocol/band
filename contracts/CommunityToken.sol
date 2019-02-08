@@ -196,32 +196,38 @@ contract CommunityToken is IERC20, Ownable, Feeless {
    * can vote on this account's behalf. Note that delegator assignments are
    * NOT recursive.
    */
-  function delegateVote(address delegator) public returns (bool) {
-    require(delegatorOf(msg.sender) == msg.sender);
-    require(delegator != msg.sender);
+  function delegateVote(address sender, address delegator) 
+    public
+    feeless(sender)
+  returns (bool) {
+    require(delegatorOf(sender) == sender);
+    require(delegator != sender);
     // Update delegator of this sender
-    delegators[msg.sender] = delegator;
+    delegators[sender] = delegator;
     // Update voting power of involved parties
-    uint256 balance = balanceOf(msg.sender);
-    _changeVotingPower(msg.sender, votingPowerOf(msg.sender).sub(balance));
+    uint256 balance = balanceOf(sender);
+    _changeVotingPower(sender, votingPowerOf(sender).sub(balance));
     _changeVotingPower(delegator, votingPowerOf(delegator).add(balance));
-    emit Delegate(msg.sender, delegator);
+    emit Delegate(sender, delegator);
     return true;
   }
 
   /**
    * @dev Revoke voting power delegation from the previously assigned delegator.
    */
-  function revokeDelegateVote(address previousDelegator) public returns (bool) {
-    require(delegatorOf(msg.sender) == previousDelegator);
-    require(previousDelegator != msg.sender);
+  function revokeDelegateVote(address sender, address previousDelegator)
+    public
+    feeless(sender)
+  returns (bool) {
+    require(delegatorOf(sender) == previousDelegator);
+    require(previousDelegator != sender);
     // Update delegator of this sender
-    delegators[msg.sender] = address(0);
+    delegators[sender] = address(0);
     // Update voting power of involved parties
-    uint256 balance = balanceOf(msg.sender);
-    _changeVotingPower(msg.sender, votingPowerOf(msg.sender).add(balance));
+    uint256 balance = balanceOf(sender);
+    _changeVotingPower(sender, votingPowerOf(sender).add(balance));
     _changeVotingPower(previousDelegator, votingPowerOf(previousDelegator).sub(balance));
-    emit Delegate(msg.sender, address(0));
+    emit Delegate(sender, address(0));
     return true;
   }
 
@@ -236,21 +242,35 @@ contract CommunityToken is IERC20, Ownable, Feeless {
   }
 
   /**
+   * @dev Similar to transfer, with extra parameter sender.
+   */
+  function transferFeeless(address sender, address to, uint256 value) 
+    public
+    feeless(sender)
+    returns (bool)
+  {
+    _transfer(sender, to, value);
+    return true;
+  }
+
+  /**
    * @dev Transfer tokens and call the reciver's given function with supplied
    * data, using ERC165 to determine interoperability.
    */
   function transferAndCall(
+    address sender,
     address to,
     uint256 value,
     bytes4 sig,
     bytes calldata data
   )
     external
+    feeless(sender)
     returns (bool)
   {
-    _transfer(msg.sender, to, value);
+    _transfer(sender, to, value);
     require(ERC165Checker._supportsInterface(to, sig));
-    (bool success,) = to.call(abi.encodePacked(sig, uint256(msg.sender), value, data));
+    (bool success,) = to.call(abi.encodePacked(sig, uint256(sender), value, data));
     require(success);
     return true;
   }
@@ -281,7 +301,7 @@ contract CommunityToken is IERC20, Ownable, Feeless {
   function transferFrom(
     address from,
     address to,
-    uint256 value
+    uint256 value 
   )
     public
     returns (bool)
@@ -289,52 +309,6 @@ contract CommunityToken is IERC20, Ownable, Feeless {
     require(value <= _allowed[from][msg.sender]);
     _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(value);
     _transfer(from, to, value);
-    return true;
-  }
-
-  /**
-   * @dev Increase the amount of tokens that an owner allowed to a spender.
-   * approve should be called when allowed_[_spender] == 0. To increment
-   * allowed value is better to use this function to avoid 2 calls (and wait until
-   * the first transaction is mined)
-   * From MonolithDAO Token.sol
-   * @param spender The address which will spend the funds.
-   * @param addedValue The amount of tokens to increase the allowance by.
-   */
-  function increaseAllowance(
-    address spender,
-    uint256 addedValue
-  )
-    public
-    returns (bool)
-  {
-    require(spender != address(0));
-    _allowed[msg.sender][spender] = (_allowed[msg.sender][spender].add(addedValue));
-    emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
-    return true;
-  }
-
-  /**
-   * @dev Decrease the amount of tokens that an owner allowed to a spender.
-   * approve should be called when allowed_[_spender] == 0. To decrement
-   * allowed value is better to use this function to avoid 2 calls (and wait until
-   * the first transaction is mined)
-   * From MonolithDAO Token.sol
-   * @param spender The address which will spend the funds.
-   * @param subtractedValue The amount of tokens to decrease the allowance by.
-   */
-  function decreaseAllowance(
-    address spender,
-    uint256 subtractedValue
-  )
-    public
-    returns (bool)
-  {
-    require(spender != address(0));
-
-    _allowed[msg.sender][spender] = (
-      _allowed[msg.sender][spender].sub(subtractedValue));
-    emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
     return true;
   }
 

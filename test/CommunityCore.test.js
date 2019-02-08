@@ -10,12 +10,14 @@ const BandToken = artifacts.require('BandToken');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
+const BandFactory = artifacts.require('BandFactory');
 const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
 
 contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
+    this.factory = await BandFactory.deployed();
     this.band = await BandToken.new(1000000, owner, { from: owner });
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
@@ -49,6 +51,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       },
     );
     await this.params.propose(
+      owner,
       [web3.utils.fromAscii('core:admin_contract')],
       [this.admin.address],
       {
@@ -149,6 +152,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         .encodeABI();
       await reverting(
         this.comm.transferAndCall(
+          alice,
           this.core.address,
           10,
           '0x' + calldata2.slice(2, 10),
@@ -158,12 +162,69 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       const calldata3 = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
       await this.comm.transferAndCall(
+        alice,
         this.core.address,
         10,
         '0x' + calldata3.slice(2, 10),
         '0x' + calldata3.slice(138),
         { from: alice },
       );
+      (await this.band.balanceOf(alice)).toString().should.eq('91900');
+      (await this.comm.balanceOf(alice)).toString().should.eq('90');
+      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+    });
+
+    it('should be able to sell/transferAndCall feelessly', async () => {
+      await this.comm.setExecDelegator(this.factory.address);
+
+      const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      await this.band.transferAndCall(
+        alice,
+        this.core.address,
+        11000,
+        '0x' + calldata1.slice(2, 10),
+        '0x' + calldata1.slice(138),
+        { from: alice },
+      );
+      const calldata2 = this.core.contract.methods
+        .sell(_, 0, 10000)
+        .encodeABI();
+      await reverting(
+        this.comm.transferAndCall(
+          alice,
+          this.core.address,
+          10,
+          '0x' + calldata2.slice(2, 10),
+          '0x' + calldata2.slice(138),
+          { from: alice },
+        ),
+      );
+
+      const calldata3 = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
+      const calldata4 = await this.comm.contract.methods.transferAndCall(
+        alice,
+        this.core.address,
+        10,
+        '0x' + calldata3.slice(2, 10),
+        '0x' + calldata3.slice(138),
+      ).encodeABI();
+
+      const nonce = (await this.factory.execNonces(alice)).toNumber();
+      const dataNoFuncSig = '0x' + calldata4.slice(10 + 64);
+      const sig = await web3.eth.sign(
+        web3.utils.soliditySha3(nonce, dataNoFuncSig),
+        alice
+      );
+
+      await this.factory.sendDelegatedExecution(
+        alice,
+        this.comm.address,
+        '0x' + calldata4.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: bob },
+      );
+
       (await this.band.balanceOf(alice)).toString().should.eq('91900');
       (await this.comm.balanceOf(alice)).toString().should.eq('90');
       (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
@@ -186,6 +247,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should inflate 10% per month properly after a purchase', async () => {
       // 10% per month inflation
       await this.params.propose(
+        owner,
         [web3.utils.fromAscii('core:inflation_ratio')],
         [38581],
         {
@@ -193,6 +255,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         },
       );
       await this.voting.commitVote(
+        alice,
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
@@ -202,7 +265,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await increase(duration.seconds(60));
-      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
       await increase(duration.days(30) - duration.seconds(60));
@@ -226,6 +289,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should inflate 10% per hour properly after a sale', async () => {
       // 10% per hour inflation
       await this.params.propose(
+        owner,
         [web3.utils.fromAscii('core:inflation_ratio')],
         [27777778],
         {
@@ -234,6 +298,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
 
       await this.voting.commitVote(
+        alice,
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
@@ -243,7 +308,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await increase(duration.seconds(60));
-      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
       await increase(duration.hours(1) - duration.seconds(60));
@@ -252,6 +317,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await increase(duration.hours(9));
       const calldata = this.core.contract.methods.sell(_, 0, 0).encodeABI();
       await this.comm.transferAndCall(
+        alice,
         this.core.address,
         10,
         '0x' + calldata.slice(2, 10),
@@ -268,6 +334,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       // Second sale
       await increase(duration.hours(10));
       await this.comm.transferAndCall(
+        alice,
         this.core.address,
         10,
         '0x' + calldata.slice(2, 10),
@@ -297,6 +364,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       // 20% sales tax
       await this.params.propose(
+        alice,
         [web3.utils.fromAscii('core:sales_commission')],
         [200000000000],
         {
@@ -305,6 +373,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
 
       await this.voting.commitVote(
+        alice,
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
@@ -314,7 +383,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await increase(duration.seconds(60));
-      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
       await increase(duration.seconds(60));
@@ -340,6 +409,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should impose commission on sales', async () => {
       const calldata = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
       await this.comm.transferAndCall(
+        alice,
         this.core.address,
         15,
         '0x' + calldata.slice(2, 10),
@@ -388,6 +458,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
       // Change Admin TCR parameters to allow new admin application
       await this.params.propose(
+        owner,
         [
           web3.utils.fromAscii('admin:min_deposit'),
           web3.utils.fromAscii('admin:apply_stage_length'),
@@ -399,6 +470,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
 
       await this.voting.commitVote(
+        owner,
         this.params.address,
         2,
         web3.utils.soliditySha3(90, 0, 42),
@@ -408,6 +480,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
       await this.voting.commitVote(
+        alice,
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
@@ -417,10 +490,10 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await increase(duration.seconds(60));
-      await this.voting.revealVote(this.params.address, 2, 90, 0, 42, {
+      await this.voting.revealVote(owner, this.params.address, 2, 90, 0, 42, {
         from: owner,
       });
-      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
       await increase(duration.seconds(60));
@@ -431,6 +504,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         .applyEntry(_, 0, await this.admin.toTCREntry(alice))
         .encodeABI();
       await this.comm.transferAndCall(
+        alice,
         this.admin.address,
         10,
         '0x' + calldata.slice(2, 10),
@@ -460,6 +534,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       // Reward period of 1 month, with 1 day edit period.
       await this.params.propose(
+        owner,
         [
           web3.utils.fromAscii('core:reward_period'),
           web3.utils.fromAscii('core:reward_edit_period'),
@@ -470,6 +545,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         },
       );
       await this.voting.commitVote(
+        owner,
         this.params.address,
         2,
         web3.utils.soliditySha3(100, 0, 42),
@@ -479,7 +555,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
       await increase(duration.seconds(60));
-      await this.voting.revealVote(this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(owner, this.params.address, 2, 100, 0, 42, {
         from: owner,
       });
       await increase(duration.seconds(60));

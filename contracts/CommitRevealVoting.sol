@@ -188,6 +188,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
   }
 
   function commitVote(
+    address sender,
     address pollContract,
     uint256 pollID,
     bytes32 commitValue,
@@ -196,6 +197,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     uint256 prevTotalWeight
   )
     public
+    feeless(sender)
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
@@ -204,32 +206,33 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     require(now < poll.commitEndTime);
     // commitValue should look like hash
     require(commitValue != 0);
-
-    uint256 senderVotingPower = poll.token.historicalVotingPowerAtBlock(
-      msg.sender,
-      poll.snapshotBlockNo
-    );
-
     // totalWeight = 0 is pointless
     require(totalWeight > 0);
-    // totalWeight will not exceed voting power of msg.sender
-    require(totalWeight <= senderVotingPower);
+    // totalWeight will not exceed voting power of sender
+    require(
+      totalWeight <= 
+      poll.token.historicalVotingPowerAtBlock(
+        sender,
+        poll.snapshotBlockNo
+      )
+    );
 
     // caculate current commit by hashing prev totalWeight and commitValue
     bytes32 prevCommitValWithTW = getHash(prevTotalWeight, prevCommitValue);
-    require(poll.commits[msg.sender] == prevCommitValWithTW);
+    require(poll.commits[sender] == prevCommitValWithTW);
 
     // calculate new commit by hashing totalWeight and commitValue
     bytes32 commitValWithTW = getHash(totalWeight, commitValue);
-    poll.commits[msg.sender] = commitValWithTW;
+    poll.commits[sender] = commitValWithTW;
 
     // remove prevTotalWeight from poll.totalCount before adding new totalWeight
     poll.totalCount = poll.totalCount.sub(prevTotalWeight).add(totalWeight);
 
-    emit VoteCommitted(pollContract, pollID, msg.sender, commitValWithTW);
+    emit VoteCommitted(pollContract, pollID, sender, commitValWithTW);
   }
 
   function revealVote(
+    address voteOwner,
     address pollContract,
     uint256 pollID,
     uint256 yesWeight,
@@ -245,21 +248,21 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     // pointless if yesWeight and noWeight are 0
     require(yesWeight > 0 || noWeight > 0);
     // Must not already be revealed.
-    require(getPollUserState(pollContract, pollID, msg.sender) == VoteState.Committed);
+    require(getPollUserState(pollContract, pollID, voteOwner) == VoteState.Committed);
     // Must be consistent with the prior commit value.
     require(
       getHash(yesWeight.add(noWeight),
         keccak256(abi.encodePacked(yesWeight, noWeight, salt))
       ) ==
-      poll.commits[msg.sender]
+      poll.commits[voteOwner]
     );
 
-    poll.yesWeights[msg.sender] = yesWeight;
+    poll.yesWeights[voteOwner] = yesWeight;
     poll.yesCount = poll.yesCount.add(yesWeight);
-    poll.noWeights[msg.sender] = noWeight;
+    poll.noWeights[voteOwner] = noWeight;
     poll.noCount = poll.noCount.add(noWeight);
 
-    emit VoteRevealed(pollContract, pollID, msg.sender, yesWeight, noWeight, salt);
+    emit VoteRevealed(pollContract, pollID, voteOwner, yesWeight, noWeight, salt);
   }
 
   function resolvePoll(address pollContract, uint256 pollID)

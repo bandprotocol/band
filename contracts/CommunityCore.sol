@@ -11,7 +11,6 @@ import "./CommunityToken.sol";
 import "./Equation.sol";
 import "./ParametersBase.sol";
 import "./Proof.sol";
-import "./Feeless.sol";
 
 /**
  * @title CommunityCore
@@ -22,7 +21,7 @@ import "./Feeless.sol";
  * acts as the automated market maker, allowing anyone to buy/sell community
  * token with itself.
  */
-contract CommunityCore is BandContractBase, ERC165, Feeless {
+contract CommunityCore is BandContractBase, ERC165 {
   using Equation for Equation.Node[];
   using SafeMath for uint256;
   using Proof for bytes32;

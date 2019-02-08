@@ -133,12 +133,14 @@ contract SimpleVoting is VotingInterface, Feeless {
   }
 
   function castVote(
+    address sender,
     address pollContract,
     uint256 pollID,
     uint256 yesWeight,
     uint256 noWeight
   )
     public
+    feeless(sender)
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
@@ -147,19 +149,19 @@ contract SimpleVoting is VotingInterface, Feeless {
     // Get the weight, which is the voting power at the block before the
     // poll is initiated.
     uint256 totalWeight = poll.token.historicalVotingPowerAtBlock(
-      msg.sender,
+      sender,
       poll.snapshotBlockNo
     );
     require(yesWeight.add(noWeight) <= totalWeight);
 
-    uint256 previousYesWeight = poll.yesWeights[msg.sender];
-    uint256 previousNoWeight = poll.noWeights[msg.sender];
+    uint256 previousYesWeight = poll.yesWeights[sender];
+    uint256 previousNoWeight = poll.noWeights[sender];
 
     poll.yesCount = poll.yesCount.sub(previousYesWeight).add(yesWeight);
     poll.noCount = poll.noCount.sub(previousNoWeight).add(noWeight);
-    poll.yesWeights[msg.sender] = yesWeight;
-    poll.noWeights[msg.sender] = noWeight;
-    emit SimpleVoteCasted(pollContract, pollID, msg.sender, yesWeight, noWeight);
+    poll.yesWeights[sender] = yesWeight;
+    poll.noWeights[sender] = noWeight;
+    emit SimpleVoteCasted(pollContract, pollID, sender, yesWeight, noWeight);
   }
 
   function resolvePoll(address pollContract, uint256 pollID)

@@ -9,7 +9,7 @@ import "./CommunityToken.sol";
 import "./ParametersBase.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
-
+import "./Feeless.sol";
 
 /**
  * @title SimpleTCR
@@ -17,7 +17,7 @@ import "./VotingInterface.sol";
  * @dev TCR contract implements Token Curated Registry logic, with reward
  * distribution allocated equally to both winning and losing sides.
  */
-contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
+contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   using SafeMath for uint256;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
@@ -215,25 +215,31 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
   /**
    * @dev Withdraw token from the given existing entry to the applicant.
    */
-  function withdraw(bytes32 data, uint256 amount) public entryMustExist(data) {
+  function withdraw(address sender, bytes32 data, uint256 amount) public 
+    feeless(sender)
+    entryMustExist(data) 
+  {
     Entry storage entry = entries[data];
-    require(entry.proposer == msg.sender);
+    require(entry.proposer == sender);
     require(entry.withdrawableDeposit >= amount);
     entry.withdrawableDeposit -= amount;
-    require(token.transfer(msg.sender, amount));
-    emit EntryWithdrawn(data, msg.sender, amount);
+    require(token.transfer(sender, amount));
+    emit EntryWithdrawn(data, sender, amount);
   }
 
   /**
    * @dev Delete the entry and refund everything to entry applicant. The entry
    * must not have an ongoing challenge.
    */
-  function exit(bytes32 data) public entryMustExist(data) {
+  function exit(address sender, bytes32 data) public 
+    feeless(sender) 
+    entryMustExist(data) 
+  {
     Entry storage entry = entries[data];
-    require(entry.proposer == msg.sender);
+    require(entry.proposer == sender);
     require(entry.challengeID == 0);
     deleteEntry(data);
-    emit EntryExited(data, msg.sender);
+    emit EntryExited(data, sender);
   }
 
   /**
@@ -352,7 +358,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
    * @dev Claim reward for the given challenge. The claimer must already reveal
    * the vote that is consistent with vote result.
    */
-  function claimReward(uint256 challengeID)
+  function claimReward(address rewardOwner, uint256 challengeID)
     public
     challengeMustExist(challengeID)
   {
@@ -361,7 +367,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
     require(challenge.remainingVotes > 0);
 
     (uint256 yesCount, uint256 noCount) =
-      voting.getPollUserVote(address(this), challengeID, msg.sender);
+      voting.getPollUserVote(address(this), challengeID, rewardOwner);
     uint256 totalCount = yesCount.add(noCount);
 
     uint256 rewardPool = challenge.rewardPool;
@@ -372,8 +378,8 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener {
     challenge.rewardPool = rewardPool.sub(reward);
 
     // Send reward to the claimer.
-    require(token.transfer(msg.sender, reward));
-    emit ChallengeRewardClaimed(challengeID, msg.sender, reward);
+    require(token.transfer(rewardOwner, reward));
+    emit ChallengeRewardClaimed(challengeID, rewardOwner, reward);
   }
 
   /**

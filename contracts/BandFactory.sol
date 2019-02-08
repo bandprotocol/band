@@ -83,7 +83,6 @@ contract BandFactory is Ownable, ExecutionDelegator {
 
     token.setExecDelegator(address(this));
     params.setExecDelegator(address(this));
-    core.setExecDelegator(address(this));
 
     token.transferOwnership(address(core));
     cores.push(core);

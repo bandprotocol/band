@@ -153,7 +153,6 @@ contract('BandFactory', ([owner, alice, bob]) => {
     });
 
     it('should be recognized by core, params, token', async () => {
-      (await this.core.execDelegator()).should.eq(this.contract.address);
       (await this.params.execDelegator()).should.eq(this.contract.address);
       (await this.token.execDelegator()).should.eq(this.contract.address);
     });
