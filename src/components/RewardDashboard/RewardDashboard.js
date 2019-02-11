@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { loadRewards } from 'actions'
+import { loadRewards, claimReward } from 'actions'
 import RewardDashboardRender from './RewardDashboardRender'
 import { currentUserSelector } from 'selectors/current'
 import { rewardCommunitySelector } from 'selectors/reward'
@@ -12,12 +12,13 @@ class RewardDashboard extends React.Component {
     this.props.loadRewards()
   }
   render() {
-    const { logedin, rewards, symbol } = this.props
+    const { logedin, rewards, symbol, claimReward } = this.props
     return (
       <RewardDashboardRender
         logedin={logedin}
         rewards={rewards}
         symbol={symbol}
+        claimReward={claimReward}
       />
     )
   }
@@ -31,6 +32,7 @@ const mapStateToProps = (state, { communityName }) => ({
 
 const mapDispatchToProps = (dispatch, { communityName }) => ({
   loadRewards: () => dispatch(loadRewards(communityName)),
+  claimReward: rewardID => dispatch(claimReward(communityName, rewardID)),
 })
 
 export default connect(

@@ -4,7 +4,7 @@ import colors from 'ui/colors'
 
 import RewardCard from 'components/RewardCard'
 
-export default ({ rewards, logedin, symbol }) => (
+export default ({ rewards, logedin, symbol, claimReward }) => (
   <Flex flexDirection="column" my={3}>
     <Text color={colors.purple.dark} fontSize={3} fontWeight="bold" pl={2}>
       Reward
@@ -21,6 +21,7 @@ export default ({ rewards, logedin, symbol }) => (
           logedin={logedin}
           amount={reward.amount.pretty()}
           claimed={reward.claimed}
+          onClick={() => claimReward(reward.rewardID)}
         />
       ))}
     </Flex>

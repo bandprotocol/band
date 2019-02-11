@@ -5,6 +5,7 @@ import {
   updateConfimation,
   BUY_TOKEN,
   SELL_TOKEN,
+  CLAIM_REWARD,
   trackTransaction,
   showModal,
   hideModal,
@@ -65,9 +66,17 @@ function* handleSellToken({ name, amount, priceLimit }) {
   yield put(trackTransaction(emitter))
 }
 
+function* handleClaimReward({ name, rewardID }) {
+  const client = yield select(currentCommunityClientSelector, { name })
+  const transaction = yield client.createClaimRewardTransaction(rewardID)
+  const emitter = transaction.send()
+  yield put(trackTransaction(emitter))
+}
+
 export default function*() {
   yield takeEvery(confirmationChannel, handleConfirmChannel)
   yield takeEvery(TRACK_TRANSACTION, handleTrackTransaction)
   yield takeEvery(BUY_TOKEN, handleBuyToken)
   yield takeEvery(SELL_TOKEN, handleSellToken)
+  yield takeEvery(CLAIM_REWARD, handleClaimReward)
 }

@@ -61,6 +61,7 @@ export default ({
   logedin,
   claimed,
   amount,
+  onClick,
 }) => (
   <Flex flexDirection="column" px={2} py={2}>
     <Card
@@ -143,6 +144,7 @@ export default ({
             boxShadow: '0 4px 5px 0 rgba(136, 104, 255, 0.26)',
             pointerEvents: `${claimed ? 'none' : 'auto'}`,
           }}
+          onClick={onClick}
         >
           {claimed && (
             <i className="fas fa-check" style={{ paddingRight: '4px' }} />
