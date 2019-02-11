@@ -13,13 +13,13 @@ export default ({ rewards, logedin, symbol, claimReward }) => (
       {rewards.map(reward => (
         <RewardCard
           key={reward.rewardID}
-          src="https://i.imgur.com/Ygh4bRe.jpg"
-          link="https://www.binance.com"
-          header="January Reward"
+          src={reward.imageLink}
+          link={reward.detailLink}
+          header={reward.header}
           total={`${reward.totalReward.pretty()} ${symbol}`}
-          period="01/01/2019 - 31/01/2019"
+          period={reward.period}
           logedin={logedin}
-          amount={reward.amount.pretty()}
+          amount={reward.amount && reward.amount.pretty()}
           claimed={reward.claimed}
           onClick={() => claimReward(reward.rewardID)}
         />
