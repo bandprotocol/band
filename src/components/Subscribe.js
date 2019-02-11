@@ -17,7 +17,7 @@ const Input = styled.input`
   transition: all 0.2s;
 
   &::placeholder {
-    color: #4e3ca9;
+    color: ${colors.purple.dark};
   }
 `
 
