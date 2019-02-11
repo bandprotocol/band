@@ -7,7 +7,7 @@ import ScrollToTop from 'ScrollToTop'
 import Sidebar from 'components/Sidebar'
 import CommunitiesPage from 'pages/Communities'
 import CommunityDetailPage from 'pages/CommunityDetail'
-import RewardPage from 'pages/Reward'
+import CommunityRewardPage from 'pages/CommunityReward'
 
 export default ({ match, location }) => (
   <React.Fragment>
@@ -30,7 +30,11 @@ export default ({ match, location }) => (
                 />
                 <Route
                   path="/community/:community/reward"
-                  render={({ match }) => <RewardPage />}
+                  render={({ match }) => (
+                    <CommunityRewardPage
+                      communityName={match.params.community}
+                    />
+                  )}
                 />
                 <Route
                   path="/community/:community/governance"

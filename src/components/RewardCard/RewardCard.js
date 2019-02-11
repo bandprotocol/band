@@ -52,7 +52,16 @@ position: relative;
 
 const claimedOpacity = '0.6'
 
-export default ({ src, link, header, total, period, logined, claimed }) => (
+export default ({
+  src,
+  link,
+  header,
+  total,
+  period,
+  logedin,
+  claimed,
+  amount,
+}) => (
   <Flex flexDirection="column" px={2} py={2}>
     <Card
       variant="detail"
@@ -61,7 +70,7 @@ export default ({ src, link, header, total, period, logined, claimed }) => (
       pr={3}
       bg="#fff"
       style={{
-        borderBottomWidth: `${logined ? '0px' : '1.5px'}`,
+        borderBottomWidth: `${logedin ? '0px' : '1.5px'}`,
         alignSelf: 'flex-start',
         width: '290px',
         height: '265px',
@@ -123,7 +132,7 @@ export default ({ src, link, header, total, period, logined, claimed }) => (
         </Flex>
       </Flex>
     </Card>
-    {logined && (
+    {logedin && (
       <BottomTicket style={{ opacity: `${claimed ? claimedOpacity : '1'}` }}>
         <MaskCircle />
         <MaskCircle right />
@@ -136,9 +145,9 @@ export default ({ src, link, header, total, period, logined, claimed }) => (
           }}
         >
           {claimed && (
-            <i class="fas fa-check" style={{ paddingRight: '4px' }} />
+            <i className="fas fa-check" style={{ paddingRight: '4px' }} />
           )}
-          Get x500
+          Get {amount}
         </Button>
       </BottomTicket>
     )}

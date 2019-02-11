@@ -12,12 +12,12 @@ const handleAddOrders = (state, { name, orders }) => {
       (acc, order) =>
         acc.push(
           Map({
-            time: moment(order.block_time),
-            price: BN(order.price),
-            amount: BN(order.value),
-            type: order.order_type,
+            time: moment(order.blockTime),
+            price: order.price,
+            amount: order.value,
+            type: order.orderType,
             user: order.user.toLowerCase(),
-            txHash: order.tx_hash,
+            txHash: order.txHash,
           }),
         ),
       List(),

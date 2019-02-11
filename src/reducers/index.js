@@ -5,6 +5,7 @@ import community from 'reducers/community'
 import current from 'reducers/current'
 import order from 'reducers/order'
 import price from 'reducers/price'
+import reward from 'reducers/reward'
 import transaction from 'reducers/transaction'
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
   current,
   order,
   price,
+  reward,
   transaction,
 })

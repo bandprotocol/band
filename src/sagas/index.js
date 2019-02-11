@@ -6,6 +6,7 @@ import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
 import priceSaga from 'sagas/prices'
 import providersSaga from 'sagas/providers'
+import rewardsSaga from 'sagas/rewards'
 import transactionsSaga from 'sagas/transaction'
 
 import BandProtocolClient from 'band.js'
@@ -59,6 +60,7 @@ export default function*() {
     fork(transactionsSaga),
     fork(ordersSaga),
     fork(priceSaga),
+    fork(rewardsSaga),
   ])
   yield* baseInitialize()
 }

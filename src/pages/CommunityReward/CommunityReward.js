@@ -5,7 +5,7 @@ import PageContainer from 'components/PageContainer'
 import RewardDashboard from 'components/RewardDashboard'
 
 export default ({ communityName }) => (
-  <PageContainer>
-    <RewardDashboard communityName={communityName} logined={true} />
+  <PageContainer withSidebar>
+    <RewardDashboard communityName={communityName} />
   </PageContainer>
 )

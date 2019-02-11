@@ -3,6 +3,7 @@ export const communitySelector = state => state.get('community')
 export const currentSelector = state => state.get('current')
 export const orderSelector = state => state.get('order')
 export const priceSelector = state => state.get('price')
+export const rewardSelector = state => state.get('reward')
 export const transactionSelector = state => state.get('transaction')
 export const nameSelector = (_, { name }) => name
 export const typeSelector = (_, { type }) => type

@@ -18,3 +18,8 @@ export const communityDetailSelector = createSelector(
   [communitySelector, nameSelector],
   (communities, name) => communities.get(name),
 )
+
+export const communitySymbolSelector = createSelector(
+  communityDetailSelector,
+  community => community && community.get('symbol'),
+)
