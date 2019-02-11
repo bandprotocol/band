@@ -1,7 +1,8 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Image, Flex, Text, Bold } from 'ui/common'
+
+import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 // Images
@@ -20,14 +21,19 @@ const Left = styled.div`
   top: 80px;
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
 `
-const FocusStyle = {
-  background: '#eaeeff',
-  borderLeft: '4px solid #8868ff',
-}
 
 const TextClickable = styled(Text)`
   cursor: pointer;
 `
+
+const Tab = ({ link, imgSrc, children }) => (
+  <HighlightNavLink to={link} activeClassName="is-active">
+    <Flex flexDirection="row" alignItems="center" py={3} pl={4}>
+      <Image src={imgSrc} width="25px" height="25px" />
+      <Text px={3}>{children}</Text>
+    </Flex>
+  </HighlightNavLink>
+)
 
 const HighlightSymbolOrUSD = ({ symbol, isSymbol, toggle }) => {
   return (
@@ -93,46 +99,24 @@ export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
           </React.Fragment>
         )}
       </Flex>
-      <Flex flexDirection="column" py={5}>
+      <Flex flexDirection="column" py={5} width={[1]}>
         <Bold px={4} pb={3} fontSize={0}>
           MENU
         </Bold>
-        <Flex
-          flexDirection="row"
-          alignItems="center"
-          py={3}
-          width="275px"
-          pl={4}
-          style={FocusStyle}
-        >
-          <Image src={DetailSrc} width="25px" height="25px" />
-          <Text
-            fontWeight="600"
-            color={colors.purple.normal}
-            px={3}
-            fontSize={0}
-          >
+        <Text fontSize={0} fontWeight={500}>
+          <Tab link={`/community/${name}/detail`} imgSrc={DetailSrc}>
             Detail
-          </Text>
-        </Flex>
-        <Flex flexDirection="row" alignItems="center" py={3} pl={4}>
-          <Image src={RewardSrc} width="25px" height="25px" />
-          <Text color={colors.text} px={3} fontSize={0}>
+          </Tab>
+          <Tab link={`/community/${name}/reward`} imgSrc={RewardSrc}>
             Reward
-          </Text>
-        </Flex>
-        <Flex flexDirection="row" alignItems="center" py={3} pl={4}>
-          <Image src={GovernanceSrc} width="25px" height="25px" />
-          <Text color={colors.text} px={3} fontSize={0}>
+          </Tab>
+          <Tab link={`/community/${name}/governance`} imgSrc={GovernanceSrc}>
             Governance
-          </Text>
-        </Flex>
-        <Flex flexDirection="row" alignItems="center" py={3} px={4}>
-          <Image src={ProposalSrc} width="25px" height="25px" />
-          <Text color={colors.text} px={3} fontSize={0}>
+          </Tab>
+          <Tab link={`/community/${name}/proposal`} imgSrc={ProposalSrc}>
             Proposal
-          </Text>
-        </Flex>
+          </Tab>
+        </Text>
       </Flex>
     </Flex>
   </Left>

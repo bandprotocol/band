@@ -58,6 +58,7 @@ export default ({ match, location }) => (
           </React.Fragment>
         )}
       />
+
       <Route exact path="/" component={CommunitiesPage} />
     </Switch>
   </React.Fragment>

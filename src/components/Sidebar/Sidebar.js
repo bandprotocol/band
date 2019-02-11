@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import SidebarRender from 'components/Sidebar/SidebarRender'
 
@@ -50,4 +51,4 @@ const mapStateToProps = (state, { communityName }) => {
   }
 }
 
-export default connect(mapStateToProps)(SideBar)
+export default withRouter(connect(mapStateToProps)(SideBar))

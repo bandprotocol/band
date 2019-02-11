@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import colors from './colors'
 import { Text, Image as BaseImage, Flex, Box, Button, Card } from 'rebass'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, NavLink } from 'react-router-dom'
 
 export const Bold = styled(Text)`
   display: inline-block;
@@ -86,6 +86,22 @@ export const BackgroundCard = styled(Card)`
   background-size: ${p => p.bgSize || 'contain'};
   background-position: center;
   background-repeat: no-repeat;
+`
+
+export const HighlightNavLink = styled(NavLink)`
+  color: ${colors.text.grey};
+  & > * {
+    border-left: 4px solid #ffffff;
+  }
+
+  &.is-active {
+    font-weight: 700;
+    color: ${colors.purple.normal};
+    & > * {
+      background: #eaeeff;
+      border-left: 4px solid #8868ff;
+    }
+  }
 `
 
 export { Text, Flex, Box, Button, Card }
