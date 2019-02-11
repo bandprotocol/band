@@ -7,8 +7,9 @@
 This static website is built on the following tech
 
 - Create React App
-- Styled Component
 - React-Router DOM
+- Styled Component
+- Rebass
 
 ## Initialization
 
