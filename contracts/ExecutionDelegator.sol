@@ -14,6 +14,7 @@ contract ExecutionDelegator {
     address indexed relayer,
     address indexed sender,
     address indexed to,
+    uint256 nonce,
     bytes4 funcInterface,
     bytes senderSig
   );
@@ -62,6 +63,6 @@ contract ExecutionDelegator {
     execNonces[sender] = nonce.add(1);
     (bool ok,) = to.call(abi.encodePacked(funcInterface,uint256(sender),data));
     require(ok);
-    emit SendDelegatedExecution(msg.sender, sender, to, funcInterface, senderSig);
+    emit SendDelegatedExecution(msg.sender, sender, to, nonce, funcInterface, senderSig);
   }
 }
