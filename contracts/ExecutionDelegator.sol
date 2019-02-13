@@ -9,6 +9,14 @@ import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
  */
 contract ExecutionDelegator {
   using SafeMath for uint256;
+
+  event SendDelegatedExecution(
+    address indexed relayer,
+    address indexed sender,
+    address indexed to,
+    bytes4 funcInterface,
+    bytes senderSig
+  );
   
   /**
   * @dev Keep track nonce of each user
@@ -51,9 +59,9 @@ contract ExecutionDelegator {
   ) public {
     uint256 nonce = execNonces[sender];
     require(verify(sender, nonce, data, senderSig));
-    require(execNonces[sender] == nonce);
     execNonces[sender] = nonce.add(1);
     (bool ok,) = to.call(abi.encodePacked(funcInterface,uint256(sender),data));
     require(ok);
+    emit SendDelegatedExecution(msg.sender, sender, to, funcInterface, senderSig);
   }
 }
