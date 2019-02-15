@@ -5,11 +5,17 @@ import styled from 'styled-components'
 import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
-// Images
+// Images inactive
 import DetailSrc from 'images/detail.svg'
 import RewardSrc from 'images/reward.svg'
 import GovernanceSrc from 'images/governance.svg'
 import ProposalSrc from 'images/vote.svg'
+
+// Image active
+import DetailActiveSrc from 'images/detailPurple.svg'
+import RewardActiveSrc from 'images/rewardPurple.svg'
+import GovernanceActiveSrc from 'images/governancePurple.svg'
+import ProposalActiveSrc from 'images/votePurple.svg'
 
 const Left = styled.div`
   width: 275px;
@@ -26,10 +32,21 @@ const TextClickable = styled(Text)`
   cursor: pointer;
 `
 
-const Tab = ({ link, imgSrc, children }) => (
+const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
   <HighlightNavLink to={link} activeClassName="is-active">
     <Flex flexDirection="row" alignItems="center" py={3} pl={4}>
-      <Image src={imgSrc} width="25px" height="25px" />
+      <Image
+        className="img-active"
+        src={imgSrcActive}
+        width="25px"
+        height="25px"
+      />
+      <Image
+        className="img-inactive"
+        src={imgSrcInactive}
+        width="25px"
+        height="25px"
+      />
       <Text px={3}>{children}</Text>
     </Flex>
   </HighlightNavLink>
@@ -71,7 +88,15 @@ const HighlightSymbolOrUSD = ({ symbol, isSymbol, toggle }) => {
   )
 }
 
-export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
+export default ({
+  logedin,
+  name,
+  src,
+  balance,
+  symbol,
+  isSymbol,
+  toggleBalance,
+}) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
       <Image src={src} width="80px" height="80px" m={3} borderRadius="50%" />
@@ -84,8 +109,8 @@ export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
         {name}
       </Text>
       <Flex flexDirection="row" alignItems="flex-end" py={1}>
-        {balance === undefined ? (
-          <CircleLoadingSpinner radius="16px" />
+        {!logedin ? null : balance === undefined ? (
+          <CircleLoadingSpinner radius="25px" />
         ) : (
           <React.Fragment>
             <Text color={colors.text.grey} fontSize={2}>
@@ -104,16 +129,32 @@ export default ({ name, src, balance, symbol, isSymbol, toggleBalance }) => (
           MENU
         </Bold>
         <Text fontSize={0} fontWeight={500}>
-          <Tab link={`/community/${name}/detail`} imgSrc={DetailSrc}>
+          <Tab
+            link={`/community/${name}/detail`}
+            imgSrcActive={DetailActiveSrc}
+            imgSrcInactive={DetailSrc}
+          >
             Detail
           </Tab>
-          <Tab link={`/community/${name}/reward`} imgSrc={RewardSrc}>
+          <Tab
+            link={`/community/${name}/reward`}
+            imgSrcActive={RewardActiveSrc}
+            imgSrcInactive={RewardSrc}
+          >
             Reward
           </Tab>
-          <Tab link={`/community/${name}/governance`} imgSrc={GovernanceSrc}>
+          <Tab
+            link={`/community/${name}/governance`}
+            imgSrcActive={GovernanceActiveSrc}
+            imgSrcInactive={GovernanceSrc}
+          >
             Governance
           </Tab>
-          <Tab link={`/community/${name}/proposal`} imgSrc={ProposalSrc}>
+          <Tab
+            link={`/community/${name}/proposal`}
+            imgSrcActive={ProposalActiveSrc}
+            imgSrcInactive={ProposalSrc}
+          >
             Proposal
           </Tab>
         </Text>

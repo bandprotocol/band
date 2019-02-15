@@ -12,6 +12,7 @@ import transactionsSaga from 'sagas/transaction'
 import BandProtocolClient from 'band.js'
 
 function* baseInitialize() {
+  BandProtocolClient.setAPI('https://stable-api-band.herokuapp.com')
   const tempBandClient = yield BandProtocolClient.make({})
   const { address, price, last24Hrs } = yield tempBandClient.getBand()
 

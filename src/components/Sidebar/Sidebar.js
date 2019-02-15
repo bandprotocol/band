@@ -6,6 +6,7 @@ import SidebarRender from 'components/Sidebar/SidebarRender'
 
 import { communityDetailSelector } from 'selectors/communities'
 import { bandPriceSelector } from 'selectors/bandPrice'
+import { currentUserSelector } from 'selectors/current'
 
 class SideBar extends React.Component {
   state = {
@@ -19,7 +20,15 @@ class SideBar extends React.Component {
   }
 
   render() {
-    const { name, src, balance, symbol, communityPrice, bandPrice } = this.props
+    const {
+      logedin,
+      name,
+      src,
+      balance,
+      symbol,
+      communityPrice,
+      bandPrice,
+    } = this.props
     const balanceToggled =
       this.state.isSymbol || !balance
         ? balance
@@ -27,6 +36,7 @@ class SideBar extends React.Component {
 
     return (
       <SidebarRender
+        logedin={logedin}
         name={name}
         src={src}
         balance={balanceToggled}
@@ -42,6 +52,7 @@ const mapStateToProps = (state, { communityName }) => {
   const community = communityDetailSelector(state, { name: communityName })
   if (!community) return {}
   return {
+    logedin: !!currentUserSelector(state),
     name: communityName,
     src: community.get('logo'),
     balance: community.get('balance'),

@@ -101,6 +101,22 @@ export const HighlightNavLink = styled(NavLink)`
       background: #eaeeff;
       border-left: 4px solid #8868ff;
     }
+
+    & .img-active {
+      display: block;
+    }
+
+    & .img-inactive {
+      display: none;
+    }
+  }
+
+  & .img-active {
+    display: none;
+  }
+
+  & .img-inactive {
+    display: block;
   }
 `
 

@@ -66,7 +66,7 @@ const BandApp = ({
         mb={[2, 0]}
         width={[100, 110]}
         src={src}
-        style={{ borderRadius: 2 }}
+        style={{ borderRadius: 2, maxHeight: '100px' }}
       />
       <Box flex={1} ml={[0, '20px']}>
         <Flex>
@@ -212,7 +212,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
           </React.Fragment>
         ) : (
           <Flex style={{ height: 225 }} alignItems="center">
-            <CircleLoadingSpinner radius="20" />
+            <CircleLoadingSpinner radius="80px" />
           </Flex>
         )}
       </Flex>

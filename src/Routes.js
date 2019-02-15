@@ -8,6 +8,8 @@ import Sidebar from 'components/Sidebar'
 import CommunitiesPage from 'pages/Communities'
 import CommunityDetailPage from 'pages/CommunityDetail'
 import CommunityRewardPage from 'pages/CommunityReward'
+import CommunityGovernancePage from 'pages/CommunityGovernance'
+import CommuntyProposalPage from 'pages/CommunityProposal'
 
 export default ({ match, location }) => (
   <React.Fragment>
@@ -38,11 +40,19 @@ export default ({ match, location }) => (
                 />
                 <Route
                   path="/community/:community/governance"
-                  render={({ match }) => <div>governance</div>}
+                  render={({ match }) => (
+                    <CommunityGovernancePage
+                      communityName={match.params.community}
+                    />
+                  )}
                 />
                 <Route
                   path="/community/:community/proposal"
-                  render={({ match }) => <div>proposal</div>}
+                  render={({ match }) => (
+                    <CommuntyProposalPage
+                      communityName={match.params.community}
+                    />
+                  )}
                 />
                 <Route
                   path="/community/:community"

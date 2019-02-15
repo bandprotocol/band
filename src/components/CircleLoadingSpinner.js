@@ -3,8 +3,8 @@ import styled from 'styled-components'
 
 const StyledSpinner = styled.svg`
   animation: rotate 2s linear infinite;
-  width: 25px;
-  height: 25px;
+  width: ${p => p.size};
+  height: ${p => p.size};
 
   & .path {
     stroke: #5652bf;
@@ -34,12 +34,12 @@ const StyledSpinner = styled.svg`
 `
 
 export default ({ radius }) => (
-  <StyledSpinner viewBox="0 0 50 50">
+  <StyledSpinner viewBox="0 0 50 50" size={radius}>
     <circle
       className="path"
       cx="25"
       cy="25"
-      r={radius}
+      r="16px"
       fill="none"
       strokeWidth="4"
     />
