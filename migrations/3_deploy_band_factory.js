@@ -10,7 +10,7 @@ module.exports = function(deployer) {
     .then(async () => {
       const bandFactory = await deployer.deploy(
         BandFactory,
-        '1000000000000000000000000',
+        '100000000000000000000000000',
         TokenFactory.address,
         ParametersFactory.address,
         CoreFactory.address,
