@@ -6,20 +6,20 @@ import {
   currentUserSelector,
 } from 'selectors/current'
 
-function* handleLoadHistory({ name, isAll }) {
+function* handleLoadHistory({ address, isAll }) {
   // TODO: Find a better way.
   while (true) {
-    if (yield select(currentCommunityClientSelector, { name })) break
+    if (yield select(currentCommunityClientSelector, { address })) break
     yield delay(100)
   }
-  const client = yield select(currentCommunityClientSelector, { name })
+  const client = yield select(currentCommunityClientSelector, { address })
 
   // TODO: Limit 10 hardcode
   const orders = yield client.getOrderHistory({
     limit: 100,
     user: isAll ? undefined : yield select(currentUserSelector),
   })
-  yield put(addOrders(name, orders))
+  yield put(addOrders(address, orders))
 }
 
 export default function*() {

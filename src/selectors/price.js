@@ -1,12 +1,12 @@
 import { createSelector } from 'reselect'
 import { List } from 'immutable'
 
-import { priceSelector, nameSelector } from 'selectors/basic'
+import { priceSelector, addressSelector } from 'selectors/basic'
 
 export const priceHistorySelector = createSelector(
-  [priceSelector, nameSelector],
-  (prices, name) => {
-    if (!prices.get(name)) return List()
-    return prices.get(name)
+  [priceSelector, addressSelector],
+  (prices, address) => {
+    if (!prices.get(address)) return List()
+    return prices.get(address)
   },
 )

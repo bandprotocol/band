@@ -1,11 +1,11 @@
 import { createSelector } from 'reselect'
 
-import { rewardSelector, nameSelector } from 'selectors/basic'
+import { rewardSelector, addressSelector } from 'selectors/basic'
 
 export const rewardCommunitySelector = createSelector(
-  [rewardSelector, nameSelector],
-  (rewards, name) => {
-    if (!rewards.get(name)) return null
-    return rewards.get(name).toJS()
+  [rewardSelector, addressSelector],
+  (rewards, address) => {
+    if (!rewards.get(address)) return null
+    return rewards.get(address).toJS()
   },
 )

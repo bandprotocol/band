@@ -24,15 +24,15 @@ class RewardDashboard extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityName }) => ({
+const mapStateToProps = (state, { communityAddress }) => ({
   logedin: !!currentUserSelector(state),
-  rewards: rewardCommunitySelector(state, { name: communityName }),
-  symbol: communitySymbolSelector(state, { name: communityName }),
+  rewards: rewardCommunitySelector(state, { address: communityAddress }),
+  symbol: communitySymbolSelector(state, { address: communityAddress }),
 })
 
-const mapDispatchToProps = (dispatch, { communityName }) => ({
-  loadRewards: () => dispatch(loadRewards(communityName)),
-  claimReward: rewardID => dispatch(claimReward(communityName, rewardID)),
+const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+  loadRewards: () => dispatch(loadRewards(communityAddress)),
+  claimReward: rewardID => dispatch(claimReward(communityAddress, rewardID)),
 })
 
 export default connect(

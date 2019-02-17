@@ -17,9 +17,9 @@ export const setUserAddress = address => ({
 
 export const reloadBandBalance = () => ({ type: RELOAD_BAND_BALANCE })
 
-export const reloadCTBalance = communityName => ({
+export const reloadCTBalance = communityAddress => ({
   type: RELOAD_CT_BALANCE,
-  communityName,
+  communityAddress,
 })
 
 export const saveBandBalance = balance => ({
@@ -27,9 +27,9 @@ export const saveBandBalance = balance => ({
   balance: BN(balance),
 })
 
-export const saveCTBalance = (communityName, balance) => ({
+export const saveCTBalance = (communityAddress, balance) => ({
   type: SAVE_CT_BALANCE,
-  communityName,
+  communityAddress,
   balance: BN(balance),
 })
 

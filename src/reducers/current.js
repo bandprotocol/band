@@ -14,8 +14,8 @@ const handleSetUserAddress = (state, { address }) => state.set('user', address)
 const handleSaveBandClient = (state, { client }) =>
   state.setIn(['client', 'band'], client)
 
-const handleSaveCommunityClient = (state, { name, client }) =>
-  state.setIn(['client', 'communities', name], client)
+const handleSaveCommunityClient = (state, { address, client }) =>
+  state.setIn(['client', 'communities', address], client)
 
 const handleShowModal = (state, { modalName, data }) =>
   state.set(

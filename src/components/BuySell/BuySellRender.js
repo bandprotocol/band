@@ -2,11 +2,11 @@ import React from 'react'
 import { Flex, Text, Button, Card } from 'ui/common'
 import Graph from 'components/PriceGraph'
 
-export default ({ showBuy, showSell, communityName }) => (
+export default ({ showBuy, showSell, communityAddress }) => (
   <Card variant="detail" bg="#fff" p="20px" style={{ alignSelf: 'flex-start' }}>
     <Flex flexDirection="column">
       {/* Price Chart here*/}
-      <Graph communityName={communityName} />
+      <Graph communityAddress={communityAddress} />
       {/* Buy Sell Button */}
       <Flex
         flexDirection="row"

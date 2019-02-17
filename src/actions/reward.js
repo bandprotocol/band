@@ -2,19 +2,19 @@ export const LOAD_REWARDS = 'LOAD_REWARDS'
 export const ADD_REWARDS = 'ADD_REWARDS'
 export const CLAIM_REWARD = 'CLAIM_REWARD'
 
-export const loadRewards = name => ({
+export const loadRewards = address => ({
   type: LOAD_REWARDS,
-  name,
+  address,
 })
 
-export const addRewards = (name, rewards) => ({
+export const addRewards = (address, rewards) => ({
   type: ADD_REWARDS,
-  name,
+  address,
   rewards,
 })
 
-export const claimReward = (name, rewardID) => ({
+export const claimReward = (address, rewardID) => ({
   type: CLAIM_REWARD,
-  name,
+  address,
   rewardID,
 })

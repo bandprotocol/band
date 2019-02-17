@@ -20,13 +20,13 @@ export default ({ match, location }) => (
         render={({ match, history, location }) => (
           <React.Fragment>
             <Flex flexDirection="row">
-              <Sidebar communityName={match.params.community} />
+              <Sidebar communityAddress={match.params.community} />
               <Switch>
                 <Route
                   path="/community/:community/detail"
                   render={({ match }) => (
                     <CommunityDetailPage
-                      communityName={match.params.community}
+                      communityAddress={match.params.community}
                     />
                   )}
                 />
@@ -34,7 +34,7 @@ export default ({ match, location }) => (
                   path="/community/:community/reward"
                   render={({ match }) => (
                     <CommunityRewardPage
-                      communityName={match.params.community}
+                      communityAddress={match.params.community}
                     />
                   )}
                 />
@@ -42,7 +42,7 @@ export default ({ match, location }) => (
                   path="/community/:community/governance"
                   render={({ match }) => (
                     <CommunityGovernancePage
-                      communityName={match.params.community}
+                      communityAddress={match.params.community}
                     />
                   )}
                 />
@@ -50,7 +50,7 @@ export default ({ match, location }) => (
                   path="/community/:community/proposal"
                   render={({ match }) => (
                     <CommuntyProposalPage
-                      communityName={match.params.community}
+                      communityAddress={match.params.community}
                     />
                   )}
                 />

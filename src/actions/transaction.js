@@ -14,16 +14,16 @@ export const updateConfimation = (txHash, confirmationNumber) => ({
   confirmationNumber,
 })
 
-export const buyToken = (name, amount, priceLimit) => ({
+export const buyToken = (address, amount, priceLimit) => ({
   type: BUY_TOKEN,
-  name,
+  address,
   amount,
   priceLimit,
 })
 
-export const sellToken = (name, amount, priceLimit) => ({
+export const sellToken = (address, amount, priceLimit) => ({
   type: SELL_TOKEN,
-  name,
+  address,
   amount,
   priceLimit,
 })

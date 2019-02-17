@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { currentSelector, nameSelector } from 'selectors/basic'
+import { currentSelector, addressSelector } from 'selectors/basic'
 
 export const currentUserSelector = createSelector(
   currentSelector,
@@ -17,6 +17,6 @@ export const currentBandClientSelector = createSelector(
 )
 
 export const currentCommunityClientSelector = createSelector(
-  [currentSelector, nameSelector],
-  (current, name) => current.getIn(['client', 'communities', name]),
+  [currentSelector, addressSelector],
+  (current, address) => current.getIn(['client', 'communities', address]),
 )

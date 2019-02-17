@@ -38,7 +38,7 @@ export default ({
   options,
   selectedOption,
   onChange,
-  communityName,
+  communityAddress,
   currentPage,
   onChangePage,
   pageSize,
@@ -71,13 +71,13 @@ export default ({
       </Flex>
       <HistoryHeader />
       <HistoryBody
-        communityName={communityName}
+        communityAddress={communityAddress}
         isAll={selectedOption.value === 'all'}
         currentPage={currentPage}
         pageSize={pageSize}
       />
       <OrderPagination
-        communityName={communityName}
+        communityAddress={communityAddress}
         isAll={selectedOption.value === 'all'}
         pageSize={pageSize}
         currentPage={currentPage}

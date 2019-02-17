@@ -4,16 +4,16 @@ import { LOAD_PRICE_HISTORY, addPrices } from 'actions'
 
 import { currentCommunityClientSelector } from 'selectors/current'
 
-function* handleLoadPriceHistory({ name, isAll }) {
+function* handleLoadPriceHistory({ address }) {
   // TODO: Find a better way.
   while (true) {
-    if (yield select(currentCommunityClientSelector, { name })) break
+    if (yield select(currentCommunityClientSelector, { address })) break
     yield delay(100)
   }
-  const client = yield select(currentCommunityClientSelector, { name })
+  const client = yield select(currentCommunityClientSelector, { address })
 
   const pricers = yield client.getPriceHistory({})
-  yield put(addPrices(name, pricers))
+  yield put(addPrices(address, pricers))
 }
 
 export default function*() {

@@ -1,13 +1,13 @@
 export const LOAD_PRICE_HISTORY = 'LOAD_PRICE_HISTORY'
 export const ADD_PRICES = 'ADD_PRICES'
 
-export const loadPriceHistory = name => ({
+export const loadPriceHistory = address => ({
   type: LOAD_PRICE_HISTORY,
-  name,
+  address,
 })
 
-export const addPrices = (name, prices) => ({
+export const addPrices = (address, prices) => ({
   type: ADD_PRICES,
-  name,
+  address,
   prices,
 })

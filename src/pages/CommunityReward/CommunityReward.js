@@ -4,8 +4,8 @@ import PageContainer from 'components/PageContainer'
 
 import RewardDashboard from 'components/RewardDashboard'
 
-export default ({ communityName }) => (
+export default ({ communityAddress }) => (
   <PageContainer withSidebar>
-    <RewardDashboard communityName={communityName} />
+    <RewardDashboard communityAddress={communityAddress} />
   </PageContainer>
 )

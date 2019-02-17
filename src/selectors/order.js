@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import {
   orderSelector,
   typeSelector,
-  nameSelector,
+  addressSelector,
   pageSelector,
   pageSizeSelector,
 } from 'selectors/basic'
@@ -12,26 +12,27 @@ import { currentUserSelector } from 'selectors/current'
 export const orderHistorySelector = createSelector(
   [
     orderSelector,
-    nameSelector,
+    addressSelector,
     typeSelector,
     currentUserSelector,
     pageSelector,
     pageSizeSelector,
   ],
-  (orders, name, isAll, user, page, pageSize) => {
-    if (!orders.get(name)) return List()
+  (orders, address, isAll, user, page, pageSize) => {
+    if (!orders.get(address)) return List()
     return orders
-      .get(name)
+      .get(address)
       .filter(order => isAll || order.get('user') === user)
       .slice((page - 1) * pageSize, page * pageSize)
   },
 )
 
 export const noOrderSelector = createSelector(
-  [orderSelector, nameSelector, typeSelector, currentUserSelector],
-  (orders, name, isAll, user) => {
-    if (!orders.get(name)) return 0
-    return orders.get(name).filter(order => isAll || order.get('user') === user)
-      .size
+  [orderSelector, addressSelector, typeSelector, currentUserSelector],
+  (orders, address, isAll, user) => {
+    if (!orders.get(address)) return 0
+    return orders
+      .get(address)
+      .filter(order => isAll || order.get('user') === user).size
   },
 )

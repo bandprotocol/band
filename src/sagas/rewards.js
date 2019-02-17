@@ -6,16 +6,16 @@ import {
   currentUserSelector,
 } from 'selectors/current'
 
-function* handleLoadReward({ name }) {
+function* handleLoadReward({ address }) {
   while (true) {
-    if (yield select(currentCommunityClientSelector, { name })) break
+    if (yield select(currentCommunityClientSelector, { address })) break
     yield delay(100)
   }
-  const client = yield select(currentCommunityClientSelector, { name })
+  const client = yield select(currentCommunityClientSelector, { address })
   const rewards = yield client.getRewards({
     user: yield select(currentUserSelector),
   })
-  yield put(addRewards(name, rewards))
+  yield put(addRewards(address, rewards))
 }
 
 export default function*() {

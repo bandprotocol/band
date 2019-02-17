@@ -219,27 +219,29 @@ class BuySellModal extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { type, communityName }) => {
-  const community = communityDetailSelector(state, { name: communityName })
+const mapStateToProps = (state, { type, communityAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: communityAddress,
+  })
   if (!community) return {}
   return {
-    name: communityName,
+    name: community.get('name'),
     logo: community.get('logo'),
     symbol: community.get('symbol'),
     bandBalance: bandBalanceSelector(state),
     tokenBalance: community.get('balance'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {
-      name: communityName,
+      address: communityAddress,
     }),
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityName }) => ({
+const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   onBuy: (amount, priceLimit) =>
-    dispatch(buyToken(communityName, amount, priceLimit)),
+    dispatch(buyToken(communityAddress, amount, priceLimit)),
   onSell: (amount, priceLimit) =>
-    dispatch(sellToken(communityName, amount, priceLimit)),
+    dispatch(sellToken(communityAddress, amount, priceLimit)),
 })
 
 export default connect(

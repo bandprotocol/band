@@ -4,9 +4,7 @@ import moment from 'utils/moment'
 import { ADD_ORDERS } from 'actions'
 import { Map, List } from 'immutable'
 
-import BN from 'utils/bignumber'
-
-const handleAddOrders = (state, { name, orders }) => {
+const handleAddOrders = (state, { address, orders }) => {
   const newOrders = orders
     .reduce(
       (acc, order) =>
@@ -27,7 +25,7 @@ const handleAddOrders = (state, { name, orders }) => {
       if (a.get('time') < b.get('time')) return 1
       return 0
     })
-  return state.set(name, newOrders)
+  return state.set(address, newOrders)
 }
 
 export default createReducer({

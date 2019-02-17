@@ -19,8 +19,9 @@ const handleSaveCommunityInfo = (
   },
 ) =>
   state.set(
-    name,
+    address,
     Map({
+      name,
       address,
       symbol,
       logo,
@@ -33,8 +34,8 @@ const handleSaveCommunityInfo = (
     }),
   )
 
-const handleSaveCTBalance = (state, { communityName, balance }) =>
-  state.setIn([communityName, 'balance'], balance)
+const handleSaveCTBalance = (state, { communityAddress, balance }) =>
+  state.setIn([communityAddress, 'balance'], balance)
 
 const handleRemoveBalance = state =>
   state.map(community => community.delete('balance'))

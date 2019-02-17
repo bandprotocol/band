@@ -166,6 +166,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
                 author,
                 marketCap,
                 price,
+                address,
                 last24Hrs,
               }) => (
                 <BandApp
@@ -175,7 +176,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
                   description={description}
                   author={author}
                   link={website}
-                  onClick={() => history.push(`/community/${name}/detail`)}
+                  onClick={() => history.push(`/community/${address}/detail`)}
                 >
                   <PriceDetail
                     marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}

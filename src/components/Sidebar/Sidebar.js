@@ -28,6 +28,7 @@ class SideBar extends React.Component {
       symbol,
       communityPrice,
       bandPrice,
+      address,
     } = this.props
     const balanceToggled =
       this.state.isSymbol || !balance
@@ -38,6 +39,7 @@ class SideBar extends React.Component {
       <SidebarRender
         logedin={logedin}
         name={name}
+        address={address}
         src={src}
         balance={balanceToggled}
         symbol={symbol}
@@ -48,17 +50,20 @@ class SideBar extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityName }) => {
-  const community = communityDetailSelector(state, { name: communityName })
+const mapStateToProps = (state, { communityAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: communityAddress,
+  })
   if (!community) return {}
   return {
     logedin: !!currentUserSelector(state),
-    name: communityName,
+    name: community.get('name'),
     src: community.get('logo'),
     balance: community.get('balance'),
     symbol: community.get('symbol'),
     communityPrice: community.get('price'),
     bandPrice: bandPriceSelector(state),
+    address: community.get('address'),
   }
 }
 

@@ -30,8 +30,6 @@ class ModalContainer extends React.Component {
   }
 
   render() {
-    console.log('State', this.state)
-    console.log('Preops', this.props)
     return <ModalContainerRender {...this.state} {...this.props} />
   }
 }

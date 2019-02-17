@@ -96,6 +96,7 @@ export default ({
   symbol,
   isSymbol,
   toggleBalance,
+  address,
 }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
@@ -130,28 +131,28 @@ export default ({
         </Bold>
         <Text fontSize={0} fontWeight={500}>
           <Tab
-            link={`/community/${name}/detail`}
+            link={`/community/${address}/detail`}
             imgSrcActive={DetailActiveSrc}
             imgSrcInactive={DetailSrc}
           >
             Detail
           </Tab>
           <Tab
-            link={`/community/${name}/reward`}
+            link={`/community/${address}/reward`}
             imgSrcActive={RewardActiveSrc}
             imgSrcInactive={RewardSrc}
           >
             Reward
           </Tab>
           <Tab
-            link={`/community/${name}/governance`}
+            link={`/community/${address}/governance`}
             imgSrcActive={GovernanceActiveSrc}
             imgSrcInactive={GovernanceSrc}
           >
             Governance
           </Tab>
           <Tab
-            link={`/community/${name}/proposal`}
+            link={`/community/${address}/proposal`}
             imgSrcActive={ProposalActiveSrc}
             imgSrcInactive={ProposalSrc}
           >

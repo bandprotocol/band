@@ -17,11 +17,11 @@ function* handleReloadBandBalance() {
   yield put(saveBandBalance(bandBalance))
 }
 
-function* handleReloadCTBalance({ communityName }) {
+function* handleReloadCTBalance({ communityAddress }) {
   const communityClient = yield select(currentCommunityClientSelector, {
-    name: communityName,
+    address: communityAddress,
   })
-  yield put(saveCTBalance(communityName, yield communityClient.getBalance()))
+  yield put(saveCTBalance(communityAddress, yield communityClient.getBalance()))
 }
 
 export default function*() {

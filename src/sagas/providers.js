@@ -37,7 +37,7 @@ function* handleUpdateProvider({ address, provider }) {
   for (const dapp of dapps.valueSeq()) {
     yield put(
       saveCommunityClient(
-        dapp.get('name'),
+        dapp.get('address'),
         yield bandClient.at(dapp.get('address')),
       ),
     )
@@ -46,7 +46,7 @@ function* handleUpdateProvider({ address, provider }) {
   if (address) {
     yield all(
       dapps
-        .map(dapp => put(reloadCTBalance(dapp.get('name'))))
+        .map(dapp => put(reloadCTBalance(dapp.get('address'))))
         .valueSeq()
         .toJS(),
     )

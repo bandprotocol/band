@@ -52,22 +52,22 @@ function* handleConfirmChannel({ type, txHash, confirmationNumber }) {
   }
 }
 
-function* handleBuyToken({ name, amount, priceLimit }) {
-  const client = yield select(currentCommunityClientSelector, { name })
+function* handleBuyToken({ address, amount, priceLimit }) {
+  const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createBuyTransaction(amount, priceLimit)
   const emitter = transaction.send()
   yield put(trackTransaction(emitter))
 }
 
-function* handleSellToken({ name, amount, priceLimit }) {
-  const client = yield select(currentCommunityClientSelector, { name })
+function* handleSellToken({ address, amount, priceLimit }) {
+  const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createSellTransaction(amount, priceLimit)
   const emitter = transaction.send()
   yield put(trackTransaction(emitter))
 }
 
-function* handleClaimReward({ name, rewardID }) {
-  const client = yield select(currentCommunityClientSelector, { name })
+function* handleClaimReward({ address, rewardID }) {
+  const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createClaimRewardTransaction(rewardID)
   const emitter = transaction.send()
   yield put(trackTransaction(emitter))

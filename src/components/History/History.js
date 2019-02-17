@@ -42,13 +42,13 @@ class History extends React.Component {
       { value: 'mine', label: 'My Orders' },
     ]
     const { selectedOption, currentPage } = this.state
-    const { communityName, pageSize } = this.props
+    const { communityAddress, pageSize } = this.props
     return (
       <HistoryRender
         options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
-        communityName={communityName}
+        communityAddress={communityAddress}
         currentPage={currentPage}
         onChangePage={this.onChangePage.bind(this)}
         pageSize={pageSize}
@@ -57,8 +57,8 @@ class History extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityName }) => ({
-  loadOrderHistory: isAll => dispatch(loadOrderHistory(communityName, isAll)),
+const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+  loadOrderHistory: isAll => dispatch(loadOrderHistory(communityAddress, isAll)),
 })
 export default withRouter(
   connect(

@@ -26,8 +26,8 @@ export const saveCommunityInfo = (
   last24Hrs,
 })
 
-export const saveCommunityClient = (name, client) => ({
+export const saveCommunityClient = (address, client) => ({
   type: SAVE_COMMUNITY_CLIENT,
-  name,
+  address,
   client,
 })

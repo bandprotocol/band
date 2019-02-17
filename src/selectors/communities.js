@@ -1,22 +1,22 @@
 import { createSelector } from 'reselect'
-import { communitySelector, nameSelector } from 'selectors/basic'
+import { communitySelector, addressSelector } from 'selectors/basic'
 
 import { Map } from 'immutable'
 
 export const nameAndAddressCommunitySelector = createSelector(
   communitySelector,
   communities =>
-    communities.map((community, name) =>
+    communities.map((community, address) =>
       Map({
-        name,
-        address: community.get('address'),
+        name: community.name,
+        address,
       }),
     ),
 )
 
 export const communityDetailSelector = createSelector(
-  [communitySelector, nameSelector],
-  (communities, name) => communities.get(name),
+  [communitySelector, addressSelector],
+  (communities, address) => communities.get(address),
 )
 
 export const communitySymbolSelector = createSelector(

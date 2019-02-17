@@ -6,10 +6,10 @@ import { noOrderSelector } from 'selectors/order'
 
 import PaginationRender from './PaginationRender'
 
-const mapStateToProps = (state, { communityName, pageSize, isAll }) => ({
+const mapStateToProps = (state, { communityAddress, pageSize, isAll }) => ({
   numberOfPages: Math.ceil(
     noOrderSelector(state, {
-      name: communityName,
+      address: communityAddress,
       type: isAll,
     }) / pageSize,
   ),
