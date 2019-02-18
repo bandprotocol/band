@@ -25,7 +25,7 @@ contract AdminTCR is AdminInterface, SimpleTCR {
     // so any challenge will kick this admin out.
     bytes32 data = bytes32(uint256(msg.sender));
     entries[data].proposer = msg.sender;
-    entries[data].pendingExpiration = now;
+    entries[data].listedAt = now;
     emit ApplicationSubmitted(data, msg.sender);
   }
 

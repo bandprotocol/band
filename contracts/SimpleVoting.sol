@@ -54,6 +54,14 @@ contract SimpleVoting is VotingInterface, Feeless {
     _;
   }
 
+  function getPollState(address pollContract, uint256 pollID)
+    public
+    view
+    returns (ResolveListener.PollState)
+  {
+    return polls[pollContract][pollID].pollState;
+  }
+
   function getPollTotalVote(address pollContract, uint256 pollID)
     public
     view

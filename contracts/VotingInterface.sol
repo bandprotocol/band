@@ -48,6 +48,14 @@ contract VotingInterface {
     returns (bool);
 
   /**
+   * Return the current state for a specific poll.
+   */
+  function getPollState(address pollContract, uint256 pollID)
+    public
+    view
+    returns (ResolveListener.PollState);
+
+  /**
    * Return the current vote score for a specific poll.
    */
   function getPollTotalVote(address pollContract, uint256 pollID)
