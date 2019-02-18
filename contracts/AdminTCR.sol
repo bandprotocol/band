@@ -26,7 +26,7 @@ contract AdminTCR is AdminInterface, SimpleTCR {
     bytes32 data = bytes32(uint256(msg.sender));
     entries[data].proposer = msg.sender;
     entries[data].listedAt = now;
-    emit ApplicationSubmitted(data, msg.sender);
+    emit ApplicationSubmitted(data, msg.sender, entries[data].listedAt, 0);
   }
 
   function toTCREntry(address account) public pure returns (bytes32) {

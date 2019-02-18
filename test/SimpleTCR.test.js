@@ -166,9 +166,18 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         }),
       );
     });
+    it('Should exitable if nothing goes wrong', async () => {
+      const balanceOfAlice = (await this.comm.balanceOf(alice)).toNumber();
+      await this.tcr.exit(alice, web3.utils.soliditySha3('some entry'), {
+        from: alice,
+      });
+      (await this.comm.balanceOf(alice))
+        .toNumber()
+        .should.eq(balanceOfAlice + 20);
+    });
   });
 
-  context('Case 2', () => {
+  context('Challenge Functionality', () => {
     beforeEach(async () => {
       // commit
     });

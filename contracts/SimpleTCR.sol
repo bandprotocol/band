@@ -23,24 +23,23 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
     bytes32 data,
-    address indexed proposer
+    address indexed proposer,
+    uint256 listAt,
+    uint256 deposit
   );
 
   event EntryDeposited(  // Someone deposits token to an entry
     bytes32 indexed data,
-    address indexed proposer,
     uint256 value
   );
 
   event EntryWithdrawn(  // Someone withdraws token from an entry
     bytes32 indexed data,
-    address indexed proposer,
     uint256 value
   );
 
   event EntryExited(  // An entry is exited
-    bytes32 indexed data,
-    address indexed proposer
+    bytes32 indexed data
   );
 
   event ChallengeInitiated(  // An new challenge is initiated.
@@ -52,13 +51,15 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   event ChallengeSuccess(  // A challenge is successful.
     bytes32 indexed data,
     uint256 indexed challengeID,
-    uint256 rewardPool
+    uint256 rewardPool,
+    uint256 challengerReward
   );
 
   event ChallengeFailed(  // A challenge has failed.
     bytes32 indexed data,
     uint256 indexed challengeID,
-    uint256 rewardPool
+    uint256 rewardPool,
+    uint256 proposerReward
   );
 
   event ChallengeInconclusive(  // A challenge is not conclusive
@@ -92,7 +93,8 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   // A challenge represent a challenge for a TCR entry. All challenges ever
   // existed are stored in 'challenges' map below.
   struct Challenge {
-    bytes32 entryData;      // The data that is in question
+    bytes32 entryData;      // The hash of data that is in question
+    bytes32 reasonData;     // The hash of reason for this challenge
     address challenger;     // The challenger
     uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
     uint256 remainingVotes; // Remaining voting power to claim rewards.
@@ -180,17 +182,17 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
    * 'min_deposit'. Application will get auto-approved if no challenge happens
    * during the first 'apply_stage_length' seconds.
    */
-  function applyEntry(address proposer, uint256 stake, bytes32 data)
+  function applyEntry(address proposer, uint256 deposit, bytes32 data)
     external
     onlyFrom(address(token))
     entryMustNotExist(data)
   {
-    require(stake >= get("min_deposit"));
+    require(deposit >= get("min_deposit"));
     Entry storage entry = entries[data];
     entry.proposer = proposer;
-    entry.withdrawableDeposit = stake;
+    entry.withdrawableDeposit = deposit;
     entry.listedAt = now.add(get("apply_stage_length"));
-    emit ApplicationSubmitted(data, proposer);
+    emit ApplicationSubmitted(data, proposer, entry.listedAt, deposit);
   }
 
   /**
@@ -205,7 +207,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     Entry storage entry = entries[data];
     require(entry.proposer == depositor);
     entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
-    emit EntryDeposited(data, depositor, amount);
+    emit EntryDeposited(data, amount);
   }
 
   /**
@@ -224,7 +226,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     }
     entry.withdrawableDeposit = entry.withdrawableDeposit.sub(amount);
     require(token.transfer(sender, amount));
-    emit EntryWithdrawn(data, sender, amount);
+    emit EntryWithdrawn(data, amount);
   }
 
   /**
@@ -239,7 +241,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     require(entry.proposer == sender);
     require(entry.challengeID == 0);
     deleteEntry(data);
-    emit EntryExited(data, sender);
+    emit EntryExited(data);
   }
 
   /**
@@ -250,7 +252,8 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   function initiateChallenge(
     address challenger,
     uint256 challengeDeposit,
-    bytes32 data
+    bytes32 data,
+    bytes32 reasonData
   )
     public
     onlyFrom(address(token))
@@ -270,6 +273,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     uint256 challengeID = nextChallengeNonce;
     entry.challengeID = challengeID;
     challenges[challengeID].entryData = data;
+    challenges[challengeID].reasonData = reasonData;
     challenges[challengeID].challenger = challenger;
     challenges[challengeID].rewardPool = stake.mul(2);
     // Increment the nonce for the next challenge.
@@ -323,7 +327,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = yesCount;
       
-      emit ChallengeSuccess(data, challengeID, rewardPool);
+      emit ChallengeSuccess(data, challengeID, rewardPool, leaderReward);
     } else if (pollState == PollState.No) {
       // Challenge fails. Entry deposit is added by reward.
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
@@ -331,7 +335,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = noCount;
       
-      emit ChallengeFailed(data, challengeID, rewardPool);
+      emit ChallengeFailed(data, challengeID, rewardPool, leaderReward);
     } else if (pollState == PollState.Inconclusive) {
       // Inconclusive. Both challenger and entry owner get half of the pool
       // back. The reward pool then becomes zero. Too bad for voters.
