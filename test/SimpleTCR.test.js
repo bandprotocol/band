@@ -41,11 +41,19 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       [60, 60, 50, 50, 30, 100, 300, 30, 30, 50, 50],
       { from: owner },
     );
+    this.core = await CommunityCore.new(
+      this.band.address,
+      this.comm.address,
+      this.params.address,
+      [8, 1, 0, 2],
+      {
+        from: owner,
+      },
+    );
     this.tcr = await SimpleTCR.new(
       web3.utils.fromAscii('tcr:'),
-      this.comm.address,
+      this.core.address,
       this.voting.address,
-      this.params.address,
       //  if x <= 60
       //    return 1e12
       //  else if x <= 120
@@ -83,15 +91,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       ],
       { from: owner },
     );
-    this.core = await CommunityCore.new(
-      this.band.address,
-      this.comm.address,
-      this.params.address,
-      [8, 1, 0, 2],
-      {
-        from: owner,
-      },
-    );
+
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
     await this.band.transfer(carol, 10000000, { from: owner });

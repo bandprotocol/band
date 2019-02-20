@@ -6,8 +6,7 @@ import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "./BandContractBase.sol";
-import "./CommunityToken.sol";
-import "./ParametersBase.sol";
+import "./CommunityCore.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
 import "./Equation.sol";
@@ -118,9 +117,8 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
   constructor(
     bytes8 _prefix,
-    CommunityToken _token,
+    CommunityCore _core,
     VotingInterface _voting,
-    ParametersBase _params,
     uint256[] memory _expressions
   )
     public
@@ -129,9 +127,9 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     _registerInterface(this.deposit.selector);
     _registerInterface(this.initiateChallenge.selector);
     prefix = _prefix;
-    token = _token;
+    token = _core.commToken();
+    params = _core.params();
     voting = _voting;
-    params = _params;
     depositDecayFunction.init(_expressions);
   }
 

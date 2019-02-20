@@ -1,6 +1,7 @@
 pragma solidity 0.5.0;
 
 import "./AdminInterface.sol";
+import "./CommunityCore.sol";
 import "./SimpleTCR.sol";
 
 
@@ -14,12 +15,11 @@ import "./SimpleTCR.sol";
 contract AdminTCR is AdminInterface, SimpleTCR {
 
   constructor(
-    CommunityToken _token,
+    CommunityCore _core,
     VotingInterface _voting,
-    ParametersBase _params,
     uint256[] memory _expressions
   )
-    SimpleTCR("admin:", _token, _voting, _params, _expressions)
+    SimpleTCR("admin:", _core, _voting, _expressions)
     public
   {
     // Make the contract creator the admin. Note that this is without deposit,

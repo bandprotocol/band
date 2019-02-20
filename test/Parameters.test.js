@@ -80,13 +80,6 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
       await this.params.setExecDelegator(this.factory.address);
-      this.admin = await AdminTCR.new(
-        this.comm.address,
-        this.voting.address,
-        this.params.address,
-        [0, 1e12],
-        { from: owner },
-      );
       this.core = await CommunityCore.new(
         this.band.address,
         this.comm.address,
@@ -95,6 +88,12 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         {
           from: owner,
         },
+      );
+      this.admin = await AdminTCR.new(
+        this.core.address,
+        this.voting.address,
+        [0, 1e12],
+        { from: owner },
       );
       await this.params.propose(
         owner,
