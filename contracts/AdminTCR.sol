@@ -14,11 +14,12 @@ import "./SimpleTCR.sol";
 contract AdminTCR is AdminInterface, SimpleTCR {
 
   constructor(
-    CommunityToken token,
-    VotingInterface voting,
-    ParametersBase params
+    CommunityToken _token,
+    VotingInterface _voting,
+    ParametersBase _params,
+    uint256[] memory _expressions
   )
-    SimpleTCR("admin:", token, voting, params)
+    SimpleTCR("admin:", _token, _voting, _params, _expressions)
     public
   {
     // Make the contract creator the admin. Note that this is without deposit,

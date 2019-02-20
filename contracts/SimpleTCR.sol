@@ -10,6 +10,7 @@ import "./CommunityToken.sol";
 import "./ParametersBase.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
+import "./Equation.sol";
 import "./Feeless.sol";
 
 /**
@@ -20,6 +21,7 @@ import "./Feeless.sol";
  */
 contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   using SafeMath for uint256;
+  using Equation for Equation.Node[];
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
     bytes32 data,
@@ -73,6 +75,8 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     uint256 reward
   );
 
+  Equation.Node[] public depositDecayFunction;
+
   CommunityToken public token;
   VotingInterface public voting;
   ParametersBase public params;
@@ -116,7 +120,8 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     bytes8 _prefix,
     CommunityToken _token,
     VotingInterface _voting,
-    ParametersBase _params
+    ParametersBase _params,
+    uint256[] memory _expressions
   )
     public
   {
@@ -127,6 +132,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     token = _token;
     voting = _voting;
     params = _params;
+    depositDecayFunction.init(_expressions);
   }
 
   modifier entryMustExist(bytes32 data) {
@@ -178,6 +184,26 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   }
 
   /**
+   * @dev Get current min_deposit of the entry
+   */
+  function currentMinDeposit(bytes32 entryData) 
+    public
+    view
+    entryMustExist(entryData)
+    returns (uint256) 
+  {
+    Entry storage entry = entries[entryData];
+    uint256 minDeposit = get("min_deposit");
+    if (now < entry.listedAt) {
+      return minDeposit;
+    } else {
+      return (minDeposit.mul(
+        depositDecayFunction.calculate(now.sub(entry.listedAt)))
+      ).div(DENOMINATOR);
+    }
+  }
+
+  /**
    * @dev Apply a new entry to the TCR. The applicant must stake token at least
    * 'min_deposit'. Application will get auto-approved if no challenge happens
    * during the first 'apply_stage_length' seconds.
@@ -220,7 +246,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     Entry storage entry = entries[data];
     require(entry.proposer == sender);
     if (entry.challengeID == 0) {
-      require(entry.withdrawableDeposit >= amount.add(get("min_deposit")));
+      require(entry.withdrawableDeposit >= amount.add(currentMinDeposit(data)));
     } else {
       require(entry.withdrawableDeposit >= amount);
     }
@@ -263,12 +289,13 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     Entry storage entry = entries[data];
     require(entry.challengeID == 0);
 
-    uint256 stake = Math.min(entry.withdrawableDeposit, get("min_deposit"));
-    // Take 'stake' tokens from the entry ('stake' tokens from challenger are
-    // already taken by the caller).
-    if (challengeDeposit > stake) {
+    uint256 stake = Math.min(entry.withdrawableDeposit, currentMinDeposit(data));
+    require(challengeDeposit >= stake);
+
+    if (challengeDeposit != stake) {
       require(token.transfer(challenger, challengeDeposit.sub(stake)));
     }
+    
     entry.withdrawableDeposit = entry.withdrawableDeposit.sub(stake);
     uint256 challengeID = nextChallengeNonce;
     entry.challengeID = challengeID;

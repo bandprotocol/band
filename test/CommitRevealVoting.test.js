@@ -39,6 +39,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       this.comm.address,
       this.voting.address,
       this.params.address,
+      [0, 1e12],
       { from: owner },
     );
     this.core = await CommunityCore.new(
@@ -121,100 +122,98 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         0,
         { from: bob },
       );
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        alice
-      )).toString().should.eq('1');
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        bob
-      )).toString().should.eq('1');
+      (await this.voting.getPollUserState(this.params.address, 2, alice))
+        .toString()
+        .should.eq('1');
+      (await this.voting.getPollUserState(this.params.address, 2, bob))
+        .toString()
+        .should.eq('1');
     });
     it('should revert (totalWeight == 0), getPollUserState should be Invalid', async () => {
       // commit
-      await reverting(this.voting.commitVote(
-        alice,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(0, 0, 42),
-        '0x00',
-        0,
-        0,
-        { from: alice },
-      ));
-      await reverting(this.voting.commitVote(
-        bob,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(30, 30, 42),
-        '0x00',
-        0,
-        0,
-        { from: bob },
-      ));
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        alice
-      )).toString().should.eq('0');
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        bob
-      )).toString().should.eq('0');
+      await reverting(
+        this.voting.commitVote(
+          alice,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(0, 0, 42),
+          '0x00',
+          0,
+          0,
+          { from: alice },
+        ),
+      );
+      await reverting(
+        this.voting.commitVote(
+          bob,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(30, 30, 42),
+          '0x00',
+          0,
+          0,
+          { from: bob },
+        ),
+      );
+      (await this.voting.getPollUserState(this.params.address, 2, alice))
+        .toString()
+        .should.eq('0');
+      (await this.voting.getPollUserState(this.params.address, 2, bob))
+        .toString()
+        .should.eq('0');
     });
     it('should revert (totalWeight > voting power), getPollUserState should be Invalid', async () => {
       // commit
-      await reverting(this.voting.commitVote(
-        alice,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(200, 0, 42),
-        '0x00',
-        200,
-        0,
-        { from: alice },
-      ));
-      await reverting(this.voting.commitVote(
-        bob,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(60, 0, 42),
-        '0x00',
-        110,
-        0,
-        { from: bob },
-      ));
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        alice
-      )).toString().should.eq('0');
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        bob
-      )).toString().should.eq('0');
+      await reverting(
+        this.voting.commitVote(
+          alice,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(200, 0, 42),
+          '0x00',
+          200,
+          0,
+          { from: alice },
+        ),
+      );
+      await reverting(
+        this.voting.commitVote(
+          bob,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(60, 0, 42),
+          '0x00',
+          110,
+          0,
+          { from: bob },
+        ),
+      );
+      (await this.voting.getPollUserState(this.params.address, 2, alice))
+        .toString()
+        .should.eq('0');
+      (await this.voting.getPollUserState(this.params.address, 2, bob))
+        .toString()
+        .should.eq('0');
     });
 
     it('should use delegated execution to commitVote feelessly', async () => {
       // commit
-      const data = await this.voting.contract.methods.commitVote(
-        alice,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(60, 0, 42),
-        '0x00',
-        60,
-        0
-      ).encodeABI();
+      const data = await this.voting.contract.methods
+        .commitVote(
+          alice,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(60, 0, 42),
+          '0x00',
+          60,
+          0,
+        )
+        .encodeABI();
       const nonce = 0;
       const dataNoFuncSig = '0x' + data.slice(10 + 64);
       const sig = await web3.eth.sign(
         web3.utils.soliditySha3(nonce, dataNoFuncSig),
-        alice
+        alice,
       );
       await this.factory.sendDelegatedExecution(
         alice,
@@ -224,11 +223,9 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         sig,
         { from: bob },
       );
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        alice
-      )).toString().should.eq('1');
+      (await this.voting.getPollUserState(this.params.address, 2, alice))
+        .toString()
+        .should.eq('1');
     });
   });
 
@@ -281,26 +278,30 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     });
     it('should revert, wrong params', async () => {
       // commit again
-      await reverting(this.voting.commitVote(
-        alice,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(60, 0, 42),
-        '0x00',
-        60,
-        0,
-        { from: alice },
-      ));
-      await reverting(this.voting.commitVote(
-        bob,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(60, 0, 42),
-        web3.utils.soliditySha3(99, 99, 99),
-        60,
-        99,
-        { from: bob },
-      ));
+      await reverting(
+        this.voting.commitVote(
+          alice,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(60, 0, 42),
+          '0x00',
+          60,
+          0,
+          { from: alice },
+        ),
+      );
+      await reverting(
+        this.voting.commitVote(
+          bob,
+          this.params.address,
+          2,
+          web3.utils.soliditySha3(60, 0, 42),
+          web3.utils.soliditySha3(99, 99, 99),
+          60,
+          99,
+          { from: bob },
+        ),
+      );
     });
   });
 
@@ -337,55 +338,67 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
         from: bob,
       });
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        alice
-      )).toString().should.eq('2');
-      (await this.voting.getPollUserState(
-        this.params.address,
-        2,
-        bob
-      )).toString().should.eq('2');
+      (await this.voting.getPollUserState(this.params.address, 2, alice))
+        .toString()
+        .should.eq('2');
+      (await this.voting.getPollUserState(this.params.address, 2, bob))
+        .toString()
+        .should.eq('2');
     });
     it('should revert, wrong salt', async () => {
       await increase(duration.seconds(60));
       // reveal vote with wrong salt
-      await reverting(this.voting.revealVote(alice, this.params.address, 2, 60, 0, 43, {
-        from: alice,
-      }));
-      await reverting(this.voting.revealVote(bob, this.params.address, 2, 60, 0, 43, {
-        from: bob,
-      }));
+      await reverting(
+        this.voting.revealVote(alice, this.params.address, 2, 60, 0, 43, {
+          from: alice,
+        }),
+      );
+      await reverting(
+        this.voting.revealVote(bob, this.params.address, 2, 60, 0, 43, {
+          from: bob,
+        }),
+      );
     });
     it('should revert, wrong total weight(yes+no)', async () => {
       await increase(duration.seconds(60));
       // reveal vote with wrong salt
-      await reverting(this.voting.revealVote(alice, this.params.address, 2, 60, 10, 42, {
-        from: alice,
-      }));
-      await reverting(this.voting.revealVote(bob, this.params.address, 2, 50, 0, 42, {
-        from: bob,
-      }));
+      await reverting(
+        this.voting.revealVote(alice, this.params.address, 2, 60, 10, 42, {
+          from: alice,
+        }),
+      );
+      await reverting(
+        this.voting.revealVote(bob, this.params.address, 2, 50, 0, 42, {
+          from: bob,
+        }),
+      );
     });
     it('should revert, correct total weight(yes+no) but wrong yes/no weight', async () => {
       await increase(duration.seconds(60));
       // reveal vote with wrong yes/no weight
-      await reverting(this.voting.revealVote(alice, this.params.address, 2, 0, 60, 42, {
-        from: alice,
-      }));
-      await reverting(this.voting.revealVote(bob, this.params.address, 2, 30, 30, 42, {
-        from: bob,
-      }));
+      await reverting(
+        this.voting.revealVote(alice, this.params.address, 2, 0, 60, 42, {
+          from: alice,
+        }),
+      );
+      await reverting(
+        this.voting.revealVote(bob, this.params.address, 2, 30, 30, 42, {
+          from: bob,
+        }),
+      );
     });
     it('should revert, try to reveal after reveal time has end', async () => {
       await increase(duration.seconds(120));
-      await reverting(this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
-        from: alice,
-      }));
-      await reverting(this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
-        from: bob,
-      }));
+      await reverting(
+        this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
+          from: alice,
+        }),
+      );
+      await reverting(
+        this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
+          from: bob,
+        }),
+      );
     });
   });
 
@@ -425,10 +438,9 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, {
         from: bob,
       });
-      (await this.voting.polls(
-        this.params.address,
-        2
-      )).pollState.toString().should.eq('2');
+      (await this.voting.polls(this.params.address, 2)).pollState
+        .toString()
+        .should.eq('2');
     });
     it('correctly resolve, lack of voting power, pollState should be Inconclusive', async () => {
       // commit
@@ -447,10 +459,9 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, {
         from: bob,
       });
-      (await this.voting.polls(
-        this.params.address,
-        2
-      )).pollState.toString().should.eq('4');
+      (await this.voting.polls(this.params.address, 2)).pollState
+        .toString()
+        .should.eq('4');
     });
     it('should revert, lack of voting power but try to resolve too zoon', async () => {
       // commit
@@ -464,9 +475,11 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         0,
         { from: alice },
       );
-      await reverting(this.voting.resolvePoll(this.params.address, 2, {
-        from: bob,
-      }));
+      await reverting(
+        this.voting.resolvePoll(this.params.address, 2, {
+          from: bob,
+        }),
+      );
     });
     it('should revert, enough voting power but try to resolve too zoon', async () => {
       // commit
@@ -491,9 +504,11 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         { from: bob },
       );
       await increase(duration.seconds(60));
-      await reverting(this.voting.resolvePoll(this.params.address, 2, {
-        from: bob,
-      }));
+      await reverting(
+        this.voting.resolvePoll(this.params.address, 2, {
+          from: bob,
+        }),
+      );
     });
   });
 });

@@ -39,6 +39,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       this.comm.address,
       this.voting.address,
       this.params.address,
+      [0, 1e12],
       { from: owner },
     );
     this.core = await CommunityCore.new(
@@ -70,7 +71,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await reverting(this.core.buy(alice, 100, 11000, { from: alice }));
     });
 
-    it('should not allow buying if buy doesn\'t have enough band', async () => {
+    it("should not allow buying if buy doesn't have enough band", async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await reverting(
         this.band.transferAndCall(
@@ -201,19 +202,21 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
 
       const calldata3 = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
-      const calldata4 = await this.comm.contract.methods.transferAndCall(
-        alice,
-        this.core.address,
-        10,
-        '0x' + calldata3.slice(2, 10),
-        '0x' + calldata3.slice(138),
-      ).encodeABI();
+      const calldata4 = await this.comm.contract.methods
+        .transferAndCall(
+          alice,
+          this.core.address,
+          10,
+          '0x' + calldata3.slice(2, 10),
+          '0x' + calldata3.slice(138),
+        )
+        .encodeABI();
 
       const nonce = (await this.factory.execNonces(alice)).toNumber();
       const dataNoFuncSig = '0x' + calldata4.slice(10 + 64);
       const sig = await web3.eth.sign(
         web3.utils.soliditySha3(nonce, dataNoFuncSig),
-        alice
+        alice,
       );
 
       await this.factory.sendDelegatedExecution(

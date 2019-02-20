@@ -79,9 +79,6 @@ contract CommunityCore is BandContractBase, ERC165 {
   CommunityToken public commToken;
   ParametersBase public params;
 
-  // Denominator for inflation-related ratios and sales tax.
-  uint256 public constant DENOMINATOR = 1e12;
-
   // Last time the auto-inflation was added to system. Auto-inflation happens
   // automatically everytime someone buys or sells tokens through bonding curve.
   uint256 public lastInflationTime;
