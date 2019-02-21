@@ -76,7 +76,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('params:support_required_pct'),
           web3.utils.fromAscii('params:min_participation_pct'),
         ],
-        [60, 60, 80, 60],
+        [60, 60, 80 * 1e12, 60 * 1e12],
         { from: owner },
       );
       await this.params.setExecDelegator(this.factory.address);
@@ -138,12 +138,12 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
-          .should.eq('80');
+          .should.eq('80000000000000');
         (await this.params.getZeroable(
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
-          .should.eq('80');
+          .should.eq('80000000000000');
       });
 
       it('should only allow getting zero if called via getZeroable', async () => {

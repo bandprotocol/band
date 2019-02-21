@@ -38,7 +38,19 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('tcr:support_required_pct'),
         web3.utils.fromAscii('tcr:min_participation_pct'),
       ],
-      [60, 60, 50, 50, 30, 100, 300, 30, 30, 50, 50],
+      [
+        60,
+        60,
+        50 * 1e12,
+        50 * 1e12,
+        30 * 1e12,
+        100,
+        300,
+        30,
+        30,
+        50 * 1e12,
+        50 * 1e12,
+      ],
       { from: owner },
     );
     this.core = await CommunityCore.new(
@@ -177,7 +189,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
     it('verify parameters of TCR', async () => {
       (await this.tcr.get(web3.utils.fromAscii('dispensation_percentage')))
         .toNumber()
-        .should.eq(30);
+        .should.eq(30 * 1e12);
 
       (await this.tcr.get(web3.utils.fromAscii('min_deposit')))
         .toNumber()
@@ -186,6 +198,14 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.tcr.get(web3.utils.fromAscii('apply_stage_length')))
         .toNumber()
         .should.eq(300);
+
+      (await this.tcr.get(web3.utils.fromAscii('support_required_pct')))
+        .toNumber()
+        .should.eq(50 * 1e12);
+
+      (await this.tcr.get(web3.utils.fromAscii('min_participation_pct')))
+        .toNumber()
+        .should.eq(50 * 1e12);
     });
     it('verify min_deposit with time-value decay', async () => {
       // min_deposit at the begining

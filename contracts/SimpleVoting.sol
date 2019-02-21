@@ -2,13 +2,14 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
+import "./BandContractBase.sol";
 import "./VotingInterface.sol";
 import "./Feeless.sol";
 
 /**
  * @title SimpleVoting
  */
-contract SimpleVoting is VotingInterface, Feeless {
+contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
   using SafeMath for uint256;
 
   event SimplePollCreated(  // A poll is created.
@@ -86,8 +87,8 @@ contract SimpleVoting is VotingInterface, Feeless {
     uint256 voteSupportRequiredPct = getParam("params:support_required_pct");
 
     require(expirationTime > 0);
-    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= 100);
-    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= 100);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= ONE_HUNDRED_PERCENT);
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
 
     return true;
   }
@@ -107,8 +108,8 @@ contract SimpleVoting is VotingInterface, Feeless {
     uint256 voteSupportRequiredPct = get(params, prefix, "support_required_pct");
 
     require(expirationTime < 2 ** 64);
-    require(voteMinParticipationPct <= 100);
-    require(voteSupportRequiredPct <= 100);
+    require(voteMinParticipationPct <= ONE_HUNDRED_PERCENT);
+    require(voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
 
     // NOTE: This could possibliy be slightly mismatched with `snapshotBlockNo`
     // if there are mint/burn transactions in this block prior to
@@ -116,7 +117,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     // `minimum_quorum` is primarily used to ensure minimum number of vote
     // participants. The primary decision factor should be `support_required`.
     uint256 voteMinParticipation
-      = voteMinParticipationPct.mul(token.totalSupply()).div(100);
+      = voteMinParticipationPct.mul(token.totalSupply()).div(ONE_HUNDRED_PERCENT);
 
     polls[msg.sender][pollID] = Poll({
       token: token,
@@ -186,7 +187,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     ResolveListener.PollState pollState;
     if (totalCount < poll.voteMinParticipation) {
       pollState = ResolveListener.PollState.Inconclusive;
-    } else if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(totalCount)) {
+    } else if (yesCount.mul(ONE_HUNDRED_PERCENT) >= poll.voteSupportRequiredPct.mul(totalCount)) {
       pollState = ResolveListener.PollState.Yes;
     } else {
       pollState = ResolveListener.PollState.No;

@@ -2,13 +2,14 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
+import "./BandContractBase.sol";
 import "./VotingInterface.sol";
 import "./Feeless.sol";
 
 /**
  * @title CommitRevealVoting
  */
-contract CommitRevealVoting is VotingInterface, Feeless {
+contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
   using SafeMath for uint256;
 
   event PollCreated(  // A poll is created.
@@ -139,8 +140,8 @@ contract CommitRevealVoting is VotingInterface, Feeless {
 
     require(commitEndTime > 0);
     require(revealEndTime > 0);
-    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= 100);
-    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= 100);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <=  ONE_HUNDRED_PERCENT);
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
 
     return true;
   }
@@ -155,7 +156,6 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     pollMustNotExist(msg.sender, pollID)
     returns (bool)
   {
-
     uint256 commitEndTime = now.add(get(params, prefix, "commit_time"));
     uint256 revealEndTime = commitEndTime.add(get(params, prefix, "reveal_time"));
     uint256 voteMinParticipationPct = get(params, prefix, "min_participation_pct");
@@ -163,8 +163,8 @@ contract CommitRevealVoting is VotingInterface, Feeless {
 
     require(revealEndTime < 2 ** 64);
     require(commitEndTime < revealEndTime);
-    require(voteMinParticipationPct <= 100);
-    require(voteSupportRequiredPct <= 100);
+    require(voteMinParticipationPct <= ONE_HUNDRED_PERCENT);
+    require(voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
 
     // NOTE: This could possibliy be slightly mismatched with `snapshotBlockNo`
     // if there are mint/burn transactions in this block prior to
@@ -172,7 +172,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     // `minimum_quorum` is primarily used to ensure minimum number of vote
     // participants. The primary decision factor should be `support_required`.
     uint256 voteMinParticipation
-      = voteMinParticipationPct.mul(token.totalSupply()).div(100);
+      = voteMinParticipationPct.mul(token.totalSupply()).div(ONE_HUNDRED_PERCENT);
 
     Poll storage poll = polls[msg.sender][pollID];
     poll.snapshotBlockNo = block.number.sub(1);
@@ -291,7 +291,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
       uint256 yesCount = poll.yesCount;
       uint256 noCount = poll.noCount;
 
-      if (yesCount.mul(100) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
+      if (yesCount.mul(ONE_HUNDRED_PERCENT) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
         pollState = ResolveListener.PollState.Yes;
       } else {
         pollState = ResolveListener.PollState.No;

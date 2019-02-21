@@ -32,7 +32,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('params:support_required_pct'),
         web3.utils.fromAscii('params:min_participation_pct'),
       ],
-      [60, 60, 80, 60],
+      [60, 60, 80 * 1e12, 60 * 1e12],
       { from: owner },
     );
     this.core = await CommunityCore.new(

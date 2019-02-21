@@ -338,11 +338,14 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
     uint256 rewardPool = challenge.rewardPool;
     uint256 dispensationPercentage = get("dispensation_percentage");
-    require(dispensationPercentage >= 0 && dispensationPercentage <= 100);
+    require(dispensationPercentage >= 0 && dispensationPercentage <= ONE_HUNDRED_PERCENT);
 
     // The reward for winning side leader (challenger/entry owner) is the
     // specified percentage of total reward pool.
-    uint256 leaderReward = rewardPool.mul(dispensationPercentage.add(100)).div(200);
+    // (dispensationPercentage + ONE_HUNDRED_PERCENT)/(TWO_HUNDRED_PERCENT)
+    uint256 leaderReward = rewardPool.mul(
+      dispensationPercentage.add(ONE_HUNDRED_PERCENT)
+    ).div(ONE_HUNDRED_PERCENT.mul(2));
 
     if (pollState == PollState.Yes) {
       // Challenge succeeds. Challenger gets reward. Entry gets removed.
