@@ -130,6 +130,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     token = _core.commToken();
     params = _core.params();
     voting = _voting;
+    setExecDelegator(token.execDelegator());
     depositDecayFunction.init(_expressions);
   }
 

@@ -155,6 +155,10 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
     });
+    it('Should have the same execDelegator as community token', async () => {
+      const execDelegatorToken = (await this.comm.execDelegator()).toString();
+      (await this.tcr.execDelegator()).toString().should.eq(execDelegatorToken);
+    });
     it('Should be unable to overwrite existing entry', async () => {
       const calldata = await this.tcr.contract.methods
         .applyEntry(_, 0, entryHash)
