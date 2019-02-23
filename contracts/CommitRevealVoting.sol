@@ -32,7 +32,8 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     address indexed pollContract,
     uint256 indexed pollID,
     address indexed voter,
-    bytes32 voteHash
+    bytes32 voteHash,
+    uint256 totalWeight
   );
 
   event VoteRevealed(  // A vote is revealed by a user.
@@ -209,7 +210,7 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-    
+
     // Must be in commit period.
     require(now < poll.commitEndTime);
     // commitValue should look like hash
@@ -218,7 +219,7 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     require(totalWeight > 0);
     // totalWeight will not exceed voting power of sender
     require(
-      totalWeight <= 
+      totalWeight <=
       poll.token.historicalVotingPowerAtBlock(
         sender,
         poll.snapshotBlockNo
@@ -226,17 +227,17 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     );
 
     // caculate current commit by hashing prev totalWeight and commitValue
-    bytes32 prevCommitValWithTW = getHash(prevTotalWeight, prevCommitValue);
-    require(poll.commits[sender] == prevCommitValWithTW);
+    bytes32 prevCommitValWithTotalWeight = getHash(prevTotalWeight, prevCommitValue);
+    require(poll.commits[sender] == prevCommitValWithTotalWeight);
 
     // calculate new commit by hashing totalWeight and commitValue
-    bytes32 commitValWithTW = getHash(totalWeight, commitValue);
-    poll.commits[sender] = commitValWithTW;
+    bytes32 commitValWithTotalWeight = getHash(totalWeight, commitValue);
+    poll.commits[sender] = commitValWithTotalWeight;
 
     // remove prevTotalWeight from poll.totalCount before adding new totalWeight
     poll.totalCount = poll.totalCount.sub(prevTotalWeight).add(totalWeight);
 
-    emit VoteCommitted(pollContract, pollID, sender, commitValWithTW);
+    emit VoteCommitted(pollContract, pollID, sender, commitValue, totalWeight);
   }
 
   function revealVote(
