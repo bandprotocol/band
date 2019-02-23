@@ -357,7 +357,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = yesCount;
 
-      emit ChallengeSuccess(data, challengeID, rewardPool, leaderReward);
+      emit ChallengeSuccess(data, challengeID, challenge.rewardPool, leaderReward);
     } else if (pollState == PollState.No) {
       // Challenge fails. Entry deposit is added by reward.
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
@@ -365,7 +365,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = noCount;
 
-      emit ChallengeFailed(data, challengeID, rewardPool, leaderReward);
+      emit ChallengeFailed(data, challengeID, challenge.rewardPool, leaderReward);
     } else if (pollState == PollState.Inconclusive) {
       // Inconclusive. Both challenger and entry owner get half of the pool
       // back. The reward pool then becomes zero. Too bad for voters.
