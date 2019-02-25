@@ -337,6 +337,12 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
     (uint256 yesCount, uint256 noCount) =
       voting.getPollTotalVote(address(this), challengeID);
+    // We call the following two functions prior to checking `pollState` to avoid 
+    // "Stack too deep" error due to Solidity/EVM's limitation of DUPn opcodes.
+    (uint256 challengerYesCount, ) = 
+      voting.getPollUserVote(address(this), challengeID, challenge.challenger);
+    (, uint256 proposerNoCount) = 
+      voting.getPollUserVote(address(this), challengeID, entry.proposer);
 
     uint256 rewardPool = challenge.rewardPool;
     uint256 dispensationPercentage = get("dispensation_percentage");
@@ -350,20 +356,30 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     ).div(ONE_HUNDRED_PERCENT.mul(2));
 
     if (pollState == PollState.Yes) {
+      // Automatically claim reward for challenger
+      leaderReward = leaderReward.add(
+        rewardPool.sub(leaderReward).mul(challengerYesCount).div(yesCount)
+      );
       // Challenge succeeds. Challenger gets reward. Entry gets removed.
       require(token.transfer(challenge.challenger, leaderReward));
       deleteEntry(data);
       // The remaining reward is distributed among Yes voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
-      challenge.remainingVotes = yesCount;
+      challenge.remainingVotes = yesCount.sub(challengerYesCount);
+      challenge.claims[challenge.challenger] = true;
 
       emit ChallengeSuccess(data, challengeID, challenge.rewardPool, leaderReward);
     } else if (pollState == PollState.No) {
+      // Automatically claim reward for the entry
+      leaderReward = leaderReward.add(
+        rewardPool.sub(leaderReward).mul(proposerNoCount).div(noCount)
+      );
       // Challenge fails. Entry deposit is added by reward.
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
       // The remaining reward is distributed among No voters.
       challenge.rewardPool = rewardPool.sub(leaderReward);
-      challenge.remainingVotes = noCount;
+      challenge.remainingVotes = noCount.sub(proposerNoCount);
+      challenge.claims[entry.proposer] = true;
 
       emit ChallengeFailed(data, challengeID, challenge.rewardPool, leaderReward);
     } else if (pollState == PollState.Inconclusive) {
@@ -397,16 +413,13 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
     challenge.claims[rewardOwner] = true;
 
-    ResolveListener.PollState pollState = voting.getPollState(address(this), challengeID);
-    require(
-      pollState == ResolveListener.PollState.Yes ||
-      pollState == ResolveListener.PollState.No
-    );
+    PollState pollState = voting.getPollState(address(this), challengeID);
+    require(pollState == PollState.Yes || pollState == PollState.No);
 
     (uint256 yesCount, uint256 noCount) =
       voting.getPollUserVote(address(this), challengeID, rewardOwner);
 
-    uint256 claimableCount = (pollState == ResolveListener.PollState.Yes) ? yesCount : noCount;
+    uint256 claimableCount = (pollState == PollState.Yes) ? yesCount : noCount;
     uint256 rewardPool = challenge.rewardPool;
     uint256 remainingVotes = challenge.remainingVotes;
     uint256 reward = rewardPool.mul(claimableCount).div(remainingVotes);

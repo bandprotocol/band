@@ -503,8 +503,12 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       );
       // alice should loss her stake
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000 - 100);
-      // bob should gain more 30% from leader reward after resolve
-      (await this.comm.balanceOf(bob)).toNumber().should.eq(1000 + 30);
+      // bob should gain more 30% from leader reward and
+      // so he should also get 600/(400+600) of the remaining
+      // from his voting after resolve
+      (await this.comm.balanceOf(bob))
+        .toNumber()
+        .should.eq(1000 + 30 + (200 - 130) * (600 / (400 + 600)));
 
       // alice should not get anything from reward pool
       await reverting(
@@ -515,11 +519,11 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.comm.balanceOf(carol))
         .toNumber()
         .should.eq(1000 + (200 - 130) * (400 / (400 + 600)));
-      // bob claim his reward, so he should get 600/(400+600) of the remaining
-      await this.tcr.claimReward(bob, challengeID, { from: bob });
+      // bob cannot claim his reward, because he already got it in resolving process
+      await reverting(this.tcr.claimReward(bob, challengeID, { from: bob }));
       (await this.comm.balanceOf(bob))
         .toNumber()
-        .should.eq(1030 + (200 - 130) * (600 / (400 + 600)));
+        .should.eq(1000 + 30 + (200 - 130) * (600 / (400 + 600)));
     });
     it('Bob should loss after voting has correctly resolved', async () => {
       const commits = [[alice, 0, 100], [bob, 800, 0], [carol, 0, 900]];
@@ -564,12 +568,12 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         from: carol,
       });
       // entry should gain +30 for withdrawableDeposit
+      // and (200 - 130) * (100 / (900 + 100)) from alice(the proposer) voting
       (await this.tcr.entries(entryHash)).withdrawableDeposit
         .toNumber()
-        .should.eq(200 + 30);
+        .should.eq(200 + 30 + (200 - 130) * (100 / (900 + 100)));
       // bob should loss his deposit of his challenge
       (await this.comm.balanceOf(bob)).toNumber().should.eq(1000 - 100);
-
       // bob should not get anything from reward pool
       await reverting(this.tcr.claimReward(bob, challengeID, { from: bob }));
       // carol claim her reward, so she should get 400/(400+600) of the remaining
@@ -577,11 +581,11 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.comm.balanceOf(carol))
         .toNumber()
         .should.eq(1000 + (200 - 130) * (900 / (900 + 100)));
-      // bob claim his reward, so he should get 600/(400+600) of the remaining
-      await this.tcr.claimReward(alice, challengeID, { from: alice });
-      (await this.comm.balanceOf(alice))
-        .toNumber()
-        .should.eq(800 + (200 - 130) * (100 / (900 + 100)));
+      // alice cannot claim her reward, because it already add to the entry since resolving has ended
+      await reverting(
+        this.tcr.claimReward(alice, challengeID, { from: alice }),
+      );
+      (await this.comm.balanceOf(alice)).toNumber().should.eq(800);
     });
     it('Should be inconclusive if tatal voting power < min_participation_pct', async () => {
       const commits = [[alice, 0, 400], [bob, 400, 0], [carol, 0, 200]];
