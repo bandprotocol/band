@@ -45,6 +45,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
   event ChallengeInitiated(  // An new challenge is initiated.
     bytes32 indexed data,
+    bytes32 reasonData,
     uint256 indexed challengeID,
     address indexed challenger,
     uint256 stake
@@ -305,7 +306,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
     challenges[challengeID].rewardPool = stake.mul(2);
     // Increment the nonce for the next challenge.
     nextChallengeNonce = challengeID.add(1);
-    emit ChallengeInitiated(data, challengeID, challenger, stake.mul(2));
+    emit ChallengeInitiated(data, reasonData, challengeID, challenger, stake.mul(2));
     require(
       voting.startPoll(
         token,
