@@ -69,7 +69,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       //  if x <= 60
       //    return 1e12
       //  else if x <= 120
-      //    return 1e12 - 5e11 * (x-60)/60
+      //    return 1e12 - (5e11 * (x-60))/60
       //  else
       //    return 5e11
       [
@@ -223,11 +223,10 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // linearly decrease overtime, 370 -> 420 sec
       for (let i = 80; i < 120; i += 20) {
         await increase(duration.seconds(20));
-        Math.floor(
-          100 -
-            (50 * (i - 60)) / 60 -
-            (await this.tcr.currentMinDeposit(entryHash)).toNumber(),
-        ).should.eq(0);
+        // 1e12 - (5e11 * (x-60))/60
+        Math.floor(100 - (50 * (i - 60)) / 60).should.eq(
+          (await this.tcr.currentMinDeposit(entryHash)).toNumber(),
+        );
       }
       // min_deposit reduced to half forever, 420 -> ∞ sec
       await increase(duration.seconds(10000));
@@ -625,6 +624,55 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       poll.yesCount.toNumber().should.eq(400);
       poll.noCount.toNumber().should.eq(600);
       await increase(duration.seconds(30));
+      // bob resolve
+      await this.voting.resolvePoll(this.tcr.address, challengeID, {
+        from: bob,
+      });
+      // poll state should be inconclusive
+      (await this.voting.polls(this.tcr.address, challengeID)).pollState
+        .toString()
+        .should.eq('4');
+      // no one can claim their reward
+      for (const commit of commits) {
+        const person = commit[0];
+        await reverting(
+          this.tcr.claimReward(person, challengeID, { from: person }),
+        );
+      }
+      // fund of every entities should be the same
+      (await this.tcr.entries(entryHash)).withdrawableDeposit
+        .toNumber()
+        .should.eq(200);
+      (await this.comm.balanceOf(alice)).toNumber().should.eq(800);
+      (await this.comm.balanceOf(bob)).toNumber().should.eq(1000);
+      (await this.comm.balanceOf(carol)).toNumber().should.eq(1000);
+    });
+    it('Should be the same as inconclusive if enough participant but yesCount or noCount is 0', async () => {
+      const commits = [[alice, 0, 700], [bob, 700, 0], [carol, 0, 700]];
+      const challengeID = 1;
+      // everyone commit
+      for (const [person, yes, no] of commits) {
+        await this.voting.commitVote(
+          person,
+          this.tcr.address,
+          challengeID,
+          web3.utils.soliditySha3(yes, no, salt),
+          '0x00',
+          yes + no,
+          0,
+          { from: person },
+        );
+      }
+      // participant is more than enough
+      (await this.voting.polls(this.tcr.address, challengeID)).totalCount
+        .toNumber()
+        .should.eq(2100);
+      await increase(duration.seconds(30));
+      // nobody reveal ...
+      await increase(duration.seconds(30));
+      const poll = await this.voting.polls(this.tcr.address, challengeID);
+      poll.yesCount.toNumber().should.eq(0);
+      poll.noCount.toNumber().should.eq(0);
       // bob resolve
       await this.voting.resolvePoll(this.tcr.address, challengeID, {
         from: bob,
