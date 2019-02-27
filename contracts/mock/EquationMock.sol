@@ -14,7 +14,7 @@ contract EquationMock {
     equation.init(expressions);
   }
 
-  function getPrice(uint256 supply) public view returns (uint256) {
+  function getCollateralAt(uint256 supply) public view returns (uint256) {
     return equation.calculate(supply);
   }
 }

@@ -1,6 +1,7 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./thirdparty/BancorPower.sol";
 
 
 /**
@@ -38,6 +39,7 @@ library Equation {
    * |   15   | Boolean And Condition                  |  &&  |      2     |
    * |   16   | Boolean Or Condition                   |  ||  |      2     |
    * |   17   | Ternary Operation                      |  ?:  |      3     |
+   * |   18   | Bancor's power* (see below)            |      |      4     |
    * +--------+----------------------------------------+------+------------+
    *  2. children: the list of node indices of this node's sub-expressions.
    *  Different opcode nodes will have different number of children.
@@ -47,12 +49,18 @@ library Equation {
    * An equation's data is a list of nodes. The nodes will link against
    * each other using index as pointer. The root node of the expression tree
    * is the first node in the list
+   *
+   * (*) Using BancorFomula, the opcode computes exponential of fractional
+   * numbers. The opcode takes 4 children (c,baseN,baseD,expV), and computes
+   * (c * ((baseN / baseD) ^ (expV / 1e6))). See implementation for the limitation
+   * of the each value's domain. The end result must be in uint256 range.
    */
   struct Node {
     uint8 opcode;
     uint8 child0;
     uint8 child1;
     uint8 child2;
+    uint8 child3;
     uint256 value;
   }
 
@@ -84,7 +92,8 @@ library Equation {
   uint8 constant OPCODE_AND = 15;
   uint8 constant OPCODE_OR = 16;
   uint8 constant OPCODE_IF = 17;
-  uint8 constant OPCODE_INVALID = 18;
+  uint8 constant OPCODE_BANCOR_POWER = 18;
+  uint8 constant OPCODE_INVALID = 19;
 
   /**
    * @dev Initialize equation by array of opcodes/values in prefix order. Array
@@ -173,6 +182,8 @@ library Equation {
       return 2;
     } else if (opcode <= OPCODE_IF) {
       return 3;
+    } else if (opcode <= OPCODE_BANCOR_POWER) {
+      return 4;
     } else {
       assert(false);
     }
@@ -190,37 +201,37 @@ library Equation {
   {
     if (opcode <= OPCODE_VAR) {
       return ExprType.Math;
-
     } else if (opcode == OPCODE_SQRT) {
       require(types[0] == ExprType.Math);
       return ExprType.Math;
-
     } else if (opcode == OPCODE_NOT) {
       require(types[0] == ExprType.Boolean);
       return ExprType.Boolean;
-
     } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
       require(types[0] == ExprType.Math);
       require(types[1] == ExprType.Math);
       return ExprType.Math;
-
     } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
       require(types[0] == ExprType.Math);
       require(types[1] == ExprType.Math);
       return ExprType.Boolean;
-
     } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
       require(types[0] == ExprType.Boolean);
       require(types[1] == ExprType.Boolean);
       return ExprType.Boolean;
-
     } else if (opcode == OPCODE_IF) {
       require(types[0] == ExprType.Boolean);
       require(types[1] != ExprType.Invalid);
       require(types[1] == types[2]);
       return types[1];
-
+    } else if (opcode == OPCODE_BANCOR_POWER) {
+      require(types[0] == ExprType.Math);
+      require(types[1] == ExprType.Math);
+      require(types[2] == ExprType.Math);
+      require(types[3] == ExprType.Math);
+      return ExprType.Math;
     }
+    assert(false);
   }
 
   /**
@@ -245,24 +256,19 @@ library Equation {
     uint8 childrenCount = getChildrenCount(opcode);
 
     ExprType[] memory childrenTypes = new ExprType[](childrenCount);
-    uint8 lastNodeIndex = currentNodeIndex;
+    uint8 lastNodeIdx = currentNodeIndex;
 
     for (uint8 idx = 0; idx < childrenCount; ++idx) {
-      if (idx == 0) {
-        node.child0 = lastNodeIndex + 1;
-      } else if (idx == 1) {
-        node.child1 = lastNodeIndex + 1;
-      } else if (idx == 2) {
-        node.child2 = lastNodeIndex + 1;
-      } else {
-        assert(false);
-      }
-
-      (lastNodeIndex, childrenTypes[idx]) = populateTree(self, lastNodeIndex + 1);
+      if (idx == 0) node.child0 = lastNodeIdx + 1;
+      else if (idx == 1) node.child1 = lastNodeIdx + 1;
+      else if (idx == 2) node.child2 = lastNodeIdx + 1;
+      else if (idx == 3) node.child3 = lastNodeIdx + 1;
+      else assert(false);
+      (lastNodeIdx, childrenTypes[idx]) = populateTree(self, lastNodeIdx + 1);
     }
 
     ExprType exprType = checkExprType(opcode, childrenTypes);
-    return (lastNodeIndex, exprType);
+    return (lastNodeIdx, exprType);
   }
 
 
@@ -322,8 +328,15 @@ library Equation {
       } else {
         return solveMath(self, node.child2, xValue);
       }
+    } else if (opcode == OPCODE_BANCOR_POWER) {
+      uint256 multipler = solveMath(self, node.child0, xValue);
+      uint256 baseN = solveMath(self, node.child1, xValue);
+      uint256 baseD = solveMath(self, node.child2, xValue);
+      uint256 expV = solveMath(self, node.child3, xValue);
+      require(expV < 1 << 32);
+      (uint256 expResult, uint8 precision) = BancorPower.power(baseN, baseD, uint32(expV), 1e6);
+      return expResult.mul(multipler) >> precision;
     }
-
     assert(false);
   }
 

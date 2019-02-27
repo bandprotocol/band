@@ -27,13 +27,52 @@ contract('EquationMock', ([_, owner]) => {
     });
 
     it('should compute f(5) = 12', async () => {
-      const value = await this.contract.getPrice(5);
+      const value = await this.contract.getCollateralAt(5);
       value.toString().should.eq('12');
     });
 
     it('should compute f(10) = 17', async () => {
-      const value = await this.contract.getPrice(10);
+      const value = await this.contract.getCollateralAt(10);
       value.toString().should.be.eq('17');
+    });
+  });
+
+  context('Bancor exponential equation f(x) = 1e18 * (x / MAGIC) ^ 5', () => {
+    beforeEach(async () => {
+      this.contract = await EquationMock.new(
+        [
+          18,
+          0,
+          '1000000000000000000',
+          1,
+          0,
+          '137972966146121475817472',
+          0,
+          '5000000',
+        ],
+        { from: owner },
+      );
+    });
+
+    it('should compute f(1e24) ~ (2e22)', async () => {
+      const value = await this.contract.getCollateralAt(
+        '1000000000000000000000000',
+      );
+      value.toString().should.be.eq('20000000000000005378977');
+    });
+
+    it('should compute f(2512562e18) ~ (2e24)', async () => {
+      const value = await this.contract.getCollateralAt(
+        '2512562000000000000000000',
+      );
+      value.toString().should.be.eq('2002690933659130635756763');
+    });
+
+    it('should compute f(15848940e18) ~ (2e28)', async () => {
+      const value = await this.contract.getCollateralAt(
+        '15848940000000000000000000',
+      );
+      value.toString().should.be.eq('19454042124038388340035453438');
     });
   });
 
@@ -45,17 +84,17 @@ contract('EquationMock', ([_, owner]) => {
     });
 
     it('should compute f(10) = 97', async () => {
-      const value = await this.contract.getPrice(10);
+      const value = await this.contract.getCollateralAt(10);
       value.toString().should.eq('97');
     });
 
     it('should compute f(56) = 3133', async () => {
-      const value = await this.contract.getPrice(56);
+      const value = await this.contract.getCollateralAt(56);
       value.toString().should.be.eq('3133');
     });
 
     it('should fail on f(1) < 0', async () => {
-      await reverting(this.contract.getPrice(1));
+      await reverting(this.contract.getCollateralAt(1));
     });
   });
 
@@ -70,12 +109,12 @@ contract('EquationMock', ([_, owner]) => {
       });
 
       it('should compute f(5) = 33', async () => {
-        const value = await this.contract.getPrice(5);
+        const value = await this.contract.getCollateralAt(5);
         value.toString().should.eq('33');
       });
 
       it('should compute f(6) = 67', async () => {
-        const value = await this.contract.getPrice(6);
+        const value = await this.contract.getCollateralAt(6);
         value.toString().should.eq('67');
       });
     },
@@ -90,17 +129,17 @@ contract('EquationMock', ([_, owner]) => {
     });
 
     it('should compute f(8) = 16', async () => {
-      const value = await this.contract.getPrice(8);
+      const value = await this.contract.getCollateralAt(8);
       value.toString().should.eq('16');
     });
 
     it('should compute f(10) = 10', async () => {
-      const value = await this.contract.getPrice(10);
+      const value = await this.contract.getCollateralAt(10);
       value.toString().should.eq('10');
     });
 
     it('should compute f(500) = 249910', async () => {
-      const value = await this.contract.getPrice(500);
+      const value = await this.contract.getCollateralAt(500);
       value.toString().should.eq('249910');
     });
   });
@@ -138,17 +177,17 @@ contract('EquationMock', ([_, owner]) => {
       });
 
       it('should compute f(8) = 16', async () => {
-        const value = await this.contract.getPrice(8);
+        const value = await this.contract.getCollateralAt(8);
         value.toString().should.eq('16');
       });
 
       it('should compute f(10) = 10', async () => {
-        const value = await this.contract.getPrice(10);
+        const value = await this.contract.getCollateralAt(10);
         value.toString().should.eq('10');
       });
 
       it('should compute f(500) = 1000', async () => {
-        const value = await this.contract.getPrice(500);
+        const value = await this.contract.getCollateralAt(500);
         value.toString().should.eq('1000');
       });
     },
