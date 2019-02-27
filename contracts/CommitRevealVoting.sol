@@ -292,7 +292,9 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
       uint256 yesCount = poll.yesCount;
       uint256 noCount = poll.noCount;
 
-      if (yesCount.mul(ONE_HUNDRED_PERCENT) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
+      if (yesCount == 0 && noCount == 0) {
+        pollState = ResolveListener.PollState.Inconclusive;
+      } else if (yesCount.mul(ONE_HUNDRED_PERCENT) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
         pollState = ResolveListener.PollState.Yes;
       } else {
         pollState = ResolveListener.PollState.No;

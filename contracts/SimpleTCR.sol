@@ -289,6 +289,7 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   {
     Entry storage entry = entries[data];
     require(entry.challengeID == 0);
+    require(entry.proposer != challenger);
 
     uint256 stake = Math.min(entry.withdrawableDeposit, currentMinDeposit(data));
     require(challengeDeposit >= stake);
