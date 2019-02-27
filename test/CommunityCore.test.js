@@ -19,6 +19,8 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.factory = await BandFactory.deployed();
     this.band = await BandToken.new(1000000, owner, { from: owner });
+    await this.band.transfer(alice, 100000, { from: owner });
+    await this.band.transfer(bob, 100000, { from: owner });
     this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
       from: owner,
     });
@@ -44,12 +46,25 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
+    await this.comm.transferOwnership(this.core.address, { from: owner });
+    // Alice buys 100 tokens to get voting power. Will sell it back soon.
+    const buyCalldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+    await this.band.transferAndCall(
+      alice,
+      this.core.address,
+      100000,
+      '0x' + buyCalldata.slice(2, 10),
+      '0x' + buyCalldata.slice(138),
+      { from: alice },
+    );
+
     this.admin = await AdminTCR.new(
       this.core.address,
       this.voting.address,
       [0, 1e12],
       { from: owner },
     );
+
     await this.params.propose(
       owner,
       [web3.utils.fromAscii('core:admin_contract')],
@@ -58,11 +73,34 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
+    await this.voting.commitVote(
+      alice,
+      this.params.address,
+      1,
+      web3.utils.soliditySha3(60, 0, 42),
+      '0x00',
+      60,
+      0,
+      { from: alice },
+    );
+    await increase(duration.seconds(60));
+    // reveal vote with correct params
+    await this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
+      from: alice,
+    });
     await increase(duration.days(30));
     await this.voting.resolvePoll(this.params.address, 1, { from: owner });
-    await this.band.transfer(alice, 100000, { from: owner });
-    await this.band.transfer(bob, 100000, { from: owner });
-    await this.comm.transferOwnership(this.core.address, { from: owner });
+
+    // Alice sells 100 tokens back
+    const sellCalldata = this.core.contract.methods.sell(_, 0, 100).encodeABI();
+    await this.comm.transferAndCall(
+      alice,
+      this.core.address,
+      100,
+      '0x' + sellCalldata.slice(2, 10),
+      '0x' + sellCalldata.slice(138),
+      { from: alice },
+    );
   });
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
@@ -457,7 +495,6 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     it('should allow admin to deflate', async () => {
       await this.core.deflate(10, { from: owner });
       (await this.core.curveMultiplier()).toString().should.eq('1108033240997');
-
       // Change Admin TCR parameters to allow new admin application
       await this.params.propose(
         owner,
