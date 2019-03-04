@@ -18,7 +18,8 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
     address indexed tokenContract,
     uint256 expirationTime,
     uint256 voteMinParticipation,
-    uint256 voteSupportRequired
+    uint256 voteSupportRequired,
+    uint256 snapshotNonce
   );
 
   event SimpleVoteCasted(  // A vote is casted by a user.
@@ -31,7 +32,7 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
 
   struct Poll {
     CommunityToken token;
-    uint256 snapshotBlockNo;        // The block number to count voting power
+    uint256 snapshotNonce;          // The votingPowerNonce to count voting power
     uint256 expirationTime;         // Expiration timestamp of commit period
     uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
     uint256 voteMinParticipation;   // The minimum # of votes required
@@ -119,9 +120,10 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
     uint256 voteMinParticipation
       = voteMinParticipationPct.mul(token.totalSupply()).div(ONE_HUNDRED_PERCENT);
 
+    uint256 snapshotNonce = token.votingPowerChangeNonce();
     polls[msg.sender][pollID] = Poll({
       token: token,
-      snapshotBlockNo: block.number.sub(1),
+      snapshotNonce: snapshotNonce,
       expirationTime: expirationTime,
       voteSupportRequiredPct: voteSupportRequiredPct,
       voteMinParticipation: voteMinParticipation,
@@ -136,7 +138,8 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
       address(token),
       expirationTime,
       voteMinParticipation,
-      voteSupportRequiredPct
+      voteSupportRequiredPct,
+      snapshotNonce
     );
     return true;
   }
@@ -157,9 +160,9 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
 
     // Get the weight, which is the voting power at the block before the
     // poll is initiated.
-    uint256 totalWeight = poll.token.historicalVotingPowerAtBlock(
+    uint256 totalWeight = poll.token.historicalVotingPowerAtNonce(
       sender,
-      poll.snapshotBlockNo
+      poll.snapshotNonce
     );
     require(yesWeight.add(noWeight) <= totalWeight);
 

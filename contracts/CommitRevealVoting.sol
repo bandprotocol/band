@@ -19,7 +19,8 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     uint256 commitEndTime,
     uint256 revealEndTime,
     uint256 voteMinParticipation,
-    uint256 voteSupportRequired
+    uint256 voteSupportRequired,
+    uint256 snapshotNonce
   );
 
   event PollResolved(  // A poll is resolved.
@@ -54,7 +55,7 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
   struct Poll {
     CommunityToken token; // The address of community token contract for voting power reference
 
-    uint256 snapshotBlockNo;        // The block number to count voting power
+    uint256 snapshotNonce;          // The votingPowerNonce to count voting power
     uint256 commitEndTime;          // Expiration timestamp of commit period
     uint256 revealEndTime;          // Expiration timestamp of reveal period
     uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
@@ -176,7 +177,7 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
       = voteMinParticipationPct.mul(token.totalSupply()).div(ONE_HUNDRED_PERCENT);
 
     Poll storage poll = polls[msg.sender][pollID];
-    poll.snapshotBlockNo = block.number.sub(1);
+    poll.snapshotNonce = token.votingPowerChangeNonce();
     poll.commitEndTime = commitEndTime;
     poll.revealEndTime = revealEndTime;
     poll.voteSupportRequiredPct = voteSupportRequiredPct;
@@ -191,7 +192,8 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
       commitEndTime,
       revealEndTime,
       voteMinParticipation,
-      voteSupportRequiredPct
+      voteSupportRequiredPct,
+      poll.snapshotNonce
     );
     return true;
   }
@@ -220,9 +222,9 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     // totalWeight will not exceed voting power of sender
     require(
       totalWeight <=
-      poll.token.historicalVotingPowerAtBlock(
+      poll.token.historicalVotingPowerAtNonce(
         sender,
-        poll.snapshotBlockNo
+        poll.snapshotNonce
       )
     );
 

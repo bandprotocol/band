@@ -108,7 +108,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
     await this.band.transfer(bob, 10000000, { from: owner });
     await this.band.transfer(carol, 10000000, { from: owner });
     await this.comm.transferOwnership(this.core.address, { from: owner });
-    // alice buy 100 XCH
+    // alice buy 1000 XCH
     const calldata1 = this.core.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       alice,
@@ -118,7 +118,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       '0x' + calldata1.slice(138),
       { from: alice },
     );
-    // bob buy 100 XCH
+    // bob buy 1000 XCH
     const calldata2 = this.core.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       bob,
@@ -128,7 +128,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       '0x' + calldata2.slice(138),
       { from: bob },
     );
-    // carol buy 100 XCH
+    // carol buy 1000 XCH
     const calldata3 = this.core.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       carol,
@@ -395,6 +395,71 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         100, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
+        { from: bob },
+      );
+    });
+    it('should unable to vote more than voting power', async () => {
+      await reverting(
+        this.voting.commitVote(
+          bob,
+          this.tcr.address,
+          1,
+          web3.utils.soliditySha3(1000, 0, 42),
+          '0x00',
+          1000,
+          0,
+          { from: bob },
+        ),
+      );
+
+      await reverting(
+        this.voting.commitVote(
+          alice,
+          this.tcr.address,
+          1,
+          web3.utils.soliditySha3(0, 1000, 42),
+          '0x00',
+          1000,
+          0,
+          { from: alice },
+        ),
+      );
+
+      await this.voting.commitVote(
+        carol,
+        this.tcr.address,
+        1,
+        web3.utils.soliditySha3(0, 1000, 42),
+        '0x00',
+        1000,
+        0,
+        { from: carol },
+      );
+
+      this.comm.transfer(bob, 100, { from: alice });
+
+      // Have 1000 community tokens but still cannot buy
+      await reverting(
+        this.voting.commitVote(
+          bob,
+          this.tcr.address,
+          1,
+          web3.utils.soliditySha3(1000, 0, 42),
+          '0x00',
+          1000,
+          0,
+          { from: bob },
+        ),
+      );
+
+      await this.voting.commitVote(
+        bob,
+        this.tcr.address,
+        1,
+        web3.utils.soliditySha3(900, 0, 42),
+        '0x00',
+        900,
+        0,
         { from: bob },
       );
     });
