@@ -192,4 +192,72 @@ contract('EquationMock', ([_, owner]) => {
       });
     },
   );
+
+  context('And test', () => {
+    beforeEach(async () => {
+      // equation if x < 10 and 10 - x > 3 then 1 else 9
+      this.contract = await EquationMock.new([
+        17,
+        15,
+        11,
+        1,
+        0,
+        10,
+        12,
+        5,
+        0,
+        10,
+        1,
+        0,
+        3,
+        0,
+        1,
+        0,
+        9,
+      ]);
+    });
+    it('should return 1 if x < 10 and 10 - x > 3', async () => {
+      (await this.contract.getCollateralAt(3)).toString().should.eq('1');
+    });
+    it('should return 9 if x < 10 but 10 - x <= 3', async () => {
+      (await this.contract.getCollateralAt(9)).toString().should.eq('9');
+    });
+    it('should return 9 if x >= 10', async () => {
+      (await this.contract.getCollateralAt(10)).toString().should.eq('9');
+    });
+  });
+
+  context('Or test', () => {
+    beforeEach(async () => {
+      // equation if x == 0 or 1000 / x >= 20 then 12 else 101
+      this.contract = await EquationMock.new([
+        17,
+        16,
+        9,
+        1,
+        0,
+        0,
+        14,
+        7,
+        0,
+        1000,
+        1,
+        0,
+        20,
+        0,
+        12,
+        0,
+        101,
+      ]);
+    });
+    it('should return 12 if x == 0', async () => {
+      (await this.contract.getCollateralAt(0)).toString().should.eq('12');
+    });
+    it('should return 12 if x <= 50', async () => {
+      (await this.contract.getCollateralAt(50)).toString().should.eq('12');
+    });
+    it('should return 101 if x > 50', async () => {
+      (await this.contract.getCollateralAt(51)).toString().should.eq('101');
+    });
+  });
 });

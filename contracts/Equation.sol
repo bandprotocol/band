@@ -372,14 +372,17 @@ library Equation {
         return leftValue >= rightValue;
       }
     } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
-
       bool leftBoolValue = solveBool(self, node.child0, xValue);
-      bool rightBoolValue = solveBool(self, node.child1, xValue);
-
       if (opcode == OPCODE_AND) {
-        return leftBoolValue && rightBoolValue;
+        if (leftBoolValue)
+          return solveBool(self, node.child1, xValue);
+        else
+          return false;
       } else if (opcode == OPCODE_OR) {
-        return leftBoolValue || rightBoolValue;
+        if (leftBoolValue)
+          return true;
+        else
+          return solveBool(self, node.child1, xValue);
       }
     } else if (opcode == OPCODE_IF) {
       bool condValue = solveBool(self, node.child0, xValue);
