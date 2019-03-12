@@ -34,15 +34,15 @@ const timeOptions = [
 export default ({ value, unit, type, onChangeUnit, handleParameterChange }) => (
   <InputFlex px={1}>
     <Box flex={1}>
-      <ModernInput
-        placeholder={value.toFixed(2)}
-        onChange={handleParameterChange}
-      />
+      <ModernInput placeholder={value} onChange={handleParameterChange} />
     </Box>
     {type === 'TIME' ? (
-      <UnitSelector onChange={e => onChangeUnit(e.target.value)}>
+      <UnitSelector
+        onChange={e => onChangeUnit(e.target.value)}
+        defaultValue="minute"
+      >
         {timeOptions.map(u => (
-          <option value={u.value} selected={u.value === 'hour'}>
+          <option key={u.value} value={u.value}>
             {u.label}
           </option>
         ))}

@@ -30,11 +30,13 @@ export default ({
         flexDirection="column"
         style={{ height: '100%', padding: '28px 40px 28px 16px' }}
       >
-        <Text fontSize={1} fontWeight="bold" color={colors.purple.normal}>
+        <Text fontSize={0} fontWeight="bold" color={colors.purple.normal}>
           {name}
         </Text>
+        {/* TODO: Mock description */}
         <Text color={colors.text.grey} fontSize={0} lineHeight={1.43} mt={3}>
-          {description}
+          {description ||
+            'The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).'}
         </Text>
         <Box flex={1} />
         <Flex>
@@ -54,7 +56,7 @@ export default ({
             />
           ) : (
             <Text fontSize={0}>
-              {convertedValue.toFixed(2) + ' ' + getUnitFromType(type)}
+              {convertedValue + ' ' + getUnitFromType(type)}
             </Text>
           )}
         </Flex>

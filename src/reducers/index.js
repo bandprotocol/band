@@ -7,6 +7,7 @@ import order from 'reducers/order'
 import price from 'reducers/price'
 import reward from 'reducers/reward'
 import transaction from 'reducers/transaction'
+import parameter from 'reducers/parameter'
 
 export default combineReducers({
   band,
@@ -16,4 +17,5 @@ export default combineReducers({
   price,
   reward,
   transaction,
+  parameter,
 })

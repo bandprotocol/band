@@ -84,7 +84,7 @@ const BandApp = ({
                 style={{ marginLeft: 10, fontSize: '0.9em' }}
                 dark
               >
-                <i class="fas fa-external-link-alt" />
+                <i className="fas fa-external-link-alt" />
               </AbsoluteLink>
             )}
           </Text>

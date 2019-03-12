@@ -3,6 +3,11 @@ import { connect } from 'react-redux'
 
 import ParameterPanelRender from './ParameterPanelRender'
 
+import { currentUserSelector } from 'selectors/current'
+
+import { prefixListSelector } from 'selectors/parameter'
+import { loadParameters, showModal } from 'actions'
+
 class ParameterPanel extends React.Component {
   state = {
     prefix: null,
@@ -12,9 +17,18 @@ class ParameterPanel extends React.Component {
 
   componentDidMount() {
     this.props.loadParameters()
-    this.setState({
-      prefix: this.props.prefixList[0],
-    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.prefixList !== prevProps.prefixList &&
+      this.state.prefix === null
+    ) {
+      this.setState({
+        prefix:
+          this.props.prefixList.length > 0 ? this.props.prefixList[0] : null,
+      })
+    }
   }
 
   onPrefixChange(newPreifx) {
@@ -29,10 +43,13 @@ class ParameterPanel extends React.Component {
     this.setState(prevState => {
       if (value) {
         return {
-          changes: { ...prevState.changes, [key]: value },
+          changes: {
+            ...prevState.changes,
+            [this.state.prefix.value + ':' + key]: value,
+          },
         }
       } else {
-        delete prevState.changes[key]
+        delete prevState.changes[this.state.prefix.value + ':' + key]
         return {
           changes: { ...prevState.changes },
         }
@@ -41,8 +58,7 @@ class ParameterPanel extends React.Component {
   }
 
   submitChanges() {
-    // Open modal here
-    console.log('Submit changes', this.state.changes)
+    this.props.onSubmit(this.state.changes)
   }
 
   render() {
@@ -55,22 +71,25 @@ class ParameterPanel extends React.Component {
         handleParameterChange={this.handleParameterChange.bind(this)}
         submitChanges={this.submitChanges.bind(this)}
         prefixList={this.props.prefixList}
+        signin={this.props.signin}
+        logedin={this.props.logedin}
       />
     )
   }
 }
 
 const mapStateToProps = (state, { communityAddress }) => ({
-  prefixList: [
-    { value: 'admin', label: 'admin' },
-    { value: 'tcr', label: 'tcr' },
-    { value: 'core', label: 'core' },
-  ],
+  prefixList: prefixListSelector(state, { address: communityAddress }).map(
+    prefix => ({ value: prefix, label: prefix }),
+  ),
+  logedin: !!currentUserSelector(state),
 })
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadParameters: () => console.log(communityAddress),
-  // onSubmit:
+  loadParameters: () => dispatch(loadParameters(communityAddress)),
+  onSubmit: changes =>
+    dispatch(showModal('PROPOSE', { changes, communityAddress })),
+  signin: () => dispatch(showModal('LOGIN', {})),
 })
 
 export default connect(

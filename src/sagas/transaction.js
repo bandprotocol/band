@@ -6,12 +6,15 @@ import {
   BUY_TOKEN,
   SELL_TOKEN,
   CLAIM_REWARD,
+  PROPOSE_PROPOSAL,
   trackTransaction,
   showModal,
   hideModal,
 } from 'actions'
 
 import { currentCommunityClientSelector } from 'selectors/current'
+
+import IPFSStorage from 'utils/ipfs'
 
 const UPDATE_CONFIRMATION = 'UPDATE_CONFIRMATION'
 const NEW_TRANSACTION = 'NEW_TRANSACTION'
@@ -73,10 +76,33 @@ function* handleClaimReward({ address, rewardID }) {
   yield put(trackTransaction(emitter))
 }
 
+function* handleProposeProposal({ address, title, reason, changes }) {
+  const reasonHash = yield IPFSStorage.save(
+    JSON.stringify({
+      title,
+      reason,
+    }),
+  )
+
+  const parameterClient = (yield select(currentCommunityClientSelector, {
+    address,
+  })).parameter()
+
+  const transaction = yield parameterClient.createProposalTransaction(
+    reasonHash,
+    Object.keys(changes),
+    Object.values(changes),
+  )
+
+  const emitter = transaction.send()
+  yield put(trackTransaction(emitter))
+}
+
 export default function*() {
   yield takeEvery(confirmationChannel, handleConfirmChannel)
   yield takeEvery(TRACK_TRANSACTION, handleTrackTransaction)
   yield takeEvery(BUY_TOKEN, handleBuyToken)
   yield takeEvery(SELL_TOKEN, handleSellToken)
   yield takeEvery(CLAIM_REWARD, handleClaimReward)
+  yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
 }

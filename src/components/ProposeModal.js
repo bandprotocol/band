@@ -4,6 +4,9 @@ import styled from 'styled-components'
 import colors from 'ui/colors'
 import { Box, Button, Text, Card } from 'ui/common'
 
+import { connect } from 'react-redux'
+import { proposeProposal } from 'actions'
+
 const TitleInput = styled.input`
   width: 100%;
   padding: 12px 20px;
@@ -23,7 +26,7 @@ const ReasonInput = styled.textarea`
   font-family: Montserrat, sans-serif;
 `
 
-export default class ProposeModal extends React.Component {
+class ProposeModal extends React.Component {
   state = {
     title: '',
     reason: '',
@@ -31,6 +34,10 @@ export default class ProposeModal extends React.Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  onSubmit() {
+    this.props.onSubmit(this.state.title, this.state.reason)
   }
 
   render() {
@@ -69,7 +76,11 @@ export default class ProposeModal extends React.Component {
           />
         </Box>
         <Box px={3} my={4}>
-          <Button variant="primary" style={{ width: '100%' }}>
+          <Button
+            variant="primary"
+            style={{ width: '100%' }}
+            onClick={this.onSubmit.bind(this)}
+          >
             OK
           </Button>
         </Box>
@@ -77,3 +88,13 @@ export default class ProposeModal extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = (dispatch, { communityAddress, changes }) => ({
+  onSubmit: (title, reason) =>
+    dispatch(proposeProposal(communityAddress, title, reason, changes)),
+})
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(ProposeModal)

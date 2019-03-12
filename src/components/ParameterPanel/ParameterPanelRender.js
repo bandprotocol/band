@@ -50,6 +50,8 @@ export default ({
   toggleEdit,
   handleParameterChange,
   submitChanges,
+  logedin,
+  signin,
 }) => (
   <Flex flexDirection="column" my={3}>
     <Text color={colors.purple.normal} fontSize={2} fontWeight="bold" mb={3}>
@@ -115,7 +117,9 @@ export default ({
                 <SubmitButton onClick={submitChanges}>Submit</SubmitButton>
               </Flex>
             ) : (
-              <ProposeButton onClick={toggleEdit}>Propose Change</ProposeButton>
+              <ProposeButton onClick={logedin ? toggleEdit : signin}>
+                Propose Change
+              </ProposeButton>
             )}
           </Flex>
         </Flex>

@@ -9,24 +9,27 @@ export const convertFromChain = (value, type, unit) => {
   if (type === 'PERCENTAGE') {
     return BigNumber(value.toString())
       .div(BigNumber(1e12))
-      .toNumber()
+      .toFixed(2)
   } else if (type === 'TOKEN') {
     return BigNumber(value.toString())
       .div(BigNumber(1e18))
-      .toNumber()
+      .toFixed(2)
   } else if (type === 'TIME') {
-    const second = BigNumber(value.toString()).toNumber()
+    const second = BigNumber(value.toString())
     switch (unit) {
       case 'minute':
-        return second / 60
+        return second.div(60).toFixed(2)
       case 'hour':
-        return second / 60 / 60
+        return second.div(60 * 60).toFixed(2)
       case 'day':
-        return second / 60 / 60 / 24
+        return second.div(60 * 60 * 24).toFixed(2)
       default:
-        return second
+        return second.toFixed(0)
     }
+  } else if (type === 'ADDRESS') {
+    return '0x' + BigNumber(value.toString()).toString(16)
   }
+  return value.toString()
 }
 
 export const convertToChain = (value, type, unit) => {
@@ -54,11 +57,30 @@ export const convertToChain = (value, type, unit) => {
       default:
         return new BN(bigTime.toFixed(0))
     }
+  } else if (type === 'ADDRESS') {
+    const hexString = value.startsWith('0x') ? value.slice(2) : value
+    return new BN(BigNumber(hexString, 16).toFixed(0))
   }
 }
 
 export const getUnitFromType = type => {
   if (type === 'PERCENTAGE') return '%'
   else if (type === 'TOKEN') return 'token'
-  else if (type === 'TIME') return 'hour'
+  else if (type === 'TIME') return 'minute'
+  else if (type === 'ADDRESS') return ''
 }
+
+export const getParameterType = name =>
+  ({
+    admin_contract: 'ADDRESS',
+    reward_edit_period: 'TIME',
+    reward_period: 'TIME',
+    expiration_time: 'TIME',
+    min_participation_pct: 'PERCENTAGE',
+    support_required_pct: 'PERCENTAGE',
+    apply_stage_length: 'TIME',
+    commit_time: 'TIME',
+    dispensation_percentage: 'PERCENTAGE',
+    min_deposit: 'TOKEN',
+    reveal_time: 'TIME',
+  }[name])
