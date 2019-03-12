@@ -1,0 +1,56 @@
+import React from 'react'
+import styled from 'styled-components'
+
+// TODO: Now I cannot config style on react-select
+// import Select from 'react-select'
+
+import { Text, Flex, Box } from 'ui/common'
+
+const InputFlex = styled(Flex).attrs({ alignItems: 'center' })`
+  width: 120px;
+  height: 25px;
+  border-radius: 4px;
+  border: solid 1px #8868ff;
+  background-color: #ffffff;
+`
+
+const ModernInput = styled.input`
+  border: 0px;
+  width: 100%;
+`
+
+const UnitSelector = styled.select`
+  height: 25px;
+  fontsize: 14px;
+  border: 0px;
+`
+
+const timeOptions = [
+  { value: 'day', label: 'day' },
+  { value: 'hour', label: 'hour' },
+  { value: 'minute', label: 'minute' },
+]
+
+export default ({ value, unit, type, onChangeUnit, handleParameterChange }) => (
+  <InputFlex px={1}>
+    <Box flex={1}>
+      <ModernInput
+        placeholder={value.toFixed(2)}
+        onChange={handleParameterChange}
+      />
+    </Box>
+    {type === 'TIME' ? (
+      <UnitSelector onChange={e => onChangeUnit(e.target.value)}>
+        {timeOptions.map(u => (
+          <option value={u.value} selected={u.value === 'hour'}>
+            {u.label}
+          </option>
+        ))}
+      </UnitSelector>
+    ) : (
+      <Text fontSize={0} ml="auto">
+        {unit}
+      </Text>
+    )}
+  </InputFlex>
+)

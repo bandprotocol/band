@@ -1,4 +1,3 @@
-import React from 'react'
 import styled from 'styled-components'
 import colors from './colors'
 import { Text, Image as BaseImage, Flex, Box, Button, Card } from 'rebass'
