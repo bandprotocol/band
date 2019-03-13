@@ -20,7 +20,8 @@ contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeles
 
   event ProposalProposed(  // A new proposal is proposed.
     uint256 indexed proposalID,
-    address indexed proposer
+    address indexed proposer,
+    bytes32 reasonHash
   );
 
   event ProposalAccepted( // A proposol is accepted.
@@ -103,7 +104,7 @@ contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeles
   /**
    * @dev Propose a set of new key-value changes.
    */
-  function propose(address sender, bytes32[] calldata keys, uint256[] calldata values)
+  function propose(address sender, bytes32 reasonHash, bytes32[] calldata keys, uint256[] calldata values)
     external
     feeless(sender)
     returns (uint256)
@@ -114,7 +115,8 @@ contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeles
 
     emit ProposalProposed(
       proposalID,
-      sender
+      sender,
+      reasonHash
     );
     proposals[proposalID].changeCount = keys.length;
     for (uint256 index = 0; index < keys.length; ++index) {

@@ -783,6 +783,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // propose new min_deposit
       await this.params.propose(
         owner,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('tcr:min_deposit')],
         [newMinDeposit],
         {

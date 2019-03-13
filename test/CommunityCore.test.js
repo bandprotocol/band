@@ -67,6 +67,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
     await this.params.propose(
       owner,
+      '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
       [web3.utils.fromAscii('core:admin_contract')],
       [this.admin.address],
       {
@@ -288,6 +289,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       // 10% per month inflation
       await this.params.propose(
         owner,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('core:inflation_ratio')],
         [38581],
         {
@@ -330,6 +332,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       // 10% per hour inflation
       await this.params.propose(
         owner,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('core:inflation_ratio')],
         [27777778],
         {
@@ -405,6 +408,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       // 20% sales tax
       await this.params.propose(
         alice,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('core:sales_commission')],
         [200000000000],
         {
@@ -498,6 +502,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       // Change Admin TCR parameters to allow new admin application
       await this.params.propose(
         owner,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [
           web3.utils.fromAscii('admin:min_deposit'),
           web3.utils.fromAscii('admin:apply_stage_length'),
@@ -574,6 +579,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       // Reward period of 1 month, with 1 day edit period.
       await this.params.propose(
         owner,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [
           web3.utils.fromAscii('core:reward_period'),
           web3.utils.fromAscii('core:reward_edit_period'),

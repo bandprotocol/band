@@ -97,6 +97,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       );
       await this.params.propose(
         owner,
+        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('core:admin_contract')],
         [this.admin.address],
         {
@@ -158,6 +159,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       it('should be Inconclusive case(participants less than minimum participation)', async () => {
         await this.params.propose(
           owner,
+          '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
           {
@@ -209,6 +211,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       it('should be Yes case(participants more than minimum participation)', async () => {
         await this.params.propose(
           owner,
+          '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
           {
@@ -262,6 +265,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       it('should be No case(votes Yes less than support_required_pct)', async () => {
         await this.params.propose(
           owner,
+          '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
           {
@@ -323,6 +327,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       it('should change params:support_required_pct to 60', async () => {
         await this.params.propose(
           owner,
+          '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('params:support_required_pct')],
           [60],
           {
@@ -396,6 +401,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         let data = await this.params.contract.methods
           .propose(
             owner,
+            '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
             [web3.utils.fromAscii('params:support_required_pct')],
             [60],
           )
