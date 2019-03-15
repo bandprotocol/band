@@ -73,15 +73,15 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       //  else
       //    return 5e11
       [
-        17,
-        13,
+        18,
+        14,
         1,
         0,
         60,
         0,
         1e12,
-        17,
-        13,
+        18,
+        14,
         1,
         0,
         120,

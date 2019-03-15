@@ -30,16 +30,18 @@ library Equation {
    * |   06   | Arithmetic Multiplication              |   *  |      2     |
    * |   07   | Arithmetic Division                    |   /  |      2     |
    * |   08   | Arithmetic Exponentiation              |  **  |      2     |
-   * |   09   | Arithmetic Equal Comparison            |  ==  |      2     |
-   * |   10   | Arithmetic Non-Equal Comparison        |  !=  |      2     |
-   * |   11   | Arithmetic Less-Than Comparison        |  <   |      2     |
-   * |   12   | Arithmetic Greater-Than Comparison     |  >   |      2     |
-   * |   13   | Arithmetic Non-Greater-Than Comparison |  <=  |      2     |
-   * |   14   | Arithmetic Non-Less-Than Comparison    |  >=  |      2     |
-   * |   15   | Boolean And Condition                  |  &&  |      2     |
-   * |   16   | Boolean Or Condition                   |  ||  |      2     |
-   * |   17   | Ternary Operation                      |  ?:  |      3     |
-   * |   18   | Bancor's power* (see below)            |      |      4     |
+   * |   09   | Arithmetic Percentage* (see below)     |   %  |      2     |
+   * |   10   | Arithmetic Equal Comparison            |  ==  |      2     |
+   * |   11   | Arithmetic Non-Equal Comparison        |  !=  |      2     |
+   * |   12   | Arithmetic Less-Than Comparison        |  <   |      2     |
+   * |   13   | Arithmetic Greater-Than Comparison     |  >   |      2     |
+   * |   14   | Arithmetic Non-Greater-Than Comparison |  <=  |      2     |
+   * |   15   | Arithmetic Non-Less-Than Comparison    |  >=  |      2     |
+   * |   16   | Boolean And Condition                  |  &&  |      2     |
+   * |   17   | Boolean Or Condition                   |  ||  |      2     |
+   * |   18   | Ternary Operation                      |  ?:  |      3     |
+   * |   19   | Bancor's log** (see below)             |      |      3     |
+   * |   20   | Bancor's power*** (see below)          |      |      4     |
    * +--------+----------------------------------------+------+------------+
    *  2. children: the list of node indices of this node's sub-expressions.
    *  Different opcode nodes will have different number of children.
@@ -50,7 +52,17 @@ library Equation {
    * each other using index as pointer. The root node of the expression tree
    * is the first node in the list
    *
-   * (*) Using BancorFomula, the opcode computes exponential of fractional
+   * (*) Arithmetic percentage is computed by multiplying the left-hand side value
+   * with the right-hand side, and divide the result by 10^18, rounded down to
+   * uint256 integer.
+   *
+   * (**) Using BancorFormula, the opcode computes log of fractional numbers.
+   * However, this fraction's value must be more than 1. (baseN / baseD >= 1).
+   * The opcode takes 3 childrens(c, baseN, baseD), and computes (c * log(baseN / baseD))
+   * The limitation is in range of 1 <= baseN / baseD <= 58774717541114375398436826861112283890 (It comes from 1e76/FIXED_1)
+   * FIXED_1 is constant in BancorPower.sol
+   *
+   * (***) Using BancorFomula, the opcode computes exponential of fractional
    * numbers. The opcode takes 4 children (c,baseN,baseD,expV), and computes
    * (c * ((baseN / baseD) ^ (expV / 1e6))). See implementation for the limitation
    * of the each value's domain. The end result must be in uint256 range.
@@ -83,17 +95,19 @@ library Equation {
   uint8 constant OPCODE_MUL = 6;
   uint8 constant OPCODE_DIV = 7;
   uint8 constant OPCODE_EXP = 8;
-  uint8 constant OPCODE_EQ = 9;
-  uint8 constant OPCODE_NE = 10;
-  uint8 constant OPCODE_LT = 11;
-  uint8 constant OPCODE_GT = 12;
-  uint8 constant OPCODE_LE = 13;
-  uint8 constant OPCODE_GE = 14;
-  uint8 constant OPCODE_AND = 15;
-  uint8 constant OPCODE_OR = 16;
-  uint8 constant OPCODE_IF = 17;
-  uint8 constant OPCODE_BANCOR_POWER = 18;
-  uint8 constant OPCODE_INVALID = 19;
+  uint8 constant OPCODE_PCT = 9;
+  uint8 constant OPCODE_EQ = 10;
+  uint8 constant OPCODE_NE = 11;
+  uint8 constant OPCODE_LT = 12;
+  uint8 constant OPCODE_GT = 13;
+  uint8 constant OPCODE_LE = 14;
+  uint8 constant OPCODE_GE = 15;
+  uint8 constant OPCODE_AND = 16;
+  uint8 constant OPCODE_OR = 17;
+  uint8 constant OPCODE_IF = 18;
+  uint8 constant OPCODE_BANCOR_LOG = 19;
+  uint8 constant OPCODE_BANCOR_POWER = 20;
+  uint8 constant OPCODE_INVALID = 21;
 
   /**
    * @dev Initialize equation by array of opcodes/values in prefix order. Array
@@ -180,7 +194,7 @@ library Equation {
       return 1;
     } else if (opcode <= OPCODE_OR) {
       return 2;
-    } else if (opcode <= OPCODE_IF) {
+    } else if (opcode <= OPCODE_BANCOR_LOG) {
       return 3;
     } else if (opcode <= OPCODE_BANCOR_POWER) {
       return 4;
@@ -207,7 +221,7 @@ library Equation {
     } else if (opcode == OPCODE_NOT) {
       require(types[0] == ExprType.Boolean);
       return ExprType.Boolean;
-    } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
+    } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_PCT) {
       require(types[0] == ExprType.Math);
       require(types[1] == ExprType.Math);
       return ExprType.Math;
@@ -224,6 +238,11 @@ library Equation {
       require(types[1] != ExprType.Invalid);
       require(types[1] == types[2]);
       return types[1];
+    } else if (opcode == OPCODE_BANCOR_LOG) {
+      require(types[0] == ExprType.Math);
+      require(types[1] == ExprType.Math);
+      require(types[2] == ExprType.Math);
+      return ExprType.Math;
     } else if (opcode == OPCODE_BANCOR_POWER) {
       require(types[0] == ExprType.Math);
       require(types[1] == ExprType.Math);
@@ -300,7 +319,7 @@ library Equation {
 
       return result;
 
-    } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_EXP) {
+    } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_PCT) {
 
       uint256 leftValue = solveMath(self, node.child0, xValue);
       uint256 rightValue = solveMath(self, node.child1, xValue);
@@ -320,6 +339,8 @@ library Equation {
           expResult = expResult.mul(leftValue);
         }
         return expResult;
+      } else if (opcode == OPCODE_PCT) {
+        return leftValue.mul(rightValue).div(1e18);
       }
     } else if (opcode == OPCODE_IF) {
       bool condValue = solveBool(self, node.child0, xValue);
@@ -328,14 +349,19 @@ library Equation {
       } else {
         return solveMath(self, node.child2, xValue);
       }
+    } else if (opcode == OPCODE_BANCOR_LOG) {
+      uint256 multiplier = solveMath(self, node.child0, xValue);
+      uint256 baseN = solveMath(self, node.child1, xValue);
+      uint256 baseD = solveMath(self, node.child2, xValue);
+      return BancorPower.log(multiplier, baseN, baseD);
     } else if (opcode == OPCODE_BANCOR_POWER) {
-      uint256 multipler = solveMath(self, node.child0, xValue);
+      uint256 multiplier = solveMath(self, node.child0, xValue);
       uint256 baseN = solveMath(self, node.child1, xValue);
       uint256 baseD = solveMath(self, node.child2, xValue);
       uint256 expV = solveMath(self, node.child3, xValue);
       require(expV < 1 << 32);
       (uint256 expResult, uint8 precision) = BancorPower.power(baseN, baseD, uint32(expV), 1e6);
-      return expResult.mul(multipler) >> precision;
+      return expResult.mul(multiplier) >> precision;
     }
     assert(false);
   }

@@ -16,7 +16,7 @@ contract('EquationMock', ([_, owner]) => {
 
     it('should fail if typecheck fails: (*) (>) (x) (5) (3)', async () => {
       await reverting(
-        EquationMock.new([6, 12, 1, 0, 5, 0, 3], { from: owner }),
+        EquationMock.new([6, 13, 1, 0, 5, 0, 3], { from: owner }),
       );
     });
   });
@@ -41,7 +41,7 @@ contract('EquationMock', ([_, owner]) => {
     beforeEach(async () => {
       this.contract = await EquationMock.new(
         [
-          18,
+          20,
           0,
           '1000000000000000000',
           1,
@@ -73,6 +73,43 @@ contract('EquationMock', ([_, owner]) => {
         '15848940000000000000000000',
       );
       value.toString().should.be.eq('19454042124038388340035453438');
+    });
+  });
+
+  context('Bancor logarithm equation f(x) = 1e18 * log(x / 10^18)', () => {
+    beforeEach(async () => {
+      this.contract = await EquationMock.new(
+        [19, 0, '1000000000000000000', 1, 0, '1000000000000000000'],
+        { from: owner },
+      );
+    });
+
+    it('should compute f(1e24) ~ (13815510557964274104)', async () => {
+      const value = await this.contract.getCollateralAt(
+        '1000000000000000000000000',
+      );
+      value.toString().should.be.eq('13815510557964274104');
+    });
+
+    it('should compute f(1.0001 * 1e18) ~ (99995000333308)', async () => {
+      const value = await this.contract.getCollateralAt('1000100000000000000');
+      value.toString().should.be.eq('99995000333308');
+    });
+  });
+
+  context('Bancor logarithm equation f(x) = 1e18 * log(x / 1)', () => {
+    beforeEach(async () => {
+      this.contract = await EquationMock.new(
+        [19, 0, '1000000000000000000', 1, 0, '1'],
+        { from: owner },
+      );
+    });
+
+    it('should compute f(587747175411143753984368268611122838909) ~ (89269360229428463373)', async () => {
+      const value = await this.contract.getCollateralAt(
+        '587747175411143753984368268611122838909',
+      );
+      value.toString().should.be.eq('89269360229428463373');
     });
   });
 
@@ -120,10 +157,32 @@ contract('EquationMock', ([_, owner]) => {
     },
   );
 
+  context(
+    'Use Pct in equation f(x) = kx; k = a / 10^18; a can less than 1',
+    () => {
+      beforeEach(async () => {
+        // 500000000000 = 0.5 * 1e18
+        this.contract = await EquationMock.new(
+          [9, 1, 0, '500000000000000000'],
+          {
+            from: owner,
+          },
+        );
+      });
+
+      it('should compute f(1500000000000000000) = 750000000000000000', async () => {
+        const value = await this.contract.getCollateralAt(
+          '1500000000000000000',
+        );
+        value.toString().should.eq('750000000000000000');
+      });
+    },
+  );
+
   context('If-else equation f(x) = 2 * x if x < 10 else (x ^ 2) - 90', () => {
     beforeEach(async () => {
       this.contract = await EquationMock.new(
-        [17, 11, 1, 0, 10, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90],
+        [18, 12, 1, 0, 10, 6, 0, 2, 1, 5, 8, 1, 0, 2, 0, 90],
         { from: owner },
       );
     });
@@ -150,13 +209,13 @@ contract('EquationMock', ([_, owner]) => {
       beforeEach(async () => {
         this.contract = await EquationMock.new(
           [
+            18,
             17,
-            16,
-            11,
+            12,
             1,
             0,
             10,
-            12,
+            13,
             1,
             0,
             100,
@@ -197,13 +256,13 @@ contract('EquationMock', ([_, owner]) => {
     beforeEach(async () => {
       // equation if x < 10 and 10 - x > 3 then 1 else 9
       this.contract = await EquationMock.new([
-        17,
-        15,
-        11,
+        18,
+        16,
+        12,
         1,
         0,
         10,
-        12,
+        13,
         5,
         0,
         10,
@@ -231,13 +290,13 @@ contract('EquationMock', ([_, owner]) => {
     beforeEach(async () => {
       // equation if x == 0 or 1000 / x >= 20 then 12 else 101
       this.contract = await EquationMock.new([
+        18,
         17,
-        16,
-        9,
+        10,
         1,
         0,
         0,
-        14,
+        15,
         7,
         0,
         1000,
