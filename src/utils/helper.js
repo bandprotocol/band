@@ -6,6 +6,7 @@ export const isPositiveNumber = input => {
 }
 
 export const convertFromChain = (value, type, unit) => {
+  if (!value) return null
   if (type === 'PERCENTAGE') {
     return BigNumber(value.toString())
       .div(BigNumber(1e12))

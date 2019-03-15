@@ -6,7 +6,14 @@ import ParticipationStatus from 'components/ParticipationStatus'
 import YourVote from 'components/YourVote'
 import Oval from 'components/Oval'
 import colors from 'ui/colors'
-import { hidden } from 'ansi-colors'
+
+import BN from 'utils/bignumber'
+
+import {
+  convertFromChain,
+  getParameterType,
+  getUnitFromType,
+} from 'utils/helper'
 
 const FlexDropDown = styled(Flex)`
   overflow: hidden;
@@ -23,16 +30,16 @@ const VotedOval = ({ width }) => (
       bg={colors.purple.normal}
       flexDirection="column"
       justifyContent="center"
-      style={{ 'border-radius': '10px', width: '50px', height: '18px' }}
+      style={{ borderRadius: '10px', width: '50px', height: '18px' }}
     >
       <Text
         fontSize={12}
         px="5px"
         textAlign="center"
         style={{
-          'font-style': 'oblique',
+          fontStyle: 'oblique',
           color: 'white',
-          'letter-spacing': '-0.2px',
+          letterSpacing: '-0.2px',
         }}
       >
         Voted
@@ -42,23 +49,33 @@ const VotedOval = ({ width }) => (
 )
 
 export default ({
+  proposalId,
+  prefix,
+  expiredAt,
   title,
+  reason,
+  proposer,
+  proposedAt,
   show,
   toggleShow,
   isActive,
-  isSupport,
-  isVoted,
+  vote,
   status,
+  changes,
+  yesVote,
+  noVote,
+  minParticipation,
+  supportRequiredPct,
+  totalVotingPower,
 }) => {
-  isSupport = Math.random() >= 0.5
-  isVoted = Math.random() >= 0.5
+  const totalVote = yesVote.add(noVote)
   return (
     <Flex
       flex={1}
       flexDirection="column"
       mb="20px"
       style={{
-        'border-radius': '4px',
+        borderRadius: '4px',
         border: 'solid 1px ' + colors.background.lightGrey,
       }}
     >
@@ -78,7 +95,7 @@ export default ({
             fontSize={16}
             fontWeight="regular"
           >
-            {title}
+            {'#' + prefix}
           </Text>
           <Text
             color={colors.text.normal}
@@ -86,9 +103,9 @@ export default ({
             fontSize={16}
             fontWeight="regular"
           >
-            Increase Reward
+            {title}
           </Text>
-          {isVoted ? (
+          {vote !== 'NOT VOTED' ? (
             <VotedOval width={300 / 870} />
           ) : (
             <Flex width={300 / 870}>{''}</Flex>
@@ -111,7 +128,7 @@ export default ({
                 fontWeight="regular"
                 textAlign="right"
               >
-                28/01/2019 07:55
+                {expiredAt.formal()}
               </Text>
             </React.Fragment>
           ) : (
@@ -123,21 +140,21 @@ export default ({
             >
               <Flex mr="20px">
                 <Oval
-                  t={status === 'support' ? '✓' : '✕'}
+                  t={status === 'YES' ? '✓' : '✕'}
                   color="white"
-                  bg={status === 'support' ? '#42c47f' : '#ff6757'}
+                  bg={status === 'YES' ? '#42c47f' : '#ff6757'}
                   size="16"
                   fontSize={12}
                 />
               </Flex>
               <Text
-                color={status === 'support' ? '#42c47f' : '#ff6757'}
+                color={status === 'YES' ? '#42c47f' : '#ff6757'}
                 width={150 / 870}
                 fontSize={16}
                 fontWeight="500"
                 textAlign="right"
               >
-                {status === 'support' ? 'Support' : 'Rejected'}
+                {status === 'YES' ? 'Support' : 'Rejected'}
               </Text>
             </Flex>
           )}
@@ -155,44 +172,53 @@ export default ({
       <FlexDropDown flexDirection="column" px="40px" show={show}>
         <ProposalDetail
           title={'Reason for Change'}
-          description={
-            'In an effort to promote better participation rate in our community, the development team has conducted an experiment which results in the proposing changes of parameters. We expect this change to increase voter participation rate by 12.8% according to our simulation.'
-          }
-          proposer={'Mike Ramos'}
-          since={'25mins ago'}
+          description={reason}
+          proposer={proposer}
+          since={proposedAt.pretty()}
         />
-        <ProposalDetail
-          title={'reward_percentage'}
-          description={
-            'The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).'
-          }
-          current={'70%'}
-          changeTo={'80%'}
+        {changes.map(change => (
+          <ProposalDetail
+            title={change.name}
+            current={`${convertFromChain(
+              change.oldValue,
+              getParameterType(change.name),
+            )} ${getUnitFromType(getParameterType(change.name))}`}
+            changeTo={`${convertFromChain(
+              change.newValue,
+              getParameterType(change.name),
+            )} ${getUnitFromType(getParameterType(change.name))}`}
+          />
+        ))}
+        <YourVote
+          isVoted={vote !== 'NOT VOTED'}
+          isSupport={vote === 'SUPPORT'}
+          isActive={isActive}
+          proposalId={proposalId}
         />
-        <ProposalDetail
-          title={'min_deposit'}
-          description={
-            'The number of tokens an operator must deposit for their application and for the duration of their position.'
-          }
-          current={'5000 CHT'}
-          changeTo={'7000 CHT'}
-        />
-        <ProposalDetail
-          title={'reveal_time'}
-          description={
-            'The duration in seconds during which token holders can reveal committed votes for a particular challenge.'
-          }
-          current={'7 days'}
-          changeTo={'3 days'}
-        />
-        {(isActive || isVoted) && (
-          <YourVote
-            isVoted={isVoted}
-            isSupport={isSupport}
-            isActive={isActive}
+        {(!isActive || vote !== 'NOT VOTED') && (
+          <ParticipationStatus
+            percentParticipant={yesVote
+              .add(noVote)
+              .mul(new BN(100))
+              .div(totalVotingPower)
+              .toNumber()}
+            percentReject={
+              totalVote.eq(new BN(0))
+                ? 100
+                : noVote
+                    .mul(new BN(100))
+                    .div(totalVote)
+                    .toNumber()
+            }
+            minParticipation={minParticipation
+              .mul(new BN(100))
+              .div(totalVotingPower)
+              .toNumber()}
+            supportRequiredPct={
+              100 - supportRequiredPct.div(new BN(1e12)).toNumber()
+            }
           />
         )}
-        <ParticipationStatus />
       </FlexDropDown>
     </Flex>
   )

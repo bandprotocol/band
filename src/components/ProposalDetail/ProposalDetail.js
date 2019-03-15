@@ -7,7 +7,7 @@ export default ({ title, description, proposer, current, changeTo, since }) => (
   <Flex
     mt="20px"
     flexDirection="column"
-    style={{ 'border-bottom': '1px solid #cbcfe3', 'min-height': '100px' }}
+    style={{ borderBottom: '1px solid #cbcfe3', minHeight: '100px' }}
   >
     <Text fontWeight="500">{title}</Text>
     <Flex mt="20px">

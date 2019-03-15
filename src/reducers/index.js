@@ -8,6 +8,7 @@ import price from 'reducers/price'
 import reward from 'reducers/reward'
 import transaction from 'reducers/transaction'
 import parameter from 'reducers/parameter'
+import proposal from 'reducers/proposal'
 
 export default combineReducers({
   band,
@@ -18,4 +19,5 @@ export default combineReducers({
   reward,
   transaction,
   parameter,
+  proposal,
 })

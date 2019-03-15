@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
-export default ({ isResult, percent }) => {
+export default ({ isResult, percent, minimum }) => {
   return (
     <Flex py="5px" flexDirection="column">
       <Flex flexDirection="row" justifyContent="center" alignItems="center">
@@ -19,10 +19,10 @@ export default ({ isResult, percent }) => {
               style={{
                 position: 'absolute',
                 height: '20px',
-                width: !isResult ? '20px' : '120px',
+                width: minimum + '%',
                 top: '15px',
-                'z-index': '1',
-                'border-right': '1px dashed black',
+                zIndex: '1',
+                borderRight: '1px dashed black',
               }}
             />
             <Flex width={!isResult ? percent / 100 : 100}>
@@ -53,14 +53,14 @@ export default ({ isResult, percent }) => {
             flexDirection="row"
             style={{
               height: '10px',
-              'border-radius': '2px',
+              borderRadius: '2px',
               position: 'relative',
             }}
           >
             <Flex
               width={percent / 100}
               bg={!isResult ? colors.purple.normal : '#ec6363'}
-              style={{ height: '10px', 'border-radius': '2px' }}
+              style={{ height: '10px', borderRadius: '2px' }}
             />
           </Flex>
         </Flex>

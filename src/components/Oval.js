@@ -11,7 +11,7 @@ export default ({ t, color, bg, size, fontSize, fontWeight }) => (
     style={{
       width: (size || '24') + 'px',
       height: (size || '24') + 'px',
-      'border-radius': '50%',
+      borderRadius: '50%',
     }}
   >
     <Text

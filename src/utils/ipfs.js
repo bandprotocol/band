@@ -12,7 +12,9 @@ export default class IPFSStorage {
       try {
         result = JSON.parse(await IPFSStorage.ipfs.cat(cid))
         break
-      } catch {}
+      } catch {
+        break
+      }
     }
     return result
   }

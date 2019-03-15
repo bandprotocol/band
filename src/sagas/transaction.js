@@ -7,12 +7,16 @@ import {
   SELL_TOKEN,
   CLAIM_REWARD,
   PROPOSE_PROPOSAL,
+  VOTE_PROPOSAL,
   trackTransaction,
   showModal,
   hideModal,
 } from 'actions'
 
-import { currentCommunityClientSelector } from 'selectors/current'
+import {
+  currentCommunityClientSelector,
+  currentUserSelector,
+} from 'selectors/current'
 
 import IPFSStorage from 'utils/ipfs'
 
@@ -98,6 +102,25 @@ function* handleProposeProposal({ address, title, reason, changes }) {
   yield put(trackTransaction(emitter))
 }
 
+function* handleVoteProposal({ address, proposalId, vote }) {
+  const user = yield select(currentUserSelector)
+  if (!user) {
+    yield put(showModal('LOGIN'))
+  }
+  const parameterClient = (yield select(currentCommunityClientSelector, {
+    address,
+  })).parameter()
+
+  const votingPower = yield parameterClient.getVotingPower(proposalId)
+  const transaction = yield parameterClient.createCastVoteTransaction(
+    proposalId,
+    vote ? votingPower : '0',
+    vote ? '0' : votingPower,
+  )
+  const emitter = transaction.send()
+  yield put(trackTransaction(emitter))
+}
+
 export default function*() {
   yield takeEvery(confirmationChannel, handleConfirmChannel)
   yield takeEvery(TRACK_TRANSACTION, handleTrackTransaction)
@@ -105,4 +128,5 @@ export default function*() {
   yield takeEvery(SELL_TOKEN, handleSellToken)
   yield takeEvery(CLAIM_REWARD, handleClaimReward)
   yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
+  yield takeEvery(VOTE_PROPOSAL, handleVoteProposal)
 }

@@ -6,7 +6,9 @@ export const priceSelector = state => state.get('price')
 export const rewardSelector = state => state.get('reward')
 export const transactionSelector = state => state.get('transaction')
 export const parameterSelector = state => state.get('parameter')
+export const proposalSelector = state => state.get('proposal')
 export const addressSelector = (_, { address }) => address
+export const nameSelector = (_, { name }) => name
 export const typeSelector = (_, { type }) => type
 export const txHashSelector = (_, { txHash }) => txHash
 export const pageSelector = (_, { page }) => page

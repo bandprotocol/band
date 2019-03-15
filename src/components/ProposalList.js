@@ -1,11 +1,13 @@
 import React from 'react'
-import styled from 'styled-components'
-import { Flex, Text, Box, Button } from 'ui/common'
+import { connect } from 'react-redux'
+import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 import ProposalBox from 'components/ProposalBox'
 import Oval from 'components/Oval'
 
-export default ({ description, proposals, isActive, title }) => (
+import { proposalByStatusSelector } from 'selectors/proposal'
+
+const ProposalList = ({ description, proposals, isActive, title }) => (
   <Flex flexDirection="column" my={3} flex={1}>
     <Flex flexDirection="row">
       <Flex
@@ -29,14 +31,19 @@ export default ({ description, proposals, isActive, title }) => (
       {proposals.map(proposal => {
         return (
           <Flex>
-            <ProposalBox
-              title={proposal.title}
-              isActive={isActive}
-              status={Math.random() >= 0.5 ? 'support' : 'rejected'}
-            />
+            <ProposalBox {...proposal} isActive={isActive} />
           </Flex>
         )
       })}
     </Flex>
   </Flex>
 )
+
+const mapStateToProps = (state, { communityAddress, isActive }) => ({
+  proposals: proposalByStatusSelector(state, {
+    address: communityAddress,
+    type: isActive,
+  }),
+})
+
+export default connect(mapStateToProps)(ProposalList)

@@ -1,13 +1,15 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Flex, Text } from 'ui/common'
 import ProgressBar from 'components/ProgressBar'
 import Oval from 'components/Oval'
 import { colors } from 'ui'
 
-export default () => {
-  const percentParticipant = Math.floor(Math.random() * 1000) % 101
-  const percentReject = Math.floor(Math.random() * 1000) % 101
+export default ({
+  percentParticipant,
+  percentReject,
+  minParticipation,
+  supportRequiredPct,
+}) => {
   return (
     <Flex flexDirection="column" mt="30px" mb="40px">
       <Flex flexDirection="row" justifyContent="center">
@@ -31,7 +33,11 @@ export default () => {
               t="?"
             />
           </Flex>
-          <ProgressBar percent={percentParticipant} isResult={false} />
+          <ProgressBar
+            percent={percentParticipant}
+            isResult={false}
+            minimum={minParticipation}
+          />
         </Flex>
         <Flex width={1 / 2} justifyContent="flex-end">
           <Flex flexDirection="column" justifyContent="flex-end" mr="5px">
@@ -53,17 +59,21 @@ export default () => {
               t="?"
             />
           </Flex>
-          <ProgressBar percent={percentReject} isResult={true} />
+          <ProgressBar
+            percent={percentReject}
+            isResult={true}
+            minimum={supportRequiredPct}
+          />
         </Flex>
       </Flex>
       <Flex flexDirection="row" mt="30px">
         <Flex width={1 / 2}>
           <Text fontWeight="500">Status</Text> : Minimum participation
-          {percentParticipant < 10 ? ' unreached' : ' reached'}
+          {percentParticipant < minParticipation ? ' unreached' : ' reached'}
         </Flex>
         <Flex width={1 / 2} justifyContent="flex-end">
           <Text fontWeight="500">Status</Text>
-          {percentReject < 60 ? ': support' : ': rejected'}
+          {percentReject < supportRequiredPct ? ': support' : ': rejected'}
         </Flex>
       </Flex>
     </Flex>
