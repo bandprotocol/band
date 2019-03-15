@@ -1,8 +1,4 @@
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
-const {
-  increase,
-  duration,
-} = require('openzeppelin-solidity/test/helpers/time');
+const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
@@ -26,7 +22,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         this.voting = await CommitRevealVoting.new({ from: owner });
       });
       it('impossible parameters', async () => {
-        await reverting(
+        await shouldFail.reverting(
           Parameters.new(
             this.comm.address,
             this.voting.address,
@@ -42,7 +38,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         );
       });
       it('missing a parameter', async () => {
-        await reverting(
+        await shouldFail.reverting(
           Parameters.new(
             this.comm.address,
             this.voting.address,
@@ -104,7 +100,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           from: owner,
         },
       );
-      await increase(duration.days(30));
+      await time.increase(time.duration.days(30));
       await this.voting.resolvePoll(this.params.address, 1, { from: owner });
       await this.band.transfer(alice, 100000, { from: owner });
       await this.band.transfer(bob, 100000, { from: owner });
@@ -148,7 +144,9 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
       });
 
       it('should only allow getting zero if called via getZeroable', async () => {
-        await reverting(this.params.get(web3.utils.fromAscii('xxxxxx')));
+        await shouldFail.reverting(
+          this.params.get(web3.utils.fromAscii('xxxxxx')),
+        );
         (await this.params.getZeroable(web3.utils.fromAscii('xxxxxx')))
           .toString()
           .should.eq('0');
@@ -188,7 +186,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           0,
           { from: bob },
         );
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // reveal vote
         await this.voting.revealVote(alice, this.params.address, 2, 20, 0, 42, {
@@ -197,7 +195,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.revealVote(bob, this.params.address, 2, 10, 0, 42, {
           from: bob,
         });
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // resolvePoll
         await this.voting.resolvePoll(this.params.address, 2, { from: alice });
@@ -241,7 +239,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: bob },
         );
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // reveal vote
         await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
@@ -251,7 +249,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           from: bob,
         });
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // resolvePoll
         await this.voting.resolvePoll(this.params.address, 2, { from: alice });
@@ -295,7 +293,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: bob },
         );
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // reveal vote
         await this.voting.revealVote(
@@ -313,7 +311,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           from: bob,
         });
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // resolvePoll
         await this.voting.resolvePoll(this.params.address, 2, { from: alice });
@@ -357,7 +355,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: bob },
         );
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // reveal vote
         await this.voting.revealVote(
@@ -375,7 +373,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           from: bob,
         });
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // resolvePoll
         await this.voting.resolvePoll(this.params.address, 2, { from: alice });
@@ -472,7 +470,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           { from: owner },
         );
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // reveal vote
         await this.voting.revealVote(
@@ -490,7 +488,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           from: owner,
         });
 
-        await increase(duration.seconds(60));
+        await time.increase(time.duration.seconds(60));
 
         // resolvePoll
         await this.voting.resolvePoll(this.params.address, 2, { from: alice });

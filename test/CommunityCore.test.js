@@ -1,8 +1,4 @@
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
-const {
-  increase,
-  duration,
-} = require('openzeppelin-solidity/test/helpers/time');
+const { shouldFail, time } = require('openzeppelin-test-helpers');
 const { Merkle } = require('../lib/merkle');
 
 const AdminTCR = artifacts.require('AdminTCR');
@@ -84,12 +80,12 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       0,
       { from: alice },
     );
-    await increase(duration.seconds(60));
+    await time.increase(time.duration.seconds(60));
     // reveal vote with correct params
     await this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
       from: alice,
     });
-    await increase(duration.days(30));
+    await time.increase(time.duration.days(30));
     await this.voting.resolvePoll(this.params.address, 1, { from: owner });
 
     // Alice sells 100 tokens back
@@ -106,12 +102,14 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
     it('should not allow buying directly', async () => {
-      await reverting(this.core.buy(alice, 100, 11000, { from: alice }));
+      await shouldFail.reverting(
+        this.core.buy(alice, 100, 11000, { from: alice }),
+      );
     });
 
     it("should not allow buying if buy doesn't have enough band", async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.band.transferAndCall(
           alice,
           this.core.address,
@@ -125,7 +123,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
     it('should not allow buying if price limit does not pass', async () => {
       const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.band.transferAndCall(
           alice,
           this.core.address,
@@ -152,7 +150,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
     });
 
-    it('should increase price for subsequent purchases', async () => {
+    it('should time.increase price for subsequent purchases', async () => {
       const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
@@ -189,7 +187,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       const calldata2 = this.core.contract.methods
         .sell(_, 0, 10000)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
           this.core.address,
@@ -228,7 +226,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       const calldata2 = this.core.contract.methods
         .sell(_, 0, 10000)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
           this.core.address,
@@ -306,11 +304,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         0,
         { from: alice },
       );
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
-      await increase(duration.days(30) - duration.seconds(60));
+      await time.increase(time.duration.days(30) - time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
       const calldata = this.core.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
@@ -350,14 +348,14 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         0,
         { from: alice },
       );
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
-      await increase(duration.hours(1) - duration.seconds(60));
+      await time.increase(time.duration.hours(1) - time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
       // First sale
-      await increase(duration.hours(9));
+      await time.increase(time.duration.hours(9));
       const calldata = this.core.contract.methods.sell(_, 0, 0).encodeABI();
       await this.comm.transferAndCall(
         alice,
@@ -375,7 +373,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       (await this.comm.totalSupply()).toString().should.eq('190');
       (await this.core.curveMultiplier()).toString().should.eq('250000000000');
       // Second sale
-      await increase(duration.hours(10));
+      await time.increase(time.duration.hours(10));
       await this.comm.transferAndCall(
         alice,
         this.core.address,
@@ -426,11 +424,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         0,
         { from: alice },
       );
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
     });
 
@@ -489,11 +487,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should not allow non-admin to deflate', async () => {
-      await reverting(this.core.deflate(10, { from: alice }));
+      await shouldFail.reverting(this.core.deflate(10, { from: alice }));
     });
 
     it('should not allow admin to deflate more than what they own', async () => {
-      await reverting(this.core.deflate(110, { from: owner }));
+      await shouldFail.reverting(this.core.deflate(110, { from: owner }));
     });
 
     it('should allow admin to deflate', async () => {
@@ -533,14 +531,14 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         0,
         { from: alice },
       );
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.revealVote(owner, this.params.address, 2, 90, 0, 42, {
         from: owner,
       });
       await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
         from: alice,
       });
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
 
       // Alice applies to be an admin.
@@ -557,9 +555,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
 
       // The apply stage has not passed yet. TCR application is still pending.
-      await reverting(this.core.deflate(10, { from: alice }));
+      await shouldFail.reverting(this.core.deflate(10, { from: alice }));
       // 100 seconds have passed, and no one challenges, so now Alice is good.
-      await increase(100);
+      await time.increase(100);
       await this.core.deflate(10, { from: alice });
       (await this.core.curveMultiplier()).toString().should.eq('1234567901234');
     });
@@ -599,11 +597,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         0,
         { from: owner },
       );
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.revealVote(owner, this.params.address, 2, 100, 0, 42, {
         from: owner,
       });
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, { from: owner });
 
       // Owner sends some revenue to the contract
@@ -617,7 +615,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should not allow non-admin to report reward', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.core.addRewardDistribution(this.merkle.root, 50, {
           from: alice,
         }),
@@ -632,7 +630,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       });
 
       it('should not allow members to withdraw before edit period', async () => {
-        await reverting(
+        await shouldFail.reverting(
           this.core.claimReward(alice, 1, 10, this.merkle.getProof(alice)[1], {
             from: alice,
           }),
@@ -640,7 +638,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       });
 
       it('should allow withdraw reward after edit period', async () => {
-        await increase(duration.days(1.5));
+        await time.increase(time.duration.days(1.5));
         await this.core.claimReward(
           alice,
           1,
@@ -654,7 +652,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       });
 
       it('should not allow members to withdraw with invalid value', async () => {
-        await increase(duration.days(1.5));
+        await time.increase(time.duration.days(1.5));
         await this.core.claimReward(
           alice,
           1,
@@ -669,18 +667,18 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       });
 
       it('should allow extend edit period of admin overwrites the distribution hash', async () => {
-        await increase(duration.days(0.75));
+        await time.increase(time.duration.hours(18));
         this.merkle.insert(alice, 60);
         await this.core.editRewardDistribution(1, this.merkle.root, 100, {
           from: owner,
         });
-        await increase(duration.days(0.75));
-        await reverting(
+        await time.increase(time.duration.hours(18));
+        await shouldFail.reverting(
           this.core.claimReward(alice, 1, 60, this.merkle.getProof(alice)[1], {
             from: alice,
           }),
         );
-        await increase(duration.days(0.75));
+        await time.increase(time.duration.hours(18));
         await this.core.claimReward(
           alice,
           1,
@@ -695,7 +693,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       });
 
       it('should allow another reward distribution after reward_period', async () => {
-        await increase(duration.days(20));
+        await time.increase(time.duration.days(20));
         // Owner sends some revenue to the contract for the next period
         await this.comm.transfer(this.core.address, 10, { from: owner });
         // Alice claims reward of first period
@@ -713,19 +711,19 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
         // Admin tries to report for the next period, but it's too early
         this.merkle.insert(alice, 60);
-        await reverting(
+        await shouldFail.reverting(
           this.core.addRewardDistribution(this.merkle.root, 100, {
             from: owner,
           }),
         );
 
-        await increase(duration.days(20));
+        await time.increase(time.duration.days(20));
         await this.core.addRewardDistribution(this.merkle.root, 100, {
           from: owner,
         });
 
         // Alice claims reward of second period
-        await increase(duration.days(2));
+        await time.increase(time.duration.days(2));
         await this.core.claimReward(
           alice,
           2,

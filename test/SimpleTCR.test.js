@@ -1,8 +1,4 @@
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
-const {
-  increase,
-  duration,
-} = require('openzeppelin-solidity/test/helpers/time');
+const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const SimpleTCR = artifacts.require('SimpleTCR');
 const BandToken = artifacts.require('BandToken');
@@ -163,7 +159,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const calldata = await this.tcr.contract.methods
         .applyEntry(_, 0, entryHash)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
           this.tcr.address,
@@ -179,7 +175,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const calldata = await this.tcr.contract.methods
         .applyEntry(_, 0, newEntryHash)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
           this.tcr.address,
@@ -215,26 +211,26 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // min_deposit at the begining
       (await this.tcr.currentMinDeposit(entryHash)).toNumber().should.eq(100);
       // 300 sec passed, end of apply_stage_length
-      await increase(duration.seconds(300));
+      await time.increase(time.duration.seconds(300));
       (await this.tcr.currentMinDeposit(entryHash)).toNumber().should.eq(100);
       // 360 sec passed, end of cliff
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       (await this.tcr.currentMinDeposit(entryHash)).toNumber().should.eq(100);
       // linearly decrease overtime, 370 -> 420 sec
       for (let i = 80; i < 120; i += 20) {
-        await increase(duration.seconds(20));
+        await time.increase(time.duration.seconds(20));
         // 1e12 - (5e11 * (x-60))/60
         Math.floor(100 - (50 * (i - 60)) / 60).should.eq(
           (await this.tcr.currentMinDeposit(entryHash)).toNumber(),
         );
       }
       // min_deposit reduced to half forever, 420 -> ∞ sec
-      await increase(duration.seconds(10000));
+      await time.increase(time.duration.seconds(10000));
       (await this.tcr.currentMinDeposit(entryHash)).toNumber().should.eq(50);
     });
     it('Should should active after listAt', async () => {
       (await this.tcr.isEntryActive(entryHash)).toString().should.eq('false');
-      await increase(duration.seconds(300));
+      await time.increase(time.duration.seconds(300));
       (await this.tcr.isEntryActive(entryHash)).toString().should.eq('true');
     });
     it('Should withdrawable if nothing goes wrong', async () => {
@@ -248,14 +244,14 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         .should.eq(balanceOfAlice + withdrawAmount);
     });
     it('Should not withdrawable if not proposer', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.tcr.withdraw(bob, entryHash, 100, {
           from: bob,
         }),
       );
     });
     it('Should not withdrawable if not withdrawableDeposit < min_deposit', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.tcr.withdraw(alice, entryHash, 101, {
           from: alice,
         }),
@@ -292,7 +288,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const calldata = await this.tcr.contract.methods
         .initiateChallenge(bob, 10, entryHash, reasonHash)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           bob,
           this.tcr.address,
@@ -341,7 +337,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
           web3.utils.soliditySha3('reason of carol'),
         )
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           carol,
           this.tcr.address,
@@ -355,7 +351,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
     it('Should return fund back to challenger, if challengeDeposit > stake', async () => {
       const balanceOfBob = (await this.comm.balanceOf(bob)).toNumber();
       const calldata = await this.tcr.contract.methods
-        .initiateChallenge(_, 0, entryHash, reasonHash) // increase challengeDeposit to 200
+        .initiateChallenge(_, 0, entryHash, reasonHash) // time.increase challengeDeposit to 200
         .encodeABI();
       await this.comm.transferAndCall(
         bob,
@@ -399,7 +395,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should unable to vote more than voting power', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           bob,
           this.tcr.address,
@@ -412,7 +408,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         ),
       );
 
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           alice,
           this.tcr.address,
@@ -439,7 +435,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       this.comm.transfer(bob, 100, { from: alice });
 
       // Have 1000 community tokens but still cannot buy
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           bob,
           this.tcr.address,
@@ -469,7 +465,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // on one claim their reward
       for (const commit of commits) {
         const person = commit[0];
-        await reverting(
+        await shouldFail.reverting(
           this.tcr.claimReward(person, challengeID, { from: person }),
         );
       }
@@ -489,11 +485,11 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.voting.polls(this.tcr.address, challengeID)).totalCount
         .toNumber()
         .should.eq(1900);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // no one can claim their reward
       for (const commit of commits) {
         const person = commit[0];
-        await reverting(
+        await shouldFail.reverting(
           this.tcr.claimReward(person, challengeID, { from: person }),
         );
       }
@@ -514,7 +510,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // no one can claim their reward
       for (const commit of commits) {
         const person = commit[0];
-        await reverting(
+        await shouldFail.reverting(
           this.tcr.claimReward(person, challengeID, { from: person }),
         );
       }
@@ -538,7 +534,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.voting.polls(this.tcr.address, challengeID)).totalCount
         .toNumber()
         .should.eq(1900);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // everyone reveal
       for (const [person, yes, no] of commits) {
         await this.voting.revealVote(
@@ -556,7 +552,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const poll = await this.voting.polls(this.tcr.address, challengeID);
       poll.yesCount.toNumber().should.eq(1000);
       poll.noCount.toNumber().should.eq(900);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // alice resolve
       await this.voting.resolvePoll(this.tcr.address, challengeID, {
         from: alice,
@@ -575,7 +571,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         .should.eq(1000 + 30 + (200 - 130) * (600 / (400 + 600)));
 
       // alice should not get anything from reward pool
-      await reverting(
+      await shouldFail.reverting(
         this.tcr.claimReward(alice, challengeID, { from: alice }),
       );
       // carol claim her reward, so she should get 400/(400+600) of the remaining
@@ -584,7 +580,9 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(1000 + (200 - 130) * (400 / (400 + 600)));
       // bob cannot claim his reward, because he already got it in resolving process
-      await reverting(this.tcr.claimReward(bob, challengeID, { from: bob }));
+      await shouldFail.reverting(
+        this.tcr.claimReward(bob, challengeID, { from: bob }),
+      );
       (await this.comm.balanceOf(bob))
         .toNumber()
         .should.eq(1000 + 30 + (200 - 130) * (600 / (400 + 600)));
@@ -608,7 +606,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.voting.polls(this.tcr.address, challengeID)).totalCount
         .toNumber()
         .should.eq(1800);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // everyone reveal
       for (const [person, yes, no] of commits) {
         await this.voting.revealVote(
@@ -626,7 +624,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const poll = await this.voting.polls(this.tcr.address, challengeID);
       poll.yesCount.toNumber().should.eq(800);
       poll.noCount.toNumber().should.eq(1000);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // carol resolve
       await this.voting.resolvePoll(this.tcr.address, challengeID, {
         from: carol,
@@ -639,14 +637,16 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // bob should loss his deposit of his challenge
       (await this.comm.balanceOf(bob)).toNumber().should.eq(1000 - 100);
       // bob should not get anything from reward pool
-      await reverting(this.tcr.claimReward(bob, challengeID, { from: bob }));
+      await shouldFail.reverting(
+        this.tcr.claimReward(bob, challengeID, { from: bob }),
+      );
       // carol claim her reward, so she should get 400/(400+600) of the remaining
       await this.tcr.claimReward(carol, challengeID, { from: carol });
       (await this.comm.balanceOf(carol))
         .toNumber()
         .should.eq(1000 + (200 - 130) * (900 / (900 + 100)));
       // alice cannot claim her reward, because it already add to the entry since resolving has ended
-      await reverting(
+      await shouldFail.reverting(
         this.tcr.claimReward(alice, challengeID, { from: alice }),
       );
       (await this.comm.balanceOf(alice)).toNumber().should.eq(800);
@@ -670,7 +670,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.voting.polls(this.tcr.address, challengeID)).totalCount
         .toNumber()
         .should.eq(1000);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // everyone reveal
       for (const [person, yes, no] of commits) {
         await this.voting.revealVote(
@@ -688,7 +688,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const poll = await this.voting.polls(this.tcr.address, challengeID);
       poll.yesCount.toNumber().should.eq(400);
       poll.noCount.toNumber().should.eq(600);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // bob resolve
       await this.voting.resolvePoll(this.tcr.address, challengeID, {
         from: bob,
@@ -700,7 +700,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // no one can claim their reward
       for (const commit of commits) {
         const person = commit[0];
-        await reverting(
+        await shouldFail.reverting(
           this.tcr.claimReward(person, challengeID, { from: person }),
         );
       }
@@ -732,9 +732,9 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.voting.polls(this.tcr.address, challengeID)).totalCount
         .toNumber()
         .should.eq(2100);
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       // nobody reveal ...
-      await increase(duration.seconds(30));
+      await time.increase(time.duration.seconds(30));
       const poll = await this.voting.polls(this.tcr.address, challengeID);
       poll.yesCount.toNumber().should.eq(0);
       poll.noCount.toNumber().should.eq(0);
@@ -749,7 +749,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // no one can claim their reward
       for (const commit of commits) {
         const person = commit[0];
-        await reverting(
+        await shouldFail.reverting(
           this.tcr.claimReward(person, challengeID, { from: person }),
         );
       }
@@ -809,7 +809,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.voting.polls(this.params.address, proposeID)).totalCount
         .toNumber()
         .should.eq(1800);
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // everyone reveal
       for (const [person, yes, no] of commits) {
         await this.voting.revealVote(
@@ -824,7 +824,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
           },
         );
       }
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // alice resolve
       await this.voting.resolvePoll(this.params.address, proposeID, {
         from: alice,
@@ -839,7 +839,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const calldata = await this.tcr.contract.methods
         .initiateChallenge(_, 0, entryHash, reasonHash)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           bob,
           this.tcr.address,
@@ -854,7 +854,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const calldata = await this.tcr.contract.methods
         .initiateChallenge(_, 0, entryHash, reasonHash)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           bob,
           this.tcr.address,
@@ -884,7 +884,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       const calldata = await this.tcr.contract.methods
         .applyEntry(_, 0, newEntryHash)
         .encodeABI();
-      await reverting(
+      await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
           this.tcr.address,

@@ -1,8 +1,4 @@
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
-const {
-  increase,
-  duration,
-} = require('openzeppelin-solidity/test/helpers/time');
+const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
@@ -59,7 +55,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
-    await increase(duration.days(30));
+    await time.increase(time.duration.days(30));
     await this.voting.resolvePoll(this.params.address, 1, { from: owner });
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
@@ -132,7 +128,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     });
     it('should revert (totalWeight == 0), getPollUserState should be Invalid', async () => {
       // commit
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           alice,
           this.params.address,
@@ -144,7 +140,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         ),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           bob,
           this.params.address,
@@ -165,7 +161,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     });
     it('should revert (totalWeight > voting power), getPollUserState should be Invalid', async () => {
       // commit
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           alice,
           this.params.address,
@@ -177,7 +173,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         ),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           bob,
           this.params.address,
@@ -279,7 +275,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     });
     it('should revert, wrong params', async () => {
       // commit again
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           alice,
           this.params.address,
@@ -291,7 +287,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
           { from: alice },
         ),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.commitVote(
           bob,
           this.params.address,
@@ -331,7 +327,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('correct params, getPollUserState should be Revealed', async () => {
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // reveal vote with correct params
       await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
         from: alice,
@@ -347,55 +343,55 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         .should.eq('2');
     });
     it('should revert, wrong salt', async () => {
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // reveal vote with wrong salt
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(alice, this.params.address, 2, 60, 0, 43, {
           from: alice,
         }),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(bob, this.params.address, 2, 60, 0, 43, {
           from: bob,
         }),
       );
     });
     it('should revert, wrong total weight(yes+no)', async () => {
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // reveal vote with wrong salt
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(alice, this.params.address, 2, 60, 10, 42, {
           from: alice,
         }),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(bob, this.params.address, 2, 50, 0, 42, {
           from: bob,
         }),
       );
     });
     it('should revert, correct total weight(yes+no) but wrong yes/no weight', async () => {
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // reveal vote with wrong yes/no weight
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(alice, this.params.address, 2, 0, 60, 42, {
           from: alice,
         }),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(bob, this.params.address, 2, 30, 30, 42, {
           from: bob,
         }),
       );
     });
     it('should revert, try to reveal after reveal time has end', async () => {
-      await increase(duration.seconds(120));
-      await reverting(
+      await time.increase(time.duration.seconds(120));
+      await shouldFail.reverting(
         this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
           from: alice,
         }),
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
           from: bob,
         }),
@@ -426,7 +422,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         0,
         { from: bob },
       );
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       // reveal vote with correct params
       await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
         from: alice,
@@ -435,7 +431,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         from: bob,
       });
       // quickly end reveal time
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, {
         from: bob,
       });
@@ -456,7 +452,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       // waiting for commit period to end
-      await increase(duration.seconds(60));
+      await time.increase(time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, {
         from: bob,
       });
@@ -476,7 +472,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         0,
         { from: alice },
       );
-      await reverting(
+      await shouldFail.reverting(
         this.voting.resolvePoll(this.params.address, 2, {
           from: bob,
         }),
@@ -504,8 +500,8 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         0,
         { from: bob },
       );
-      await increase(duration.seconds(60));
-      await reverting(
+      await time.increase(time.duration.seconds(60));
+      await shouldFail.reverting(
         this.voting.resolvePoll(this.params.address, 2, {
           from: bob,
         }),

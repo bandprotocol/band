@@ -1,5 +1,4 @@
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
-const { increase } = require('openzeppelin-solidity/test/helpers/time');
+const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const CommunityToken = artifacts.require('CommunityToken');
 const BandFactory = artifacts.require('BandFactory');
@@ -37,7 +36,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should allow only owner to mint tokens', async () => {
-      await reverting(this.contract.mint(alice, 1000000, { from: alice }));
+      await shouldFail.reverting(
+        this.contract.mint(alice, 1000000, { from: alice }),
+      );
       await this.contract.mint(alice, 1000000, { from: owner });
 
       const totalSupply = await this.contract.totalSupply();
@@ -51,7 +52,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should allow transfer of ownership', async () => {
-      await reverting(this.contract.mint(alice, 1000000, { from: alice }));
+      await shouldFail.reverting(
+        this.contract.mint(alice, 1000000, { from: alice }),
+      );
       await this.contract.transferOwnership(alice, { from: owner });
       await this.contract.mint(alice, 1000000, { from: alice });
 
@@ -68,7 +71,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       const owner1stBalance = await this.contract.balanceOf(owner);
       owner1stBalance.toString().should.eq('1000000');
 
-      await reverting(this.contract.burn(owner, 10, { from: alice }));
+      await shouldFail.reverting(
+        this.contract.burn(owner, 10, { from: alice }),
+      );
       await this.contract.burn(owner, 10, { from: owner });
 
       const owner2ndBalance = await this.contract.balanceOf(owner);
@@ -191,7 +196,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
       (await this.contract.votingPowerOf(bob)).toString().should.eq('61');
 
-      await reverting(
+      await shouldFail.reverting(
         this.contract.revokeDelegateVote(alice, carol, { from: alice }),
       );
       await this.contract.revokeDelegateVote(alice, bob, { from: alice });
@@ -307,8 +312,12 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
   context('Historical voting power snapshot features', () => {
     it('should give zero balance if account has no activity', async () => {
-      await reverting(this.contract.historicalVotingPowerAtIndex(alice, 1));
-      await reverting(this.contract.historicalVotingPowerAtIndex(alice, 10));
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtIndex(alice, 1),
+      );
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtIndex(alice, 10),
+      );
 
       (await this.contract.historicalVotingPowerAtIndex(alice, 0))
         .toString()
@@ -317,14 +326,16 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('0');
 
-      await reverting(this.contract.historicalVotingPowerAtNonce(alice, 1));
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtNonce(alice, 1),
+      );
     });
 
     it('should give correct historical balance at each transfer, mint, and burn', async () => {
       await this.contract.mint(alice, 100, { from: owner });
-      await increase(100);
+      await time.increase(100);
       await this.contract.transfer(bob, 10, { from: alice });
-      await increase(100);
+      await time.increase(100);
       await this.contract.transfer(alice, 5, { from: bob });
       await this.contract.transfer(carol, 8, { from: alice });
 
@@ -349,7 +360,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('87');
 
-      await reverting(this.contract.historicalVotingPowerAtIndex(alice, 5));
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtIndex(alice, 5),
+      );
 
       (await this.contract.historicalVotingPowerAtNonce(alice, 0))
         .toString()
@@ -429,7 +442,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       (await this.contract.historicalVotingPowerAtIndex(alice, 4))
         .toString()
         .should.eq('115');
-      await reverting(this.contract.historicalVotingPowerAtIndex(alice, 5));
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtIndex(alice, 5),
+      );
 
       (await this.contract.historicalVotingPowerAtIndex(bob, 0))
         .toString()
@@ -440,7 +455,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       (await this.contract.historicalVotingPowerAtIndex(bob, 2))
         .toString()
         .should.eq('0');
-      await reverting(this.contract.historicalVotingPowerAtIndex(bob, 3));
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtIndex(bob, 3),
+      );
 
       (await this.contract.historicalVotingPowerAtIndex(carol, 0))
         .toString()
@@ -451,7 +468,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       (await this.contract.historicalVotingPowerAtIndex(carol, 2))
         .toString()
         .should.eq('35');
-      await reverting(this.contract.historicalVotingPowerAtIndex(carol, 3));
+      await shouldFail.reverting(
+        this.contract.historicalVotingPowerAtIndex(carol, 3),
+      );
 
       // Find by nonce
       // at nonce 1

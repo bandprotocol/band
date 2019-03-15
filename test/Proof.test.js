@@ -1,5 +1,5 @@
 const randomhex = require('randomhex');
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
+const { shouldFail } = require('openzeppelin-test-helpers');
 const { Merkle, bigNumberToHex } = require('../lib/merkle');
 
 const ProofMock = artifacts.require('ProofMock');
@@ -39,7 +39,7 @@ contract('ProofMock', ([_, owner]) => {
     it('should not accept incorrect value', async () => {
       const key = this.keys[8];
       const [value, proof] = this.merkle.getProof(key);
-      await reverting(
+      await shouldFail.reverting(
         this.contract.verify(
           this.merkle.root,
           key,
@@ -87,7 +87,7 @@ contract('ProofMock', ([_, owner]) => {
     });
 
     it('should fail if key is changed', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.contract.verify(
           this.rootHash,
           '0x0367100453a0e46792466c1ce9a0eb84fc04904f',
@@ -98,7 +98,7 @@ contract('ProofMock', ([_, owner]) => {
     });
 
     it('should fail if value is changed', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.contract.verify(
           this.rootHash,
           this.key,
@@ -109,7 +109,7 @@ contract('ProofMock', ([_, owner]) => {
     });
 
     it('should fail if proof is too short (truncated)', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.contract.verify(
           this.rootHash,
           this.key,
@@ -120,7 +120,7 @@ contract('ProofMock', ([_, owner]) => {
     });
 
     it('should fail if proof is too long (extra)', async () => {
-      await reverting(
+      await shouldFail.reverting(
         this.contract.verify(
           this.rootHash,
           this.key,

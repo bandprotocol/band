@@ -1,4 +1,4 @@
-const { reverting } = require('openzeppelin-solidity/test/helpers/shouldFail');
+const { shouldFail } = require('openzeppelin-test-helpers');
 
 const BandFactory = artifacts.require('BandFactory');
 
@@ -37,14 +37,14 @@ contract('BandFactory', ([owner, alice, bob]) => {
   });
 
   it('should be able to transfer feelessly', async () => {
-    const transferData = this.band.contract.methods.transferFeeless(
-      owner, alice, 100000
-    ).encodeABI();
+    const transferData = this.band.contract.methods
+      .transferFeeless(owner, alice, 100000)
+      .encodeABI();
     const nonce = 0;
     const dataNoFuncSig = '0x' + transferData.slice(10 + 64);
     const sig = await web3.eth.sign(
       web3.utils.soliditySha3(nonce, dataNoFuncSig),
-      owner
+      owner,
     );
     await this.contract.sendDelegatedExecution(
       owner,
@@ -58,14 +58,14 @@ contract('BandFactory', ([owner, alice, bob]) => {
   });
 
   it('should revert, did not use latest nonce of this user', async () => {
-    const transferData = this.band.contract.methods.transferFeeless(
-      owner, alice, 100000
-    ).encodeABI();
+    const transferData = this.band.contract.methods
+      .transferFeeless(owner, alice, 100000)
+      .encodeABI();
     let nonce = 1;
     const dataNoFuncSig = '0x' + transferData.slice(10 + 64);
     let sig = await web3.eth.sign(
       web3.utils.soliditySha3(nonce, dataNoFuncSig),
-      owner
+      owner,
     );
     await this.contract.sendDelegatedExecution(
       owner,
@@ -76,27 +76,31 @@ contract('BandFactory', ([owner, alice, bob]) => {
       { from: bob },
     );
     (await this.band.balanceOf(alice)).toString().should.eq('100000');
-    await reverting(this.contract.sendDelegatedExecution(
-      owner,
-      this.band.address,
-      '0x' + transferData.slice(2, 10),
-      dataNoFuncSig,
-      sig,
-      { from: bob },
-    ));
+    await shouldFail.reverting(
+      this.contract.sendDelegatedExecution(
+        owner,
+        this.band.address,
+        '0x' + transferData.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: bob },
+      ),
+    );
     nonce = 13;
     sig = await web3.eth.sign(
       web3.utils.soliditySha3(nonce, dataNoFuncSig),
-      owner
-    );
-    await reverting(this.contract.sendDelegatedExecution(
       owner,
-      this.band.address,
-      '0x' + transferData.slice(2, 10),
-      dataNoFuncSig,
-      sig,
-      { from: bob },
-    ));
+    );
+    await shouldFail.reverting(
+      this.contract.sendDelegatedExecution(
+        owner,
+        this.band.address,
+        '0x' + transferData.slice(2, 10),
+        dataNoFuncSig,
+        sig,
+        { from: bob },
+      ),
+    );
   });
 
   context('Create new community', () => {
@@ -171,7 +175,9 @@ contract('BandFactory', ([owner, alice, bob]) => {
     });
 
     it('should only allow getting zero if called via getZeroable', async () => {
-      await reverting(this.params.get(web3.utils.fromAscii('xxxxxx')));
+      await shouldFail.reverting(
+        this.params.get(web3.utils.fromAscii('xxxxxx')),
+      );
       (await this.params.getZeroable(web3.utils.fromAscii('xxxxxx')))
         .toString()
         .should.eq('0');
@@ -183,19 +189,21 @@ contract('BandFactory', ([owner, alice, bob]) => {
       const calldata = this.core.contract.methods
         .buy(alice, 0, 100)
         .encodeABI();
-      const transferData = this.band.contract.methods.transferAndCall(
-        alice,
-        this.core.address,
-        11000,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138)
-      ).encodeABI();
+      const transferData = this.band.contract.methods
+        .transferAndCall(
+          alice,
+          this.core.address,
+          11000,
+          '0x' + calldata.slice(2, 10),
+          '0x' + calldata.slice(138),
+        )
+        .encodeABI();
 
       const nonce = 0;
       const dataNoFuncSig = '0x' + transferData.slice(10 + 64);
       const sig = await web3.eth.sign(
         web3.utils.soliditySha3(nonce, dataNoFuncSig),
-        alice
+        alice,
       );
 
       await this.contract.sendDelegatedExecution(
@@ -231,7 +239,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
     });
     it('should revert if use new voting address', async () => {
       const newVote = await CommitRevealVoting.new({ from: alice });
-      await reverting(
+      await shouldFail.reverting(
         this.contract.createNewCommunity(
           'CoinHatcher2',
           'XC2',
