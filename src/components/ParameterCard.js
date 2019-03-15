@@ -9,7 +9,7 @@ import { getUnitFromType, convertFromChain } from 'utils/helper'
 
 const WhiteCard = styled(Card).attrs({
   variant: 'modal',
-  width: '410px',
+  width: '412px',
   mb: 3,
 })`
   height: 200px;
@@ -38,8 +38,7 @@ export default ({
           {description ||
             'The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).'}
         </Text>
-        <Box flex={1} />
-        <Flex>
+        <Flex alignItems="center" py={2} mt={2}>
           <Text
             fontSize={0}
             fontWeight="bold"
@@ -55,7 +54,15 @@ export default ({
               handleParameterChange={handleParameterChange}
             />
           ) : (
-            <Text fontSize={0}>
+            <Text
+              fontSize={0}
+              width="80%"
+              style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
               {convertedValue + ' ' + getUnitFromType(type)}
             </Text>
           )}

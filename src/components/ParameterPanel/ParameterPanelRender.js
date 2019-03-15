@@ -9,9 +9,10 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 import ParameterList from 'components/ParameterList'
 
-const PrefixSelect = styled(Select)`
+const PrefixSelect = styled(Select).attrs({
+  isSearchable: false,
+})`
   width: 200px;
-  height: 35px;
   border-radius: 4px;
   border: solid 1px #e7ecff;
   background-color: #ffffff;
@@ -36,7 +37,7 @@ const SubmitButton = styled(Button)`
   font-family: Montserrat, sans-serif;
   cursor: pointer;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 300;
   border-radius: 4px;
   box-shadow: 0 9px 13px 0 rgba(136, 104, 255, 0.38);
   background-color: #8868ff;
@@ -82,7 +83,7 @@ export default ({
         <Flex py={4} alignItems="center">
           <Text
             fontSize={1}
-            fontWeight="bold"
+            fontWeight="500"
             color={colors.purple.normal}
             mr={2}
           >
@@ -117,8 +118,16 @@ export default ({
                 <SubmitButton onClick={submitChanges}>Submit</SubmitButton>
               </Flex>
             ) : (
-              <ProposeButton onClick={logedin ? toggleEdit : signin}>
-                Propose Change
+              <ProposeButton
+                onClick={logedin ? toggleEdit : signin}
+                style={{ height: '40px' }}
+              >
+                <Flex justifyContent="center" alignItems="center">
+                  <i className="far fa-edit" style={{ fontSize: '20px' }} />
+                  <Text fontSize="14px" mx={2} fontWeight="200">
+                    Propose Change
+                  </Text>
+                </Flex>
               </ProposeButton>
             )}
           </Flex>

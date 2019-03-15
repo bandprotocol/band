@@ -5,7 +5,7 @@ import ParameterCard from 'components/ParameterCard'
 import { getParameterType } from 'utils/helper'
 
 export default ({ params, isEdit, handleParameterChange }) => (
-  <Flex flexWrap="wrap" justifyContent="space-between" px={4}>
+  <Flex flexWrap="wrap" justifyContent="space-between">
     {params.map(param => (
       <ParameterCard
         {...param}
