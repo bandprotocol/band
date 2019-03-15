@@ -1,13 +1,23 @@
 import React from 'react'
 
 import PageContainer from 'components/PageContainer'
-import { Text } from 'ui/common'
+import ProposalList from 'components/ProposalList'
+import { Flex, Text, Box, Button } from 'ui/common'
 import colors from 'ui/colors'
 
 export default ({ communityAddress }) => (
   <PageContainer withSidebar>
-    <Text fontSize={6} color={colors.purple.normal} textAlign="center" pt={6}>
-      Coming Soon.
-    </Text>
+    <Flex pb="50px" style={{ 'border-bottom': '1px solid #cbcfe3' }}>
+      <ProposalList
+        title={'Open Proposal'}
+        description={
+          'Recently proposed change in governance parameter. Please vote before each proposal expires.'
+        }
+        isActive={true}
+      />
+    </Flex>
+    <Flex mt="25px">
+      <ProposalList title={'Past Proposal'} isActive={false} />
+    </Flex>
   </PageContainer>
 )
