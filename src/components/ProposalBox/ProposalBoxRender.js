@@ -112,7 +112,7 @@ export default ({
                 'white-space': 'nowrap',
                 'text-overflow': 'ellipsis',
                 overflow: 'hidden',
-                maxWidth: '530px',
+                maxWidth: '450px',
               }}
             >
               {title}
@@ -125,10 +125,11 @@ export default ({
               <React.Fragment>
                 <Text
                   color={colors.purple.normal}
-                  width={150 / 870}
                   fontSize={16}
                   fontWeight="regular"
                   textAlign="right"
+                  px={0}
+                  mr="10px"
                 >
                   Expiry date:
                 </Text>
@@ -137,6 +138,8 @@ export default ({
                   fontSize={16}
                   fontWeight="regular"
                   textAlign="right"
+                  px={0}
+                  mr="10px"
                 >
                   {expiredAt.formal()}
                 </Text>
