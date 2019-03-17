@@ -4,7 +4,7 @@ import PageContainer from 'components/PageContainer'
 import ProposalList from 'components/ProposalList'
 import { Flex } from 'ui/common'
 
-import { loadProposals } from 'actions'
+import { loadProposals, loadParameters } from 'actions'
 
 class CommunityProposal extends React.Component {
   componentDidMount() {
@@ -37,7 +37,10 @@ class CommunityProposal extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadProposals: () => dispatch(loadProposals(communityAddress)),
+  loadProposals: () => {
+    dispatch(loadParameters(communityAddress))
+    dispatch(loadProposals(communityAddress))
+  },
 })
 
 export default connect(
