@@ -20,9 +20,11 @@ const ModernInput = styled.input`
 `
 
 const UnitSelector = styled.select`
-  height: 25px;
+  height: 10px;
   fontsize: 14px;
   border: 0px;
+  background-color: #fff;
+  outline: 0;
 `
 
 const timeOptions = [
