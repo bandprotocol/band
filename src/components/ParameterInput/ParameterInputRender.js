@@ -28,9 +28,9 @@ const UnitSelector = styled.select`
 `
 
 const timeOptions = [
-  { value: 'day', label: 'day' },
-  { value: 'hour', label: 'hour' },
-  { value: 'minute', label: 'minute' },
+  { value: 'days', label: 'days' },
+  { value: 'hours', label: 'hours' },
+  { value: 'minutes', label: 'minutes' },
 ]
 
 export default ({ value, unit, type, onChangeUnit, handleParameterChange }) => (
@@ -41,7 +41,7 @@ export default ({ value, unit, type, onChangeUnit, handleParameterChange }) => (
     {type === 'TIME' ? (
       <UnitSelector
         onChange={e => onChangeUnit(e.target.value)}
-        defaultValue="minute"
+        defaultValue="minutes"
       >
         {timeOptions.map(u => (
           <option key={u.value} value={u.value}>

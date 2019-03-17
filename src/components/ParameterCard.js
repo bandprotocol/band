@@ -15,15 +15,12 @@ const WhiteCard = styled(Card).attrs({
   height: 200px;
 `
 
-export default ({
-  name,
-  description,
-  value,
-  type,
-  isEdit,
-  handleParameterChange,
-}) => {
-  const convertedValue = convertFromChain(value, type, getUnitFromType(type))
+export default ({ name, value, detail, isEdit, handleParameterChange }) => {
+  const convertedValue = convertFromChain(
+    value,
+    detail.type,
+    getUnitFromType(detail.type),
+  )
   return (
     <WhiteCard>
       <Flex
@@ -35,9 +32,9 @@ export default ({
         </Text>
         {/* TODO: Mock description */}
         <Text color={colors.text.grey} fontSize={0} lineHeight={1.43} mt={3}>
-          {description ||
-            'The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).'}
+          {detail.description}
         </Text>
+        <Flex flex={1} />
         <Flex alignItems="center" py={2} mt={2}>
           <Text
             fontSize={0}
@@ -50,7 +47,7 @@ export default ({
           {isEdit ? (
             <ParameterInput
               value={convertedValue}
-              type={type}
+              type={detail.type}
               handleParameterChange={handleParameterChange}
             />
           ) : (
@@ -63,7 +60,7 @@ export default ({
                 textOverflow: 'ellipsis',
               }}
             >
-              {convertedValue + ' ' + getUnitFromType(type)}
+              {convertedValue + ' ' + getUnitFromType(detail.type)}
             </Text>
           )}
         </Flex>

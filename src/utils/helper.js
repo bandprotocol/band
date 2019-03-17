@@ -18,12 +18,12 @@ export const convertFromChain = (value, type, unit) => {
   } else if (type === 'TIME') {
     const second = BigNumber(value.toString())
     switch (unit) {
-      case 'minute':
-        return second.div(60).toFixed(2)
-      case 'hour':
-        return second.div(60 * 60).toFixed(2)
-      case 'day':
-        return second.div(60 * 60 * 24).toFixed(2)
+      case 'minutes':
+        return second.div(60).toFixed(0)
+      case 'hours':
+        return second.div(60 * 60).toFixed(0)
+      case 'days':
+        return second.div(60 * 60 * 24).toFixed(0)
       default:
         return second.toFixed(0)
     }
@@ -49,11 +49,11 @@ export const convertToChain = (value, type, unit) => {
   } else if (type === 'TIME') {
     const bigTime = BigNumber(value)
     switch (unit) {
-      case 'minute':
+      case 'minutes':
         return new BN(bigTime.times(60).toFixed(0))
-      case 'hour':
+      case 'hours':
         return new BN(bigTime.times(60 * 60).toFixed(0))
-      case 'day':
+      case 'days':
         return new BN(bigTime.times(60 * 60 * 24).toFixed(0))
       default:
         return new BN(bigTime.toFixed(0))
@@ -66,22 +66,63 @@ export const convertToChain = (value, type, unit) => {
 
 export const getUnitFromType = type => {
   if (type === 'PERCENTAGE') return '%'
-  else if (type === 'TOKEN') return 'token'
-  else if (type === 'TIME') return 'minute'
+  else if (type === 'TOKEN') return 'tokens'
+  else if (type === 'TIME') return 'minutes'
   else if (type === 'ADDRESS') return ''
 }
 
-export const getParameterType = name =>
+export const getParameterDetail = name =>
   ({
-    admin_contract: 'ADDRESS',
-    reward_edit_period: 'TIME',
-    reward_period: 'TIME',
-    expiration_time: 'TIME',
-    min_participation_pct: 'PERCENTAGE',
-    support_required_pct: 'PERCENTAGE',
-    apply_stage_length: 'TIME',
-    commit_time: 'TIME',
-    dispensation_percentage: 'PERCENTAGE',
-    min_deposit: 'TOKEN',
-    reveal_time: 'TIME',
+    admin_contract: {
+      type: 'ADDRESS',
+      description: 'The address of admin contract',
+    },
+    reward_edit_period: {
+      type: 'TIME',
+      description: 'The duration in second that admin can re submit reward',
+    },
+    reward_period: {
+      type: 'TIME',
+      description: 'The duration in second for each period reward',
+    },
+    expiration_time: {
+      type: 'TIME',
+      description:
+        'The duration in seconds during which token holders can votes for a particular challenge.',
+    },
+    min_participation_pct: {
+      type: 'PERCENTAGE',
+      description:
+        'The percentage of votes required to consider a poll can conclude.',
+    },
+    support_required_pct: {
+      type: 'PERCENTAGE',
+      description:
+        'The percentage of votes required to consider a challenge to be successful.',
+    },
+    apply_stage_length: {
+      type: 'TIME',
+      description:
+        'The duration in seconds that an operator application can be challenged before it is considered accepted.',
+    },
+    commit_time: {
+      type: 'TIME',
+      description:
+        'The duration in seconds during which token holders can commit votes for a particular challenge.',
+    },
+    dispensation_percentage: {
+      type: 'PERCENTAGE',
+      description:
+        'The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).',
+    },
+    min_deposit: {
+      type: 'TOKEN',
+      description:
+        'The number of tokens an operator must deposit for their application and for the duration of their position.',
+    },
+    reveal_time: {
+      type: 'TIME',
+      description:
+        'The duration in seconds during which token holders can reveal committed votes for a particular challenge.',
+    },
   }[name])

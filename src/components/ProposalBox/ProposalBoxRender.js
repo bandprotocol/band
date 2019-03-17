@@ -11,7 +11,7 @@ import BN from 'utils/bignumber'
 
 import {
   convertFromChain,
-  getParameterType,
+  getParameterDetail,
   getUnitFromType,
 } from 'utils/helper'
 
@@ -191,14 +191,15 @@ export default ({
         {changes.map(change => (
           <ProposalDetail
             title={change.name}
+            description={getParameterDetail(change.name).description}
             current={`${convertFromChain(
               change.oldValue,
-              getParameterType(change.name),
-            )} ${getUnitFromType(getParameterType(change.name))}`}
+              getParameterDetail(change.name).type,
+            )} ${getUnitFromType(getParameterDetail(change.name).type)}`}
             changeTo={`${convertFromChain(
               change.newValue,
-              getParameterType(change.name),
-            )} ${getUnitFromType(getParameterType(change.name))}`}
+              getParameterDetail(change.name).type,
+            )} ${getUnitFromType(getParameterDetail(change.name).type)}`}
           />
         ))}
         <YourVote
