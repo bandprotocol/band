@@ -18,6 +18,7 @@ export default ({ t, color, bg, size, fontSize, fontWeight }) => (
       color={color || colors.purple.normal}
       fontSize={fontSize || 14}
       fontWeight={fontWeight || 'bold'}
+      lineHeight="20px"
     >
       {t}
     </Text>

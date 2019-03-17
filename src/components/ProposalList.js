@@ -8,7 +8,7 @@ import Oval from 'components/Oval'
 import { proposalByStatusSelector } from 'selectors/proposal'
 
 const ProposalList = ({ description, proposals, isActive, title }) => (
-  <Flex flexDirection="column" my={3} flex={1}>
+  <Flex flexDirection="column" my={3} width="100%">
     <Flex flexDirection="row">
       <Flex
         flexDirection="column"

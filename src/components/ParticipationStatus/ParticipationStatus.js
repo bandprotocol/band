@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, Text } from 'ui/common'
 import ProgressBar from 'components/ProgressBar'
-import Oval from 'components/Oval'
+import ToolTip from 'components/ToolTip'
 import { colors } from 'ui'
 
 export default ({
@@ -23,14 +23,13 @@ export default ({
             flexDirection="column"
             justifyContent="flex-end"
             mr="20px"
-            pb="3px"
+            pt="10px"
           >
-            <Oval
-              color="white"
-              bg={colors.purple.normal}
-              size={20}
-              fontWeight="regular"
-              t="?"
+            <ToolTip
+              top={5}
+              info={`If less than ${minParticipation}% of all voting power
+              participate, the proposal is canceled and
+              no parameter changes will be applied.`}
             />
           </Flex>
           <ProgressBar
@@ -49,21 +48,23 @@ export default ({
             flexDirection="column"
             justifyContent="flex-end"
             mr="20px"
-            pb="3px"
+            pt="10px"
           >
-            <Oval
-              color="white"
-              bg={colors.purple.normal}
-              size={20}
-              fontWeight="regular"
-              t="?"
+            <ToolTip
+              top={5}
+              info={`To approve a proposal, at least ${supportRequiredPct}% of
+              participating voting power is required.
+              Otherwise the proposal will not be
+              successful.`}
             />
           </Flex>
-          <ProgressBar
-            percent={percentReject}
-            isResult={true}
-            minimum={supportRequiredPct}
-          />
+          <Flex pb="2px">
+            <ProgressBar
+              percent={percentReject}
+              isResult={true}
+              minimum={supportRequiredPct}
+            />
+          </Flex>
         </Flex>
       </Flex>
       <Flex flexDirection="row" mt="30px">

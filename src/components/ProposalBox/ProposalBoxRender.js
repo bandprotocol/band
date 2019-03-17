@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text } from 'ui/common'
+import { Flex, Text, Box } from 'ui/common'
 import ProposalDetail from 'components/ProposalDetail'
 import ParticipationStatus from 'components/ParticipationStatus'
 import YourVote from 'components/YourVote'
@@ -71,7 +71,7 @@ export default ({
   const totalVote = yesVote.add(noVote)
   return (
     <Flex
-      flex={1}
+      width="100%"
       flexDirection="column"
       mb="20px"
       style={{
@@ -88,85 +88,94 @@ export default ({
         style={{ height: '50px' }}
         onClick={() => toggleShow()}
       >
-        <Flex flexDirection="row">
-          <Text
-            color={colors.purple.normal}
-            width={100 / 870}
-            fontSize={16}
-            fontWeight="regular"
-          >
-            {'#' + prefix}
-          </Text>
-          <Text
-            color={colors.text.normal}
-            width={150 / 870}
-            fontSize={16}
-            fontWeight="regular"
-          >
-            {title}
-          </Text>
-          {vote !== 'NOT VOTED' ? (
-            <VotedOval width={300 / 870} />
-          ) : (
-            <Flex width={300 / 870}>{''}</Flex>
-          )}
-          {isActive ? (
-            <React.Fragment>
-              <Text
-                color={colors.purple.normal}
-                width={150 / 870}
-                fontSize={16}
-                fontWeight="regular"
-                textAlign="right"
-              >
-                Expiry date:
-              </Text>
-              <Text
-                color={colors.text.normal}
-                width={150 / 870}
-                fontSize={16}
-                fontWeight="regular"
-                textAlign="right"
-              >
-                {expiredAt.formal()}
-              </Text>
-            </React.Fragment>
-          ) : (
-            <Flex
-              width={300 / 870}
-              alignItems="center"
-              mr="20px"
-              justifyContent="flex-end"
+        <Flex
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          {/* Left */}
+          <Flex>
+            <Text
+              color={colors.purple.normal}
+              fontSize={16}
+              fontWeight="regular"
+              width="80px"
             >
-              <Flex mr="20px">
-                <Oval
-                  t={status === 'YES' ? '✓' : '✕'}
-                  color="white"
-                  bg={status === 'YES' ? '#42c47f' : '#ff6757'}
-                  size="16"
-                  fontSize={12}
-                />
+              {'#' + prefix}
+            </Text>
+            <Text
+              color={colors.text.normal}
+              fontSize={16}
+              px={2}
+              fontWeight="regular"
+              style={{
+                'white-space': 'nowrap',
+                'text-overflow': 'ellipsis',
+                overflow: 'hidden',
+                maxWidth: '530px',
+              }}
+            >
+              {title}
+            </Text>
+            {vote !== 'NOT VOTED' ? <VotedOval /> : null}
+          </Flex>
+          {/* Right */}
+          <Flex flexDirection="row" alignItems="center" justifyContent="center">
+            {isActive ? (
+              <React.Fragment>
+                <Text
+                  color={colors.purple.normal}
+                  width={150 / 870}
+                  fontSize={16}
+                  fontWeight="regular"
+                  textAlign="right"
+                >
+                  Expiry date:
+                </Text>
+                <Text
+                  color={colors.text.normal}
+                  fontSize={16}
+                  fontWeight="regular"
+                  textAlign="right"
+                >
+                  {expiredAt.formal()}
+                </Text>
+              </React.Fragment>
+            ) : (
+              <Flex alignItems="center" mr="20px" justifyContent="flex-end">
+                <Flex mr="20px">
+                  <Oval
+                    t={status === 'YES' ? '✓' : '✕'}
+                    color="white"
+                    bg={status === 'YES' ? '#42c47f' : '#ff6757'}
+                    size="16"
+                    fontSize={10}
+                  />
+                </Flex>
+                <Text
+                  color={status === 'YES' ? '#42c47f' : '#ff6757'}
+                  fontSize={16}
+                  fontWeight="500"
+                  textAlign="right"
+                  width="72px"
+                >
+                  {status === 'YES' ? 'Support' : 'Rejected'}
+                </Text>
               </Flex>
-              <Text
-                color={status === 'YES' ? '#42c47f' : '#ff6757'}
-                width={150 / 870}
-                fontSize={16}
-                fontWeight="500"
-                textAlign="right"
-              >
-                {status === 'YES' ? 'Support' : 'Rejected'}
-              </Text>
-            </Flex>
-          )}
-          <Text
-            width={30 / 870}
-            fontSize={16}
-            fontWeight="bold"
-            textAlign="right"
-            color={colors.purple.normal}
-          >
-            {show ? '^' : 'v'}
-          </Text>
+            )}
+            <Text
+              fontSize={16}
+              fontWeight="bold"
+              textAlign="right"
+              color={colors.purple.normal}
+            >
+              {show ? (
+                <i class="fas fa-angle-up" />
+              ) : (
+                <i class="fas fa-angle-down" />
+              )}
+            </Text>
+          </Flex>
         </Flex>
       </Flex>
       <FlexDropDown flexDirection="column" px="40px" show={show}>
