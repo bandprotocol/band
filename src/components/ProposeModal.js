@@ -24,6 +24,7 @@ const ReasonInput = styled.textarea`
   border: solid 1px #cbcfe3;
   font-size: 16px;
   font-family: Montserrat, sans-serif;
+  resize: none;
 `
 
 class ProposeModal extends React.Component {
@@ -43,11 +44,11 @@ class ProposeModal extends React.Component {
   render() {
     return (
       <Card variant="modal">
-        <Box px={4} pt={3}>
+        <Box px={4} pt={3} width="430px" height="460px">
           <Text
             color={colors.purple.normal}
             fontSize={0}
-            fontWeight="bold"
+            fontWeight="500"
             mb={3}
           >
             Subject
@@ -62,7 +63,7 @@ class ProposeModal extends React.Component {
           <Text
             color={colors.purple.normal}
             fontSize={0}
-            fontWeight="bold"
+            fontWeight="500"
             my={3}
           >
             Reason for Change
@@ -75,10 +76,10 @@ class ProposeModal extends React.Component {
             onChange={this.handleChange.bind(this)}
           />
         </Box>
-        <Box px={3} my={4}>
+        <Box px={3} my={3}>
           <Button
             variant="primary"
-            style={{ width: '100%' }}
+            style={{ width: '100%', height: '60px' }}
             onClick={this.onSubmit.bind(this)}
           >
             OK
