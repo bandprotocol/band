@@ -5,30 +5,33 @@ export const isPositiveNumber = input => {
   return input.match(/^\d*\.?\d*$/) && parseInt(input, 10) >= 0
 }
 
-export const convertFromChain = (value, type, unit) => {
+export const convertFromChain = (value, type) => {
   if (!value) return null
   if (type === 'PERCENTAGE') {
-    return BigNumber(value.toString())
-      .div(BigNumber(1e12))
-      .toFixed(2)
+    return [
+      BigNumber(value.toString())
+        .div(BigNumber(1e12))
+        .toFixed(2),
+      '%',
+    ]
   } else if (type === 'TOKEN') {
-    return BigNumber(value.toString())
-      .div(BigNumber(1e18))
-      .toFixed(2)
+    return [
+      BigNumber(value.toString())
+        .div(BigNumber(1e18))
+        .toFixed(2),
+      'token',
+    ]
   } else if (type === 'TIME') {
     const second = BigNumber(value.toString())
-    switch (unit) {
-      case 'minutes':
-        return second.div(60).toFixed(0)
-      case 'hours':
-        return second.div(60 * 60).toFixed(0)
-      case 'days':
-        return second.div(60 * 60 * 24).toFixed(0)
-      default:
-        return second.toFixed(0)
-    }
+    if (second.mod(60 * 60 * 24).isEqualTo(0)) {
+      return [second.div(60 * 60 * 24).toFixed(0), 'days']
+    } else if (second.mod(60 * 60).isEqualTo(0)) {
+      return [second.div(60 * 60).toFixed(0), 'hours']
+    } else if (second.mod(60).isEqualTo(0)) {
+      return [second.div(60).toFixed(0), 'minutes']
+    } else return [second.toFixed(0), 'seconds']
   } else if (type === 'ADDRESS') {
-    return '0x' + BigNumber(value.toString()).toString(16)
+    return ['0x' + BigNumber(value.toString()).toString(16), '']
   }
   return value.toString()
 }
@@ -62,13 +65,6 @@ export const convertToChain = (value, type, unit) => {
     const hexString = value.startsWith('0x') ? value.slice(2) : value
     return new BN(BigNumber(hexString, 16).toFixed(0))
   }
-}
-
-export const getUnitFromType = type => {
-  if (type === 'PERCENTAGE') return '%'
-  else if (type === 'TOKEN') return 'tokens'
-  else if (type === 'TIME') return 'minutes'
-  else if (type === 'ADDRESS') return ''
 }
 
 export const getParameterDetail = name =>

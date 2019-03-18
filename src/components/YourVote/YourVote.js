@@ -23,8 +23,10 @@ const VoteButton = styled(Button)`
 
   font-family: Montserrat, sans-serif;
   font-weight: 500;
+  font-size: 14px;
   border-radius: 6px;
-  width:135px;
+  width: 135px;
+  height: 35px;
 `
 
 const YourVote = ({ isSupport, isVoted, isActive, vote }) => (

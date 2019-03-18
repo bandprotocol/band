@@ -28,7 +28,7 @@ export default ({ isResult, percent, minimum }) => {
             <Flex width={!isResult ? percent / 100 : 100}>
               <Text
                 weight="light"
-                size={12}
+                fontSize={0}
                 color={!isResult ? colors.purple.normal : '#ec6363'}
               >
                 {isResult && percent + '%'}
@@ -40,7 +40,7 @@ export default ({ isResult, percent, minimum }) => {
             >
               <Text
                 weight="light"
-                size={12}
+                fontSize={0}
                 color={!isResult ? colors.purple.normal : '#42c47f'}
               >
                 {isResult ? 100 - percent : percent}%

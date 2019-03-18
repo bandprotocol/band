@@ -49,14 +49,18 @@ function* checkProvider() {
   while (true) {
     const userState = yield select(currentUserSelector)
     const userAddress =
-      (yield new Promise((resolve, reject) => {
-        window.web3.eth.getAccounts((error, users) => {
-          if (error) reject(error)
-          else resolve(users)
-        })
-      }))[0] || null
+      (window.web3 &&
+        (yield new Promise((resolve, reject) => {
+          window.web3.eth.getAccounts((error, users) => {
+            if (error) reject(error)
+            else resolve(users)
+          })
+        }))[0]) ||
+      null
     if (userAddress !== userState) {
-      yield put(updateProvider(userAddress, window.web3.currentProvider))
+      yield put(
+        updateProvider(userAddress, window.web3 && window.web3.currentProvider),
+      )
     }
     yield delay(100)
   }

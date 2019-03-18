@@ -5,7 +5,7 @@ import colors from 'ui/colors'
 
 import ParameterInput from 'components/ParameterInput'
 
-import { getUnitFromType, convertFromChain } from 'utils/helper'
+import { convertFromChain } from 'utils/helper'
 
 const WhiteCard = styled(Card).attrs({
   variant: 'modal',
@@ -16,11 +16,7 @@ const WhiteCard = styled(Card).attrs({
 `
 
 export default ({ name, value, detail, isEdit, handleParameterChange }) => {
-  const convertedValue = convertFromChain(
-    value,
-    detail.type,
-    getUnitFromType(detail.type),
-  )
+  const [convertedValue, unit] = convertFromChain(value, detail.type)
   return (
     <WhiteCard>
       <Flex
@@ -48,6 +44,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
             <ParameterInput
               value={convertedValue}
               type={detail.type}
+              unit={unit}
               handleParameterChange={handleParameterChange}
             />
           ) : (
@@ -60,7 +57,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
                 textOverflow: 'ellipsis',
               }}
             >
-              {convertedValue + ' ' + getUnitFromType(detail.type)}
+              {convertedValue + ' ' + unit}
             </Text>
           )}
         </Flex>

@@ -2,12 +2,12 @@ import React from 'react'
 
 import ParameterInputRender from './ParameterInputRender'
 
-import { getUnitFromType, convertToChain } from 'utils/helper'
+import { convertToChain } from 'utils/helper'
 
 export default class ParameterInput extends React.Component {
   state = {
     value: this.props.value,
-    unit: getUnitFromType(this.props.type),
+    unit: this.props.unit,
   }
 
   changeUnit(unit) {

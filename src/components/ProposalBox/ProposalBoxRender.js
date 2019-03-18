@@ -9,11 +9,7 @@ import colors from 'ui/colors'
 
 import BN from 'utils/bignumber'
 
-import {
-  convertFromChain,
-  getParameterDetail,
-  getUnitFromType,
-} from 'utils/helper'
+import { convertFromChain, getParameterDetail } from 'utils/helper'
 
 const FlexDropDown = styled(Flex)`
   overflow: hidden;
@@ -109,8 +105,8 @@ export default ({
               px={2}
               fontWeight="regular"
               style={{
-                'white-space': 'nowrap',
-                'text-overflow': 'ellipsis',
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
                 overflow: 'hidden',
                 maxWidth: '450px',
               }}
@@ -173,9 +169,9 @@ export default ({
               color={colors.purple.normal}
             >
               {show ? (
-                <i class="fas fa-angle-up" />
+                <i className="fas fa-angle-up" />
               ) : (
-                <i class="fas fa-angle-down" />
+                <i className="fas fa-angle-down" />
               )}
             </Text>
           </Flex>
@@ -188,20 +184,25 @@ export default ({
           proposer={proposer}
           since={proposedAt.pretty()}
         />
-        {changes.map(change => (
-          <ProposalDetail
-            title={change.name}
-            description={getParameterDetail(change.name).description}
-            current={`${convertFromChain(
-              change.oldValue,
-              getParameterDetail(change.name).type,
-            )} ${getUnitFromType(getParameterDetail(change.name).type)}`}
-            changeTo={`${convertFromChain(
-              change.newValue,
-              getParameterDetail(change.name).type,
-            )} ${getUnitFromType(getParameterDetail(change.name).type)}`}
-          />
-        ))}
+        {changes.map(change => {
+          const { type, description } = getParameterDetail(change.name)
+          const [currentValue, currentUnit] = convertFromChain(
+            change.oldValue,
+            type,
+          )
+          const [changeValue, changeUnit] = convertFromChain(
+            change.newValue,
+            type,
+          )
+          return (
+            <ProposalDetail
+              title={change.name}
+              description={description}
+              current={`${currentValue} ${currentUnit}`}
+              changeTo={`${changeValue} ${changeUnit}`}
+            />
+          )
+        })}
         <YourVote
           isVoted={vote !== 'NOT VOTED'}
           isSupport={vote === 'SUPPORT'}
