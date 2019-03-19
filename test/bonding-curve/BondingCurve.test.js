@@ -70,15 +70,10 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
 
   context('Alice buys 100 tokens', () => {
     beforeEach(async () => {
-      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await this.collateralToken.transferAndCall(
-        alice,
-        this.curve.address,
-        10000,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138),
-        { from: alice },
-      );
+      await this.collateralToken.approve(this.curve.address, 10000, {
+        from: alice,
+      });
+      await this.curve.buy(alice, 10000, 100, { from: alice });
     });
 
     it('should allow Alice to sell 20 tokens with price limit 10', async () => {

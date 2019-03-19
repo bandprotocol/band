@@ -160,20 +160,6 @@ library Equation {
   }
 
   /**
-   * @dev Clear the existing equation. Must be called prior to init of the tree
-   * has already been initialized.
-   */
-  function clear(Node[] storage self) internal {
-    assert(self.length < 256);
-
-    for (uint8 idx = 0; idx < self.length; ++idx) {
-      delete self[idx];
-    }
-
-    self.length = 0;
-  }
-
-  /**
    * @dev Calculate the Y position from the X position for this equation.
    */
   function calculate(Node[] storage self, uint256 xValue)
@@ -198,9 +184,8 @@ library Equation {
       return 3;
     } else if (opcode <= OPCODE_BANCOR_POWER) {
       return 4;
-    } else {
-      assert(false);
     }
+    assert(false);
   }
 
   /**

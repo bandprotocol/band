@@ -1,6 +1,5 @@
 pragma solidity 0.5.0;
 
-import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -18,7 +17,7 @@ import "./Feeless.sol";
  * @dev TCR contract implements Token Curated Registry logic, with reward
  * distribution allocated equally to both winning and losing sides.
  */
-contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
+contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
   using SafeMath for uint256;
   using Equation for Equation.Node[];
 
@@ -125,9 +124,6 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
   )
     public
   {
-    _registerInterface(this.applyEntry.selector);
-    _registerInterface(this.deposit.selector);
-    _registerInterface(this.initiateChallenge.selector);
     prefix = _prefix;
     token = _core.commToken();
     params = _core.params();
@@ -339,11 +335,11 @@ contract SimpleTCR is BandContractBase, ERC165, ResolveListener, Feeless {
 
     (uint256 yesCount, uint256 noCount) =
       voting.getPollTotalVote(address(this), challengeID);
-    // We call the following two functions prior to checking `pollState` to avoid 
+    // We call the following two functions prior to checking `pollState` to avoid
     // "Stack too deep" error due to Solidity/EVM's limitation of DUPn opcodes.
-    (uint256 challengerYesCount, ) = 
+    (uint256 challengerYesCount, ) =
       voting.getPollUserVote(address(this), challengeID, challenge.challenger);
-    (, uint256 proposerNoCount) = 
+    (, uint256 proposerNoCount) =
       voting.getPollUserVote(address(this), challengeID, entry.proposer);
 
     uint256 rewardPool = challenge.rewardPool;

@@ -1,6 +1,5 @@
 pragma solidity 0.5.0;
 
-import "openzeppelin-solidity/contracts/introspection/ERC165Checker.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -262,8 +261,7 @@ contract CommunityToken is IERC20, Ownable, Feeless {
   }
 
   /**
-   * @dev Transfer tokens and call the reciver's given function with supplied
-   * data, using ERC165 to determine interoperability.
+   * @dev Transfer tokens and call the reciver's given function with supplied data.
    */
   function transferAndCall(
     address sender,
@@ -277,7 +275,6 @@ contract CommunityToken is IERC20, Ownable, Feeless {
     returns (bool)
   {
     _transfer(sender, to, value);
-    require(ERC165Checker._supportsInterface(to, sig));
     (bool success,) = to.call(abi.encodePacked(sig, uint256(sender), value, data));
     require(success);
     return true;

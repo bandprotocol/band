@@ -3,6 +3,7 @@ const { Merkle } = require('../lib/merkle');
 
 const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
+const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
@@ -42,12 +43,13 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
-    await this.comm.transferOwnership(this.core.address, { from: owner });
+    this.curve = await BondingCurve.at(await this.core.bondingCurve());
+    await this.comm.transferOwnership(this.curve.address, { from: owner });
     // Alice buys 100 tokens to get voting power. Will sell it back soon.
-    const buyCalldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+    const buyCalldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
     await this.band.transferAndCall(
       alice,
-      this.core.address,
+      this.curve.address,
       100000,
       '0x' + buyCalldata.slice(2, 10),
       '0x' + buyCalldata.slice(138),
@@ -89,10 +91,12 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     await this.voting.resolvePoll(this.params.address, 1, { from: owner });
 
     // Alice sells 100 tokens back
-    const sellCalldata = this.core.contract.methods.sell(_, 0, 100).encodeABI();
+    const sellCalldata = this.curve.contract.methods
+      .sell(_, 0, 100)
+      .encodeABI();
     await this.comm.transferAndCall(
       alice,
-      this.core.address,
+      this.curve.address,
       100,
       '0x' + sellCalldata.slice(2, 10),
       '0x' + sellCalldata.slice(138),
@@ -101,18 +105,18 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
   });
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
-    it('should not allow buying directly', async () => {
+    it('should not allow buying directly without approval', async () => {
       await shouldFail.reverting(
-        this.core.buy(alice, 100, 11000, { from: alice }),
+        this.curve.buy(alice, 100, 11000, { from: alice }),
       );
     });
 
     it("should not allow buying if buy doesn't have enough band", async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await shouldFail.reverting(
         this.band.transferAndCall(
           alice,
-          this.core.address,
+          this.curve.address,
           110000,
           '0x' + calldata.slice(2, 10),
           '0x' + calldata.slice(138),
@@ -122,11 +126,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should not allow buying if price limit does not pass', async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await shouldFail.reverting(
         this.band.transferAndCall(
           alice,
-          this.core.address,
+          this.curve.address,
           9000,
           '0x' + calldata.slice(2, 10),
           '0x' + calldata.slice(138),
@@ -136,10 +140,10 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should allow buying tokens if calling via band tokens', async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         11000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -147,23 +151,25 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('90000');
       (await this.comm.balanceOf(alice)).toString().should.eq('100');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
 
     it('should time.increase price for subsequent purchases', async () => {
-      const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         11000,
         '0x' + calldata1.slice(2, 10),
         '0x' + calldata1.slice(138),
         { from: alice },
       );
-      const calldata2 = this.core.contract.methods.buy(_, 0, 10).encodeABI();
+      const calldata2 = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
         bob,
-        this.core.address,
+        this.curve.address,
         11000,
         '0x' + calldata2.slice(2, 10),
         '0x' + calldata2.slice(138),
@@ -171,36 +177,40 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       (await this.band.balanceOf(bob)).toString().should.eq('97900');
       (await this.comm.balanceOf(bob)).toString().should.eq('10');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
 
     it('should allow selling with correct price drop', async () => {
-      const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         11000,
         '0x' + calldata1.slice(2, 10),
         '0x' + calldata1.slice(138),
         { from: alice },
       );
-      const calldata2 = this.core.contract.methods
+      const calldata2 = this.curve.contract.methods
         .sell(_, 0, 10000)
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
-          this.core.address,
+          this.curve.address,
           10,
           '0x' + calldata2.slice(2, 10),
           '0x' + calldata2.slice(138),
           { from: alice },
         ),
       );
-      const calldata3 = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
+      const calldata3 = this.curve.contract.methods
+        .sell(_, 0, 1000)
+        .encodeABI();
       await this.comm.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         10,
         '0x' + calldata3.slice(2, 10),
         '0x' + calldata3.slice(138),
@@ -208,28 +218,30 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('91900');
       (await this.comm.balanceOf(alice)).toString().should.eq('90');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
 
     it('should be able to sell/transferAndCall feelessly', async () => {
       await this.comm.setExecDelegator(this.factory.address);
 
-      const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         11000,
         '0x' + calldata1.slice(2, 10),
         '0x' + calldata1.slice(138),
         { from: alice },
       );
-      const calldata2 = this.core.contract.methods
+      const calldata2 = this.curve.contract.methods
         .sell(_, 0, 10000)
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
           alice,
-          this.core.address,
+          this.curve.address,
           10,
           '0x' + calldata2.slice(2, 10),
           '0x' + calldata2.slice(138),
@@ -237,11 +249,13 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         ),
       );
 
-      const calldata3 = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
+      const calldata3 = this.curve.contract.methods
+        .sell(_, 0, 1000)
+        .encodeABI();
       const calldata4 = await this.comm.contract.methods
         .transferAndCall(
           alice,
-          this.core.address,
+          this.curve.address,
           10,
           '0x' + calldata3.slice(2, 10),
           '0x' + calldata3.slice(138),
@@ -266,16 +280,18 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
 
       (await this.band.balanceOf(alice)).toString().should.eq('91900');
       (await this.comm.balanceOf(alice)).toString().should.eq('90');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
   });
 
   context('Checking auto-inflation feature', () => {
     beforeEach(async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -288,8 +304,8 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.params.propose(
         owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('core:inflation_ratio')],
-        [38581],
+        [web3.utils.fromAscii('curve:inflation_rate')],
+        [38580246914],
         {
           from: owner,
         },
@@ -310,10 +326,10 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       });
       await time.increase(time.duration.days(30) - time.duration.seconds(60));
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
-      const calldata = this.core.contract.methods.buy(_, 0, 10).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -323,7 +339,9 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       (await this.comm.balanceOf(alice)).toString().should.eq('110');
       (await this.comm.balanceOf(this.core.address)).toString().should.eq('10');
       (await this.comm.totalSupply()).toString().should.eq('120');
-      (await this.core.curveMultiplier()).toString().should.eq('826446280991');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('826446280991735537');
     });
 
     it('should inflate 10% per hour properly after a sale', async () => {
@@ -331,8 +349,8 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.params.propose(
         owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('core:inflation_ratio')],
-        [27777778],
+        [web3.utils.fromAscii('curve:inflation_rate')],
+        [27777777777778],
         {
           from: owner,
         },
@@ -356,10 +374,10 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
       // First sale
       await time.increase(time.duration.hours(9));
-      const calldata = this.core.contract.methods.sell(_, 0, 0).encodeABI();
+      const calldata = this.curve.contract.methods.sell(_, 0, 0).encodeABI();
       await this.comm.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         10,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -371,43 +389,47 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('100');
       (await this.comm.totalSupply()).toString().should.eq('190');
-      (await this.core.curveMultiplier()).toString().should.eq('250000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('250000000000000000');
       // Second sale
       await time.increase(time.duration.hours(10));
       await this.comm.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         10,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
         { from: alice },
       );
-      (await this.band.balanceOf(alice)).toString().should.eq('91443');
+      (await this.band.balanceOf(alice)).toString().should.eq('91444');
       (await this.comm.balanceOf(alice)).toString().should.eq('80');
       (await this.comm.balanceOf(this.core.address))
         .toString()
         .should.eq('290');
       (await this.comm.totalSupply()).toString().should.eq('370');
-      (await this.core.curveMultiplier()).toString().should.eq('62500000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('62500000000000000');
     });
   });
 
-  context('Checking sales commission', () => {
+  context('Checking liquidity fee', () => {
     beforeEach(async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
         { from: alice },
       );
-      // 20% sales tax
+      // 20% liquidity fee
       await this.params.propose(
         alice,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('core:sales_commission')],
+        [web3.utils.fromAscii('curve:liquidity_fee')],
         [200000000000],
         {
           from: alice,
@@ -432,11 +454,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.voting.resolvePoll(this.params.address, 2, { from: alice });
     });
 
-    it('should not impose commission on purchases', async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 15).encodeABI();
+    it('should impose commission on purchases', async () => {
+      const calldata = this.curve.contract.methods.buy(_, 0, 15).encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         10000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -444,33 +466,37 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('86775');
       (await this.comm.balanceOf(alice)).toString().should.eq('115');
-      (await this.comm.balanceOf(this.core.address)).toString().should.eq('0');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.comm.balanceOf(this.curve.address)).toString().should.eq('0');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
 
-    it('should impose commission on sales', async () => {
-      const calldata = this.core.contract.methods.sell(_, 0, 1000).encodeABI();
+    it('should not impose commission on sales', async () => {
+      const calldata = this.curve.contract.methods.sell(_, 0, 1000).encodeABI();
       await this.comm.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         15,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
         { from: alice },
       );
-      (await this.band.balanceOf(alice)).toString().should.eq('92256');
+      (await this.band.balanceOf(alice)).toString().should.eq('92775');
       (await this.comm.balanceOf(alice)).toString().should.eq('85');
-      (await this.comm.balanceOf(this.core.address)).toString().should.eq('3');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.comm.balanceOf(this.curve.address)).toString().should.eq('0');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
   });
 
   context('Checking deflation feature', () => {
     beforeEach(async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         owner,
-        this.core.address,
+        this.curve.address,
         100000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -478,97 +504,35 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         100000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
         { from: alice },
       );
+      await this.comm.approve(this.curve.address, 100, { from: owner });
     });
 
-    it('should not allow non-admin to deflate', async () => {
-      await shouldFail.reverting(this.core.deflate(10, { from: alice }));
-    });
-
-    it('should not allow admin to deflate more than what they own', async () => {
-      await shouldFail.reverting(this.core.deflate(110, { from: owner }));
+    it('should not allow deflate more than what they own', async () => {
+      await shouldFail.reverting(
+        this.curve.deflate(owner, 110, { from: owner }),
+      );
     });
 
     it('should allow admin to deflate', async () => {
-      await this.core.deflate(10, { from: owner });
-      (await this.core.curveMultiplier()).toString().should.eq('1108033240997');
-      // Change Admin TCR parameters to allow new admin application
-      await this.params.propose(
-        owner,
-        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [
-          web3.utils.fromAscii('admin:min_deposit'),
-          web3.utils.fromAscii('admin:apply_stage_length'),
-        ],
-        [10, 60],
-        {
-          from: owner,
-        },
-      );
-
-      await this.voting.commitVote(
-        owner,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(90, 0, 42),
-        '0x00',
-        90,
-        0,
-        { from: owner },
-      );
-      await this.voting.commitVote(
-        alice,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(100, 0, 42),
-        '0x00',
-        100,
-        0,
-        { from: alice },
-      );
-      await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(owner, this.params.address, 2, 90, 0, 42, {
-        from: owner,
-      });
-      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
-        from: alice,
-      });
-      await time.increase(time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
-
-      // Alice applies to be an admin.
-      const calldata = this.admin.contract.methods
-        .applyEntry(_, 0, await this.admin.toTCREntry(alice))
-        .encodeABI();
-      await this.comm.transferAndCall(
-        alice,
-        this.admin.address,
-        10,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138),
-        { from: alice },
-      );
-
-      // The apply stage has not passed yet. TCR application is still pending.
-      await shouldFail.reverting(this.core.deflate(10, { from: alice }));
-      // 100 seconds have passed, and no one challenges, so now Alice is good.
-      await time.increase(100);
-      await this.core.deflate(10, { from: alice });
-      (await this.core.curveMultiplier()).toString().should.eq('1234567901234');
+      await this.curve.deflate(owner, 10, { from: owner });
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1108033240997229916');
     });
   });
 
   context('Checking reward distribution feature', () => {
     beforeEach(async () => {
-      const calldata = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         owner,
-        this.core.address,
+        this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),

@@ -3,6 +3,7 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 const SimpleTCR = artifacts.require('SimpleTCR');
 const BandToken = artifacts.require('BandToken');
 const BandFactory = artifacts.require('BandFactory');
+const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
@@ -58,6 +59,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
+    this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.tcr = await SimpleTCR.new(
       web3.utils.fromAscii('tcr:'),
       this.core.address,
@@ -103,32 +105,32 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
     await this.band.transfer(carol, 10000000, { from: owner });
-    await this.comm.transferOwnership(this.core.address, { from: owner });
+    await this.comm.transferOwnership(this.curve.address, { from: owner });
     // alice buy 1000 XCH
-    const calldata1 = this.core.contract.methods.buy(_, 0, 1000).encodeABI();
+    const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       alice,
-      this.core.address,
+      this.curve.address,
       1000000,
       '0x' + calldata1.slice(2, 10),
       '0x' + calldata1.slice(138),
       { from: alice },
     );
     // bob buy 1000 XCH
-    const calldata2 = this.core.contract.methods.buy(_, 0, 1000).encodeABI();
+    const calldata2 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       bob,
-      this.core.address,
+      this.curve.address,
       3000000,
       '0x' + calldata2.slice(2, 10),
       '0x' + calldata2.slice(138),
       { from: bob },
     );
     // carol buy 1000 XCH
-    const calldata3 = this.core.contract.methods.buy(_, 0, 1000).encodeABI();
+    const calldata3 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       carol,
-      this.core.address,
+      this.curve.address,
       5000000,
       '0x' + calldata3.slice(2, 10),
       '0x' + calldata3.slice(138),
@@ -215,13 +217,16 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       (await this.tcr.currentMinDeposit(entryHash)).toNumber().should.eq(100);
       // 360 sec passed, end of cliff
       await time.increase(time.duration.seconds(60));
-      (await this.tcr.currentMinDeposit(entryHash)).toNumber().should.eq(100);
+      (await this.tcr.currentMinDeposit(entryHash))
+        .toNumber()
+        .should.closeTo(100, 1);
       // linearly decrease overtime, 370 -> 420 sec
       for (let i = 80; i < 120; i += 20) {
         await time.increase(time.duration.seconds(20));
         // 1e12 - (5e11 * (x-60))/60
-        Math.floor(100 - (50 * (i - 60)) / 60).should.eq(
+        Math.floor(100 - (50 * (i - 60)) / 60).should.closeTo(
           (await this.tcr.currentMinDeposit(entryHash)).toNumber(),
+          1,
         );
       }
       // min_deposit reduced to half forever, 420 -> ∞ sec

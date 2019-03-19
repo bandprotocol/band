@@ -3,6 +3,7 @@ const { shouldFail } = require('openzeppelin-test-helpers');
 const BandFactory = artifacts.require('BandFactory');
 
 const BandToken = artifacts.require('BandToken');
+const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const CommunityCore = artifacts.require('CommunityCore');
@@ -147,6 +148,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
       );
       const addressCore = await this.contract.cores(0);
       this.core = await CommunityCore.at(addressCore);
+      this.curve = await BondingCurve.at(await this.core.bondingCurve());
       this.params = await Parameters.at(await this.core.params());
       this.token = await CommunityToken.at(await this.core.commToken());
     });
@@ -186,13 +188,13 @@ contract('BandFactory', ([owner, alice, bob]) => {
     it('should be able to transferAndCall feelessly', async () => {
       await this.band.transfer(alice, 100000, { from: owner });
 
-      const calldata = this.core.contract.methods
+      const calldata = this.curve.contract.methods
         .buy(alice, 0, 100)
         .encodeABI();
       const transferData = this.band.contract.methods
         .transferAndCall(
           alice,
-          this.core.address,
+          this.curve.address,
           11000,
           '0x' + calldata.slice(2, 10),
           '0x' + calldata.slice(138),
@@ -216,18 +218,20 @@ contract('BandFactory', ([owner, alice, bob]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('90000');
       (await this.token.balanceOf(alice)).toString().should.eq('100');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
 
     it('should allow buying tokens if calling via band tokens', async () => {
       await this.band.transfer(alice, 100000, { from: owner });
       await this.band.transfer(bob, 100000, { from: owner });
-      const calldata = this.core.contract.methods
+      const calldata = this.curve.contract.methods
         .buy(alice, 0, 100)
         .encodeABI();
       await this.band.transferAndCall(
         alice,
-        this.core.address,
+        this.curve.address,
         30000,
         '0x' + calldata.slice(2, 10),
         '0x' + calldata.slice(138),
@@ -235,7 +239,9 @@ contract('BandFactory', ([owner, alice, bob]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('70000');
       (await this.token.balanceOf(alice)).toString().should.eq('200');
-      (await this.core.curveMultiplier()).toString().should.eq('1000000000000');
+      (await this.curve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
     });
     it('should revert if use new voting address', async () => {
       const newVote = await CommitRevealVoting.new({ from: alice });

@@ -27,6 +27,11 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     uint256 collateralTokenAmount
   );
 
+  event Deflate(
+    address indexed burner,
+    uint256 burnedAmount
+  );
+
   event RevenueCollect(
     address indexed beneficiary,
     uint256 bondedTokenAmount
@@ -46,8 +51,8 @@ contract BondingCurve is Ownable, ERC20Acceptor {
   uint256 public curveMultiplier = 1e18;
   uint256 public lastInflationTime = now;
 
-  uint256 public inflationRateNumerator;
-  uint256 public liquidityFeeNumerator;
+  uint256 internal _inflationRateNumerator;
+  uint256 internal _liquidityFeeNumerator;
   uint256 public constant RATIONAL_DENOMINATOR = 1e18;
 
   constructor(
@@ -58,6 +63,7 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     collateralToken = _collateralToken;
     bondedToken = _bondedToken;
     collateralEquation.init(collateralExpressionTree);
+    emit CurveMultiplierChange(0, curveMultiplier);
   }
 
   function getCollateralAtSupply(uint256 tokenSupply) public view returns (uint256) {
@@ -81,14 +87,22 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
   }
 
-  function setInflationRate(uint256 _inflationRateNumerator) public onlyOwner {
-    require(_inflationRateNumerator < RATIONAL_DENOMINATOR);
-    inflationRateNumerator = _inflationRateNumerator;
+  function getInflationRateNumerator() public view returns (uint256) {
+    return _inflationRateNumerator;
   }
 
-  function setLiquidityFee(uint256 _liquidityFeeNumerator) public onlyOwner {
-    require(_liquidityFeeNumerator < RATIONAL_DENOMINATOR);
-    liquidityFeeNumerator = _liquidityFeeNumerator;
+  function setInflationRate(uint256 inflationRateNumerator) public onlyOwner {
+    require(inflationRateNumerator < RATIONAL_DENOMINATOR);
+    _inflationRateNumerator = inflationRateNumerator;
+  }
+
+  function getLiquidityFeeNumerator() public view returns (uint256) {
+    return _liquidityFeeNumerator;
+  }
+
+  function setLiquidityFee(uint256 liquidityFeeNumerator) public onlyOwner {
+    require(liquidityFeeNumerator < RATIONAL_DENOMINATOR);
+    _liquidityFeeNumerator = liquidityFeeNumerator;
   }
 
   function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
@@ -96,16 +110,16 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     requireToken(collateralToken, buyer, priceLimit)
   {
     _adjustAutoInflation();
-    uint256 liquidityFeeAmount = buyAmount.mul(liquidityFeeNumerator).div(RATIONAL_DENOMINATOR);
-    uint256 totalMintAmount = buyAmount.add(liquidityFeeAmount);
+    uint256 liquidityFee = buyAmount.mul(getLiquidityFeeNumerator()).div(RATIONAL_DENOMINATOR);
+    uint256 totalMintAmount = buyAmount.add(liquidityFee);
     uint256 buyPrice = getBuyPrice(totalMintAmount);
     require(buyPrice > 0 && buyPrice <= priceLimit);
     if (priceLimit > buyPrice) {
       require(collateralToken.transfer(buyer, priceLimit.sub(buyPrice)));
     }
     require(bondedToken.mint(buyer, buyAmount));
-    if (liquidityFeeAmount > 0) {
-      _rewardBondingCurveOwner(liquidityFeeAmount);
+    if (liquidityFee > 0) {
+      _rewardBondingCurveOwner(liquidityFee);
     }
     currentMintedTokens = currentMintedTokens.add(totalMintAmount);
     currentCollateral = currentCollateral.add(buyPrice);
@@ -126,6 +140,16 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     emit Sell(seller, sellAmount, sellPrice);
   }
 
+  function deflate(address burner, uint256 burnAmount)
+    public
+    requireToken(bondedToken, burner, burnAmount)
+  {
+    require(bondedToken.burn(address(this), burnAmount));
+    currentMintedTokens = currentMintedTokens.sub(burnAmount);
+    _adjustcurveMultiplier();
+    emit Deflate(burner, burnAmount);
+  }
+
   function _rewardBondingCurveOwner(uint256 rewardAmount) internal {
     address beneficiary = owner();
     require(bondedToken.mint(beneficiary, rewardAmount));
@@ -137,7 +161,7 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     if (currentSupply != 0 && lastInflationTime < now) {
       uint256 pastSeconds = now.sub(lastInflationTime);
       uint256 inflatingSupply = currentSupply
-        .mul(pastSeconds).mul(inflationRateNumerator).div(RATIONAL_DENOMINATOR);
+        .mul(pastSeconds).mul(getInflationRateNumerator()).div(RATIONAL_DENOMINATOR);
       if (inflatingSupply != 0) {
         currentMintedTokens = currentMintedTokens.add(inflatingSupply);
         _rewardBondingCurveOwner(inflatingSupply);

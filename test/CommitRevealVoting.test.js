@@ -3,6 +3,7 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
 const BandFactory = artifacts.require('BandFactory');
+const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
@@ -40,6 +41,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
+    this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.admin = await AdminTCR.new(
       this.core.address,
       this.voting.address,
@@ -60,13 +62,13 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
     await this.band.transfer(carol, 100000, { from: owner });
-    await this.comm.transferOwnership(this.core.address, { from: owner });
+    await this.comm.transferOwnership(this.curve.address, { from: owner });
 
     // alice buy 100 XCH
-    const calldata1 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+    const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
     await this.band.transferAndCall(
       alice,
-      this.core.address,
+      this.curve.address,
       11000,
       '0x' + calldata1.slice(2, 10),
       '0x' + calldata1.slice(138),
@@ -74,10 +76,10 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     );
 
     // bob buy 100 XCH
-    const calldata2 = this.core.contract.methods.buy(_, 0, 100).encodeABI();
+    const calldata2 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
     await this.band.transferAndCall(
       bob,
-      this.core.address,
+      this.curve.address,
       30000,
       '0x' + calldata2.slice(2, 10),
       '0x' + calldata2.slice(138),

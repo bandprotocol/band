@@ -1,6 +1,5 @@
 pragma solidity 0.5.0;
 
-import "openzeppelin-solidity/contracts/introspection/ERC165Checker.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 
@@ -198,7 +197,7 @@ contract BandToken is ERC20, Ownable, Feeless {
   /**
    * @dev Similar to transfer, with extra parameter sender.
    */
-  function transferFeeless(address sender, address to, uint256 value) 
+  function transferFeeless(address sender, address to, uint256 value)
     public
     feeless(sender)
     returns (bool)
@@ -209,8 +208,7 @@ contract BandToken is ERC20, Ownable, Feeless {
   }
 
   /**
-  * @dev Transfer tokens and call the reciver's given function with supplied
-  * data, using ERC165 to determine interoperability.
+  * @dev Transfer tokens and call the reciver's given function with supplied data.
   */
   function transferAndCall(
     address sender,
@@ -225,7 +223,6 @@ contract BandToken is ERC20, Ownable, Feeless {
   {
     require(value <= unlockedBalanceOf(sender));
     _transfer(sender, to, value);
-    require(ERC165Checker._supportsInterface(to, sig));
     (bool success,) = to.call(abi.encodePacked(sig, uint256(sender), value, data));
     require(success);
     return true;
