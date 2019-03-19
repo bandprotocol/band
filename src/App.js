@@ -5,7 +5,6 @@ import theme from 'ui/theme'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Navbar from 'components/Navbar'
 import ModalEntry from 'components/ModalEntry'
-
 import Routes from 'Routes'
 
 class App extends Component {

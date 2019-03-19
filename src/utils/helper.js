@@ -5,6 +5,9 @@ export const isPositiveNumber = input => {
   return input.match(/^\d*\.?\d*$/) && parseInt(input, 10) >= 0
 }
 
+export const pado = (x, l) => (x.length < l ? pado(x + '0') : x)
+export const opad = (x, l) => (x.length < l ? opad('0' + x) : x)
+
 export const convertFromChain = (value, type) => {
   if (!value) return null
   if (type === 'PERCENTAGE') {
@@ -31,7 +34,9 @@ export const convertFromChain = (value, type) => {
       return [second.div(60).toFixed(0), 'minutes']
     } else return [second.toFixed(0), 'seconds']
   } else if (type === 'ADDRESS') {
-    return ['0x' + BigNumber(value.toString()).toString(16), '']
+    return ['0x' + opad(BigNumber(value.toString()).toString(16), 40), '']
+  } else if (type === 'IPFS') {
+    return ['0x' + opad(BigNumber(value.toString()).toString(16), 64), '']
   }
   return value.toString()
 }
@@ -120,5 +125,21 @@ export const getParameterDetail = name =>
       type: 'TIME',
       description:
         'The duration in seconds during which token holders can reveal committed votes for a particular challenge.',
+    },
+    description: {
+      type: 'IPFS',
+      description: 'Description of the community',
+    },
+    website: {
+      type: 'IPFS',
+      description: 'Link to website of the community',
+    },
+    author: {
+      type: 'IPFS',
+      description: 'Author of the community',
+    },
+    logo: {
+      type: 'IPFS',
+      description: 'Link to logo of the community',
     },
   }[name])

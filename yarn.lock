@@ -1874,14 +1874,16 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-band.js@^1.0.52:
-  version "1.0.52"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.52.tgz#8c6bc31dc267480bbea218905906d636c53d2bd5"
-  integrity sha512-5Bg62S5lXryAAli/B38gVOnbTJZJiXadxKIOKh3FuClTnbdTwF0xiovn2jnCOfb76ZnXzrrk1cBSrZIURccO4Q==
+band.js@^1.0.54:
+  version "1.0.54"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.54.tgz#02018f83bcce6e25874141ee12f96cc197b4578a"
+  integrity sha512-XKzSeYweHE9SQ0pMk9Bsn/0Aq1pHJjPCMYuWT1X8ubL/Y+Z538Kt5/IlDxDw9miXcULGKlgiqERBJgvlybzBlg==
   dependencies:
     "@types/qs" "^6.5.1"
     axios "^0.18.0"
     bignumber.js "^8.0.1"
+    bs58 "^4.0.1"
+    nano-ipfs-store "^0.1.3"
     qs "^6.6.0"
     typescript "^3.1.6"
     web3 "1.0.0-beta.36"
