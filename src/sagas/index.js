@@ -1,6 +1,13 @@
 import { all, fork, put, delay, select } from 'redux-saga/effects'
 import { currentUserSelector } from 'selectors/current'
-import { updateProvider, saveBandInfo, saveCommunityInfo } from 'actions'
+import {
+  updateProvider,
+  saveBandInfo,
+  saveCommunityInfo,
+  saveTxs,
+} from 'actions'
+
+import { blockNumberSelector, transactionSelector } from 'selectors/basic'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -12,6 +19,17 @@ import parameterSaga from 'sagas/parameters'
 import proposalSaga from 'sagas/proposals'
 
 import { BandProtocolClient } from 'band.js'
+
+import transit from 'transit-immutable-js'
+import { List, fromJS } from 'immutable'
+
+// import web3
+import Web3 from 'web3'
+
+const INFURA_KEY =
+  'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
+
+const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_KEY))
 
 function* baseInitialize() {
   BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
@@ -41,8 +59,68 @@ function* baseInitialize() {
     )
   }
 
+  // Load transaction history here!
+  const rawTxState = localStorage.getItem('txs')
+  if (rawTxState) {
+    const txState = transit.fromJSON(rawTxState)
+    yield put(saveTxs(yield web3.eth.getBlockNumber(), txState, true))
+  } else {
+    yield put(saveTxs(yield web3.eth.getBlockNumber(), List(), true))
+  }
+  // Auto update pending transaction
+  yield fork(checkTransaction)
   // Update user address and balance after fetch all data
   yield fork(checkProvider)
+}
+
+function* checkTransaction() {
+  while (true) {
+    const currentBlock = yield web3.eth.getBlockNumber()
+    if (currentBlock !== (yield select(blockNumberSelector))) {
+      const allTxs = yield select(transactionSelector)
+      const newTxs = fromJS(
+        yield all(
+          allTxs
+            .map(function*(tx) {
+              try {
+                if (
+                  tx.get('status') === 'COMPLETED' ||
+                  tx.get('status') === 'FAILED'
+                )
+                  return tx
+
+                const receipt = yield web3.eth.getTransactionReceipt(
+                  tx.get('txHash'),
+                )
+
+                if (receipt) {
+                  if (receipt.status) {
+                    if (currentBlock - receipt.blockNumber + 1 >= 8)
+                      return tx.set('status', 'COMPLETED')
+                    else
+                      return tx
+                        .set('status', 'PENDING')
+                        .set('confirm', currentBlock - receipt.blockNumber + 1)
+                  } else {
+                    return tx.set('status', 'FAILED')
+                  }
+                }
+
+                return tx.set('status', 'SENDING').set('confirm', 0)
+              } catch (e) {
+                console.error('Error processing txn:', e)
+                return tx.set('status', 'SENDING').set('confirm', 0)
+              }
+            })
+            .toJS(),
+        ),
+      )
+      yield put(saveTxs(currentBlock, newTxs, false))
+      localStorage.setItem('txs', transit.toJSON(newTxs))
+    }
+
+    yield delay(1000)
+  }
 }
 
 function* checkProvider() {

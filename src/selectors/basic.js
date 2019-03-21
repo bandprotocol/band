@@ -4,7 +4,9 @@ export const currentSelector = state => state.get('current')
 export const orderSelector = state => state.get('order')
 export const priceSelector = state => state.get('price')
 export const rewardSelector = state => state.get('reward')
-export const transactionSelector = state => state.get('transaction')
+export const blockNumberSelector = state =>
+  state.getIn(['transaction', 'currentBlock'])
+export const transactionSelector = state => state.getIn(['transaction', 'txs'])
 export const parameterSelector = state => state.get('parameter')
 export const proposalSelector = state => state.get('proposal')
 export const addressSelector = (_, { address }) => address
