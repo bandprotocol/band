@@ -9,7 +9,7 @@ import "./CommunityCore.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
 import "./Equation.sol";
-import "./Feeless.sol";
+import "./feeless/Feeless.sol";
 
 /**
  * @title SimpleTCR

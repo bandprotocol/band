@@ -6,7 +6,7 @@ import "./BandContractBase.sol";
 import "./ParametersBase.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
-import "./Feeless.sol";
+import "./feeless/Feeless.sol";
 
 /*
  * @title Parameters

@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./BandContractBase.sol";
 import "./VotingInterface.sol";
-import "./Feeless.sol";
+import "./feeless/Feeless.sol";
 
 /**
  * @title CommitRevealVoting
