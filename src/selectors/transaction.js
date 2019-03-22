@@ -1,8 +1,8 @@
 import { createSelector } from 'reselect'
 
-import { transactionSelector, txHashSelector } from 'selectors/basic'
+import { transactionSelector } from 'selectors/basic'
 
-export const txConfirmationSelector = createSelector(
-  [transactionSelector, txHashSelector],
-  (transactions, txHash) => transactions.get(txHash),
+export const allTxsSelector = createSelector(
+  [transactionSelector],
+  transactions => transactions && transactions.reverse().toJS(),
 )

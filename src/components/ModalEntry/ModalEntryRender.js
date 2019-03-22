@@ -5,7 +5,6 @@ import ModalContainer from 'components/ModalContainer'
 // modal
 import LoginModal from 'components/LoginModal'
 import BuySellModal from 'components/BuySellModal'
-import ConfirmModal from 'components/ConfirmModal'
 import ProposeModal from 'components/ProposeModal'
 
 export default ({ modalName, data, hideModal }) => (
@@ -16,8 +15,6 @@ export default ({ modalName, data, hideModal }) => (
       <BuySellModal type="buy" communityAddress={data.communityAddress} />
     ) : modalName === 'SELL' ? (
       <BuySellModal type="sell" communityAddress={data.communityAddress} />
-    ) : modalName === 'CONFIRMATION' ? (
-      <ConfirmModal txHash={data.txHash} />
     ) : modalName === 'PROPOSE' ? (
       <ProposeModal
         changes={data.changes}

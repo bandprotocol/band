@@ -1,5 +1,8 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
+import { Utils } from 'band.js'
 import { channel } from 'redux-saga'
+
+import transit from 'transit-immutable-js'
 
 import {
   BUY_TOKEN,
@@ -8,8 +11,10 @@ import {
   PROPOSE_PROPOSAL,
   VOTE_PROPOSAL,
   addTx,
+  dumpTxs,
   showModal,
   hideModal,
+  DUMP_TXS,
 } from 'actions'
 
 import {
@@ -17,19 +22,26 @@ import {
   currentUserSelector,
 } from 'selectors/current'
 
+import { transactionSelector } from 'selectors/basic'
+
 import IPFSStorage from 'utils/ipfs'
 
 const txChannel = channel()
 
 function* handleTxChannel({ type, txHash, title }) {
   yield put(addTx(txHash, title, type))
+  yield put(dumpTxs())
 }
 
 function* handleBuyToken({ address, amount, priceLimit }) {
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createBuyTransaction(amount, priceLimit)
   transaction.send().once('transactionHash', txHash => {
-    txChannel.put({ txHash, title: `Buy ${amount} tokens`, type: 'Buy' })
+    txChannel.put({
+      txHash,
+      title: `Buy ${Utils.fromBlockchainUnit(amount)} tokens`,
+      type: 'BUY',
+    })
   })
   yield put(hideModal())
 }
@@ -38,7 +50,11 @@ function* handleSellToken({ address, amount, priceLimit }) {
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createSellTransaction(amount, priceLimit)
   transaction.send().once('transactionHash', txHash => {
-    txChannel.put({ txHash, title: `Sell ${amount} tokens`, type: 'Sell' })
+    txChannel.put({
+      txHash,
+      title: `Sell ${Utils.fromBlockchainUnit(amount)} tokens`,
+      type: 'SELL',
+    })
   })
   yield put(hideModal())
 }
@@ -50,7 +66,7 @@ function* handleClaimReward({ address, rewardID }) {
     txChannel.put({
       txHash,
       title: `Claim reward #${rewardID}`,
-      type: 'Reward',
+      type: 'REWARD',
     })
   })
 }
@@ -74,7 +90,7 @@ function* handleProposeProposal({ address, title, reason, changes }) {
   )
 
   transaction.send().once('transactionHash', txHash => {
-    txChannel.put({ txHash, title: `Propose ${title}`, type: 'Propose' })
+    txChannel.put({ txHash, title: `Propose ${title}`, type: 'PROPOSE' })
   })
   yield put(hideModal())
 }
@@ -99,9 +115,17 @@ function* handleVoteProposal({ address, proposalId, vote }) {
     txChannel.put({
       txHash,
       title: `Vote ${vote ? 'accept' : 'reject'}`,
-      type: 'Vote',
+      type: 'VOTE',
     })
   })
+}
+
+function* handleDumpTxs() {
+  const user = yield select(currentUserSelector)
+  if (user) {
+    const txs = yield select(transactionSelector)
+    localStorage.setItem(`txs-${user}`, transit.toJSON(txs))
+  }
 }
 
 export default function*() {
@@ -111,4 +135,5 @@ export default function*() {
   yield takeEvery(CLAIM_REWARD, handleClaimReward)
   yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
   yield takeEvery(VOTE_PROPOSAL, handleVoteProposal)
+  yield takeEvery(DUMP_TXS, handleDumpTxs)
 }

@@ -1,5 +1,6 @@
 export const ADD_TX = 'ADD_TX'
 export const SAVE_TXS = 'SAVE_TXS'
+export const DUMP_TXS = 'DUMP_TXS'
 export const BUY_TOKEN = 'BUY_TOKEN'
 export const SELL_TOKEN = 'SELL_TOKEN'
 
@@ -15,6 +16,10 @@ export const saveTxs = (currentBlock, txs, force) => ({
   currentBlock,
   txs,
   force,
+})
+
+export const dumpTxs = () => ({
+  type: DUMP_TXS,
 })
 
 export const buyToken = (address, amount, priceLimit) => ({
