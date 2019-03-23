@@ -1,6 +1,5 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
-const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
 const BandFactory = artifacts.require('BandFactory');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -87,23 +86,6 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         },
       );
       this.curve = await BondingCurve.at(await this.core.bondingCurve());
-      this.admin = await AdminTCR.new(
-        this.core.address,
-        this.voting.address,
-        [0, 1e12],
-        { from: owner },
-      );
-      await this.params.propose(
-        owner,
-        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('core:admin_contract')],
-        [this.admin.address],
-        {
-          from: owner,
-        },
-      );
-      await time.increase(time.duration.days(30));
-      await this.voting.resolvePoll(this.params.address, 1, { from: owner });
       await this.band.transfer(alice, 100000, { from: owner });
       await this.band.transfer(bob, 100000, { from: owner });
       await this.comm.transferOwnership(this.curve.address, { from: owner });
@@ -171,7 +153,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(20, 0, 42),
           '0x00',
           20,
@@ -181,7 +163,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(10, 0, 42),
           '0x00',
           10,
@@ -191,19 +173,19 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await time.increase(time.duration.seconds(60));
 
         // reveal vote
-        await this.voting.revealVote(alice, this.params.address, 2, 20, 0, 42, {
+        await this.voting.revealVote(alice, this.params.address, 1, 20, 0, 42, {
           from: alice,
         });
-        await this.voting.revealVote(bob, this.params.address, 2, 10, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 1, 10, 0, 42, {
           from: bob,
         });
         await time.increase(time.duration.seconds(60));
 
         // resolvePoll
-        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+        await this.voting.resolvePoll(this.params.address, 1, { from: alice });
 
         // assertion
-        (await this.voting.polls(this.params.address, 2)).pollState
+        (await this.voting.polls(this.params.address, 1)).pollState
           .toString()
           .should.be.eq('4');
       });
@@ -223,7 +205,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(60, 0, 42),
           '0x00',
           60,
@@ -233,7 +215,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(60, 0, 42),
           '0x00',
           60,
@@ -244,20 +226,20 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await time.increase(time.duration.seconds(60));
 
         // reveal vote
-        await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
+        await this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
           from: alice,
         });
-        await this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 1, 60, 0, 42, {
           from: bob,
         });
 
         await time.increase(time.duration.seconds(60));
 
         // resolvePoll
-        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+        await this.voting.resolvePoll(this.params.address, 1, { from: alice });
 
         // assertion
-        (await this.voting.polls(this.params.address, 2)).pollState
+        (await this.voting.polls(this.params.address, 1)).pollState
           .toString()
           .should.be.eq('2');
       });
@@ -277,7 +259,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(10, 70, 42),
           '0x00',
           80,
@@ -287,7 +269,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(40, 20, 42),
           '0x00',
           60,
@@ -301,7 +283,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.revealVote(
           alice,
           this.params.address,
-          2,
+          1,
           10,
           70,
           42,
@@ -309,17 +291,17 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
             from: alice,
           },
         );
-        await this.voting.revealVote(bob, this.params.address, 2, 40, 20, 42, {
+        await this.voting.revealVote(bob, this.params.address, 1, 40, 20, 42, {
           from: bob,
         });
 
         await time.increase(time.duration.seconds(60));
 
         // resolvePoll
-        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+        await this.voting.resolvePoll(this.params.address, 1, { from: alice });
 
         // assertion
-        (await this.voting.polls(this.params.address, 2)).pollState
+        (await this.voting.polls(this.params.address, 1)).pollState
           .toString()
           .should.be.eq('3');
       });
@@ -339,7 +321,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(100, 0, 42),
           '0x00',
           100,
@@ -349,7 +331,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(100, 0, 42),
           '0x00',
           100,
@@ -363,7 +345,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.revealVote(
           alice,
           this.params.address,
-          2,
+          1,
           100,
           0,
           42,
@@ -371,17 +353,17 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
             from: alice,
           },
         );
-        await this.voting.revealVote(bob, this.params.address, 2, 100, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 1, 100, 0, 42, {
           from: bob,
         });
 
         await time.increase(time.duration.seconds(60));
 
         // resolvePoll
-        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+        await this.voting.resolvePoll(this.params.address, 1, { from: alice });
 
         // assertion
-        (await this.voting.polls(this.params.address, 2)).pollState
+        (await this.voting.polls(this.params.address, 1)).pollState
           .toString()
           .should.be.eq('2');
 
@@ -426,7 +408,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           .commitVote(
             alice,
             this.params.address,
-            2,
+            1,
             web3.utils.soliditySha3(100, 0, 42),
             '0x00',
             100,
@@ -451,7 +433,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           .commitVote(
             bob,
             this.params.address,
-            2,
+            1,
             web3.utils.soliditySha3(100, 0, 42),
             '0x00',
             100,
@@ -478,7 +460,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
         await this.voting.revealVote(
           alice,
           this.params.address,
-          2,
+          1,
           100,
           0,
           42,
@@ -486,17 +468,17 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
             from: owner,
           },
         );
-        await this.voting.revealVote(bob, this.params.address, 2, 100, 0, 42, {
+        await this.voting.revealVote(bob, this.params.address, 1, 100, 0, 42, {
           from: owner,
         });
 
         await time.increase(time.duration.seconds(60));
 
         // resolvePoll
-        await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+        await this.voting.resolvePoll(this.params.address, 1, { from: alice });
 
         // assertion
-        (await this.voting.polls(this.params.address, 2)).pollState
+        (await this.voting.polls(this.params.address, 1)).pollState
           .toString()
           .should.be.eq('2');
 

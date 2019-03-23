@@ -1,7 +1,6 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 const { Merkle } = require('../lib/merkle');
 
-const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
@@ -55,40 +54,6 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       '0x' + buyCalldata.slice(138),
       { from: alice },
     );
-
-    this.admin = await AdminTCR.new(
-      this.core.address,
-      this.voting.address,
-      [0, 1e12],
-      { from: owner },
-    );
-
-    await this.params.propose(
-      owner,
-      '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-      [web3.utils.fromAscii('core:admin_contract')],
-      [this.admin.address],
-      {
-        from: owner,
-      },
-    );
-    await this.voting.commitVote(
-      alice,
-      this.params.address,
-      1,
-      web3.utils.soliditySha3(60, 0, 42),
-      '0x00',
-      60,
-      0,
-      { from: alice },
-    );
-    await time.increase(time.duration.seconds(60));
-    // reveal vote with correct params
-    await this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
-      from: alice,
-    });
-    await time.increase(time.duration.days(30));
-    await this.voting.resolvePoll(this.params.address, 1, { from: owner });
 
     // Alice sells 100 tokens back
     const sellCalldata = this.curve.contract.methods
@@ -313,7 +278,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(100, 0, 42),
         '0x00',
         100,
@@ -321,11 +286,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 1, 100, 0, 42, {
         from: alice,
       });
       await time.increase(time.duration.days(30) - time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
         alice,
@@ -359,7 +324,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(100, 0, 42),
         '0x00',
         100,
@@ -367,11 +332,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 1, 100, 0, 42, {
         from: alice,
       });
       await time.increase(time.duration.hours(1) - time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       // First sale
       await time.increase(time.duration.hours(9));
       const calldata = this.curve.contract.methods.sell(_, 0, 0).encodeABI();
@@ -439,7 +404,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(100, 0, 42),
         '0x00',
         100,
@@ -447,11 +412,11 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(alice, this.params.address, 2, 100, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 1, 100, 0, 42, {
         from: alice,
       });
       await time.increase(time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, { from: alice });
+      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
     });
 
     it('should impose commission on purchases', async () => {
@@ -519,7 +484,7 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       );
     });
 
-    it('should allow admin to deflate', async () => {
+    it('should allow anyone to deflate', async () => {
       await this.curve.deflate(owner, 10, { from: owner });
       (await this.curve.curveMultiplier())
         .toString()
@@ -527,179 +492,179 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     });
   });
 
-  context('Checking reward distribution feature', () => {
-    beforeEach(async () => {
-      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await this.band.transferAndCall(
-        owner,
-        this.curve.address,
-        20000,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138),
-        { from: owner },
-      );
-      // Reward period of 1 month, with 1 day edit period.
-      await this.params.propose(
-        owner,
-        '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [
-          web3.utils.fromAscii('core:reward_period'),
-          web3.utils.fromAscii('core:reward_edit_period'),
-        ],
-        [2592000, 86400],
-        {
-          from: owner,
-        },
-      );
-      await this.voting.commitVote(
-        owner,
-        this.params.address,
-        2,
-        web3.utils.soliditySha3(100, 0, 42),
-        '0x00',
-        100,
-        0,
-        { from: owner },
-      );
-      await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(owner, this.params.address, 2, 100, 0, 42, {
-        from: owner,
-      });
-      await time.increase(time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, { from: owner });
+  // context('Checking reward distribution feature', () => {
+  //   beforeEach(async () => {
+  //     const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
+  //     await this.band.transferAndCall(
+  //       owner,
+  //       this.curve.address,
+  //       20000,
+  //       '0x' + calldata.slice(2, 10),
+  //       '0x' + calldata.slice(138),
+  //       { from: owner },
+  //     );
+  //     // Reward period of 1 month, with 1 day edit period.
+  //     await this.params.propose(
+  //       owner,
+  //       '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
+  //       [
+  //         web3.utils.fromAscii('core:reward_period'),
+  //         web3.utils.fromAscii('core:reward_edit_period'),
+  //       ],
+  //       [2592000, 86400],
+  //       {
+  //         from: owner,
+  //       },
+  //     );
+  //     await this.voting.commitVote(
+  //       owner,
+  //       this.params.address,
+  //       2,
+  //       web3.utils.soliditySha3(100, 0, 42),
+  //       '0x00',
+  //       100,
+  //       0,
+  //       { from: owner },
+  //     );
+  //     await time.increase(time.duration.seconds(60));
+  //     await this.voting.revealVote(owner, this.params.address, 2, 100, 0, 42, {
+  //       from: owner,
+  //     });
+  //     await time.increase(time.duration.seconds(60));
+  //     await this.voting.resolvePoll(this.params.address, 2, { from: owner });
 
-      // Owner sends some revenue to the contract
-      await this.comm.transfer(this.core.address, 10, { from: owner });
+  //     // Owner sends some revenue to the contract
+  //     await this.comm.transfer(this.core.address, 10, { from: owner });
 
-      this.merkle = new Merkle();
-      this.merkle.insert(owner, 5);
-      this.merkle.insert(alice, 10);
-      this.merkle.insert(bob, 15);
-      this.merkle.insert(carol, 20);
-    });
+  //     this.merkle = new Merkle();
+  //     this.merkle.insert(owner, 5);
+  //     this.merkle.insert(alice, 10);
+  //     this.merkle.insert(bob, 15);
+  //     this.merkle.insert(carol, 20);
+  //   });
 
-    it('should not allow non-admin to report reward', async () => {
-      await shouldFail.reverting(
-        this.core.addRewardDistribution(this.merkle.root, 50, {
-          from: alice,
-        }),
-      );
-    });
+  //   it('should not allow non-admin to report reward', async () => {
+  //     await shouldFail.reverting(
+  //       this.core.addRewardDistribution(this.merkle.root, 50, {
+  //         from: alice,
+  //       }),
+  //     );
+  //   });
 
-    context('After admin report reward', async () => {
-      beforeEach(async () => {
-        await this.core.addRewardDistribution(this.merkle.root, 50, {
-          from: owner,
-        });
-      });
+  //   context('After admin report reward', async () => {
+  //     beforeEach(async () => {
+  //       await this.core.addRewardDistribution(this.merkle.root, 50, {
+  //         from: owner,
+  //       });
+  //     });
 
-      it('should not allow members to withdraw before edit period', async () => {
-        await shouldFail.reverting(
-          this.core.claimReward(alice, 1, 10, this.merkle.getProof(alice)[1], {
-            from: alice,
-          }),
-        );
-      });
+  //     it('should not allow members to withdraw before edit period', async () => {
+  //       await shouldFail.reverting(
+  //         this.core.claimReward(alice, 1, 10, this.merkle.getProof(alice)[1], {
+  //           from: alice,
+  //         }),
+  //       );
+  //     });
 
-      it('should allow withdraw reward after edit period', async () => {
-        await time.increase(time.duration.days(1.5));
-        await this.core.claimReward(
-          alice,
-          1,
-          10,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('2');
-      });
+  //     it('should allow withdraw reward after edit period', async () => {
+  //       await time.increase(time.duration.days(1.5));
+  //       await this.core.claimReward(
+  //         alice,
+  //         1,
+  //         10,
+  //         this.merkle.getProof(alice)[1],
+  //         {
+  //           from: alice,
+  //         },
+  //       );
+  //       (await this.comm.balanceOf(alice)).toString().should.eq('2');
+  //     });
 
-      it('should not allow members to withdraw with invalid value', async () => {
-        await time.increase(time.duration.days(1.5));
-        await this.core.claimReward(
-          alice,
-          1,
-          10,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('2');
-        (await this.core.unwithdrawnReward()).toString().should.eq('8');
-      });
+  //     it('should not allow members to withdraw with invalid value', async () => {
+  //       await time.increase(time.duration.days(1.5));
+  //       await this.core.claimReward(
+  //         alice,
+  //         1,
+  //         10,
+  //         this.merkle.getProof(alice)[1],
+  //         {
+  //           from: alice,
+  //         },
+  //       );
+  //       (await this.comm.balanceOf(alice)).toString().should.eq('2');
+  //       (await this.core.unwithdrawnReward()).toString().should.eq('8');
+  //     });
 
-      it('should allow extend edit period of admin overwrites the distribution hash', async () => {
-        await time.increase(time.duration.hours(18));
-        this.merkle.insert(alice, 60);
-        await this.core.editRewardDistribution(1, this.merkle.root, 100, {
-          from: owner,
-        });
-        await time.increase(time.duration.hours(18));
-        await shouldFail.reverting(
-          this.core.claimReward(alice, 1, 60, this.merkle.getProof(alice)[1], {
-            from: alice,
-          }),
-        );
-        await time.increase(time.duration.hours(18));
-        await this.core.claimReward(
-          alice,
-          1,
-          60,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('6');
-        (await this.core.unwithdrawnReward()).toString().should.eq('4');
-      });
+  //     it('should allow extend edit period of admin overwrites the distribution hash', async () => {
+  //       await time.increase(time.duration.hours(18));
+  //       this.merkle.insert(alice, 60);
+  //       await this.core.editRewardDistribution(1, this.merkle.root, 100, {
+  //         from: owner,
+  //       });
+  //       await time.increase(time.duration.hours(18));
+  //       await shouldFail.reverting(
+  //         this.core.claimReward(alice, 1, 60, this.merkle.getProof(alice)[1], {
+  //           from: alice,
+  //         }),
+  //       );
+  //       await time.increase(time.duration.hours(18));
+  //       await this.core.claimReward(
+  //         alice,
+  //         1,
+  //         60,
+  //         this.merkle.getProof(alice)[1],
+  //         {
+  //           from: alice,
+  //         },
+  //       );
+  //       (await this.comm.balanceOf(alice)).toString().should.eq('6');
+  //       (await this.core.unwithdrawnReward()).toString().should.eq('4');
+  //     });
 
-      it('should allow another reward distribution after reward_period', async () => {
-        await time.increase(time.duration.days(20));
-        // Owner sends some revenue to the contract for the next period
-        await this.comm.transfer(this.core.address, 10, { from: owner });
-        // Alice claims reward of first period
-        await this.core.claimReward(
-          alice,
-          1,
-          10,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('2');
-        (await this.core.unwithdrawnReward()).toString().should.eq('8');
+  //     it('should allow another reward distribution after reward_period', async () => {
+  //       await time.increase(time.duration.days(20));
+  //       // Owner sends some revenue to the contract for the next period
+  //       await this.comm.transfer(this.core.address, 10, { from: owner });
+  //       // Alice claims reward of first period
+  //       await this.core.claimReward(
+  //         alice,
+  //         1,
+  //         10,
+  //         this.merkle.getProof(alice)[1],
+  //         {
+  //           from: alice,
+  //         },
+  //       );
+  //       (await this.comm.balanceOf(alice)).toString().should.eq('2');
+  //       (await this.core.unwithdrawnReward()).toString().should.eq('8');
 
-        // Admin tries to report for the next period, but it's too early
-        this.merkle.insert(alice, 60);
-        await shouldFail.reverting(
-          this.core.addRewardDistribution(this.merkle.root, 100, {
-            from: owner,
-          }),
-        );
+  //       // Admin tries to report for the next period, but it's too early
+  //       this.merkle.insert(alice, 60);
+  //       await shouldFail.reverting(
+  //         this.core.addRewardDistribution(this.merkle.root, 100, {
+  //           from: owner,
+  //         }),
+  //       );
 
-        await time.increase(time.duration.days(20));
-        await this.core.addRewardDistribution(this.merkle.root, 100, {
-          from: owner,
-        });
+  //       await time.increase(time.duration.days(20));
+  //       await this.core.addRewardDistribution(this.merkle.root, 100, {
+  //         from: owner,
+  //       });
 
-        // Alice claims reward of second period
-        await time.increase(time.duration.days(2));
-        await this.core.claimReward(
-          alice,
-          2,
-          60,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('8');
-        (await this.core.unwithdrawnReward()).toString().should.eq('12');
-      });
-    });
-  });
+  //       // Alice claims reward of second period
+  //       await time.increase(time.duration.days(2));
+  //       await this.core.claimReward(
+  //         alice,
+  //         2,
+  //         60,
+  //         this.merkle.getProof(alice)[1],
+  //         {
+  //           from: alice,
+  //         },
+  //       );
+  //       (await this.comm.balanceOf(alice)).toString().should.eq('8');
+  //       (await this.core.unwithdrawnReward()).toString().should.eq('12');
+  //     });
+  //   });
+  // });
 });

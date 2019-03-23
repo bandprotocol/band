@@ -1,6 +1,5 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
-const AdminTCR = artifacts.require('AdminTCR');
 const BandToken = artifacts.require('BandToken');
 const BandFactory = artifacts.require('BandFactory');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -42,23 +41,6 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       },
     );
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.admin = await AdminTCR.new(
-      this.core.address,
-      this.voting.address,
-      [0, 1e12],
-      { from: owner },
-    );
-    await this.params.propose(
-      owner,
-      '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-      [web3.utils.fromAscii('core:admin_contract')],
-      [this.admin.address],
-      {
-        from: owner,
-      },
-    );
-    await time.increase(time.duration.days(30));
-    await this.voting.resolvePoll(this.params.address, 1, { from: owner });
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
     await this.band.transfer(carol, 100000, { from: owner });
@@ -104,7 +86,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -114,17 +96,17 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         bob,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
         0,
         { from: bob },
       );
-      (await this.voting.getPollUserState(this.params.address, 2, alice))
+      (await this.voting.getPollUserState(this.params.address, 1, alice))
         .toString()
         .should.eq('1');
-      (await this.voting.getPollUserState(this.params.address, 2, bob))
+      (await this.voting.getPollUserState(this.params.address, 1, bob))
         .toString()
         .should.eq('1');
     });
@@ -134,7 +116,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(0, 0, 42),
           '0x00',
           0,
@@ -146,7 +128,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(30, 30, 42),
           '0x00',
           0,
@@ -154,10 +136,10 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
           { from: bob },
         ),
       );
-      (await this.voting.getPollUserState(this.params.address, 2, alice))
+      (await this.voting.getPollUserState(this.params.address, 1, alice))
         .toString()
         .should.eq('0');
-      (await this.voting.getPollUserState(this.params.address, 2, bob))
+      (await this.voting.getPollUserState(this.params.address, 1, bob))
         .toString()
         .should.eq('0');
     });
@@ -167,7 +149,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(200, 0, 42),
           '0x00',
           200,
@@ -179,7 +161,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(60, 0, 42),
           '0x00',
           110,
@@ -187,10 +169,10 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
           { from: bob },
         ),
       );
-      (await this.voting.getPollUserState(this.params.address, 2, alice))
+      (await this.voting.getPollUserState(this.params.address, 1, alice))
         .toString()
         .should.eq('0');
-      (await this.voting.getPollUserState(this.params.address, 2, bob))
+      (await this.voting.getPollUserState(this.params.address, 1, bob))
         .toString()
         .should.eq('0');
     });
@@ -201,7 +183,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         .commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(60, 0, 42),
           '0x00',
           60,
@@ -222,7 +204,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         sig,
         { from: bob },
       );
-      (await this.voting.getPollUserState(this.params.address, 2, alice))
+      (await this.voting.getPollUserState(this.params.address, 1, alice))
         .toString()
         .should.eq('1');
     });
@@ -234,7 +216,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -244,7 +226,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         bob,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -257,7 +239,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(69, 0, 22),
         web3.utils.soliditySha3(60, 0, 42),
         69,
@@ -267,7 +249,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         bob,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(39, 0, 48),
         web3.utils.soliditySha3(60, 0, 42),
         39,
@@ -281,7 +263,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         this.voting.commitVote(
           alice,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(60, 0, 42),
           '0x00',
           60,
@@ -293,7 +275,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         this.voting.commitVote(
           bob,
           this.params.address,
-          2,
+          1,
           web3.utils.soliditySha3(60, 0, 42),
           web3.utils.soliditySha3(99, 99, 99),
           60,
@@ -310,7 +292,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -320,7 +302,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         bob,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -331,16 +313,16 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     it('correct params, getPollUserState should be Revealed', async () => {
       await time.increase(time.duration.seconds(60));
       // reveal vote with correct params
-      await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
         from: alice,
       });
-      await this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
+      await this.voting.revealVote(bob, this.params.address, 1, 60, 0, 42, {
         from: bob,
       });
-      (await this.voting.getPollUserState(this.params.address, 2, alice))
+      (await this.voting.getPollUserState(this.params.address, 1, alice))
         .toString()
         .should.eq('2');
-      (await this.voting.getPollUserState(this.params.address, 2, bob))
+      (await this.voting.getPollUserState(this.params.address, 1, bob))
         .toString()
         .should.eq('2');
     });
@@ -348,12 +330,12 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await time.increase(time.duration.seconds(60));
       // reveal vote with wrong salt
       await shouldFail.reverting(
-        this.voting.revealVote(alice, this.params.address, 2, 60, 0, 43, {
+        this.voting.revealVote(alice, this.params.address, 1, 60, 0, 43, {
           from: alice,
         }),
       );
       await shouldFail.reverting(
-        this.voting.revealVote(bob, this.params.address, 2, 60, 0, 43, {
+        this.voting.revealVote(bob, this.params.address, 1, 60, 0, 43, {
           from: bob,
         }),
       );
@@ -362,12 +344,12 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await time.increase(time.duration.seconds(60));
       // reveal vote with wrong salt
       await shouldFail.reverting(
-        this.voting.revealVote(alice, this.params.address, 2, 60, 10, 42, {
+        this.voting.revealVote(alice, this.params.address, 1, 60, 10, 42, {
           from: alice,
         }),
       );
       await shouldFail.reverting(
-        this.voting.revealVote(bob, this.params.address, 2, 50, 0, 42, {
+        this.voting.revealVote(bob, this.params.address, 1, 50, 0, 42, {
           from: bob,
         }),
       );
@@ -376,12 +358,12 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await time.increase(time.duration.seconds(60));
       // reveal vote with wrong yes/no weight
       await shouldFail.reverting(
-        this.voting.revealVote(alice, this.params.address, 2, 0, 60, 42, {
+        this.voting.revealVote(alice, this.params.address, 1, 0, 60, 42, {
           from: alice,
         }),
       );
       await shouldFail.reverting(
-        this.voting.revealVote(bob, this.params.address, 2, 30, 30, 42, {
+        this.voting.revealVote(bob, this.params.address, 1, 30, 30, 42, {
           from: bob,
         }),
       );
@@ -389,12 +371,12 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
     it('should revert, try to reveal after reveal time has end', async () => {
       await time.increase(time.duration.seconds(120));
       await shouldFail.reverting(
-        this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
+        this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
           from: alice,
         }),
       );
       await shouldFail.reverting(
-        this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
+        this.voting.revealVote(bob, this.params.address, 1, 60, 0, 42, {
           from: bob,
         }),
       );
@@ -407,7 +389,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -417,7 +399,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         bob,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -426,18 +408,18 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       );
       await time.increase(time.duration.seconds(60));
       // reveal vote with correct params
-      await this.voting.revealVote(alice, this.params.address, 2, 60, 0, 42, {
+      await this.voting.revealVote(alice, this.params.address, 1, 60, 0, 42, {
         from: alice,
       });
-      await this.voting.revealVote(bob, this.params.address, 2, 60, 0, 42, {
+      await this.voting.revealVote(bob, this.params.address, 1, 60, 0, 42, {
         from: bob,
       });
       // quickly end reveal time
       await time.increase(time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, {
+      await this.voting.resolvePoll(this.params.address, 1, {
         from: bob,
       });
-      (await this.voting.polls(this.params.address, 2)).pollState
+      (await this.voting.polls(this.params.address, 1)).pollState
         .toString()
         .should.eq('2');
     });
@@ -446,7 +428,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(1, 0, 42),
         '0x00',
         1,
@@ -455,10 +437,10 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       );
       // waiting for commit period to end
       await time.increase(time.duration.seconds(60));
-      await this.voting.resolvePoll(this.params.address, 2, {
+      await this.voting.resolvePoll(this.params.address, 1, {
         from: bob,
       });
-      (await this.voting.polls(this.params.address, 2)).pollState
+      (await this.voting.polls(this.params.address, 1)).pollState
         .toString()
         .should.eq('4');
     });
@@ -467,7 +449,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(1, 0, 42),
         '0x00',
         1,
@@ -475,7 +457,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       await shouldFail.reverting(
-        this.voting.resolvePoll(this.params.address, 2, {
+        this.voting.resolvePoll(this.params.address, 1, {
           from: bob,
         }),
       );
@@ -485,7 +467,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         alice,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -495,7 +477,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       await this.voting.commitVote(
         bob,
         this.params.address,
-        2,
+        1,
         web3.utils.soliditySha3(60, 0, 42),
         '0x00',
         60,
@@ -504,7 +486,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
       );
       await time.increase(time.duration.seconds(60));
       await shouldFail.reverting(
-        this.voting.resolvePoll(this.params.address, 2, {
+        this.voting.resolvePoll(this.params.address, 1, {
           from: bob,
         }),
       );

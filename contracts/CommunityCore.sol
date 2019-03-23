@@ -6,7 +6,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./bonding-curve/ParameterizedBondingCurve.sol";
 import "./token/ERC20Interface.sol";
 
-import "./AdminInterface.sol";
 import "./BandContractBase.sol";
 import "./BandToken.sol";
 import "./CommunityToken.sol";
@@ -103,15 +102,6 @@ contract CommunityCore is BandContractBase {
   }
 
   /**
-   * @dev Throws if called by any account other than the admin.
-   */
-  modifier onlyAdmin() {
-    AdminInterface admin = AdminInterface(params.get("core:admin_contract"));
-    require(admin.isAdmin(msg.sender));
-    _;
-  }
-
-  /**
    * @dev Called by admins to report reward distribution over the past period.
    * @param rewardPortionRootHash Merkle root of the distribution tree.
    * @param totalPortion Total value of portion assignments (Merkle leaves)
@@ -122,7 +112,7 @@ contract CommunityCore is BandContractBase {
     uint256 totalPortion
   )
     public
-    onlyAdmin
+    // onlyAdmin
   {
     uint256 rewardPeriod = params.get("core:reward_period");
     require(now >= lastRewardTime.add(rewardPeriod));
@@ -165,7 +155,7 @@ contract CommunityCore is BandContractBase {
     uint256 totalPortion
   )
     public
-    onlyAdmin
+    // onlyAdmin
   {
     require(rewardID > 0 && rewardID < nextRewardID);
     Reward storage reward = rewards[rewardID];
