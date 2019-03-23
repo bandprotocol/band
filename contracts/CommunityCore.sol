@@ -5,7 +5,6 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./bonding-curve/ParameterizedBondingCurve.sol";
 import "./token/ERC20Interface.sol";
 
-import "./BandContractBase.sol";
 import "./BandToken.sol";
 import "./CommunityToken.sol";
 import "./ParametersBase.sol";
@@ -19,7 +18,7 @@ import "./ParametersBase.sol";
  * acts as the automated market maker, allowing anyone to buy/sell community
  * token with itself.
  */
-contract CommunityCore is BandContractBase {
+contract CommunityCore {
   BandToken public bandToken;
   CommunityToken public commToken;
   ParametersBase public params;

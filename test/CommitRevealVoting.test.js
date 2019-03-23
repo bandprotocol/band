@@ -28,7 +28,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('params:support_required_pct'),
         web3.utils.fromAscii('params:min_participation_pct'),
       ],
-      [60, 60, 80 * 1e12, 60 * 1e12],
+      [60, 60, '800000000000000000', '600000000000000000'],
       { from: owner },
     );
     this.core = await CommunityCore.new(
@@ -444,7 +444,7 @@ contract('CommitRevealVoting', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('4');
     });
-    it('should revert, lack of voting power but try to resolve too zoon', async () => {
+    it('should revert, lack of voting power but try to resolve too soon', async () => {
       // commit
       await this.voting.commitVote(
         alice,

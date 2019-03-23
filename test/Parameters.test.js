@@ -32,7 +32,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
               web3.utils.fromAscii('params:support_required_pct'),
               web3.utils.fromAscii('params:min_participation_pct'),
             ],
-            [0, 0, 101, 101],
+            [0, 0, '1000000000000000001', '1000000000000000001'],
             { from: owner },
           ),
         );
@@ -47,7 +47,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
               web3.utils.fromAscii('params:reveal_time'),
               web3.utils.fromAscii('params:support_required_pct'),
             ],
-            [60, 60, 80],
+            [60, 60, '1000000000000000000'],
             { from: owner },
           ),
         );
@@ -72,7 +72,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('params:support_required_pct'),
           web3.utils.fromAscii('params:min_participation_pct'),
         ],
-        [60, 60, 80 * 1e12, 60 * 1e12],
+        [60, 60, '800000000000000000', '600000000000000000'],
         { from: owner },
       );
       await this.params.setExecDelegator(this.factory.address);
@@ -119,12 +119,12 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
-          .should.eq('80000000000000');
+          .should.eq('800000000000000000');
         (await this.params.getZeroable(
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
-          .should.eq('80000000000000');
+          .should.eq('800000000000000000');
       });
 
       it('should only allow getting zero if called via getZeroable', async () => {
@@ -311,7 +311,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('params:support_required_pct')],
-          [60],
+          ['600000000000000000'],
           {
             from: owner,
           },
@@ -371,7 +371,7 @@ contract('Parameters', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
-          .should.eq('60');
+          .should.eq('600000000000000000');
       });
 
       it('should support feeless execution', async () => {

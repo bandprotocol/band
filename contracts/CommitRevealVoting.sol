@@ -2,15 +2,16 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./BandContractBase.sol";
 import "./VotingInterface.sol";
 import "./feeless/Feeless.sol";
+import "./utils/Fractional.sol";
 
 /**
  * @title CommitRevealVoting
  */
-contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
+contract CommitRevealVoting is VotingInterface, Feeless {
   using SafeMath for uint256;
+  using Fractional for uint256;
 
   event PollCreated(  // A poll is created.
     address indexed pollContract,
@@ -134,17 +135,16 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     return poll.commits[voter];
   }
 
-  function verifyVotingParams() public returns(bool) {
+  function verifyVotingParams() public returns (bool) {
     uint256 commitEndTime = getParam("params:commit_time");
     uint256 revealEndTime = getParam("params:reveal_time");
     uint256 voteMinParticipationPct = getParam("params:min_participation_pct");
     uint256 voteSupportRequiredPct = getParam("params:support_required_pct");
 
-    require(commitEndTime > 0);
     require(revealEndTime > 0);
-    require(voteMinParticipationPct > 0 && voteMinParticipationPct <=  ONE_HUNDRED_PERCENT);
-    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
-
+    require(commitEndTime > 0);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
     return true;
   }
 
@@ -165,16 +165,9 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
 
     require(revealEndTime < 2 ** 64);
     require(commitEndTime < revealEndTime);
-    require(voteMinParticipationPct <= ONE_HUNDRED_PERCENT);
-    require(voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
-
-    // NOTE: This could possibliy be slightly mismatched with `snapshotBlockNo`
-    // if there are mint/burn transactions in this block prior to
-    // this transaction. The effect, however, should be minimal as
-    // `minimum_quorum` is primarily used to ensure minimum number of vote
-    // participants. The primary decision factor should be `support_required`.
-    uint256 voteMinParticipation
-      = voteMinParticipationPct.mul(token.totalSupply()).div(ONE_HUNDRED_PERCENT);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
+    uint256 voteMinParticipation = voteMinParticipationPct.multipliedBy(token.totalSupply());
 
     Poll storage poll = polls[msg.sender][pollID];
     poll.snapshotNonce = token.votingPowerChangeNonce();
@@ -281,22 +274,19 @@ contract CommitRevealVoting is BandContractBase, VotingInterface, Feeless {
     pollMustBeActive(pollContract, pollID)
   {
     Poll storage poll = polls[pollContract][pollID];
-
     require(now >= poll.commitEndTime);
-
     ResolveListener.PollState pollState;
 
     if (poll.totalCount < poll.voteMinParticipation) {
       pollState = ResolveListener.PollState.Inconclusive;
     } else {
       require(now >= poll.revealEndTime);
-
       uint256 yesCount = poll.yesCount;
       uint256 noCount = poll.noCount;
-
+      uint256 totalCount = yesCount.add(noCount);
       if (yesCount == 0 && noCount == 0) {
         pollState = ResolveListener.PollState.Inconclusive;
-      } else if (yesCount.mul(ONE_HUNDRED_PERCENT) >= poll.voteSupportRequiredPct.mul(yesCount.add(noCount))) {
+      } else if (yesCount.mul(Fractional.getDenominator()) >= poll.voteSupportRequiredPct.mul(totalCount)) {
         pollState = ResolveListener.PollState.Yes;
       } else {
         pollState = ResolveListener.PollState.No;

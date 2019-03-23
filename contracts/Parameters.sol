@@ -2,7 +2,6 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./BandContractBase.sol";
 import "./ParametersBase.sol";
 import "./ResolveListener.sol";
 import "./VotingInterface.sol";
@@ -15,7 +14,7 @@ import "./feeless/Feeless.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeless {
+contract Parameters is ParametersBase, ResolveListener, Feeless {
   using SafeMath for uint256;
 
   event ProposalProposed(  // A new proposal is proposed.
@@ -141,9 +140,9 @@ contract Parameters is BandContractBase, ParametersBase, ResolveListener, Feeles
    */
   function onResolved(uint256 proposalID, PollState pollState)
     public
-    onlyFrom(address(voting))
     returns (bool)
   {
+    require(msg.sender == address(voting));
     Proposal storage proposal = proposals[proposalID];
     if (pollState == PollState.Yes) {
       for (uint256 index = 0; index < proposal.changeCount; ++index) {

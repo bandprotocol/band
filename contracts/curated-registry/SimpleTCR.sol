@@ -4,12 +4,14 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "../BandContractBase.sol";
 import "../CommunityCore.sol";
 import "../ResolveListener.sol";
 import "../VotingInterface.sol";
+
+import "../token/ERC20Acceptor.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Equation.sol";
+import "../utils/Fractional.sol";
 
 /**
  * @title SimpleTCR
@@ -17,7 +19,8 @@ import "../utils/Equation.sol";
  * @dev TCR contract implements Token Curated Registry logic, with reward
  * distribution allocated equally to both winning and losing sides.
  */
-contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
+contract SimpleTCR is ResolveListener, Feeless, ERC20Acceptor {
+  using Fractional for uint256;
   using SafeMath for uint256;
   using Equation for Equation.Node[];
 
@@ -194,9 +197,7 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
     if (now < entry.listedAt) {
       return minDeposit;
     } else {
-      return (minDeposit.mul(
-        depositDecayFunction.calculate(now.sub(entry.listedAt)))
-      ).div(DENOMINATOR);
+      return depositDecayFunction.calculate(now.sub(entry.listedAt)).multipliedBy(minDeposit);
     }
   }
 
@@ -207,7 +208,7 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
    */
   function applyEntry(address proposer, uint256 deposit, bytes32 data)
     external
-    onlyFrom(address(token))
+    requireToken(ERC20Interface(address(token)), proposer, deposit)
     entryMustNotExist(data)
   {
     require(deposit >= get("min_deposit"));
@@ -224,7 +225,7 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
    */
   function deposit(address depositor, uint256 amount, bytes32 data)
     external
-    onlyFrom(address(token))
+    requireToken(ERC20Interface(address(token)), depositor, amount)
     entryMustExist(data)
   {
     Entry storage entry = entries[data];
@@ -279,7 +280,7 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
     bytes32 reasonData
   )
     public
-    onlyFrom(address(token))
+    requireToken(ERC20Interface(address(token)), challenger, challengeDeposit)
     entryMustExist(data)
     returns (uint256)
   {
@@ -322,10 +323,10 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
    */
   function onResolved(uint256 challengeID, PollState pollState)
     public
-    onlyFrom(address(voting))
     challengeMustExist(challengeID)
     returns (bool)
   {
+    require(msg.sender == address(voting));
     Challenge storage challenge = challenges[challengeID];
     bytes32 data = challenge.entryData;
     Entry storage entry = entries[data];
@@ -344,14 +345,12 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
 
     uint256 rewardPool = challenge.rewardPool;
     uint256 dispensationPercentage = get("dispensation_percentage");
-    require(dispensationPercentage >= 0 && dispensationPercentage <= ONE_HUNDRED_PERCENT);
+    require(dispensationPercentage <= Fractional.getDenominator());
 
-    // The reward for winning side leader (challenger/entry owner) is the
-    // specified percentage of total reward pool.
-    // (dispensationPercentage + ONE_HUNDRED_PERCENT)/(TWO_HUNDRED_PERCENT)
-    uint256 leaderReward = rewardPool.mul(
-      dispensationPercentage.add(ONE_HUNDRED_PERCENT)
-    ).div(ONE_HUNDRED_PERCENT.mul(2));
+    // The reward for winning side leader (challenger/entry owner) is
+    // half of the poll (their stake) plus the dispensation percentage of the remaining.
+    uint256 halfRewardPool = rewardPool.div(2);
+    uint256 leaderReward = dispensationPercentage.multipliedBy(halfRewardPool).add(halfRewardPool);
 
     if (pollState == PollState.Yes) {
       // Automatically claim reward for challenger
@@ -365,7 +364,6 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = yesCount.sub(challengerYesCount);
       challenge.claims[challenge.challenger] = true;
-
       emit ChallengeSuccess(data, challengeID, challenge.rewardPool, leaderReward);
     } else if (pollState == PollState.No) {
       // Automatically claim reward for the entry
@@ -378,16 +376,13 @@ contract SimpleTCR is BandContractBase, ResolveListener, Feeless {
       challenge.rewardPool = rewardPool.sub(leaderReward);
       challenge.remainingVotes = noCount.sub(proposerNoCount);
       challenge.claims[entry.proposer] = true;
-
       emit ChallengeFailed(data, challengeID, challenge.rewardPool, leaderReward);
     } else if (pollState == PollState.Inconclusive) {
       // Inconclusive. Both challenger and entry owner get half of the pool
       // back. The reward pool then becomes zero. Too bad for voters.
-      uint256 halfRewardPool = rewardPool.div(2);
       require(token.transfer(challenge.challenger, halfRewardPool));
       entry.withdrawableDeposit = entry.withdrawableDeposit.add(halfRewardPool);
       challenge.rewardPool = 0;
-
       emit ChallengeInconclusive(data, challengeID);
     } else {
       revert();

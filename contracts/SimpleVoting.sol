@@ -2,15 +2,16 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./BandContractBase.sol";
 import "./VotingInterface.sol";
 import "./feeless/Feeless.sol";
+import "./utils/Fractional.sol";
 
 /**
  * @title SimpleVoting
  */
-contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
+contract SimpleVoting is VotingInterface, Feeless {
   using SafeMath for uint256;
+  using Fractional for uint256;
 
   event SimplePollCreated(  // A poll is created.
     address indexed pollContract,
@@ -88,8 +89,8 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
     uint256 voteSupportRequiredPct = getParam("params:support_required_pct");
 
     require(expirationTime > 0);
-    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= ONE_HUNDRED_PERCENT);
-    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
 
     return true;
   }
@@ -109,16 +110,9 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
     uint256 voteSupportRequiredPct = get(params, prefix, "support_required_pct");
 
     require(expirationTime < 2 ** 64);
-    require(voteMinParticipationPct <= ONE_HUNDRED_PERCENT);
-    require(voteSupportRequiredPct <= ONE_HUNDRED_PERCENT);
-
-    // NOTE: This could possibliy be slightly mismatched with `snapshotBlockNo`
-    // if there are mint/burn transactions in this block prior to
-    // this transaction. The effect, however, should be minimal as
-    // `minimum_quorum` is primarily used to ensure minimum number of vote
-    // participants. The primary decision factor should be `support_required`.
-    uint256 voteMinParticipation
-      = voteMinParticipationPct.mul(token.totalSupply()).div(ONE_HUNDRED_PERCENT);
+    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
+    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
+    uint256 voteMinParticipation = voteMinParticipationPct.multipliedBy(token.totalSupply());
 
     uint256 snapshotNonce = token.votingPowerChangeNonce();
     polls[msg.sender][pollID] = Poll({
@@ -190,7 +184,7 @@ contract SimpleVoting is BandContractBase, VotingInterface, Feeless {
     ResolveListener.PollState pollState;
     if (totalCount < poll.voteMinParticipation) {
       pollState = ResolveListener.PollState.Inconclusive;
-    } else if (yesCount.mul(ONE_HUNDRED_PERCENT) >= poll.voteSupportRequiredPct.mul(totalCount)) {
+    } else if (yesCount.mul(Fractional.getDenominator()) >= poll.voteSupportRequiredPct.mul(totalCount)) {
       pollState = ResolveListener.PollState.Yes;
     } else {
       pollState = ResolveListener.PollState.No;

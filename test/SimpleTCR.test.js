@@ -38,15 +38,15 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       [
         60,
         60,
-        50 * 1e12,
-        50 * 1e12,
-        30 * 1e12,
+        '500000000000000000',
+        '500000000000000000',
+        '300000000000000000',
         100,
         300,
         30,
         30,
-        50 * 1e12,
-        50 * 1e12,
+        '500000000000000000',
+        '500000000000000000',
       ],
       { from: owner },
     );
@@ -65,11 +65,11 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       this.core.address,
       this.voting.address,
       //  if x <= 60
-      //    return 1e12
+      //    return 1e18
       //  else if x <= 120
-      //    return 1e12 - (5e11 * (x-60))/60
+      //    return 1e18 - (5e17 * (x-60))/60
       //  else
-      //    return 5e11
+      //    return 5e17
       [
         18,
         14,
@@ -77,7 +77,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         0,
         60,
         0,
-        1e12,
+        '1000000000000000000',
         18,
         14,
         1,
@@ -85,11 +85,11 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         120,
         5,
         0,
-        1e12,
+        '1000000000000000000',
         7,
         6,
         0,
-        5e11,
+        '500000000000000000',
         5,
         1,
         0,
@@ -97,7 +97,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         0,
         60,
         0,
-        5e11,
+        '500000000000000000',
       ],
       { from: owner },
     );
@@ -190,9 +190,8 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
     });
     it('verify parameters of TCR', async () => {
       (await this.tcr.get(web3.utils.fromAscii('dispensation_percentage')))
-        .toNumber()
-        .should.eq(30 * 1e12);
-
+        .toString()
+        .should.eq('300000000000000000');
       (await this.tcr.get(web3.utils.fromAscii('min_deposit')))
         .toNumber()
         .should.eq(100);
@@ -202,12 +201,11 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         .should.eq(300);
 
       (await this.tcr.get(web3.utils.fromAscii('support_required_pct')))
-        .toNumber()
-        .should.eq(50 * 1e12);
-
+        .toString()
+        .should.eq('500000000000000000');
       (await this.tcr.get(web3.utils.fromAscii('min_participation_pct')))
-        .toNumber()
-        .should.eq(50 * 1e12);
+        .toString()
+        .should.eq('500000000000000000');
     });
     it('verify min_deposit with time-value decay', async () => {
       // min_deposit at the begining
@@ -223,7 +221,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       // linearly decrease overtime, 370 -> 420 sec
       for (let i = 80; i < 120; i += 20) {
         await time.increase(time.duration.seconds(20));
-        // 1e12 - (5e11 * (x-60))/60
+        // 1e18 - (5e17 * (x-60))/60
         Math.floor(100 - (50 * (i - 60)) / 60).should.closeTo(
           (await this.tcr.currentMinDeposit(entryHash)).toNumber(),
           1,
@@ -520,7 +518,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
         );
       }
     });
-    it('Alice should loss after voting has correctly resolved, entry will be removed', async () => {
+    it('Alice should lose after voting has correctly resolved, entry will be removed', async () => {
       const commits = [[alice, 0, 600], [bob, 600, 0], [carol, 400, 300]];
       const challengeID = 1;
       // everyone commit
