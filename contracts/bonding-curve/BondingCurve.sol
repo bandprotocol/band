@@ -87,17 +87,21 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
   }
 
+  function getRevenueBeneficiary() public view returns (address) {
+    return owner();
+  }
+
   function getInflationRateNumerator() public view returns (uint256) {
     return _inflationRateNumerator;
+  }
+
+  function getLiquidityFeeNumerator() public view returns (uint256) {
+    return _liquidityFeeNumerator;
   }
 
   function setInflationRate(uint256 inflationRateNumerator) public onlyOwner {
     require(inflationRateNumerator < RATIONAL_DENOMINATOR);
     _inflationRateNumerator = inflationRateNumerator;
-  }
-
-  function getLiquidityFeeNumerator() public view returns (uint256) {
-    return _liquidityFeeNumerator;
   }
 
   function setLiquidityFee(uint256 liquidityFeeNumerator) public onlyOwner {
@@ -151,7 +155,7 @@ contract BondingCurve is Ownable, ERC20Acceptor {
   }
 
   function _rewardBondingCurveOwner(uint256 rewardAmount) internal {
-    address beneficiary = owner();
+    address beneficiary = getRevenueBeneficiary();
     require(bondedToken.mint(beneficiary, rewardAmount));
     emit RevenueCollect(beneficiary, rewardAmount);
   }
