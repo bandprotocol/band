@@ -2,7 +2,8 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "../Equation.sol";
+
+import "../utils/Equation.sol";
 
 
 /**
@@ -10,7 +11,7 @@ import "../Equation.sol";
  *
  * @dev Example contract to illustrate Band Protocol's Equation Library.
  * DO NOT USE IT IN PRODUCTION. The contract is not fully auditted, and
- * is likely susceptible to common attacks such as front running. 
+ * is likely susceptible to common attacks such as front running.
  */
 contract BondingCurveDemoToken is ERC20 {
   using Equation for Equation.Node[];
@@ -43,7 +44,7 @@ contract BondingCurveDemoToken is ERC20 {
       msg.sender.transfer(msg.value.sub(collateralChange));
     }
   }
-  
+
   /**
    * @dev Sell 'amount' of BCDT back to ether.
    */

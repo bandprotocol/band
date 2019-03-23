@@ -8,8 +8,8 @@ import "../BandContractBase.sol";
 import "../CommunityCore.sol";
 import "../ResolveListener.sol";
 import "../VotingInterface.sol";
-import "../Equation.sol";
 import "../feeless/Feeless.sol";
+import "../utils/Equation.sol";
 
 /**
  * @title SimpleTCR

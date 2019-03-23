@@ -1,7 +1,8 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./thirdparty/BancorPower.sol";
+
+import "../thirdparty/BancorPower.sol";
 
 
 /**
