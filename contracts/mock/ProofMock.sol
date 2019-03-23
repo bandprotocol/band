@@ -1,6 +1,6 @@
 pragma solidity 0.5.0;
 
-import "../Proof.sol";
+import "../reward-distribution/Proof.sol";
 
 
 /**

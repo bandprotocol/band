@@ -3,7 +3,7 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-import "../Proof.sol";
+import "./Proof.sol";
 import "../token/ERC20Interface.sol";
 
 
