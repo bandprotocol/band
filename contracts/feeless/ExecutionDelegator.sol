@@ -18,7 +18,7 @@ contract ExecutionDelegator {
     bytes4 funcInterface,
     bytes senderSig
   );
-  
+
   /**
   * @dev Keep track nonce of each user
   */
@@ -26,23 +26,23 @@ contract ExecutionDelegator {
 
   /**
   * @dev Verify that the signature of sender is consistent with nonce and data
-  */  
+  */
   function verify(
-    address sender, 
-    uint256 nonce, 
+    address sender,
+    uint256 nonce,
     bytes memory data,
     bytes memory sig
-  ) 
-    internal 
-    pure 
-    returns (bool) 
+  )
+    internal
+    pure
+    returns (bool)
   {
     bytes32 hash = ECDSA.toEthSignedMessageHash(
       keccak256(abi.encodePacked(nonce, data))
     );
     return sender == ECDSA.recover(hash, sig);
   }
-  
+
   /**
   * @dev Perform delegated execution
   * @param sender The address that wants to send this transaction feelessly

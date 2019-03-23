@@ -2,12 +2,13 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
+import "./feeless/ExecutionDelegator.sol";
+
 import "./BandToken.sol";
 import "./CommunityCore.sol";
 import "./CommunityToken.sol";
 import "./Parameters.sol";
 import "./VotingInterface.sol";
-import "./ExecutionDelegator.sol";
 
 import "./factory/TokenFactory.sol";
 import "./factory/ParametersFactory.sol";
