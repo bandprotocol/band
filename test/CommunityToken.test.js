@@ -146,169 +146,169 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     (await this.factory.execNonces(bob)).toNumber().should.eq(nonce.bob);
   });
 
-  context('Vote delegation feature', async () => {
-    beforeEach(async () => {
-      await this.contract.mint(alice, 1, { from: owner });
-      await this.contract.mint(bob, 10, { from: owner });
-      await this.contract.mint(carol, 100, { from: owner });
-    });
+  // context('Vote delegation feature', async () => {
+  //   beforeEach(async () => {
+  //     await this.contract.mint(alice, 1, { from: owner });
+  //     await this.contract.mint(bob, 10, { from: owner });
+  //     await this.contract.mint(carol, 100, { from: owner });
+  //   });
 
-    it('should delegate vote one level correct', async () => {
-      await this.contract.delegateVote(alice, bob, { from: alice });
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
+  //   it('should delegate vote one level correct', async () => {
+  //     await this.contract.delegateVote(alice, bob, { from: alice });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
 
-      await this.contract.mint(alice, 2, { from: owner });
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('13');
-    });
+  //     await this.contract.mint(alice, 2, { from: owner });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('13');
+  //   });
 
-    it('should not delegate recursively', async () => {
-      await this.contract.delegateVote(alice, bob, { from: alice });
-      await this.contract.delegateVote(bob, carol, { from: bob });
+  //   it('should not delegate recursively', async () => {
+  //     await this.contract.delegateVote(alice, bob, { from: alice });
+  //     await this.contract.delegateVote(bob, carol, { from: bob });
 
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('1');
-      (await this.contract.votingPowerOf(carol)).toString().should.eq('110');
-    });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('1');
+  //     (await this.contract.votingPowerOf(carol)).toString().should.eq('110');
+  //   });
 
-    it('should change delegated voting power upon balance change', async () => {
-      await this.contract.delegateVote(alice, bob, { from: alice });
-      await this.contract.transfer(alice, 50, { from: carol });
-      await this.contract.transfer(bob, 5, { from: carol });
-      await this.contract.transfer(carol, 1, { from: bob });
+  //   it('should change delegated voting power upon balance change', async () => {
+  //     await this.contract.delegateVote(alice, bob, { from: alice });
+  //     await this.contract.transfer(alice, 50, { from: carol });
+  //     await this.contract.transfer(bob, 5, { from: carol });
+  //     await this.contract.transfer(carol, 1, { from: bob });
 
-      (await this.contract.balanceOf(alice)).toString().should.eq('51');
-      (await this.contract.balanceOf(bob)).toString().should.eq('14');
-      (await this.contract.balanceOf(carol)).toString().should.eq('46');
+  //     (await this.contract.balanceOf(alice)).toString().should.eq('51');
+  //     (await this.contract.balanceOf(bob)).toString().should.eq('14');
+  //     (await this.contract.balanceOf(carol)).toString().should.eq('46');
 
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('65');
-      (await this.contract.votingPowerOf(carol)).toString().should.eq('46');
-    });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('65');
+  //     (await this.contract.votingPowerOf(carol)).toString().should.eq('46');
+  //   });
 
-    it('should revoke delegate vote correctly', async () => {
-      await this.contract.delegateVote(alice, bob, { from: alice });
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
+  //   it('should revoke delegate vote correctly', async () => {
+  //     await this.contract.delegateVote(alice, bob, { from: alice });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('11');
 
-      await this.contract.transfer(alice, 50, { from: carol });
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('61');
+  //     await this.contract.transfer(alice, 50, { from: carol });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('0');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('61');
 
-      await shouldFail.reverting(
-        this.contract.revokeDelegateVote(alice, carol, { from: alice }),
-      );
-      await this.contract.revokeDelegateVote(alice, bob, { from: alice });
-      (await this.contract.votingPowerOf(alice)).toString().should.eq('51');
-      (await this.contract.votingPowerOf(bob)).toString().should.eq('10');
-    });
+  //     await shouldFail.reverting(
+  //       this.contract.revokeDelegateVote(alice, carol, { from: alice }),
+  //     );
+  //     await this.contract.revokeDelegateVote(alice, bob, { from: alice });
+  //     (await this.contract.votingPowerOf(alice)).toString().should.eq('51');
+  //     (await this.contract.votingPowerOf(bob)).toString().should.eq('10');
+  //   });
 
-    it('should be able to delegateVote feelessly', async () => {
-      await this.contract.setExecDelegator(this.factory.address);
-      const power = {
-        alice: (await this.contract.votingPowerOf(alice)).toNumber(),
-        bob: (await this.contract.votingPowerOf(bob)).toNumber(),
-        carol: (await this.contract.votingPowerOf(carol)).toNumber(),
-      };
-      const nonce = {
-        alice: (await this.factory.execNonces(alice)).toNumber(),
-        bob: (await this.factory.execNonces(bob)).toNumber(),
-        carol: (await this.factory.execNonces(owner)).toNumber(),
-      };
-      let data = this.contract.contract.methods
-        .delegateVote(alice, carol)
-        .encodeABI();
-      let dataNoFuncSig = '0x' + data.slice(10 + 64);
-      let sig = await web3.eth.sign(
-        web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
-        alice,
-      );
-      await this.factory.sendDelegatedExecution(
-        alice,
-        this.contract.address,
-        '0x' + data.slice(2, 10),
-        dataNoFuncSig,
-        sig,
-        { from: bob },
-      );
-      data = this.contract.contract.methods
-        .delegateVote(bob, carol)
-        .encodeABI();
-      dataNoFuncSig = '0x' + data.slice(10 + 64);
-      sig = await web3.eth.sign(
-        web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
-        bob,
-      );
-      await this.factory.sendDelegatedExecution(
-        bob,
-        this.contract.address,
-        '0x' + data.slice(2, 10),
-        dataNoFuncSig,
-        sig,
-        { from: carol },
-      );
-      (await this.contract.votingPowerOf(carol))
-        .toNumber()
-        .should.eq(power.alice + power.bob + power.carol);
-    });
+  //   it('should be able to delegateVote feelessly', async () => {
+  //     await this.contract.setExecDelegator(this.factory.address);
+  //     const power = {
+  //       alice: (await this.contract.votingPowerOf(alice)).toNumber(),
+  //       bob: (await this.contract.votingPowerOf(bob)).toNumber(),
+  //       carol: (await this.contract.votingPowerOf(carol)).toNumber(),
+  //     };
+  //     const nonce = {
+  //       alice: (await this.factory.execNonces(alice)).toNumber(),
+  //       bob: (await this.factory.execNonces(bob)).toNumber(),
+  //       carol: (await this.factory.execNonces(owner)).toNumber(),
+  //     };
+  //     let data = this.contract.contract.methods
+  //       .delegateVote(alice, carol)
+  //       .encodeABI();
+  //     let dataNoFuncSig = '0x' + data.slice(10 + 64);
+  //     let sig = await web3.eth.sign(
+  //       web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+  //       alice,
+  //     );
+  //     await this.factory.sendDelegatedExecution(
+  //       alice,
+  //       this.contract.address,
+  //       '0x' + data.slice(2, 10),
+  //       dataNoFuncSig,
+  //       sig,
+  //       { from: bob },
+  //     );
+  //     data = this.contract.contract.methods
+  //       .delegateVote(bob, carol)
+  //       .encodeABI();
+  //     dataNoFuncSig = '0x' + data.slice(10 + 64);
+  //     sig = await web3.eth.sign(
+  //       web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+  //       bob,
+  //     );
+  //     await this.factory.sendDelegatedExecution(
+  //       bob,
+  //       this.contract.address,
+  //       '0x' + data.slice(2, 10),
+  //       dataNoFuncSig,
+  //       sig,
+  //       { from: carol },
+  //     );
+  //     (await this.contract.votingPowerOf(carol))
+  //       .toNumber()
+  //       .should.eq(power.alice + power.bob + power.carol);
+  //   });
 
-    it('should be able to revokeDelegateVote feelessly', async () => {
-      await this.contract.setExecDelegator(this.factory.address);
-      const power = {
-        alice: (await this.contract.votingPowerOf(alice)).toNumber(),
-        bob: (await this.contract.votingPowerOf(bob)).toNumber(),
-        carol: (await this.contract.votingPowerOf(carol)).toNumber(),
-      };
-      const nonce = {
-        alice: (await this.factory.execNonces(alice)).toNumber(),
-        bob: (await this.factory.execNonces(bob)).toNumber(),
-        carol: (await this.factory.execNonces(owner)).toNumber(),
-      };
+  //   it('should be able to revokeDelegateVote feelessly', async () => {
+  //     await this.contract.setExecDelegator(this.factory.address);
+  //     const power = {
+  //       alice: (await this.contract.votingPowerOf(alice)).toNumber(),
+  //       bob: (await this.contract.votingPowerOf(bob)).toNumber(),
+  //       carol: (await this.contract.votingPowerOf(carol)).toNumber(),
+  //     };
+  //     const nonce = {
+  //       alice: (await this.factory.execNonces(alice)).toNumber(),
+  //       bob: (await this.factory.execNonces(bob)).toNumber(),
+  //       carol: (await this.factory.execNonces(owner)).toNumber(),
+  //     };
 
-      await this.contract.delegateVote(alice, carol, { from: alice });
-      await this.contract.delegateVote(bob, carol, { from: bob });
-      (await this.contract.votingPowerOf(carol))
-        .toNumber()
-        .should.eq(power.alice + power.bob + power.carol);
+  //     await this.contract.delegateVote(alice, carol, { from: alice });
+  //     await this.contract.delegateVote(bob, carol, { from: bob });
+  //     (await this.contract.votingPowerOf(carol))
+  //       .toNumber()
+  //       .should.eq(power.alice + power.bob + power.carol);
 
-      let data = this.contract.contract.methods
-        .revokeDelegateVote(alice, carol)
-        .encodeABI();
-      let dataNoFuncSig = '0x' + data.slice(10 + 64);
-      let sig = await web3.eth.sign(
-        web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
-        alice,
-      );
-      await this.factory.sendDelegatedExecution(
-        alice,
-        this.contract.address,
-        '0x' + data.slice(2, 10),
-        dataNoFuncSig,
-        sig,
-        { from: bob },
-      );
-      data = this.contract.contract.methods
-        .revokeDelegateVote(bob, carol)
-        .encodeABI();
-      dataNoFuncSig = '0x' + data.slice(10 + 64);
-      sig = await web3.eth.sign(
-        web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
-        bob,
-      );
-      await this.factory.sendDelegatedExecution(
-        bob,
-        this.contract.address,
-        '0x' + data.slice(2, 10),
-        dataNoFuncSig,
-        sig,
-        { from: carol },
-      );
-      (await this.contract.votingPowerOf(carol))
-        .toNumber()
-        .should.eq(power.carol);
-    });
-  });
+  //     let data = this.contract.contract.methods
+  //       .revokeDelegateVote(alice, carol)
+  //       .encodeABI();
+  //     let dataNoFuncSig = '0x' + data.slice(10 + 64);
+  //     let sig = await web3.eth.sign(
+  //       web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+  //       alice,
+  //     );
+  //     await this.factory.sendDelegatedExecution(
+  //       alice,
+  //       this.contract.address,
+  //       '0x' + data.slice(2, 10),
+  //       dataNoFuncSig,
+  //       sig,
+  //       { from: bob },
+  //     );
+  //     data = this.contract.contract.methods
+  //       .revokeDelegateVote(bob, carol)
+  //       .encodeABI();
+  //     dataNoFuncSig = '0x' + data.slice(10 + 64);
+  //     sig = await web3.eth.sign(
+  //       web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+  //       bob,
+  //     );
+  //     await this.factory.sendDelegatedExecution(
+  //       bob,
+  //       this.contract.address,
+  //       '0x' + data.slice(2, 10),
+  //       dataNoFuncSig,
+  //       sig,
+  //       { from: carol },
+  //     );
+  //     (await this.contract.votingPowerOf(carol))
+  //       .toNumber()
+  //       .should.eq(power.carol);
+  //   });
+  // });
 
   context('Historical voting power snapshot features', () => {
     it('should give zero balance if account has no activity', async () => {
@@ -416,147 +416,147 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .should.eq('67');
     });
 
-    it('should give correct historical balance when delegate voting power', async () => {
-      await this.contract.mint(alice, 100, { from: owner });
-      await this.contract.mint(bob, 50, { from: owner });
+    // it('should give correct historical balance when delegate voting power', async () => {
+    //   await this.contract.mint(alice, 100, { from: owner });
+    //   await this.contract.mint(bob, 50, { from: owner });
 
-      await this.contract.delegateVote(bob, alice, { from: bob });
+    //   await this.contract.delegateVote(bob, alice, { from: bob });
 
-      await this.contract.transfer(carol, 10, { from: alice });
+    //   await this.contract.transfer(carol, 10, { from: alice });
 
-      await this.contract.transfer(carol, 25, { from: bob });
+    //   await this.contract.transfer(carol, 25, { from: bob });
 
-      // Check each item in list
-      (await this.contract.historicalVotingPowerAtIndex(alice, 0))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtIndex(alice, 1))
-        .toString()
-        .should.eq('100');
-      (await this.contract.historicalVotingPowerAtIndex(alice, 2))
-        .toString()
-        .should.eq('150');
-      (await this.contract.historicalVotingPowerAtIndex(alice, 3))
-        .toString()
-        .should.eq('140');
-      (await this.contract.historicalVotingPowerAtIndex(alice, 4))
-        .toString()
-        .should.eq('115');
-      await shouldFail.reverting(
-        this.contract.historicalVotingPowerAtIndex(alice, 5),
-      );
+    //   // Check each item in list
+    //   (await this.contract.historicalVotingPowerAtIndex(alice, 0))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtIndex(alice, 1))
+    //     .toString()
+    //     .should.eq('100');
+    //   (await this.contract.historicalVotingPowerAtIndex(alice, 2))
+    //     .toString()
+    //     .should.eq('150');
+    //   (await this.contract.historicalVotingPowerAtIndex(alice, 3))
+    //     .toString()
+    //     .should.eq('140');
+    //   (await this.contract.historicalVotingPowerAtIndex(alice, 4))
+    //     .toString()
+    //     .should.eq('115');
+    //   await shouldFail.reverting(
+    //     this.contract.historicalVotingPowerAtIndex(alice, 5),
+    //   );
 
-      (await this.contract.historicalVotingPowerAtIndex(bob, 0))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtIndex(bob, 1))
-        .toString()
-        .should.eq('50');
-      (await this.contract.historicalVotingPowerAtIndex(bob, 2))
-        .toString()
-        .should.eq('0');
-      await shouldFail.reverting(
-        this.contract.historicalVotingPowerAtIndex(bob, 3),
-      );
+    //   (await this.contract.historicalVotingPowerAtIndex(bob, 0))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtIndex(bob, 1))
+    //     .toString()
+    //     .should.eq('50');
+    //   (await this.contract.historicalVotingPowerAtIndex(bob, 2))
+    //     .toString()
+    //     .should.eq('0');
+    //   await shouldFail.reverting(
+    //     this.contract.historicalVotingPowerAtIndex(bob, 3),
+    //   );
 
-      (await this.contract.historicalVotingPowerAtIndex(carol, 0))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtIndex(carol, 1))
-        .toString()
-        .should.eq('10');
-      (await this.contract.historicalVotingPowerAtIndex(carol, 2))
-        .toString()
-        .should.eq('35');
-      await shouldFail.reverting(
-        this.contract.historicalVotingPowerAtIndex(carol, 3),
-      );
+    //   (await this.contract.historicalVotingPowerAtIndex(carol, 0))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtIndex(carol, 1))
+    //     .toString()
+    //     .should.eq('10');
+    //   (await this.contract.historicalVotingPowerAtIndex(carol, 2))
+    //     .toString()
+    //     .should.eq('35');
+    //   await shouldFail.reverting(
+    //     this.contract.historicalVotingPowerAtIndex(carol, 3),
+    //   );
 
-      // Find by nonce
-      // at nonce 1
-      (await this.contract.historicalVotingPowerAtNonce(alice, 1))
-        .toString()
-        .should.eq('100');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 1))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 1))
-        .toString()
-        .should.eq('0');
-      // at nonce 2
-      (await this.contract.historicalVotingPowerAtNonce(alice, 2))
-        .toString()
-        .should.eq('100');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 2))
-        .toString()
-        .should.eq('50');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 2))
-        .toString()
-        .should.eq('0');
-      // at nonce 3
-      (await this.contract.historicalVotingPowerAtNonce(alice, 3))
-        .toString()
-        .should.eq('150');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 3))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 3))
-        .toString()
-        .should.eq('0');
-      // at nonce 4
-      (await this.contract.historicalVotingPowerAtNonce(alice, 4))
-        .toString()
-        .should.eq('140');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 4))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 4))
-        .toString()
-        .should.eq('10');
-      // at nonce 5
-      (await this.contract.historicalVotingPowerAtNonce(alice, 5))
-        .toString()
-        .should.eq('115');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 5))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 5))
-        .toString()
-        .should.eq('35');
+    //   // Find by nonce
+    //   // at nonce 1
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 1))
+    //     .toString()
+    //     .should.eq('100');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 1))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 1))
+    //     .toString()
+    //     .should.eq('0');
+    //   // at nonce 2
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 2))
+    //     .toString()
+    //     .should.eq('100');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 2))
+    //     .toString()
+    //     .should.eq('50');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 2))
+    //     .toString()
+    //     .should.eq('0');
+    //   // at nonce 3
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 3))
+    //     .toString()
+    //     .should.eq('150');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 3))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 3))
+    //     .toString()
+    //     .should.eq('0');
+    //   // at nonce 4
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 4))
+    //     .toString()
+    //     .should.eq('140');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 4))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 4))
+    //     .toString()
+    //     .should.eq('10');
+    //   // at nonce 5
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 5))
+    //     .toString()
+    //     .should.eq('115');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 5))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 5))
+    //     .toString()
+    //     .should.eq('35');
 
-      // Revoke delegate
-      await this.contract.revokeDelegateVote(bob, alice, { from: bob });
-      (await this.contract.historicalVotingPowerAtNonce(alice, 6))
-        .toString()
-        .should.eq('90');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 6))
-        .toString()
-        .should.eq('25');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 6))
-        .toString()
-        .should.eq('35');
+    //   // Revoke delegate
+    //   await this.contract.revokeDelegateVote(bob, alice, { from: bob });
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 6))
+    //     .toString()
+    //     .should.eq('90');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 6))
+    //     .toString()
+    //     .should.eq('25');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 6))
+    //     .toString()
+    //     .should.eq('35');
 
-      await this.contract.burn(carol, 30, { from: owner });
-      (await this.contract.historicalVotingPowerAtNonce(alice, 7))
-        .toString()
-        .should.eq('90');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 7))
-        .toString()
-        .should.eq('25');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 7))
-        .toString()
-        .should.eq('5');
+    //   await this.contract.burn(carol, 30, { from: owner });
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 7))
+    //     .toString()
+    //     .should.eq('90');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 7))
+    //     .toString()
+    //     .should.eq('25');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 7))
+    //     .toString()
+    //     .should.eq('5');
 
-      // Recheck search on past nonce
-      (await this.contract.historicalVotingPowerAtNonce(alice, 4))
-        .toString()
-        .should.eq('140');
-      (await this.contract.historicalVotingPowerAtNonce(bob, 4))
-        .toString()
-        .should.eq('0');
-      (await this.contract.historicalVotingPowerAtNonce(carol, 4))
-        .toString()
-        .should.eq('10');
-    });
+    //   // Recheck search on past nonce
+    //   (await this.contract.historicalVotingPowerAtNonce(alice, 4))
+    //     .toString()
+    //     .should.eq('140');
+    //   (await this.contract.historicalVotingPowerAtNonce(bob, 4))
+    //     .toString()
+    //     .should.eq('0');
+    //   (await this.contract.historicalVotingPowerAtNonce(carol, 4))
+    //     .toString()
+    //     .should.eq('10');
+    // });
   });
 });

@@ -420,7 +420,7 @@ contract SimpleTCR is ResolveListener, Feeless, ERC20Acceptor {
     challenge.remainingVotes = remainingVotes.sub(claimableCount);
     challenge.rewardPool = rewardPool.sub(reward);
 
-    // Send reward to the claimer.
+    require(reward != 0);
     require(token.transfer(rewardOwner, reward));
     emit ChallengeRewardClaimed(challengeID, rewardOwner, reward);
   }
