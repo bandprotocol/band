@@ -31,6 +31,9 @@ export default class ParameterInput extends React.Component {
         value={this.state.value || this.props.value}
         unit={this.state.unit}
         type={this.props.type}
+        width={this.props.width}
+        height={this.props.height}
+        borderColor={this.props.borderColor}
         onChangeUnit={this.changeUnit.bind(this)}
         handleParameterChange={this.handleChange.bind(this)}
       />

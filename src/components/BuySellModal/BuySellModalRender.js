@@ -218,9 +218,9 @@ const Advance = ({
           onClick={toggleAdvance}
         >
           {showAdvance ? (
-            <i class="fas fa-angle-up" />
+            <i className="fas fa-angle-up" />
           ) : (
-            <i class="fas fa-angle-down" />
+            <i className="fas fa-angle-down" />
           )}
         </Box>
       </Flex>

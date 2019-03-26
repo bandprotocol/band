@@ -10,6 +10,7 @@ import CommunityDetailPage from 'pages/CommunityDetail'
 import CommunityRewardPage from 'pages/CommunityReward'
 import CommunityGovernancePage from 'pages/CommunityGovernance'
 import CommuntyProposalPage from 'pages/CommunityProposal'
+import CreateCommunityPage from 'pages/CreateCommunity'
 
 export default ({ match, location }) => (
   <React.Fragment>
@@ -69,6 +70,7 @@ export default ({ match, location }) => (
         )}
       />
 
+      <Route exact path="/create-community" component={CreateCommunityPage} />
       <Route exact path="/" component={CommunitiesPage} />
     </Switch>
   </React.Fragment>

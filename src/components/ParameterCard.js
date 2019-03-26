@@ -42,6 +42,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
           </Text>
           {isEdit ? (
             <ParameterInput
+              onClick={console.log(convertedValue, detail, unit)}
               value={convertedValue}
               type={detail.type}
               unit={unit}

@@ -84,6 +84,16 @@ export default ({ balance, isBND, toggleBalance, showLogin }) => (
           <Bold ml={[0, 3]}>Band Protocol</Bold>
         </Link>
         <Flex ml="auto">
+          <Link dark to="/create-community" px={1}>
+            <Flex px={3} alignItems="center">
+              <Text color="#8868ff" px={2} fontSize={3}>
+                <i className="fas fa-plus-square" />
+              </Text>
+              <Text color="#8868ff" fontWeight="500" fontSize={0}>
+                Create Community
+              </Text>
+            </Flex>
+          </Link>
           {balance !== undefined ? (
             <Flex flexDirection="row" mr={4} alignItems="center">
               <Text mr={2} color="#8868ff" fontSize={0}>
