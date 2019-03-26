@@ -26,7 +26,8 @@ contract BandFactory is Ownable, ExecutionDelegator {
     uint256 nonce,
     address token,
     address parameter,
-    address core
+    address core,
+    address curve
   );
 
   event NewVotingContractRegistered(
@@ -92,7 +93,8 @@ contract BandFactory is Ownable, ExecutionDelegator {
       cores.length - 1,
       address(token),
       address(params),
-      address(core));
+      address(core),
+      address(core.bondingCurve()));
     return true;
   }
 
