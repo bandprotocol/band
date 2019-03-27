@@ -1,9 +1,6 @@
 pragma solidity 0.5.0;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-
-import "./feeless/Feeless.sol";
+import "./token/ERC20Base.sol";
 
 
 /**
@@ -14,7 +11,7 @@ import "./feeless/Feeless.sol";
  * means not all of their tokens are transferable. Locked tokens will reduce
  * monthly proportionally until they are fully unlocked.
  */
-contract BandToken is ERC20, Ownable, Feeless {
+contract BandToken is ERC20Base {
 
   string public constant name = "BandToken";
   string public constant symbol = "BAND";
@@ -55,7 +52,6 @@ contract BandToken is ERC20, Ownable, Feeless {
     // Initially, all of the minted tokens belong to the contract creator.
     _mint(creator, totalSupply);
     transferOwnership(creator);
-
     // Populate eomTimestamps for every month from the start of Q2 2019.
     // until the end of Q1 2023, for the total of 4 years (48 months).
     eomTimestamps[0] = 1556668800;   // End of 2019/04
@@ -186,56 +182,21 @@ contract BandToken is ERC20, Ownable, Feeless {
     }
   }
 
-  /**
-   * @dev Similar to ERC20 transfer, with extra token locking restriction.
-   */
   function transfer(address to, uint256 value) public returns (bool) {
     require(value <= unlockedBalanceOf(msg.sender));
     return super.transfer(to, value);
   }
 
-  /**
-   * @dev Similar to transfer, with extra parameter sender.
-   */
-  function transferFeeless(address sender, address to, uint256 value)
-    public
-    feeless(sender)
-    returns (bool)
-  {
-    require(value <= unlockedBalanceOf(sender));
-    _transfer(sender, to, value);
-    return true;
-  }
-
-  /**
-  * @dev Transfer tokens and call the reciver's given function with supplied data.
-  */
-  function transferAndCall(
-    address sender,
-    address to,
-    uint256 value,
-    bytes4 sig,
-    bytes calldata data
-  )
-    external
-    feeless(sender)
-    returns (bool)
-  {
-    require(value <= unlockedBalanceOf(sender));
-    _transfer(sender, to, value);
-    (bool success,) = to.call(abi.encodePacked(sig, uint256(sender), value, data));
-    require(success);
-    return true;
-  }
-
-  /**
-   * @dev Similar to ERC20 transferFrom, with extra token locking restriction.
-   */
-  function transferFrom(address from, address to, uint256 value)
+  function transferAndCall(address sender, address to, uint256 value, bytes4 sig, bytes memory data)
     public
     returns (bool)
   {
-    require(value <= unlockedBalanceOf(from));
-    return super.transferFrom(from, to, value);
+    require(value <= unlockedBalanceOf(sender));
+    return super.transferAndCall(sender, to, value, sig, data);
+  }
+
+  function transferFeeless(address sender, address to, uint256 value) public returns (bool) {
+    require(value <= unlockedBalanceOf(sender));
+    return super.transferFeeless(sender, to, value);
   }
 }

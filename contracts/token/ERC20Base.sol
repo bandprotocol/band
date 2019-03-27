@@ -9,8 +9,8 @@ import "../feeless/Feeless.sol";
 
 contract ERC20Base is ERC20Interface, ERC20, Feeless, Ownable {
 
-  function transferAndCall(address sender, address to, uint256 value, bytes4 sig, bytes calldata data)
-    external
+  function transferAndCall(address sender, address to, uint256 value, bytes4 sig, bytes memory data)
+    public
     feeless(sender)
     returns (bool)
   {
