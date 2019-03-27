@@ -12,10 +12,10 @@ export default class LinearCurve extends BaseCurve {
   static get defaultParams() {
     return {
       priceStart: 0, // range 0 - 100
-      slope: 1, // range 0.01 - 10
-      totalSupply: 100, //fixed
-      minSlope: 0.01,
-      maxSlope: 10,
+      slope: 0.1, // range 0.01 - 10
+      totalSupply: 4500, //fixed
+      minSlope: 0.001,
+      maxSlope: 0.25,
       minPriceStart: 0,
       maxPriceStart: 100,
     }
@@ -24,6 +24,20 @@ export default class LinearCurve extends BaseCurve {
   /**
    * Derived Properties
    */
+
+  get priceGraphConfig() {
+    return {
+      stepSize: 100,
+      suggestedMax: 800,
+    }
+  }
+
+  get collateralGraphConfig() {
+    return {
+      stepSize: 150000,
+      suggestedMax: 1500000,
+    }
+  }
 
   /**
    * Calculations
@@ -49,10 +63,16 @@ export default class LinearCurve extends BaseCurve {
     let xDataSet = []
     let bondingDataSet = []
     let collateralDataSet = []
-    for (let i = 0; i <= this.totalSupply; i++) {
-      xDataSet[i] = i
-      bondingDataSet[i] = this.slope * i + this.priceStart
-      collateralDataSet[i] = 0.5 * this.slope * i * i + this.priceStart * i
+    for (let i = 0; i <= this.totalSupply; i += 100) {
+      xDataSet.push(i)
+      bondingDataSet.push({
+        x: i,
+        y: this.slope * i + this.priceStart,
+      })
+      collateralDataSet.push({
+        x: i,
+        y: 0.5 * this.slope * i * i + this.priceStart * i,
+      })
     }
     return {
       xDataSet,
@@ -61,6 +81,49 @@ export default class LinearCurve extends BaseCurve {
     }
   }
 
+  generateCollateralArray() {
+    const slopeOnChain = Math.floor(this.slope * 100000000)
+    const withZero = [
+      '7',
+      '6',
+      '0',
+      slopeOnChain.toString(),
+      '6',
+      '1',
+      '1',
+      '0',
+      '200000000000000000000000000',
+    ]
+    const withPriceStart = [
+      '7',
+      '6',
+      '0',
+      slopeOnChain.toString(),
+      '6',
+      '1',
+      '1',
+      '0',
+      '200000000000000000000000000',
+      '6',
+      '0',
+      (this.priceStart * Math.pow(10, 18)).toLocaleString('fullwide', {
+        useGrouping: false,
+      }),
+      '1',
+    ]
+    // const withZero = `[7, 6, 0, ${slopeOnChain}, 6, 1, 1, 0, 200000000000000000000000000]`
+    // const withPriceStart = `[ 4, 7, 6, 0, ${slopeOnChain}, 6, 1, 1, 0, 200000000000000000000000000, 6, 0, ${this
+    //   .priceStart * Math.pow(10, 18)},
+    // 1]`
+
+    if (this.priceStart === 0) {
+      return withZero
+    } else {
+      return withPriceStart
+    }
+  }
+
+  // Don't use right now
   generateTree() {
     const slopeOnChain = this.slope * 100000000 // 10^8
     if (this.priceStart === 0) {
@@ -165,21 +228,6 @@ export default class LinearCurve extends BaseCurve {
           ],
         },
       ]
-    }
-  }
-
-  generateCollateralArray() {
-    const slopeOnChain = this.slope * 100000000
-    const withZero = `[7, 6, 0, ${slopeOnChain}, 6, 1, 1, 0, 200000000000000000000000000]`
-    const withPriceStart = `[ 4, 7, 6, 0, ${slopeOnChain}, 6, 1, 1, 0, 200000000000000000000000000, 6, 0, ${
-      this.priceStart
-    },
-    1]`
-
-    if (this.priceStart === 0) {
-      return withZero
-    } else {
-      return withPriceStart
     }
   }
 }

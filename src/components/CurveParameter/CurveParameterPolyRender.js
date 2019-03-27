@@ -1,7 +1,16 @@
 import React from 'react'
-import styled from 'styled-components'
-import Slider from 'components/Slider'
 import { Flex, Text, Box } from 'rebass'
+import Slider from 'components/Slider'
+import colors from 'ui/colors'
+import styled from 'styled-components'
+
+const Label = styled(Text).attrs({
+  fontWeight: '500',
+  fontSize: '14px',
+  mt: '16px',
+  mx: '10px',
+  color: colors.normal,
+})``
 
 const Input = styled.input`
   width: 270px;
@@ -17,124 +26,176 @@ const Input = styled.input`
 `
 
 export default ({
-  values: { totalSupply, priceStart, priceEnd, reserveRatio },
+  values: {
+    priceStart,
+    slope,
+    reserveRatio,
+    minSlope,
+    maxSlope,
+    minPriceStart,
+    maxPriceStart,
+    minReserveRatio,
+    maxReserveRatio,
+  },
   onChange,
 }) => {
-  const handletotalSupplyBar = e => {
+  const handlePriceStartBar = e => {
     const { name, value } = e.target
-    onChange(name, parseFloat(value) * 100)
-  }
-  const handletotalSupplyInput = e => {
-    const { name, value } = e.target
-    onChange(name, parseFloat(value))
+    const newPrice =
+      (parseFloat(value) * (maxPriceStart - minPriceStart)) / 100 +
+      minPriceStart
+    onChange(name, clampedPrice(newPrice))
   }
 
-  const clampTotalSupply = t => {
-    if (t < 1) {
-      return 1
-    } else if (t > 10000) {
-      return 10000
+  const handlePriceStartInput = e => {
+    const { name, value } = e.target
+    if (Number(value) === parseFloat(value)) {
+      const newPrice =
+        (parseFloat(value) * (maxPriceStart - minPriceStart)) / 100 +
+        minPriceStart
+      onChange(name, clampedPrice(newPrice))
     }
-    return t
   }
 
-  const handlePriceEndBar = e => {
-    const { name, value } = e.target
-    onChange(name, parseFloat(value) * 100)
-  }
-  const handlePriceEndInput = e => {
+  const handleSlopeBar = e => {
     const { name, value } = e.target
     onChange(name, parseFloat(value))
   }
 
-  const clampPriceEnd = p => {
-    if (p < 1) {
-      return 1
-    } else if (p > 10000) {
-      return 10000
+  const handleSlopeInput = e => {
+    const { name, value } = e.target
+    if (Number(value) === parseFloat(value)) {
+      const newSlope = parseFloat(value)
+      onChange(name, clampedSlope(newSlope))
     }
-    return p
   }
 
-  const handleReserveRatioBar = e => {
-    const { name, value } = e.target
-    onChange(name, parseFloat(value))
-  }
-  const handleReserveRatioInput = e => {
+  const handleReserveBar = e => {
     const { name, value } = e.target
     onChange(name, parseFloat(value))
   }
 
-  const clampReserveRatio = r => {
-    if (r < 10) {
-      return 10
-    } else if (r > 100) {
-      return 100
+  const handleReserveInput = e => {
+    const { name, value } = e.target
+    if (Number(value) === parseFloat(value)) {
+      const newRatio = parseFloat(value)
+      onChange(name, clampedReserveRatio(newRatio))
     }
-    return r
   }
+
+  const clampedPrice = price => {
+    if (price > maxPriceStart) {
+      return maxPriceStart
+    }
+    if (price < minPriceStart) {
+      return minPriceStart
+    }
+    return price
+  }
+
+  const clampedSlope = s => {
+    if (s > maxSlope) {
+      return maxSlope
+    }
+    if (s < minSlope) {
+      return minSlope
+    }
+    return s
+  }
+
+  const clampedReserveRatio = s => {
+    if (s > maxReserveRatio) {
+      return maxReserveRatio
+    }
+    if (s < minReserveRatio) {
+      return minReserveRatio
+    }
+    return s
+  }
+
   return (
     <Flex flexDirection="column" alignItems="flex-start" p={3}>
-      <Box width="100%">
-        <Text fontSize={1} my={1}>
-          Token Total Supply
-        </Text>
+      {/* Initial Price */}
+      <Flex
+        my={1}
+        width="100%"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex width="100%" justifyContent="flex-start">
+          <Label>Initial Price</Label>
+        </Flex>
         <Slider
-          value={totalSupply / 100}
-          name="totalSupply"
-          min={1}
-          max={100}
-          onChange={handletotalSupplyBar}
+          value={clampedPrice(priceStart)}
+          name="priceStart"
+          min={minPriceStart}
+          max={maxPriceStart}
+          onChange={handlePriceStartBar}
         />
         <Input
           type="text"
-          name="totalSupply"
-          defaultValue={totalSupply}
-          value={clampTotalSupply(totalSupply)}
-          onChange={handletotalSupplyInput}
-          style={{ width: '80%', lineHeight: '20px' }}
+          name="priceStart"
+          defaultValue={priceStart}
+          value={clampedPrice(priceStart)}
+          onChange={handlePriceStartInput}
         />
-      </Box>
-      <Box my={1} width="100%">
-        <Text fontSize={1} my={1}>
-          Last Price
-        </Text>
+      </Flex>
+      {/* Rate of increase */}
+      <Flex
+        my={1}
+        width="100%"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex width="100%" justifyContent="flex-start">
+          <Label>Rate of increase(10^(-3))</Label>
+        </Flex>
         <Slider
-          value={priceEnd / 100}
-          name="priceEnd"
-          min={1}
-          max={100}
-          onChange={handlePriceEndBar}
+          value={(clampedSlope(slope) * 100) / (maxSlope - minSlope)}
+          name="slope"
+          min={minSlope}
+          max={maxSlope}
+          onChange={handleSlopeBar}
         />
         <Input
           type="text"
-          name="priceEnd"
-          defaultValue={clampPriceEnd(priceEnd)}
-          value={clampPriceEnd(priceEnd)}
-          onChange={handlePriceEndInput}
-          style={{ width: '80%', lineHeight: '20px' }}
+          name="slope"
+          defaultValue={slope}
+          value={clampedSlope(slope)}
+          onChange={handleSlopeInput}
         />
-      </Box>
-      <Box my={1} width="100%">
-        <Text fontSize={1} my={1}>
-          Reserve Ratio (10% - 100%)
-        </Text>
+      </Flex>
+      {/* Reserve Ratio */}
+      <Flex
+        my={1}
+        width="100%"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex width="100%" justifyContent="flex-start">
+          <Label>Reserve Ratio</Label>
+        </Flex>
         <Slider
-          value={clampReserveRatio(reserveRatio)}
+          value={
+            ((reserveRatio - minReserveRatio) * 100) /
+            (maxReserveRatio - minReserveRatio)
+          }
           name="reserveRatio"
-          min={10}
-          max={100}
-          onChange={handleReserveRatioBar}
+          min={minReserveRatio}
+          max={maxReserveRatio}
+          onChange={handleReserveBar}
         />
         <Input
           type="text"
           name="reserveRatio"
-          defaultValue={clampReserveRatio(reserveRatio)}
-          value={clampReserveRatio(reserveRatio)}
-          onChange={handleReserveRatioInput}
-          style={{ width: '80%', lineHeight: '20px' }}
+          defaultValue={reserveRatio}
+          value={clampedReserveRatio(reserveRatio)}
+          onChange={handleReserveInput}
         />
-      </Box>
+      </Flex>
     </Flex>
   )
 }

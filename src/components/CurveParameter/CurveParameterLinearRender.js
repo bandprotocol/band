@@ -3,7 +3,6 @@ import { Flex, Text, Box } from 'rebass'
 import Slider from 'components/Slider'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { XML_1_0 } from 'xmlchars'
 
 const Label = styled(Text).attrs({
   fontWeight: '500',

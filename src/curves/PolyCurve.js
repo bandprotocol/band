@@ -11,11 +11,16 @@ export default class PolyCurve extends BaseCurve {
 
   static get defaultParams() {
     return {
-      priceStart: 0,
-      priceEnd: 2000,
-      totalSupply: 100,
-      //   degree: 2,
-      reserveRatio: 50,
+      totalSupply: 10000, // hard code
+      priceStart: 0, // 0 - 100
+      slope: 0.003, //
+      reserveRatio: 33.33, // 10% - 100%
+      minSlope: 0.001,
+      maxSlope: 0.01,
+      minPriceStart: 0,
+      maxPriceStart: 100,
+      minReserveRatio: 27.5,
+      maxReserveRatio: 49,
     }
   }
 
@@ -23,8 +28,44 @@ export default class PolyCurve extends BaseCurve {
    * Derived Properties
    */
 
+  get convertedSlope() {
+    return this.slope * 0.001
+  }
+
+  get priceGraphConfig() {
+    if (this.reserveRatio < 28.7) {
+      return {
+        stepSize: 15000,
+        suggestedMax: 150000,
+      }
+    }
+    if (this.reserveRatio < 31.7) {
+      return {
+        stepSize: 1000,
+        suggestedMax: 10000,
+      }
+    }
+    return {
+      stepSize: 50,
+      suggestedMax: 500,
+    }
+  }
+
+  get collateralGraphConfig() {
+    if (this.reserveRatio < 32.2) {
+      return {
+        stepSize: 10000000,
+        suggestedMax: 100000000,
+      }
+    }
+    return {
+      stepSize: 100000,
+      suggestedMax: 1000000,
+    }
+  }
+
   get degree() {
-    return 100 / this.reserveRatio
+    return 100 / this.reserveRatio - 1
   }
   get intregralDegree() {
     return this.degree + 1
@@ -38,16 +79,10 @@ export default class PolyCurve extends BaseCurve {
   get theoriticalSupply() {
     const y = Math.pow(10, 26)
     const A =
-      this.slope / (this.intregralDegree * Math.pow(10, this.degree * 18))
+      this.convertedSlope /
+      (this.intregralDegree * Math.pow(10, this.degree * 18))
     const T = Math.pow(y / A, 1 / this.intregralDegree)
     return T
-  }
-
-  get slope() {
-    return (
-      (this.priceEnd - this.priceStart) /
-      Math.pow(this.totalSupply, this.degree)
-    )
   }
 
   // convert equation to y = c * (x / baseD) ^ (n * 1000000)
@@ -58,7 +93,8 @@ export default class PolyCurve extends BaseCurve {
 
   get c() {
     return (
-      (this.slope / (Math.pow(10, this.degree * 18) * this.intregralDegree)) *
+      (this.convertedSlope /
+        (Math.pow(10, this.degree * 18) * this.intregralDegree)) *
       Math.pow(this.baseD, this.intregralDegree)
     )
   }
@@ -69,22 +105,26 @@ export default class PolyCurve extends BaseCurve {
 
   // use degree
   generateEquation() {
-    // const slope = this.slope.toLocaleString(undefined, {
-    //   maximumFractionDigits: 14,
-    // })
-    const slope = this.slope
-    if (slope === 1) {
+    const convertedSlope = this.convertedSlope.toLocaleString(undefined, {
+      maximumFractionDigits: 8,
+    })
+
+    const degree = this.degree.toLocaleString(undefined, {
+      maximumFractionDigits: 3,
+    })
+
+    if (convertedSlope === 1) {
       if (this.priceStart === 0) {
-        return `y = x^{${this.degree}}`
+        return `y = x^{${degree}}`
       } else {
-        return `y = x^{${this.degree}} + ${this.priceStart}`
+        return `y = x^{${degree}} + ${this.priceStart}`
       }
     }
 
     if (this.priceStart === 0) {
-      return `y = (${slope})x^{${this.degree}}`
+      return `y = (${convertedSlope})x^{${degree}}`
     } else {
-      return `y = (${slope})x^{${this.degree}} + ${this.priceStart}`
+      return `y = (${convertedSlope})x^{${degree}} + ${this.priceStart}`
     }
   }
 
@@ -93,14 +133,19 @@ export default class PolyCurve extends BaseCurve {
     let xDataSet = []
     let bondingDataSet = []
     let collateralDataSet = []
-    for (let i = 0; i <= this.totalSupply; i++) {
-      xDataSet[i] = i
-      bondingDataSet[i] =
-        this.slope * Math.pow(i, this.degree) + this.priceStart
-      collateralDataSet[i] =
-        (this.slope / this.intregralDegree) *
-          Math.pow(i, this.intregralDegree) +
-        this.priceStart * i
+    for (let i = 0; i <= this.totalSupply; i += 1000) {
+      xDataSet.push(i)
+      bondingDataSet.push({
+        x: i,
+        y: this.convertedSlope * Math.pow(i, this.degree) + this.priceStart,
+      })
+      collateralDataSet.push({
+        x: i,
+        y:
+          (this.convertedSlope / this.intregralDegree) *
+            Math.pow(i, this.intregralDegree) +
+          this.priceStart * i,
+      })
     }
     return {
       xDataSet,
@@ -109,6 +154,74 @@ export default class PolyCurve extends BaseCurve {
     }
   }
 
+  generateCollateralArray() {
+    const expV = Math.floor(this.intregralDegree * 1000000)
+    const baseD = this.baseD.toLocaleString('fullwide', { useGrouping: false })
+    const cString = this.c.toString()
+    if (this.priceStart === 0) {
+      const withZero = [
+        '18',
+        '12',
+        '1',
+        '0',
+        baseD,
+        '7',
+        '6',
+        '0',
+        cString,
+        '1',
+        '0',
+        baseD,
+        '20',
+        '0',
+        cString,
+        '1',
+        '0',
+        baseD,
+        '0',
+        expV.toString(),
+      ]
+      // const withZero = `[18, 12, 1, 0, ${baseD}, 7, 6, 0, ${
+      //   this.c
+      // }, 1, 0, ${baseD}, 20, 0, ${this.c}, 1, 0, ${baseD}, 0, ${expV}]`
+      return withZero
+    } else {
+      const withNoZero = [
+        '4',
+        '18',
+        '12',
+        '1',
+        '0',
+        baseD,
+        '7',
+        '6',
+        '0',
+        cString,
+        '1',
+        '0',
+        baseD,
+        '20',
+        '0',
+        cString,
+        '1',
+        '0',
+        baseD,
+        '0',
+        expV.toString(),
+        '0',
+        (this.priceStart * Math.pow(10, 18)).toLocaleString('fullwide', {
+          useGrouping: false,
+        }),
+      ]
+      // const withNoZero = `[4, 18, 12, 1, 0, ${baseD}, 7, 6, 0, ${
+      //   this.c
+      // }, 1, 0, ${baseD}, 20, 0, ${this.c}, 1, 0, ${baseD}, 0, ${expV}, 0, ${this
+      //   .priceStart * Math.pow(10, 18)}]`
+      return withNoZero
+    }
+  }
+
+  // don't use right now
   generateTree() {
     const baseD = this.baseD.toLocaleString('fullwide', { useGrouping: false })
     const expV = this.intregralDegree * 1000000
@@ -198,14 +311,5 @@ export default class PolyCurve extends BaseCurve {
         },
       ]
     }
-  }
-
-  generateCollateralArray() {
-    const expV = this.intregralDegree * 1000000
-    const baseD = this.baseD.toLocaleString('fullwide', { useGrouping: false })
-    const withZero = `[18, 12, 1, 0, ${baseD}, 7, 6, 0, ${
-      this.c
-    }, 1, 0, ${baseD}, 20, 0, ${this.c}, 1, 0, ${baseD}, 0, ${expV}]`
-    return withZero
   }
 }

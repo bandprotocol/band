@@ -47,6 +47,20 @@ export default {
         backgroundColor: '#FFFBFB',
       },
     },
+    grey: {
+      fontFamily: 'Montserrat, sans-serif',
+      fontWeight: 400,
+      fontSize: '0.85em',
+      padding: '0.9em 3em',
+      cursor: 'pointer',
+      color: 'white',
+      backgroundColor: colors.text.grey,
+      border: `solid 1px ${colors.text.grey}`,
+      transition: 'all 250ms',
+      '&:hover': {
+        backgroundColor: '#b4bbda',
+      },
+    },
     submit: {
       fontFamily: 'Montserrat, sans-serif',
       fontWeight: 400,

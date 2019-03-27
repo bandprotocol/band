@@ -12,11 +12,12 @@ const Footer = styled.div`
   text-align: center;
   height: 100px;
   box-shadow: 0px -5px 35px 1px rgba(225, 230, 250, 1);
+  z-index: 10;
 `
 
 const FooterButton = styled(Button).attrs({
   width: '180px',
-  variant: 'primary',
+  variant: 'grey',
 })`
   height: 45px;
   box-shadow: 0 3px 5px 0 #baa8ff;

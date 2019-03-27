@@ -1,6 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import { Flex, Text, Image } from 'ui/common'
+import { Flex, Text, Image, Box } from 'ui/common'
 import { colors } from 'ui'
 import IPFSStorage from 'utils/ipfs'
 import ImageLogoSrc from 'images/picture.svg'
@@ -88,9 +88,32 @@ export default class ImageUpload extends React.Component {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             width: width,
+            borderRadius: this.props.banner ? '8px' : '0px',
             height: height,
+            boxShadow: this.props.banner ? '0 10px 17px 0 #e6e9f5' : '',
+            position: 'relative',
           }}
-        />
+        >
+          <Flex
+            bg="red"
+            width="20px"
+            justifyContent="center"
+            alignItems="center"
+            onClick={() => this.setState({ imgBase64: null })}
+            style={{
+              height: '20px',
+              borderRadius: '50%',
+              position: 'absolute',
+              bottom: '-10px',
+              right: '-5px',
+              cursor: 'pointer',
+            }}
+          >
+            <Text color="white">
+              <i class="fas fa-times" />
+            </Text>
+          </Flex>
+        </div>
       )
     }
   }

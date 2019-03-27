@@ -1,44 +1,63 @@
 import React from 'react'
 import { Chart, Line } from 'react-chartjs-2'
 import 'chartjs-plugin-downsample'
-import colors from 'ui/colors'
 
 Chart.defaults.global.defaultFontSize = 16
 Chart.defaults.global.elements.point.radius = 0
 Chart.defaults.global.elements.point.hitRadius = 10
 Chart.defaults.global.elements.point.hoverRadius = 10
 
-const compileDatasets = (stacked, xDataset, yDatasets) => {
-  return yDatasets.map((dataSet, index) => {
-    return {
-      label: dataSet.label,
-      fillColor: 'rgba(220,220,220,0.2)',
-      strokeColor: 'rgba(220,220,220,1)',
-      pointColor: colors.purple.normal,
-      pointStrokeColor: '#fff',
-      pointHighlightFill: '#fff',
-      pointHighlightStroke: 'rgba(220,220,220,1)',
-      data: dataSet.data.map((y, i) => ({ x: xDataset[i], y: y })),
-    }
-  })
-}
+// const compileDatasets = dataset => {
+//   return {
+//     label: 'Peach',
+//     borderColor: 'rgba(136, 104, 255)',
+//     backgroundColor: 'rgba(220, 227, 255)',
+//     strokeColor: 'rgba(220,220,220,1)',
+//     pointColor: 'rgba(136, 104, 255)',
+//     pointStrokeColor: '#fff',
+//     pointHighlightFill: '#fff',
+//     pointHighlightStroke: 'rgba(220,220,220,1)',
+//     // spanGaps: true,
+//     data: [{ x: 0, y: 1000 }, { x: 1, y: 1001 }],
+//   }
+// }
 
 export default ({
   stacked = false,
+  dataset,
   xDataset,
   yDatasets,
   title,
   xLabel,
   yLabel,
+  config,
 }) => {
-  const chartData = {
+  const data = {
     labels: xDataset,
-    datasets: compileDatasets(stacked, xDataset, yDatasets),
+    datasets: [
+      {
+        label: yLabel,
+        fill: true,
+        lineTension: 0.1,
+        borderColor: 'rgb(78, 60, 169)',
+        backgroundColor: 'rgb(220, 227, 255)',
+        borderCapStyle: 'butt',
+        borderDash: [],
+        borderDashOffset: 0.0,
+        borderJoinStyle: 'miter',
+        pointBorderColor: 'rgb(78, 60, 169)',
+        pointBackgroundColor: 'rgb(78, 60, 169)',
+        pointBorderWidth: 1,
+        pointHoverRadius: 5,
+        pointHoverBackgroundColor: 'rgb(78, 60, 169)',
+        pointHoverBorderColor: 'rgb(78, 60, 169)',
+        pointHoverBorderWidth: 2,
+        pointRadius: 1,
+        pointHitRadius: 10,
+        data: dataset.map(e => e.y),
+      },
+    ],
   }
-
-  // DEBUG
-  // console.log('x-data', xDataset)
-  // console.log('y-data', yDatasets[0].data)
 
   const chartOptions = {
     maintainAspectRatio: true,
@@ -68,16 +87,15 @@ export default ({
             display: true,
             labelString: yLabel,
           },
+          ticks: {
+            stepSize: config.stepSize, // congifure for each graph
+            suggestedMax: config.suggestedMax, // congifure for each graph
+            suggestedMin: 0,
+          },
         },
       ],
     },
-    // downsample: {
-    //  enabled: true,
-    //  threshold: 1000,
-    // },
   }
 
-  return (
-    <Line data={chartData} options={chartOptions} width={720} height={500} />
-  )
+  return <Line data={data} options={chartOptions} width={720} height={500} />
 }

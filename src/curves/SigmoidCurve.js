@@ -11,16 +11,40 @@ export default class SigmoidCurve extends BaseCurve {
 
   static get defaultParams() {
     return {
-      slope: 1, //TODO: use suitable name for this!!!
-      b: 0, //TODO: use suitable name for this too!!!
-      priceEnd: 300,
-      totalSupply: 20,
+      totalSupply: 500,
+      turningPoint: 200,
+      slope: 0.03,
+      priceEnd: 200000,
+      minSlope: 0.01,
+      maxSlope: 0.1,
+      minTurningPoint: 0,
+      maxTurningPoint: 350,
+      minPriceEnd: 200,
+      maxPriceEnd: 220000,
     }
   }
 
   /**
    * Derived Properties
    */
+
+  get priceGraphConfig() {
+    return {
+      stepSize: 30000,
+      suggestedMax: 300000,
+    }
+  }
+
+  get collateralGraphConfig() {
+    return {
+      stepSize: 100000,
+      suggestedMax: 1000000,
+    }
+  }
+
+  get b() {
+    return -1 * this.turningPoint * this.slope
+  }
 
   // e * 10^18
   get eExpEighteen() {
@@ -104,59 +128,25 @@ export default class SigmoidCurve extends BaseCurve {
     let xDataSet = []
     let bondingDataSet = []
     let collateralDataSet = []
-    for (let i = 0; i <= this.totalSupply; i++) {
-      xDataSet[i] = i
-      bondingDataSet[i] =
-        this.priceEnd / (1 + this.exp(-(this.slope * i + this.b)))
-      collateralDataSet[i] =
-        (this.priceEnd / 2) * Math.log(this.exp(this.slope * i + this.b) + 1) +
-        this.integralConstant
+    for (let i = 0; i <= this.totalSupply; i += 20) {
+      xDataSet.push(i)
+      bondingDataSet.push({
+        x: i,
+        y: this.priceEnd / (1 + this.exp(-(this.slope * i + this.b))),
+      })
+      collateralDataSet.push({
+        x: i,
+        y:
+          (this.priceEnd / 2) *
+            Math.log(this.exp(this.slope * i + this.b) + 1) +
+          this.integralConstant,
+      })
     }
     return {
       xDataSet,
       bondingCurve: bondingDataSet,
       collateralCurve: collateralDataSet,
     }
-  }
-
-  generateTree() {
-    return [
-      {
-        name: `${this.integralConstant >= 0 ? '4 (Opcode +)' : '5 (Opcode -)'}`,
-        children: [
-          {
-            name: '17 (Opcode Ternary)',
-            children: [
-              {
-                name: '14 (Opcode >=)',
-                children: [
-                  {
-                    name: '1 (Opcode Variable)',
-                  },
-                  {
-                    name: '0 (Opcode Constant)',
-                    children: [
-                      {
-                        name: `${this.maximumTotalSupply} (Value)`,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: '0 (Opcode Constant)',
-            children: [
-              {
-                name: `${Math.abs(this.integralConstant) *
-                  this.tenExpEighteen} (Value)`,
-              },
-            ],
-          },
-        ],
-      },
-    ]
   }
 
   generateCollateralArray() {
@@ -206,5 +196,45 @@ export default class SigmoidCurve extends BaseCurve {
     // }, 0, ${Math.abs(this.integralConstantMulTenExpEighteen)}]`
     // return result
     return '[18, 15, 1, 0, 1700000000000000000000, 5, 9, 1, 0, 5000000000000000000, 0, 656630843759111400000, 5, 18, 15, 1, 0, 100000000000000000000, 19, 0, 500000000000000000000, 4, 20, 0, 1000000000000000000, 0, 2718281828459045400, 0, 1000000000000000000, 5, 9, 1, 0, 10000, 0, 1000000, 0, 1000000000000000000, 0, 1000000000000000000, 19, 0, 500000000000000000000, 4, 0, 1000000000000000000, 20, 0, 1000000000000000000, 0, 2718281828459045400, 0, 1000000000000000000, 5, 0, 1000000, 9, 1, 0, 10000, 20, 0, 1000000000000000000, 0, 2718281828459045400, 0, 1000000000000000000, 5, 0, 1000000, 9, 1, 0, 10000, 0, 156630843759111440000]'
+  }
+
+  generateTree() {
+    return [
+      {
+        name: `${this.integralConstant >= 0 ? '4 (Opcode +)' : '5 (Opcode -)'}`,
+        children: [
+          {
+            name: '17 (Opcode Ternary)',
+            children: [
+              {
+                name: '14 (Opcode >=)',
+                children: [
+                  {
+                    name: '1 (Opcode Variable)',
+                  },
+                  {
+                    name: '0 (Opcode Constant)',
+                    children: [
+                      {
+                        name: `${this.maximumTotalSupply} (Value)`,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: '0 (Opcode Constant)',
+            children: [
+              {
+                name: `${Math.abs(this.integralConstant) *
+                  this.tenExpEighteen} (Value)`,
+              },
+            ],
+          },
+        ],
+      },
+    ]
   }
 }

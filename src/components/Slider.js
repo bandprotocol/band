@@ -13,24 +13,14 @@ const styles = {
 }
 
 class SimpleSlider extends React.Component {
-  state = {
-    value: 0,
-  }
-
-  componentDidMount() {
-    const { value: rawValue, min, max } = this.props
-    const value = ((max - min) / 100) * rawValue
-    this.setState({
-      value,
-    })
-  }
-
   handleChange = (event, value) => {
-    const { value: rawValue, min, max } = this.props
+    const { min, max } = this.props
+    const convertedValue = (value * (max - min)) / 100 + min
+    const valueToFixed = Math.floor(convertedValue * 1000) / 1000
     this.props.onChange({
       target: {
         name: this.props.name,
-        value: (value * (max - min)) / 100 + min,
+        value: valueToFixed,
       },
     })
   }

@@ -45,7 +45,11 @@ export default ({
 }) => (
   <InputFlex px={1} width={width} height={height} borderColor={borderColor}>
     <Box flex={1}>
-      <ModernInput placeholder={value} onChange={handleParameterChange} />
+      <ModernInput
+        type="number"
+        placeholder={value}
+        onChange={handleParameterChange}
+      />
     </Box>
     {type === 'TIME' ? (
       <UnitSelector

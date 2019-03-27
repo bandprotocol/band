@@ -1,7 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 import Slider from 'components/Slider'
-import { Flex, Text, Box } from 'rebass'
+import { Flex, Text } from 'rebass'
+import colors from 'ui/colors'
+
+const Label = styled(Text).attrs({
+  fontWeight: '500',
+  fontSize: '14px',
+  mt: '16px',
+  mx: '10px',
+  color: colors.normal,
+})``
 
 const Input = styled.input`
   width: 270px;
@@ -17,116 +26,99 @@ const Input = styled.input`
 `
 
 export default ({
-  values: { totalSupply, slope, priceEnd, reserveRatio, b },
+  values: {
+    slope,
+    priceEnd,
+    turningPoint,
+    minSlope,
+    maxSlope,
+    minTurningPoint,
+    maxTurningPoint,
+    minPriceEnd,
+    maxPriceEnd,
+  },
   onChange,
 }) => {
-  const handleFormChange = e => {
-    const { name, value } = e.target
-    onChange(name, parseFloat(value))
-  }
-
-  const handletotalSupplyBar = e => {
-    const { name, value } = e.target
-    onChange(name, parseFloat(value) * 100)
-  }
-  const handletotalSupplyInput = e => {
-    const { name, value } = e.target
-    onChange(name, parseFloat(value))
-  }
-
-  const clampTotalSupply = t => {
-    if (t < 1) {
-      return 1
-    } else if (t > 10000) {
-      return 10000
-    }
-    return t
-  }
-
   const handleSlopeBar = e => {
     const { name, value } = e.target
     onChange(name, parseFloat(value))
   }
   const handleSlopeInput = e => {
     const { name, value } = e.target
-    onChange(name, parseFloat(value))
+    if (Number(value) === parseFloat(value)) {
+      const newRatio = parseFloat(value)
+      onChange(name, clampSlope(newRatio))
+    }
   }
 
   const clampSlope = s => {
-    if (s < 0.01) {
-      return 0.01
-    } else if (s > 10) {
-      return 10
+    if (s < minSlope) {
+      return minSlope
+    } else if (s > maxSlope) {
+      return maxSlope
     }
     return s
   }
 
   const handlePriceEndBar = e => {
     const { name, value } = e.target
-    onChange(name, parseFloat(value) * 10)
+    onChange(name, parseFloat(value))
   }
   const handlePriceEndInput = e => {
     const { name, value } = e.target
-    onChange(name, parseFloat(value))
+    if (Number(value) === parseFloat(value)) {
+      const newRatio = parseFloat(value)
+      onChange(name, clampPriceEnd(newRatio))
+    }
   }
 
   const clampPriceEnd = p => {
-    if (p < 1) {
-      return 1
-    } else if (p > 1000) {
-      return 1000
+    if (p < minPriceEnd) {
+      return minPriceEnd
+    } else if (p > maxPriceEnd) {
+      return maxPriceEnd
     }
     return p
   }
 
-  const handleBBar = e => {
+  const handleTurningPointBar = e => {
     const { name, value } = e.target
     onChange(name, parseFloat(value))
   }
-  const handleBInput = e => {
+  const handleTurningPointInput = e => {
     const { name, value } = e.target
-    onChange(name, parseFloat(value))
+    if (Number(value) === parseFloat(value)) {
+      const newRatio = parseFloat(value)
+      onChange(name, clampTP(newRatio))
+    }
   }
 
-  const clampB = _b => {
-    if (_b < 0.01) {
-      return 0.01
-    } else if (_b > 10) {
-      return 10
+  const clampTP = _b => {
+    if (_b < minTurningPoint) {
+      return minTurningPoint
+    } else if (_b > maxTurningPoint) {
+      return maxTurningPoint
     }
     return _b
   }
   return (
     <Flex flexDirection="column" alignItems="flex-start" p={3}>
-      <Box width="100%">
-        <Text fontSize={1} my={1}>
-          Token Total Supply
-        </Text>
+      {/* Rate of increase */}
+      <Flex
+        my={1}
+        width="100%"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex width="100%" justifyContent="flex-start">
+          <Label>Rate of increase</Label>
+        </Flex>
         <Slider
-          value={totalSupply / 100}
-          name="totalSupply"
-          min={1}
-          max={100}
-          onChange={handletotalSupplyBar}
-        />
-        <Input
-          type="text"
-          name="totalSupply"
-          defaultValue={clampTotalSupply(totalSupply)}
-          value={clampTotalSupply(totalSupply)}
-          onChange={handletotalSupplyInput}
-          style={{ width: '80%', lineHeight: '20px' }}
-        />
-      </Box>
-      <Box my={2} width="100%">
-        <Text fontSize={1} my={2}>
-          a
-        </Text>
-        <Slider
-          value={(clampSlope(slope) * 100) / (10 - 0.01)}
+          value={(clampSlope(slope) * 100) / (maxSlope - minSlope)}
           name="slope"
-          min={0.01}
-          max={10}
+          min={minSlope}
+          max={maxSlope}
           onChange={handleSlopeBar}
         />
         <Input
@@ -135,38 +127,52 @@ export default ({
           defaultValue={clampSlope(slope)}
           value={clampSlope(slope)}
           onChange={handleSlopeInput}
-          style={{ width: '80%', lineHeight: '20px' }}
         />
-      </Box>
-      <Box my={2} width="100%">
-        <Text fontSize={1} my={2}>
-          b
-        </Text>
+      </Flex>
+      {/* Turning Point */}
+      <Flex
+        my={1}
+        width="100%"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex width="100%" justifyContent="flex-start">
+          <Label>Turning point supply</Label>
+        </Flex>
         <Slider
-          value={(clampB(b) * 100) / (10 - 0.01)}
-          name="b"
-          min={0.01}
-          max={10}
-          onChange={handleBBar}
+          value={
+            (clampTP(turningPoint) * 100) / (maxTurningPoint - minTurningPoint)
+          }
+          name="turningPoint"
+          min={minTurningPoint}
+          max={maxTurningPoint}
+          onChange={handleTurningPointBar}
         />
         <Input
           type="text"
-          name="b"
-          value={clampB(b)}
-          defaultValue={clampB(b)}
-          onChange={handleBInput}
-          style={{ width: '80%', lineHeight: '20px' }}
+          name="turningPoint"
+          value={clampTP(turningPoint)}
+          defaultValue={clampTP(turningPoint)}
+          onChange={handleTurningPointInput}
         />
-      </Box>
-      <Box my={2} width="100%">
-        <Text fontSize={1} my={2}>
-          Last Price
-        </Text>
+      </Flex>
+      {/* Maximum Price */}
+      <Flex
+        my={1}
+        width="100%"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex width="100%" justifyContent="flex-start">
+          <Label> Maximum Price</Label>
+        </Flex>
         <Slider
-          value={priceEnd / 10}
+          value={(clampPriceEnd(priceEnd) * 100) / (maxPriceEnd - minPriceEnd)}
           name="priceEnd"
-          min={1}
-          max={100}
+          min={minPriceEnd}
+          max={maxPriceEnd}
           onChange={handlePriceEndBar}
         />
         <Input
@@ -175,9 +181,8 @@ export default ({
           defaultValue={clampPriceEnd(priceEnd)}
           value={clampPriceEnd(priceEnd)}
           onChange={handlePriceEndInput}
-          style={{ width: '80%', lineHeight: '20px' }}
         />
-      </Box>
+      </Flex>
     </Flex>
   )
 }

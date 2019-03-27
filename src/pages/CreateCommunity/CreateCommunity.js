@@ -4,6 +4,9 @@ import CreateCommunityState from 'components/CreateCommunityState'
 import CreateCommunityFooter from 'components/CreateCommunityFooter'
 import Curves from 'curves'
 import { BandProtocolClient } from 'band.js'
+import { Flex } from 'ui/common'
+import { convertToChain } from 'utils/helper'
+
 // page
 import CreateCommunityInfo from 'pages/CreateCommunityInfo'
 import CreateCommunityDistribution from 'pages/CreateCommunityDistribution'
@@ -24,11 +27,11 @@ export default class CreateCommunity extends React.Component {
     type: Curves['linear'].type, // linear, poly, sigmoid
     params: Curves['linear'].defaultParams,
     kvs: {
-      'params:expiration_time': '60',
-      'params:min_participation_pct': '6000000000000',
-      'params:support_required_pct': '5000000000000',
-      'curve:liqudity_fee': '3',
-      'curve:inflation_rate': '3',
+      'params:expiration_time': '2',
+      'params:min_participation_pct': '60',
+      'params:support_required_pct': '50',
+      'curve:liqudity_fee': '0',
+      'curve:inflation_rate': '0',
       'info:name': '',
       'info:symbol': '',
       'info:description': '',
@@ -36,6 +39,28 @@ export default class CreateCommunity extends React.Component {
       'info:organization': '',
       'info:logo': '',
       'info:banner': '',
+    },
+    kvsUnit: {
+      'params:expiration_time': {
+        type: 'TIME',
+        unit: 'minutes',
+      },
+      'params:min_participation_pct': {
+        type: 'PERCENTAGE',
+        unit: '%',
+      },
+      'params:support_required_pct': {
+        type: 'PERCENTAGE',
+        unit: '%',
+      },
+      'curve:liqudity_fee': {
+        type: 'PERCENTAGE',
+        unit: '%',
+      },
+      'curve:inflation_rate': {
+        type: 'PERCENTAGE',
+        unit: '%',
+      },
     },
   }
 
@@ -47,10 +72,12 @@ export default class CreateCommunity extends React.Component {
     }
   }
 
-  setKeyValue(key, value) {
+  setKeyValue(key, value, type, unit) {
     const kvs = { ...this.state.kvs, [key]: value }
+    const kvsUnit = { ...this.state.kvsUnit, [key]: { type: type, unit: unit } }
     this.setState({
       kvs,
+      kvsUnit,
     })
   }
 
@@ -80,11 +107,12 @@ export default class CreateCommunity extends React.Component {
   }
 
   onParamChange(k, v) {
+    const valueToFixed = Math.floor(v * 1000) / 1000
     this.setState(
       {
         params: {
           ...this.state.params,
-          [k]: v,
+          [k]: valueToFixed,
         },
       },
       this.updateCurve.bind(this),
@@ -93,7 +121,6 @@ export default class CreateCommunity extends React.Component {
 
   // sumbit when everything done!
   async handleSubmit() {
-    console.log('Congrats!!!', this.state)
     BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
     const bandClient = await BandProtocolClient.make({
       provider: window.web3.currentProvider,
@@ -106,11 +133,15 @@ export default class CreateCommunity extends React.Component {
     delete kvs['info:url']
     delete kvs['info:organization']
 
+    // create keys, values array
     const keys = []
     const values = []
     for (var k in kvs) {
-      keys.push(k)
-      values.push(kvs[k])
+      if (this.state.kvsUnit[k] !== undefined) {
+        const { type, unit } = this.state.kvsUnit[k]
+        keys.push(k)
+        values.push(convertToChain(kvs[k], type, unit).toString())
+      }
     }
 
     await bandClient.deployCommunity(
@@ -120,44 +151,47 @@ export default class CreateCommunity extends React.Component {
       this.state.description,
       this.state.url,
       this.state.organization,
-      '0xb1A10d0c283Ba23eb7894ba8C2Ba276fF4c7588f', // this.state.voting,
+      '0xc36D339F7C1Fb31AFcFa117C9F67d9b57568A970', // this.state.voting,
       keys,
       values,
-      '(x^2 / 2000000000000000000000000000000000000) ^ 2', //this.state.collateralEquation,
+      this.state.curve.collateral,
     )
   }
 
   render() {
     const { pageState } = this.state
     return (
-      <PageContainer style={{ backgroundColor: '#f9faff' }}>
-        {/* Header State */}
-        <CreateCommunityState pageState={pageState} />
-        {/* Body */}
-        {pageState === 0 ? (
-          <CreateCommunityInfo
-            {...this.state}
-            handleChange={this.handleChange.bind(this)}
-            setKeyValue={this.setKeyValue.bind(this)}
+      <PageContainer>
+        <Flex flexDirection="column" bg="white" style={{ borderRadius: '6px' }}>
+          {/* Header State */}
+          <CreateCommunityState pageState={pageState} />
+          {/* Body */}
+          {pageState === 0 ? (
+            <CreateCommunityInfo
+              {...this.state}
+              handleChange={this.handleChange.bind(this)}
+              setKeyValue={this.setKeyValue.bind(this)}
+            />
+          ) : pageState === 1 ? (
+            <CreateCommunityDistribution
+              {...this.state}
+              setCurveType={this.setCurveType.bind(this)}
+              onParamChange={this.onParamChange.bind(this)}
+              setKeyValue={this.setKeyValue.bind(this)}
+            />
+          ) : (
+            <CreateCommunityParameters
+              kvs={this.state.kvs}
+              setKeyValue={this.setKeyValue.bind(this)}
+            />
+          )}
+          {/* Footer */}
+          <CreateCommunityFooter
+            pageState={this.state.pageState}
+            setPageState={this.setPageState.bind(this)}
+            handleSubmit={this.handleSubmit.bind(this)}
           />
-        ) : pageState === 1 ? (
-          <CreateCommunityDistribution
-            {...this.state}
-            setCurveType={this.setCurveType.bind(this)}
-            onParamChange={this.onParamChange.bind(this)}
-            setKeyValue={this.setKeyValue.bind(this)}
-          />
-        ) : (
-          <CreateCommunityParameters
-            setKeyValue={this.setKeyValue.bind(this)}
-          />
-        )}
-        {/* Footer */}
-        <CreateCommunityFooter
-          pageState={this.state.pageState}
-          setPageState={this.setPageState.bind(this)}
-          handleSubmit={this.handleSubmit.bind(this)}
-        />
+        </Flex>
       </PageContainer>
     )
   }

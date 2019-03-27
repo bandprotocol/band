@@ -1999,10 +1999,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-band.js@^1.0.57:
-  version "1.0.57"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.57.tgz#8ec8c9b309b2042cf56471c56d8db78a03daad5f"
-  integrity sha512-EzhPgzlq5OohgM4HYmNHZ83J2v6+xpLUlA8dcGfQVpmoIKDMAtOa6Qwu8+XF9B2fbI57EYefe5aPsVZRlePhOg==
+band.js@^1.0.58:
+  version "1.0.58"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.58.tgz#eb174784993fc7674342a8018c48268cef886151"
+  integrity sha512-cpWSOiUSWq6yE0oJ4KNMCgQoJ0v/9/1f+djDh2NMVGs6uJxA/knhSNiuqi5M4NIAWdo3dLq63gQqMAuRwSz5rA==
   dependencies:
     "@types/qs" "^6.5.1"
     axios "^0.18.0"

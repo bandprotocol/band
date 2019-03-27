@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import ImageUpload from 'components/ImageUpload'
 import { Label, Field, Input, TextArea } from 'components/Form'
 import colors from 'ui/colors'
-import EditPen from 'images/editPen.svg'
 
 const DarkLabel = styled(Label).attrs({
   color: colors.purple.dark,
@@ -35,7 +34,7 @@ export default ({
 }) => (
   <Flex flexDirection="column" justifyContent="center" alignItems="center">
     <Flex width="535px" mt="40px" flexDirection="column" alignItems="center">
-      <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
+      <Text fontSize="20px" fontWeight={500} color={colors.purple.dark}>
         Create Community
       </Text>
       <Text
@@ -62,11 +61,6 @@ export default ({
             fontSize="12px"
             description={'200x200 KB'}
           />
-          <Flex
-            style={{ position: 'absolute', bottom: '-10px', right: '-5px' }}
-          >
-            <Image src={EditPen} width="30px" height="30px" block />
-          </Flex>
         </Flex>
       </Flex>
       <Flex flexDirection="column">
@@ -79,11 +73,6 @@ export default ({
             width={320}
             description={'size: 320x160 pixels 200x200 KB'}
           />
-          <Flex
-            style={{ position: 'absolute', bottom: '-10px', right: '-5px' }}
-          >
-            <Image src={EditPen} width="30px" height="30px" block />
-          </Flex>
         </Flex>
       </Flex>
     </Flex>

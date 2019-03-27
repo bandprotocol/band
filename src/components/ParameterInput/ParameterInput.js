@@ -1,8 +1,5 @@
 import React from 'react'
-
 import ParameterInputRender from './ParameterInputRender'
-
-import { convertToChain } from 'utils/helper'
 
 export default class ParameterInput extends React.Component {
   state = {
@@ -12,18 +9,38 @@ export default class ParameterInput extends React.Component {
 
   changeUnit(unit) {
     this.setState({ unit })
+    if (this.state.value === '') {
+      this.props.handleParameterChange(0, this.props.type, unit)
+    } else {
+      this.props.handleParameterChange(this.state.value, this.props.type, unit)
+    }
   }
 
   handleChange(e) {
-    this.setState({ value: e.target.value })
-    if (e.target.value === '') {
-      this.props.handleParameterChange(null)
-    } else {
-      this.props.handleParameterChange(
-        convertToChain(e.target.value, this.props.type, this.state.unit),
-      )
+    if (parseFloat(e.target.value) > 0 && e.target.value !== '') {
+      this.setState({ value: e.target.value }, () => {
+        this.props.handleParameterChange(
+          this.state.value,
+          this.props.type,
+          this.state.unit,
+        )
+      })
     }
   }
+
+  // updateParam() {
+  //   if (e.target.value === '') {
+  //     this.props.handleParameterChange(0, this.props.type, this.state.unit)
+  //   } else {
+  //     if (e.target.value > parseFloat(e.target.value)) {
+  //       this.props.handleParameterChange(
+  //         e.target.value,
+  //         this.props.type,
+  //         this.state.unit,
+  //       )
+  //     }
+  //   }
+  // }
 
   render() {
     return (

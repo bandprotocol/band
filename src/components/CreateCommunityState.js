@@ -10,8 +10,8 @@ const Pagecontainer = styled.div`
 
 const Circle = styled.div`
   border-radius: 50%;
-  background-color: ${p => (p.active ? colors.purple.normal : 'white')};
-  ${p => (p.active ? '' : `border: 1px solid ${colors.purple.light};`)}
+  background-color: ${p => (p.active ? colors.purple.dark : 'white')};
+  ${p => (p.active ? '' : `border: 1px solid #d9d3fb;`)}
   width: 20px;
   height: 20px;
   position: relative;
@@ -28,14 +28,14 @@ const Circle = styled.div`
     left: ${p => (p.state === 2 ? '-35px' : '-70px')};
     width: 200px;
     font-weight: ${p => (p.active ? '500' : '200')};
-    color: ${p => (p.active ? colors.purple.normal : colors.purple.light)};
+    color: ${p => (p.active ? colors.purple.dark : colors.normal)};
   }
 `
 
 const Line = styled.div`
   ${p =>
     p.active
-      ? `border-top: 2px solid ${colors.purple.normal};`
+      ? `border-top: 2px solid ${colors.purple.dark};`
       : `border-top: 1px solid #ded6ff;`}
   width: 280px;
 `

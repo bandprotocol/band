@@ -162,7 +162,7 @@ body {
   flex-direction: column;
   overflow: auto;
   font-family: 'Montserrat', sans-serif;
-  background: #fafbff;
+  background: #f2f4f9;
 }
 
 *:focus {
@@ -174,4 +174,9 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.MathJax_Preview,
+.mjx-math:not(:first-child) {
+  display: none;
 }

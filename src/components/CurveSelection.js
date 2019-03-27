@@ -23,7 +23,7 @@ const ImageBox = styled(Flex).attrs({
   flexDirection: 'column',
 })`
   border: ${p =>
-    p.active ? `2px solid ${colors.purple.normal};` : `1px solid #cbcfe3;`}
+    p.active ? `2px solid ${colors.purple.dark};` : `1px solid #cbcfe3;`}
   border-radius: 4px;
   height: 200px;
   cursor: pointer;
@@ -41,7 +41,7 @@ const CurveName = styled(Text).attrs({
   letterSpcing: '0.53px',
   fontWeight: '500',
 })`
-  color: ${p => (p.active ? colors.purple.normal : '#cbcfe3')};
+  color: ${p => (p.active ? colors.purple.dark : '#cbcfe3')};
 `
 
 const CorrectIcon = ({ active }) => (
@@ -49,7 +49,7 @@ const CorrectIcon = ({ active }) => (
     justifyContent="center"
     alignItems="center"
     width="30px"
-    bg={colors.purple.normal}
+    bg={colors.purple.dark}
     style={{
       height: '30px',
       borderRadius: '50%',

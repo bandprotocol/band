@@ -70,6 +70,7 @@ export const convertToChain = (value, type, unit) => {
     const hexString = value.startsWith('0x') ? value.slice(2) : value
     return new BN(BigNumber(hexString, 16).toFixed(0))
   }
+  return new BN(value)
 }
 
 export const getParameterDetail = name =>

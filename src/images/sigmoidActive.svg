@@ -2,6 +2,6 @@
     <g fill="none" fill-rule="evenodd">
         <path stroke="#CBCFE3" stroke-linecap="round" stroke-width="1.5" d="M1 1v116h134.451"/>
         <path fill="#F4F6FD" d="M6.853 115c34.169 0 48.898-18.303 65.018-40.01C94 45.188 97.209 9.363 132 9.363V115H6.853z"/>
-        <path stroke="#8868FF" stroke-linecap="round" stroke-width="2" d="M6.853 115C41.022 115 58.441 93.782 74 72 94 44 97.209 9.364 132 9.364"/>
+        <path stroke="#4E3CA9" stroke-linecap="round" stroke-width="2" d="M6.853 115C41.022 115 58.441 93.782 74 72 94 44 97.209 9.364 132 9.364"/>
     </g>
 </svg>
