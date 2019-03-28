@@ -1,6 +1,6 @@
 import React from 'react'
 
-import HistoryRender from './HistoryRender'
+import OrderHistoryRender from './OrderHistoryRender'
 
 import { connect } from 'react-redux'
 
@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom'
 
 import { loadOrderHistory } from 'actions'
 
-class History extends React.Component {
+class OrderHistory extends React.Component {
   state = {
     selectedOption: { value: 'all', label: 'All Orders' },
     currentPage: 1,
@@ -44,7 +44,7 @@ class History extends React.Component {
     const { selectedOption, currentPage } = this.state
     const { communityAddress, pageSize } = this.props
     return (
-      <HistoryRender
+      <OrderHistoryRender
         options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
@@ -58,11 +58,12 @@ class History extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadOrderHistory: isAll => dispatch(loadOrderHistory(communityAddress, isAll)),
+  loadOrderHistory: isAll =>
+    dispatch(loadOrderHistory(communityAddress, isAll)),
 })
 export default withRouter(
   connect(
     null,
     mapDispatchToProps,
-  )(History),
+  )(OrderHistory),
 )

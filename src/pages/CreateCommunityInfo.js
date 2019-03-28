@@ -47,7 +47,7 @@ export default ({
       >
         Spicy jalapeno bacon ipsum dolor amet sausage pig jerky tail tongue
         frankfurter andouille.{' '}
-        <A style={{ 'text-decoration': 'underline' }}>Learn more</A>
+        <A style={{ textDecoration: 'underline' }}>Learn more</A>
       </Text>
     </Flex>
     <Flex flexDirection="row" mt="40px">

@@ -6,23 +6,21 @@ import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 // Images inactive
-import DetailSrc from 'images/detail.svg'
-import RewardSrc from 'images/reward.svg'
-import GovernanceSrc from 'images/governance.svg'
-import ProposalSrc from 'images/vote.svg'
+import DetailSrc from 'images/detailInactive.svg'
+import GovernanceSrc from 'images/govInactive.svg'
+import ProposalSrc from 'images/voteInactive.svg'
 
 // Image active
-import DetailActiveSrc from 'images/detailPurple.svg'
-import RewardActiveSrc from 'images/rewardPurple.svg'
-import GovernanceActiveSrc from 'images/governancePurple.svg'
-import ProposalActiveSrc from 'images/votePurple.svg'
+import DetailActiveSrc from 'images/detailActive.svg'
+import GovernanceActiveSrc from 'images/govActive.svg'
+import ProposalActiveSrc from 'images/voteActive.svg'
 
 const Left = styled.div`
   width: 275px;
   height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: #353540;
   position: sticky;
   top: 80px;
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
@@ -125,8 +123,24 @@ export default ({
           </React.Fragment>
         )}
       </Flex>
-      <Flex flexDirection="column" py={5} width={[1]}>
-        <Bold px={4} pb={3} fontSize={0}>
+      <Flex
+        bg="#3f3f4c"
+        width={[1]}
+        flexDirection="column"
+        justifyContent="center"
+        px={4}
+        py="20px"
+      >
+        <Text color="white">Your balance</Text>
+        <Flex mt="20px" mb="10px">
+          <Text color="white" fontSize="18px" fontWeight={500}>
+            7,706.89 CHT
+          </Text>
+        </Flex>
+        <Text color="white">(224.87 USD)</Text>
+      </Flex>
+      <Flex flexDirection="column" py={4} width={[1]}>
+        <Bold px={4} pb={3} fontSize={0} color="#7a7a84">
           MENU
         </Bold>
         <Text fontSize={0} fontWeight={500}>
@@ -136,13 +150,6 @@ export default ({
             imgSrcInactive={DetailSrc}
           >
             Detail
-          </Tab>
-          <Tab
-            link={`/community/${address}/reward`}
-            imgSrcActive={RewardActiveSrc}
-            imgSrcInactive={RewardSrc}
-          >
-            Reward
           </Tab>
           <Tab
             link={`/community/${address}/governance`}

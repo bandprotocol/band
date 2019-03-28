@@ -3,37 +3,118 @@ import { colors } from 'ui'
 import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
 
 export default ({ name, src, link, author, description }) => (
-  <Card variant="detail" p="25px" bg="#fff" style={{ alignSelf: 'flex-start' }}>
-    <Flex alignItems="flex-start">
-      <Image width={[200, 180]} src={src} style={{ borderRadius: 4 }} />
-      <Box flex={1} ml="30px">
-        <Flex>
-          <Text
-            color={colors.purple.dark}
-            fontSize={3}
-            fontWeight="500"
-            lineHeight={2}
-          >
-            {name}
-
-            {link && (
-              <AbsoluteLink
-                href={link}
-                style={{ marginLeft: 10, fontSize: '0.9em' }}
-                dark
-              >
-                <i className="fas fa-external-link-alt" />
-              </AbsoluteLink>
-            )}
+  <Flex style={{ minHeight: '180px' }} flexDirection="row">
+    <Flex
+      flexDirection="column"
+      flex={1}
+      style={{ borderRadius: '10px', padding: '10px 20px' }}
+      mr="30px"
+      bg="white"
+    >
+      <Flex
+        flexDirection="row"
+        style={{ borderBottom: '1px solid #f2f4f9' }}
+        py="20px"
+        pl="10px"
+      >
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Community:
           </Text>
         </Flex>
-        <Text fontSize={12} color={colors.text.normal} fontWeight="500">
-          By {author}
+        <Text fontSize="13px" lineHeight={1.64}>
+          {'Coinhatcher'}
         </Text>
-        <Text lineHeight={1.6} fontSize={0} my={3}>
-          {description}
+      </Flex>
+      <Flex
+        flexDirection="row"
+        style={{ borderBottom: '1px solid #f2f4f9' }}
+        py="20px"
+        pl="10px"
+      >
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Organization:
+          </Text>
+        </Flex>
+        <Text fontSize="13px" lineHeight={1.64}>
+          {'Band Protocol'}
         </Text>
-      </Box>
+      </Flex>
+      <Flex flexDirection="row" py="20px" pl="10px">
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Description:
+          </Text>
+        </Flex>
+        <Text fontSize="13px" lineHeight={1.64}>
+          {
+            'Coinhatcher is a decentralized data curation with a mission to provide trusted and reliable information in blockchain industry. Ranging from daily news to founder’s directory and crypto economics.'
+          }
+        </Text>
+      </Flex>
     </Flex>
-  </Card>
+    <Flex
+      flexDirection="column"
+      flex={1}
+      style={{ borderRadius: '10px', padding: '10px 20px' }}
+      bg="white"
+    >
+      <Flex
+        flexDirection="row"
+        style={{ borderBottom: '1px solid #f2f4f9' }}
+        py="20px"
+        pl="10px"
+      >
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Website:
+          </Text>
+        </Flex>
+        <Text fontSize="13px" lineHeight={1.64}>
+          {'coinhatcher.com'}
+        </Text>
+      </Flex>
+      <Flex
+        flexDirection="row"
+        style={{ borderBottom: '1px solid #f2f4f9' }}
+        py="20px"
+        pl="10px"
+      >
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Contract:
+          </Text>
+        </Flex>
+        <Text fontSize="13px" lineHeight={1.64}>
+          {'0x4e9ce36e442e55ecd9025b9a6e0d88485d628a67'}
+        </Text>
+      </Flex>
+      <Flex
+        flexDirection="row"
+        style={{ borderBottom: '1px solid #f2f4f9' }}
+        py="20px"
+        pl="10px"
+      >
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Created:
+          </Text>
+        </Flex>
+        <Text fontSize="13px" lineHeight={1.64}>
+          {'20-03-2019  17:00'}
+        </Text>
+      </Flex>
+      <Flex flexDirection="row" py="20px" pl="10px">
+        <Flex mr="10px" style={{ minWidth: '90px' }} justifyContent="flex-end">
+          <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            Transferable:
+          </Text>
+        </Flex>
+        <Text fontSize="13px" lineHeight={1.64}>
+          {'Yes'}
+        </Text>
+      </Flex>
+    </Flex>
+  </Flex>
 )

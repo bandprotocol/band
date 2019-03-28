@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 
 import { communityDetailSelector } from 'selectors/communities'
 
-import CommunityDesciption from 'components/CommunityDescription/CommunityDescriptionRender'
+import CommunityDescription from 'components/CommunityDescription/CommunityDescriptionRender'
 
 const mapStateToProps = (state, { communityAddress }) => {
   const community = communityDetailSelector(state, {
@@ -21,4 +21,4 @@ const mapStateToProps = (state, { communityAddress }) => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(CommunityDesciption))
+export default withRouter(connect(mapStateToProps)(CommunityDescription))

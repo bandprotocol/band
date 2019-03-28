@@ -88,17 +88,14 @@ export const BackgroundCard = styled(Card)`
 `
 
 export const HighlightNavLink = styled(NavLink)`
-  color: ${colors.text.grey};
-  & > * {
-    border-left: 4px solid #ffffff;
-  }
+  color: white;
 
   &.is-active {
     font-weight: 700;
     color: ${colors.purple.normal};
     & > * {
-      background: #eaeeff;
-      border-left: 4px solid #8868ff;
+      background: white;
+      color: #4e3ca9;
     }
 
     & .img-active {
