@@ -7,8 +7,12 @@ require('chai').should();
 
 contract('BondingCurve', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
-    this.collateralToken = await ERC20Base.new({ from: owner });
-    this.bondedToken = await ERC20Base.new({ from: owner });
+    this.collateralToken = await ERC20Base.new('CollateralToken', 'CLT', 18, {
+      from: owner,
+    });
+    this.bondedToken = await ERC20Base.new('BondedToken', 'BDT', 18, {
+      from: owner,
+    });
     this.curve = await BondingCurve.new(
       this.collateralToken.address,
       this.bondedToken.address,
