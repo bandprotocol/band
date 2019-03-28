@@ -8,6 +8,15 @@ import "../feeless/Feeless.sol";
 
 
 contract ERC20Base is ERC20Interface, ERC20, Feeless, Ownable {
+  string public name;
+  string public symbol;
+  uint8 public decimals = 18;
+
+  constructor(string memory _name, string memory _symbol, uint8 _decimals) public {
+    name = _name;
+    symbol = _symbol;
+    decimals = _decimals;
+  }
 
   function transferAndCall(address sender, address to, uint256 value, bytes4 sig, bytes memory data)
     public

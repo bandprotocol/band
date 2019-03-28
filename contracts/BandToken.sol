@@ -11,11 +11,7 @@ import "./token/ERC20Base.sol";
  * means not all of their tokens are transferable. Locked tokens will reduce
  * monthly proportionally until they are fully unlocked.
  */
-contract BandToken is ERC20Base {
-
-  string public constant name = "BandToken";
-  string public constant symbol = "BAND";
-  uint256 public constant decimals = 18;
+contract BandToken is ERC20Base("BandToken", "BAND", 18) {
 
   /**
    * @dev TokenLock struct represents the token locking information. This is
