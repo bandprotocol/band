@@ -1,8 +1,8 @@
 import React from 'react'
+import colors from 'ui/colors'
 import { Flex, Text } from 'ui/common'
 import ProgressBar from 'components/ProgressBar'
 import ToolTip from 'components/ToolTip'
-import { colors } from 'ui'
 
 export default ({
   percentParticipant,
@@ -11,70 +11,81 @@ export default ({
   supportRequiredPct,
 }) => {
   return (
-    <Flex flexDirection="column" mt="30px" mb="40px">
-      <Flex flexDirection="row" justifyContent="center">
-        <Flex width={1 / 2}>
-          <Flex flexDirection="column" justifyContent="flex-end" mr="5px">
-            <Text pb="5px" fontWeight="500">
+    <Flex my={4}>
+      <Flex>
+        <Flex flexDirection="column">
+          <Flex alignItems="center" mb={3}>
+            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
               Participation
             </Text>
-          </Flex>
-          <Flex
-            flexDirection="column"
-            justifyContent="flex-end"
-            mr="20px"
-            pt="10px"
-          >
             <ToolTip
-              top={5}
-              info={`If less than ${minParticipation}% of all voting power
-              participate, the proposal is canceled and
-              no parameter changes will be applied.`}
+              top={40}
+              left={60}
+              bg="#7c84a6"
+              textBg="#b2b6be"
+              textColor="#000000"
+              tip={{ left: 61 }}
+            >
+              {`If less than ${minParticipation}% of all voting power participate,
+              the proposal is canceled and no parameter changes will be applied.`}
+            </ToolTip>
+            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+              :
+            </Text>
+            <ProgressBar
+              percent={percentParticipant}
+              isResult={false}
+              minimum={minParticipation}
+              pb={3}
+              ml={2}
             />
           </Flex>
-          <ProgressBar
-            percent={percentParticipant}
-            isResult={false}
-            minimum={minParticipation}
-          />
+          <Flex>
+            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+              Status
+            </Text>{' '}
+            : Minimum participation
+            {percentParticipant < minParticipation ? ' unreached' : ' reached'}
+          </Flex>
         </Flex>
-        <Flex width={1 / 2} justifyContent="flex-end">
-          <Flex flexDirection="column" justifyContent="flex-end" mr="5px">
-            <Text pb="5px" fontWeight="500">
+      </Flex>
+      <Flex flex={1} />
+      <Flex>
+        <Flex flexDirection="column">
+          <Flex alignItems="center" mb={3}>
+            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
               Result
             </Text>
-          </Flex>
-          <Flex
-            flexDirection="column"
-            justifyContent="flex-end"
-            mr="20px"
-            pt="10px"
-          >
             <ToolTip
-              top={5}
-              info={`To approve a proposal, at least ${supportRequiredPct}% of
+              top={40}
+              left={60}
+              bg="#7c84a6"
+              textBg="#b2b6be"
+              textColor="#000000"
+              tip={{ left: 61 }}
+            >
+              {`To approve a proposal, at least ${100 - supportRequiredPct}% of
               participating voting power is required.
               Otherwise the proposal will not be
               successful.`}
-            />
-          </Flex>
-          <Flex pb="2px">
+            </ToolTip>
+            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+              :
+            </Text>
             <ProgressBar
               percent={percentReject}
               isResult={true}
               minimum={supportRequiredPct}
+              pb={3}
+              ml={2}
             />
           </Flex>
-        </Flex>
-      </Flex>
-      <Flex flexDirection="row" mt="30px">
-        <Flex width={1 / 2}>
-          <Text fontWeight="500">Status</Text> : Minimum participation
-          {percentParticipant < minParticipation ? ' unreached' : ' reached'}
-        </Flex>
-        <Flex width={1 / 2} justifyContent="flex-end">
-          <Text fontWeight="500">Status</Text>
-          {percentReject < supportRequiredPct ? ': support' : ': rejected'}
+          <Flex>
+            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+              Status
+            </Text>
+            {percentReject < supportRequiredPct ? ': Approved' : ': Rejected'}
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

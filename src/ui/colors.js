@@ -1,6 +1,7 @@
 export default {
   purple: {
     light: '#aa93ff',
+    blueberry: '#4e3ca9',
     normal: '#8868ff',
     dark: '#4e3ca9',
   },
@@ -8,6 +9,7 @@ export default {
     lighter: '#fafbff',
     light: '#f4f6fe',
     lightGrey: '#e7ecff',
+    paleGrey: '#f6f8fb',
   },
   text: {
     grey: '#7c84a6',

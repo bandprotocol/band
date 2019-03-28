@@ -17,5 +17,6 @@ export default ({ params, isEdit, handleParameterChange }) => (
         }
       />
     ))}
+    {params.length % 3 === 2 && <Flex width="370px" />}
   </Flex>
 )

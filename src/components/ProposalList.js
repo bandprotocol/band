@@ -3,32 +3,34 @@ import { connect } from 'react-redux'
 import { Flex, Text, Box } from 'ui/common'
 import colors from 'ui/colors'
 import ProposalBox from 'components/ProposalBox'
-import Oval from 'components/Oval'
 
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import ToolTip from 'components/ToolTip'
 
 import { proposalByStatusSelector } from 'selectors/proposal'
 
 const ProposalList = ({ description, proposals, isActive, title }) => (
   <Flex flexDirection="column" my={3} width="100%">
     <Flex flexDirection="row">
-      <Flex
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        mr="10px"
-      >
-        <Text color={colors.purple.normal} fontSize={2} fontWeight="bold">
-          {title}
+      <Flex justifyContent="center" alignItems="center">
+        <Text color={colors.text.normal} fontSize={4} fontWeight="bold" mr={3}>
+          {`${title} (${proposals ? proposals.length : 0})`}
         </Text>
-      </Flex>
-      <Flex flexDirection="column" justifyContent="center">
-        <Oval t={proposals ? proposals.length : 0} />
+        {description && (
+          <ToolTip
+            bg={colors.text.grey}
+            width="410px"
+            textBg="#b2b6be"
+            textColor={colors.text.normal}
+            bottom={20}
+            left={20}
+            tip={{ left: 21 }}
+          >
+            {description}
+          </ToolTip>
+        )}
       </Flex>
     </Flex>
-    <Text color={colors.text.grey} fontSize={1} fontWeight="regular" my={3}>
-      {description}
-    </Text>
     {!proposals ? (
       <Box m="100px auto 0px auto">
         <CircleLoadingSpinner radius="60px" />

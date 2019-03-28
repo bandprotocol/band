@@ -10,7 +10,7 @@ import { convertFromChain } from 'utils/helper'
 const WhiteCard = styled(Card).attrs({
   variant: 'modal',
   width: '370px',
-  mb: 2,
+  mb: 3,
 })`
   height: 200px;
 `
@@ -36,7 +36,6 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
           </Text>
           {isEdit ? (
             <ParameterInput
-              onClick={console.log(convertedValue, detail, unit)}
               value={convertedValue}
               type={detail.type}
               unit={unit}

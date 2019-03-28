@@ -2,9 +2,9 @@ import React from 'react'
 import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
-export default ({ isResult, percent, minimum }) => {
+export default ({ isResult, percent, minimum, ...others }) => {
   return (
-    <Flex py="5px" flexDirection="column">
+    <Flex flexDirection="column" {...others}>
       <Flex flexDirection="row" justifyContent="center" alignItems="center">
         <Flex flexDirection="column">
           <Flex

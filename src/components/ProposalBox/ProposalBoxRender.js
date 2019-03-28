@@ -78,7 +78,7 @@ export default ({
       <Flex
         flexDirection="column"
         justifyContent="center"
-        bg={colors.background.lightGrey}
+        bg="#dee2f0"
         flex={1}
         px="40px"
         style={{ height: '50px' }}
@@ -92,8 +92,8 @@ export default ({
           {/* Left */}
           <Flex>
             <Text
-              color={colors.purple.normal}
-              fontSize={16}
+              color={colors.purple.blueberry}
+              fontSize={1}
               fontWeight="regular"
               width="80px"
             >
@@ -101,7 +101,7 @@ export default ({
             </Text>
             <Text
               color={colors.text.normal}
-              fontSize={16}
+              fontSize={1}
               px={2}
               fontWeight="regular"
               style={{
@@ -177,62 +177,107 @@ export default ({
           </Flex>
         </Flex>
       </Flex>
-      <FlexDropDown flexDirection="column" px="40px" show={show}>
-        <ProposalDetail
-          title={'Reason for Change'}
-          description={reason}
-          proposer={proposer}
-          since={proposedAt.pretty()}
-        />
-        {changes.map(change => {
-          const { type, description } = getParameterDetail(change.name)
-          const [currentValue, currentUnit] = convertFromChain(
-            change.oldValue,
-            type,
-          )
-          const [changeValue, changeUnit] = convertFromChain(
-            change.newValue,
-            type,
-          )
-          return (
-            <ProposalDetail
-              title={change.name}
-              description={description}
-              current={`${currentValue} ${currentUnit}`}
-              changeTo={`${changeValue} ${changeUnit}`}
-            />
-          )
-        })}
-        <YourVote
-          isVoted={vote !== 'NOT VOTED'}
-          isSupport={vote === 'SUPPORT'}
-          isActive={isActive}
-          proposalId={proposalId}
-        />
-        {(!isActive || vote !== 'NOT VOTED') && (
-          <ParticipationStatus
-            percentParticipant={yesVote
-              .add(noVote)
-              .mul(new BN(100))
-              .div(totalVotingPower)
-              .toNumber()}
-            percentReject={
-              totalVote.eq(new BN(0))
-                ? 100
-                : noVote
-                    .mul(new BN(100))
-                    .div(totalVote)
-                    .toNumber()
-            }
-            minParticipation={minParticipation
-              .mul(new BN(100))
-              .div(totalVotingPower)
-              .toNumber()}
-            supportRequiredPct={
-              100 - supportRequiredPct.div(new BN(1e12)).toNumber()
-            }
+      <FlexDropDown
+        flexDirection="column"
+        px="40px"
+        show={show}
+        bg="white"
+        py={show && 4}
+      >
+        <Flex
+          flexDirection="column"
+          bg={colors.background.paleGrey}
+          py="22px"
+          px={4}
+        >
+          <Text fontWeight="500" color={colors.purple.blueberry} fontSize={1}>
+            Reason for Change
+          </Text>
+          <Flex mt="20px">
+            <Text fontSize={0} color={colors.text.normal} lineHeight={1.43}>
+              {reason}
+            </Text>
+          </Flex>
+          <Flex mt="20px">
+            <Flex mr="10px">
+              <Text
+                fontSize={0}
+                fontWeight="500"
+                color={colors.purple.blueberry}
+              >
+                By:
+              </Text>
+            </Flex>
+            <Flex mr="10px">
+              <Text fontSize={14} fontWeight="500">
+                {proposer}
+              </Text>
+            </Flex>
+            <Flex>
+              <Text fontSize={12} fontWeight="300">
+                {proposedAt.pretty()}
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex
+          mt="20px"
+          flexDirection="column"
+          bg={colors.background.paleGrey}
+          px={4}
+        >
+          {changes.map(change => {
+            const { type, description } = getParameterDetail(change.name)
+            const [currentValue, currentUnit] = convertFromChain(
+              change.oldValue,
+              type,
+            )
+            const [changeValue, changeUnit] = convertFromChain(
+              change.newValue,
+              type,
+            )
+            return (
+              <ProposalDetail
+                title={change.name}
+                description={description}
+                current={`${currentValue} ${currentUnit}`}
+                changeTo={`${changeValue} ${changeUnit}`}
+              />
+            )
+          })}
+
+          <YourVote
+            isVoted={vote !== 'NOT VOTED'}
+            isSupport={vote === 'SUPPORT'}
+            isActive={isActive}
+            proposalId={proposalId}
           />
-        )}
+          {(!isActive || vote !== 'NOT VOTED') && (
+            <ParticipationStatus
+              percentParticipant={yesVote
+                .add(noVote)
+                .mul(new BN(100))
+                .div(totalVotingPower)
+                .toNumber()}
+              percentReject={
+                totalVote.eq(new BN(0))
+                  ? 100
+                  : noVote
+                      .mul(new BN(100))
+                      .div(totalVote)
+                      .toNumber()
+              }
+              minParticipation={minParticipation
+                .mul(new BN(100))
+                .div(totalVotingPower)
+                .toNumber()}
+              supportRequiredPct={
+                100 -
+                supportRequiredPct.div(new BN(10).pow(new BN(16))).toNumber()
+              }
+            />
+          )}
+        </Flex>
       </FlexDropDown>
     </Flex>
   )

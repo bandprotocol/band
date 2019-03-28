@@ -35,10 +35,10 @@ const SubmitButton = styled(Button)`
   height: 40px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: 300;
+  font-weight: 500;
   border-radius: 4px;
-  box-shadow: 0 9px 13px 0 rgba(136, 104, 255, 0.38);
-  background-color: #8868ff;
+  box-shadow: 0 3px 5px 0 rgba(180, 187, 218, 0.5);
+  background-color: #7c84a6;
 `
 
 export default ({
@@ -57,7 +57,15 @@ export default ({
       <Text color={colors.text.normal} fontSize={4} fontWeight="bold" mr={2}>
         Governance
       </Text>
-      <ToolTip bg={colors.text.grey}>
+      <ToolTip
+        bg={colors.text.grey}
+        width="410px"
+        textBg="#b2b6be"
+        textColor={colors.text.normal}
+        bottom={20}
+        left={20}
+        tip={{ left: 21 }}
+      >
         Public parameters that govern how community operates and functions.
         Community members can propose changes in parameters. Approved proposal
         requires over 80% participation and 30% accepted vote.
@@ -103,15 +111,10 @@ export default ({
                 <SubmitButton onClick={submitChanges}>Submit</SubmitButton>
               </Flex>
             ) : (
-              <ProposeButton
-                onClick={logedin ? toggleEdit : signin}
-                style={{ height: '40px' }}
-              >
-                <Flex justifyContent="center" alignItems="center">
+              <ProposeButton onClick={logedin ? toggleEdit : signin}>
+                <Flex justifyContent="center" alignItems="flex-end">
                   <i className="far fa-edit" style={{ fontSize: '18px' }} />
-                  <Text fontSize="14px" mx={2} fontWeight="200">
-                    Propose Change
-                  </Text>
+                  <Text ml={2}>Propose Change</Text>
                 </Flex>
               </ProposeButton>
             )}

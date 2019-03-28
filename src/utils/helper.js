@@ -141,7 +141,7 @@ export const getParameterDetail = name =>
       type: 'IPFS',
       description: 'Description of the community',
     },
-    url: {
+    website: {
       type: 'IPFS',
       description: 'Link to website of the community',
     },

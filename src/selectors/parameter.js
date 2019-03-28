@@ -19,7 +19,11 @@ export const prefixListSelector = createSelector(
 
 export const parameterByPrefixSelector = createSelector(
   [parameterSelector, addressSelector, typeSelector],
-  (params, address, type) => params.getIn([address, type], List()).toJS(),
+  (params, address, type) =>
+    params
+      .getIn([address, type], List())
+      .sortBy(param => param.get('name'))
+      .toJS(),
 )
 
 export const parameterByNameSelector = createSelector(

@@ -10,7 +10,7 @@ const InputFlex = styled(Flex).attrs({ alignItems: 'center' })`
   width: ${p => p.width || '120px'};
   height: ${p => p.height || '25px'};
   border-radius: 4px;
-  border: solid 1px ${p => p.borderColor || '#8868ff'};
+  border: solid 1px ${p => p.borderColor || '#e7ecff'};
   background-color: #ffffff;
 `
 
@@ -45,11 +45,7 @@ export default ({
 }) => (
   <InputFlex px={1} width={width} height={height} borderColor={borderColor}>
     <Box flex={1}>
-      <ModernInput
-        type="number"
-        placeholder={value}
-        onChange={handleParameterChange}
-      />
+      <ModernInput placeholder={value} onChange={handleParameterChange} />
     </Box>
     {type === 'TIME' ? (
       <UnitSelector

@@ -16,14 +16,14 @@ const HoverBox = styled(Flex).attrs({
 const PopupBox = styled(Box)`
   z-index: 1000000000;
   position: absolute;
-  ${p => (p.left ? `left: ${p.left}px` : `right: ${p.right}px`)};
-  bottom: ${p => p.bottom || 20}px;
+  ${p => (p.left ? `left: ${-p.left}px` : `right: ${p.right}px`)};
+  ${p => (p.top ? `bottom: ${p.top}px` : `top: ${p.bottom}px`)};
   border: ${p => `1px solid ${p.bg || '#cbcfe3'}`};
   box-shadow: 0 14px 18px 0 rgba(0, 0, 0, 0.07);
   width: ${p => p.width || 250}px;
-  font-size: 13px;
-  background: #fff;
-  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 8px;
   color: #7c84a6;
   transition: all 250ms;
   ${p =>
@@ -39,29 +39,27 @@ const PopupBox = styled(Box)`
   `}
   &:before {
     position: absolute;
-    top: ${p => (p.top ? -8 : 0)} px;
-    bottom: ${p => (p.bottom ? -8 : 0)}px;
+    ${p => (p.top ? `bottom: -8px` : `top: -8px`)};
     left: ${p => p.tipLeft + 5 || 5}px;
     content: '';
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: ${p => p.bottom && `8px solid ${p.bg || '#cbcfe3'}`};
-    border-bottom: ${p => p.top && `8px solid ${p.bg || '#cbcfe3'}`};
+    border-top: ${p => p.top && `8px solid ${p.bg || '#cbcfe3'}`};
+    border-bottom: ${p => p.bottom && `8px solid ${p.bg || '#cbcfe3'}`};
   }
   &:after {
     position: absolute;
-    top: ${p => (p.top ? -6.5 : 0)} px;
-    bottom: ${p => (p.bottom ? -6.5 : 0)}px;
+    ${p => (p.top ? `bottom: -6.5px` : `top: -6.5px`)};
     left: ${p => p.tipLeft + 5 || 5}px;
     content: '';
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: ${p => p.bottom && `8px solid ${p.bg || '#ffffff'}`};
-    border-bottom: ${p => p.top && `8px solid ${p.bg || '#ffffff'}`};
+    border-top: ${p => p.top && `8px solid ${p.bg || '#ffffff'}`};
+    border-bottom: ${p => p.bottom && `8px solid ${p.bg || '#ffffff'}`};
   }
 `
 
@@ -75,7 +73,7 @@ export default class Tooltip extends React.Component {
       bottom,
       left,
       right,
-      tip = { lift: 0 },
+      tip,
       width,
       bg,
       textBg,
@@ -88,7 +86,6 @@ export default class Tooltip extends React.Component {
         style={{
           cursor: 'pointer',
           position: 'relative',
-          height: '100%',
           display: 'inline-block',
         }}
       >
@@ -116,8 +113,9 @@ export default class Tooltip extends React.Component {
           bottom={bottom}
           left={left}
           right={right}
-          tipLeft={tip.left}
+          tipLeft={tip && tip.left}
           bg={textBg}
+          p={2}
         >
           <Text
             fontSize="12px"

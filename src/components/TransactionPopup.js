@@ -12,6 +12,7 @@ const Container = styled(Box)`
   bottom: 0;
   right: 0;
   width: 366px;
+  max-height: 500px;
   z-index: 20;
   transform: translateY(${p => (p.show ? 0 : 100)}%);
   background-color: #ffffff;
@@ -54,10 +55,6 @@ class TransactionPopup extends React.Component {
     }
   }
 
-  hideTxns() {
-    this.props.hideTxns(this.props.txns.map(tx => tx.txHash))
-  }
-
   toggleExpand(e) {
     e.stopPropagation()
     window.localStorage.setItem('TransactionPopup:expand', !this.state.expand)
@@ -82,7 +79,7 @@ class TransactionPopup extends React.Component {
               />
             </Text>
           </Box>
-          <Box ml={3} onClick={this.hideTxns.bind(this)}>
+          <Box ml={3}>
             <Text color="#ffffff" size={24}>
               <i className="ion ion-md-close" />
             </Text>
