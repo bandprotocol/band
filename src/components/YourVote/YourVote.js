@@ -21,7 +21,6 @@ const VoteButton = styled(Button)`
   ${props => (props.disabled ? ' opacity: 0.5;' : ' opacity: 1  ;')}
   ${props => (props.disabled ? 'cursor: default;' : 'cursor: pointer;')}
 
-  font-family: Montserrat, sans-serif;
   font-weight: 500;
   font-size: 14px;
   border-radius: 6px;

@@ -31,7 +31,6 @@ const options = {
       color: colors.purple.normal,
       fontWeight: '600',
       fontSize: '11px',
-      fontFamily: 'Montserrat',
     },
   },
   scrollbar: { enabled: false },

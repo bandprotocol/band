@@ -13,7 +13,6 @@ const TitleInput = styled.input`
   border-radius: 2px;
   border: solid 1px #cbcfe3;
   font-size: 16px;
-  font-family: Montserrat, sans-serif;
 `
 
 const ReasonInput = styled.textarea`
@@ -23,7 +22,6 @@ const ReasonInput = styled.textarea`
   border-radius: 2px;
   border: solid 1px #cbcfe3;
   font-size: 16px;
-  font-family: Montserrat, sans-serif;
   resize: none;
 `
 

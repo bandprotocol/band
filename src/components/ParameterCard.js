@@ -9,8 +9,8 @@ import { convertFromChain } from 'utils/helper'
 
 const WhiteCard = styled(Card).attrs({
   variant: 'modal',
-  width: '412px',
-  mb: 3,
+  width: '370px',
+  mb: 2,
 })`
   height: 200px;
 `
@@ -23,21 +23,15 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
         flexDirection="column"
         style={{ height: '100%', padding: '28px 40px 28px 16px' }}
       >
-        <Text fontSize={0} fontWeight="bold" color={colors.purple.normal}>
+        <Text fontSize={1} fontWeight="bold" color={colors.purple.dark}>
           {name}
         </Text>
-        {/* TODO: Mock description */}
         <Text color={colors.text.grey} fontSize={0} lineHeight={1.43} mt={3}>
           {detail.description}
         </Text>
         <Flex flex={1} />
-        <Flex alignItems="center" py={2} mt={2}>
-          <Text
-            fontSize={0}
-            fontWeight="bold"
-            color={colors.purple.normal}
-            mr={3}
-          >
+        <Flex alignItems="center" py={1} mt={2}>
+          <Text fontSize={0} color={colors.purple.dark} mr={3}>
             Value:
           </Text>
           {isEdit ? (

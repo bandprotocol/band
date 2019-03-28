@@ -9,11 +9,11 @@ export const pado = (x, l) => (x.length < l ? pado(x + '0') : x)
 export const opad = (x, l) => (x.length < l ? opad('0' + x) : x)
 
 export const convertFromChain = (value, type) => {
-  if (!value) return null
+  if (!value) return [null, '']
   if (type === 'PERCENTAGE') {
     return [
       BigNumber(value.toString())
-        .div(BigNumber(1e12))
+        .div(BigNumber(1e16))
         .toFixed(2),
       '%',
     ]
@@ -45,7 +45,7 @@ export const convertToChain = (value, type, unit) => {
   if (type === 'PERCENTAGE') {
     return new BN(
       BigNumber(value)
-        .times(BigNumber(1e12))
+        .times(BigNumber(1e16))
         .toFixed(0),
     )
   } else if (type === 'TOKEN') {
@@ -127,15 +127,23 @@ export const getParameterDetail = name =>
       description:
         'The duration in seconds during which token holders can reveal committed votes for a particular challenge.',
     },
+    name: {
+      type: 'IPFS',
+      description: 'Name of the community',
+    },
+    symbol: {
+      type: 'IPFS',
+      description: 'Symbol of the community',
+    },
     description: {
       type: 'IPFS',
       description: 'Description of the community',
     },
-    website: {
+    url: {
       type: 'IPFS',
       description: 'Link to website of the community',
     },
-    author: {
+    organization: {
       type: 'IPFS',
       description: 'Author of the community',
     },
@@ -143,4 +151,16 @@ export const getParameterDetail = name =>
       type: 'IPFS',
       description: 'Link to logo of the community',
     },
-  }[name])
+    banner: {
+      type: 'IPFS',
+      description: 'Link to banner of the community',
+    },
+    liqudity_fee: {
+      type: 'PERCENTAGE',
+      description: 'The percentage of the liquidty fee for ...',
+    },
+    inflation_rate: {
+      type: 'PERCENTAGE',
+      description: 'The percentage of the inflation rate on this community',
+    },
+  }[name] || { type: 'Unknown', description: 'UNKNOWN' })

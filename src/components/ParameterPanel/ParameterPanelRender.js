@@ -6,6 +6,7 @@ import colors from 'ui/colors'
 import Select from 'react-select'
 
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import ToolTip from 'components/ToolTip'
 
 import ParameterList from 'components/ParameterList'
 
@@ -21,20 +22,17 @@ const PrefixSelect = styled(Select).attrs({
 const ProposeButton = styled(Button)`
   width: 210px;
   height: 40px;
-  font-family: Montserrat, sans-serif;
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
   border-radius: 4px;
-  box-shadow: 0 2px 4px 0 rgba(136, 104, 255, 0.5);
-  border: solid 1px #8868ff;
-  background-image: linear-gradient(259deg, #6c5bff, #8868ff);
+  box-shadow: 0 3px 5px 0 rgba(180, 187, 218, 0.5);
+  background-color: #7c84a6;
 `
 
 const SubmitButton = styled(Button)`
   width: 100px;
   height: 40px;
-  font-family: Montserrat, sans-serif;
   cursor: pointer;
   font-size: 16px;
   font-weight: 300;
@@ -55,24 +53,16 @@ export default ({
   signin,
 }) => (
   <Flex flexDirection="column" my={3}>
-    <Text color={colors.purple.normal} fontSize={2} fontWeight="bold" mb={3}>
-      Governance
-    </Text>
-    <Text
-      fontSize={1}
-      color={colors.text.grey}
-      mb={4}
-      style={{ lineHeight: 1.56 }}
-    >
-      Public parameters that govern how community operates and functions.
-      Community members can propose changes in parameters. Approved proposal
-      requires over 80% participation and 30% accepted vote.
-    </Text>
-    <Box
-      style={{
-        borderBottom: 'solid 1px #7c84a6',
-      }}
-    />
+    <Flex alignItems="center">
+      <Text color={colors.text.normal} fontSize={4} fontWeight="bold" mr={2}>
+        Governance
+      </Text>
+      <ToolTip bg={colors.text.grey}>
+        Public parameters that govern how community operates and functions.
+        Community members can propose changes in parameters. Approved proposal
+        requires over 80% participation and 30% accepted vote.
+      </ToolTip>
+    </Flex>
 
     {currentPrefix === null ? (
       <Box m="100px auto 0px auto">
@@ -81,12 +71,7 @@ export default ({
     ) : (
       <React.Fragment>
         <Flex py={4} alignItems="center">
-          <Text
-            fontSize={1}
-            fontWeight="500"
-            color={colors.purple.normal}
-            mr={2}
-          >
+          <Text fontSize={1} color={colors.text.normal} mr={2}>
             Parameter Group:
           </Text>
 
@@ -123,7 +108,7 @@ export default ({
                 style={{ height: '40px' }}
               >
                 <Flex justifyContent="center" alignItems="center">
-                  <i className="far fa-edit" style={{ fontSize: '20px' }} />
+                  <i className="far fa-edit" style={{ fontSize: '18px' }} />
                   <Text fontSize="14px" mx={2} fontWeight="200">
                     Propose Change
                   </Text>

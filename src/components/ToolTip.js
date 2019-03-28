@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Box, Text, Flex } from 'ui/common'
-import { colors } from 'ui'
+import { Box, Text, Flex } from 'rebass'
 
 const HoverBox = styled(Flex).attrs({
   mx: '5px',
 })`
+  font-family: Avenir-Medium;
   border-radius: 50%;
-  width: ${props => props.radius || '20px'};
-  height: ${props => props.radius || '20px'};
+  width: 20px;
+  height: 20px;
   justify-content: center;
   align-items: center;
 `
@@ -17,9 +17,8 @@ const PopupBox = styled(Box)`
   z-index: 1000000000;
   position: absolute;
   ${p => (p.left ? `left: ${p.left}px` : `right: ${p.right}px`)};
-  right: ${p => p.right};
-  top: ${p => 20 + p.top || 20}px;
-  border: solid 1px #cbcfe3;
+  bottom: ${p => p.bottom || 20}px;
+  border: ${p => `1px solid ${p.bg || '#cbcfe3'}`};
   box-shadow: 0 14px 18px 0 rgba(0, 0, 0, 0.07);
   width: ${p => p.width || 250}px;
   font-size: 13px;
@@ -27,7 +26,6 @@ const PopupBox = styled(Box)`
   border-radius: 4px;
   color: #7c84a6;
   transition: all 250ms;
-
   ${p =>
     p.show
       ? `
@@ -39,29 +37,31 @@ const PopupBox = styled(Box)`
     transform: translateY(0);
     pointer-events: none;
   `}
-
   &:before {
     position: absolute;
-    top: -8px;
+    top: ${p => (p.top ? -8 : 0)} px;
+    bottom: ${p => (p.bottom ? -8 : 0)}px;
     left: ${p => p.tipLeft + 5 || 5}px;
     content: '';
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid #cbcfe3;
+    border-top: ${p => p.bottom && `8px solid ${p.bg || '#cbcfe3'}`};
+    border-bottom: ${p => p.top && `8px solid ${p.bg || '#cbcfe3'}`};
   }
-
   &:after {
     position: absolute;
-    top: -6.5px;
+    top: ${p => (p.top ? -6.5 : 0)} px;
+    bottom: ${p => (p.bottom ? -6.5 : 0)}px;
     left: ${p => p.tipLeft + 5 || 5}px;
     content: '';
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid #ffffff;
+    border-top: ${p => p.bottom && `8px solid ${p.bg || '#ffffff'}`};
+    border-bottom: ${p => p.top && `8px solid ${p.bg || '#ffffff'}`};
   }
 `
 
@@ -70,7 +70,18 @@ export default class Tooltip extends React.Component {
     show: false,
   }
   render() {
-    const { top, left, right, tip, width, info, radius, bg } = this.props
+    const {
+      top,
+      bottom,
+      left,
+      right,
+      tip = { lift: 0 },
+      width,
+      bg,
+      textBg,
+      textColor,
+      children,
+    } = this.props
     return (
       <Flex
         alignItems="center"
@@ -78,11 +89,11 @@ export default class Tooltip extends React.Component {
           cursor: 'pointer',
           position: 'relative',
           height: '100%',
+          display: 'inline-block',
         }}
       >
         <HoverBox
-          bg={bg || colors.purple.normal}
-          radius={radius}
+          bg={bg}
           onMouseLeave={() =>
             this.setState({
               show: false,
@@ -102,12 +113,22 @@ export default class Tooltip extends React.Component {
           show={this.state.show}
           width={width}
           top={top}
+          bottom={bottom}
           left={left}
           right={right}
-          tipLeft={tip ? tip.left : 0}
+          tipLeft={tip.left}
+          bg={textBg}
         >
-          <Text color="#7c84a6" fontSize="12px" lineHeight="19px" py={2} px={3}>
-            {info}
+          <Text
+            fontSize="12px"
+            lineHeight="19px"
+            py={2}
+            px={2}
+            bg={textBg}
+            color={textColor}
+            textAlign="left"
+          >
+            {children}
           </Text>
         </PopupBox>
       </Flex>

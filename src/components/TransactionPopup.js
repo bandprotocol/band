@@ -66,7 +66,6 @@ class TransactionPopup extends React.Component {
 
   render() {
     const { txns } = this.props
-    console.log(txns)
     return txns ? (
       <Container show={!!txns.length}>
         <MainBar onClick={this.toggleExpand.bind(this)}>

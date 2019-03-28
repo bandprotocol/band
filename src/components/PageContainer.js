@@ -11,8 +11,8 @@ const PageContainer = styled(Box)`
   ${p =>
     !p.fullWidth &&
     `
-    padding: 32px 18px;
-    max-width: ${p.withSidebar ? '1080px' : '1440px'};
+    padding: 32px 40px;
+    max-width: ${p.withSidebar ? '1218px' : '1440px'};
 
     ${media.mobile} {
       padding: 24px 12px;
