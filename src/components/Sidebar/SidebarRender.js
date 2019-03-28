@@ -131,13 +131,19 @@ export default ({
         px={4}
         py="20px"
       >
-        <Text color="white">Your balance</Text>
-        <Flex mt="20px" mb="10px">
-          <Text color="white" fontSize="18px" fontWeight={500}>
-            7,706.89 CHT
-          </Text>
-        </Flex>
-        <Text color="white">(224.87 USD)</Text>
+        {!logedin ? null : balance === undefined ? (
+          <CircleLoadingSpinner radius="25px" />
+        ) : (
+          <React.Fragment>
+            <Text color="white">Your balance</Text>
+            <Flex mt="20px" mb="10px">
+              <Text color="white" fontSize="18px" fontWeight={500}>
+                7,706.89 CHT
+              </Text>
+            </Flex>
+            <Text color="white">(224.87 USD)</Text>
+          </React.Fragment>
+        )}
       </Flex>
       <Flex flexDirection="column" py={4} width={[1]}>
         <Bold px={4} pb={3} fontSize={0} color="#7a7a84">

@@ -2,6 +2,7 @@ export const bandSelector = state => state.get('band')
 export const communitySelector = state => state.get('community')
 export const currentSelector = state => state.get('current')
 export const orderSelector = state => state.get('order')
+export const transferSelector = state => state.get('transfer')
 export const priceSelector = state => state.get('price')
 export const rewardSelector = state => state.get('reward')
 export const blockNumberSelector = state =>

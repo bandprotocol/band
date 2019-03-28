@@ -1,5 +1,5 @@
 import { takeEvery, put, select, delay, all } from 'redux-saga/effects'
-import IPFSStorage from 'utils/ipfs'
+import { IPFS } from 'band.js'
 import moment from 'utils/moment'
 
 import { LOAD_PROPOSALS, saveProposals } from 'actions'
@@ -33,7 +33,7 @@ function* handleLoadProposals({ address }) {
   const proposals = yield all(
     rawProposals.map(function*(proposal) {
       const vote = votes.filter(v => v.onChainId === proposal.proposalId)
-      const data = yield IPFSStorage.get(proposal.reasonHash)
+      const data = JSON.parse(yield IPFS.get(proposal.reasonHash))
       const [prefix, name] = proposal.changes[0].key.split(':')
       if (!name)
         return {

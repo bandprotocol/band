@@ -30,7 +30,7 @@ const BandApp = ({
   name,
   src,
   link,
-  author,
+  organization,
   description,
   children,
   onClick,
@@ -90,7 +90,7 @@ const BandApp = ({
           </Text>
         </Flex>
         <Text fontSize={12} color={colors.text.normal} fontWeight="500">
-          By {author}
+          By {organization}
         </Text>
         <Description lineHeight={1.5} fontSize={12} my={3}>
           {description}
@@ -163,7 +163,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
                 logo,
                 description,
                 website,
-                author,
+                organization,
                 marketCap,
                 price,
                 address,
@@ -174,7 +174,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
                   name={name}
                   src={logo}
                   description={description}
-                  author={author}
+                  organization={organization}
                   link={website}
                   onClick={() => history.push(`/community/${address}/detail`)}
                 >
@@ -189,7 +189,7 @@ const CommunityPage = ({ communities, bandPrice, history }) => (
             <BandApp
               name="Work with us"
               src={WorkWithUsSrc}
-              author="Band Protocol"
+              organization="Band Protocol"
               description="Already have an idea or working app. Want to incorporate Band protocol, contact us for help or grant query."
             >
               <Flex p={2} justifyContent={['flex-start', 'center']}>

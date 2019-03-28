@@ -24,7 +24,7 @@ import {
 
 import { transactionSelector } from 'selectors/basic'
 
-import IPFSStorage from 'utils/ipfs'
+import { IPFS } from 'band.js'
 
 const txChannel = channel()
 
@@ -72,7 +72,7 @@ function* handleClaimReward({ address, rewardID }) {
 }
 
 function* handleProposeProposal({ address, title, reason, changes }) {
-  const reasonHash = yield IPFSStorage.save(
+  const reasonHash = yield IPFS.set(
     JSON.stringify({
       title,
       reason,

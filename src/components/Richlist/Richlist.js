@@ -1,6 +1,5 @@
 import React from 'react'
 
-import HistoryBody from 'components/HistoryBody'
 import { OrderPagination } from 'components/Pagination'
 
 import { Flex, Text, Box } from 'ui/common'
@@ -55,12 +54,6 @@ export default ({
     pb={3}
   >
     <RichlistHeader />
-    <HistoryBody
-      communityAddress={communityAddress}
-      //isAll={selectedOption.value === 'all'}
-      currentPage={currentPage}
-      pageSize={pageSize}
-    />
     <OrderPagination
       communityAddress={communityAddress}
       //isAll={selectedOption.value === 'all'}

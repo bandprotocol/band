@@ -41,7 +41,6 @@ function* baseInitialize() {
     // TODO: Mock on price and last24hr
     saveBandInfo(address, '1000000000000000000000000', price, last24Hrs),
   )
-
   const dapps = yield tempBandClient.getDAppsInfo()
   for (const dapp of dapps) {
     yield put(
@@ -49,8 +48,9 @@ function* baseInitialize() {
         dapp.name,
         dapp.symbol,
         dapp.address,
-        dapp.author,
-        dapp.logo,
+        dapp.organization,
+        `https://ipfs.io/ipfs/${dapp.logo}`,
+        `https://ipfs.io/ipfs/${dapp.banner}`,
         dapp.description,
         dapp.website,
         dapp.marketCap,

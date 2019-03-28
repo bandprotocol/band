@@ -2,53 +2,53 @@ import React from 'react'
 import Dropzone from 'react-dropzone'
 import { Flex, Text, Image, Box } from 'ui/common'
 import { colors } from 'ui'
-import IPFSStorage from 'utils/ipfs'
+import { IPFS } from 'band.js'
 import ImageLogoSrc from 'images/picture.svg'
 
 const parentStyle = {
   border: '2px dashed rgb(213, 219, 243)',
-  'border-radius': '6px',
-  'background-color': 'white',
+  borderRadius: '6px',
+  backgroundColor: 'white',
 }
 
-const getBase64 = file => {
+window.IPFS = IPFS
+
+const setIPFSUrl = file => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.readAsDataURL(file)
     reader.onabort = () => console.log('file reading was aborted')
     reader.onerror = error => reject(error)
-    reader.onload = () => resolve(reader.result)
+    reader.onload = async () => {
+      const arr = new Uint8Array(reader.result)
+      const hash = await IPFS.uploadImageToIPFS(arr)
+      resolve(hash)
+    }
+    reader.readAsArrayBuffer(file)
   })
 }
 
 export default class ImageUpload extends React.Component {
   state = {
-    imgBase64: null,
+    src: null,
   }
 
   async onImageDrop(files) {
     const { setImgHash } = this.props
     const file = files[0]
     try {
-      const imgBase64 = await getBase64(file)
-      const imgHash = await IPFSStorage.save(
-        JSON.stringify({
-          imgBase64,
-        }),
-      )
-      setImgHash(imgHash)
-      this.setState({
-        imgBase64,
-      })
+      const chainHash = await setIPFSUrl(file)
+      const urlHash = IPFS.toIPFSHash(chainHash)
+      this.setState({ src: `https://ipfs.io/ipfs/${urlHash}` })
+      setImgHash(chainHash)
     } catch (err) {
       alert('Upload jpeg or png only.')
     }
   }
 
   render() {
-    const { imgBase64 } = this.state
+    const { src } = this.state
     const { description, width = 120, height = 120 } = this.props
-    if (imgBase64 === null) {
+    if (src === null) {
       return (
         <Dropzone
           multiple={false}
@@ -84,7 +84,7 @@ export default class ImageUpload extends React.Component {
       return (
         <div
           style={{
-            backgroundImage: `url(${imgBase64})`,
+            backgroundImage: `url(${src})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             width: width,
@@ -99,7 +99,7 @@ export default class ImageUpload extends React.Component {
             width="20px"
             justifyContent="center"
             alignItems="center"
-            onClick={() => this.setState({ imgBase64: null })}
+            onClick={() => this.setState({ src: null })}
             style={{
               height: '20px',
               borderRadius: '50%',
@@ -110,7 +110,7 @@ export default class ImageUpload extends React.Component {
             }}
           >
             <Text color="white">
-              <i class="fas fa-times" />
+              <i className="fas fa-times" />
             </Text>
           </Flex>
         </div>

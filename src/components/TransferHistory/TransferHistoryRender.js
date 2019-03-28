@@ -1,13 +1,13 @@
 import React from 'react'
 
-import HistoryBody from './HistoryBody'
 import { OrderPagination } from 'components/Pagination'
+import TransferBody from './TransferBody'
 
-import { Flex, Text, Box, Card } from 'ui/common'
-
+import { Flex, Text, Box } from 'ui/common'
+import { Utils } from 'band.js'
 import { colors } from 'ui'
 
-const HistoryHeader = () => (
+const TransferHistoryHeader = () => (
   <Flex
     flexDirection="row"
     py={3}
@@ -17,22 +17,22 @@ const HistoryHeader = () => (
   >
     <Flex pl="30px" flex={1}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Time
+        TxHash
       </Text>
     </Flex>
     <Flex flex={1}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Price(BAND)
+        From
       </Text>
     </Flex>
     <Flex flex={1}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Amount
+        To
       </Text>
     </Flex>
     <Flex flex={1}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Type
+        Quantity
       </Text>
     </Flex>
   </Flex>
@@ -47,6 +47,31 @@ export default ({
   onChangePage,
   pageSize,
 }) => {
+  ;(async () => {
+    const test = await Utils.graphqlRequest(
+      `
+        {
+          community(address:"0xd788b98722581456f051783c47D90aAD04AD6770") {
+            token {
+              transferHistory {
+                tx {
+                  txHash
+                }
+                sender {
+                  address
+                }
+                receiver {
+                  address
+                }
+                value
+              }
+            }
+          }
+        }
+        `,
+    )
+    console.log(test)
+  })()
   return (
     <Flex
       style={{ borderRadius: '10px' }}
@@ -55,16 +80,10 @@ export default ({
       flexDirection="column"
       pb={3}
     >
-      <HistoryHeader />
-      <HistoryBody
-        communityAddress={communityAddress}
-        isAll={selectedOption.value === 'all'}
-        currentPage={currentPage}
-        pageSize={pageSize}
-      />
+      <TransferHistoryHeader />
       <OrderPagination
         communityAddress={communityAddress}
-        isAll={selectedOption.value === 'all'}
+        //isAll={selectedOption.value === 'all'}
         pageSize={pageSize}
         currentPage={currentPage}
         onChangePage={onChangePage}

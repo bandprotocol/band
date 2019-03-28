@@ -16,7 +16,7 @@ const mapStateToProps = (state, { communityAddress }) => {
     address: community.get('address'),
     src: community.get('logo'),
     link: community.get('website'),
-    author: community.get('author'),
+    organization: community.get('organization'),
     description: community.get('description'),
   }
 }

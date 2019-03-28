@@ -145,7 +145,7 @@ export const getParameterDetail = name =>
     },
     organization: {
       type: 'IPFS',
-      description: 'Author of the community',
+      description: 'Organization of the community',
     },
     logo: {
       type: 'IPFS',

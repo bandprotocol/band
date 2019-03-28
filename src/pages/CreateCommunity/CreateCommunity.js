@@ -132,6 +132,8 @@ export default class CreateCommunity extends React.Component {
     delete kvs['info:description']
     delete kvs['info:url']
     delete kvs['info:organization']
+    delete kvs['info:logo']
+    delete kvs['info:banner']
 
     // create keys, values array
     const keys = []
@@ -144,10 +146,23 @@ export default class CreateCommunity extends React.Component {
       }
     }
 
+    // name: string,
+    // symbol: string,
+    // logo: string,
+    // banner: string,
+    // description: string,
+    // website: string,
+    // organization: string,
+    // voting: Address,
+    // keys: string[],
+    // values: (string | number)[],
+    // collateralEquation: (string | BN)[],
+
     await bandClient.deployCommunity(
       this.state.name,
       this.state.symbol,
       this.state.kvs['info:logo'],
+      this.state.kvs['info:banner'],
       this.state.description,
       this.state.url,
       this.state.organization,

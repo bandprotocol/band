@@ -78,12 +78,15 @@ class ParameterPanel extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => ({
-  prefixList: prefixListSelector(state, { address: communityAddress }).map(
-    prefix => ({ value: prefix, label: prefix }),
-  ),
-  logedin: !!currentUserSelector(state),
-})
+const mapStateToProps = (state, { communityAddress }) => {
+  // console.log(state)
+  return {
+    prefixList: prefixListSelector(state, { address: communityAddress }).map(
+      prefix => ({ value: prefix, label: prefix }),
+    ),
+    logedin: !!currentUserSelector(state),
+  }
+}
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   loadParameters: () => dispatch(loadParameters(communityAddress)),
