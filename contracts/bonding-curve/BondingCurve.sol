@@ -15,32 +15,11 @@ contract BondingCurve is Ownable, ERC20Acceptor {
   using Equation for Equation.Node[];
   using SafeMath for uint256;
 
-  event Buy(
-    address indexed buyer,
-    uint256 bondedTokenAmount,
-    uint256 collateralTokenAmount
-  );
-
-  event Sell(
-    address indexed seller,
-    uint256 bondedTokenAmount,
-    uint256 collateralTokenAmount
-  );
-
-  event Deflate(
-    address indexed burner,
-    uint256 burnedAmount
-  );
-
-  event RevenueCollect(
-    address indexed beneficiary,
-    uint256 bondedTokenAmount
-  );
-
-  event CurveMultiplierChange(
-    uint256 previousValue,
-    uint256 nextValue
-  );
+  event Buy(address indexed buyer, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
+  event Sell(address indexed seller, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
+  event Deflate(address indexed burner, uint256 burnedAmount);
+  event RevenueCollect(address indexed beneficiary, uint256 bondedTokenAmount);
+  event CurveMultiplierChange(uint256 previousValue, uint256 nextValue);
 
   ERC20Interface public collateralToken;
   ERC20Interface public bondedToken;
