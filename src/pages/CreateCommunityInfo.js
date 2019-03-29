@@ -28,6 +28,8 @@ export default ({
   symbol,
   description,
   url,
+  logoUrl,
+  bannerUrl,
   organization,
   handleChange,
   setKeyValue,
@@ -57,6 +59,10 @@ export default ({
         </DarkLabel>
         <Flex mt="10px" style={{ position: 'relative' }}>
           <ImageUpload
+            imgUrl={logoUrl}
+            saveImageUrl={imageUrl =>
+              handleChange({ target: { name: 'logoUrl', value: imageUrl } })
+            }
             setImgHash={imgHash => setKeyValue('info:logo', imgHash)}
             fontSize="12px"
             description={'200x200 KB'}
@@ -69,6 +75,10 @@ export default ({
         </DarkLabel>
         <Flex mt="10px" style={{ position: 'relative' }}>
           <ImageUpload
+            imgUrl={bannerUrl}
+            saveImageUrl={imageUrl =>
+              handleChange({ target: { name: 'bannerUrl', value: imageUrl } })
+            }
             setImgHash={imgHash => setKeyValue('info:banner', imgHash)}
             width={320}
             description={'size: 320x160 pixels 200x200 KB'}

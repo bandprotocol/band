@@ -27,7 +27,7 @@ const setIPFSUrl = file => {
 
 export default class ImageUpload extends React.Component {
   state = {
-    src: null,
+    src: this.props.imgUrl,
   }
 
   async onImageDrop(files) {
@@ -36,11 +36,16 @@ export default class ImageUpload extends React.Component {
     try {
       const chainHash = await setIPFSUrl(file)
       const urlHash = IPFS.toIPFSHash(chainHash)
+      const imageSrc = `https://ipfs.infura.io:5001/api/v0/cat/${urlHash}`
       this.setState({
-        src: `https://ipfs.infura.io:5001/api/v0/cat/${urlHash}`,
+        src: imageSrc,
       })
+      // save image url
+      this.props.saveImageUrl(imageSrc)
+      // save image hash
       setImgHash(chainHash)
     } catch (err) {
+      console.log(err)
       alert('Upload jpeg or png only.')
     }
   }

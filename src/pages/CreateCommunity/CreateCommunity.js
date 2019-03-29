@@ -20,7 +20,8 @@ export default class CreateCommunity extends React.Component {
     symbol: '',
     description: '',
     url: '',
-    logo: '',
+    logoUrl: null,
+    bannerUrl: null,
     organization: '',
     //distribution
     curve: new Curves['linear'](Curves['linear'].defaultParams),
@@ -31,12 +32,6 @@ export default class CreateCommunity extends React.Component {
       'params:min_participation_pct': '60',
       'params:support_required_pct': '50',
       'curve:liqudity_fee': '0',
-      'curve:inflation_rate': '0',
-      'info:name': '',
-      'info:symbol': '',
-      'info:description': '',
-      'info:url': '',
-      'info:organization': '',
       'info:logo': '',
       'info:banner': '',
     },
@@ -127,11 +122,7 @@ export default class CreateCommunity extends React.Component {
     })
 
     const kvs = { ...this.state.kvs }
-    delete kvs['info:name']
-    delete kvs['info:symbol']
-    delete kvs['info:description']
-    delete kvs['info:url']
-    delete kvs['info:organization']
+    // delete keys that won't use convertToChain
     delete kvs['info:logo']
     delete kvs['info:banner']
 
@@ -145,18 +136,6 @@ export default class CreateCommunity extends React.Component {
         values.push(convertToChain(kvs[k], type, unit).toString())
       }
     }
-
-    // name: string,
-    // symbol: string,
-    // logo: string,
-    // banner: string,
-    // description: string,
-    // website: string,
-    // organization: string,
-    // voting: Address,
-    // keys: string[],
-    // values: (string | number)[],
-    // collateralEquation: (string | BN)[],
 
     await bandClient.deployCommunity(
       this.state.name,
