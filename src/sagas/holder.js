@@ -13,13 +13,14 @@ function* handleLoadHolders({ address }) {
 
   const {
     community: {
-      token: { balances: holders },
+      token: { address: tokenAddress, balances: holders },
     },
   } = yield Utils.graphqlRequest(
     `
     {
         community(address:"${address}") {
           token {
+            address
             balances {
               user {
                 address
@@ -38,6 +39,7 @@ function* handleLoadHolders({ address }) {
       address,
       holders
         .map(holder => ({
+          tokenAddress,
           address: holder.user.address,
           balance: new BN(holder.value),
         }))

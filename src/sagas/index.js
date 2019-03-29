@@ -20,6 +20,7 @@ import parameterSaga from 'sagas/parameters'
 import proposalSaga from 'sagas/proposals'
 import transferSaga from 'sagas/transfer'
 import holderSaga from 'sagas/holder'
+import tokenSaga from 'sagas/token'
 
 import { BandProtocolClient } from 'band.js'
 
@@ -167,6 +168,7 @@ export default function*() {
     fork(proposalSaga),
     fork(transferSaga),
     fork(holderSaga),
+    fork(tokenSaga),
   ])
   yield* baseInitialize()
 }

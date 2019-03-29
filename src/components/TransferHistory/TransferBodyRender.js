@@ -18,7 +18,7 @@ import {
   Bold,
 } from 'ui/common'
 
-const HistoryRow = ({ txHash, from, to, quantity, timeStamp, txLink }) => (
+const HistoryRow = ({ from, to, quantity, timeStamp, txLink }) => (
   <Flex flexDirection="row" py={4} style={{ minWidth: 0, overflow: 'hidden' }}>
     <Flex
       flex={4}
@@ -83,26 +83,6 @@ const HistoryRow = ({ txHash, from, to, quantity, timeStamp, txLink }) => (
         {timeStamp}
       </Text>
     </Flex>
-    <Flex
-      flex={4}
-      pr="10px"
-      style={{
-        minWidth: 0,
-      }}
-    >
-      <Text
-        color={colors.text}
-        fontSize={0}
-        style={{
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-        }}
-        letterSpacing="0.5px"
-      >
-        {txHash}
-      </Text>
-    </Flex>
     <Flex flex={1}>
       <AbsoluteLink
         href={txLink}
@@ -120,7 +100,6 @@ export default ({ items }) => {
     <React.Fragment>
       {items.map(({ txHash, from, to, quantity, timeStamp }) => (
         <HistoryRow
-          txHash={txHash}
           from={from}
           to={to}
           quantity={quantity.pretty()}

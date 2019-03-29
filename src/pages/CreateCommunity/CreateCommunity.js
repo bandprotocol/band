@@ -3,7 +3,7 @@ import PageContainer from 'components/PageContainer'
 import CreateCommunityState from 'components/CreateCommunityState'
 import CreateCommunityFooter from 'components/CreateCommunityFooter'
 import Curves from 'curves'
-import { BandProtocolClient } from 'band.js'
+import { BandProtocolClient, IPFS } from 'band.js'
 import { Flex } from 'ui/common'
 import { convertToChain } from 'utils/helper'
 
@@ -11,6 +11,8 @@ import { convertToChain } from 'utils/helper'
 import CreateCommunityInfo from 'pages/CreateCommunityInfo'
 import CreateCommunityDistribution from 'pages/CreateCommunityDistribution'
 import CreateCommunityParameters from 'pages/CreateCommunityParameters'
+
+window.IPFS = IPFS
 
 export default class CreateCommunity extends React.Component {
   state = {
@@ -57,6 +59,10 @@ export default class CreateCommunity extends React.Component {
         unit: '%',
       },
     },
+  }
+
+  componentDidUpdate() {
+    window.CreateCommState = this.state
   }
 
   setPageState(nextPageState) {

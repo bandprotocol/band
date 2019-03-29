@@ -34,11 +34,6 @@ const TransferHistoryHeader = () => (
         Timestamp
       </Text>
     </Flex>
-    <Flex flex={4}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        TxHash
-      </Text>
-    </Flex>
     <Flex flex={1} />
   </Flex>
 )

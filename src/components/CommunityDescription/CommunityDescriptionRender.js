@@ -1,8 +1,14 @@
 import React from 'react'
-import { colors } from 'ui'
-import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
+import { Flex, Text, AbsoluteLink } from 'ui/common'
 
-export default ({ name, src, link, organization, description, address }) => {
+export default ({
+  name,
+  link,
+  organization,
+  description,
+  address,
+  tokenAddr,
+}) => {
   return (
     <Flex style={{ minHeight: '180px' }} flexDirection="row">
       <Flex
@@ -108,12 +114,16 @@ export default ({ name, src, link, organization, description, address }) => {
               Website:
             </Text>
           </Flex>
-          <Flex mr="10px">
+          <Flex mr="10px" style={{ minWidth: 0 }}>
             <Text
               fontSize="13px"
               lineHeight={1.64}
               color="#4a4a4a"
-              style={{ wordBreak: 'break-word' }}
+              style={{
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}
             >
               {link}
             </Text>
@@ -137,12 +147,16 @@ export default ({ name, src, link, organization, description, address }) => {
               Contract:
             </Text>
           </Flex>
-          <Flex mr="10px">
+          <Flex mr="10px" style={{ minWidth: 0 }}>
             <Text
               fontSize="13px"
               lineHeight={1.64}
               color="#4a4a4a"
-              style={{ wordBreak: 'break-word' }}
+              style={{
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}
             >
               {address}
             </Text>
@@ -165,12 +179,25 @@ export default ({ name, src, link, organization, description, address }) => {
             justifyContent="flex-end"
           >
             <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
-              Created:
+              Token:
             </Text>
           </Flex>
-          <Text fontSize="13px" lineHeight={1.64}>
-            {'20-03-2019  17:00'}
+          <Text
+            fontSize="13px"
+            lineHeight={1.64}
+            style={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {tokenAddr}
           </Text>
+          <AbsoluteLink
+            href={`https://rinkeby.etherscan.io/address/${tokenAddr}`}
+          >
+            <i className="fas fa-external-link-alt" />
+          </AbsoluteLink>
         </Flex>
         <Flex flexDirection="row" py="20px" pl="10px">
           <Flex

@@ -88,14 +88,14 @@ const HistoryRow = ({ rank, address, balance, txLink }) => (
 export default ({ items }) => {
   return (
     <React.Fragment>
-      {items.map(({ rank, address, balance }) => (
+      {items.map(({ rank, tokenAddress, address, balance }) => (
         <HistoryRow
           rank={rank}
           address={address}
           balance={balance.pretty()}
           key={rank}
           // TODO: Change hardcode link depend to networkID
-          txLink={`https://rinkeby.etherscan.io/address/${address}`}
+          txLink={`https://rinkeby.etherscan.io/token/${tokenAddress}?a=${address}`}
         />
       ))}
     </React.Fragment>
