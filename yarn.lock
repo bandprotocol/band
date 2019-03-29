@@ -2020,10 +2020,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-band.js@^1.0.60:
-  version "1.0.60"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.60.tgz#f0ce962033670a4bab69e2359fe54920ae29dac3"
-  integrity sha512-19+SFF2K068gxar86VnWhz0FNlpwsF0E5ej6L0NXcSXGlOjLSAKiCT14gwM76TL4ABBsRihpSgboctSN1jJBCw==
+band.js@^1.0.61:
+  version "1.0.61"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.0.61.tgz#343bfb49c4c7ce56847404a471e730a860460f35"
+  integrity sha512-8NOPMI3OeAN9eYt1k3na7IF96ikiJjZo81pG38S7UC2N79xUW6s9Vg5XZg36mg713U7Bt4jXtaIVBNmurRJM0A==
   dependencies:
     "@types/qs" "^6.5.1"
     axios "^0.18.0"

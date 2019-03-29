@@ -45,18 +45,23 @@ export default ({
   onClick,
 }) => (
   <MiniCard onClick={onClick}>
-    <Image
-      src={logo}
-      width="85px"
-      height="85px"
-      style={{ borderRadius: '8.5px' }}
+    {/* Image Logo */}
+    <div
+      style={{
+        borderRadius: '8.5px',
+        backgroundImage: `url(${logo})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '85px',
+        height: '85px',
+      }}
     />
     <Flex
       flexDirection="column"
       justifyContent="flex-start"
       alignItems="left"
       ml={3}
-      width="100%"
+      width="70%"
       style={{ height: '100%' }}
     >
       <Flex flexDirection="row" alignItems="center">

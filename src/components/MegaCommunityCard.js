@@ -110,7 +110,16 @@ export default ({
     }}
     onClick={onClick}
   >
-    <Image src={banner} width="100%" height="150px" />
+    {/* Image Banner */}
+    <div
+      style={{
+        backgroundImage: `url(${banner})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '150px',
+      }}
+    />
     <Flex
       flexDirection={['column-reverse', 'row']}
       alignItems="flex-start"
