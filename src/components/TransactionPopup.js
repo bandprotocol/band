@@ -91,8 +91,8 @@ class TransactionPopup extends React.Component {
         <TxnContainer
           maxHeight={this.state.expand ? `${txns.length * 95}px` : 0}
         >
-          {txns.map(txn => (
-            <PendingTransaction {...txn} />
+          {txns.map((txn, i) => (
+            <PendingTransaction key={i} {...txn} />
           ))}
         </TxnContainer>
       </Container>

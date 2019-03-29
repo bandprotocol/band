@@ -18,6 +18,7 @@ import rewardsSaga from 'sagas/rewards'
 import transactionsSaga from 'sagas/transaction'
 import parameterSaga from 'sagas/parameters'
 import proposalSaga from 'sagas/proposals'
+import transferSaga from 'sagas/transfer'
 
 import { BandProtocolClient } from 'band.js'
 
@@ -49,8 +50,8 @@ function* baseInitialize() {
         dapp.symbol,
         dapp.address,
         dapp.organization,
-        `https://ipfs.io/ipfs/${dapp.logo}`,
-        `https://ipfs.io/ipfs/${dapp.banner}`,
+        `https://ipfs.infura.io:5001/api/v0/cat/${dapp.logo}`,
+        `https://ipfs.infura.io:5001/api/v0/cat/${dapp.banner}`,
         dapp.description,
         dapp.website,
         dapp.marketCap,
@@ -163,6 +164,7 @@ export default function*() {
     fork(rewardsSaga),
     fork(parameterSaga),
     fork(proposalSaga),
+    fork(transferSaga),
   ])
   yield* baseInitialize()
 }

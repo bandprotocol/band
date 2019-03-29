@@ -87,6 +87,7 @@ const NumberPage = ({ currentPage, numberOfPages, onChangePage }) => {
           .filter(page => page <= 4)
           .map(i => (
             <TextClickable
+              key={i}
               onClick={() => onChangePage(i + 1)}
               disabled={currentPage === i + 1}
             >

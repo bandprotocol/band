@@ -38,7 +38,9 @@ export default class ImageUpload extends React.Component {
     try {
       const chainHash = await setIPFSUrl(file)
       const urlHash = IPFS.toIPFSHash(chainHash)
-      this.setState({ src: `https://ipfs.io/ipfs/${urlHash}` })
+      this.setState({
+        src: `https://ipfs.infura.io:5001/api/v0/cat/${urlHash}`,
+      })
       setImgHash(chainHash)
     } catch (err) {
       alert('Upload jpeg or png only.')

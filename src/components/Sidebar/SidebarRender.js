@@ -50,42 +50,6 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
   </HighlightNavLink>
 )
 
-const HighlightSymbolOrUSD = ({ symbol, isSymbol, toggle }) => {
-  return (
-    <Flex ml={1} style={{ lineHeight: '15px' }}>
-      {isSymbol ? (
-        <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="11px">
-          {symbol}
-        </Text>
-      ) : (
-        <TextClickable
-          color={colors.text.grey}
-          onClick={toggle}
-          fontSize="11px"
-        >
-          {symbol}
-        </TextClickable>
-      )}
-      <Text px={0} color={colors.text.grey} fontSize="11px">
-        /
-      </Text>
-      {isSymbol ? (
-        <TextClickable
-          color={colors.text.grey}
-          onClick={toggle}
-          fontSize="11px"
-        >
-          USD
-        </TextClickable>
-      ) : (
-        <Text mr={0} fontWeight="bold" color="#8868ff" fontSize="11px">
-          USD
-        </Text>
-      )}
-    </Flex>
-  )
-}
-
 export default ({
   logedin,
   name,
@@ -99,29 +63,16 @@ export default ({
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
       <Image src={src} width="80px" height="80px" m={3} borderRadius="50%" />
-      <Text
-        py={1}
-        fontSize={0}
-        fontWeight={500}
-        style={{ textTransform: 'uppercase' }}
-      >
-        {name}
-      </Text>
-      <Flex flexDirection="row" alignItems="flex-end" py={1}>
-        {!logedin ? null : balance === undefined ? (
-          <CircleLoadingSpinner radius="25px" />
-        ) : (
-          <React.Fragment>
-            <Text color={colors.text.grey} fontSize={2}>
-              {balance.pretty()}
-            </Text>
-            <HighlightSymbolOrUSD
-              symbol={symbol}
-              isSymbol={isSymbol}
-              toggle={toggleBalance}
-            />
-          </React.Fragment>
-        )}
+      <Flex mb="20px">
+        <Text
+          py={1}
+          fontSize={0}
+          fontWeight={500}
+          color="white"
+          style={{ textTransform: 'uppercase' }}
+        >
+          {name}
+        </Text>
       </Flex>
       <Flex
         bg="#3f3f4c"
@@ -138,10 +89,10 @@ export default ({
             <Text color="white">Your balance</Text>
             <Flex mt="20px" mb="10px">
               <Text color="white" fontSize="18px" fontWeight={500}>
-                7,706.89 CHT
+                {`${balance.pretty()} ${symbol}`}
               </Text>
             </Flex>
-            <Text color="white">(224.87 USD)</Text>
+            <Text color="white">{`(${balance.pretty()} USD)`}</Text>
           </React.Fragment>
         )}
       </Flex>

@@ -18,27 +18,73 @@ import {
   Bold,
 } from 'ui/common'
 
-const HistoryRow = ({ time, price, amount, type, txLink }) => (
-  <Flex flexDirection="row" py={4}>
-    <Box flex="0 0 270px" pl="55px">
+const HistoryRow = ({ txHash, from, to, quantity, timeStamp, txLink }) => (
+  <Flex
+    flexDirection="row"
+    py={4}
+    style={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}
+  >
+    <Flex
+      flex={4}
+      pl="30px"
+      pr="10px"
+      style={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        minWidth: 0,
+      }}
+      letterSpacing="0.5px"
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{ textOverflow: 'ellipsis' }}
+      >
+        {from}
+      </Text>
+    </Flex>
+    <Flex
+      flex={4}
+      px="10px"
+      style={{ overflow: 'hidden' }}
+      letterSpacing="0.5px"
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{ textOverflow: 'ellipsis' }}
+      >
+        {to}
+      </Text>
+    </Flex>
+    <Flex flex={2} px="10px" style={{ overflow: 'hidden' }}>
+      <Text color={colors.text} fontSize={0}>
+        {quantity}
+      </Text>
+    </Flex>
+    <Flex flex={4} px="10px" style={{ overflow: 'hidden' }}>
       <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
-        {time}
+        {timeStamp}
       </Text>
-    </Box>
-    <Box flex="0 0 160px">
-      <Text color={colors.text} fontSize={0}>
-        {price}
+    </Flex>
+    <Flex
+      flex={4}
+      style={{
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        minWidth: 0,
+      }}
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{ textOverflow: 'ellipsis' }}
+        letterSpacing="0.5px"
+      >
+        {txHash}
       </Text>
-    </Box>
-    <Box flex="0 0 160px">
-      <Text color={colors.text} fontSize={0}>
-        {amount}
-      </Text>
-    </Box>
-    <Flex flex={1}>
-      <Bold color={type === 'Buy' ? colors.green : colors.red} fontSize={0}>
-        {type}
-      </Bold>
     </Flex>
     <Flex flex={1}>
       <AbsoluteLink
@@ -52,17 +98,25 @@ const HistoryRow = ({ time, price, amount, type, txLink }) => (
   </Flex>
 )
 
-export default ({ items }) => (
-  <React.Fragment>
-    {items.map(({ time, price, amount, type, txHash }) => (
-      <HistoryRow
-        time={time.formal()}
-        price={price.pretty()}
-        amount={amount.pretty()}
-        type={type}
-        // TODO: Change hardcode link depend to networkID
-        txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
-      />
-    ))}
-  </React.Fragment>
-)
+export default ({ items }) => {
+  return (
+    <React.Fragment>
+      {items.map(({ txHash, from, to, quantity, timeStamp }) => (
+        <HistoryRow
+          txHash={txHash}
+          from={from}
+          to={to}
+          quantity={quantity.pretty()}
+          timeStamp={new Date(timeStamp)
+            .toUTCString()
+            .split(' ')
+            .slice(0, -1)
+            .join(' ')}
+          key={txHash}
+          // TODO: Change hardcode link depend to networkID
+          txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
+        />
+      ))}
+    </React.Fragment>
+  )
+}

@@ -7,13 +7,13 @@ import CurveParameter from 'components/CurveParameter'
 import CurveEquation from 'components/CurveEquation'
 import colors from 'ui/colors'
 
-const TabMenu = styled(Text).attrs({
+const TabMenu = styled(Text).attrs(props => ({
   mx: '16px',
   my: '10px',
   fontSize: '14px',
-  fontWeight: props => (props.active ? '500' : '300'),
-  color: props => (props.active ? colors.purple.dark : colors.dark),
-})`
+  fontWeight: props.active ? '500' : '300',
+  color: props.active ? colors.purple.dark : colors.dark,
+}))`
   height: 25px;
   border-bottom: ${p => (p.active ? `2px solid ${colors.purple.dark}` : '0px')};
   cursor: pointer;

@@ -10,29 +10,9 @@ import {
 import { currentUserSelector } from 'selectors/current'
 
 export const transferHistorySelector = createSelector(
-  [
-    transferSelector,
-    addressSelector,
-    typeSelector,
-    currentUserSelector,
-    pageSelector,
-    pageSizeSelector,
-  ],
-  (transfers, address, isAll, user, page, pageSize) => {
+  [transferSelector, addressSelector, pageSelector, pageSizeSelector],
+  (transfers, address, page, pageSize) => {
     if (!transfers.get(address)) return List()
-    return transfers
-      .get(address)
-      .filter(order => isAll || order.get('user') === user)
-      .slice((page - 1) * pageSize, page * pageSize)
-  },
-)
-
-export const noOrderSelector = createSelector(
-  [transferSelector, addressSelector, typeSelector, currentUserSelector],
-  (transfers, address, isAll, user) => {
-    if (!transfers.get(address)) return 0
-    return transfers
-      .get(address)
-      .filter(order => isAll || order.get('user') === user).size
+    return transfers.get(address).slice((page - 1) * pageSize, page * pageSize)
   },
 )

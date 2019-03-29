@@ -1,6 +1,5 @@
 import React from 'react'
-import { colors } from 'ui'
-import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import Richlist from 'components/Richlist'
 import TransferHistory from 'components/TransferHistory'
 import OrderHistory from 'components/OrderHistory'
@@ -25,14 +24,15 @@ export default class DetailHistory extends React.Component {
               onClick={() => this.setState({ selectedTab: 0 })}
               style={{
                 cursor: 'pointer',
-                borderBottom: selectedTab === 0 && 'solid 2px #4e3ca9',
+                borderBottom:
+                  selectedTab === 0 ? 'solid 2px #4e3ca9' : undefined,
                 height: '35px',
               }}
             >
               <Text
                 fontSize="16px"
                 fontWeight={500}
-                color={selectedTab === 0 && '#4e3ca9'}
+                color={selectedTab === 0 ? '#4e3ca9' : undefined}
               >
                 Rich list
               </Text>
@@ -43,14 +43,15 @@ export default class DetailHistory extends React.Component {
               onClick={() => this.setState({ selectedTab: 1 })}
               style={{
                 cursor: 'pointer',
-                borderBottom: selectedTab === 1 && 'solid 2px #4e3ca9',
+                borderBottom:
+                  selectedTab === 1 ? 'solid 2px #4e3ca9' : undefined,
                 height: '35px',
               }}
             >
               <Text
                 fontSize="16px"
                 fontWeight={500}
-                color={selectedTab === 1 && '#4e3ca9'}
+                color={selectedTab === 1 ? '#4e3ca9' : undefined}
               >
                 Transfer
               </Text>
@@ -61,14 +62,15 @@ export default class DetailHistory extends React.Component {
               onClick={() => this.setState({ selectedTab: 2 })}
               style={{
                 cursor: 'pointer',
-                borderBottom: selectedTab === 2 && 'solid 2px #4e3ca9',
+                borderBottom:
+                  selectedTab === 2 ? 'solid 2px #4e3ca9' : undefined,
                 height: '35px',
               }}
             >
               <Text
                 fontSize="16px"
                 fontWeight={500}
-                color={selectedTab === 2 && '#4e3ca9'}
+                color={selectedTab === 2 ? '#4e3ca9' : undefined}
               >
                 Orders
               </Text>

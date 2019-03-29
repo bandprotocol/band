@@ -66,11 +66,11 @@ export const Link = styled(RouterLink)`
   }
 `
 
-export const AbsoluteLink = styled.a.attrs({
-  href: props => props.to || props.href,
+export const AbsoluteLink = styled.a.attrs(props => ({
+  href: props.to || props.href,
   target: '_blank',
   rel: 'noopener',
-})`
+}))`
   text-decoration: underline;
   color: ${p => (p.dark ? colors.purple.dark : colors.purple.normal)};
   transition: color 250ms;

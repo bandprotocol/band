@@ -152,12 +152,12 @@ export default ({
     <Nav>
       <PageContainer fullWidth>
         <Flex alignItems="center">
-          <Link dark to="/">
+          <Link dark="true" to="/">
             <Image src={LogoSrc} width={16} ml={4} />
             <Bold ml={[0, 3]}>Band Protocol</Bold>
           </Link>
           <Flex ml="auto">
-            <Link dark to="/create-community" px={1}>
+            <Link dark="true" to="/create-community" px={1}>
               <Flex px={3} alignItems="center">
                 <Text color="#8868ff" px={2} fontSize={3}>
                   <i className="fas fa-plus-square" />
@@ -204,7 +204,10 @@ export default ({
                     Pending Transaction ({txs && txs.length})
                   </Text>
                   <Box px={3} pb={3} pt={3}>
-                    {txs && txs.map(txn => <PendingTransaction {...txn} />)}
+                    {txs &&
+                      txs.map((txn, i) => (
+                        <PendingTransaction key={i} {...txn} />
+                      ))}
                   </Box>
                 </BlockTransactions>
               </ClickOutSide>

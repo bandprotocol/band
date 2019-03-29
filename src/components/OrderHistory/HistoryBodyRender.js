@@ -60,6 +60,7 @@ export default ({ items }) => (
         price={price.pretty()}
         amount={amount.pretty()}
         type={type}
+        key={txHash}
         // TODO: Change hardcode link depend to networkID
         txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
       />

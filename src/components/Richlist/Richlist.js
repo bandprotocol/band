@@ -1,65 +1,63 @@
 import React from 'react'
 
-import { OrderPagination } from 'components/Pagination'
+import RichlistRender from './RichlistRender'
 
-import { Flex, Text, Box } from 'ui/common'
+import { connect } from 'react-redux'
 
-import { colors } from 'ui'
+import { withRouter } from 'react-router-dom'
 
-const RichlistHeader = () => (
-  <Flex
-    flexDirection="row"
-    py={3}
-    bg="#f5f7ff"
-    style={{ minHeight: '60px' }}
-    alignItems="center"
-  >
-    <Flex pl="30px" flex={1}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Rank
-      </Text>
-    </Flex>
-    <Flex flex={1}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Address
-      </Text>
-    </Flex>
-    <Flex flex={1}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Quantity
-      </Text>
-    </Flex>
-    <Flex flex={1}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Percentage
-      </Text>
-    </Flex>
-  </Flex>
-)
+import { loadTransferHistory } from 'actions'
 
-export default ({
-  options,
-  selectedOption,
-  onChange,
-  communityAddress,
-  currentPage,
-  onChangePage,
-  pageSize,
-}) => (
-  <Flex
-    style={{ borderRadius: '10px' }}
-    width={1}
-    bg="white"
-    flexDirection="column"
-    pb={3}
-  >
-    <RichlistHeader />
-    <OrderPagination
-      communityAddress={communityAddress}
-      //isAll={selectedOption.value === 'all'}
-      pageSize={pageSize}
-      currentPage={currentPage}
-      onChangePage={onChangePage}
-    />
-  </Flex>
+class Richlist extends React.Component {
+  state = {
+    selectedOption: { value: 'all', label: 'All Orders' },
+    currentPage: 1,
+  }
+
+  componentDidMount() {
+    // this.props.loadTransferHistory(this.state.selectedOption.value === 'all')
+  }
+
+  onChange(selectedOption) {
+    if (selectedOption.value !== this.state.selectedOption.value)
+      this.setState({ selectedOption, currentPage: 1 })
+    else this.setState({ selectedOption })
+  }
+
+  onChangePage(selectedPage) {
+    this.setState({
+      currentPage: selectedPage,
+    })
+  }
+
+  render() {
+    const options = [
+      { value: 'all', label: 'All Orders' },
+      { value: 'mine', label: 'My Orders' },
+    ]
+    const { selectedOption, currentPage } = this.state
+    const { communityAddress, pageSize } = this.props
+    return (
+      <RichlistRender
+        options={options}
+        selectedOption={selectedOption}
+        onChange={this.onChange.bind(this)}
+        communityAddress={communityAddress}
+        currentPage={currentPage}
+        onChangePage={this.onChangePage.bind(this)}
+        pageSize={pageSize}
+      />
+    )
+  }
+}
+
+const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+  loadTransferHistory: isAll =>
+    dispatch(loadTransferHistory(communityAddress, isAll)),
+})
+export default withRouter(
+  connect(
+    null,
+    mapDispatchToProps,
+  )(Richlist),
 )
