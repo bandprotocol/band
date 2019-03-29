@@ -16,3 +16,5 @@ export const typeSelector = (_, { type }) => type
 export const txHashSelector = (_, { txHash }) => txHash
 export const pageSelector = (_, { page }) => page
 export const pageSizeSelector = (_, { pageSize }) => pageSize
+export const featureCommunitiesSelector = (_, { featureCommunities }) =>
+  featureCommunities

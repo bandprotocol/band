@@ -1,224 +1,130 @@
 import React from 'react'
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
-import BN from 'utils/bignumber'
-import {
-  Flex,
-  Text,
-  Button,
-  Image,
-  Box,
-  AbsoluteLink,
-  Card,
-  Bold,
-} from 'ui/common'
+import { Flex, Text, Box } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import MiniCommunityCard from 'components/MiniCommunityCard'
+import MegaCommunityCard from 'components/MegaCommunityCard'
 
-import WorkWithUsSrc from 'images/work-with-us.svg'
-
-const Description = styled(Text)`
-  height: 54px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 3;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-`
-
-const BandApp = ({
-  name,
-  src,
-  link,
-  organization,
-  description,
-  children,
-  onClick,
-}) => (
-  <Card
-    variant="primary"
-    flex={['', '0 0 395px']}
-    p="14px"
-    bg="#fff"
-    mx={2}
-    mb={3}
-    css={{
-      alignSelf: 'flex-start',
-      ...(onClick
-        ? {
-            cursor: 'pointer',
-            transition: 'all 200ms',
-            '&:hover': {
-              border: `solid 1px ${colors.purple.light}`,
-            },
-          }
-        : {}),
-    }}
-    onClick={onClick}
-  >
-    <Flex
-      flexDirection={['column-reverse', 'row']}
-      alignItems="flex-start"
-      pl={[2, 0]}
-    >
-      <Image
-        mt={[0, 1]}
-        mb={[2, 0]}
-        width={[100, 110]}
-        src={src}
-        style={{ borderRadius: 2, maxHeight: '100px' }}
-      />
-      <Box flex={1} ml={[0, '20px']}>
-        <Flex>
-          <Text
-            color={colors.purple.dark}
-            size={16}
-            fontWeight="500"
-            lineHeight={2}
-          >
-            {name}
-
-            {link && (
-              <AbsoluteLink
-                href={link}
-                style={{ marginLeft: 10, fontSize: '0.9em' }}
-                dark
-              >
-                <i className="fas fa-external-link-alt" />
-              </AbsoluteLink>
-            )}
-          </Text>
-        </Flex>
-        <Text fontSize={12} color={colors.text.normal} fontWeight="500">
-          By {organization}
+const YourCommunities = ({ yourCommunities, bandPrice, history }) => {
+  if (yourCommunities.length === 0) return <div />
+  return (
+    <Box style={{ width: '100%' }}>
+      <PageContainer dashboard>
+        <Text
+          fontSize="18px"
+          color={colors.text.normal}
+          fontWeight="500"
+          pt={3}
+          pb={2}
+        >
+          YOUR COMMUNITIES
         </Text>
-        <Description lineHeight={1.5} fontSize={12} my={3}>
-          {description}
-        </Description>
-      </Box>
-    </Flex>
-    {children}
-  </Card>
-)
+        <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
+          {yourCommunities.map(yourCommunity => (
+            <MegaCommunityCard
+              key={yourCommunity.name}
+              community={yourCommunity}
+              bandPrice={bandPrice}
+              onClick={() =>
+                history.push(`/community/${yourCommunity.address}/detail`)
+              }
+            />
+          ))}
+        </Flex>
+      </PageContainer>
+    </Box>
+  )
+}
 
-const PriceDetail = ({ marketCap, price, last24Hrs }) => (
-  <Flex
-    flexDirection="row"
-    pt={2}
-    pb={1}
-    justifyContent="space-around"
-    alignItems="center"
+const FeatureCommunity = ({ featureCommunities, bandPrice, history }) => {
+  if (featureCommunities.length === 0) return <div />
+  return (
+    <Box bg="#fafbfd" style={{ width: '100%' }}>
+      <PageContainer dashboard>
+        <Text
+          fontSize="18px"
+          color={colors.text.normal}
+          fontWeight="500"
+          pt={3}
+          pb={2}
+        >
+          FEATURED COMMUNITIES
+        </Text>
+        <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
+          {featureCommunities.map(featureCommunity => (
+            <MegaCommunityCard
+              key={featureCommunity.name}
+              community={featureCommunity}
+              bandPrice={bandPrice}
+              style={{}}
+              onClick={() =>
+                history.push(`/community/${featureCommunity.address}/detail`)
+              }
+            />
+          ))}
+        </Flex>
+      </PageContainer>
+    </Box>
+  )
+}
+
+export default ({
+  communities,
+  yourCommunities,
+  featureCommunities,
+  bandPrice,
+  history,
+}) => (
+  <PageContainer
+    fullWidth
+    style={{ minHeight: 'calc(100vh - 80px)', background: '#f6f7fc' }}
   >
-    <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Bold fontSize={12}>Market Cap.</Bold>
-      <Text
-        color={colors.purple.normal}
-        fontSize={1}
-        fontWeight="bold"
-        py="12px"
-      >
-        $ {marketCap.shortPretty()}
-      </Text>
-    </Flex>
-    <Flex
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      px={3}
-    >
-      <Bold fontSize={12}>Price</Bold>
-      <Text
-        color={colors.purple.normal}
-        fontSize={1}
-        fontWeight="bold"
-        py="12px"
-      >
-        $ {price.shortPretty()}
-      </Text>
-    </Flex>
-    <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Bold fontSize={12}>Last 24 hrs.</Bold>
-      <Text
-        color={last24Hrs >= 0.0 ? colors.green.normal : colors.red.normal}
-        fontSize={1}
-        fontWeight="bold"
-        py="12px"
-      >
-        {last24Hrs >= 0.0 ? '+' : null}
-        {last24Hrs} %
-      </Text>
-    </Flex>
-  </Flex>
-)
-
-const CommunityPage = ({ communities, bandPrice, history }) => (
-  <React.Fragment>
-    <PageContainer>
-      <Flex justifyContent="center" flexWrap="wrap">
-        {communities && communities.length ? (
-          <React.Fragment>
-            {communities.map(
-              ({
-                name,
-                logo,
-                description,
-                website,
-                organization,
-                marketCap,
-                price,
-                address,
-                last24Hrs,
-              }) => (
-                <BandApp
-                  key={name}
-                  name={name}
-                  src={logo}
-                  description={description}
-                  organization={organization}
-                  link={website}
-                  onClick={() => history.push(`/community/${address}/detail`)}
-                >
-                  <PriceDetail
-                    marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
-                    price={BN.parse(price).bandToUSD(bandPrice)}
-                    last24Hrs={last24Hrs.toFixed(2)}
-                  />
-                </BandApp>
-              ),
-            )}
-            <BandApp
-              name="Work with us"
-              src={WorkWithUsSrc}
-              organization="Band Protocol"
-              description="Already have an idea or working app. Want to incorporate Band protocol, contact us for help or grant query."
-            >
-              <Flex p={2} justifyContent={['flex-start', 'center']}>
-                <AbsoluteLink
-                  style={{ fontSize: 14 }}
-                  href="https://bandprotocol.typeform.com/to/A39Zgd"
-                >
-                  <Button
-                    variant="primary"
-                    my={1}
-                    style={{
-                      fontSize: 14,
-                      boxShadow: '0 4px 5px 0 rgba(136, 104, 255, 0.26)',
-                    }}
-                  >
-                    Apply Now!
-                  </Button>
-                </AbsoluteLink>
-              </Flex>
-            </BandApp>
-          </React.Fragment>
-        ) : (
-          <Flex style={{ height: 225 }} alignItems="center">
-            <CircleLoadingSpinner radius="80px" />
-          </Flex>
-        )}
+    {communities && communities.length ? (
+      <Flex flexDirection="column">
+        {/* Your Communities */}
+        <YourCommunities
+          yourCommunities={yourCommunities}
+          bandPrice={bandPrice}
+          history={history}
+        />
+        {/* Feature Communities */}
+        <FeatureCommunity
+          featureCommunities={featureCommunities}
+          bandPrice={bandPrice}
+          history={history}
+        />
+        {/* All Communities */}
+        <Box style={{ width: '100%', height: '100%' }}>
+          <PageContainer dashboard>
+            <Text fontSize="18px" color={colors.text.normal} fontWeight="500">
+              ALL COMMUNITIES
+            </Text>
+            <Flex flexWrap="wrap" mt={3} mx="-5px" justifyContent="flex-start">
+              {communities.map(community => (
+                <MiniCommunityCard
+                  key={community.name}
+                  community={community}
+                  onClick={() =>
+                    history.push(`/community/${community.address}/detail`)
+                  }
+                />
+              ))}
+            </Flex>
+          </PageContainer>
+        </Box>
       </Flex>
-    </PageContainer>
-  </React.Fragment>
+    ) : (
+      // Loading icon
+      <Flex
+        style={{ height: 225 }}
+        width="100%"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <CircleLoadingSpinner radius="80px" />
+      </Flex>
+    )}
+  </PageContainer>
 )
-
-export default CommunityPage

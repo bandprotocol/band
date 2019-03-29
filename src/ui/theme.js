@@ -55,7 +55,7 @@ export default {
       cursor: 'pointer',
       color: 'white',
       backgroundColor: colors.text.grey,
-      border: `solid 1px ${colors.text.grey}`,
+      border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
       '&:hover': {
         backgroundColor: '#b4bbda',
