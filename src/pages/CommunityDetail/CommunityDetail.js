@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { showModal } from 'actions'
 import { communityDetailSelector } from 'selectors/communities'
+import { numHolders } from 'selectors/holder'
 
 import CommunityDetailRender from './CommunityDetailRender'
 
@@ -21,12 +22,18 @@ const mapStateToProps = (state, { communityAddress }) => {
   const community = communityDetailSelector(state, {
     address: communityAddress,
   })
+
+  const numberOfHolders = numHolders(state, {
+    address: communityAddress,
+  })
   // console.log(state)
   // console.log(community)
   if (!community) return {}
   return {
+    numberOfHolders: numberOfHolders,
     name: community.get('name'),
     address: community.get('address'),
+    symbol: community.get('symbol'),
     src: community.get('logo'),
     link: community.get('website'),
     organization: community.get('organization'),

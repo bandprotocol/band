@@ -2,12 +2,10 @@ import { createSelector } from 'reselect'
 import { List } from 'immutable'
 import {
   transferSelector,
-  typeSelector,
   addressSelector,
   pageSelector,
   pageSizeSelector,
 } from 'selectors/basic'
-import { currentUserSelector } from 'selectors/current'
 
 export const transferHistorySelector = createSelector(
   [transferSelector, addressSelector, pageSelector, pageSizeSelector],

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import { withRouter } from 'react-router-dom'
 
-import { loadTransferHistory } from 'actions'
+import { loadHolders } from 'actions'
 
 class Richlist extends React.Component {
   state = {
@@ -15,7 +15,7 @@ class Richlist extends React.Component {
   }
 
   componentDidMount() {
-    // this.props.loadTransferHistory(this.state.selectedOption.value === 'all')
+    this.props.loadHolders()
   }
 
   onChange(selectedOption) {
@@ -52,8 +52,7 @@ class Richlist extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadTransferHistory: isAll =>
-    dispatch(loadTransferHistory(communityAddress, isAll)),
+  loadHolders: () => dispatch(loadHolders(communityAddress)),
 })
 export default withRouter(
   connect(

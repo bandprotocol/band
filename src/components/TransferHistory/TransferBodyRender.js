@@ -19,19 +19,12 @@ import {
 } from 'ui/common'
 
 const HistoryRow = ({ txHash, from, to, quantity, timeStamp, txLink }) => (
-  <Flex
-    flexDirection="row"
-    py={4}
-    style={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}
-  >
+  <Flex flexDirection="row" py={4} style={{ minWidth: 0, overflow: 'hidden' }}>
     <Flex
       flex={4}
       pl="30px"
       pr="10px"
       style={{
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
         minWidth: 0,
       }}
       letterSpacing="0.5px"
@@ -39,48 +32,72 @@ const HistoryRow = ({ txHash, from, to, quantity, timeStamp, txLink }) => (
       <Text
         color={colors.text}
         fontSize={0}
-        style={{ textOverflow: 'ellipsis' }}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
       >
         {from}
       </Text>
     </Flex>
     <Flex
       flex={4}
-      px="10px"
-      style={{ overflow: 'hidden' }}
+      pr="10px"
+      style={{
+        minWidth: 0,
+      }}
       letterSpacing="0.5px"
     >
       <Text
         color={colors.text}
         fontSize={0}
-        style={{ textOverflow: 'ellipsis' }}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
       >
         {to}
       </Text>
     </Flex>
-    <Flex flex={2} px="10px" style={{ overflow: 'hidden' }}>
+    <Flex
+      flex={3}
+      pr="10px"
+      style={{
+        minWidth: 0,
+      }}
+    >
       <Text color={colors.text} fontSize={0}>
         {quantity}
       </Text>
     </Flex>
-    <Flex flex={4} px="10px" style={{ overflow: 'hidden' }}>
+    <Flex
+      flex={3}
+      pr="10px"
+      style={{
+        minWidth: 0,
+      }}
+    >
       <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
         {timeStamp}
       </Text>
     </Flex>
     <Flex
       flex={4}
+      pr="10px"
       style={{
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
         minWidth: 0,
       }}
     >
       <Text
         color={colors.text}
         fontSize={0}
-        style={{ textOverflow: 'ellipsis' }}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
         letterSpacing="0.5px"
       >
         {txHash}
@@ -110,7 +127,7 @@ export default ({ items }) => {
           timeStamp={new Date(timeStamp)
             .toUTCString()
             .split(' ')
-            .slice(0, -1)
+            .slice(1, -1)
             .join(' ')}
           key={txHash}
           // TODO: Change hardcode link depend to networkID

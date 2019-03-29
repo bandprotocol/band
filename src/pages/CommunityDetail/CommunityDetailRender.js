@@ -27,7 +27,8 @@ const GrayButton = styled(Button)`
 `
 
 export default props => {
-  const { communityAddress, showBuy, showSell } = props
+  // console.log('comm detail props : ', props)
+  const { numberOfHolders, communityAddress, showBuy, showSell, symbol } = props
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <Flex
@@ -48,14 +49,14 @@ export default props => {
               color: '#4a4a4a',
             }}
           >
-            7,706.89 BAND / CHT
+            {`7,706.89 BAND / ${symbol}`}
           </Text>
         </Flex>
         <Flex flex={1}>
           <Text
             style={{ fontSize: '19px', lineHeight: 1.68, color: '#7c84a6' }}
           >
-            1,328.35 USD / CHT
+            {`1,328.35 USD / ${symbol}`}
           </Text>
         </Flex>
         <Flex
@@ -78,7 +79,7 @@ export default props => {
           <Flex mr="15px" flex={1}>
             <MiniGraph
               title="Total Address"
-              value="2,300"
+              value={numberOfHolders}
               unit="holders"
               graphSrc={graphBlue}
             />
@@ -87,7 +88,7 @@ export default props => {
             <MiniGraph
               title={'Supply'}
               value="200k"
-              unit="CHT"
+              unit={symbol}
               valueUsd="200k"
             />
           </Flex>

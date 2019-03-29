@@ -18,26 +18,59 @@ import {
   Bold,
 } from 'ui/common'
 
-const HistoryRow = ({ txHash, from, to, quantity, txLink }) => (
-  <Flex flexDirection="row" py={4}>
-    <Flex flex={2} pl="55px">
+const HistoryRow = ({ rank, address, balance, txLink }) => (
+  <Flex flexDirection="row" py={4} style={{ minWidth: 0, overflow: 'hidden' }}>
+    <Flex
+      flex={1}
+      pl="30px"
+      pr="10px"
+      style={{
+        minWidth: 0,
+      }}
+      letterSpacing="0.5px"
+    >
       <Text color={colors.text} fontSize={0}>
-        {from}
+        {rank}
       </Text>
     </Flex>
-    <Flex flex={2}>
-      <Text color={colors.text} fontSize={0}>
-        {to}
+    <Flex
+      flex={2}
+      pr="10px"
+      style={{
+        minWidth: 0,
+      }}
+      letterSpacing="0.5px"
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
+      >
+        {balance}
       </Text>
     </Flex>
-    <Flex flex={2}>
-      <Text color={colors.text} fontSize={0}>
-        {quantity}
-      </Text>
-    </Flex>
-    <Flex flex={1}>
-      <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
-        {txHash}
+    <Flex
+      flex={4}
+      pr="10px"
+      style={{
+        minWidth: 0,
+      }}
+      letterSpacing="0.5px"
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
+      >
+        {address}
       </Text>
     </Flex>
     <Flex flex={1}>
@@ -53,18 +86,16 @@ const HistoryRow = ({ txHash, from, to, quantity, txLink }) => (
 )
 
 export default ({ items }) => {
-  console.log(items)
   return (
     <React.Fragment>
-      {items.map(({ txHash, from, to, quantity }) => (
+      {items.map(({ rank, address, balance }) => (
         <HistoryRow
-          txHash={txHash}
-          from={from}
-          to={to}
-          quantity={quantity.pretty()}
-          key={txHash}
+          rank={rank}
+          address={address}
+          balance={balance.pretty()}
+          key={rank}
           // TODO: Change hardcode link depend to networkID
-          txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
+          txLink={`https://rinkeby.etherscan.io/address/${address}`}
         />
       ))}
     </React.Fragment>

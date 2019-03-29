@@ -11,8 +11,6 @@ const parentStyle = {
   backgroundColor: 'white',
 }
 
-window.IPFS = IPFS
-
 const setIPFSUrl = file => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()

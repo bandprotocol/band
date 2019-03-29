@@ -24,12 +24,12 @@ const TransferHistoryHeader = () => (
         To
       </Text>
     </Flex>
-    <Flex flex={2}>
+    <Flex flex={3}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Quantity
       </Text>
     </Flex>
-    <Flex flex={4}>
+    <Flex flex={3}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Timestamp
       </Text>
@@ -52,7 +52,7 @@ export default ({
 }) => {
   return (
     <Flex
-      style={{ borderRadius: '10px', textOverflow: 'ellipsis' }}
+      style={{ borderRadius: '10px' }}
       width={1}
       bg="white"
       flexDirection="column"

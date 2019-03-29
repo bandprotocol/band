@@ -10,6 +10,7 @@ import transaction from 'reducers/transaction'
 import parameter from 'reducers/parameter'
 import proposal from 'reducers/proposal'
 import transfer from 'reducers/transfer'
+import holder from 'reducers/holder'
 
 export default combineReducers({
   band,
@@ -22,4 +23,5 @@ export default combineReducers({
   parameter,
   proposal,
   transfer,
+  holder,
 })

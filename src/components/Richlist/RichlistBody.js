@@ -4,14 +4,14 @@ import { withRouter } from 'react-router-dom'
 
 import RichlistBodyRender from './RichlistBodyRender'
 
-import { loadTransferHistory } from 'actions'
-import { transferHistorySelector } from 'selectors/transfer'
+import { loadHolders } from 'actions'
+import { holdersSelector } from 'selectors/holder'
 
 const mapStateToProps = (
   state,
-  { communityAddress, isAll, currentPage, pageSize },
+  { communityAddress, currentPage, pageSize },
 ) => ({
-  items: transferHistorySelector(state, {
+  items: holdersSelector(state, {
     address: communityAddress,
     page: currentPage,
     pageSize,
@@ -19,8 +19,7 @@ const mapStateToProps = (
 })
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadOrderHistory: isAll =>
-    dispatch(loadTransferHistory(communityAddress, isAll)),
+  loadHolders: () => dispatch(loadHolders(communityAddress)),
 })
 export default withRouter(
   connect(

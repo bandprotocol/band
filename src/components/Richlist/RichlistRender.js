@@ -17,14 +17,20 @@ const RichlistHeader = () => (
   >
     <Flex pl="30px" flex={1}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+        Rank
+      </Text>
+    </Flex>
+    <Flex flex={2}>
+      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Balance
       </Text>
     </Flex>
-    <Flex flex={1}>
+    <Flex flex={4}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Address
       </Text>
     </Flex>
+    <Flex flex={1} />
   </Flex>
 )
 
