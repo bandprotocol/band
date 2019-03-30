@@ -17,47 +17,24 @@ window.IPFS = IPFS
 export default class CreateCommunity extends React.Component {
   state = {
     pageState: 0, // INFO = 0, DISTRIBUTION = 1, PARAMETERS = 2
-    //info
     name: '',
     symbol: '',
     description: '',
     url: '',
+    organization: '',
     logoUrl: null,
     bannerUrl: null,
-    organization: '',
-    //distribution
     curve: new Curves['linear'](Curves['linear'].defaultParams),
     type: Curves['linear'].type, // linear, poly, sigmoid
     params: Curves['linear'].defaultParams,
     kvs: {
-      'params:expiration_time': '2',
-      'params:min_participation_pct': '60',
-      'params:support_required_pct': '50',
-      'curve:liqudity_fee': '0',
+      'params:expiration_time': convertToChain(24, 'TIME', 'hours'),
+      'params:min_participation_pct': convertToChain(60, 'PERCENTAGE'),
+      'params:support_required_pct': convertToChain(50, 'PERCENTAGE'),
+      'curve:liqudity_fee': convertToChain(0, 'PERCENTAGE'),
+      'curve:inflation_rate': convertToChain(0, 'PERCENTAGE'),
       'info:logo': '',
       'info:banner': '',
-    },
-    kvsUnit: {
-      'params:expiration_time': {
-        type: 'TIME',
-        unit: 'minutes',
-      },
-      'params:min_participation_pct': {
-        type: 'PERCENTAGE',
-        unit: '%',
-      },
-      'params:support_required_pct': {
-        type: 'PERCENTAGE',
-        unit: '%',
-      },
-      'curve:liqudity_fee': {
-        type: 'PERCENTAGE',
-        unit: '%',
-      },
-      'curve:inflation_rate': {
-        type: 'PERCENTAGE',
-        unit: '%',
-      },
     },
   }
 
@@ -66,6 +43,30 @@ export default class CreateCommunity extends React.Component {
   }
 
   setPageState(nextPageState) {
+    const {
+      name,
+      symbol,
+      description,
+      url,
+      organization,
+      logoUrl,
+      bannerUrl,
+    } = this.state
+    // TODO: regex check empty string and spacebar
+    if (
+      nextPageState === 1 &&
+      (name === '' ||
+        symbol === '' ||
+        description === '' ||
+        url === '' ||
+        organization === '' ||
+        logoUrl === null ||
+        bannerUrl === null)
+    ) {
+      alert('Please fill all form and upload images.')
+      return
+    }
+
     if (nextPageState >= 0 && nextPageState <= 2) {
       this.setState({
         pageState: nextPageState,
@@ -73,16 +74,12 @@ export default class CreateCommunity extends React.Component {
     }
   }
 
-  setKeyValue(key, value, type, unit) {
-    const kvs = { ...this.state.kvs, [key]: value }
-    const kvsUnit = { ...this.state.kvsUnit, [key]: { type: type, unit: unit } }
-    this.setState({
-      kvs,
-      kvsUnit,
-    })
+  // Debug
+  componentDidUpdate() {
+    window.peach = this.state
   }
 
-  // for input form
+  // handle input in CreateCommunityInfo Page
   handleChange(e) {
     const { name, value } = e.target
     this.setState({
@@ -107,7 +104,7 @@ export default class CreateCommunity extends React.Component {
     })
   }
 
-  onParamChange(k, v) {
+  onCurveParamChange(k, v) {
     const valueToFixed = Math.floor(v * 1000) / 1000
     this.setState(
       {
@@ -120,7 +117,17 @@ export default class CreateCommunity extends React.Component {
     )
   }
 
-  // sumbit when everything done!
+  // handle key, value in CreateCommunityParameter Page
+  setKeyValue(key, value) {
+    if (value === null) return
+
+    const kvs = { ...this.state.kvs, [key]: value }
+    this.setState({
+      kvs,
+    })
+  }
+
+  // submit when everything done!
   async handleSubmit() {
     BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
     const bandClient = await BandProtocolClient.make({
@@ -136,11 +143,8 @@ export default class CreateCommunity extends React.Component {
     const keys = []
     const values = []
     for (var k in kvs) {
-      if (this.state.kvsUnit[k] !== undefined) {
-        const { type, unit } = this.state.kvsUnit[k]
-        keys.push(k)
-        values.push(convertToChain(kvs[k], type, unit).toString())
-      }
+      keys.push(k)
+      values.push(kvs[k].toString())
     }
 
     await bandClient.deployCommunity(
@@ -176,8 +180,7 @@ export default class CreateCommunity extends React.Component {
             <CreateCommunityDistribution
               {...this.state}
               setCurveType={this.setCurveType.bind(this)}
-              onParamChange={this.onParamChange.bind(this)}
-              setKeyValue={this.setKeyValue.bind(this)}
+              onParamChange={this.onCurveParamChange.bind(this)}
             />
           ) : (
             <CreateCommunityParameters

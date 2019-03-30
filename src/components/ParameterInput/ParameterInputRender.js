@@ -50,7 +50,7 @@ export default ({
     {type === 'TIME' ? (
       <UnitSelector
         onChange={e => onChangeUnit(e.target.value)}
-        defaultValue="minutes"
+        defaultValue={unit}
       >
         {timeOptions.map(u => (
           <option key={u.value} value={u.value}>

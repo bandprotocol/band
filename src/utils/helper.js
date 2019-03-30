@@ -2,7 +2,8 @@ import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 
 export const isPositiveNumber = input => {
-  return input.match(/^\d*\.?\d*$/) && parseInt(input, 10) >= 0
+  if (input.match(/^\d*\.?\d*$/)) return parseInt(input, 10) >= 0
+  else return false
 }
 
 export const pado = (x, l) => (x.length < l ? pado(x + '0') : x)

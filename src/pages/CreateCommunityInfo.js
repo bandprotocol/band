@@ -63,6 +63,9 @@ export default ({
             saveImageUrl={imageUrl =>
               handleChange({ target: { name: 'logoUrl', value: imageUrl } })
             }
+            removeImageUrl={() =>
+              handleChange({ target: { name: 'logoUrl', value: null } })
+            }
             setImgHash={imgHash => setKeyValue('info:logo', imgHash)}
             fontSize="12px"
             description={'200x200 KB'}
@@ -78,6 +81,9 @@ export default ({
             imgUrl={bannerUrl}
             saveImageUrl={imageUrl =>
               handleChange({ target: { name: 'bannerUrl', value: imageUrl } })
+            }
+            removeImageUrl={() =>
+              handleChange({ target: { name: 'bannerUrl', value: null } })
             }
             setImgHash={imgHash => setKeyValue('info:banner', imgHash)}
             width={320}

@@ -10,16 +10,22 @@ export default class ParameterInput extends React.Component {
   }
 
   changeUnit(unit) {
-    this.setState({ unit })
+    this.setState({ unit }, () => {
+      this.setNewParameter(this.state.value)
+    })
   }
 
   handleChange(e) {
     this.setState({ value: e.target.value })
-    if (e.target.value === '') {
+    this.setNewParameter(e.target.value)
+  }
+
+  setNewParameter(value) {
+    if (value === '') {
       this.props.handleParameterChange(null)
     } else {
       this.props.handleParameterChange(
-        convertToChain(e.target.value, this.props.type, this.state.unit),
+        convertToChain(value, this.props.type, this.state.unit),
       )
     }
   }

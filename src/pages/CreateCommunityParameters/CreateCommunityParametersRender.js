@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Text, AbsoluteLink } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import ParameterInput from 'components/ParameterInput'
 import colors from 'ui/colors'
+import { getParameterDetail, convertFromChain } from 'utils/helper'
 
 const A = styled.a`
   color: #4e3ca9;
@@ -42,205 +43,128 @@ const CircleTooltip = () => (
   </Circle>
 )
 
-export default ({ setKeyValue, kvs }) => {
-  const handleParamsChange = (key, val, type, unit) => {
-    console.log(key, val, type, unit)
-    setKeyValue(key, val.toString(), type, unit)
-  }
+const GroupTitle = ({ title }) => (
+  <Flex flexDirection="row">
+    <Flex mr="10px">
+      <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
+        {title}
+      </Text>
+    </Flex>
+    <CircleTooltip />
+  </Flex>
+)
+
+const ParameterField = ({ name, value, handleParameterChange }) => {
+  const detail = getParameterDetail(name)
+  const [convertedValue, unit] = convertFromChain(value, detail.type)
+
   return (
-    <Flex
-      flexDirection="column"
-      alignItems="center"
-      style={{ height: '600px' }}
-      mt="40px"
-    >
-      <Flex width="535px" flexDirection="column" alignItems="center">
-        <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
-          Parameters
-        </Text>
-        <Text
-          fontSize="16px"
-          fontWeight={300}
-          textAlign="center"
-          mt="10px"
-          lineHeight={1.69}
-          letterSpacing={0.6}
-        >
-          Spicy jalapeno bacon ipsum dolor amet sausage pig jerky tail tongue
-          frankfurter andouille.{' '}
-          <A style={{ 'text-decoration': 'underline' }}>Learn more</A>
-        </Text>
-      </Flex>
-      <Flex flexDirection="row" mt="50px" width="720px">
-        <Flex flex={1}>
-          <Flex flexDirection="column">
-            <Flex flexDirection="row">
-              <Flex mr="10px">
-                <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
-                  Params
-                </Text>
-              </Flex>
-              <CircleTooltip />
-            </Flex>
-            <ParamRect mt="15px" flexDirection="column">
-              <Flex flexDirection="row" alignItems="center" mt="20px">
-                <Flex mr="10px">
-                  <Text
-                    fontSize="14px"
-                    fontWeight={500}
-                    color={colors.purple.dark}
-                  >
-                    expiration_time
-                  </Text>
-                </Flex>
-                <CircleTooltip />
-              </Flex>
-              <Flex mt="10px" alignItems="center">
-                <ParameterInput
-                  type="TIME"
-                  unit="minutes"
-                  width="250px"
-                  height="35px"
-                  borderColor="#e7ecff"
-                  value={kvs['params:expiration_time']}
-                  handleParameterChange={(val, type, unit) =>
-                    handleParamsChange(
-                      'params:expiration_time',
-                      val,
-                      type,
-                      unit,
-                    )
-                  }
-                />
-              </Flex>
-              <Flex flexDirection="row" alignItems="center" mt="20px">
-                <Flex mr="10px">
-                  <Text
-                    fontSize="14px"
-                    fontWeight={500}
-                    color={colors.purple.dark}
-                  >
-                    min_participation_pct
-                  </Text>
-                </Flex>
-                <CircleTooltip />
-              </Flex>
-              <Flex mt="10px" alignItems="center">
-                <ParameterInput
-                  type="PERCENTAGE"
-                  width="250px"
-                  height="35px"
-                  borderColor="#e7ecff"
-                  unit="%"
-                  value={kvs['params:min_participation_pct']}
-                  handleParameterChange={(val, type, unit) =>
-                    handleParamsChange(
-                      'params:min_participation_pct',
-                      val,
-                      type,
-                      unit,
-                    )
-                  }
-                />
-              </Flex>
-              <Flex flexDirection="row" alignItems="center" mt="20px">
-                <Flex mr="10px">
-                  <Text
-                    fontSize="14px"
-                    fontWeight={500}
-                    color={colors.purple.dark}
-                  >
-                    support_required_pct
-                  </Text>
-                </Flex>
-                <CircleTooltip />
-              </Flex>
-              <Flex mt="10px" alignItems="center">
-                <ParameterInput
-                  type="PERCENTAGE"
-                  width="250px"
-                  height="35px"
-                  borderColor="#e7ecff"
-                  unit="%"
-                  value={kvs['params:support_required_pct']}
-                  handleParameterChange={(val, type, unit) =>
-                    handleParamsChange(
-                      'params:support_required_pct',
-                      val,
-                      type,
-                      unit,
-                    )
-                  }
-                />
-              </Flex>
-            </ParamRect>
-          </Flex>
+    <React.Fragment>
+      <Flex flexDirection="row" alignItems="center" mt="20px">
+        <Flex mr="10px">
+          <Text fontSize="14px" fontWeight={500} color={colors.purple.dark}>
+            {name}
+          </Text>
         </Flex>
-        <Flex flex={1} justifyContent="flex-end">
-          <Flex flexDirection="column">
-            <Flex flexDirection="row">
-              <Flex mr="10px">
-                <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
-                  Curve
-                </Text>
-              </Flex>
-              <CircleTooltip />
-            </Flex>
-            <ParamRect mt="15px" flexDirection="column">
-              <Flex flexDirection="row" alignItems="center" mt="20px">
-                <Flex mr="10px">
-                  <Text
-                    fontSize="14px"
-                    fontWeight={500}
-                    color={colors.purple.dark}
-                  >
-                    liqudity_fee
-                  </Text>
-                </Flex>
-                <CircleTooltip />
-              </Flex>
-              <Flex mt="10px">
-                <ParameterInput
-                  type="PERCENTAGE"
-                  width="250px"
-                  height="35px"
-                  borderColor="#e7ecff"
-                  unit="%"
-                  value={kvs['curve:liqudity_fee']}
-                  handleParameterChange={(val, type, unit) =>
-                    handleParamsChange('curve:liqudity_fee', val, type, unit)
-                  }
-                />
-              </Flex>
-              <Flex flexDirection="row" alignItems="center" mt="20px">
-                <Flex mr="10px">
-                  <Text
-                    fontSize="14px"
-                    fontWeight={500}
-                    color={colors.purple.dark}
-                  >
-                    inflation_rate
-                  </Text>
-                </Flex>
-                <CircleTooltip />
-              </Flex>
-              <Flex mt="10px">
-                <ParameterInput
-                  type="PERCENTAGE"
-                  width="250px"
-                  height="35px"
-                  borderColor="#e7ecff"
-                  unit="%"
-                  value={kvs['curve:inflation_rate']}
-                  handleParameterChange={(val, type, unit) =>
-                    handleParamsChange('curve:inflation_rate', val, type, unit)
-                  }
-                />
-              </Flex>
-            </ParamRect>
-          </Flex>
+        <CircleTooltip />
+      </Flex>
+      <Flex mt="10px" alignItems="center">
+        <ParameterInput
+          width="250px"
+          height="35px"
+          borderColor="#e7ecff"
+          value={convertedValue}
+          type={detail.type}
+          unit={unit}
+          handleParameterChange={handleParameterChange}
+        />
+      </Flex>
+    </React.Fragment>
+  )
+}
+
+export default ({ kvs, setKeyValue }) => (
+  <Flex
+    flexDirection="column"
+    alignItems="center"
+    style={{ height: '600px' }}
+    mt="40px"
+  >
+    {/* Header */}
+    <Flex width="535px" flexDirection="column" alignItems="center">
+      <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
+        Parameters
+      </Text>
+      <Text
+        fontSize="16px"
+        fontWeight={300}
+        textAlign="center"
+        mt="10px"
+        lineHeight={1.69}
+        letterSpacing={0.6}
+      >
+        Spicy jalapeno bacon ipsum dolor amet sausage pig jerky tail tongue
+        frankfurter andouille.{' '}
+        <A style={{ 'text-decoration': 'underline' }}>Learn more</A>
+      </Text>
+    </Flex>
+    {/* Params Box */}
+    <Flex flexDirection="row" mt="50px" width="720px">
+      <Flex flex={1}>
+        <Flex flexDirection="column">
+          <GroupTitle title="Params" />
+          <ParamRect mt="15px" flexDirection="column">
+            {/* expiration_time */}
+            <ParameterField
+              name="expiration_time"
+              value={kvs['params:expiration_time']}
+              handleParameterChange={value =>
+                setKeyValue('params:expiration_time', value)
+              }
+            />
+            {/* min_participation_pct */}
+            <ParameterField
+              name="min_participation_pct"
+              value={kvs['params:min_participation_pct']}
+              handleParameterChange={value =>
+                setKeyValue('params:min_participation_pct', value)
+              }
+            />
+            {/* support_required_pct */}
+            <ParameterField
+              name="support_required_pct"
+              value={kvs['params:support_required_pct']}
+              handleParameterChange={value =>
+                setKeyValue('params:support_required_pct', value)
+              }
+            />
+          </ParamRect>
+        </Flex>
+      </Flex>
+      {/* Curve Box */}
+      <Flex flex={1} justifyContent="flex-end">
+        <Flex flexDirection="column">
+          <GroupTitle title="Curve" />
+          <ParamRect mt="15px" flexDirection="column">
+            {/* liqudity_fee */}
+            <ParameterField
+              name="liqudity_fee"
+              value={kvs['curve:liqudity_fee']}
+              handleParameterChange={value =>
+                setKeyValue('curve:liqudity_fee', value)
+              }
+            />
+            {/* inflation_rate */}
+            <ParameterField
+              name="inflation_rate"
+              value={kvs['curve:inflation_rate']}
+              handleParameterChange={value =>
+                setKeyValue('curve:inflation_rate', value)
+              }
+            />
+          </ParamRect>
         </Flex>
       </Flex>
     </Flex>
-  )
-}
+  </Flex>
+)

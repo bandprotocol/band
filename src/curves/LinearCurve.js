@@ -11,8 +11,8 @@ export default class LinearCurve extends BaseCurve {
 
   static get defaultParams() {
     return {
-      priceStart: 0, // range 0 - 100
-      slope: 0.1, // range 0.01 - 10
+      priceStart: 0,
+      slope: 0.1,
       totalSupply: 4500, //fixed
       minSlope: 0.001,
       maxSlope: 0.25,

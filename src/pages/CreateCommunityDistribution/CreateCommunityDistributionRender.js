@@ -29,7 +29,7 @@ export default ({
   onParamChange,
   setCurveType,
 }) =>
-  console.log('array: ', curve.generateCollateralArray()) || (
+  console.log('array: ', curve.collateral) || (
     <Flex
       flexDirection="column"
       justifyContent="center"
@@ -144,7 +144,7 @@ export default ({
               <CurveGraph
                 title=""
                 xLabel="Token Supply"
-                yLabel="Bonding"
+                yLabel="Price"
                 dataset={curve.dataset.bondingCurve}
                 xDataset={curve.dataset.xDataSet}
                 config={curve.priceGraphConfig}

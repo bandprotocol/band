@@ -1,7 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import { Flex, Text, Image, Box } from 'ui/common'
-import { colors } from 'ui'
 import { IPFS } from 'band.js'
 import ImageLogoSrc from 'images/picture.svg'
 
@@ -48,6 +47,13 @@ export default class ImageUpload extends React.Component {
       console.log(err)
       alert('Upload jpeg or png only.')
     }
+  }
+
+  removeImage() {
+    this.setState({
+      src: null,
+    })
+    this.props.removeImageUrl()
   }
 
   render() {
@@ -104,7 +110,7 @@ export default class ImageUpload extends React.Component {
             width="20px"
             justifyContent="center"
             alignItems="center"
-            onClick={() => this.setState({ src: null })}
+            onClick={this.removeImage.bind(this)}
             style={{
               height: '20px',
               borderRadius: '50%',

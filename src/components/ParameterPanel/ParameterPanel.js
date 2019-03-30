@@ -40,7 +40,6 @@ class ParameterPanel extends React.Component {
   }
 
   handleParameterChange(key, value) {
-    console.log(key, value)
     this.setState(prevState => {
       if (value) {
         return {
