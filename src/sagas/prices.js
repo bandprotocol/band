@@ -11,8 +11,8 @@ function* handleLoadPriceHistory({ address }) {
     yield delay(100)
   }
   const client = yield select(currentCommunityClientSelector, { address })
-
   const pricers = yield client.getPriceHistory({})
+  console.log('heyhey', pricers)
   yield put(addPrices(address, pricers))
 }
 

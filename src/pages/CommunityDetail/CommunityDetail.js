@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { showModal } from 'actions'
 import { communityDetailSelector } from 'selectors/communities'
+import { bandPriceSelector } from 'selectors/bandPrice'
 import { numHolders } from 'selectors/holder'
 
 import CommunityDetailRender from './CommunityDetailRender'
@@ -31,6 +32,7 @@ const mapStateToProps = (state, { communityAddress }) => {
   if (!community) return {}
   return {
     numberOfHolders: numberOfHolders,
+    bandPrice: bandPriceSelector(state),
     name: community.get('name'),
     address: community.get('address'),
     symbol: community.get('symbol'),
@@ -38,6 +40,9 @@ const mapStateToProps = (state, { communityAddress }) => {
     link: community.get('website'),
     organization: community.get('organization'),
     description: community.get('description'),
+    price: community.get('price'),
+    marketCap: community.get('marketCap'),
+    totalSupply: community.get('totalSupply'),
   }
 }
 

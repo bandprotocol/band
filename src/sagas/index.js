@@ -59,6 +59,7 @@ function* baseInitialize() {
         dapp.marketCap,
         dapp.price,
         dapp.last24Hrs,
+        dapp.totalSupply,
       ),
     )
   }

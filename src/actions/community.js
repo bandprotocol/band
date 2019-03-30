@@ -13,6 +13,7 @@ export const saveCommunityInfo = (
   marketCap,
   price,
   last24Hrs,
+  totalSupply,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
@@ -26,6 +27,7 @@ export const saveCommunityInfo = (
   marketCap,
   price,
   last24Hrs,
+  totalSupply,
 })
 
 export const saveCommunityClient = (address, client) => ({

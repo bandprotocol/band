@@ -17,6 +17,7 @@ const handleSaveCommunityInfo = (
     marketCap,
     price,
     last24Hrs,
+    totalSupply,
   },
 ) =>
   state.set(
@@ -33,6 +34,7 @@ const handleSaveCommunityInfo = (
       marketCap,
       price,
       last24Hrs,
+      totalSupply,
     }),
   )
 

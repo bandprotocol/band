@@ -25,10 +25,10 @@ const transformData = rawData => {
 }
 
 const mapStateToProps = (state, { communityAddress }) => ({
-  // data: transformData(
-  //   priceHistorySelector(state, { address: communityAddress }),
-  // ),
-  data,
+  data: transformData(
+    priceHistorySelector(state, { address: communityAddress }),
+  ),
+  // data,
 })
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({

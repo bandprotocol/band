@@ -11,6 +11,7 @@ import CommunityDescription from 'components/CommunityDescription'
 import DetailHistory from 'components/DetailHistory'
 import BuySell from 'components/BuySell'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import BN from 'utils/bignumber'
 
 import Graph from 'components/PriceGraph'
 
@@ -29,8 +30,19 @@ const GrayButton = styled(Button)`
 `
 
 export default props => {
-  // console.log('comm detail props : ', props)
-  const { numberOfHolders, communityAddress, showBuy, showSell, symbol } = props
+  console.log('comm detail props : ', props)
+  const {
+    numberOfHolders,
+    communityAddress,
+    showBuy,
+    showSell,
+    symbol,
+    price,
+    bandPrice,
+    marketCap,
+    totalSupply,
+  } = props
+  console.log(totalSupply, marketCap)
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <Flex
@@ -51,14 +63,16 @@ export default props => {
               color: '#4a4a4a',
             }}
           >
-            {`7,706.89 BAND / ${symbol}`}
+            {`${BN.parse(price).pretty()} BAND / ${symbol}`}
           </Text>
         </Flex>
         <Flex flex={1}>
           <Text
             style={{ fontSize: '19px', lineHeight: 1.68, color: '#7c84a6' }}
           >
-            {`1,328.35 USD / ${symbol}`}
+            {`${BN.parse(price)
+              .bandToUSD(bandPrice)
+              .pretty()} USD / ${symbol}`}
           </Text>
         </Flex>
         <Flex
@@ -89,9 +103,8 @@ export default props => {
           <Flex ml="15px" flex={1}>
             <MiniGraph
               title={'Supply'}
-              value="200k"
+              value={BN.parse(totalSupply).shortPretty()}
               unit={symbol}
-              valueUsd="200k"
             />
           </Flex>
         </Flex>
@@ -99,18 +112,22 @@ export default props => {
           <Flex mr="15px" flex={1}>
             <MiniGraph
               title={'Price'}
-              value="0.15"
+              value={BN.parse(price).shortPretty()}
               unit="BAND"
-              valueUsd="0.15"
+              valueUsd={BN.parse(price)
+                .bandToUSD(bandPrice)
+                .shortPretty()}
               graphSrc={graphGreen}
             />
           </Flex>
           <Flex ml="15px" flex={1}>
             <MiniGraph
-              title="Marketcap"
-              value="50k"
+              title="Market Cap"
+              value={BN.parse(marketCap).shortPretty()}
               unit="BAND"
-              valueUsd="50k"
+              valueUsd={BN.parse(marketCap)
+                .bandToUSD(bandPrice)
+                .shortPretty()}
               graphSrc={graphRed}
             />
           </Flex>

@@ -22,17 +22,17 @@ BN.prototype.shortPretty = function() {
     return value
       .div(BILLION)
       .toFixed(2)
-      .concat(' B')
+      .concat('B')
   else if (value.gte(MILLION))
     return value
       .div(MILLION)
       .toFixed(2)
-      .concat(' M')
+      .concat('M')
   else if (value.gte(THOUSAND))
     return value
       .div(THOUSAND)
       .toFixed(2)
-      .concat(' K')
+      .concat('K')
   else return value.toFixed(2)
 }
 
@@ -55,8 +55,10 @@ BN.prototype.bandToUSD = function(bandPrice) {
 BN.parse = function(value) {
   if (BN.isBN(value)) {
     return value
-  } else {
+  } else if (typeof value === 'string') {
     if (value === '') throw new Error('Cannot parse empty string.')
+    return new BN(value)
+  } else {
     return new BN(DIVISOR.times(BigNumber(value)).toFixed(0))
   }
 }
