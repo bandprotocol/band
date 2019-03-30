@@ -84,7 +84,7 @@ const BuySellHeader = ({ type, setType }) => (
   </Flex>
 )
 
-const Amount = ({ amountStatus, symbol, amount, handleChange }) => (
+const Amount = ({ type, amountStatus, symbol, amount, handleChange }) => (
   <Box pb={3}>
     <Text
       fontSize="14px"
@@ -92,7 +92,7 @@ const Amount = ({ amountStatus, symbol, amount, handleChange }) => (
       fontWeight={500}
       letterSpacing="-0.16px"
     >
-      Buying
+      {type === 'buy' ? 'Buying' : 'Paying'}
     </Text>
     <Box bg="#ffffff" mt={3} style={BoxStyle}>
       <Flex flexDirection="row" alignItems="center" justifyContent="center">
@@ -122,7 +122,7 @@ const Amount = ({ amountStatus, symbol, amount, handleChange }) => (
   </Box>
 )
 
-const EstimatedPrice = ({ price, priceStatus, loading }) => (
+const EstimatedPrice = ({ type, price, priceStatus, loading }) => (
   <Box>
     <Flex width={1}>
       <Flex flex={1}>
@@ -132,7 +132,7 @@ const EstimatedPrice = ({ price, priceStatus, loading }) => (
           fontWeight={500}
           letterSpacing="-0.2px"
         >
-          Paying
+          {type === 'buy' ? 'Paying' : 'Receiving'}
         </Text>
       </Flex>
       <Flex flex={1} justifyContent="flex-end">
@@ -435,6 +435,7 @@ export default ({
       <Flex flexDirection="column" justifyContent="flex-start" mt="40px" px={3}>
         <Box px={3}>
           <Amount
+            type={type}
             symbol={symbol}
             amount={amount}
             amountStatus={amountStatus}
@@ -448,6 +449,7 @@ export default ({
             </Text>
           </Flex>
           <EstimatedPrice
+            type={type}
             price={price}
             ratio={ratio}
             priceStatus={priceStatus}
