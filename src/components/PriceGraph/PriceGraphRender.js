@@ -4,49 +4,68 @@ import HighchartsReact from 'highcharts-react-official'
 
 import { colors } from 'ui'
 
-import { Text, Box } from 'ui/common'
+import { Box } from 'ui/common'
 
 import moment from 'utils/moment'
+
+import './style.css'
 
 const options = {
   colors: [colors.purple.normal],
   navigator: {
     enabled: false,
   },
-  rangeSelector: {
-    buttonTheme: {
-      style: {
-        color: colors.text.grey,
-      },
-      states: {
-        select: {
-          fill: colors.purple.normal,
-          style: {
-            color: 'white',
-          },
-        },
-      },
-    },
-    inputStyle: {
-      color: colors.purple.normal,
-      fontWeight: '600',
-      fontSize: '11px',
-    },
-  },
   scrollbar: { enabled: false },
   tooltip: {
-    enabled: false,
+    enabled: true,
+    formatter: function(tooltip) {
+      return `
+      ${moment(this.x).priceDate()}<br>
+      Price: ${this.y}`
+    },
   },
   xAxis: {
     ordinal: false,
+    title: {
+      text: 'Token supply',
+    },
   },
   yAxis: {
     tickPixelInterval: 35,
     labels: {
+      align: 'left',
       formatter() {
         return this.value
       },
     },
+  },
+  rangeSelector: {
+    buttons: [
+      {
+        type: 'month',
+        count: 1,
+        text: '1 M',
+      },
+      {
+        type: 'month',
+        count: 3,
+        text: '3 M',
+      },
+      {
+        type: 'month',
+        count: 6,
+        text: '6 M',
+      },
+      {
+        type: 'year',
+        count: 1,
+        text: '1 Y',
+      },
+      {
+        type: 'all',
+        text: 'All',
+      },
+    ],
   },
   plotOptions: {
     line: {
@@ -65,7 +84,13 @@ class HighChartGraph extends React.Component {
     return nextProps.data !== this.props.data
   }
   render() {
-    const { data, onMouseOverPoint, onMouseOut } = this.props
+    const {
+      data,
+      onMouseOverPoint,
+      onMouseOut,
+      width = 570,
+      height = 330,
+    } = this.props
     return (
       <HighchartsReact
         highcharts={Highcharts}
@@ -83,11 +108,16 @@ class HighChartGraph extends React.Component {
                   mouseOver: onMouseOverPoint,
                 },
               },
+              type: 'area',
+              threshold: null,
+              fillColor: '#ede8ff',
             },
           ],
 
           chart: {
-            height: 240,
+            width,
+            height,
+            styledMode: true,
           },
         }}
       />
@@ -97,48 +127,11 @@ class HighChartGraph extends React.Component {
 
 class Graph extends React.PureComponent {
   state = { hovering: null }
-
-  renderPrice = data => {
-    if (!data || data.length === 0) return null
-    const { hovering } = this.state
-
-    if (hovering) {
-      return (
-        <React.Fragment>
-          <Text fontSize={5} block weight="semibold">
-            {`${hovering.y.toFixed(2)} BAND`}
-          </Text>
-          <Text size={13}>{moment.utc(hovering.x).pretty()}</Text>
-        </React.Fragment>
-      )
-    }
-    return (
-      <React.Fragment>
-        <Text fontSize={5} block weight="semibold">
-          {`${data[data.length - 1][1].toFixed(2)} BAND`}
-        </Text>
-        <Text fontSize={1}>{`Last price at ${moment
-          .utc(data[data.length - 1][0])
-          .pretty()}`}</Text>
-      </React.Fragment>
-    )
-  }
   render() {
     const { data } = this.props
     return (
       <React.Fragment>
         <Box>
-          <Box
-            bg="white"
-            style={{
-              textAlign: 'center',
-              zIndex: 10,
-              textShadow: '0 0 5px white',
-            }}
-            mb={5}
-          >
-            {this.renderPrice(data)}
-          </Box>
           <HighChartGraph
             onMouseOverPoint={event =>
               this.setState({

@@ -5,6 +5,11 @@ moment.prototype.formal = function() {
   return localTime.format('DD-MM-YYYY HH:mm:ss')
 }
 
+moment.prototype.priceDate = function() {
+  const localTime = this.local()
+  return localTime.format('dddd, MM DD YYYY, HH:mm:ss')
+}
+
 moment.prototype.pretty = function() {
   const today = moment().startOf('day')
   const yesterday = moment()

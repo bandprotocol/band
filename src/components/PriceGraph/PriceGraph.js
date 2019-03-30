@@ -6,6 +6,8 @@ import PriceGraphRender from './PriceGraphRender'
 import { loadPriceHistory } from 'actions'
 import { priceHistorySelector } from 'selectors/price'
 
+import data from './mock'
+
 class PriceGraph extends React.Component {
   componentDidMount() {
     this.props.loadPrice()
@@ -23,9 +25,10 @@ const transformData = rawData => {
 }
 
 const mapStateToProps = (state, { communityAddress }) => ({
-  data: transformData(
-    priceHistorySelector(state, { address: communityAddress }),
-  ),
+  // data: transformData(
+  //   priceHistorySelector(state, { address: communityAddress }),
+  // ),
+  data,
 })
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({

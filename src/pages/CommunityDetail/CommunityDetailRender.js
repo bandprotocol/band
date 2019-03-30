@@ -12,6 +12,8 @@ import DetailHistory from 'components/DetailHistory'
 import BuySell from 'components/BuySell'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
 
+import Graph from 'components/PriceGraph'
+
 const GrayButton = styled(Button)`
   padding: 0px;
   width: 120px;
@@ -116,17 +118,17 @@ export default props => {
       </Flex>
       <Flex flexDirection="row" mt="30px">
         <Flex
-          flex={1}
+          flex={1 / 2}
           mr="15px"
           bg="white"
           style={{ height: '330px', borderRadius: '10px' }}
           justifyContent="center"
           alignItems="center"
         >
-          <Text>dummy</Text>
+          <Graph communityAddress={communityAddress} />
         </Flex>
         <Flex
-          flex={1}
+          flex={1 / 2}
           ml="15px"
           bg="white"
           style={{ height: '330px', borderRadius: '10px' }}
