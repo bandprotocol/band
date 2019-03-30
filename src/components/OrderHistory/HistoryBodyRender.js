@@ -20,21 +20,21 @@ import {
 
 const HistoryRow = ({ time, price, amount, type, txLink }) => (
   <Flex flexDirection="row" py={4}>
-    <Box flex="0 0 270px" pl="55px">
+    <Flex flex={1} pl="30px">
       <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
         {time}
       </Text>
-    </Box>
-    <Box flex="0 0 160px">
+    </Flex>
+    <Flex flex={1}>
       <Text color={colors.text} fontSize={0}>
         {price}
       </Text>
-    </Box>
-    <Box flex="0 0 160px">
+    </Flex>
+    <Flex flex={1}>
       <Text color={colors.text} fontSize={0}>
         {amount}
       </Text>
-    </Box>
+    </Flex>
     <Flex flex={1}>
       <Bold color={type === 'Buy' ? colors.green : colors.red} fontSize={0}>
         {type}

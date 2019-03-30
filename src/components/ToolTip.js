@@ -7,8 +7,8 @@ const HoverBox = styled(Flex).attrs({
 })`
   font-family: Avenir-Medium;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: ${props => props.size || '20px'};
+  height: ${props => props.size || '20px'};
   justify-content: center;
   align-items: center;
 `
@@ -79,6 +79,8 @@ export default class Tooltip extends React.Component {
       textBg,
       textColor,
       children,
+      size,
+      fontSize,
     } = this.props
     return (
       <Flex
@@ -91,6 +93,7 @@ export default class Tooltip extends React.Component {
       >
         <HoverBox
           bg={bg}
+          size={size}
           onMouseLeave={() =>
             this.setState({
               show: false,
@@ -102,7 +105,12 @@ export default class Tooltip extends React.Component {
             })
           }
         >
-          <Text size={14} color="#fff" weight="regular" textAlign="center">
+          <Text
+            fontSize={fontSize || 14}
+            color="#fff"
+            weight="regular"
+            textAlign="center"
+          >
             ?
           </Text>
         </HoverBox>

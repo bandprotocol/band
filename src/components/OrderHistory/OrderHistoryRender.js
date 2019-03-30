@@ -35,6 +35,7 @@ const HistoryHeader = () => (
         Type
       </Text>
     </Flex>
+    <Flex flex={1} />
   </Flex>
 )
 

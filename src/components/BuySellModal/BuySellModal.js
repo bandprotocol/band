@@ -15,6 +15,7 @@ class BuySellModal extends React.Component {
       amount: '',
       price: '0', // CANNOT CALCULATE PRICE, number
       priceLimit: '',
+      priceChange: '',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK', // INSUFFICIENT_BAND, OK
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -23,6 +24,7 @@ class BuySellModal extends React.Component {
       amount: '',
       price: '0', // CANNOT CALCULATE PRICE, number
       priceLimit: '',
+      priceChange: '',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK',
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -177,7 +179,6 @@ class BuySellModal extends React.Component {
   async handleChange(what, e) {
     const { value } = e.target
     const { type } = this.state
-
     this.setState({
       [type]: {
         ...this.state[type],
@@ -204,6 +205,7 @@ class BuySellModal extends React.Component {
         type={type}
         amount={currentType.amount}
         price={currentType.price}
+        priceChange={currentType.priceChange}
         priceLimit={currentType.priceLimit}
         amountStatus={currentType.amountStatus}
         priceStatus={currentType.priceStatus}
