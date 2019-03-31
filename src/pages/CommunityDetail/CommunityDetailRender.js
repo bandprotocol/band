@@ -12,6 +12,7 @@ import DetailHistory from 'components/DetailHistory'
 import CurveGraph from 'components/CurveGraph'
 import BN from 'utils/bignumber'
 import { calculatePriceAt } from 'utils/equation'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 import Graph from 'components/PriceGraph'
 
@@ -154,29 +155,53 @@ export default props => {
           flex={1 / 2}
           mr="15px"
           bg="white"
-          style={{ height: '330px', borderRadius: '10px' }}
-          justifyContent="center"
-          alignItems="center"
+          p="15px"
+          style={{ height: '360px', borderRadius: '10px', minWidth: 0 }}
+          justifyContent="flex-start"
+          alignItems="flex-start"
         >
-          <Graph communityAddress={communityAddress} />
+          <AutoSizer>
+            {({ height, width }) => (
+              <Box style={{ height, width }}>
+                <Graph
+                  communityAddress={communityAddress}
+                  height={height}
+                  width={width}
+                />
+              </Box>
+            )}
+          </AutoSizer>
         </Flex>
         <Flex
           flex={1 / 2}
           ml="15px"
           bg="white"
-          style={{ height: '330px', borderRadius: '10px' }}
-          justifyContent="center"
-          alignItems="center"
+          p="15px"
+          style={{ height: '360px', borderRadius: '10px', minWidth: 0 }}
+          justifyContent="flex-start"
+          alignItems="flex-start"
         >
-          <CurveGraph
-            title=""
-            xLabel="Token Supply"
-            yLabel="Price"
-            dataset={dataset}
-            width={260}
-            height={200}
-            config={{}}
-          />
+          <AutoSizer>
+            {({ height, width }) => (
+              <Box style={{ height, width }}>
+                <CurveGraph
+                  title="Colleteral graph"
+                  xLabel="Token Supply"
+                  dataset={dataset}
+                  width={width}
+                  height={height - 10}
+                  config={{}}
+                  currentSupply={parseFloat(
+                    BN.parse(totalSupply)
+                      .pretty()
+                      .replace(/,/g, ''),
+                  )}
+                  verticalLine
+                  yAxes="right"
+                />
+              </Box>
+            )}
+          </AutoSizer>
         </Flex>
       </Flex>
       <Flex mt="30px">

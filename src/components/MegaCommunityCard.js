@@ -132,6 +132,7 @@ export default ({
             size={16}
             fontWeight="500"
             lineHeight={2}
+            mt={1}
           >
             {name}
           </WrapText>

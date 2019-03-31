@@ -13,7 +13,8 @@ class PriceGraph extends React.Component {
     this.props.loadPrice()
   }
   render() {
-    return <PriceGraphRender data={this.props.data} />
+    const { data, height, width } = this.props
+    return <PriceGraphRender data={data} height={height} width={width} />
   }
 }
 

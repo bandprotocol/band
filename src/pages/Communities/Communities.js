@@ -18,10 +18,7 @@ const mapStateToProps = (state, props) => ({
     .valueSeq()
     .toJS(),
   featureCommunities: communityFeatureSelector(state, {
-    featureCommunities: [
-      '0x35446727c0C4332CA05AC9e2bAA10809c4748479',
-      '0x3698856D3bD066D0950F0B11E5f493ec58697563', // TODO: FIX HARDCODE LATER
-    ],
+    featureCommunities: ['0x6C206e56C74F45E76bed5A76A45550472a8B0634'],
   })
     .valueSeq()
     .toJS(),

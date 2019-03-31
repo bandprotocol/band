@@ -33,11 +33,14 @@ const options = {
   yAxis: {
     tickPixelInterval: 35,
     labels: {
-      align: 'left',
       formatter() {
-        return this.value
+        return this.value.toLocaleString('en-US', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        })
       },
     },
+    min: 0,
   },
   rangeSelector: {
     buttons: [
@@ -88,7 +91,7 @@ class HighChartGraph extends React.Component {
       data,
       onMouseOverPoint,
       onMouseOut,
-      width = 570,
+      width = 100,
       height = 330,
     } = this.props
     return (
@@ -128,11 +131,13 @@ class HighChartGraph extends React.Component {
 class Graph extends React.PureComponent {
   state = { hovering: null }
   render() {
-    const { data } = this.props
+    const { data, height, width } = this.props
     return (
       <React.Fragment>
         <Box>
           <HighChartGraph
+            height={height}
+            width={width}
             onMouseOverPoint={event =>
               this.setState({
                 hovering: { y: event.target.y, x: event.target.x },

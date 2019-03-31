@@ -22,7 +22,7 @@ const OPCODE_IF = 18
 const OPCODE_BANCOR_LOG = 19
 const OPCODE_BANCOR_POWER = 20
 
-Decimal.set({ precision: 1000 })
+Decimal.set({ precision: 100 })
 
 export function calculatePriceAt(self, value) {
   const xValue = new Decimal(value)

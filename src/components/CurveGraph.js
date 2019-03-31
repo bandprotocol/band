@@ -16,30 +16,47 @@ export default ({
   config,
   width,
   height,
+  currentSupply,
+  verticalLine,
+  yAxes,
 }) => {
+  const lineStyle = {
+    lineTension: 0.1,
+    borderColor: '#4853ff',
+    backgroundColor: 'rgb(220, 227, 255)',
+    borderCapStyle: 'butt',
+    borderWidth: 1,
+    borderJoinStyle: 'miter',
+    pointBorderColor: '#4853ff',
+    pointBackgroundColor: '#4853ff',
+    pointHoverRadius: 2,
+    pointHoverBackgroundColor: 'rgb(78, 60, 169)',
+    pointHoverBorderColor: 'rgb(78, 60, 169)',
+    pointHoverBorderWidth: 1.5,
+  }
   const data = {
     labels: dataset.map(e => e.x),
     datasets: [
       {
-        label: yLabel,
+        ...lineStyle,
+        label: 'Hello',
         fill: true,
-        lineTension: 0.1,
-        borderColor: 'rgb(78, 60, 169)',
-        backgroundColor: 'rgb(220, 227, 255)',
-        borderCapStyle: 'butt',
-        borderDash: [],
-        borderDashOffset: 0.0,
-        borderJoinStyle: 'miter',
-        pointBorderColor: 'rgb(78, 60, 169)',
-        pointBackgroundColor: 'rgb(78, 60, 169)',
-        pointBorderWidth: 1,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: 'rgb(78, 60, 169)',
-        pointHoverBorderColor: 'rgb(78, 60, 169)',
-        pointHoverBorderWidth: 2,
-        pointRadius: 1,
-        pointHitRadius: 10,
-        data: dataset.map(e => e.y),
+        data: verticalLine
+          ? dataset
+              .map(e => ({ x: e.x, y: e.y }))
+              .filter(e => parseFloat(e.x.replace(/,/g, '')) <= currentSupply)
+          : dataset.map(e => e.y),
+        install: verticalLine && 10,
+      },
+      {
+        ...lineStyle,
+        label: '2',
+        fill: false,
+        data: verticalLine
+          ? dataset
+              .map(e => ({ x: e.x, y: e.y }))
+              .filter(e => parseFloat(e.x.replace(/,/g, '')) >= currentSupply)
+          : [],
       },
     ],
   }
@@ -56,9 +73,15 @@ export default ({
         label: (item, data) => `y: ${item.yLabel}`,
       },
     },
+    legend: {
+      display: false,
+    },
     scales: {
       xAxes: [
         {
+          gridLines: {
+            display: false,
+          },
           scaleLabel: {
             display: true,
             labelString: xLabel,
@@ -69,9 +92,10 @@ export default ({
         {
           stacked: stacked,
           scaleLabel: {
-            display: true,
+            display: yLabel,
             labelString: yLabel,
           },
+          position: yAxes || 'left',
           ticks: {
             stepSize: config.stepSize, // congifure for each graph
             suggestedMax: config.suggestedMax, // congifure for each graph
