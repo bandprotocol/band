@@ -137,9 +137,6 @@ export default class PolyCurve extends BaseCurve {
         x: i,
         y: this.convertedSlope * Math.pow(i, this.degree) + this.priceStart,
       })
-      console.log(
-        this.convertedSlope * Math.pow(i, this.degree) + this.priceStart,
-      )
       collateralDataSet.push({
         x: i,
         y:
@@ -209,6 +206,8 @@ export default class PolyCurve extends BaseCurve {
         baseD,
         '0',
         expV.toString(),
+        '9',
+        '1',
         '0',
         (this.priceStart * Math.pow(10, 18)).toLocaleString('fullwide', {
           useGrouping: false,
