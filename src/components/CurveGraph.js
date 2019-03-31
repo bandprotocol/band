@@ -2,25 +2,10 @@ import React from 'react'
 import { Chart, Line } from 'react-chartjs-2'
 import 'chartjs-plugin-downsample'
 
-Chart.defaults.global.defaultFontSize = 16
+Chart.defaults.global.defaultFontSize = 11
 Chart.defaults.global.elements.point.radius = 0
 Chart.defaults.global.elements.point.hitRadius = 10
 Chart.defaults.global.elements.point.hoverRadius = 10
-
-// const compileDatasets = dataset => {
-//   return {
-//     label: 'Peach',
-//     borderColor: 'rgba(136, 104, 255)',
-//     backgroundColor: 'rgba(220, 227, 255)',
-//     strokeColor: 'rgba(220,220,220,1)',
-//     pointColor: 'rgba(136, 104, 255)',
-//     pointStrokeColor: '#fff',
-//     pointHighlightFill: '#fff',
-//     pointHighlightStroke: 'rgba(220,220,220,1)',
-//     // spanGaps: true,
-//     data: [{ x: 0, y: 1000 }, { x: 1, y: 1001 }],
-//   }
-// }
 
 export default ({
   stacked = false,
@@ -31,6 +16,8 @@ export default ({
   xLabel,
   yLabel,
   config,
+  width,
+  height,
 }) => {
   const data = {
     labels: xDataset,
@@ -97,5 +84,7 @@ export default ({
     },
   }
 
-  return <Line data={data} options={chartOptions} width={720} height={500} />
+  return (
+    <Line data={data} options={chartOptions} width={width} height={height} />
+  )
 }

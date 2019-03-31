@@ -3,6 +3,7 @@ import { Flex, Text, Box } from 'rebass'
 import Slider from 'components/Slider'
 import colors from 'ui/colors'
 import styled from 'styled-components'
+// import SliderLog from 'components/SliderLogScale'
 
 const Label = styled(Text).attrs({
   fontWeight: '500',
@@ -150,7 +151,7 @@ export default ({
         alignItems="center"
       >
         <Flex width="100%" justifyContent="flex-start">
-          <Label>Rate of increase(10^(-3))</Label>
+          <Label>Rate of increase(10^(-23))</Label>
         </Flex>
         <Slider
           value={(clampedSlope(slope) * 100) / (maxSlope - minSlope)}

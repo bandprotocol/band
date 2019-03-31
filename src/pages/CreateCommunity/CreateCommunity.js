@@ -6,6 +6,7 @@ import Curves from 'curves'
 import { BandProtocolClient, IPFS } from 'band.js'
 import { Flex } from 'ui/common'
 import { convertToChain } from 'utils/helper'
+import { withRouter } from 'react-router-dom'
 
 // page
 import CreateCommunityInfo from 'pages/CreateCommunityInfo'
@@ -14,7 +15,7 @@ import CreateCommunityParameters from 'pages/CreateCommunityParameters'
 
 window.IPFS = IPFS
 
-export default class CreateCommunity extends React.Component {
+class CreateCommunity extends React.Component {
   state = {
     pageState: 0, // INFO = 0, DISTRIBUTION = 1, PARAMETERS = 2
     name: '',
@@ -147,6 +148,7 @@ export default class CreateCommunity extends React.Component {
       values.push(kvs[k].toString())
     }
 
+    alert('Waiting for deployment...')
     await bandClient.deployCommunity(
       this.state.name,
       this.state.symbol,
@@ -160,6 +162,8 @@ export default class CreateCommunity extends React.Component {
       values,
       this.state.curve.collateral,
     )
+
+    this.props.history.push('/')
   }
 
   render() {
@@ -199,3 +203,5 @@ export default class CreateCommunity extends React.Component {
     )
   }
 }
+
+export default withRouter(CreateCommunity)

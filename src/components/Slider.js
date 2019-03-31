@@ -2,6 +2,8 @@ import React from 'react'
 import { Flex } from 'ui/common'
 import { withStyles } from '@material-ui/core/styles'
 import Slider from '@material-ui/lab/Slider'
+import styled from 'styled-components'
+import colors from 'ui/colors'
 
 const styles = {
   root: {
@@ -12,6 +14,11 @@ const styles = {
   },
 }
 
+const Thumb = styled.div`
+  background: #fff;
+  border: 2px solid ${colors.purple.dark};
+  border-radius: 50%;
+`
 class SimpleSlider extends React.Component {
   handleChange = (event, value) => {
     const { min, max } = this.props
@@ -32,6 +39,7 @@ class SimpleSlider extends React.Component {
         <Slider
           classes={{ container: classes.slider }}
           value={value}
+          thumb={<Thumb />}
           aria-labelledby="label"
           onChange={this.handleChange.bind(this)}
         />

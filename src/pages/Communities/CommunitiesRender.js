@@ -81,6 +81,8 @@ export default ({
     fullWidth
     style={{ minHeight: 'calc(100vh - 80px)', background: '#f6f7fc' }}
   >
+    {/* TODO: Fix this condition(loading forever when length === 0) and 
+    check yourcommunity, feature community as well */}
     {communities && communities.length ? (
       <Flex flexDirection="column">
         {/* Your Communities */}

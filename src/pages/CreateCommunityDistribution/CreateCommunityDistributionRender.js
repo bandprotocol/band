@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Box, Text } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import styled from 'styled-components'
 import CurveSelection from 'components/CurveSelection'
 import CurveGraph from 'components/CurveGraph'
@@ -148,15 +148,25 @@ export default ({
                 dataset={curve.dataset.bondingCurve}
                 xDataset={curve.dataset.xDataSet}
                 config={curve.priceGraphConfig}
+                width={720}
+                height={500}
               />
             ) : (
               <CurveGraph
                 title=""
                 xLabel="Token Supply"
                 yLabel="Collateral"
-                dataset={curve.dataset.collateralCurve}
-                xDataset={curve.dataset.xDataSet}
+                dataset={
+                  console.log('y', curve.dataset.collateralCurve) ||
+                  curve.dataset.collateralCurve
+                }
+                xDataset={
+                  console.log('x', curve.dataset.xDataSet) ||
+                  curve.dataset.xDataSet
+                }
                 config={curve.collateralGraphConfig}
+                width={720}
+                height={500}
               />
             )}
           </Flex>

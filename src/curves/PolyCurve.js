@@ -11,15 +11,15 @@ export default class PolyCurve extends BaseCurve {
 
   static get defaultParams() {
     return {
-      totalSupply: 10000, // hard code
+      totalSupply: 1000000, // hard code
       priceStart: 0, // 0 - 100
-      slope: 0.003, //
-      reserveRatio: 33.33, // 10% - 100%
-      minSlope: 0.001,
-      maxSlope: 0.01,
+      slope: 5, //
+      reserveRatio: 20, // 10% - 100%
+      minSlope: 1,
+      maxSlope: 100,
       minPriceStart: 0,
       maxPriceStart: 100,
-      minReserveRatio: 27.5,
+      minReserveRatio: 20,
       maxReserveRatio: 49,
     }
   }
@@ -29,38 +29,38 @@ export default class PolyCurve extends BaseCurve {
    */
 
   get convertedSlope() {
-    return this.slope * 0.001
+    return this.slope * Math.pow(10, -24)
   }
 
   get priceGraphConfig() {
-    if (this.reserveRatio < 28.7) {
-      return {
-        stepSize: 15000,
-        suggestedMax: 150000,
-      }
-    }
-    if (this.reserveRatio < 31.7) {
-      return {
-        stepSize: 1000,
-        suggestedMax: 10000,
-      }
-    }
+    // if (this.reserveRatio < 28.7) {
+    //   return {
+    //     stepSize: 15000,
+    //     suggestedMax: 150000,
+    //   }
+    // }
+    // if (this.reserveRatio < 31.7) {
+    //   return {
+    //     stepSize: 1000,
+    //     suggestedMax: 10000,
+    //   }
+    // }
     return {
-      stepSize: 50,
-      suggestedMax: 500,
+      stepSize: 10,
+      suggestedMax: 100,
     }
   }
 
   get collateralGraphConfig() {
-    if (this.reserveRatio < 32.2) {
-      return {
-        stepSize: 10000000,
-        suggestedMax: 100000000,
-      }
-    }
+    // if (this.reserveRatio < 32.2) {
+    //   return {
+    //     stepSize: 100,
+    //     suggestedMax: 1000,
+    //   }
+    // }
     return {
-      stepSize: 100000,
-      suggestedMax: 1000000,
+      stepSize: 200000,
+      suggestedMax: 2000000,
     }
   }
 
@@ -105,9 +105,7 @@ export default class PolyCurve extends BaseCurve {
 
   // use degree
   generateEquation() {
-    const convertedSlope = this.convertedSlope.toLocaleString(undefined, {
-      maximumFractionDigits: 8,
-    })
+    const convertedSlope = this.convertedSlope.toString()
 
     const degree = this.degree.toLocaleString(undefined, {
       maximumFractionDigits: 3,
@@ -133,12 +131,15 @@ export default class PolyCurve extends BaseCurve {
     let xDataSet = []
     let bondingDataSet = []
     let collateralDataSet = []
-    for (let i = 0; i <= this.totalSupply; i += 1000) {
+    for (let i = 0; i <= this.totalSupply; i += 50000) {
       xDataSet.push(i)
       bondingDataSet.push({
         x: i,
         y: this.convertedSlope * Math.pow(i, this.degree) + this.priceStart,
       })
+      console.log(
+        this.convertedSlope * Math.pow(i, this.degree) + this.priceStart,
+      )
       collateralDataSet.push({
         x: i,
         y:
