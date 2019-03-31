@@ -95,6 +95,7 @@ export default class LinearCurve extends BaseCurve {
       '200000000000000000000000000',
     ]
     const withPriceStart = [
+      '4',
       '7',
       '6',
       '0',
@@ -104,12 +105,12 @@ export default class LinearCurve extends BaseCurve {
       '1',
       '0',
       '200000000000000000000000000',
-      '6',
+      '9',
+      '1',
       '0',
       (this.priceStart * Math.pow(10, 18)).toLocaleString('fullwide', {
         useGrouping: false,
       }),
-      '1',
     ]
     // const withZero = `[7, 6, 0, ${slopeOnChain}, 6, 1, 1, 0, 200000000000000000000000000]`
     // const withPriceStart = `[ 4, 7, 6, 0, ${slopeOnChain}, 6, 1, 1, 0, 200000000000000000000000000, 6, 0, ${this
