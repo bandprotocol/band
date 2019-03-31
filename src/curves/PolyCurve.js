@@ -13,7 +13,7 @@ export default class PolyCurve extends BaseCurve {
     return {
       totalSupply: 1000000, // hard code
       priceStart: 0, // 0 - 100
-      slope: 5, //
+      slope: 50, //
       reserveRatio: 20, // 10% - 100%
       minSlope: 1,
       maxSlope: 100,
@@ -52,15 +52,21 @@ export default class PolyCurve extends BaseCurve {
   }
 
   get collateralGraphConfig() {
-    // if (this.reserveRatio < 32.2) {
-    //   return {
-    //     stepSize: 100,
-    //     suggestedMax: 1000,
-    //   }
-    // }
+    if (this.reserveRatio > 22) {
+      return {
+        stepSize: 5000,
+        suggestedMax: 50000,
+      }
+    }
+    if (this.reserveRatio > 21) {
+      return {
+        stepSize: 50000,
+        suggestedMax: 500000,
+      }
+    }
     return {
-      stepSize: 200000,
-      suggestedMax: 2000000,
+      stepSize: 500000,
+      suggestedMax: 5000000,
     }
   }
 

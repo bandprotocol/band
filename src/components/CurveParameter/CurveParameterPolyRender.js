@@ -151,7 +151,7 @@ export default ({
         alignItems="center"
       >
         <Flex width="100%" justifyContent="flex-start">
-          <Label>Rate of increase(10^(-23))</Label>
+          <Label>Rate of increase(10^(-24))</Label>
         </Flex>
         <Slider
           value={(clampedSlope(slope) * 100) / (maxSlope - minSlope)}

@@ -11,16 +11,16 @@ export default class SigmoidCurve extends BaseCurve {
 
   static get defaultParams() {
     return {
-      totalSupply: 500,
+      totalSupply: 2000,
       turningPoint: 200,
-      slope: 0.03,
-      priceEnd: 200000,
-      minSlope: 0.01,
-      maxSlope: 0.1,
+      slope: 140,
+      priceEnd: 1500,
+      minSlope: 1,
+      maxSlope: 1000,
       minTurningPoint: 0,
-      maxTurningPoint: 350,
-      minPriceEnd: 200,
-      maxPriceEnd: 220000,
+      maxTurningPoint: 600,
+      minPriceEnd: 10,
+      maxPriceEnd: 3000,
     }
   }
 
@@ -28,22 +28,26 @@ export default class SigmoidCurve extends BaseCurve {
    * Derived Properties
    */
 
+  get convertSlope() {
+    return this.slope * Math.pow(10, -4)
+  }
+
   get priceGraphConfig() {
     return {
-      stepSize: 30000,
-      suggestedMax: 300000,
+      stepSize: this.maxPriceEnd / 10,
+      suggestedMax: this.maxPriceEnd,
     }
   }
 
   get collateralGraphConfig() {
     return {
-      stepSize: 100000,
-      suggestedMax: 1000000,
+      stepSize: 5000,
+      suggestedMax: 50000,
     }
   }
 
   get b() {
-    return -1 * this.turningPoint * this.slope
+    return -1 * this.turningPoint * this.convertSlope
   }
 
   // e * 10^18
@@ -62,7 +66,7 @@ export default class SigmoidCurve extends BaseCurve {
    * Finally, x = ((16 - b) / a) * 10^18
    */
   get maximumTotalSupply() {
-    return ((16 - this.b) / this.slope) * this.tenExpEighteen
+    return ((16 - this.b) / this.convertSlope) * this.tenExpEighteen
   }
 
   /**
@@ -83,7 +87,7 @@ export default class SigmoidCurve extends BaseCurve {
    * (a * c / 2) * 10^18
    */
   get case1Constant1() {
-    return this.slope * this.priceEnd * 0.5 * this.tenExpEighteen
+    return this.convertSlope * this.priceEnd * 0.5 * this.tenExpEighteen
   }
 
   /**
@@ -103,7 +107,7 @@ export default class SigmoidCurve extends BaseCurve {
   }
 
   generateEquation() {
-    if (this.slope === 1) {
+    if (this.convertSlope === 1) {
       if (this.b > 0)
         return `y = \\frac{${this.priceEnd}}{1+e^{-(x+${this.b})}}`
       else if (this.b < 0) {
@@ -114,13 +118,15 @@ export default class SigmoidCurve extends BaseCurve {
     }
 
     if (this.b > 0)
-      return `y = \\frac{${this.priceEnd}}{1+e^{-(${this.slope}x+${this.b})}}`
+      return `y = \\frac{${this.priceEnd}}{1+e^{-(${this.convertSlope}x+${
+        this.b
+      })}}`
     else if (this.b < 0) {
-      return `y = \\frac{${this.priceEnd}}{1+e^{-(${this.slope}x-${Math.abs(
-        this.b,
-      )})}}`
+      return `y = \\frac{${this.priceEnd}}{1+e^{-(${
+        this.convertSlope
+      }x-${Math.abs(this.b)})}}`
     } else {
-      return `y = \\frac{${this.priceEnd}}{1+e^{-${this.slope}x}}`
+      return `y = \\frac{${this.priceEnd}}{1+e^{-${this.convertSlope}x}}`
     }
   }
 
@@ -128,17 +134,17 @@ export default class SigmoidCurve extends BaseCurve {
     let xDataSet = []
     let bondingDataSet = []
     let collateralDataSet = []
-    for (let i = 0; i <= this.totalSupply; i += 20) {
+    for (let i = 0; i <= this.totalSupply; i += 50) {
       xDataSet.push(i)
       bondingDataSet.push({
         x: i,
-        y: this.priceEnd / (1 + this.exp(-(this.slope * i + this.b))),
+        y: this.priceEnd / (1 + this.exp(-(this.convertSlope * i + this.b))),
       })
       collateralDataSet.push({
         x: i,
         y:
           (this.priceEnd / 2) *
-            Math.log(this.exp(this.slope * i + this.b) + 1) +
+            Math.log(this.exp(this.convertSlope * i + this.b) + 1) +
           this.integralConstant,
       })
     }
@@ -190,7 +196,7 @@ export default class SigmoidCurve extends BaseCurve {
     //   this.tenExpEighteen
     // }, 0, ${this.eExpEighteen}, 0, ${
     //   this.tenExpEighteen
-    // }, ${signOfB}, 9, 1, 0, ${this.slope * Math.pow(10, 6)}, 0, ${bNoSign *
+    // }, ${signOfB}, 9, 1, 0, ${this.convertSlope * Math.pow(10, 6)}, 0, ${bNoSign *
     //   Math.pow(10, 6)}, 0, ${this.tenExpEighteen}, 0, ${
     //   this.tenExpEighteen
     // }, 0, ${Math.abs(this.integralConstantMulTenExpEighteen)}]`
