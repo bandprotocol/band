@@ -36,7 +36,7 @@ export default ({ isResult, percent, minimum, ...others }) => {
             </Flex>
             <Flex
               width={!isResult ? (100 - percent) / 100 : 100}
-              justifyContent={isResult && 'flex-end'}
+              justifyContent="flex-end"
             >
               <Text
                 weight="light"

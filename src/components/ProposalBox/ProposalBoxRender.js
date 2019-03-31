@@ -238,6 +238,7 @@ export default ({
             )
             return (
               <ProposalDetail
+                key={`${proposalId}-${change.name}`}
                 title={change.name}
                 description={description}
                 current={`${currentValue} ${currentUnit}`}

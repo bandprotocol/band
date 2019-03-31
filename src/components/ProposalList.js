@@ -37,13 +37,13 @@ const ProposalList = ({ description, proposals, isActive, title }) => (
       </Box>
     ) : (
       <Flex flexDirection="column" mt="30px">
-        {proposals.map(proposal => {
-          return (
-            <Flex>
-              <ProposalBox {...proposal} isActive={isActive} />
-            </Flex>
-          )
-        })}
+        {proposals.map(proposal => (
+          <ProposalBox
+            key={proposal.proposalId}
+            {...proposal}
+            isActive={isActive}
+          />
+        ))}
       </Flex>
     )}
   </Flex>
