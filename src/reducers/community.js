@@ -18,6 +18,7 @@ const handleSaveCommunityInfo = (
     price,
     last24Hrs,
     totalSupply,
+    collateralEquation,
   },
 ) =>
   state.set(
@@ -35,6 +36,7 @@ const handleSaveCommunityInfo = (
       price,
       last24Hrs,
       totalSupply,
+      collateralEquation,
     }),
   )
 

@@ -9,9 +9,9 @@ import graphBlue from 'images/graphBlue.svg'
 
 import CommunityDescription from 'components/CommunityDescription'
 import DetailHistory from 'components/DetailHistory'
-import BuySell from 'components/BuySell'
 import CurveGraph from 'components/CurveGraph'
 import BN from 'utils/bignumber'
+import { calculatePriceAt } from 'utils/equation'
 
 import Graph from 'components/PriceGraph'
 
@@ -41,8 +41,22 @@ export default props => {
     bandPrice,
     marketCap,
     totalSupply,
+    collateralEquation,
   } = props
-  console.log(totalSupply, marketCap)
+  console.log(totalSupply, collateralEquation)
+
+  const dataset = []
+  if (collateralEquation) {
+    const bnTotalSupply = BN.parse(totalSupply)
+    for (let mult = 0; mult <= 20; mult++) {
+      const supplyPoint = bnTotalSupply.muln(mult).divn(10)
+      dataset.push({
+        x: supplyPoint.pretty(),
+        y: calculatePriceAt(collateralEquation, supplyPoint.toString()),
+      })
+    }
+  }
+
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <Flex
@@ -156,55 +170,10 @@ export default props => {
             title=""
             xLabel="Token Supply"
             yLabel="Price"
-            dataset={[
-              { x: 0, y: 0 },
-              { x: 50000, y: 0.0062499999999999995 },
-              { x: 100000, y: 0.19999999999999998 },
-              { x: 150000, y: 1.5187499999999998 },
-              { x: 200000, y: 6.3999999999999995 },
-              { x: 250000, y: 19.53125 },
-              { x: 300000, y: 48.599999999999994 },
-              { x: 350000, y: 105.04375 },
-              { x: 400000, y: 204.79999999999998 },
-              { x: 450000, y: 369.05625 },
-              { x: 500000, y: 625 },
-              { x: 550000, y: 1006.5687499999998 },
-              { x: 600000, y: 1555.1999999999998 },
-              { x: 650000, y: 2320.5812499999993 },
-              { x: 700000, y: 3361.4 },
-              { x: 750000, y: 4746.093749999999 },
-              { x: 800000, y: 6553.599999999999 },
-              { x: 850000, y: 8874.106249999999 },
-              { x: 900000, y: 11809.8 },
-              { x: 950000, y: 15475.618749999998 },
-              { x: 1000000, y: 20000 },
-            ]}
-            xDataset={[
-              0,
-              50000,
-              100000,
-              150000,
-              200000,
-              250000,
-              300000,
-              350000,
-              400000,
-              450000,
-              500000,
-              550000,
-              600000,
-              650000,
-              700000,
-              750000,
-              800000,
-              850000,
-              900000,
-              950000,
-              1000000,
-            ]}
+            dataset={dataset}
             width={260}
             height={200}
-            config={{ stepSize: 2000, suggestedMax: 20000 }}
+            config={{}}
           />
         </Flex>
       </Flex>

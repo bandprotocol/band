@@ -10,8 +10,6 @@ Chart.defaults.global.elements.point.hoverRadius = 10
 export default ({
   stacked = false,
   dataset,
-  xDataset,
-  yDatasets,
   title,
   xLabel,
   yLabel,
@@ -20,7 +18,7 @@ export default ({
   height,
 }) => {
   const data = {
-    labels: xDataset,
+    labels: dataset.map(e => e.x),
     datasets: [
       {
         label: yLabel,

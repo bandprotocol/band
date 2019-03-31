@@ -60,6 +60,7 @@ function* baseInitialize() {
         dapp.price,
         dapp.last24Hrs,
         dapp.totalSupply,
+        dapp.collateralEquation,
       ),
     )
   }
