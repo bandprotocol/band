@@ -1,5 +1,17 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Flex, Text, AbsoluteLink } from 'ui/common'
+
+const Description = styled(Text)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+  -webkit-line-clamp: 4;
+  line-height: 1.64;
+  font-size: 13px;
+`
 
 export default ({
   name,
@@ -79,13 +91,7 @@ export default ({
               Description:
             </Text>
           </Flex>
-          <Text
-            fontSize="13px"
-            lineHeight={1.64}
-            style={{ wordBreak: 'break-word' }}
-          >
-            {description}
-          </Text>
+          <Description>{description}</Description>
         </Flex>
       </Flex>
       <Flex
