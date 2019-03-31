@@ -52,7 +52,12 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
           BND
         </Text>
       ) : (
-        <TextClickable color="#4a4a4a" onClick={toggle} fontSize="16px">
+        <TextClickable
+          color="#d1d1d1"
+          onClick={toggle}
+          fontWeight={400}
+          fontSize="16px"
+        >
           BND
         </TextClickable>
       )}
@@ -61,14 +66,15 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
       </Text>
       {isBND ? (
         <TextClickable
-          color={colors.text.grey}
           onClick={toggle}
+          color="#d1d1d1"
+          fontWeight={400}
           fontSize="16px"
         >
           USD
         </TextClickable>
       ) : (
-        <Text mr={0} color={colors.purple.normal} fontSize="16px">
+        <Text mr={0} color="#4a4a4a" fontSize="16px" fontWeight={500}>
           USD
         </Text>
       )}

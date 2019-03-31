@@ -30,7 +30,7 @@ const GrayButton = styled(Button)`
 `
 
 export default props => {
-  console.log('comm detail props : ', props)
+  // console.log('comm detail props : ', props)
   const {
     numberOfHolders,
     communityAddress,
@@ -57,6 +57,8 @@ export default props => {
     }
   }
 
+  // console.log(totalSupply, marketCap)
+  // console.log('token price : ', price)
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <Flex

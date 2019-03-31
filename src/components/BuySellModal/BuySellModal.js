@@ -58,9 +58,15 @@ class BuySellModal extends React.Component {
     const { amount, priceLimit, price } = this.state[type]
     const { onBuy, onSell } = this.props
     if (type === 'buy') {
-      onBuy(BN.parse(amount), priceLimit !== '' ? BN.parse(priceLimit) : price)
+      onBuy(
+        BN.parse(parseFloat(amount)),
+        priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+      )
     } else {
-      onSell(BN.parse(amount), priceLimit !== '' ? BN.parse(priceLimit) : price)
+      onSell(
+        BN.parse(parseFloat(amount)),
+        priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+      )
     }
   }
 
@@ -76,14 +82,20 @@ class BuySellModal extends React.Component {
       })
       return null
     }
-
+    let amountStatusChecking = false
+    try {
+      amountStatusChecking = BN.parse(this.state[type].amount).gt(
+        this.props.tokenBalance,
+      )
+    } catch (e) {
+      amountStatusChecking = false
+    }
     if (isPositiveNumber(amount)) {
       this.setState({
         [type]: {
           ...this.state[type],
           amountStatus:
-            type === 'sell' &&
-            BN.parse(this.state[type].amount).gt(this.props.tokenBalance)
+            type === 'sell' && amountStatusChecking
               ? 'INSUFFICIENT_TOKEN'
               : 'OK',
         },
@@ -114,7 +126,7 @@ class BuySellModal extends React.Component {
     }
 
     if (isPositiveNumber(priceLimit)) {
-      const priceLimitBN = BN.parse(priceLimit)
+      const priceLimitBN = BN.parse(parseFloat(priceLimit))
       this.setState({
         [type]: {
           ...this.state[type],
@@ -145,8 +157,8 @@ class BuySellModal extends React.Component {
     try {
       const price =
         type === 'buy'
-          ? await communityClient.getBuyPrice(BN.parse(amount))
-          : await communityClient.getSellPrice(BN.parse(amount))
+          ? await communityClient.getBuyPrice(BN.parse(parseFloat(amount)))
+          : await communityClient.getSellPrice(BN.parse(parseFloat(amount)))
       this.setState({
         [type]: {
           ...this.state[type],
@@ -194,7 +206,7 @@ class BuySellModal extends React.Component {
   }
 
   render() {
-    const { name, logo, symbol } = this.props
+    const { name, logo, symbol, tokenNormalPrice } = this.props
     const { type, showAdvance, loading } = this.state
     const currentType = this.state[type]
     return (
@@ -204,6 +216,7 @@ class BuySellModal extends React.Component {
         symbol={symbol}
         type={type}
         amount={currentType.amount}
+        tokenNormalPrice={tokenNormalPrice}
         price={currentType.price}
         priceChange={currentType.priceChange}
         priceLimit={currentType.priceLimit}
@@ -232,6 +245,7 @@ const mapStateToProps = (state, { type, communityAddress }) => {
     symbol: community.get('symbol'),
     bandBalance: bandBalanceSelector(state),
     tokenBalance: community.get('balance'),
+    tokenNormalPrice: community.get('price'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {
       address: communityAddress,

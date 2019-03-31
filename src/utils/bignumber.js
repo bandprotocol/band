@@ -12,7 +12,7 @@ BN.prototype.pretty = function() {
     .toNumber()
     .toLocaleString('en-US', {
       minimumFractionDigits: 2,
-      maximunFractionDigits: 2,
+      maximumFractionDigits: 2,
     })
 }
 

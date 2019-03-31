@@ -192,12 +192,14 @@ const Advance = ({
   priceLimit,
   priceChange,
   ratio,
+  loading,
   priceLimitStatus,
   handlePriceLimit,
   handlePriceChange,
 }) => {
-  const acceptablePriceChange =
-    ratio * (1 + priceChange / (type === 'buy' ? 100 : -100))
+  const acceptablePriceChange = ratio
+    .mul(BN.parse(type === 'buy' ? 100 + 1.0 * priceChange : 100 - priceChange))
+    .div(BN.parse(100.0))
   return (
     <Box
       bg="#ffffff"
@@ -314,7 +316,7 @@ const Advance = ({
                     Invalid pricechange.
                   </Text>
                 ) : (
-                  acceptablePriceChange > 0 && (
+                  !acceptablePriceChange.isZero() && (
                     <Text
                       fontSize="11px"
                       lineHeight={1.45}
@@ -322,8 +324,8 @@ const Advance = ({
                     >
                       {`The transaction will fail if the price of 1 CHT is ${
                         type === 'buy' ? 'higher' : 'lower'
-                      } than ${acceptablePriceChange}
-                BAND ($${acceptablePriceChange})`}
+                      } than ${acceptablePriceChange.pretty()}
+                BAND ($${acceptablePriceChange.pretty()})`}
                     </Text>
                   )
                 )}
@@ -397,6 +399,7 @@ export default ({
   symbol,
   type,
   amount,
+  tokenNormalPrice,
   price,
   priceLimit,
   amountStatus,
@@ -411,14 +414,34 @@ export default ({
   onButtonClick,
 }) => {
   const ratio = (() => {
-    if (BN.isBN(price) && !isNaN(amount)) {
-      if (amount > 0) {
-        const pp = price.pretty().replace(',', '')
-        return parseFloat(pp) / parseFloat(amount.replace(',', ''))
-      }
-      return 0
+    try {
+      const bnAmount = BN.parse(parseFloat(amount))
+      return price.mul(new BN(10).pow(new BN(18))).div(bnAmount)
+    } catch (e) {
+      return new BN(0)
     }
-    return 0
+  })()
+  const priceSlippage = (() => {
+    try {
+      if (type === 'sell' && ratio.isZero()) {
+        return new BN(0)
+      }
+      const tmp = BN.parse(
+        type === 'buy'
+          ? ratio.mul(new BN(100)).toString() /
+              BN.parse(tokenNormalPrice).toString() -
+              100.0
+          : 100.0 -
+              ratio.mul(new BN(100)).toString() /
+                BN.parse(tokenNormalPrice).toString(),
+      )
+      if (tmp.isZero() || tmp.isNeg()) {
+        return new BN(0)
+      }
+      return tmp
+    } catch (e) {
+      return new BN(0)
+    }
   })()
   return (
     <Flex
@@ -436,6 +459,7 @@ export default ({
         <Box px={3}>
           <Amount
             type={type}
+            loading={loading}
             symbol={symbol}
             amount={amount}
             amountStatus={amountStatus}
@@ -451,7 +475,7 @@ export default ({
           <EstimatedPrice
             type={type}
             price={price}
-            ratio={ratio}
+            ratio={ratio.pretty()}
             priceStatus={priceStatus}
             loading={loading}
           />
@@ -463,15 +487,25 @@ export default ({
           >
             <Flex flexDirection="row">
               <Flex flex={1}>Rate</Flex>
-              <Flex flex={3} justifyContent="flex-end" flexDirection="row">
-                {`1 ${symbol} = ${ratio} BAND `}
-                <Text color="#4e3ca9" ml="5px">
-                  ${`(${ratio} USD)`}
-                </Text>
+              <Flex flex={6} justifyContent="flex-end" flexDirection="row">
+                {loading ? (
+                  <React.Fragment>
+                    <Flex flex={5} />
+                    <DotLoading color="#b1b8e7" size="6px" />
+                    <Flex flex={1} />
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    {`1 ${symbol} = ${ratio.pretty()} BAND `}
+                    <Text color="#4e3ca9" ml="5px">
+                      ${`(${ratio.pretty()} USD)`}
+                    </Text>
+                  </React.Fragment>
+                )}
               </Flex>
             </Flex>
             <Flex flexDirection="row" mt="10px">
-              <Flex flex={1}>
+              <Flex flex={2}>
                 <Text>Price slippage</Text>
                 <ToolTip size="12px" fontSize="12px" bg={colors.text.grey}>
                   Price slippage refers to the difference between the expected
@@ -479,13 +513,22 @@ export default ({
                   which it is executed.
                 </ToolTip>
               </Flex>
-              <Flex flex={1} justifyContent="flex-end">
-                8%
-              </Flex>
+              {loading ? (
+                <React.Fragment>
+                  <Flex flex={4} />
+                  <DotLoading color="#b1b8e7" size="6px" />
+                  <Flex flex={1} />
+                </React.Fragment>
+              ) : (
+                <Flex flex={2} justifyContent="flex-end">
+                  {`${priceSlippage.pretty()} %`}
+                </Flex>
+              )}
             </Flex>
           </Flex>
           <Advance
             type={type}
+            loading={loading}
             showAdvance={showAdvance}
             toggleAdvance={toggleAdvance}
             ratio={ratio}
