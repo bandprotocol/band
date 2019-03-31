@@ -55,6 +55,7 @@ export default ({
   name,
   src,
   balance,
+  usdBalance,
   symbol,
   isSymbol,
   toggleBalance,
@@ -92,7 +93,7 @@ export default ({
                 {`${balance.pretty()} ${symbol}`}
               </Text>
             </Flex>
-            <Text color="white">{`(${balance.pretty()} USD)`}</Text>
+            <Text color="white">{`(${usdBalance.pretty()} USD)`}</Text>
           </React.Fragment>
         )}
       </Flex>

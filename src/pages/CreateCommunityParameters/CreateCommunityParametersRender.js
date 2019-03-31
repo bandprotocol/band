@@ -93,7 +93,7 @@ export default ({ kvs, setKeyValue }) => (
     {/* Header */}
     <Flex width="535px" flexDirection="column" alignItems="center">
       <Text fontSize="20px" fontWeight={500} color="#4e3ca9">
-        Parameters
+        Governance Parameters
       </Text>
       <Text
         fontSize="16px"
@@ -103,8 +103,9 @@ export default ({ kvs, setKeyValue }) => (
         lineHeight={1.69}
         letterSpacing={0.6}
       >
-        Spicy jalapeno bacon ipsum dolor amet sausage pig jerky tail tongue
-        frankfurter andouille.{' '}
+        Public set of parameters to be used by smart contracts inside this
+        community. These parameters can be changed by proposing changes through
+        Band Protocol's builtin voting mechanics.{' '}
         <A style={{ 'text-decoration': 'underline' }}>Learn more</A>
       </Text>
     </Flex>

@@ -19,6 +19,10 @@ const TabMenu = styled(Text).attrs(props => ({
   cursor: pointer;
   pointer-events: ${p => (p.active ? 'none' : 'auto')};
 `
+const A = styled.a`
+  color: #4e3ca9;
+  text-decoration: underline;
+`
 
 export default ({
   tab,
@@ -47,7 +51,9 @@ export default ({
         lineHeight={1.69}
         letterSpacing={0.6}
       >
-        This is a description of Token distribution page.
+        Bonding curve controls how community tokens are issued. This ensures
+        that the value of community tokens goes up as community grows.{' '}
+        <A style={{ 'text-decoration': 'underline' }}>Learn more</A>
       </Text>
     </Flex>
     <CurveSelection type={type} setCurveType={setCurveType} />

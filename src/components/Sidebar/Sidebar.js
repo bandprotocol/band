@@ -30,10 +30,6 @@ class SideBar extends React.Component {
       bandPrice,
       address,
     } = this.props
-    const balanceToggled =
-      this.state.isSymbol || !balance
-        ? balance
-        : balance.communityToBand(communityPrice).bandToUSD(bandPrice)
 
     return (
       <SidebarRender
@@ -41,7 +37,11 @@ class SideBar extends React.Component {
         name={name}
         address={address}
         src={src}
-        balance={balanceToggled}
+        balance={balance}
+        usdBalance={
+          balance &&
+          balance.communityToBand(communityPrice).bandToUSD(bandPrice)
+        }
         symbol={symbol}
         isSymbol={this.state.isSymbol}
         toggleBalance={this.toggleBalance.bind(this)}

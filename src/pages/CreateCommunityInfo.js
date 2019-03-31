@@ -37,7 +37,7 @@ export default ({
   <Flex flexDirection="column" justifyContent="center" alignItems="center">
     <Flex width="535px" mt="40px" flexDirection="column" alignItems="center">
       <Text fontSize="20px" fontWeight={500} color={colors.purple.dark}>
-        Create Community
+        Basic Information
       </Text>
       <Text
         fontSize="16px"
@@ -47,8 +47,9 @@ export default ({
         lineHeight={1.69}
         letterSpacing={0.6}
       >
-        Spicy jalapeno bacon ipsum dolor amet sausage pig jerky tail tongue
-        frankfurter andouille.{' '}
+        Set up basic community information. These settings will be availble on
+        the community's detail page. Information can be changed in the future
+        through Governance mechanism.{' '}
         <A style={{ textDecoration: 'underline' }}>Learn more</A>
       </Text>
     </Flex>

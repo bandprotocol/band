@@ -156,7 +156,7 @@ class CreateCommunity extends React.Component {
       this.state.description,
       this.state.url,
       this.state.organization,
-      '0xc36D339F7C1Fb31AFcFa117C9F67d9b57568A970', // this.state.voting,
+      '0x6E9ea65099fC2948884Fb768B09E6559Af84Afe4', // this.state.voting,
       keys,
       values,
       this.state.curve.collateral,
