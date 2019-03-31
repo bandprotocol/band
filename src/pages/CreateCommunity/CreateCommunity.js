@@ -148,7 +148,6 @@ class CreateCommunity extends React.Component {
       values.push(kvs[k].toString())
     }
 
-    alert('Waiting for deployment...')
     await bandClient.deployCommunity(
       this.state.name,
       this.state.symbol,

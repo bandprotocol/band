@@ -2,6 +2,7 @@ import React from 'react'
 import { Flex, Text, Button } from 'ui/common'
 import colors from 'ui/colors'
 import styled from 'styled-components'
+import BaseButton from 'components/BaseButton'
 
 const Footer = styled.div`
   position: fixed;
@@ -15,7 +16,7 @@ const Footer = styled.div`
   z-index: 10;
 `
 
-const FooterButton = styled(Button).attrs({
+const FooterButtonRender = styled(Button).attrs({
   width: '180px',
   variant: 'grey',
 })`
@@ -24,6 +25,10 @@ const FooterButton = styled(Button).attrs({
 
   ${p => (p.disabled ? 'opacity: 0.2;' : 'opacity: 1;')}
 `
+
+class FooterButton extends BaseButton {
+  static Component = FooterButtonRender
+}
 
 export default ({ pageState, setPageState, handleSubmit }) => (
   <Footer>
