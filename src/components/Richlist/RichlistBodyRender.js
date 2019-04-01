@@ -2,28 +2,18 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { colors } from 'ui'
-import {
-  Flex,
-  Text,
-  BackgroundCard,
-  H1,
-  Button,
-  Image,
-  Box,
-  H3,
-  H4,
-  AbsoluteLink,
-  Link,
-  Card,
-  Bold,
-} from 'ui/common'
+import { Flex, Text } from 'ui/common'
 
-const HistoryRow = ({ rank, address, balance, txLink }) => (
-  <Flex flexDirection="row" py={4} style={{ minWidth: 0, overflow: 'hidden' }}>
+const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
+  <Flex
+    flexDirection="row"
+    style={{ minWidth: 0, overflow: 'hidden', height: '60px' }}
+    bg={index % 2 === 0 ? 'white' : '#f9fbff'}
+    alignItems="center"
+  >
     <Flex
-      flex={1}
-      pl="30px"
-      pr="10px"
+      flex={2}
+      ml="30px"
       style={{
         minWidth: 0,
       }}
@@ -34,28 +24,7 @@ const HistoryRow = ({ rank, address, balance, txLink }) => (
       </Text>
     </Flex>
     <Flex
-      flex={2}
-      pr="10px"
-      style={{
-        minWidth: 0,
-      }}
-      letterSpacing="0.5px"
-    >
-      <Text
-        color={colors.text}
-        fontSize={0}
-        style={{
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-        }}
-      >
-        {balance}
-      </Text>
-    </Flex>
-    <Flex
-      flex={4}
-      pr="10px"
+      flex={5}
       style={{
         minWidth: 0,
       }}
@@ -73,31 +42,71 @@ const HistoryRow = ({ rank, address, balance, txLink }) => (
         {address}
       </Text>
     </Flex>
-    <Flex flex={1}>
-      <AbsoluteLink
-        href={txLink}
-        style={{ marginLeft: 10, fontSize: '0.9em' }}
-        dark
+    <Flex
+      flex={3}
+      style={{
+        minWidth: 0,
+      }}
+      justifyContent="flex-end"
+      letterSpacing="0.5px"
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
       >
-        <i className="fas fa-external-link-alt" />
-      </AbsoluteLink>
+        {balance}
+      </Text>
     </Flex>
+    <Flex
+      flex={2}
+      mr="30px"
+      style={{
+        minWidth: 0,
+      }}
+      justifyContent="flex-end"
+      letterSpacing="0.5px"
+    >
+      <Text
+        color={colors.text}
+        fontSize={0}
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
+      >
+        {percentage}
+      </Text>
+    </Flex>
+    <Flex flex={1} />
   </Flex>
 )
 
 export default ({ items }) => {
   return (
     <React.Fragment>
-      {items.map(({ rank, tokenAddress, address, balance }) => (
-        <HistoryRow
-          rank={rank}
-          address={address}
-          balance={balance.pretty()}
-          key={rank}
-          // TODO: Change hardcode link depend to networkID
-          txLink={`https://rinkeby.etherscan.io/token/${tokenAddress}?a=${address}`}
-        />
-      ))}
+      {items.map((item, i) => {
+        if (!item) {
+          return <Flex width={1} key={i} style={{ height: '60px' }} />
+        }
+        const { rank, tokenAddress, address, balance, percentage } = item
+        return (
+          <HistoryRow
+            index={i}
+            rank={rank}
+            address={address}
+            balance={balance.pretty()}
+            key={i}
+            percentage={percentage + '%'}
+            txLink={`https://rinkeby.etherscan.io/token/${tokenAddress}?a=${address}`}
+          />
+        )
+      })}
     </React.Fragment>
   )
 }

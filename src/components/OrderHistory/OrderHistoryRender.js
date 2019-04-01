@@ -15,7 +15,7 @@ const HistoryHeader = () => (
     style={{ minHeight: '60px' }}
     alignItems="center"
   >
-    <Flex pl="30px" flex={1}>
+    <Flex ml="30px" flex={1}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Time
       </Text>
@@ -25,12 +25,12 @@ const HistoryHeader = () => (
         Price(BAND)
       </Text>
     </Flex>
-    <Flex flex={1}>
+    <Flex flex={1} justifyContent="flex-end">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Amount
       </Text>
     </Flex>
-    <Flex flex={1}>
+    <Flex flex={1} justifyContent="flex-end">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Type
       </Text>
@@ -40,9 +40,8 @@ const HistoryHeader = () => (
 )
 
 export default ({
-  options,
+  numOrders,
   selectedOption,
-  onChange,
   communityAddress,
   currentPage,
   onChangePage,
@@ -57,19 +56,33 @@ export default ({
       pb={3}
     >
       <HistoryHeader />
-      <HistoryBody
-        communityAddress={communityAddress}
-        isAll={selectedOption.value === 'all'}
-        currentPage={currentPage}
-        pageSize={pageSize}
-      />
-      <OrderPagination
-        communityAddress={communityAddress}
-        isAll={selectedOption.value === 'all'}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onChangePage={onChangePage}
-      />
+      {numOrders > 0 ? (
+        <React.Fragment>
+          <HistoryBody
+            communityAddress={communityAddress}
+            isAll={selectedOption.value === 'all'}
+            currentPage={currentPage}
+            pageSize={pageSize}
+          />
+          <OrderPagination
+            communityAddress={communityAddress}
+            isAll={selectedOption.value === 'all'}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onChangePage={onChangePage}
+          />
+        </React.Fragment>
+      ) : (
+        <Flex
+          width={1}
+          justifyContent="center"
+          alignItems="center"
+          fontWeight={500}
+          style={{ height: '600px' }}
+        >
+          No Data
+        </Flex>
+      )}
     </Flex>
   )
 }

@@ -10,14 +10,18 @@ import { orderHistorySelector } from 'selectors/order'
 const mapStateToProps = (
   state,
   { communityAddress, isAll, currentPage, pageSize },
-) => ({
-  items: orderHistorySelector(state, {
+) => {
+  const items = orderHistorySelector(state, {
     address: communityAddress,
     type: isAll,
     page: currentPage,
     pageSize,
-  }).toJS(),
-})
+  }).toJS()
+  while (items.length < pageSize) {
+    items.push(null)
+  }
+  return { items }
+}
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   loadOrderHistory: isAll =>

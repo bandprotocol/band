@@ -13,7 +13,7 @@ const TransferHistoryHeader = () => (
     style={{ minHeight: '60px' }}
     alignItems="center"
   >
-    <Flex pl="30px" flex={4}>
+    <Flex ml="30px" flex={4}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         From
       </Text>
@@ -23,21 +23,27 @@ const TransferHistoryHeader = () => (
         To
       </Text>
     </Flex>
-    <Flex flex={3}>
+    <Flex flex={3} justifyContent="flex-end">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Quantity
       </Text>
     </Flex>
-    <Flex flex={3}>
+    <Flex flex={3} justifyContent="flex-end">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Timestamp
       </Text>
     </Flex>
-    <Flex flex={1} />
+    <Flex flex={2} />
   </Flex>
 )
 
-export default ({ communityAddress, currentPage, onChangePage, pageSize }) => {
+export default ({
+  numTransfers,
+  communityAddress,
+  currentPage,
+  onChangePage,
+  pageSize,
+}) => {
   return (
     <Flex
       style={{ borderRadius: '10px' }}
@@ -47,17 +53,31 @@ export default ({ communityAddress, currentPage, onChangePage, pageSize }) => {
       pb={3}
     >
       <TransferHistoryHeader />
-      <TransferBody
-        communityAddress={communityAddress}
-        currentPage={currentPage}
-        pageSize={pageSize}
-      />
-      <TransferPagination
-        communityAddress={communityAddress}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onChangePage={onChangePage}
-      />
+      {numTransfers > 0 ? (
+        <React.Fragment>
+          <TransferBody
+            communityAddress={communityAddress}
+            currentPage={currentPage}
+            pageSize={pageSize}
+          />
+          <TransferPagination
+            communityAddress={communityAddress}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onChangePage={onChangePage}
+          />
+        </React.Fragment>
+      ) : (
+        <Flex
+          width={1}
+          justifyContent="center"
+          alignItems="center"
+          fontWeight={500}
+          style={{ height: '600px' }}
+        >
+          No Data
+        </Flex>
+      )}
     </Flex>
   )
 }

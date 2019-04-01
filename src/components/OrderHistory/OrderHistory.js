@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom'
 
 import { loadOrderHistory } from 'actions'
 
+import { noOrderSelector } from 'selectors/order'
+
 class OrderHistory extends React.Component {
   state = {
     selectedOption: { value: 'all', label: 'All Orders' },
@@ -42,9 +44,10 @@ class OrderHistory extends React.Component {
       { value: 'mine', label: 'My Orders' },
     ]
     const { selectedOption, currentPage } = this.state
-    const { communityAddress, pageSize } = this.props
+    const { communityAddress, pageSize, numOrders } = this.props
     return (
       <OrderHistoryRender
+        numOrders={numOrders}
         options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
@@ -57,13 +60,22 @@ class OrderHistory extends React.Component {
   }
 }
 
+const mapStateToProps = (state, { communityAddress }) => {
+  return {
+    numOrders: noOrderSelector(state, {
+      address: communityAddress,
+      isAll: true,
+    }),
+  }
+}
+
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   loadOrderHistory: isAll =>
     dispatch(loadOrderHistory(communityAddress, isAll)),
 })
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
   )(OrderHistory),
 )

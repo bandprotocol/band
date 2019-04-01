@@ -21,13 +21,22 @@ const GrayButton = styled(Button)`
   width: 120px;
   height: 40px;
   border-radius: 4px;
-  box-shadow: 0 3px 5px 0 #b4bbda;
+  box-shadow: 0 3px 5px 0 #969cb7;
   background-color: #7c84a6;
   font-family: Avenir;
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.2px;
   text-align: center;
+  cursor: pointer;
+  transition: all ease 0.3s;
+  &:hover {
+    box-shadow: 0 5px 7px 0 #b4bbda;
+  }
+  :active {
+    box-shadow: 0 3px 5px 0 #969cb7;
+    top: 3px;
+  }
 `
 
 export default props => {
@@ -44,7 +53,7 @@ export default props => {
     totalSupply,
     collateralEquation,
   } = props
-  console.log(totalSupply, collateralEquation)
+  // console.log(totalSupply, collateralEquation)
 
   const dataset = []
   if (collateralEquation) {

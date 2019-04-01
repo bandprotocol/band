@@ -19,7 +19,7 @@ export default class DetailHistory extends React.Component {
         width={1}
       >
         <Flex width={1} flexDirection="row" pt="30px" px="30px">
-          <Flex width={[1 / 8]}>
+          <Flex width={[1 / 7]}>
             <Flex
               onClick={() => this.setState({ selectedTab: 0 })}
               style={{
@@ -38,7 +38,7 @@ export default class DetailHistory extends React.Component {
               </Text>
             </Flex>
           </Flex>
-          <Flex width={[1 / 8]}>
+          <Flex width={[1 / 7]}>
             <Flex
               onClick={() => this.setState({ selectedTab: 1 })}
               style={{
@@ -57,7 +57,7 @@ export default class DetailHistory extends React.Component {
               </Text>
             </Flex>
           </Flex>
-          <Flex width={[1 / 8]}>
+          <Flex width={[1 / 7]}>
             <Flex
               onClick={() => this.setState({ selectedTab: 2 })}
               style={{

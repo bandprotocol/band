@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom'
 
 import { loadTransferHistory } from 'actions'
 
+import { noTransferSelector } from 'selectors/transfer'
+
 class TransferHistory extends React.Component {
   state = {
     currentPage: 1,
@@ -25,9 +27,10 @@ class TransferHistory extends React.Component {
 
   render() {
     const { currentPage } = this.state
-    const { communityAddress, pageSize } = this.props
+    const { communityAddress, pageSize, numTransfers } = this.props
     return (
       <TransferHistoryRender
+        numTransfers={numTransfers}
         communityAddress={communityAddress}
         currentPage={currentPage}
         onChangePage={this.onChangePage.bind(this)}
@@ -37,12 +40,21 @@ class TransferHistory extends React.Component {
   }
 }
 
+const mapStateToProps = (state, { communityAddress }) => {
+  return {
+    numTransfers: noTransferSelector(state, {
+      address: communityAddress,
+    }),
+  }
+}
+
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   loadTransferHistory: () => dispatch(loadTransferHistory(communityAddress)),
 })
+
 export default withRouter(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
   )(TransferHistory),
 )

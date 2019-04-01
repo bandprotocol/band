@@ -13,44 +13,72 @@ const RichlistHeader = () => (
     style={{ minHeight: '60px' }}
     alignItems="center"
   >
-    <Flex pl="30px" flex={1}>
+    <Flex ml="30px" flex={2}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Rank
       </Text>
     </Flex>
-    <Flex flex={2}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Balance
-      </Text>
-    </Flex>
-    <Flex flex={4}>
+    <Flex flex={5}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Address
+      </Text>
+    </Flex>
+    <Flex flex={3} justifyContent="flex-end">
+      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+        Quantity
+      </Text>
+    </Flex>
+    <Flex flex={2} justifyContent="flex-end" mr="30px">
+      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+        Percentage
       </Text>
     </Flex>
     <Flex flex={1} />
   </Flex>
 )
 
-export default ({ communityAddress, currentPage, onChangePage, pageSize }) => (
-  <Flex
-    style={{ borderRadius: '10px' }}
-    width={1}
-    bg="white"
-    flexDirection="column"
-    pb={3}
-  >
-    <RichlistHeader />
-    <RichlistBody
-      communityAddress={communityAddress}
-      currentPage={currentPage}
-      pageSize={pageSize}
-    />
-    <RichListPagination
-      communityAddress={communityAddress}
-      pageSize={pageSize}
-      currentPage={currentPage}
-      onChangePage={onChangePage}
-    />
-  </Flex>
-)
+export default props => {
+  const {
+    numberOfHolders,
+    communityAddress,
+    currentPage,
+    onChangePage,
+    pageSize,
+  } = props
+  return (
+    <Flex
+      style={{ borderRadius: '10px' }}
+      width={1}
+      bg="white"
+      flexDirection="column"
+      pb={3}
+    >
+      <RichlistHeader />
+      {numberOfHolders > 0 ? (
+        <React.Fragment>
+          <RichlistBody
+            communityAddress={communityAddress}
+            currentPage={currentPage}
+            pageSize={pageSize}
+          />
+          <RichListPagination
+            communityAddress={communityAddress}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onChangePage={onChangePage}
+          />
+        </React.Fragment>
+      ) : (
+        <Flex
+          width={1}
+          justifyContent="center"
+          alignItems="center"
+          fontWeight={500}
+          style={{ height: '600px' }}
+        >
+          No Data
+        </Flex>
+      )}
+    </Flex>
+  )
+}

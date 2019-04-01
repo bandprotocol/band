@@ -10,22 +10,15 @@ const mapStateToProps = (
   state,
   { communityAddress, currentPage, pageSize },
 ) => {
-  return {
-    items: transferHistorySelector(state, {
-      address: communityAddress,
-      page: currentPage,
-      pageSize,
-    }),
+  const items = transferHistorySelector(state, {
+    address: communityAddress,
+    page: currentPage,
+    pageSize,
+  })
+  while (items.length < pageSize) {
+    items.push(null)
   }
+  return { items }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  //   loadOrderHistory: isAll =>
-  //     dispatch(loadTransferHistory(communityAddress, isAll)),
-})
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(TransferBodyRender),
-)
+export default withRouter(connect(mapStateToProps)(TransferBodyRender))

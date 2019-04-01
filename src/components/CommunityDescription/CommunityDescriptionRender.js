@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, AbsoluteLink } from 'ui/common'
+import { Flex, Text, AbsoluteLink, Image } from 'ui/common'
+import OutImg from 'images/out.svg'
 
 const Description = styled(Text)`
   overflow: hidden;
@@ -40,6 +41,7 @@ export default ({
           style={{ borderBottom: '1px solid #f2f4f9' }}
           py="20px"
           pl="10px"
+          alignItems="center"
         >
           <Flex
             mr="10px"
@@ -63,6 +65,7 @@ export default ({
           style={{ borderBottom: '1px solid #f2f4f9' }}
           py="20px"
           pl="10px"
+          alignItems="center"
         >
           <Flex
             mr="10px"
@@ -81,7 +84,7 @@ export default ({
             {organization}
           </Text>
         </Flex>
-        <Flex flexDirection="row" py="20px" pl="10px">
+        <Flex flexDirection="row" py="20px" pl="10px" alignItems="center">
           <Flex
             mr="10px"
             style={{ minWidth: '90px' }}
@@ -110,6 +113,7 @@ export default ({
           style={{ borderBottom: '1px solid #f2f4f9' }}
           py="20px"
           pl="10px"
+          alignItems="center"
         >
           <Flex
             mr="10px"
@@ -135,7 +139,7 @@ export default ({
             </Text>
           </Flex>
           <AbsoluteLink href={link}>
-            <i className="fas fa-external-link-alt" />
+            <Image src={OutImg} width="14px" height="14px" />
           </AbsoluteLink>
         </Flex>
         <Flex
@@ -143,6 +147,7 @@ export default ({
           style={{ borderBottom: '1px solid #f2f4f9' }}
           py="20px"
           pl="10px"
+          alignItems="center"
         >
           <Flex
             mr="10px"
@@ -170,7 +175,7 @@ export default ({
           <AbsoluteLink
             href={`https://rinkeby.etherscan.io/address/${address}`}
           >
-            <i className="fas fa-external-link-alt" />
+            <Image src={OutImg} width="14px" height="14px" />
           </AbsoluteLink>
         </Flex>
         <Flex
@@ -178,6 +183,7 @@ export default ({
           style={{ borderBottom: '1px solid #f2f4f9' }}
           py="20px"
           pl="10px"
+          alignItems="center"
         >
           <Flex
             mr="10px"
@@ -188,24 +194,26 @@ export default ({
               Token:
             </Text>
           </Flex>
-          <Text
-            fontSize="13px"
-            lineHeight={1.64}
-            style={{
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-            }}
-          >
-            {tokenAddr}
-          </Text>
+          <Flex mr="10px" style={{ minWidth: 0 }}>
+            <Text
+              fontSize="13px"
+              lineHeight={1.64}
+              style={{
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+              }}
+            >
+              {tokenAddr}
+            </Text>
+          </Flex>
           <AbsoluteLink
             href={`https://rinkeby.etherscan.io/address/${tokenAddr}`}
           >
-            <i className="fas fa-external-link-alt" />
+            <Image src={OutImg} width="14px" height="14px" />
           </AbsoluteLink>
         </Flex>
-        <Flex flexDirection="row" py="20px" pl="10px">
+        <Flex flexDirection="row" py="20px" pl="10px" alignItems="center">
           <Flex
             mr="10px"
             style={{ minWidth: '90px' }}
