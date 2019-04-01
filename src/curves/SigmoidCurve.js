@@ -41,8 +41,8 @@ export default class SigmoidCurve extends BaseCurve {
 
   get collateralGraphConfig() {
     return {
-      stepSize: 5000,
-      suggestedMax: 50000,
+      stepSize: 200000,
+      suggestedMax: 2000000,
     }
   }
 
@@ -143,8 +143,10 @@ export default class SigmoidCurve extends BaseCurve {
       collateralDataSet.push({
         x: i,
         y:
-          (this.priceEnd / 2) *
-            Math.log(this.exp(this.convertSlope * i + this.b) + 1) +
+          (this.priceEnd / this.convertSlope) *
+            Math.log(
+              this.exp(this.convertSlope * i) + this.exp(Math.abs(this.b)),
+            ) +
           this.integralConstant,
       })
     }
