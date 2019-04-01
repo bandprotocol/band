@@ -34,6 +34,11 @@ function* handleLoadProposals({ address }) {
     rawProposals.map(function*(proposal) {
       const vote = votes.filter(v => v.onChainId === proposal.proposalId)
       const data = JSON.parse(yield IPFS.get(proposal.reasonHash))
+      if (proposal.changes.length === 0) {
+        return {
+          deleted: true,
+        }
+      }
       const [prefix, name] = proposal.changes[0].key.split(':')
       if (!name)
         return {

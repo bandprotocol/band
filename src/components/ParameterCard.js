@@ -30,7 +30,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
           {detail.description}
         </Text>
         <Flex flex={1} />
-        <Flex alignItems="center" py={1} mt={2}>
+        <Flex alignItems="flex-end" py={1} mt={2}>
           <Text fontSize={0} color={colors.purple.dark} mr={3}>
             Value:
           </Text>
