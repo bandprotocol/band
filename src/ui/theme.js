@@ -54,6 +54,7 @@ export default {
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: 'white',
+      boxShadow: '0 3px 5px 0 rgba(180, 187, 218, 0.5) !important',
       backgroundColor: colors.text.grey,
       border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
