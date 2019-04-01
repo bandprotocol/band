@@ -507,7 +507,15 @@ export default ({
             <Flex flexDirection="row" mt="10px">
               <Flex flex={2}>
                 <Text>Price slippage</Text>
-                <ToolTip size="12px" fontSize="12px" bg={colors.text.grey}>
+                <ToolTip
+                  bg={colors.text.grey}
+                  width="410px"
+                  textBg="#b2b6be"
+                  textColor={colors.text.normal}
+                  bottom={20}
+                  left={20}
+                  tip={{ left: 21 }}
+                >
                   Price slippage refers to the difference between the expected
                   price before a transaction is executed and the actual price at
                   which it is executed.

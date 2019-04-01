@@ -13,22 +13,22 @@ const TransferHistoryHeader = () => (
     style={{ minHeight: '60px' }}
     alignItems="center"
   >
-    <Flex ml="30px" flex={4}>
+    <Flex ml="30px" flex={5}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         From
       </Text>
     </Flex>
-    <Flex flex={4}>
+    <Flex ml="15px" flex={5}>
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         To
       </Text>
     </Flex>
-    <Flex flex={3} justifyContent="flex-end">
+    <Flex flex={2} justifyContent="flex-end">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Quantity
       </Text>
     </Flex>
-    <Flex flex={3} justifyContent="flex-end">
+    <Flex flex={4} justifyContent="flex-end">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Timestamp
       </Text>
@@ -50,7 +50,6 @@ export default ({
       width={1}
       bg="white"
       flexDirection="column"
-      pb={3}
     >
       <TransferHistoryHeader />
       {numTransfers > 0 ? (

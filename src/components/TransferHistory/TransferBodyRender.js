@@ -13,7 +13,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
     alignItems="center"
   >
     <Flex
-      flex={4}
+      flex={5}
       ml="30px"
       style={{
         minWidth: 0,
@@ -33,7 +33,8 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
       </Text>
     </Flex>
     <Flex
-      flex={4}
+      flex={5}
+      ml="15px"
       style={{
         minWidth: 0,
       }}
@@ -52,7 +53,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
       </Text>
     </Flex>
     <Flex
-      flex={3}
+      flex={2}
       style={{
         minWidth: 0,
       }}
@@ -63,7 +64,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
       </Text>
     </Flex>
     <Flex
-      flex={3}
+      flex={4}
       style={{
         minWidth: 0,
       }}

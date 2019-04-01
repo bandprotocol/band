@@ -53,7 +53,6 @@ export default ({
       width={1}
       bg="white"
       flexDirection="column"
-      pb={3}
     >
       <HistoryHeader />
       {numOrders > 0 ? (

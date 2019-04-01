@@ -51,7 +51,6 @@ export default props => {
       width={1}
       bg="white"
       flexDirection="column"
-      pb={3}
     >
       <RichlistHeader />
       {numberOfHolders > 0 ? (

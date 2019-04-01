@@ -134,7 +134,12 @@ const NumberPage = ({ currentPage, numberOfPages, onChangePage }) => {
 }
 
 export default ({ currentPage, numberOfPages, onChangePage }) => (
-  <Flex flexDirectio="row" alignItem="center" justifyContent="center" mr="0px">
+  <Flex
+    flexDirection="row"
+    alignItems="center"
+    justifyContent="center"
+    style={{ height: '60px', borderRadius: '10px' }}
+  >
     <LeftRight
       disabled={currentPage === 1}
       onClick={() => onChangePage(1)}
