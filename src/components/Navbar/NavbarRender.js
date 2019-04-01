@@ -165,9 +165,6 @@ export default ({
           <Flex ml="auto">
             <Link dark="true" to="/create-community" px={1}>
               <Flex px={3} alignItems="center">
-                {/* <Text color="#42c47f" px={2} fontSize={3}>
-                  <i className="fas fa-plus-square" />
-                </Text> */}
                 <Image src={AddCommunity} width={18} height={18} mx="8px" />
                 <Text color="#4a4a4a" fontWeight="500" fontSize="16px">
                   Create Community
