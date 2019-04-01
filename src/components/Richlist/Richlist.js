@@ -10,7 +10,6 @@ import { loadHolders } from 'actions'
 
 class Richlist extends React.Component {
   state = {
-    selectedOption: { value: 'all', label: 'All Orders' },
     currentPage: 1,
   }
 
@@ -18,10 +17,8 @@ class Richlist extends React.Component {
     this.props.loadHolders()
   }
 
-  onChange(selectedOption) {
-    if (selectedOption.value !== this.state.selectedOption.value)
-      this.setState({ selectedOption, currentPage: 1 })
-    else this.setState({ selectedOption })
+  componentDidUpdate() {
+    console.log(this.state)
   }
 
   onChangePage(selectedPage) {
@@ -31,17 +28,10 @@ class Richlist extends React.Component {
   }
 
   render() {
-    const options = [
-      { value: 'all', label: 'All Orders' },
-      { value: 'mine', label: 'My Orders' },
-    ]
-    const { selectedOption, currentPage } = this.state
+    const { currentPage } = this.state
     const { communityAddress, pageSize } = this.props
     return (
       <RichlistRender
-        options={options}
-        selectedOption={selectedOption}
-        onChange={this.onChange.bind(this)}
         communityAddress={communityAddress}
         currentPage={currentPage}
         onChangePage={this.onChangePage.bind(this)}

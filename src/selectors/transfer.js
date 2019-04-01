@@ -17,3 +17,11 @@ export const transferHistorySelector = createSelector(
       .slice((page - 1) * pageSize, page * pageSize)
   },
 )
+
+export const noTransferSelector = createSelector(
+  [transferSelector, addressSelector],
+  (transfers, address) => {
+    if (!transfers.get(address)) return 0
+    return transfers.get(address).length
+  },
+)

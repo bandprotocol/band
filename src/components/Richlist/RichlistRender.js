@@ -1,10 +1,8 @@
 import React from 'react'
 
-import { OrderPagination } from 'components/Pagination'
+import RichListPagination from 'components/Pagination/RichListPagination'
 
-import { Flex, Text, Box } from 'ui/common'
-
-import { colors } from 'ui'
+import { Flex, Text } from 'ui/common'
 import RichlistBody from './RichlistBody'
 
 const RichlistHeader = () => (
@@ -34,15 +32,7 @@ const RichlistHeader = () => (
   </Flex>
 )
 
-export default ({
-  options,
-  selectedOption,
-  onChange,
-  communityAddress,
-  currentPage,
-  onChangePage,
-  pageSize,
-}) => (
+export default ({ communityAddress, currentPage, onChangePage, pageSize }) => (
   <Flex
     style={{ borderRadius: '10px' }}
     width={1}
@@ -53,13 +43,11 @@ export default ({
     <RichlistHeader />
     <RichlistBody
       communityAddress={communityAddress}
-      isAll={selectedOption.value === 'all'}
       currentPage={currentPage}
       pageSize={pageSize}
     />
-    <OrderPagination
+    <RichListPagination
       communityAddress={communityAddress}
-      //isAll={selectedOption.value === 'all'}
       pageSize={pageSize}
       currentPage={currentPage}
       onChangePage={onChangePage}

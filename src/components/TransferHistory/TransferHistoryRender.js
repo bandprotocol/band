@@ -1,10 +1,9 @@
 import React from 'react'
 
-import { OrderPagination } from 'components/Pagination'
+import TransferPagination from 'components/Pagination/TransferPagination'
 import TransferBody from './TransferBody'
 
-import { Flex, Text, Box } from 'ui/common'
-import { colors } from 'ui'
+import { Flex, Text } from 'ui/common'
 
 const TransferHistoryHeader = () => (
   <Flex
@@ -38,13 +37,7 @@ const TransferHistoryHeader = () => (
   </Flex>
 )
 
-export default ({
-  options,
-  communityAddress,
-  currentPage,
-  onChangePage,
-  pageSize,
-}) => {
+export default ({ communityAddress, currentPage, onChangePage, pageSize }) => {
   return (
     <Flex
       style={{ borderRadius: '10px' }}
@@ -59,9 +52,8 @@ export default ({
         currentPage={currentPage}
         pageSize={pageSize}
       />
-      <OrderPagination
+      <TransferPagination
         communityAddress={communityAddress}
-        //isAll={selectedOption.value === 'all'}
         pageSize={pageSize}
         currentPage={currentPage}
         onChangePage={onChangePage}
