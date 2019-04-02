@@ -219,57 +219,5 @@ contract('BandFactory', ([owner, alice, bob]) => {
         .toString()
         .should.eq('1000000000000000000');
     });
-    it('should revert if use new voting address', async () => {
-      const newVote = await CommitRevealVoting.new({ from: alice });
-      await shouldFail.reverting(
-        this.contract.createNewCommunity(
-          'CoinHatcher2',
-          'XC2',
-          18,
-          newVote.address,
-          [
-            web3.utils.fromAscii('core:reward_period'),
-            web3.utils.fromAscii('core:reward_edit_period'),
-            web3.utils.fromAscii('params:commit_time'),
-            web3.utils.fromAscii('params:reveal_time'),
-            web3.utils.fromAscii('params:support_required_pct'),
-            web3.utils.fromAscii('params:min_participation_pct'),
-          ],
-          ['120', '120', '60', '60', '70', '10'],
-          [8, 1, 0, 2],
-          { from: alice },
-        ),
-      );
-    });
-    it('should create new community if add new voting address to factory', async () => {
-      const newVote = await CommitRevealVoting.new({ from: alice });
-      await this.contract.addVotingContract(newVote.address);
-
-      await this.contract.createNewCommunity(
-        'CoinHatcher2',
-        'XC2',
-        18,
-        newVote.address,
-        [
-          web3.utils.fromAscii('core:reward_period'),
-          web3.utils.fromAscii('core:reward_edit_period'),
-          web3.utils.fromAscii('params:commit_time'),
-          web3.utils.fromAscii('params:reveal_time'),
-          web3.utils.fromAscii('params:support_required_pct'),
-          web3.utils.fromAscii('params:min_participation_pct'),
-        ],
-        ['120', '120', '60', '60', '70', '10'],
-        [8, 1, 0, 2],
-        { from: alice },
-      );
-      const addressCore = await this.contract.cores(8);
-      const currentCore = await CommunityCore.at(addressCore);
-      const currentToken = await CommunityToken.at(
-        await currentCore.commToken(),
-      );
-      (await currentToken.name()).should.eq('CoinHatcher2');
-      (await currentToken.symbol()).should.eq('XC2');
-      (await currentToken.decimals()).toString().should.eq('18');
-    });
   });
 });

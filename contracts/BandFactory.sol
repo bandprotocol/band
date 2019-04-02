@@ -30,14 +30,6 @@ contract BandFactory is Ownable, ExecutionDelegator {
     address curve
   );
 
-  event NewVotingContractRegistered(
-    address indexed voting
-  );
-
-  event VotingContractRemoved(
-    address indexed voting
-  );
-
   BandToken public band;
   CommunityCore[] public cores;
 
@@ -59,9 +51,7 @@ contract BandFactory is Ownable, ExecutionDelegator {
     tokenFactory = _tokenFactory;
     parametersFactory = _parametersFactory;
     coreFactory = _coreFactory;
-
     band.setExecDelegator(address(this));
-
     emit BandCreated(address(band), msg.sender, _totalSupply);
   }
 
@@ -77,46 +67,19 @@ contract BandFactory is Ownable, ExecutionDelegator {
     external
     returns(bool)
   {
-    require(verifiedVotingContracts[address(_voting)]);
-
     CommunityToken token = tokenFactory.create(_name, _symbol, _decimals);
     Parameters params = parametersFactory.create(token, _voting, _keys, _values);
     CommunityCore core = coreFactory.create(band, token, params, _expressions);
-
     token.setExecDelegator(address(this));
     params.setExecDelegator(address(this));
-
     token.transferOwnership(address(core.bondingCurve()));
     cores.push(core);
-
     emit CommunityCreated(
       cores.length - 1,
       address(token),
       address(params),
       address(core),
       address(core.bondingCurve()));
-    return true;
-  }
-
-  function addVotingContract(VotingInterface _voting)
-    public
-    onlyOwner
-    returns(bool)
-  {
-    require(!verifiedVotingContracts[address(_voting)]);
-    verifiedVotingContracts[address(_voting)] = true;
-    emit NewVotingContractRegistered(address(_voting));
-    return true;
-  }
-
-  function removeVotingContract(VotingInterface _voting)
-    public
-    onlyOwner
-    returns(bool)
-  {
-    require(verifiedVotingContracts[address(_voting)]);
-    verifiedVotingContracts[address(_voting)] = false;
-    emit VotingContractRemoved(address(_voting));
     return true;
   }
 }
