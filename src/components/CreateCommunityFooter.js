@@ -1,8 +1,10 @@
 import React from 'react'
-import { Flex, Text, Button } from 'ui/common'
+import { Flex, Text, Button, Image } from 'ui/common'
 import colors from 'ui/colors'
 import styled from 'styled-components'
 import BaseButton from 'components/BaseButton'
+import BackIconSrc from 'images/back.svg'
+import ForwardIconSrc from 'images/forward.svg'
 
 const Footer = styled.div`
   position: fixed;
@@ -12,7 +14,7 @@ const Footer = styled.div`
   background-color: white;
   text-align: center;
   height: 100px;
-  box-shadow: 0px -5px 35px 1px rgba(225, 230, 250, 1);
+  box-shadow: 0 -2px 5px 0 rgba(201, 207, 222, 0.12);
   z-index: 10;
 `
 
@@ -43,9 +45,7 @@ export default ({ pageState, setPageState, handleSubmit }) => (
         onClick={() => setPageState(pageState - 1)}
       >
         <Flex flexDirection="row" alignItems="center" justifyContent="center">
-          <Text px={2} color={colors.white} fontSize={2}>
-            <i className="fas fa-angle-left" />
-          </Text>
+          <Image src={BackIconSrc} mx={3} />
           <Text color={colors.white} fontSize={0}>
             Previous
           </Text>
@@ -65,9 +65,7 @@ export default ({ pageState, setPageState, handleSubmit }) => (
             <Text color={colors.white} fontSize={0}>
               Next
             </Text>
-            <Text px={2} color={colors.white} fontSize={2}>
-              <i className="fas fa-angle-right" />
-            </Text>
+            <Image src={ForwardIconSrc} mx={3} />
           </Flex>
         </FooterButton>
       )}
