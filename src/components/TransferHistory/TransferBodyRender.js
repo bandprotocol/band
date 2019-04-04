@@ -1,9 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
-
 import { colors } from 'ui'
-import { Flex, Text, AbsoluteLink, Image, Bold } from 'ui/common'
-import OutImg from 'images/out.svg'
+import { Flex, Text } from 'ui/common'
+import TxHashLink from 'components/TxHashLink'
 
 const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
   <Flex
@@ -75,9 +73,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
       </Text>
     </Flex>
     <Flex flex={2} justifyContent="center">
-      <AbsoluteLink href={txLink}>
-        <Image src={OutImg} width="14px" height="14px" />
-      </AbsoluteLink>
+      <TxHashLink href={txLink} />
     </Flex>
   </Flex>
 )

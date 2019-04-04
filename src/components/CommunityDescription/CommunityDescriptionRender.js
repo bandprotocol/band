@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, AbsoluteLink, Image } from 'ui/common'
-import OutImg from 'images/out.svg'
+import { Flex, Text } from 'ui/common'
+import TxHashLink from 'components/TxHashLink'
 
 const Description = styled(Text)`
   overflow: hidden;
@@ -138,9 +138,7 @@ export default ({
               {link}
             </Text>
           </Flex>
-          <AbsoluteLink href={link}>
-            <Image src={OutImg} width="14px" height="14px" />
-          </AbsoluteLink>
+          <TxHashLink href={link} />
         </Flex>
         <Flex
           flexDirection="row"
@@ -172,11 +170,9 @@ export default ({
               {address}
             </Text>
           </Flex>
-          <AbsoluteLink
+          <TxHashLink
             href={`https://rinkeby.etherscan.io/address/${address}`}
-          >
-            <Image src={OutImg} width="14px" height="14px" />
-          </AbsoluteLink>
+          />
         </Flex>
         <Flex
           flexDirection="row"
@@ -207,11 +203,9 @@ export default ({
               {tokenAddr}
             </Text>
           </Flex>
-          <AbsoluteLink
+          <TxHashLink
             href={`https://rinkeby.etherscan.io/address/${tokenAddr}`}
-          >
-            <Image src={OutImg} width="14px" height="14px" />
-          </AbsoluteLink>
+          />
         </Flex>
         <Flex flexDirection="row" py="20px" pl="10px" alignItems="center">
           <Flex

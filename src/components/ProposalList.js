@@ -9,7 +9,13 @@ import MockProposal from 'images/mock-proposal.svg'
 
 import { proposalByStatusSelector } from 'selectors/proposal'
 
-const ProposalList = ({ description, proposals, isActive, title }) => (
+const ProposalList = ({
+  communityAddress,
+  description,
+  proposals,
+  isActive,
+  title,
+}) => (
   <Flex flexDirection="column" my={3} width="100%">
     <Flex flexDirection="row">
       <Flex justifyContent="center" alignItems="center">
@@ -42,7 +48,16 @@ const ProposalList = ({ description, proposals, isActive, title }) => (
           No proposal right now!
         </Text>
         <Text fontSize={1} py={1}>
-          Go to Governance Page to propose the new change.
+          Go to
+          <Link
+            dark="true"
+            to={`/community/${communityAddress}/governance`}
+            px="5px"
+            underline
+          >
+            Governance
+          </Link>
+          Page to propose the new change.
         </Text>
       </Flex>
     ) : (
@@ -64,6 +79,7 @@ const mapStateToProps = (state, { communityAddress, isActive }) => ({
     address: communityAddress,
     type: isActive,
   }),
+  communityAddress,
 })
 
 export default connect(mapStateToProps)(ProposalList)

@@ -1,16 +1,5 @@
 import React from 'react'
-import {
-  BackgroundCard,
-  Bold,
-  Image,
-  Flex,
-  Box,
-  Button,
-  AbsoluteLink,
-  Text,
-  Card,
-  Highlight,
-} from 'ui/common'
+import { BackgroundCard, Image, Flex, Button, Text, Card } from 'ui/common'
 import { colors } from 'ui'
 
 // Images

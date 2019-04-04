@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { colors } from 'ui'
-import { Flex, Text, Image, Box, AbsoluteLink, Card, Bold } from 'ui/common'
+import { Flex, Text, AbsoluteLink, Image } from 'ui/common'
+import OutImg from 'images/out.svg'
 
 const MiniCard = styled(Flex).attrs({
   flexDirection: 'row',
@@ -76,7 +77,7 @@ export default ({
               dark
               onClick={e => e.stopPropagation()}
             >
-              <i className="fas fa-external-link-alt" />
+              <Image src={OutImg} />
             </AbsoluteLink>
           )}
         </Text>

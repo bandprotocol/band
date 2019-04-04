@@ -1,9 +1,8 @@
 import React from 'react'
-
 import RichListPagination from 'components/Pagination/RichListPagination'
-
-import { Flex, Text } from 'ui/common'
+import { Flex, Text, Image, Link } from 'ui/common'
 import RichlistBody from './RichlistBody'
+import MockProposal from 'images/mock-proposal.svg'
 
 const RichlistHeader = () => (
   <Flex
@@ -75,7 +74,15 @@ export default props => {
           fontWeight={500}
           style={{ height: '600px' }}
         >
-          No Data
+          <Flex flexDirection="column" alignItems="center">
+            <Image src={MockProposal} />
+            <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
+              No rich list right now!
+            </Text>
+            <Text fontSize={1} py={1}>
+              Buy token to become the first holder.
+            </Text>
+          </Flex>
         </Flex>
       )}
     </Flex>

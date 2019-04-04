@@ -1,13 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Box, Button } from 'ui/common'
+import { Flex, Text, Box, Button, Image } from 'ui/common'
 import colors from 'ui/colors'
-
+import EditPropose from 'images/edit-proposal.svg'
 import Select from 'react-select'
-
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import ToolTip from 'components/ToolTip'
-
 import ParameterList from 'components/ParameterList'
 
 const PrefixSelect = styled(Select).attrs({
@@ -19,15 +17,13 @@ const PrefixSelect = styled(Select).attrs({
   background-color: #ffffff;
 `
 
-const ProposeButton = styled(Button)`
+const ProposeButton = styled(Button).attrs({
+  variant: 'grey',
+})`
+  padding: 0;
   width: 210px;
   height: 40px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 4px;
-  box-shadow: 0 3px 5px 0 rgba(180, 187, 218, 0.5);
-  background-color: #7c84a6;
 `
 
 const SubmitButton = styled(Button)`
@@ -112,9 +108,15 @@ export default ({
               </Flex>
             ) : (
               <ProposeButton onClick={logedin ? toggleEdit : signin}>
-                <Flex justifyContent="center" alignItems="flex-end">
-                  <i className="far fa-edit" style={{ fontSize: '18px' }} />
-                  <Text ml={2}>Propose Change</Text>
+                <Flex
+                  flexDirection="row"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  <Image src={EditPropose} />
+                  <Text ml="20px" fontSize="16px" font-weight="500">
+                    Propose Change
+                  </Text>
                 </Flex>
               </ProposeButton>
             )}

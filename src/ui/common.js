@@ -57,9 +57,11 @@ export const Image = styled(BaseImage)`
 export const Link = styled(RouterLink)`
   display: inline-flex;
   align-items: center;
-  text-decoration: none;
+  text-decoration: ${p => (p.underline ? 'underline' : 'none')} !important;
   color: ${p => (p.dark ? colors.purple.dark : colors.purple.normal)};
   transition: color 250ms;
+  padding-left: ${p => p.px};
+  padding-right: ${p => p.px};
 
   &:hover {
     color: ${p => (p.dark ? colors.purple.normal : colors.purple.dark)};
@@ -89,6 +91,7 @@ export const BackgroundCard = styled(Card)`
 
 export const HighlightNavLink = styled(NavLink)`
   color: white;
+  text-decoration: none;
   &.is-active {
     font-weight: 700;
     color: ${colors.purple.normal};
@@ -112,6 +115,15 @@ export const HighlightNavLink = styled(NavLink)`
 
   & .img-inactive {
     display: block;
+  }
+
+  &:hover {
+    :not(.is-active) {
+      & > * {
+        background: #3f3f4c;
+        color: #ffffff;
+      }
+    }
   }
 `
 
