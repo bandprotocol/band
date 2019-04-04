@@ -54,19 +54,19 @@ class CreateCommunity extends React.Component {
       bannerUrl,
     } = this.state
     // TODO: regex check empty string and spacebar
-    // if (
-    //   nextPageState === 1 &&
-    //   (name === '' ||
-    //     symbol === '' ||
-    //     description === '' ||
-    //     url === '' ||
-    //     organization === '' ||
-    //     logoUrl === null ||
-    //     bannerUrl === null)
-    // ) {
-    //   alert('Please fill all form and upload images.')
-    //   return
-    // }
+    if (
+      nextPageState >= 1 &&
+      (name === '' ||
+        symbol === '' ||
+        description === '' ||
+        url === '' ||
+        organization === '' ||
+        logoUrl === null ||
+        bannerUrl === null)
+    ) {
+      alert('Please fill all form and upload images.')
+      return
+    }
 
     if (nextPageState >= 0 && nextPageState <= 2) {
       this.setState({
@@ -176,7 +176,10 @@ class CreateCommunity extends React.Component {
           mb="110px"
         >
           {/* Header State */}
-          <CreateCommunityState pageState={pageState} />
+          <CreateCommunityState
+            pageState={pageState}
+            setPageState={this.setPageState.bind(this)}
+          />
           {/* Body */}
           {pageState === 0 ? (
             <CreateCommunityInfo

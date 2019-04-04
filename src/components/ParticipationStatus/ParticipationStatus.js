@@ -69,7 +69,7 @@ export default ({
               Otherwise the proposal will not be
               successful.`}
             </ToolTip>
-            <Text fontWeight="500" mr={2} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mx={2} color={colors.purple.blueberry}>
               :
             </Text>
             <ProgressBar
