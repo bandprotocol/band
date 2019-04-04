@@ -2,10 +2,10 @@ import React from 'react'
 import Dropzone from 'react-dropzone'
 import { Flex, Text, Image, Box } from 'ui/common'
 import { IPFS } from 'band.js'
-import ImageLogoSrc from 'images/picture.svg'
+import ImageLogoSrc from 'images/upload-logo.svg'
+import ImageBannerSrc from 'images/upload-banner.svg'
 
 const parentStyle = {
-  border: '2px dashed rgb(213, 219, 243)',
   borderRadius: '6px',
   backgroundColor: 'white',
 }
@@ -58,7 +58,7 @@ export default class ImageUpload extends React.Component {
 
   render() {
     const { src } = this.state
-    const { description, width = 120, height = 120 } = this.props
+    const { width = 120, height = 120 } = this.props
     if (src === null) {
       return (
         <Dropzone
@@ -81,10 +81,11 @@ export default class ImageUpload extends React.Component {
                   justifyContent="center"
                   style={{ width: '100%', height: '100%', cursor: 'pointer' }}
                 >
-                  <Image src={ImageLogoSrc} pt={3} pb={2} />
-                  <Text fontSize={0} color="#cbcfe3" textAlign="center">
-                    {description}
-                  </Text>
+                  {!this.props.banner ? (
+                    <Image src={ImageLogoSrc} pt={3} pb={2} />
+                  ) : (
+                    <Image src={ImageBannerSrc} pt={3} pb={2} />
+                  )}
                 </Flex>
               </div>
             )

@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Box } from 'ui/common'
+import { Flex, Text, Image } from 'ui/common'
 import ProposalDetail from 'components/ProposalDetail'
 import ParticipationStatus from 'components/ParticipationStatus'
 import YourVote from 'components/YourVote'
 import Oval from 'components/Oval'
 import colors from 'ui/colors'
+import CorrectCircle from 'images/correct-circle.svg'
+import WrongCircle from 'images/wrong-circle.svg'
 
 import BN from 'utils/bignumber'
 
@@ -73,6 +75,7 @@ export default ({
       style={{
         borderRadius: '8px',
         border: 'solid 1px #dee2f0',
+        overflow: 'hidden',
       }}
     >
       <Flex
@@ -83,8 +86,6 @@ export default ({
         px="40px"
         style={{
           height: '50px',
-          borderRadius: '6px',
-          border: 'solid 1px #dee2f0',
         }}
         onClick={() => toggleShow()}
       >
@@ -149,27 +150,18 @@ export default ({
               </React.Fragment>
             ) : (
               <Flex alignItems="center" mr="20px" justifyContent="flex-end">
-                <Flex mr="20px">
-                  <Oval
-                    t={
-                      status === 'YES' ? (
-                        <i class="fas fa-check" />
-                      ) : (
-                        <i class="fas fa-times" />
-                      )
-                    }
-                    color="white"
-                    bg={status === 'YES' ? '#42c47f' : '#ff6757'}
-                    size="16"
-                    fontSize={10}
-                  />
+                <Flex mr="13px">
+                  {status === 'YES' ? (
+                    <Image src={CorrectCircle} width="18px" height="18px" />
+                  ) : (
+                    <Image src={WrongCircle} width="18px" height="18px" />
+                  )}
                 </Flex>
                 <Text
                   color={status === 'YES' ? '#42c47f' : '#ff6757'}
                   fontSize={16}
                   fontWeight="500"
                   textAlign="right"
-                  width="72px"
                 >
                   {status === 'YES' ? 'Support' : 'Rejected'}
                 </Text>
@@ -202,6 +194,7 @@ export default ({
           bg={colors.background.paleGrey}
           py="22px"
           px={4}
+          style={{ borderRadius: '6px' }}
         >
           <Text fontWeight="500" color={colors.purple.blueberry} fontSize={1}>
             Reason for Change
@@ -238,6 +231,7 @@ export default ({
           flexDirection="column"
           bg={colors.background.paleGrey}
           px={4}
+          style={{ borderRadius: '6px' }}
         >
           {changes.map(change => {
             const { type, description } = getParameterDetail(change.name)

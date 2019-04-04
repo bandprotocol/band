@@ -73,7 +73,7 @@ export default ({
           flexDirection="column"
           width="320px"
           bg="#f4f6ff"
-          style={{ height: '480px' }}
+          style={{ height: '480px', borderRadius: '5px' }}
         >
           <CurveParameter
             type={type}
@@ -96,7 +96,7 @@ export default ({
           bg="#f4f6ff"
           alignItems="center"
           justifyContent="center"
-          style={{ height: '90px' }}
+          style={{ height: '90px', borderRadius: '5px' }}
         >
           <CurveEquation type={type} params={params} />
         </Flex>
@@ -123,7 +123,7 @@ export default ({
           alignItems="center"
           justifyContent="center"
           px={3}
-          style={{ height: '100%' }}
+          style={{ height: '100%', borderRadius: '5px' }}
         >
           {/* Graph Tab */}
           <Flex

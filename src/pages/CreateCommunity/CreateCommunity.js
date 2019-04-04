@@ -54,19 +54,19 @@ class CreateCommunity extends React.Component {
       bannerUrl,
     } = this.state
     // TODO: regex check empty string and spacebar
-    if (
-      nextPageState === 1 &&
-      (name === '' ||
-        symbol === '' ||
-        description === '' ||
-        url === '' ||
-        organization === '' ||
-        logoUrl === null ||
-        bannerUrl === null)
-    ) {
-      alert('Please fill all form and upload images.')
-      return
-    }
+    // if (
+    //   nextPageState === 1 &&
+    //   (name === '' ||
+    //     symbol === '' ||
+    //     description === '' ||
+    //     url === '' ||
+    //     organization === '' ||
+    //     logoUrl === null ||
+    //     bannerUrl === null)
+    // ) {
+    //   alert('Please fill all form and upload images.')
+    //   return
+    // }
 
     if (nextPageState >= 0 && nextPageState <= 2) {
       this.setState({
@@ -169,7 +169,12 @@ class CreateCommunity extends React.Component {
     const { pageState } = this.state
     return (
       <PageContainer>
-        <Flex flexDirection="column" bg="white" style={{ borderRadius: '6px' }}>
+        <Flex
+          flexDirection="column"
+          bg="white"
+          style={{ borderRadius: '6px' }}
+          mb="110px"
+        >
           {/* Header State */}
           <CreateCommunityState pageState={pageState} />
           {/* Body */}
@@ -191,13 +196,13 @@ class CreateCommunity extends React.Component {
               setKeyValue={this.setKeyValue.bind(this)}
             />
           )}
-          {/* Footer */}
-          <CreateCommunityFooter
-            pageState={this.state.pageState}
-            setPageState={this.setPageState.bind(this)}
-            handleSubmit={this.handleSubmit.bind(this)}
-          />
         </Flex>
+        {/* Footer */}
+        <CreateCommunityFooter
+          pageState={this.state.pageState}
+          setPageState={this.setPageState.bind(this)}
+          handleSubmit={this.handleSubmit.bind(this)}
+        />
       </PageContainer>
     )
   }

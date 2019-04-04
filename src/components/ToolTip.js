@@ -1,17 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Box, Text, Flex } from 'rebass'
-
-const HoverBox = styled(Flex).attrs({
-  mx: '5px',
-})`
-  font-family: Avenir-Medium;
-  border-radius: 50%;
-  width: ${props => props.size || '20px'};
-  height: ${props => props.size || '20px'};
-  justify-content: center;
-  align-items: center;
-`
+import { Box, Text, Flex, Image } from 'rebass'
+import IconTooltip from 'images/icon-reason.svg'
 
 const PopupBox = styled(Box)`
   z-index: 1000000000;
@@ -40,7 +30,7 @@ const PopupBox = styled(Box)`
   &:before {
     position: absolute;
     ${p => (p.top ? `bottom: -8px` : `top: -8px`)};
-    left: ${p => p.tipLeft + 5 || 5}px;
+    left: ${p => p.tipLeft || 5}px;
     content: '';
     width: 0;
     height: 0;
@@ -52,7 +42,7 @@ const PopupBox = styled(Box)`
   &:after {
     position: absolute;
     ${p => (p.top ? `bottom: -6.5px` : `top: -6.5px`)};
-    left: ${p => p.tipLeft + 5 || 5}px;
+    left: ${p => p.tipLeft || 5}px;
     content: '';
     width: 0;
     height: 0;
@@ -80,7 +70,6 @@ export default class Tooltip extends React.Component {
       textColor,
       children,
       size,
-      fontSize,
     } = this.props
     return (
       <Flex
@@ -91,9 +80,10 @@ export default class Tooltip extends React.Component {
           display: 'inline-block',
         }}
       >
-        <HoverBox
-          bg={bg}
-          size={size}
+        <Image
+          src={IconTooltip}
+          width={size || '20px'}
+          height={size || '20px'}
           onMouseLeave={() =>
             this.setState({
               show: false,
@@ -104,16 +94,7 @@ export default class Tooltip extends React.Component {
               show: true,
             })
           }
-        >
-          <Text
-            fontSize={fontSize || 14}
-            color="#fff"
-            weight="regular"
-            textAlign="center"
-          >
-            ?
-          </Text>
-        </HoverBox>
+        />
         <PopupBox
           show={this.state.show}
           width={width}

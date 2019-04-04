@@ -29,7 +29,7 @@ export default ({
               {`If less than ${minParticipation}% of all voting power participate,
               the proposal is canceled and no parameter changes will be applied.`}
             </ToolTip>
-            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mx={2} color={colors.purple.blueberry}>
               :
             </Text>
             <ProgressBar
@@ -69,7 +69,7 @@ export default ({
               Otherwise the proposal will not be
               successful.`}
             </ToolTip>
-            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mr={2} color={colors.purple.blueberry}>
               :
             </Text>
             <ProgressBar

@@ -1,9 +1,9 @@
 import React from 'react'
-import colors from 'ui/colors'
 import styled from 'styled-components'
 
 import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import MockProfileSrc from 'images/mock-profile.svg'
 
 // Images inactive
 import DetailSrc from 'images/detailInactive.svg'
@@ -24,10 +24,6 @@ const Left = styled.div`
   position: sticky;
   top: 80px;
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
-`
-
-const TextClickable = styled(Text)`
-  cursor: pointer;
 `
 
 const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
@@ -57,13 +53,17 @@ export default ({
   balance,
   usdBalance,
   symbol,
-  isSymbol,
-  toggleBalance,
   address,
 }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
-      <Image src={src} width="80px" height="80px" m={3} borderRadius="50%" />
+      <Image
+        src={src || MockProfileSrc}
+        width="80px"
+        height="80px"
+        m={3}
+        borderRadius="50%"
+      />
       <Flex mb="20px">
         <Text
           py={1}

@@ -44,7 +44,7 @@ export default ({ pageState, setPageState, handleSubmit }) => (
         onClick={() => setPageState(pageState - 1)}
       >
         <Flex flexDirection="row" alignItems="center" justifyContent="center">
-          <Image src={BackIconSrc} mx={3} />
+          <Image src={BackIconSrc} mr={3} />
           <Text color={colors.white} fontSize={0}>
             Previous
           </Text>
@@ -64,7 +64,7 @@ export default ({ pageState, setPageState, handleSubmit }) => (
             <Text color={colors.white} fontSize={0}>
               Next
             </Text>
-            <Image src={ForwardIconSrc} mx={3} />
+            <Image src={ForwardIconSrc} ml={3} />
           </Flex>
         </FooterButton>
       )}

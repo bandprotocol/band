@@ -49,7 +49,7 @@ export default ({ isResult, percent, minimum, ...others }) => {
           </Flex>
           <Flex
             width="200px"
-            bg={!isResult ? '#f5f5f5' : '#42c47f'}
+            bg={!isResult ? '#d6dbe5' : '#42c47f'}
             flexDirection="row"
             style={{
               height: '10px',

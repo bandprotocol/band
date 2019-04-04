@@ -10,6 +10,7 @@ const DarkLabel = styled(Label).attrs({
 })`
   font-size: 16px;
   font-weight: 500;
+  text-align: ${props => props.textAlign};
 `
 
 const RedHighlight = styled.span`
@@ -69,12 +70,11 @@ export default ({
             }
             setImgHash={imgHash => setKeyValue('info:logo', imgHash)}
             fontSize="12px"
-            description={'200x200 KB'}
           />
         </Flex>
       </Flex>
       <Flex flexDirection="column">
-        <DarkLabel color={colors}>
+        <DarkLabel color={colors} textAlign="center">
           Upload banner <RedHighlight>*</RedHighlight>
         </DarkLabel>
         <Flex mt="10px" style={{ position: 'relative' }}>
@@ -88,7 +88,7 @@ export default ({
             }
             setImgHash={imgHash => setKeyValue('info:banner', imgHash)}
             width={320}
-            description={'size: 320x160 pixels 200x200 KB'}
+            banner
           />
         </Flex>
       </Flex>
