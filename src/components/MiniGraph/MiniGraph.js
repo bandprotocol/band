@@ -1,6 +1,5 @@
 import React from 'react'
-import { colors } from 'ui'
-import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
+import { Flex, Text, Image } from 'ui/common'
 import graphYellow from 'images/graphYellow.svg'
 
 export default ({ title, value, unit, valueUsd, graphSrc }) => (

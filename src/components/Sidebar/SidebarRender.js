@@ -75,28 +75,26 @@ export default ({
           {name}
         </Text>
       </Flex>
-      <Flex
-        bg="#3f3f4c"
-        width={[1]}
-        flexDirection="column"
-        justifyContent="center"
-        px={4}
-        py="20px"
-      >
-        {!logedin ? null : balance === undefined ? (
-          <CircleLoadingSpinner radius="25px" />
-        ) : (
-          <React.Fragment>
-            <Text color="white">Your balance</Text>
-            <Flex mt="20px" mb="10px">
-              <Text color="white" fontSize="18px" fontWeight={500}>
-                {`${balance.pretty()} ${symbol}`}
-              </Text>
-            </Flex>
-            <Text color="white">{`(${usdBalance.pretty()} USD)`}</Text>
-          </React.Fragment>
-        )}
-      </Flex>
+      {!logedin ? null : balance === undefined ? (
+        <CircleLoadingSpinner radius="25px" />
+      ) : (
+        <Flex
+          bg="#3f3f4c"
+          width={[1]}
+          flexDirection="column"
+          justifyContent="center"
+          px={4}
+          py="20px"
+        >
+          <Text color="white">Your balance</Text>
+          <Flex mt="20px" mb="10px">
+            <Text color="white" fontSize="18px" fontWeight={500}>
+              {`${balance.pretty()} ${symbol}`}
+            </Text>
+          </Flex>
+          <Text color="white">{`(${usdBalance.pretty()} USD)`}</Text>
+        </Flex>
+      )}
       <Flex flexDirection="column" py={4} width={[1]}>
         <Bold px={4} pb={3} fontSize={0} color="#7a7a84">
           MENU

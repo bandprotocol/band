@@ -82,7 +82,7 @@ class ProposeModal extends React.Component {
               textColor="black"
               width="295px"
               bottom="12px"
-              left={80}
+              left={83}
               tip={{ left: 80 }}
             >
               Explain why you propose such changes to the community. This will

@@ -13,7 +13,7 @@ const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
   >
     <Flex
       flex={2}
-      ml="30px"
+      ml="40px"
       style={{
         minWidth: 0,
       }}

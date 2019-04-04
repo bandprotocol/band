@@ -71,8 +71,8 @@ export default ({
       flexDirection="column"
       mb="20px"
       style={{
-        borderRadius: '4px',
-        border: 'solid 1px ' + colors.background.lightGrey,
+        borderRadius: '8px',
+        border: 'solid 1px #dee2f0',
       }}
     >
       <Flex
@@ -81,7 +81,11 @@ export default ({
         bg="#dee2f0"
         flex={1}
         px="40px"
-        style={{ height: '50px' }}
+        style={{
+          height: '50px',
+          borderRadius: '6px',
+          border: 'solid 1px #dee2f0',
+        }}
         onClick={() => toggleShow()}
       >
         <Flex
@@ -96,6 +100,7 @@ export default ({
               fontSize={1}
               fontWeight="regular"
               width="80px"
+              fontWeight="600"
             >
               {'#' + prefix}
             </Text>
@@ -104,11 +109,13 @@ export default ({
               fontSize={1}
               px={2}
               fontWeight="regular"
+              fontWeight="500"
               style={{
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
                 overflow: 'hidden',
                 maxWidth: '450px',
+                lineHeight: '20px',
               }}
             >
               {title}
@@ -116,7 +123,7 @@ export default ({
             {vote !== 'NOT VOTED' ? <VotedOval /> : null}
           </Flex>
           {/* Right */}
-          <Flex flexDirection="row" alignItems="center" justifyContent="center">
+          <Flex flexDirection="row" justifyContent="center">
             {isActive ? (
               <React.Fragment>
                 <Text
@@ -144,7 +151,13 @@ export default ({
               <Flex alignItems="center" mr="20px" justifyContent="flex-end">
                 <Flex mr="20px">
                   <Oval
-                    t={status === 'YES' ? '✓' : '✕'}
+                    t={
+                      status === 'YES' ? (
+                        <i class="fas fa-check" />
+                      ) : (
+                        <i class="fas fa-times" />
+                      )
+                    }
                     color="white"
                     bg={status === 'YES' ? '#42c47f' : '#ff6757'}
                     size="16"
@@ -166,7 +179,7 @@ export default ({
               fontSize={16}
               fontWeight="bold"
               textAlign="right"
-              color={colors.purple.normal}
+              color={colors.purple.dark}
             >
               {show ? (
                 <i className="fas fa-angle-up" />

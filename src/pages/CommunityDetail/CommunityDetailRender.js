@@ -197,6 +197,7 @@ export default props => {
                   title="Colleteral graph"
                   xLabel="Token Supply"
                   dataset={dataset}
+                  lineColor="#4853ff"
                   width={width}
                   height={height - 10}
                   config={{}}

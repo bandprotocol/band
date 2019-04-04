@@ -57,7 +57,7 @@ export default ({ hideLogin }) => (
         <Button
           width="345px"
           variant="primary"
-          style={{ height: '55px', boxShadow: '0 3px 5px 0 #baa8ff' }}
+          style={{ height: '55px' }}
           onClick={() => login(hideLogin)}
           my={1}
         >

@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Flex, Text, Box, Button } from 'ui/common'
 import colors from 'ui/colors'
 
@@ -18,7 +17,7 @@ export default ({ t, color, bg, size, fontSize, fontWeight }) => (
       color={color || colors.purple.normal}
       fontSize={fontSize || 14}
       fontWeight={fontWeight || 'bold'}
-      lineHeight="20px"
+      lineHeight="18px"
     >
       {t}
     </Text>

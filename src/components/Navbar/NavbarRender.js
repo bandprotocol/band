@@ -5,18 +5,7 @@ import Profile from 'images/profile.svg'
 import EthPurple from 'images/ethPurple.svg'
 import Wallet from 'images/wallet.svg'
 import AddCommunity from 'images/add-community.svg'
-import {
-  Link,
-  Bold,
-  Image,
-  Flex,
-  Box,
-  Button,
-  AbsoluteLink,
-  Text,
-  Card,
-  Highlight,
-} from 'ui/common'
+import { Link, Bold, Image, Flex, Box, Text, Card } from 'ui/common'
 import media, { isMobile } from 'ui/media'
 
 import PendingTransaction from 'components/PendingTransaction'
@@ -43,6 +32,19 @@ const Nav = styled.nav`
 
 const TextClickable = styled(Text)`
   cursor: pointer;
+`
+
+const SignIn = styled(Text).attrs({
+  fontSize: '16px',
+  fontWeight: '900',
+  color: colors.purple.dark,
+  mr: '40px',
+})`
+  cursor: pointer;
+
+  &:hover {
+    color: #322185;
+  }
 `
 
 const HighlightBNDOrUSD = ({ isBND, toggle }) => {
@@ -177,11 +179,16 @@ export default ({
                   <Flex
                     flexDirection="row"
                     alignItems="center"
+                    justifyContent="space-between"
                     bg="#f2f4f9"
                     mr="20px"
                     pl="20px"
                     pr="10px"
-                    style={{ minHeight: '40px', borderRadius: '4px' }}
+                    style={{
+                      minHeight: '40px',
+                      borderRadius: '4px',
+                      minWidth: '280px',
+                    }}
                   >
                     <Text
                       mr={2}
@@ -195,11 +202,7 @@ export default ({
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
                     <Image src={EthPurple} width={40} height={40} />
-                    {pending.length !== 0 && (
-                      <Badge bg={colors.red}>
-                        {pending.length > 9 ? '9+' : pending.length}
-                      </Badge>
-                    )}
+                    {pending.length !== 0 && <Badge bg={colors.red} />}
                   </DropdownButton>
                   <Flex ml="15px" mr="10px">
                     <Image src={Profile} width={40} height={40} />
@@ -233,9 +236,7 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : (
-              <Button variant="primary" onClick={showLogin} mr={4}>
-                Sign in
-              </Button>
+              <SignIn onClick={showLogin}>Sign in</SignIn>
             )}
           </Flex>
         </Flex>

@@ -48,18 +48,20 @@ export default {
       },
     },
     grey: {
-      fontFamily: 'Montserrat, sans-serif',
+      fontFamily: 'Avenir',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: 'white',
-      boxShadow: '0 3px 5px 0 rgba(180, 187, 218, 0.5) !important',
       backgroundColor: colors.text.grey,
       border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
       '&:hover': {
-        backgroundColor: '#b4bbda',
+        boxShadow: '0 3px 5px 0 rgba(180, 187, 218, 0.5)',
+      },
+      '&:active': {
+        backgroundColor: colors.background.darkGrey,
       },
     },
     submit: {
@@ -73,7 +75,10 @@ export default {
       border: `solid 1px ${colors.green.normal}`,
       transition: 'all 250ms',
       '&:hover': {
-        backgroundColor: '#0eb23f',
+        boxShadow: '0 3px 3px 0 #a6e7c4',
+      },
+      '&:focus': {
+        backgroundColor: colors.green.darks,
       },
     },
     cancel: {
@@ -87,7 +92,10 @@ export default {
       border: `solid 1px ${colors.red.normal}`,
       transition: 'all 250ms',
       '&:hover': {
-        backgroundColor: '#d61330',
+        boxShadow: '0 3px 3px 0 #ffb4ac',
+      },
+      '&:focus': {
+        backgroundColor: colors.red.darks,
       },
     },
     disable: {

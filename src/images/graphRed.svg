@@ -1,3 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="0 0 640 640" width="640" height="640"><defs><path d="M0 503.48L60.39 456.5L155.61 548.51L0 640L0 503.48Z" id="c2da7gMckM"></path><path d="M-3.01 640L141.72 550.95L209.35 464.81L368.26 640L-3.01 640Z" id="a2oU7k2kj7"></path><path d="M264.88 640L382.2 353.21L446.6 534.81L640 643.87L264.88 640Z" id="bl3YiulL3"></path><path d="M352.62 569.79L461.88 436.23L534.35 508.15L640 601.08L352.62 569.79Z" id="fb99HXWpC"></path><path d="M372.62 589.79L502.85 488.49L640 253.95L640 641.72L372.62 589.79Z" id="a1nnPdccnU"></path><path d="M640 252.23L506.31 479.92L461.04 434.5L426.33 476.76L382.16 353.21L298.03 561.94L209.7 464.81L148.7 540.91L60.37 456.5L0 504.11" id="aAWqH5T0P"></path></defs><g><g><g><use xlink:href="#c2da7gMckM" opacity="1" fill="#fceded" fill-opacity="1"></use></g><g><use xlink:href="#a2oU7k2kj7" opacity="1" fill="#fceded" fill-opacity="1"></use></g><g><use xlink:href="#bl3YiulL3" opacity="1" fill="#fceded" fill-opacity="1"></use></g><g><use xlink:href="#fb99HXWpC" opacity="1" fill="#fceded" fill-opacity="1"></use></g><g><use xlink:href="#a1nnPdccnU" opacity="1" fill="#fceded" fill-opacity="1"></use></g><g><use xlink:href="#aAWqH5T0P" opacity="1" fill="#ffffff" fill-opacity="0"></use><g><use xlink:href="#aAWqH5T0P" opacity="1" fill-opacity="0" stroke="#f87f7f" stroke-width="3" stroke-opacity="1"></use></g></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="260" height="140" viewBox="0 0 260 140">
+    <defs>
+        <rect id="a" width="260" height="140" rx="10"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <mask id="b" fill="#fff">
+            <use xlink:href="#a"/>
+        </mask>
+        <use fill="#FFF" xlink:href="#a"/>
+        <g mask="url(#b)">
+            <path fill="#FCEDED" d="M-1 104.568l34.99-12.191 27.936 23.071 30.42-23.071L124.856 122l34.075-49.877 13.637 32.445 19.052-7.507 15.727 7.507L261.195 43l-1 142L-2 186z"/>
+            <path stroke="#F87F7F" stroke-linecap="round" d="M1 104.568l32.99-12.191 27.936 23.071 30.42-23.071L124.856 122l34.075-49.877 13.637 32.445 19.052-7.507 15.727 7.507L260.195 43"/>
+        </g>
+    </g>
+</svg>

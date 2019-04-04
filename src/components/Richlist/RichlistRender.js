@@ -18,7 +18,7 @@ const RichlistHeader = () => (
         Rank
       </Text>
     </Flex>
-    <Flex flex={5}>
+    <Flex flex={5} ml="10px">
       <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
         Address
       </Text>

@@ -89,7 +89,6 @@ export const BackgroundCard = styled(Card)`
 
 export const HighlightNavLink = styled(NavLink)`
   color: white;
-
   &.is-active {
     font-weight: 700;
     color: ${colors.purple.normal};

@@ -23,7 +23,6 @@ const FooterButtonRender = styled(Button).attrs({
   variant: 'grey',
 })`
   height: 45px;
-  box-shadow: 0 3px 5px 0 #baa8ff;
 
   ${p => (p.disabled ? 'opacity: 0.2;' : 'opacity: 1;')}
 `

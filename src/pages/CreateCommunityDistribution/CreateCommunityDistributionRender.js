@@ -96,7 +96,6 @@ export default ({
           bg="#f4f6ff"
           alignItems="center"
           justifyContent="center"
-          mb={5}
           style={{ height: '90px' }}
         >
           <CurveEquation type={type} params={params} />
@@ -123,8 +122,8 @@ export default ({
           bg="#f4f6ff"
           alignItems="center"
           justifyContent="center"
-          p={3}
-          mb={5}
+          px={3}
+          style={{ height: '100%' }}
         >
           {/* Graph Tab */}
           <Flex
