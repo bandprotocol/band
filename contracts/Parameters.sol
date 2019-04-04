@@ -31,7 +31,7 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
     uint256 indexed proposalID
   );
 
-  event ParameterInit(  // A parameter is initialized during contract creation.
+  event ParameterChanged(  // A parameter is changed.
     bytes32 indexed key,
     uint256 value
   );
@@ -80,7 +80,7 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
     require(keys.length == values.length);
     for (uint256 idx = 0; idx < keys.length; ++idx) {
       params[keys[idx]] = values[idx];
-      emit ParameterInit(keys[idx], values[idx]);
+      emit ParameterChanged(keys[idx], values[idx]);
     }
 
     (bool ok,) = address(voting).delegatecall(abi.encodePacked(bytes4(keccak256("verifyVotingParams()"))));
@@ -149,6 +149,7 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
         bytes32 key = proposal.changes[index].key;
         uint256 value = proposal.changes[index].value;
         params[key] = value;
+        emit ParameterChanged(key,value);
       }
       emit ProposalAccepted(proposalID);
     } else {
