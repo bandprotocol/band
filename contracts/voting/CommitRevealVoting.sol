@@ -285,22 +285,14 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     require(ResolveListener(pollContract).onResolved(pollID, pollState));
   }
 
-  function getHash(uint256 weight, bytes32 commit)
-    private
-    pure
-    returns (bytes32)
-  {
+  function getHash(uint256 weight, bytes32 commit) public pure returns (bytes32) {
     if (commit == 0 && weight == 0) {
       return 0;
     }
     return keccak256(abi.encodePacked(weight, commit));
   }
 
-  function get(Parameters params, bytes8 prefix, bytes24 key)
-    internal
-    view
-    returns (uint256)
-  {
+  function get(Parameters params, bytes8 prefix, bytes24 key) internal view returns (uint256) {
     uint8 prefixSize = 0;
     while (prefixSize < 8 && prefix[prefixSize] != byte(0)) {
       ++prefixSize;
