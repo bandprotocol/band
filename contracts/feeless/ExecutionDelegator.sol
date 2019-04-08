@@ -27,12 +27,7 @@ contract ExecutionDelegator {
   /**
   * @dev Verify that the signature of sender is consistent with nonce and data
   */
-  function verify(
-    address sender,
-    uint256 nonce,
-    bytes memory data,
-    bytes memory sig
-  )
+  function verify(address sender, uint256 nonce, bytes memory data, bytes memory sig)
     internal
     pure
     returns (bool)
