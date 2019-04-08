@@ -1,39 +1,18 @@
 pragma solidity 0.5.0;
 
-import "./CommunityToken.sol";
-import "./ParametersBase.sol";
+import "../CommunityToken.sol";
+import "../Parameters.sol";
 import "./ResolveListener.sol";
 
 /**
  * @title VotingInterface
  */
 contract VotingInterface {
-
   event PollResolved(  // A poll is resolved.
     address indexed pollContract,
     uint256 indexed pollID,
     ResolveListener.PollState pollState
   );
-
-  /**
-   * Mimic the parameters in Parameters.sol and make it private.
-   * So no one can write this params.
-   */
-  mapping (bytes32 => uint256) private _params;
-
-  /**
-   * Make these params readable via internal call.
-   */
-  function getParam(bytes32 key) internal view returns(uint256) {
-    return _params[key];
-  }
-
-  /**
-   * Verify voting parameters
-   */
-  function verifyVotingParams()
-    public 
-    returns (bool);
 
   /**
    * Start a new poll for the function caller.
@@ -42,7 +21,7 @@ contract VotingInterface {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    ParametersBase params
+    Parameters params
   )
     public
     returns (bool);

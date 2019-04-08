@@ -2,10 +2,9 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./ParametersBase.sol";
-import "./ResolveListener.sol";
-import "./VotingInterface.sol";
 import "./feeless/Feeless.sol";
+import "./voting/ResolveListener.sol";
+import "./voting/VotingInterface.sol";
 
 /*
  * @title Parameters
@@ -14,7 +13,7 @@ import "./feeless/Feeless.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is ParametersBase, ResolveListener, Feeless {
+contract Parameters is ResolveListener, Feeless {
   using SafeMath for uint256;
 
   event ProposalProposed(  // A new proposal is proposed.
@@ -42,6 +41,8 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
     uint256 value
   );
 
+  mapping (bytes32 => uint256) public params;
+
   CommunityToken public token;
   VotingInterface public voting;
 
@@ -50,10 +51,6 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
     uint256 value;
   }
 
-  /**
-   * @dev Proposal struct for each of the proposal change that is proposed to
-   * this contract.
-   */
   struct Proposal {
     uint256 changeCount;
     mapping (uint256 => KeyValue) changes;
@@ -82,10 +79,22 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
       params[keys[idx]] = values[idx];
       emit ParameterChanged(keys[idx], values[idx]);
     }
+  }
 
-    (bool ok,) = address(voting).delegatecall(abi.encodePacked(bytes4(keccak256("verifyVotingParams()"))));
-    require(ok);
+  /**
+   * @dev Return the value at the given key. Throw if the value is not set.
+   */
+  function get(bytes32 key) public view returns (uint256) {
+    uint256 value = params[key];
+    require(value != 0);
+    return value;
+  }
 
+  /**
+   * @dev Similar to get function, but returns 0 instead of throwing.
+   */
+  function getZeroable(bytes32 key) public view returns (uint256) {
+    return params[key];
   }
 
   /**
@@ -124,14 +133,7 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
       emit ParameterProposed(proposalID, key, value);
       proposals[proposalID].changes[index] = KeyValue(key, value);
     }
-    require(
-      voting.startPoll(
-        token,
-        proposalID,
-        "params:",
-        this
-      )
-    );
+    require(voting.startPoll(token, proposalID, "params:", this));
     return proposalID;
   }
 

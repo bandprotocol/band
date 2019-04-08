@@ -18,6 +18,5 @@ interface ResolveListener {
    * @dev Call by Voting contract after a poll is resolved. The Callee should
    * make sure to only accept the call from its Voting contract.
    */
-  function onResolved(uint256 pollID, PollState pollState)
-    external returns (bool);
+  function onResolved(uint256 pollID, PollState pollState) external returns (bool);
 }

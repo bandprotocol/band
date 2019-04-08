@@ -2,12 +2,12 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "./bonding-curve/ParameterizedBondingCurve.sol";
+import "./bonding/ParameterizedBondingCurve.sol";
 import "./token/ERC20Interface.sol";
 
 import "./BandToken.sol";
 import "./CommunityToken.sol";
-import "./ParametersBase.sol";
+import "./Parameters.sol";
 
 /**
  * @title CommunityCore
@@ -21,7 +21,7 @@ import "./ParametersBase.sol";
 contract CommunityCore {
   BandToken public bandToken;
   CommunityToken public commToken;
-  ParametersBase public params;
+  Parameters public params;
   ParameterizedBondingCurve public bondingCurve;
 
   /**
@@ -30,7 +30,7 @@ contract CommunityCore {
   constructor(
     BandToken _bandToken,
     CommunityToken _commToken,
-    ParametersBase _params,
+    Parameters _params,
     uint256[] memory _expressions
   )
     public

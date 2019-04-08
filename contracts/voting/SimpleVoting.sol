@@ -3,8 +3,8 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./VotingInterface.sol";
-import "./feeless/Feeless.sol";
-import "./utils/Fractional.sol";
+import "../feeless/Feeless.sol";
+import "../utils/Fractional.sol";
 
 /**
  * @title SimpleVoting
@@ -83,23 +83,11 @@ contract SimpleVoting is VotingInterface, Feeless {
     return (poll.yesWeights[voter], poll.noWeights[voter]);
   }
 
-  function verifyVotingParams() public returns(bool) {
-    uint256 expirationTime = getParam("params:expiration_time");
-    uint256 voteMinParticipationPct = getParam("params:min_participation_pct");
-    uint256 voteSupportRequiredPct = getParam("params:support_required_pct");
-
-    require(expirationTime > 0);
-    require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
-    require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
-
-    return true;
-  }
-
   function startPoll(
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    ParametersBase params
+    Parameters params
   )
     public
     pollMustNotExist(msg.sender, pollID)
@@ -195,7 +183,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     require(ResolveListener(pollContract).onResolved(pollID, pollState));
   }
 
-  function get(ParametersBase params, bytes8 prefix, bytes24 key)
+  function get(Parameters params, bytes8 prefix, bytes24 key)
     internal
     view
     returns (uint256)

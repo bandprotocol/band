@@ -1,6 +1,6 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
-const SimpleTCR = artifacts.require('SimpleTCR');
+const TCR = artifacts.require('TCR');
 const BandToken = artifacts.require('BandToken');
 const BandFactory = artifacts.require('BandFactory');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -11,7 +11,7 @@ const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
 
-contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
+contract('TCR', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.factory = await BandFactory.deployed();
     this.band = await BandToken.new(100000000, owner, { from: owner });
@@ -60,7 +60,7 @@ contract('SimpleTCR', ([_, owner, alice, bob, carol]) => {
       },
     );
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.tcr = await SimpleTCR.new(
+    this.tcr = await TCR.new(
       web3.utils.fromAscii('tcr:'),
       this.core.address,
       this.voting.address,

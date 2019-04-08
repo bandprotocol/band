@@ -5,21 +5,21 @@ import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "../CommunityCore.sol";
-import "../ResolveListener.sol";
-import "../VotingInterface.sol";
 
 import "../token/ERC20Acceptor.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Equation.sol";
 import "../utils/Fractional.sol";
+import "../voting/ResolveListener.sol";
+import "../voting/VotingInterface.sol";
 
 /**
- * @title SimpleTCR
+ * @title TCR
  *
  * @dev TCR contract implements Token Curated Registry logic, with reward
  * distribution allocated equally to both winning and losing sides.
  */
-contract SimpleTCR is ResolveListener, Feeless, ERC20Acceptor {
+contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
   using Equation for Equation.Node[];
@@ -82,7 +82,7 @@ contract SimpleTCR is ResolveListener, Feeless, ERC20Acceptor {
 
   CommunityToken public token;
   VotingInterface public voting;
-  ParametersBase public params;
+  Parameters public params;
 
   // Namespace prefix for all parameters (See Parameters.sol) for usage inside
   // this TCR.

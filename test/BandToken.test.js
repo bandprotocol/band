@@ -54,7 +54,7 @@ contract('BandToken', ([_, owner, alice, bob]) => {
       beforeEach(async () => {
         // The owner sets Alice's balance to be locked for 1000 tokens,
         // starting from 2020/02/01 for 1 year with 3 months cliff.
-        await this.contract.setTokenLock(alice, 10, 13, 22, 1000, {
+        await this.contract.setTokenLock(alice, 7, 10, 19, 1000, {
           from: owner,
         });
       });

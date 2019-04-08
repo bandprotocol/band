@@ -8,7 +8,7 @@ import "./BandToken.sol";
 import "./CommunityCore.sol";
 import "./CommunityToken.sol";
 import "./Parameters.sol";
-import "./VotingInterface.sol";
+import "./voting/VotingInterface.sol";
 
 import "./factory/TokenFactory.sol";
 import "./factory/ParametersFactory.sol";

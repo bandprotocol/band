@@ -10,51 +10,7 @@ const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
 
-contract('Parameters', ([_, owner, alice, bob, carol]) => {
-  context(
-    'should not initialize if a parameter is missing or has impossible value.',
-    () => {
-      beforeEach(async () => {
-        this.band = await BandToken.new(1000000, owner, { from: owner });
-        this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
-          from: owner,
-        });
-        this.voting = await CommitRevealVoting.new({ from: owner });
-      });
-      it('impossible parameters', async () => {
-        await shouldFail.reverting(
-          Parameters.new(
-            this.comm.address,
-            this.voting.address,
-            [
-              web3.utils.fromAscii('params:commit_time'),
-              web3.utils.fromAscii('params:reveal_time'),
-              web3.utils.fromAscii('params:support_required_pct'),
-              web3.utils.fromAscii('params:min_participation_pct'),
-            ],
-            [0, 0, '1000000000000000001', '1000000000000000001'],
-            { from: owner },
-          ),
-        );
-      });
-      it('missing a parameter', async () => {
-        await shouldFail.reverting(
-          Parameters.new(
-            this.comm.address,
-            this.voting.address,
-            [
-              web3.utils.fromAscii('params:commit_time'),
-              web3.utils.fromAscii('params:reveal_time'),
-              web3.utils.fromAscii('params:support_required_pct'),
-            ],
-            [60, 60, '1000000000000000000'],
-            { from: owner },
-          ),
-        );
-      });
-    },
-  );
-
+contract('Parameters', ([_, owner, alice, bob]) => {
   context('After successful initialization', () => {
     beforeEach(async () => {
       this.factory = await BandFactory.deployed();
