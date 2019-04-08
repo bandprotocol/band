@@ -13,7 +13,7 @@ contract CoreFactory{
     uint256[] calldata _expressions
   )
     external
-    returns(CommunityCore)
+    returns (CommunityCore)
   {
     return new CommunityCore(_bandToken, _commToken, _params, _expressions);
   }

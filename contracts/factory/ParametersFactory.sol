@@ -12,7 +12,7 @@ contract ParametersFactory{
     uint256[] calldata _values
   )
     external
-    returns(Parameters)
+    returns (Parameters)
   {
     return new Parameters(_token, _voting, _keys, _values);
   }

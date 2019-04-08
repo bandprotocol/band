@@ -10,7 +10,7 @@ contract TokenFactory{
     uint8 _decimals
   )
     external
-    returns(CommunityToken)
+    returns (CommunityToken)
   {
     CommunityToken token = new CommunityToken(_name, _symbol, _decimals);
     token.transferOwnership(msg.sender);
