@@ -2,19 +2,17 @@ const TokenFactory = artifacts.require('TokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
 const CoreFactory = artifacts.require('CoreFactory');
 const BandFactory = artifacts.require('BandFactory');
+const TCRFactory = artifacts.require('TCRFactory');
+const RewardDistributorFactory = artifacts.require('RewardDistributorFactory');
 
 module.exports = function(deployer) {
-  deployer
-    .then(async () => {
-      await deployer.deploy(
-        BandFactory,
-        '100000000000000000000000000',
-        TokenFactory.address,
-        ParametersFactory.address,
-        CoreFactory.address,
-      );
-    })
-    .catch(err => {
-      console.log('ERROR', err);
-    });
+  deployer.deploy(
+    BandFactory,
+    '100000000000000000000000000',
+    TokenFactory.address,
+    ParametersFactory.address,
+    CoreFactory.address,
+  );
+  deployer.deploy(TCRFactory);
+  deployer.deploy(RewardDistributorFactory);
 };

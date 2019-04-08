@@ -3,6 +3,8 @@ pragma solidity 0.5.0;
 import "../plugins/TCR.sol";
 
 contract TCRFactory {
+  event TCRCreated(address tcr, address core);
+
   function create(
     bytes8 _prefix,
     CommunityCore _core,
@@ -10,8 +12,8 @@ contract TCRFactory {
     uint256[] calldata _expressions
   )
     external
-    returns (TCR)
   {
-    return new TCR(_prefix, _core, _voting, _expressions);
+    TCR tcr = new TCR(_prefix, _core, _voting, _expressions);
+    emit TCRCreated(address(tcr), address(_core));
   }
 }

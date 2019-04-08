@@ -37,8 +37,6 @@ contract BandFactory is Ownable, ExecutionDelegator {
   ParametersFactory public parametersFactory;
   CoreFactory public coreFactory;
 
-  mapping (address => bool) public verifiedVotingContracts;
-
   constructor(
     uint256 _totalSupply,
     TokenFactory _tokenFactory,
