@@ -81,7 +81,7 @@ export default ({
     fullWidth
     style={{ minHeight: 'calc(100vh - 80px)', background: '#f6f7fc' }}
   >
-    {/* TODO: Fix this condition(loading forever when length === 0) and 
+    {/* TODO: Fix this condition(loading forever when length === 0) and
     check yourcommunity, feature community as well */}
     {communities && communities.length ? (
       <Flex flexDirection="column">
@@ -104,9 +104,9 @@ export default ({
               ALL COMMUNITIES
             </Text>
             <Flex flexWrap="wrap" mt={3} mx="-5px" justifyContent="flex-start">
-              {communities.map(community => (
+              {communities.map((community, i) => (
                 <MiniCommunityCard
-                  key={community.name}
+                  key={i}
                   community={community}
                   onClick={() =>
                     history.push(`/community/${community.address}/detail`)

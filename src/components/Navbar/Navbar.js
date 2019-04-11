@@ -9,6 +9,7 @@ import { currentUserSelector } from 'selectors/current'
 import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { allTxsSelector } from 'selectors/transaction'
+import { walletSelector } from 'selectors/wallet'
 
 class Navbar extends React.Component {
   state = {
@@ -28,17 +29,26 @@ class Navbar extends React.Component {
     })
   }
 
+  showWallet() {
+    const { wallet } = this.props
+    if (!wallet) {
+      return
+    }
+    wallet.showWallet()
+  }
+
   render() {
-    const { balance, showLogin, price, txs } = this.props
+    const { balance, price, txs } = this.props
     const balanceToggled =
       this.state.isBND || !balance ? balance : balance.bandToUSD(price)
 
     return (
       <NavbarRender
+        showWallet={() => this.showWallet()}
         isBND={this.state.isBND}
         balance={balanceToggled}
         txs={txs}
-        showLogin={showLogin}
+        showLogin={() => this.showWallet()}
         toggleBalance={this.toggleBalance.bind(this)}
         showBlockTransactions={this.state.showBlockTransactions}
         onClickOutside={() => this.setState({ showBlockTransactions: false })}
@@ -50,6 +60,7 @@ class Navbar extends React.Component {
 
 const mapStateToProps = (state, props) => {
   return {
+    wallet: walletSelector(state),
     user: currentUserSelector(state),
     balance: bandBalanceSelector(state),
     price: bandPriceSelector(state),
@@ -57,13 +68,4 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, props) => ({
-  showLogin: () => dispatch(showModal('LOGIN')),
-})
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(Navbar),
-)
+export default withRouter(connect(mapStateToProps)(Navbar))

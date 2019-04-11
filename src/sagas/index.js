@@ -1,9 +1,15 @@
 import { all, fork, put, delay, select } from 'redux-saga/effects'
-import { currentUserSelector } from 'selectors/current'
+import {
+  currentUserSelector,
+  currentBandClientSelector,
+} from 'selectors/current'
+import { web3Selector } from 'selectors/wallet'
 import {
   updateProvider,
   saveBandInfo,
   saveCommunityInfo,
+  setWallet,
+  setWeb3,
   saveTxs,
   dumpTxs,
 } from 'actions'
@@ -23,6 +29,7 @@ import holderSaga from 'sagas/holder'
 import tokenSaga from 'sagas/token'
 
 import { BandProtocolClient } from 'band.js'
+import BandWallet from 'band-wallet'
 
 import transit from 'transit-immutable-js'
 import { List, fromJS } from 'immutable'
@@ -36,6 +43,22 @@ const INFURA_KEY =
 const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_KEY))
 
 function* baseInitialize() {
+  window.BandWallet = new BandWallet(
+    process.env.NODE_ENV === 'production'
+      ? 'https://wallet.bandprotocol.com'
+      : 'http://localhost:3000',
+    {
+      walletPosition: {
+        top: 80,
+        right: 130,
+      },
+      approvalPosition: {
+        bottom: 0,
+        right: 10,
+      },
+    },
+  )
+
   BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
   const tempBandClient = yield BandProtocolClient.make({})
   const { address, price, last24Hrs } = yield tempBandClient.getBandInfo()
@@ -64,6 +87,13 @@ function* baseInitialize() {
       ),
     )
   }
+
+  yield put(
+    // TODO: Mock on price and last24hr
+    saveBandInfo(address, '1000000000000000000000000', price, last24Hrs),
+  )
+  yield put(setWallet(window.BandWallet))
+  yield put(setWeb3(new Web3(window.BandWallet.ref.current.state.provider)))
   // Auto update pending transaction
   yield fork(checkTransaction)
   // Update user address and balance after fetch all data
@@ -127,20 +157,20 @@ function* checkTransaction() {
 
 function* checkProvider() {
   while (true) {
+    const web3 = yield select(web3Selector)
+    window.bandClient = yield select(currentBandClientSelector)
     const userState = yield select(currentUserSelector)
     const userAddress =
-      (window.web3 &&
+      (web3 &&
         (yield new Promise((resolve, reject) => {
-          window.web3.eth.getAccounts((error, users) => {
+          web3.eth.getAccounts((error, users) => {
             if (error) reject(error)
             else resolve(users)
           })
         }))[0]) ||
       null
     if (userAddress !== userState) {
-      yield put(
-        updateProvider(userAddress, window.web3 && window.web3.currentProvider),
-      )
+      yield put(updateProvider(userAddress, web3 && web3.currentProvider))
       if (userAddress) {
         // Load transaction history here!
         const rawTxState = localStorage.getItem(`txs-${userAddress}`)

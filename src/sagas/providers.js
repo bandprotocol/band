@@ -28,7 +28,13 @@ function* handleUpdateProvider({ address, provider }) {
     yield put(reloadBandBalance())
   } else {
     yield put(setUserAddress(null))
-    yield put(saveBandClient(yield BandProtocolClient.make({})))
+    yield put(
+      saveBandClient(
+        yield BandProtocolClient.make({
+          provider: window.BandWallet.ref.current.state.provider,
+        }),
+      ),
+    )
   }
 
   const bandClient = yield select(currentBandClientSelector)

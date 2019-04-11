@@ -132,7 +132,7 @@ class CreateCommunity extends React.Component {
   async handleSubmit() {
     BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
     const bandClient = await BandProtocolClient.make({
-      provider: window.web3.currentProvider,
+      provider: window.BandWallet.ref.current.state.provider,
     })
 
     const kvs = { ...this.state.kvs }

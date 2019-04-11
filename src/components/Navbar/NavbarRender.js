@@ -47,7 +47,7 @@ const SignIn = styled(Text).attrs({
   }
 `
 
-const HighlightBNDOrUSD = ({ isBND, toggle }) => {
+const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
       {isBND ? (
@@ -81,7 +81,11 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
           USD
         </Text>
       )}
-      <Flex ml="10px">
+      <Flex
+        ml="10px"
+        style={{ cursor: 'pointer' }}
+        onClick={() => showWallet()}
+      >
         <Image src={Wallet} width="20px" height="20px" />
       </Flex>
     </Flex>
@@ -143,6 +147,7 @@ const BlockTransactions = styled(Card).attrs({
 `
 
 export default ({
+  showWallet,
   balance,
   isBND,
   toggleBalance,
@@ -198,7 +203,11 @@ export default ({
                     >
                       {balance.pretty()}
                     </Text>
-                    <HighlightBNDOrUSD isBND={isBND} toggle={toggleBalance} />
+                    <HighlightBNDOrUSD
+                      isBND={isBND}
+                      toggle={toggleBalance}
+                      showWallet={showWallet}
+                    />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
                     <Image src={EthPurple} width={40} height={40} />
