@@ -1,11 +1,10 @@
 export const LOAD_TRANSFER_HISTORY = 'LOAD_ORDER_HISTORY'
 export const ADD_TRANSFERS = 'ADD_TRANSFERS'
 
-export const loadTransferHistory = (address, isAll) => {
+export const loadTransferHistory = address => {
   return {
     type: LOAD_TRANSFER_HISTORY,
     address,
-    isAll,
   }
 }
 

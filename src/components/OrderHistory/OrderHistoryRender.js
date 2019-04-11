@@ -44,6 +44,7 @@ export default ({
   onChangePage,
   pageSize,
 }) => {
+  console.log(numOrders)
   return (
     <Flex
       style={{ borderRadius: '10px' }}
@@ -56,13 +57,11 @@ export default ({
         <React.Fragment>
           <HistoryBody
             communityAddress={communityAddress}
-            isAll={selectedOption.value === 'all'}
             currentPage={currentPage}
             pageSize={pageSize}
           />
           <OrderPagination
             communityAddress={communityAddress}
-            isAll={selectedOption.value === 'all'}
             pageSize={pageSize}
             currentPage={currentPage}
             onChangePage={onChangePage}

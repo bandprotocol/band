@@ -12,18 +12,11 @@ import { noOrderSelector } from 'selectors/order'
 
 class OrderHistory extends React.Component {
   state = {
-    selectedOption: { value: 'all', label: 'All Orders' },
     currentPage: 1,
   }
 
   componentDidMount() {
-    this.props.loadOrderHistory(this.state.selectedOption.value === 'all')
-  }
-
-  componentDidUpdate(_, prevState) {
-    if (prevState.selectedOption.value !== this.state.selectedOption.value) {
-      this.props.loadOrderHistory(this.state.selectedOption.value === 'all')
-    }
+    this.props.loadOrderHistory()
   }
 
   onChange(selectedOption) {
@@ -64,14 +57,12 @@ const mapStateToProps = (state, { communityAddress }) => {
   return {
     numOrders: noOrderSelector(state, {
       address: communityAddress,
-      isAll: true,
     }),
   }
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadOrderHistory: isAll =>
-    dispatch(loadOrderHistory(communityAddress, isAll)),
+  loadOrderHistory: () => dispatch(loadOrderHistory(communityAddress)),
 })
 export default withRouter(
   connect(

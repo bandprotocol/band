@@ -3,7 +3,7 @@ import { LOAD_ORDER_HISTORY, addOrders } from 'actions'
 
 import { Utils } from 'band.js'
 
-function* handleLoadHistory({ address, isAll }) {
+function* handleLoadHistory({ address }) {
   // TODO: Find a better way.
   const orders = (yield Utils.graphqlRequest(`{
     communityByAddress(address: "${address}") {
@@ -15,10 +15,12 @@ function* handleLoadHistory({ address, isAll }) {
           timestamp
           txHash
           user
+          orderType
         }
       }
     }
   }}`)).communityByAddress.curveByCommunityAddress.ordersByCurveAddress.nodes
+  console.log('orders', orders)
   yield put(addOrders(address, orders))
 }
 

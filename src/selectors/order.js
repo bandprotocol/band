@@ -13,26 +13,26 @@ export const orderHistorySelector = createSelector(
   [
     orderSelector,
     addressSelector,
-    typeSelector,
     currentUserSelector,
     pageSelector,
     pageSizeSelector,
   ],
-  (orders, address, isAll, user, page, pageSize) => {
+  (orders, address, user, page, pageSize) => {
+    console.log('TT', orders.get(address), page)
+    console.log(
+      '2',
+      orders.get(address).slice((page - 1) * pageSize, page * pageSize),
+    )
     if (!orders.get(address)) return List()
-    return orders
-      .get(address)
-      .filter(order => isAll || order.get('user') === user)
-      .slice((page - 1) * pageSize, page * pageSize)
+    return orders.get(address).slice((page - 1) * pageSize, page * pageSize)
   },
 )
 
 export const noOrderSelector = createSelector(
-  [orderSelector, addressSelector, typeSelector, currentUserSelector],
-  (orders, address, isAll, user) => {
+  [orderSelector, addressSelector, currentUserSelector],
+  (orders, address, user) => {
+    console.log(address, orders.get(address))
     if (!orders.get(address)) return 0
-    return orders
-      .get(address)
-      .filter(order => isAll || order.get('user') === user).size
+    return orders.get(address).size
   },
 )

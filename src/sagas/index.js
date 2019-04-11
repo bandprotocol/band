@@ -120,10 +120,6 @@ function* baseInitialize() {
     )
   }
 
-  yield put(
-    // TODO: Mock on price and last24hr
-    saveBandInfo(address, '1000000000000000000000000', price, last24Hrs),
-  )
   yield put(setWallet(window.BandWallet))
   yield put(setWeb3(new Web3(window.BandWallet.ref.current.state.provider)))
   // Auto update pending transaction
