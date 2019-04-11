@@ -60,6 +60,7 @@ const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
             colorShadow="ffb4ac"
             onClick={() => vote(false)}
             mr="35px"
+            disabled={isVoted}
           >
             REJECT
           </VoteButton>
@@ -70,6 +71,7 @@ const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
             colorVote="#42c47f"
             colorShadow="a6e7c4"
             onClick={() => vote(true)}
+            disabled={isVoted}
           >
             SUPPORT
           </VoteButton>

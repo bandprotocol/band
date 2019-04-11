@@ -33,9 +33,12 @@ function* handleLoadProposals({ address }) {
             totalVotingPower
             timestamp
             expirationTime
+            status
             proposalVotesByParameterAddressAndProposalId(condition: {voter: "0x85109F11A7E1385ee826FbF5dA97bB97dba0D76f"}) {
               nodes {
                 voter
+                yesWeight
+                noWeight
               }
             }
           }

@@ -11,43 +11,34 @@ function* handleLoadTransferHistory({ address }) {
     yield delay(100)
   }
 
-  const {
-    community: {
-      token: { transferHistory: transfers },
-    },
-  } = yield Utils.graphqlRequest(
+  const transfers = (yield Utils.graphqlRequest(
     `
       {
-        community(address:"${address}") {
-          token {
-            transferHistory {
-              tx {
+        communityByAddress(address: "${address}") {
+          tokenByCommunityAddress{
+            transfersByTokenAddress{
+              nodes{
+                sender
+                receiver
+                value
                 txHash
-                blockTimestamp
+                timestamp
               }
-              sender {
-                address
-              }
-              receiver {
-                address
-              }
-              value
             }
           }
         }
       }
       `,
-  )
+  )).communityByAddress.tokenByCommunityAddress.transfersByTokenAddress.nodes
 
-  // TODO ???
   yield put(
     addTransfers(
       address,
       transfers.map(tx => ({
-        txHash: tx.tx.txHash,
-        timeStamp: tx.tx.blockTimestamp,
-        from: tx.sender.address,
-        to: tx.receiver.address,
+        txHash: tx.txHash,
+        timeStamp: tx.timestamp,
+        from: tx.sender,
+        to: tx.receiver,
         quantity: new BN(tx.value),
       })),
     ),

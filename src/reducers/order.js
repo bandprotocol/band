@@ -4,17 +4,19 @@ import moment from 'utils/moment'
 import { ADD_ORDERS } from 'actions'
 import { Map, List } from 'immutable'
 
+import BN from 'utils/bignumber'
+
 const handleAddOrders = (state, { address, orders }) => {
   const newOrders = orders
     .reduce(
       (acc, order) =>
         acc.push(
           Map({
-            time: moment(order.blockTime),
-            price: order.price,
-            amount: order.value,
+            time: moment(order.timestamp),
+            price: new BN(order.price),
+            amount: new BN(order.amount),
             type: order.orderType,
-            user: order.user.toLowerCase(),
+            user: order.user,
             txHash: order.txHash,
           }),
         ),

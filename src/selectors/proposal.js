@@ -14,7 +14,7 @@ export const proposalByStatusSelector = createSelector(
     if (!proposals.get(address)) return null
     return proposals
       .get(address, List())
-      .filter(p => !isActive ^ (p.get('status') === 'NOT_RESOLVED'))
+      .filter(p => !isActive ^ (p.get('status') === 'ACTIVE'))
       .sortBy(x => x.get('proposalId'))
       .reverse()
       .toJS()
