@@ -12,11 +12,14 @@ const InputFlex = styled(Flex).attrs({ alignItems: 'center' })`
   border-radius: 4px;
   border: solid 1px ${p => p.borderColor || '#e7ecff'};
   background-color: #ffffff;
+  margin: 0 0 2px -6px;
 `
 
 const ModernInput = styled.input`
   border: 0px;
   width: 100%;
+  height: 100%;
+  font-size: 14px;
 `
 
 const UnitSelector = styled.select`

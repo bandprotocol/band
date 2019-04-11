@@ -13,7 +13,7 @@ const Spinner = styled(Box)`
 
 export function createLoadingButton(Component) {
   class CustomButton extends Button {
-    Component = Component
+    static Component = Component
   }
   return CustomButton
 }

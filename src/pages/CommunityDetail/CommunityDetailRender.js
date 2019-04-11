@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Image, Box, Button, Card } from 'ui/common'
+import { Flex, Text, Box, Button } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import MiniGraph from 'components/MiniGraph'
 import graphGreen from 'images/graphGreen.svg'
@@ -26,7 +26,6 @@ const GrayButton = styled(Button).attrs({
 `
 
 export default props => {
-  // console.log('comm detail props : ', props)
   const {
     numberOfHolders,
     communityAddress,

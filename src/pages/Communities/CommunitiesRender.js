@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
 import { Flex, Text, Box } from 'ui/common'

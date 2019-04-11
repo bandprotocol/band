@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, Image } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import graphYellow from 'images/graphYellow.svg'
 
 export default ({ title, value, unit, valueUsd, graphSrc }) => (

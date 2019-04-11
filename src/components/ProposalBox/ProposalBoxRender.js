@@ -4,7 +4,6 @@ import { Flex, Text, Image } from 'ui/common'
 import ProposalDetail from 'components/ProposalDetail'
 import ParticipationStatus from 'components/ParticipationStatus'
 import YourVote from 'components/YourVote'
-import Oval from 'components/Oval'
 import colors from 'ui/colors'
 import CorrectCircle from 'images/correct-circle.svg'
 import WrongCircle from 'images/wrong-circle.svg'
@@ -99,7 +98,6 @@ export default ({
             <Text
               color={colors.purple.blueberry}
               fontSize={1}
-              fontWeight="regular"
               width="80px"
               fontWeight="600"
             >
@@ -109,7 +107,6 @@ export default ({
               color={colors.text.normal}
               fontSize={1}
               px={2}
-              fontWeight="regular"
               fontWeight="500"
               style={{
                 whiteSpace: 'nowrap',

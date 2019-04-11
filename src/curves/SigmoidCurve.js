@@ -158,26 +158,26 @@ export default class SigmoidCurve extends BaseCurve {
   }
 
   generateCollateralArray() {
-    const signOfCase1Constant2 = this.case1Constant2 > 0 ? '4' : '5'
-    const signOfIntegralConstant =
-      this.integralConstantMulTenExpEighteen > 0 ? '4' : '5'
-    const bNoSign = Math.abs(this.b)
+    // const signOfCase1Constant2 = this.case1Constant2 > 0 ? '4' : '5'
+    // const signOfIntegralConstant =
+    //   this.integralConstantMulTenExpEighteen > 0 ? '4' : '5'
+    // const bNoSign = Math.abs(this.b)
 
-    // for log
-    const firstParamLog = this.priceEnd * 0.5 * this.tenExpEighteen
-    const signOfB = this.b > 0 ? '4' : '5'
+    // // for log
+    // const firstParamLog = this.priceEnd * 0.5 * this.tenExpEighteen
+    // const signOfB = this.b > 0 ? '4' : '5'
 
-    // locale string
-    const maximumTotalSupply = this.maximumTotalSupply.toLocaleString(
-      'fullwide',
-      { useGrouping: false },
-    )
-    const case1Constant2 = Math.abs(this.case1Constant2).toLocaleString(
-      'fullwide',
-      {
-        useGrouping: false,
-      },
-    )
+    // // locale string
+    // const maximumTotalSupply = this.maximumTotalSupply.toLocaleString(
+    //   'fullwide',
+    //   { useGrouping: false },
+    // )
+    // const case1Constant2 = Math.abs(this.case1Constant2).toLocaleString(
+    //   'fullwide',
+    //   {
+    //     useGrouping: false,
+    //   },
+    // )
 
     // if (this.b === 0) {
     //   const result = `[18, 15, 1, 0, ${maximumTotalSupply}, ${signOfCase1Constant2}, 9, 1, 0, ${

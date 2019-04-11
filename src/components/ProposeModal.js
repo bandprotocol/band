@@ -1,13 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-
 import colors from 'ui/colors'
 import { Box, Button, Text, Card, Flex } from 'ui/common'
-
 import { connect } from 'react-redux'
 import { proposeProposal } from 'actions'
-
 import ToolTip from 'components/ToolTip'
+import { createLoadingButton } from 'components/BaseButton'
 
 const TitleInput = styled.input`
   width: 100%;
@@ -27,14 +25,14 @@ const ReasonInput = styled.textarea`
   line-height: 1.62;
   resize: none;
 `
-const ProposeButton = styled(Button)`
+const ProposeButton = createLoadingButton(styled(Button)`
   width: 100%;
   height: 40px;
   border-radius: 4px;
   box-shadow: 0 3px 5px 0 rgba(180, 187, 218, 0.5);
   background-color: #7c84a6;
   cursor: pointer;
-`
+`)
 
 class ProposeModal extends React.Component {
   state = {

@@ -26,15 +26,15 @@ const ProposeButton = styled(Button).attrs({
   cursor: pointer;
 `
 
-const SubmitButton = styled(Button)`
+const SubmitButton = styled(Button).attrs({
+  variant: 'grey',
+})`
+  padding: 0;
   width: 100px;
   height: 40px;
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
-  border-radius: 4px;
-  box-shadow: 0 3px 5px 0 rgba(180, 187, 218, 0.5);
-  background-color: #7c84a6;
 `
 
 export default ({

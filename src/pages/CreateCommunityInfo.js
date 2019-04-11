@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, Image } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import styled from 'styled-components'
 import ImageUpload from 'components/ImageUpload'
 import { Label, Field, Input, TextArea } from 'components/Form'

@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Text, Button, Image } from 'ui/common'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import BaseButton from 'components/BaseButton'
+import { createLoadingButton } from 'components/BaseButton'
 import BackIconSrc from 'images/back.svg'
 import ForwardIconSrc from 'images/forward.svg'
 
@@ -18,18 +18,14 @@ const Footer = styled.div`
   z-index: 10;
 `
 
-const FooterButtonRender = styled(Button).attrs({
+const FooterButton = createLoadingButton(styled(Button).attrs({
   width: '180px',
   variant: 'grey',
 })`
   height: 45px;
 
   ${p => (p.disabled ? 'opacity: 0.2;' : 'opacity: 1;')}
-`
-
-class FooterButton extends BaseButton {
-  static Component = FooterButtonRender
-}
+`)
 
 export default ({ pageState, setPageState, handleSubmit }) => (
   <Footer>

@@ -6,7 +6,7 @@ import EthPurple from 'images/ethPurple.svg'
 import Wallet from 'images/wallet.svg'
 import AddCommunity from 'images/add-community.svg'
 import { Link, Bold, Image, Flex, Box, Text, Card } from 'ui/common'
-import media, { isMobile } from 'ui/media'
+import media from 'ui/media'
 
 import PendingTransaction from 'components/PendingTransaction'
 import ClickOutSide from 'react-click-outside'

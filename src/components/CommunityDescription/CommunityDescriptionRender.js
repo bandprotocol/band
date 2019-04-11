@@ -11,7 +11,7 @@ const Description = styled(Text)`
   word-break: break-all;
   -webkit-line-clamp: 4;
   line-height: 1.64;
-  font-size: 13px;
+  font-size: 14px;
 `
 
 export default ({
@@ -48,12 +48,12 @@ export default ({
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Community:
             </Text>
           </Flex>
           <Text
-            fontSize="13px"
+            fontSize={0}
             lineHeight={1.64}
             style={{ wordBreak: 'break-word' }}
           >
@@ -72,12 +72,12 @@ export default ({
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Organization:
             </Text>
           </Flex>
           <Text
-            fontSize="13px"
+            fontSize={0}
             lineHeight={1.64}
             style={{ wordBreak: 'break-word' }}
           >
@@ -90,7 +90,7 @@ export default ({
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Description:
             </Text>
           </Flex>
@@ -120,13 +120,13 @@ export default ({
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Website:
             </Text>
           </Flex>
           <Flex mr="10px" style={{ minWidth: 0 }}>
             <Text
-              fontSize="13px"
+              fontSize={0}
               lineHeight={1.64}
               color="#4a4a4a"
               style={{
@@ -152,13 +152,13 @@ export default ({
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Contract:
             </Text>
           </Flex>
           <Flex mr="10px" style={{ minWidth: 0 }}>
             <Text
-              fontSize="13px"
+              fontSize={0}
               lineHeight={1.64}
               color="#4a4a4a"
               style={{
@@ -186,13 +186,13 @@ export default ({
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Token:
             </Text>
           </Flex>
           <Flex mr="10px" style={{ minWidth: 0 }}>
             <Text
-              fontSize="13px"
+              fontSize={0}
               lineHeight={1.64}
               style={{
                 textOverflow: 'ellipsis',
@@ -212,12 +212,13 @@ export default ({
             mr="10px"
             style={{ minWidth: '90px' }}
             justifyContent="flex-end"
+            alignItems="center"
           >
-            <Text color="#4e3ca9" fontSize="13px" lineHeight={1.64}>
+            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
               Transferable:
             </Text>
           </Flex>
-          <Text fontSize="13px" lineHeight={1.64}>
+          <Text fontSize={0} lineHeight={1.64}>
             {'Yes'}
           </Text>
         </Flex>

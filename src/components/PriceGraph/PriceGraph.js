@@ -6,8 +6,6 @@ import PriceGraphRender from './PriceGraphRender'
 import { loadPriceHistory } from 'actions'
 import { priceHistorySelector } from 'selectors/price'
 
-import data from './mock'
-
 class PriceGraph extends React.Component {
   componentDidMount() {
     this.props.loadPrice()

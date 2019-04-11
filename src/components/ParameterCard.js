@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Flex, Box, Text } from 'ui/common'
+import { Card, Flex, Text } from 'ui/common'
 import styled from 'styled-components'
 import colors from 'ui/colors'
 
@@ -22,7 +22,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
     <WhiteCard>
       <Flex
         flexDirection="column"
-        style={{ height: '100%', padding: '28px 40px 28px 16px' }}
+        style={{ height: '100%', padding: '28px 40px 28px 21px' }}
       >
         <Text fontSize={1} fontWeight="bold" color={colors.purple.dark}>
           {name}
@@ -31,7 +31,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
           {detail.description}
         </Text>
         <Flex flex={1} />
-        <Flex alignItems="center" py={1} mt={2} style={{ height: '30px' }}>
+        <Flex alignItems="center" py={1} mt={3} style={{ height: '30px' }}>
           <Text fontSize={0} color={colors.purple.dark} mr={3}>
             Value:
           </Text>

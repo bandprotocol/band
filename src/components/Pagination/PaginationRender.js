@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Text } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
 const LeftRight = styled(Text).attrs({

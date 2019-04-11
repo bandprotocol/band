@@ -1,6 +1,6 @@
 import React from 'react'
 import RichListPagination from 'components/Pagination/RichListPagination'
-import { Flex, Text, Image, Link } from 'ui/common'
+import { Flex, Text, Image } from 'ui/common'
 import RichlistBody from './RichlistBody'
 import MockProposal from 'images/mock-proposal.svg'
 

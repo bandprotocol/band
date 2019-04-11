@@ -1,8 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
 
 import { colors } from 'ui'
-import { Flex, Text, AbsoluteLink, Link, Image, Bold } from 'ui/common'
+import { Flex, Text, AbsoluteLink, Image, Bold } from 'ui/common'
 import OutImg from 'images/out.svg'
 
 const HistoryRow = ({ index, time, price, amount, type, txLink }) => (

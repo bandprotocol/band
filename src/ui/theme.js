@@ -106,6 +106,7 @@ export default {
       cursor: 'pointer',
       color: '#b1b8e7',
       backgroundColor: '#e8ebfd',
+      pointerEvents: 'none',
     },
   },
   cards: {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Flex, Box, Button, Text, Card } from 'ui/common'
+import { Flex, Box, Button, Text } from 'ui/common'
 import { colors } from 'ui'
 import styled from 'styled-components'
 import BN from 'utils/bignumber'
@@ -340,10 +340,7 @@ const Advance = ({
 
 const BuySellButton = ({ type, amount, symbol, disabled, onClick }) => (
   <Button
-    variant={
-      // submit is green, cancel is red
-      disabled ? 'disable' : type === 'buy' ? 'submit' : 'cancel'
-    }
+    variant={disabled ? 'disable' : type === 'buy' ? 'submit' : 'cancel'}
     my={3}
     width="395px"
     style={{

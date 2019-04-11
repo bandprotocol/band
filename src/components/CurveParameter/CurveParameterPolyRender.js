@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, Box } from 'rebass'
+import { Flex, Text } from 'rebass'
 import Slider from 'components/Slider'
 import colors from 'ui/colors'
 import styled from 'styled-components'

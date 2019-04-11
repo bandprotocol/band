@@ -59,6 +59,7 @@ class ParameterPanel extends React.Component {
 
   submitChanges() {
     this.props.onSubmit(this.state.changes)
+    this.toggleEdit()
   }
 
   render() {
@@ -79,7 +80,6 @@ class ParameterPanel extends React.Component {
 }
 
 const mapStateToProps = (state, { communityAddress }) => {
-  // console.log(state)
   return {
     prefixList: prefixListSelector(state, { address: communityAddress }).map(
       prefix => ({ value: prefix, label: prefix }),

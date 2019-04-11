@@ -1,5 +1,4 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { Flex } from 'ui/common'
 

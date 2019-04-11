@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, Box, Button } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
 export default ({ t, color, bg, size, fontSize, fontWeight }) => (

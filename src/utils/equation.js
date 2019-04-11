@@ -123,7 +123,7 @@ function solveMath(self, startIndex, xValue) {
       const thenEndIndex = dryRun(self, condEndIndex + 1)
       return solveMath(self, thenEndIndex + 1, xValue)
     }
-  } else if (opcode == OPCODE_BANCOR_LOG) {
+  } else if (opcode === OPCODE_BANCOR_LOG) {
     const [multiplierEndIndex, multiplier] = solveMath(
       self,
       startIndex + 1,

@@ -39,10 +39,6 @@ class CreateCommunity extends React.Component {
     },
   }
 
-  componentDidUpdate() {
-    window.CreateCommState = this.state
-  }
-
   setPageState(nextPageState) {
     const {
       name,

@@ -1,6 +1,6 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
-import { Flex, Text, Image, Box } from 'ui/common'
+import { Flex, Text, Image } from 'ui/common'
 import { IPFS } from 'band.js'
 import ImageLogoSrc from 'images/upload-logo.svg'
 import ImageBannerSrc from 'images/upload-banner.svg'

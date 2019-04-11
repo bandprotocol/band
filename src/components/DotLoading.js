@@ -1,6 +1,5 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
-import { Box } from 'ui/common'
 
 const FirstAnimation = keyframes`
   0% {

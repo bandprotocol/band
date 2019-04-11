@@ -28,7 +28,7 @@ const Circle = styled.div`
         : p.state === 1
         ? 'Token Distribution'
         : 'Governance Parameters'}';
-    left: ${p => (p.state == 0 ? '-50px' : p.state === 1 ? '-60px' : '-75px')};
+    left: ${p => (p.state === 0 ? '-50px' : p.state === 1 ? '-60px' : '-75px')};
     width: 200px;
     font-weight: ${p => (p.active ? '500' : '200')};
     color: ${p => (p.active ? colors.purple.dark : colors.normal)};
