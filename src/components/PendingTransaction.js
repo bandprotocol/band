@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { AbsoluteLink, Box, Flex, Text } from 'ui/common'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import { Box, Flex, Text } from 'ui/common'
+import TxHashLink from 'components/TxHashLink'
 
 const Container = styled(Box).attrs({
   bg: '#ffffff',
@@ -16,9 +15,8 @@ const Container = styled(Box).attrs({
 const EllipsisText = styled(Text).attrs(props => ({
   color: '#4a4a4a',
   fontSize: '14px',
-  width: props.width || '100%',
-  textAlign: props.textAlign,
-  flex: 1,
+  lineHeight: '18px',
+  mr: '10px',
 }))`
   text-overflow: ellipsis;
   overflow: hidden;
@@ -166,15 +164,7 @@ export default ({ title, type, txHash, status, confirm }) => (
     <Flex py={3}>
       <Flex flex={1} style={{ minWidth: 0 }}>
         <EllipsisText>{title}</EllipsisText>
-        <AbsoluteLink
-          style={{ marginLeft: 4 }}
-          to={'https://rinkeby.etherscan.io/tx/' + txHash}
-        >
-          <FontAwesomeIcon
-            icon={faExternalLinkAlt}
-            style={{ color: '#4e3ca9' }}
-          />
-        </AbsoluteLink>
+        <TxHashLink href={'https://rinkeby.etherscan.io/tx/' + txHash} />
       </Flex>
       <TxType type={type} />
     </Flex>

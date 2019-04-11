@@ -6,14 +6,12 @@ import MiniGraph from 'components/MiniGraph'
 import graphGreen from 'images/graphGreen.svg'
 import graphRed from 'images/graphRed.svg'
 import graphBlue from 'images/graphBlue.svg'
-
 import CommunityDescription from 'components/CommunityDescription'
 import DetailHistory from 'components/DetailHistory'
 import CurveGraph from 'components/CurveGraph'
 import BN from 'utils/bignumber'
 import { calculatePriceAt } from 'utils/equation'
 import AutoSizer from 'react-virtualized-auto-sizer'
-
 import Graph from 'components/PriceGraph'
 
 const GrayButton = styled(Button).attrs({
@@ -41,7 +39,6 @@ export default props => {
     totalSupply,
     collateralEquation,
   } = props
-  // console.log(totalSupply, collateralEquation)
 
   const dataset = []
   if (collateralEquation) {
@@ -55,8 +52,6 @@ export default props => {
     }
   }
 
-  // console.log(totalSupply, marketCap)
-  // console.log('token price : ', price)
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <Flex

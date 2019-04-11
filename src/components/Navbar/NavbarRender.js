@@ -58,7 +58,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
         <TextClickable
           color="#d1d1d1"
           onClick={toggle}
-          fontWeight={400}
+          fontWeight={500}
           fontSize="16px"
         >
           BND
@@ -71,7 +71,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle }) => {
         <TextClickable
           onClick={toggle}
           color="#d1d1d1"
-          fontWeight={400}
+          fontWeight={500}
           fontSize="16px"
         >
           USD

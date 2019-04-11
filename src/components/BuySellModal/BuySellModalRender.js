@@ -455,98 +455,96 @@ export default ({
       {/* Header */}
       <BuySellHeader type={type} setType={setType} />
       {/* Content */}
-      <Flex flexDirection="column" justifyContent="flex-start" mt="40px" px={3}>
-        <Box px={3}>
-          <Amount
-            type={type}
-            loading={loading}
-            symbol={symbol}
-            amount={amount}
-            amountStatus={amountStatus}
-            handleChange={handleChange.bind(null, 'amount')}
-          />
-          <Flex justifyContent="center" width={1} mb="20px">
-            <Text color="#4853ff">
-              <i className="fas fa-arrow-up" />
-              {` `}
-              <i className="fas fa-arrow-down" />
-            </Text>
-          </Flex>
-          <EstimatedPrice
-            type={type}
-            price={price}
-            ratio={ratio.pretty()}
-            priceStatus={priceStatus}
-            loading={loading}
-          />
-          <Flex
-            flexDirection="column"
-            mt="20px"
-            fontSize="12px"
-            fontWeight={500}
-          >
-            <Flex flexDirection="row">
-              <Flex flex={1}>Rate</Flex>
-              <Flex flex={6} justifyContent="flex-end" flexDirection="row">
-                {loading ? (
-                  <React.Fragment>
-                    <Flex flex={5} />
-                    <DotLoading color="#b1b8e7" size="6px" />
-                    <Flex flex={1} />
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    {`1 ${symbol} = ${ratio.pretty()} BAND `}
-                    <Text color="#4e3ca9" ml="5px">
-                      ${`(${ratio.pretty()} USD)`}
-                    </Text>
-                  </React.Fragment>
-                )}
-              </Flex>
-            </Flex>
-            <Flex flexDirection="row" mt="10px">
-              <Flex flex={2}>
-                <Text>Price slippage</Text>
-                <ToolTip
-                  bg={colors.text.grey}
-                  width="410px"
-                  textBg="#b2b6be"
-                  textColor={colors.text.normal}
-                  bottom={20}
-                  left={20}
-                  tip={{ left: 21 }}
-                >
-                  Price slippage refers to the difference between the expected
-                  price before a transaction is executed and the actual price at
-                  which it is executed.
-                </ToolTip>
-              </Flex>
+      <Flex
+        flexDirection="column"
+        justifyContent="flex-start"
+        mt="40px"
+        px="30px"
+      >
+        <Amount
+          type={type}
+          loading={loading}
+          symbol={symbol}
+          amount={amount}
+          amountStatus={amountStatus}
+          handleChange={handleChange.bind(null, 'amount')}
+        />
+        <Flex justifyContent="center" width={1} mb="20px">
+          <Text color="#4853ff">
+            <i className="fas fa-arrow-up" />
+            {` `}
+            <i className="fas fa-arrow-down" />
+          </Text>
+        </Flex>
+        <EstimatedPrice
+          type={type}
+          price={price}
+          ratio={ratio.pretty()}
+          priceStatus={priceStatus}
+          loading={loading}
+        />
+        <Flex flexDirection="column" mt="20px" fontSize="12px" fontWeight={500}>
+          <Flex flexDirection="row">
+            <Flex flex={1}>Rate</Flex>
+            <Flex flex={6} justifyContent="flex-end" flexDirection="row">
               {loading ? (
                 <React.Fragment>
-                  <Flex flex={4} />
+                  <Flex flex={5} />
                   <DotLoading color="#b1b8e7" size="6px" />
                   <Flex flex={1} />
                 </React.Fragment>
               ) : (
-                <Flex flex={2} justifyContent="flex-end">
-                  {`${priceSlippage.pretty()} %`}
-                </Flex>
+                <React.Fragment>
+                  {`1 ${symbol} = ${ratio.pretty()} BAND `}
+                  <Text color="#4e3ca9" ml="5px">
+                    ${`(${ratio.pretty()} USD)`}
+                  </Text>
+                </React.Fragment>
               )}
             </Flex>
           </Flex>
-          <Advance
-            type={type}
-            loading={loading}
-            showAdvance={showAdvance}
-            toggleAdvance={toggleAdvance}
-            ratio={ratio}
-            priceChange={priceChange}
-            priceLimit={priceLimit}
-            priceLimitStatus={priceLimitStatus}
-            handlePriceLimit={handleChange.bind(null, 'priceLimit')}
-            handlePriceChange={handleChange.bind(null, 'priceChange')}
-          />
-        </Box>
+          <Flex flexDirection="row" mt="10px">
+            <Flex flex={2} flexDirection="row" alignItems="center">
+              <Text mr={1}>Price slippage</Text>
+              <ToolTip
+                bg={colors.text.grey}
+                width="410px"
+                textBg="#b2b6be"
+                textColor={colors.text.normal}
+                bottom={20}
+                left={20}
+                tip={{ left: 21 }}
+              >
+                Price slippage refers to the difference between the expected
+                price before a transaction is executed and the actual price at
+                which it is executed.
+              </ToolTip>
+            </Flex>
+            {loading ? (
+              <React.Fragment>
+                <Flex flex={4} />
+                <DotLoading color="#b1b8e7" size="6px" />
+                <Flex flex={1} />
+              </React.Fragment>
+            ) : (
+              <Flex flex={2} justifyContent="flex-end">
+                {`${priceSlippage.pretty()} %`}
+              </Flex>
+            )}
+          </Flex>
+        </Flex>
+        <Advance
+          type={type}
+          loading={loading}
+          showAdvance={showAdvance}
+          toggleAdvance={toggleAdvance}
+          ratio={ratio}
+          priceChange={priceChange}
+          priceLimit={priceLimit}
+          priceLimitStatus={priceLimitStatus}
+          handlePriceLimit={handleChange.bind(null, 'priceLimit')}
+          handlePriceChange={handleChange.bind(null, 'priceChange')}
+        />
         <Flex width={1}>
           <BuySellButton
             type={type}

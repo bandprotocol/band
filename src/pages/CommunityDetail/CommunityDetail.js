@@ -27,8 +27,7 @@ const mapStateToProps = (state, { communityAddress }) => {
   const numberOfHolders = numHolders(state, {
     address: communityAddress,
   })
-  // console.log(state)
-  // console.log(community)
+
   if (!community) return {}
   return {
     numberOfHolders: numberOfHolders,
