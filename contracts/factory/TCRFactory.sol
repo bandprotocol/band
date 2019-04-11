@@ -15,7 +15,6 @@ contract TCRFactory {
     external
   {
     TCR tcr = new TCR(_prefix, _core, _voting, _expressions);
-    tcr.setExecDelegator(executionDelegator);
     emit TCRCreated(address(tcr), address(_core));
   }
 }
