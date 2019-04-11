@@ -2,48 +2,44 @@ import { takeEvery, put, select, delay } from 'redux-saga/effects'
 import { LOAD_HOLDERS, addHolders } from 'actions'
 import { Utils } from 'band.js'
 import BN from 'bn.js'
-import { currentCommunityClientSelector } from 'selectors/current'
 
 function* handleLoadHolders({ address }) {
-  // TODO: Find a better way.
-  while (true) {
-    if (yield select(currentCommunityClientSelector, { address })) break
-    yield delay(100)
-  }
-
   const {
-    community: {
-      token: { address: tokenAddress, balances: holders },
+    communityByAddress: {
+      tokenByCommunityAddress: {
+        address: tokenAddress,
+        balancesByTokenAddress: { nodes: holders },
+      },
     },
   } = yield Utils.graphqlRequest(
     `
     {
-        community(address:"${address}") {
-          token {
-            address
-            balances {
-              user {
-                address
-              }
+      communityByAddress(address: "${address}") {
+        tokenByCommunityAddress {
+          address
+          balancesByTokenAddress{
+            totalCount
+            nodes{
+              user
               value
             }
           }
         }
       }
+    }
       `,
   )
 
-  // TODO ???
   yield put(
     addHolders(
       address,
       holders
         .map(holder => ({
           tokenAddress,
-          address: holder.user.address,
+          address: holder.user,
           balance: new BN(holder.value),
         }))
-        .filter(holder => !holder.balance.isZero()),
+        .filter(holder => holder.balance.gt(new BN(0))),
     ),
   )
 }

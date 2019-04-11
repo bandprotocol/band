@@ -1,30 +1,37 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
-import {
-  RELOAD_BAND_BALANCE,
-  saveBandBalance,
-  RELOAD_CT_BALANCE,
-  saveCTBalance,
-} from 'actions'
-import {
-  currentBandClientSelector,
-  currentCommunityClientSelector,
-} from 'selectors/current'
+import { RELOAD_BALANCE, saveBandBalance, saveCTBalance } from 'actions'
+import { Utils } from 'band.js'
+import { currentUserSelector } from 'selectors/current'
+import { bandSelector } from 'selectors/basic'
 
-function* handleReloadBandBalance() {
-  const bandBalance = yield (yield select(
-    currentBandClientSelector,
-  )).getBalance()
-  yield put(saveBandBalance(bandBalance))
-}
+import BN from 'utils/bignumber'
 
-function* handleReloadCTBalance({ communityAddress }) {
-  const communityClient = yield select(currentCommunityClientSelector, {
-    address: communityAddress,
-  })
-  yield put(saveCTBalance(communityAddress, yield communityClient.getBalance()))
+function* handleReloadBalance() {
+  const userAddress = yield select(currentUserSelector)
+  const bandAddress = (yield select(bandSelector)).get('address')
+  const query = yield Utils.graphqlRequest(`{
+    allBalances(condition: {user: "${userAddress}"}) {
+      nodes {
+        value
+        tokenAddress
+        tokenByTokenAddress{
+          communityAddress
+        }
+      }
+    }
+  }`)
+  for (const { value, tokenAddress, tokenByTokenAddress } of query.allBalances
+    .nodes) {
+    if (tokenAddress === bandAddress) {
+      yield put(saveBandBalance(new BN(value)))
+    } else {
+      yield put(
+        saveCTBalance(tokenByTokenAddress.communityAddress, new BN(value)),
+      )
+    }
+  }
 }
 
 export default function*() {
-  yield takeEvery(RELOAD_BAND_BALANCE, handleReloadBandBalance)
-  yield takeEvery(RELOAD_CT_BALANCE, handleReloadCTBalance)
+  yield takeEvery(RELOAD_BALANCE, handleReloadBalance)
 }

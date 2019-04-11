@@ -26,10 +26,10 @@ import parameterSaga from 'sagas/parameters'
 import proposalSaga from 'sagas/proposals'
 import transferSaga from 'sagas/transfer'
 import holderSaga from 'sagas/holder'
-import tokenSaga from 'sagas/token'
 
-import { BandProtocolClient } from 'band.js'
 import BandWallet from 'band-wallet'
+import { Utils } from 'band.js'
+import BN from 'utils/bignumber'
 
 import transit from 'transit-immutable-js'
 import { List, fromJS } from 'immutable'
@@ -59,31 +59,63 @@ function* baseInitialize() {
     },
   )
 
-  BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
-  const tempBandClient = yield BandProtocolClient.make({})
-  const { address, price, last24Hrs } = yield tempBandClient.getBandInfo()
-
+  const query = yield Utils.graphqlRequest(`
+    {
+      allContracts(condition: {contractType: "BAND_TOKEN"}) {
+      nodes {
+        address
+      }
+    }
+  }
+  `)
+  const bandAddress = query.allContracts.nodes[0].address
   yield put(
     // TODO: Mock on price and last24hr
-    saveBandInfo(address, '1000000000000000000000000', price, last24Hrs),
+    saveBandInfo(bandAddress, '1000000000000000000000000', 1.03, 6.28),
   )
-  const dapps = yield tempBandClient.getDAppsInfo()
-  for (const dapp of dapps) {
+  const communityDetails = yield Utils.graphqlRequest(`{
+    allCommunities {
+      nodes {
+        name
+        address
+        organization
+        website
+        logo
+        banner
+        description
+        tokenByCommunityAddress{
+          address
+          symbol
+          totalSupply
+        }
+        curveByCommunityAddress{
+          price
+          collateralEquation
+        }
+      }
+    }
+  }
+  `)
+  for (const dapp of communityDetails.allCommunities.nodes) {
     yield put(
       saveCommunityInfo(
         dapp.name,
-        dapp.symbol,
+        dapp.tokenByCommunityAddress.symbol,
         dapp.address,
+        dapp.tokenByCommunityAddress.address,
         dapp.organization,
         `https://ipfs.infura.io:5001/api/v0/cat/${dapp.logo}`,
         `https://ipfs.infura.io:5001/api/v0/cat/${dapp.banner}`,
         dapp.description,
         dapp.website,
-        dapp.marketCap,
-        dapp.price,
-        dapp.last24Hrs,
-        dapp.totalSupply,
-        dapp.collateralEquation,
+        (parseFloat(dapp.curveByCommunityAddress.price) *
+          parseFloat(dapp.tokenByCommunityAddress.totalSupply)) /
+          1e18,
+        parseFloat(dapp.curveByCommunityAddress.price),
+        // dapp.last24Hrs,
+        0,
+        new BN(dapp.tokenByCommunityAddress.totalSupply),
+        dapp.curveByCommunityAddress.collateralEquation,
       ),
     )
   }
@@ -165,9 +197,9 @@ function* checkProvider() {
         (yield new Promise((resolve, reject) => {
           web3.eth.getAccounts((error, users) => {
             if (error) reject(error)
-            else resolve(users)
+            else resolve(web3.utils.toChecksumAddress(users[0]))
           })
-        }))[0]) ||
+        }))) ||
       null
     if (userAddress !== userState) {
       yield put(updateProvider(userAddress, web3 && web3.currentProvider))
@@ -200,7 +232,6 @@ export default function*() {
     fork(proposalSaga),
     fork(transferSaga),
     fork(holderSaga),
-    fork(tokenSaga),
   ])
   yield* baseInitialize()
 }

@@ -7,8 +7,7 @@ import {
   saveBandClient,
   saveCommunityClient,
   removeBalance,
-  reloadBandBalance,
-  reloadCTBalance,
+  reloadBalance,
 } from 'actions'
 
 import { nameAndAddressCommunitySelector } from 'selectors/communities'
@@ -25,7 +24,7 @@ function* handleUpdateProvider({ address, provider }) {
         }),
       ),
     )
-    yield put(reloadBandBalance())
+    yield put(reloadBalance())
   } else {
     yield put(setUserAddress(null))
     yield put(
@@ -46,15 +45,6 @@ function* handleUpdateProvider({ address, provider }) {
         dapp.get('address'),
         yield bandClient.at(dapp.get('address')),
       ),
-    )
-  }
-
-  if (address) {
-    yield all(
-      dapps
-        .map(dapp => put(reloadCTBalance(dapp.get('address'))))
-        .valueSeq()
-        .toJS(),
     )
   }
 }

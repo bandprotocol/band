@@ -6,7 +6,8 @@ import { List } from 'immutable'
 
 const handleAddPrices = (state, { address, prices }) => {
   const newPrices = prices.reduce(
-    (acc, price) => acc.push(List([moment(price.time), price.price])),
+    (acc, price) =>
+      acc.push(List([moment.unix(price.timestamp), parseFloat(price.price)])),
     List(),
   )
   return state.set(address, newPrices)

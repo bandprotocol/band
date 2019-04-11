@@ -1,51 +1,63 @@
 import { takeEvery, put, select, delay, all } from 'redux-saga/effects'
-import { IPFS } from 'band.js'
+import { Utils } from 'band.js'
+import BN from 'utils/bignumber'
 import moment from 'utils/moment'
 
 import { LOAD_PROPOSALS, saveProposals } from 'actions'
 
-import {
-  currentCommunityClientSelector,
-  currentUserSelector,
-} from 'selectors/current'
+import { currentUserSelector } from 'selectors/current'
 
 import { parameterByNameSelector } from 'selectors/parameter'
 
 function* handleLoadProposals({ address }) {
-  // TODO: Find a better way.
-  while (true) {
-    if (yield select(currentCommunityClientSelector, { address })) break
-    yield delay(100)
-  }
-
-  const parameterClient = (yield select(currentCommunityClientSelector, {
-    address,
-  })).parameter()
-
   const currentUser = yield select(currentUserSelector)
-
-  const rawProposals = yield parameterClient.getProposals()
-
-  const votes = yield parameterClient.getVotes({
-    voter: currentUser || undefined,
-  })
+  const {
+    communityByAddress: {
+      parameterByCommunityAddress: {
+        proposalsByParameterAddress: { nodes: rawProposals },
+      },
+    },
+  } = yield Utils.graphqlRequest(`{
+    communityByAddress(address: "${address}") {
+      parameterByCommunityAddress {
+        proposalsByParameterAddress {
+          nodes {
+            reason
+            changes
+            proposalId
+            proposer
+            minParticipation
+            supportRequired
+            currentYesCount
+            currentNoCount
+            totalVotingPower
+            timestamp
+            expirationTime
+            proposalVotesByParameterAddressAndProposalId(condition: {voter: "0x85109F11A7E1385ee826FbF5dA97bB97dba0D76f"}) {
+              nodes {
+                voter
+              }
+            }
+          }
+        }
+      }
+    }
+  }`)
 
   const proposals = yield all(
     rawProposals.map(function*(proposal) {
-      const vote = votes.filter(v => v.onChainId === proposal.proposalId)
-      const data = JSON.parse(yield IPFS.get(proposal.reasonHash))
       if (proposal.changes.length === 0) {
         return {
           deleted: true,
         }
       }
-      const [prefix, name] = proposal.changes[0].key.split(':')
+      const [prefix, name] = Object.keys(proposal.changes)[0].split(':')
       if (!name)
         return {
           deleted: true,
         }
       const changes = yield all(
-        proposal.changes.map(function*({ key, value }) {
+        Object.entries(proposal.changes).map(function*([key, value]) {
           const [_prefix, _name] = key.split(':')
           if (_prefix !== prefix || !_name) {
             return {
@@ -57,13 +69,16 @@ function* handleLoadProposals({ address }) {
             type: prefix,
             name: _name,
           })
+
           return {
             name: _name,
             oldValue,
-            newValue: value,
+            newValue: new BN(value),
           }
         }),
       )
+
+      const vote = proposal.proposalVotesByParameterAddressAndProposalId.nodes
 
       if (changes.filter(c => c.deleted).length !== 0) {
         return {
@@ -74,27 +89,28 @@ function* handleLoadProposals({ address }) {
       return {
         proposalId: proposal.proposalId,
         proposer: proposal.proposer,
-        title: data && data.title,
-        reason: data && data.reason,
+        title: proposal.reason && proposal.reason.title,
+        reason: proposal.reason && proposal.reason.reason,
         prefix: prefix,
         changes: changes,
         status: proposal.status,
-        proposedAt: moment(proposal.proposedAt),
-        expiredAt: moment(proposal.pollEndTime),
-        yesVote: proposal.yesVote,
-        noVote: proposal.noVote,
-        supportRequiredPct: proposal.supportRequiredPct,
-        minParticipation: proposal.minParticipation,
-        totalVotingPower: proposal.totalVotingPower,
+        proposedAt: moment.unix(proposal.timestamp),
+        expiredAt: moment.unix(proposal.expirationTime),
+        yesVote: new BN(proposal.currentYesCount),
+        noVote: new BN(proposal.currentNoCount),
+        supportRequiredPct: new BN(proposal.supportRequired),
+        minParticipation: new BN(proposal.minParticipation),
+        totalVotingPower: new BN(proposal.totalVotingPower),
         vote:
           vote.length !== 0 && currentUser
-            ? vote[0].yesWeight.gt(vote[0].noWeight)
+            ? new BN(vote[0].yesWeight).gt(new BN(vote[0].noWeight))
               ? 'SUPPORT'
               : 'REJECT'
             : 'NOT VOTED',
       }
     }),
   )
+
   yield put(saveProposals(address, proposals.filter(p => !p.deleted)))
 }
 

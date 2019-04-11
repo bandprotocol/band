@@ -9,6 +9,7 @@ const handleSaveCommunityInfo = (
     name,
     symbol,
     address,
+    tokenAddress,
     logo,
     banner,
     description,
@@ -26,6 +27,7 @@ const handleSaveCommunityInfo = (
     Map({
       name,
       address,
+      tokenAddress,
       symbol,
       logo,
       banner,

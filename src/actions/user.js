@@ -1,9 +1,6 @@
-import BN from 'utils/bignumber'
-
 export const SET_USER_ADDRESS = 'SET_USER_ADDRESS'
 
-export const RELOAD_BAND_BALANCE = 'RELOAD_BAND_BALANCE'
-export const RELOAD_CT_BALANCE = 'RELOAD_CT_BALANCE'
+export const RELOAD_BALANCE = 'RELOAD_BALANCE'
 
 export const SAVE_BAND_BALANCE = 'SAVE_BAND_BALANCE'
 export const SAVE_CT_BALANCE = 'SAVE_CT_BALANCE'
@@ -15,22 +12,17 @@ export const setUserAddress = address => ({
   address,
 })
 
-export const reloadBandBalance = () => ({ type: RELOAD_BAND_BALANCE })
-
-export const reloadCTBalance = communityAddress => ({
-  type: RELOAD_CT_BALANCE,
-  communityAddress,
-})
+export const reloadBalance = () => ({ type: RELOAD_BALANCE })
 
 export const saveBandBalance = balance => ({
   type: SAVE_BAND_BALANCE,
-  balance: BN(balance),
+  balance: balance,
 })
 
 export const saveCTBalance = (communityAddress, balance) => ({
   type: SAVE_CT_BALANCE,
   communityAddress,
-  balance: BN(balance),
+  balance: balance,
 })
 
 export const removeBalance = () => ({ type: REMOVE_BALANCE })

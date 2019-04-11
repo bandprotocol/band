@@ -1,18 +1,29 @@
 import { takeEvery, put, select, delay } from 'redux-saga/effects'
 
 import { LOAD_PRICE_HISTORY, addPrices } from 'actions'
-
-import { currentCommunityClientSelector } from 'selectors/current'
+import { Utils } from 'band.js'
 
 function* handleLoadPriceHistory({ address }) {
-  // TODO: Find a better way.
-  while (true) {
-    if (yield select(currentCommunityClientSelector, { address })) break
-    yield delay(100)
-  }
-  const client = yield select(currentCommunityClientSelector, { address })
-  const pricers = yield client.getPriceHistory({})
-  yield put(addPrices(address, pricers))
+  const query = yield Utils.graphqlRequest(`{
+    communityByAddress(address: "${address}") {
+      curveByCommunityAddress {
+        pricesByCurveAddress(orderBy: TIMESTAMP_DESC)  {
+          nodes {
+            price
+            timestamp
+          }
+        }
+      }
+    }
+  }`)
+
+  yield put(
+    addPrices(
+      address,
+      query.communityByAddress.curveByCommunityAddress.pricesByCurveAddress
+        .nodes,
+    ),
+  )
 }
 
 export default function*() {

@@ -2,27 +2,26 @@ import { takeEvery, put, select, delay } from 'redux-saga/effects'
 
 import { LOAD_PARAMETERS, saveParameters } from 'actions'
 
-import { currentCommunityClientSelector } from 'selectors/current'
+import { Utils } from 'band.js'
+
+import BN from 'utils/bignumber'
 
 function* handleLoadParameters({ address }) {
-  // TODO: Find a better way.
-  while (true) {
-    if (yield select(currentCommunityClientSelector, { address })) break
-    yield delay(100)
-  }
+  const { currentParameters } = (yield Utils.graphqlRequest(`{
+    communityByAddress(address: "${address}") {
+      parameterByCommunityAddress{
+        currentParameters
+      }
+    }
+  }`)).communityByAddress.parameterByCommunityAddress
 
-  const parameterClient = (yield select(currentCommunityClientSelector, {
-    address,
-  })).parameter()
-
-  const rawParams = yield parameterClient.getParameters()
   const params = {}
-  for (const param of rawParams) {
-    const [prefix, name] = param.key.split(':')
+  for (const [key, value] of Object.entries(currentParameters)) {
+    const [prefix, name] = key.split(':')
     if (!(prefix in params)) {
       params[prefix] = []
     }
-    params[prefix].push({ name, value: param.value })
+    params[prefix].push({ name, value: new BN(value) })
   }
   yield put(saveParameters(address, params))
 }
