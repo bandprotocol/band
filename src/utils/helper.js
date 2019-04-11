@@ -166,4 +166,8 @@ export const getParameterDetail = name =>
       type: 'PERCENTAGE',
       description: 'The percentage of the inflation rate on this community',
     },
+    tcr_address: {
+      type: 'ADDRESS',
+      description: 'The address of tcr contract',
+    },
   }[name] || { type: 'Unknown', description: 'UNKNOWN' })

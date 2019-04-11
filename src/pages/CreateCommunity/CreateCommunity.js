@@ -126,7 +126,6 @@ class CreateCommunity extends React.Component {
 
   // submit when everything done!
   async handleSubmit() {
-    BandProtocolClient.setAPI('https://api-wip.rinkeby.bandprotocol.com')
     const bandClient = await BandProtocolClient.make({
       provider: window.BandWallet.ref.current.state.provider,
     })

@@ -34,7 +34,7 @@ function* handleLoadProposals({ address }) {
             timestamp
             expirationTime
             status
-            proposalVotesByParameterAddressAndProposalId(condition: {voter: "0x85109F11A7E1385ee826FbF5dA97bB97dba0D76f"}) {
+            proposalVotesByParameterAddressAndProposalId(condition: {voter: "${currentUser}"}) {
               nodes {
                 voter
                 yesWeight
@@ -82,7 +82,7 @@ function* handleLoadProposals({ address }) {
       )
 
       const vote = proposal.proposalVotesByParameterAddressAndProposalId.nodes
-
+      console.warn(vote)
       if (changes.filter(c => c.deleted).length !== 0) {
         return {
           deleted: true,

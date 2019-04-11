@@ -148,19 +148,19 @@ export default ({
             ) : (
               <Flex alignItems="center" mr="20px" justifyContent="flex-end">
                 <Flex mr="13px">
-                  {status === 'YES' ? (
+                  {status === 'APPROVED' ? (
                     <Image src={CorrectCircle} width="18px" height="18px" />
                   ) : (
                     <Image src={WrongCircle} width="18px" height="18px" />
                   )}
                 </Flex>
                 <Text
-                  color={status === 'YES' ? '#42c47f' : '#ff6757'}
+                  color={status === 'APPROVED' ? '#42c47f' : '#ff6757'}
                   fontSize={16}
                   fontWeight="500"
                   textAlign="right"
                 >
-                  {status === 'YES' ? 'Support' : 'Rejected'}
+                  {status === 'APPROVED' ? 'Support' : 'Rejected'}
                 </Text>
               </Flex>
             )}
