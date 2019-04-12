@@ -12,7 +12,7 @@ const handleAddOrders = (state, { address, orders }) => {
       (acc, order) =>
         acc.push(
           Map({
-            time: moment(order.timestamp),
+            time: moment.unix(order.timestamp),
             price: new BN(order.price),
             amount: new BN(order.amount),
             type: order.orderType,

@@ -92,11 +92,7 @@ export default ({ items }) => {
             from={from}
             to={to}
             quantity={quantity.pretty()}
-            timeStamp={new Date(timeStamp)
-              .toUTCString()
-              .split(' ')
-              .slice(1, -1)
-              .join(' ')}
+            timeStamp={timeStamp.formal()}
             key={i}
             txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
           />

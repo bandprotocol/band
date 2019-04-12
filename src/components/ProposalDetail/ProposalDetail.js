@@ -24,7 +24,16 @@ export default ({ title, description, current, changeTo }) => (
           </Text>
         </Flex>
         <Flex>
-          <Text fontSize={0} fontWeight="500">
+          <Text
+            fontSize={0}
+            fontWeight="500"
+            width="80px"
+            style={{
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            }}
+          >
             {current}
           </Text>
         </Flex>

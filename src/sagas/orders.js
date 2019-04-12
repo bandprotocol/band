@@ -20,7 +20,6 @@ function* handleLoadHistory({ address }) {
       }
     }
   }}`)).communityByAddress.curveByCommunityAddress.ordersByCurveAddress.nodes
-  console.log('orders', orders)
   yield put(addOrders(address, orders))
 }
 

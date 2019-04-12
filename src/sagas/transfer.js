@@ -1,7 +1,9 @@
-import { takeEvery, put, select, delay } from 'redux-saga/effects'
+import { takeEvery, put } from 'redux-saga/effects'
 import { LOAD_TRANSFER_HISTORY, addTransfers } from 'actions'
 import { Utils } from 'band.js'
-import BN from 'bn.js'
+
+import BN from 'utils/bignumber'
+import moment from 'utils/moment'
 
 function* handleLoadTransferHistory({ address }) {
   const transfers = (yield Utils.graphqlRequest(
@@ -24,14 +26,12 @@ function* handleLoadTransferHistory({ address }) {
       `,
   )).communityByAddress.tokenByCommunityAddress.transfersByTokenAddress.nodes
 
-  console.warn(transfers)
-
   yield put(
     addTransfers(
       address,
       transfers.map(tx => ({
         txHash: tx.txHash,
-        timeStamp: tx.timestamp,
+        timeStamp: moment.unix(tx.timestamp),
         from: tx.sender,
         to: tx.receiver,
         quantity: new BN(tx.value),
