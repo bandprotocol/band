@@ -2,15 +2,8 @@ import { takeEvery, put, select, delay } from 'redux-saga/effects'
 import { LOAD_TRANSFER_HISTORY, addTransfers } from 'actions'
 import { Utils } from 'band.js'
 import BN from 'bn.js'
-import { currentCommunityClientSelector } from 'selectors/current'
 
 function* handleLoadTransferHistory({ address }) {
-  // TODO: Find a better way.
-  while (true) {
-    if (yield select(currentCommunityClientSelector, { address })) break
-    yield delay(100)
-  }
-
   const transfers = (yield Utils.graphqlRequest(
     `
       {
@@ -30,6 +23,8 @@ function* handleLoadTransferHistory({ address }) {
       }
       `,
   )).communityByAddress.tokenByCommunityAddress.transfersByTokenAddress.nodes
+
+  console.warn(transfers)
 
   yield put(
     addTransfers(
