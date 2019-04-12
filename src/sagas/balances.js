@@ -19,7 +19,21 @@ function* handleReloadBalance() {
         }
       }
     }
+    allTokens {
+      nodes { 
+        address
+        communityAddress
+      }
+    }
   }`)
+  for (const { address, communityAddress } of query.allTokens.nodes) {
+    if (address === bandAddress) {
+      yield put(saveBandBalance(new BN(0)))
+    } else {
+      yield put(saveCTBalance(communityAddress, new BN(0)))
+    }
+  }
+
   for (const { value, tokenAddress, tokenByTokenAddress } of query.allBalances
     .nodes) {
     if (tokenAddress === bandAddress) {
