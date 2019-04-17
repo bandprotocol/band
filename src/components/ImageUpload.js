@@ -35,7 +35,7 @@ export default class ImageUpload extends React.Component {
     try {
       const chainHash = await setIPFSUrl(file)
       const urlHash = IPFS.toIPFSHash(chainHash)
-      const imageSrc = `https://ipfs.infura.io:5001/api/v0/cat/${urlHash}`
+      const imageSrc = `https://ipfs.bandprotocol.com/api/v0/cat/${urlHash}`
       this.setState({
         src: imageSrc,
       })
