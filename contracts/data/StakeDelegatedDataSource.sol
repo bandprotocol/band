@@ -72,7 +72,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     emit DataSourceRegistered(dataSource, owner, stake);
   }
 
-  function exit(address caller, address dataSource) public feeless(caller) {
+  function exit(address dataSource) public {
     DataProvider storage provider = providers[dataSource];
     require(provider.currentStatus == DataProviderStatus.Active);
     address owner = provider.owner;
@@ -116,6 +116,10 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     }
     require(token.transfer(voter, withdrawAmount));
     emit DataSourceWithdrawn(dataSource, voter, withdrawAmount);
+
+    if (provider.owner == voter && provider.currentStatus == DataProviderStatus.Active) {
+      exit(dataSource);
+    }
   }
 
   ////////////////////////////////////////////////////////////
