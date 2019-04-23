@@ -66,8 +66,8 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     });
     providers[dataSource].publicOwnerships[owner] = stake;
     dataSources.push(dataSource);
-    _repositionUp(dataSources.length.sub(1));
     emit DataSourceRegistered(dataSource, owner, stake);
+    _repositionUp(dataSources.length.sub(1));
   }
 
   function vote(address voter, uint256 stake, address dataSource)
@@ -82,8 +82,8 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     provider.publicOwnerships[voter] = newVoterPublicOwnership;
     provider.stake = newStake;
     provider.totalPublicOwnership = newTotalPublicOwnership;
-    _repositionUp(_findDataSourceIndex(dataSource));
     emit DataSourceVoted(dataSource, voter, stake, newVoterPublicOwnership);
+    _repositionUp(_findDataSourceIndex(dataSource));
   }
 
   function withdraw(address voter, address dataSource) public feeless(voter) {
@@ -96,11 +96,11 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     provider.stake = newStake;
     provider.totalPublicOwnership = newOwnership;
     provider.publicOwnerships[voter] = 0;
+    require(token.transfer(voter, withdrawAmount));
+    emit DataSourceWithdrawn(dataSource, voter, withdrawAmount);
     if (provider.currentStatus == DataProviderStatus.Active) {
       _repositionDown(_findDataSourceIndex(dataSource));
     }
-    require(token.transfer(voter, withdrawAmount));
-    emit DataSourceWithdrawn(dataSource, voter, withdrawAmount);
 
     if (provider.owner == voter && provider.currentStatus == DataProviderStatus.Active) {
       kick(dataSource);
@@ -118,9 +118,9 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
       require(currentOwnerStake < params.get("data:min_provider_stake"));
     }
     provider.currentStatus = DataProviderStatus.Removed;
+    emit DataSourceRemoved(dataSource, owner, currentOwnerStake);
     _repositionDown(_findDataSourceIndex(dataSource));
     dataSources.pop();
-    emit DataSourceRemoved(dataSource, owner, currentOwnerStake);
   }
 
   ////////////////////////////////////////////////////////////
