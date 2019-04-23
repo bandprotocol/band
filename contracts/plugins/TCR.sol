@@ -84,8 +84,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   VotingInterface public voting;
   ParametersBase public params;
 
-  // Namespace prefix for all parametersBase (See ParametersBase.sol) for usage inside
-  // this TCR.
+  // Namespace prefix for all Parameters (See ParametersBase.sol) in this TCR
   bytes8 public prefix;
 
   // A TCR entry is considered to exist in 'entries' map iff its
