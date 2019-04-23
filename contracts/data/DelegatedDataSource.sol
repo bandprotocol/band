@@ -25,7 +25,7 @@ contract DelegatedDataSource {
   }
 
   function getNthDataSource(uint256 index) public view returns (address) {
-    require(msg.sender == address(0));  // Only off-chain calls allowed.
+    // require(msg.sender == address(0));  // Only off-chain calls allowed.
     return dataSources[index];
   }
 

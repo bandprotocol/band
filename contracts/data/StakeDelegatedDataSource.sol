@@ -1,8 +1,6 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-
 import "./DelegatedDataSource.sol";
 import "../CommunityCore.sol";
 import "../Parameters.sol";
@@ -11,18 +9,18 @@ import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 
 
-contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless, Ownable {
+contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless {
   using SafeMath for uint256;
 
   event DataSourceRegistered(address indexed dataSource, address owner, uint256 stake);
-  event DataSourceExited(address indexed dataSource, address owner, uint256 stake);
+  event DataSourceRemoved(address indexed dataSource, address owner, uint256 stake);
   event DataSourceVoted(address indexed dataSource, address indexed voter, uint256 stake, uint256 ownership);
   event DataSourceWithdrawn(address indexed dataSource, address indexed voter, uint256 withdraw);
 
   enum DataProviderStatus{
     Nothing,
     Active,
-    Exited
+    Removed
   }
 
   struct DataProvider {
@@ -72,19 +70,6 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     emit DataSourceRegistered(dataSource, owner, stake);
   }
 
-  function exit(address dataSource) public {
-    DataProvider storage provider = providers[dataSource];
-    require(provider.currentStatus == DataProviderStatus.Active);
-    address owner = provider.owner;
-    uint256 ownerOwnership = provider.publicOwnerships[owner];
-    uint256 currentOwnerStake = ownerOwnership.mul(provider.stake).div(provider.totalPublicOwnership);
-    require(currentOwnerStake < params.get("data:min_provider_stake"));
-    provider.currentStatus = DataProviderStatus.Exited;
-    _repositionDown(_findDataSourceIndex(dataSource));
-    dataSources.pop();
-    emit DataSourceExited(dataSource, owner, currentOwnerStake);
-  }
-
   function vote(address voter, uint256 stake, address dataSource)
     public
     requireToken(token, voter, stake)
@@ -118,8 +103,24 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     emit DataSourceWithdrawn(dataSource, voter, withdrawAmount);
 
     if (provider.owner == voter && provider.currentStatus == DataProviderStatus.Active) {
-      exit(dataSource);
+      kick(dataSource);
     }
+  }
+
+    function kick(address dataSource) public {
+    DataProvider storage provider = providers[dataSource];
+    require(provider.currentStatus == DataProviderStatus.Active);
+    address owner = provider.owner;
+    uint256 ownerOwnership = provider.publicOwnerships[owner];
+    uint256 currentOwnerStake = 0;
+    if (provider.totalPublicOwnership > 0) {
+      currentOwnerStake = provider.stake.mul(ownerOwnership).div(provider.totalPublicOwnership);
+      require(currentOwnerStake < params.get("data:min_provider_stake"));
+    }
+    provider.currentStatus = DataProviderStatus.Removed;
+    _repositionDown(_findDataSourceIndex(dataSource));
+    dataSources.pop();
+    emit DataSourceRemoved(dataSource, owner, currentOwnerStake);
   }
 
   ////////////////////////////////////////////////////////////
@@ -139,7 +140,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
   function _repositionDown(uint256 dataSourceIndex) internal {
     bool changed = false;
     uint256 lastDataSourceIndex = dataSources.length.sub(1);
-    for (; dataSourceIndex < lastDataSourceIndex; --dataSourceIndex) {
+    for (; dataSourceIndex < lastDataSourceIndex; ++dataSourceIndex) {
       if (_isLhsBetterThanRhs(dataSourceIndex + 1, dataSourceIndex)) {
         _swapDataSource(dataSourceIndex + 1, dataSourceIndex);
         changed = true;
