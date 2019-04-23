@@ -15,6 +15,7 @@ contract DelegatedDataSource {
 
   address[] internal dataSources;
   event DelegatedDataSourcesChanged();
+  event DataRead(address indexed reader, bytes32 indexed key);
 
   function getActiveDataSourceCount() public view returns (uint256) {
     return dataSources.length;
@@ -60,6 +61,7 @@ contract DelegatedDataSource {
     for (uint256 index = 0; index < rawdataLength; ++index) {
       data[index] = rawdata[index];
     }
+    emit DataRead(msg.sender, key);
     return data;
   }
 }
