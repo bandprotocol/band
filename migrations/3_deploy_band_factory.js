@@ -4,8 +4,9 @@ const CoreFactory = artifacts.require('CoreFactory');
 const BandFactory = artifacts.require('BandFactory');
 const TCRFactory = artifacts.require('TCRFactory');
 const RewardDistributorFactory = artifacts.require('RewardDistributorFactory');
+const DelegatStakeDelegatedDataSourceFactory = artifacts.require('StakeDelegatedDataSourceFactory');
 
-module.exports = function(deployer) {
+module.exports = function (deployer) {
   deployer.deploy(
     BandFactory,
     '100000000000000000000000000',
@@ -15,4 +16,5 @@ module.exports = function(deployer) {
   );
   deployer.deploy(TCRFactory);
   deployer.deploy(RewardDistributorFactory);
+  deployer.deploy(DelegatStakeDelegatedDataSourceFactory);
 };
