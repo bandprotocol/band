@@ -139,7 +139,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    Parameters params
+    ParametersBase params
   )
     public
     pollMustNotExist(msg.sender, pollID)
@@ -292,7 +292,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     return keccak256(abi.encodePacked(weight, commit));
   }
 
-  function get(Parameters params, bytes8 prefix, bytes24 key) internal view returns (uint256) {
+  function get(ParametersBase params, bytes8 prefix, bytes24 key) internal view returns (uint256) {
     uint8 prefixSize = 0;
     while (prefixSize < 8 && prefix[prefixSize] != byte(0)) {
       ++prefixSize;

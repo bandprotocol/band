@@ -2,6 +2,7 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
+import "./ParametersBase.sol";
 import "./feeless/Feeless.sol";
 import "./voting/ResolveListener.sol";
 import "./voting/VotingInterface.sol";
@@ -13,7 +14,7 @@ import "./voting/VotingInterface.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is ResolveListener, Feeless {
+contract Parameters is ParametersBase, ResolveListener, Feeless {
   using SafeMath for uint256;
 
   event ProposalProposed(  // A new proposal is proposed.

@@ -87,7 +87,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    Parameters params
+    ParametersBase params
   )
     public
     pollMustNotExist(msg.sender, pollID)
@@ -183,7 +183,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     require(ResolveListener(pollContract).onResolved(pollID, pollState));
   }
 
-  function get(Parameters params, bytes8 prefix, bytes24 key)
+  function get(ParametersBase params, bytes8 prefix, bytes24 key)
     internal
     view
     returns (uint256)

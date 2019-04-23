@@ -7,7 +7,7 @@ import "./token/ERC20Interface.sol";
 
 import "./BandToken.sol";
 import "./CommunityToken.sol";
-import "./Parameters.sol";
+import "./ParametersBase.sol";
 
 /**
  * @title CommunityCore
@@ -21,7 +21,7 @@ import "./Parameters.sol";
 contract CommunityCore {
   BandToken public bandToken;
   CommunityToken public commToken;
-  Parameters public params;
+  ParametersBase public params;
   ParameterizedBondingCurve public bondingCurve;
 
   /**
@@ -30,7 +30,7 @@ contract CommunityCore {
   constructor(
     BandToken _bandToken,
     CommunityToken _commToken,
-    Parameters _params,
+    ParametersBase _params,
     uint256[] memory _expressions
   )
     public

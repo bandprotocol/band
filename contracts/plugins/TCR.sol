@@ -82,9 +82,9 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
 
   CommunityToken public token;
   VotingInterface public voting;
-  Parameters public params;
+  ParametersBase public params;
 
-  // Namespace prefix for all parameters (See Parameters.sol) for usage inside
+  // Namespace prefix for all parametersBase (See ParametersBase.sol) for usage inside
   // this TCR.
   bytes8 public prefix;
 

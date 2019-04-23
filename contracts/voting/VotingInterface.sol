@@ -1,7 +1,7 @@
 pragma solidity 0.5.0;
 
 import "../CommunityToken.sol";
-import "../Parameters.sol";
+import "../ParametersBase.sol";
 import "./ResolveListener.sol";
 
 /**
@@ -21,7 +21,7 @@ contract VotingInterface {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    Parameters params
+    ParametersBase params
   )
     public
     returns (bool);

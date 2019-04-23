@@ -3,13 +3,12 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./DelegatedDataSource.sol";
 import "../CommunityCore.sol";
-import "../Parameters.sol";
+import "../ParametersBase.sol";
 import "../feeless/Feeless.sol";
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 
-
-contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless {
+contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless, Ownable {
   using SafeMath for uint256;
 
   event DataSourceRegistered(address indexed dataSource, address owner, uint256 stake);
@@ -34,7 +33,8 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
   mapping (address => DataProvider) public providers;
 
   ERC20Interface public token;
-  Parameters public params;
+  ParametersBase public params;
+  // DataProvider[] private dataProviders;
 
   constructor(CommunityCore core) public {
     token = core.commToken();
