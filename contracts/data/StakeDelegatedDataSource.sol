@@ -107,7 +107,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     }
   }
 
-    function kick(address dataSource) public {
+  function kick(address dataSource) public {
     DataProvider storage provider = providers[dataSource];
     require(provider.currentStatus == DataProviderStatus.Active);
     address owner = provider.owner;
