@@ -13,7 +13,7 @@ import "../utils/ArrayUtils.sol";
 contract DelegatedDataSource {
   using SafeMath for uint256;
 
-  address[] internal dataSources;
+  address[] public dataSources;
   event DelegatedDataSourcesChanged();
   event DataRead(address indexed reader, bytes32 indexed key);
 
@@ -23,11 +23,6 @@ contract DelegatedDataSource {
 
   function getAllDataSourceCount() public view returns (uint256) {
     return dataSources.length;
-  }
-
-  function getNthDataSource(uint256 index) public view returns (address) {
-    // require(msg.sender == address(0));  // Only off-chain calls allowed.
-    return dataSources[index];
   }
 
   function getAsNumber(bytes32 key) public payable returns (uint256) {

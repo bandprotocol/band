@@ -118,13 +118,24 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
         .should.eq(this.params.address);
       (await this.delegatedSource.getActiveDataSourceCount())
         .toString()
-        .should.eq('3');
+        .should.eq('0');
+      (await this.delegatedSource.getAllDataSourceCount())
+        .toString()
+        .should.eq('0');
     });
     it('should revert if stake less than min_provider_stake', async () => {
-      (await this.delegatedSource.providers(owner)).currentStatus.toNumber().should.eq(0);
-      (await this.delegatedSource.providers(alice)).currentStatus.toNumber().should.eq(0);
-      (await this.delegatedSource.providers(bob)).currentStatus.toNumber().should.eq(0);
-      (await this.delegatedSource.providers(carol)).currentStatus.toNumber().should.eq(0);
+      (await this.delegatedSource.providers(owner)).currentStatus
+        .toNumber()
+        .should.eq(0);
+      (await this.delegatedSource.providers(alice)).currentStatus
+        .toNumber()
+        .should.eq(0);
+      (await this.delegatedSource.providers(bob)).currentStatus
+        .toNumber()
+        .should.eq(0);
+      (await this.delegatedSource.providers(carol)).currentStatus
+        .toNumber()
+        .should.eq(0);
 
       await this.delegatedSource.register(owner, 40, owner, { from: owner });
       await this.delegatedSource.register(alice, 30, alice, { from: alice });
@@ -133,6 +144,14 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
         this.delegatedSource.register(carol, 9, carol, { from: carol }),
       );
       await this.delegatedSource.register(carol, 10, carol, { from: carol });
+
+      (await this.delegatedSource.getActiveDataSourceCount())
+        .toString()
+        .should.eq('3');
+
+      (await this.delegatedSource.getAllDataSourceCount())
+        .toString()
+        .should.eq('4');
 
       (await this.comm.balanceOf(owner)).toNumber().should.eq(1000 - 40);
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000 - 30);
@@ -236,12 +255,16 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
     });
     it('should be able to vote', async () => {
       await this.delegatedSource.vote(alice, 10, owner, { from: alice });
-      (await this.delegatedSource.providers(owner)).totalPublicOwnership.toNumber().should.eq(40+10);
+      (await this.delegatedSource.providers(owner)).totalPublicOwnership
+        .toNumber()
+        .should.eq(40 + 10);
     });
     it('should be able to vote many times', async () => {
       await this.delegatedSource.vote(alice, 10, owner, { from: alice });
       await this.delegatedSource.vote(alice, 10, owner, { from: alice });
-      (await this.delegatedSource.providers(owner)).totalPublicOwnership.toNumber().should.eq(40+10+10);
+      (await this.delegatedSource.providers(owner)).totalPublicOwnership
+        .toNumber()
+        .should.eq(40 + 10 + 10);
     });
     it('should revert if not enough tokens', async () => {
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000 - 30);
@@ -249,38 +272,38 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
         this.delegatedSource.vote(alice, 1000, owner, { from: alice }),
       );
     });
-    it('check getNthDataSource', async () => {
+    it('check dataSources', async () => {
       const numActiveSources = (await this.delegatedSource.getActiveDataSourceCount()).toNumber();
       const numAllSources = (await this.delegatedSource.getAllDataSourceCount()).toNumber();
       numActiveSources.should.eq(3);
       numAllSources.should.eq(4);
       const expectedSources = [owner, alice, bob, carol];
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
     });
-    it('check getNthDataSource after voting', async () => {
+    it('check dataSources after voting', async () => {
       const numAllSources = (await this.delegatedSource.getAllDataSourceCount()).toNumber();
       await this.delegatedSource.vote(alice, 15, carol, { from: alice });
       let expectedSources = [owner, alice, carol, bob];
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
       await this.delegatedSource.vote(bob, 10, carol, { from: bob });
       expectedSources = [owner, carol, alice, bob];
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
       await this.delegatedSource.vote(owner, 10, carol, { from: owner });
       expectedSources = [carol, owner, alice, bob];
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
@@ -323,14 +346,14 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
       numAllSources.should.eq(4);
       let expectedSources = [owner, alice, bob, carol];
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
       expectedSources = [alice, bob, carol, owner];
       await this.delegatedSource.withdraw(alice, owner, { from: alice });
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
@@ -339,21 +362,21 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
       numAllSources.should.eq(3);
       expectedSources = [bob, carol, owner];
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
       expectedSources = [carol, owner, bob];
       await this.delegatedSource.withdraw(alice, bob, { from: alice });
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
       expectedSources = [owner, bob, carol];
       await this.delegatedSource.withdraw(alice, carol, { from: alice });
       for (let i = 0; i < numAllSources; i++) {
-        (await this.delegatedSource.getNthDataSource(i))
+        (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
@@ -401,13 +424,13 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
 
       await this.delegatedSource.withdraw(carol, owner, { from: carol });
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1000 - 10);
-            (await this.delegatedSource.providers(owner)).totalPublicOwnership
+      (await this.delegatedSource.providers(owner)).totalPublicOwnership
         .toNumber()
         .should.eq(40 + 17 + 71 + 666 - 40 - 71 - 666);
 
       await this.delegatedSource.withdraw(alice, owner, { from: alice });
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000 - 30);
-            (await this.delegatedSource.providers(owner)).totalPublicOwnership
+      (await this.delegatedSource.providers(owner)).totalPublicOwnership
         .toNumber()
         .should.eq(0); // 40 + 17 + 71 + 666 - 40 - 71 - 666 - 17
     });

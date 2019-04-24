@@ -1,6 +1,7 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./DelegatedDataSource.sol";
 import "../CommunityCore.sol";
 import "../ParametersBase.sol";
@@ -49,7 +50,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
   }
 
   function getActiveDataSourceCount() public view returns (uint256) {
-    return params.get("data:active_data_source_count");
+    return Math.min(dataSources.length, params.get("data:active_data_source_count"));
   }
 
   function register(address owner, uint256 stake, address dataSource)
