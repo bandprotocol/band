@@ -17,6 +17,7 @@ contract BondingCurve is Ownable, ERC20Acceptor {
 
   event Buy(address indexed buyer, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
   event Sell(address indexed seller, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
+  event Inflate(address indexed to, uint256 mintedAmount);
   event Deflate(address indexed burner, uint256 burnedAmount);
   event RevenueCollect(address indexed beneficiary, uint256 bondedTokenAmount);
   event CurveMultiplierChange(uint256 previousValue, uint256 nextValue);
@@ -121,6 +122,16 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     currentMintedTokens = currentMintedTokens.sub(sellAmount);
     currentCollateral = currentCollateral.sub(sellPrice);
     emit Sell(seller, sellAmount, sellPrice);
+  }
+
+  function inflate(address to, uint256 mintedAmount)
+    public
+    onlyOwner
+  {
+    require(bondedToken.mint(to, mintedAmount));
+    currentMintedTokens = currentMintedTokens.add(mintedAmount);
+    _adjustcurveMultiplier();
+    emit Inflate(to, mintedAmount);
   }
 
   function deflate(address burner, uint256 burnAmount)

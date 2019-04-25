@@ -45,4 +45,9 @@ contract CommunityCore {
       _params
     );
   }
+
+  function convertEthToToken() public payable returns(uint256) {
+    bondingCurve.inflate(msg.sender, msg.value);
+    return msg.value;
+  }
 }

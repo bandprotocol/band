@@ -17,6 +17,15 @@ contract DelegatedDataSource {
   event DelegatedDataSourcesChanged();
   event DataRead(address indexed reader, bytes32 indexed key);
 
+  modifier requirePayment() {
+    uint256 price = getQueryPrice();
+    require(msg.value >= price);
+    if (msg.value > price) {
+      msg.sender.transfer(msg.value.sub(price));
+    }
+    _;
+  }
+
   function getActiveDataSourceCount() public view returns (uint256) {
     return dataSources.length;
   }
@@ -25,16 +34,29 @@ contract DelegatedDataSource {
     return dataSources.length;
   }
 
-  function getAsNumber(bytes32 key) public payable returns (uint256) {
+  function getAsNumber(bytes32 key) 
+    public payable requirePayment 
+    returns (uint256) 
+  {
     return ArrayUtils.getMedian(_loadDataAt(key));
   }
 
-  function getAsBytes32(bytes32 key) public payable returns (bytes32) {
+  function getAsBytes32(bytes32 key) 
+    public payable requirePayment 
+    returns (bytes32) 
+  {
     return bytes32(ArrayUtils.getMajority(_loadDataAt(key)));
   }
 
-  function getAsBool(bytes32 key) public payable returns (bool) {
+  function getAsBool(bytes32 key) 
+    public payable requirePayment 
+    returns (bool) 
+  {
     return ArrayUtils.getMajority(_loadDataAt(key)) != 0;
+  }
+
+  function getQueryPrice() public view returns (uint256) {
+    return 0;
   }
 
   ////////////////////////////////////////////////////////////

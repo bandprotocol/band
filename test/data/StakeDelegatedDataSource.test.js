@@ -8,6 +8,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const SimpleVoting = artifacts.require('SimpleVoting');
 const StakeDelegatedDataSource = artifacts.require('StakeDelegatedDataSource');
+const TrustedDataSource = artifacts.require('TrustedDataSource');
 
 require('chai').should();
 
@@ -28,8 +29,10 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('params:min_participation_pct'),
         web3.utils.fromAscii('data:min_provider_stake'),
         web3.utils.fromAscii('data:active_data_source_count'),
+        web3.utils.fromAscii('data:query_price'),
+        web3.utils.fromAscii('data:owner_percentage'),
       ],
-      [60, '5', '5', '10', 3],
+      [60, '5', '5', '10', 3, 100, '500000000000000000'],
       { from: owner },
     );
     this.core = await CommunityCore.new(
@@ -202,7 +205,7 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
       await this.delegatedSource.register(carol, 10, carol, { from: carol });
     });
     it('dataSource should be automatically kicked if owner has already withdrawn', async () => {
-      await this.delegatedSource.withdraw(alice, alice, { from: alice });
+      await this.delegatedSource.withdraw(alice, 30, alice, { from: alice });
       await shouldFail.reverting(
         this.delegatedSource.kick(alice, { from: alice }),
       );
@@ -329,9 +332,9 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
       (await this.comm.balanceOf(bob)).toNumber().should.eq(1000 - 20 - 37);
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1000 - 10 - 68);
 
-      await this.delegatedSource.withdraw(bob, owner, { from: bob });
-      await this.delegatedSource.withdraw(carol, owner, { from: carol });
-      await this.delegatedSource.withdraw(alice, owner, { from: alice });
+      await this.delegatedSource.withdraw(bob, 37, owner, { from: bob });
+      await this.delegatedSource.withdraw(carol, 68, owner, { from: carol });
+      await this.delegatedSource.withdraw(alice, 41, owner, { from: alice });
 
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000 - 30);
       (await this.comm.balanceOf(bob)).toNumber().should.eq(1000 - 20);
@@ -351,13 +354,14 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
           .should.eq(expectedSources[i]);
       }
       expectedSources = [alice, bob, carol, owner];
-      await this.delegatedSource.withdraw(alice, owner, { from: alice });
+      await this.delegatedSource.withdraw(alice, 50, owner, { from: alice });
       for (let i = 0; i < numAllSources; i++) {
         (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
-      await this.delegatedSource.withdraw(alice, alice, { from: alice });
+
+      await this.delegatedSource.withdraw(alice, 80, alice, { from: alice });
       numAllSources = (await this.delegatedSource.getAllDataSourceCount()).toNumber();
       numAllSources.should.eq(3);
       expectedSources = [bob, carol, owner];
@@ -367,14 +371,14 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
           .should.eq(expectedSources[i]);
       }
       expectedSources = [carol, owner, bob];
-      await this.delegatedSource.withdraw(alice, bob, { from: alice });
+      await this.delegatedSource.withdraw(alice, 50, bob, { from: alice });
       for (let i = 0; i < numAllSources; i++) {
         (await this.delegatedSource.dataSources(i))
           .toString()
           .should.eq(expectedSources[i]);
       }
       expectedSources = [owner, bob, carol];
-      await this.delegatedSource.withdraw(alice, carol, { from: alice });
+      await this.delegatedSource.withdraw(alice, 50, carol, { from: alice });
       for (let i = 0; i < numAllSources; i++) {
         (await this.delegatedSource.dataSources(i))
           .toString()
@@ -408,7 +412,7 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
         .should.eq(1);
 
       // owner withdraw his/her stake, dataSource will automatically kicked
-      await this.delegatedSource.withdraw(owner, owner, { from: owner });
+      await this.delegatedSource.withdraw(owner, 40, owner, { from: owner });
 
       const dataSource = await this.delegatedSource.providers(owner);
       dataSource.currentStatus.toNumber().should.eq(2);
@@ -416,23 +420,72 @@ contract('StakeDelegatedDataSource', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(40 + 17 + 71 + 666 - 40);
 
-      await this.delegatedSource.withdraw(bob, owner, { from: bob });
+      await this.delegatedSource.withdraw(bob, 71, owner, { from: bob });
       (await this.comm.balanceOf(bob)).toNumber().should.eq(1000 - 20);
       (await this.delegatedSource.providers(owner)).totalPublicOwnership
         .toNumber()
         .should.eq(40 + 17 + 71 + 666 - 40 - 71);
 
-      await this.delegatedSource.withdraw(carol, owner, { from: carol });
+      await this.delegatedSource.withdraw(carol, 666, owner, { from: carol });
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1000 - 10);
       (await this.delegatedSource.providers(owner)).totalPublicOwnership
         .toNumber()
         .should.eq(40 + 17 + 71 + 666 - 40 - 71 - 666);
 
-      await this.delegatedSource.withdraw(alice, owner, { from: alice });
+      await this.delegatedSource.withdraw(alice, 17, owner, { from: alice });
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000 - 30);
       (await this.delegatedSource.providers(owner)).totalPublicOwnership
         .toNumber()
         .should.eq(0); // 40 + 17 + 71 + 666 - 40 - 71 - 666 - 17
+    });
+  });
+  context('Get', () => {
+    beforeEach(async () => {
+      this.ownerSource = await TrustedDataSource.new('From owner', { from: owner });
+      await this.ownerSource.setNumber(web3.utils.fromAscii('P'), 20, { from: owner });
+      await this.delegatedSource.register(owner, 40, this.ownerSource.address, { from: owner });
+      this.aliceSource = await TrustedDataSource.new('From alice', { from: alice });
+      await this.aliceSource.setNumber(web3.utils.fromAscii('P'), 20, { from: alice });
+      await this.delegatedSource.register(alice, 30, this.aliceSource.address, { from: alice });
+      this.bobSource = await TrustedDataSource.new('From bob', { from: bob });
+      await this.bobSource.setNumber(web3.utils.fromAscii('P'), 10, { from: bob });
+      await this.delegatedSource.register(bob, 20, this.bobSource.address, { from: bob });
+      this.carolSource = await TrustedDataSource.new('From carol', { from: carol });
+      await this.carolSource.setNumber(web3.utils.fromAscii('P'), 11, { from: carol });
+      await this.delegatedSource.register(carol, 10, this.carolSource.address, { from: carol });
+    });
+    it('should revert if value less than query', async () => {
+      shouldFail.reverting(this.delegatedSource.getAsNumber((web3.utils.fromAscii('P'))));
+    });
+
+    it('should return value and get eth when date retrieved', async () => {
+      await this.delegatedSource.getAsNumber(web3.utils.fromAscii('P'), { from: owner, value: 100 });
+      (await web3.eth.getBalance(this.delegatedSource.address)).should.eq('100');
+    });
+
+    it('should distribute value when someone call', async () => {
+      // Carol join owner
+      await this.delegatedSource.vote(carol, 10, this.ownerSource.address, { from: carol });
+      await this.delegatedSource.getAsNumber(web3.utils.fromAscii('P'), { from: owner, value: 100 });
+      await this.delegatedSource.distributeFee({ from: owner });
+      (await this.comm.balanceOf(owner)).toString().should.eq('960');
+      (await this.comm.balanceOf(alice)).toString().should.eq('970');
+      (await this.comm.balanceOf(bob)).toString().should.eq('980');
+      (await this.comm.balanceOf(carol)).toString().should.eq('980');
+      (await this.delegatedSource.getStakeInProvider(this.aliceSource.address, alice)).toString().should.eq('63');
+
+      await this.delegatedSource.withdraw(carol, 10, this.ownerSource.address, { from: carol });
+      (await this.comm.balanceOf(carol)).toString().should.eq('994');
+
+      await this.delegatedSource.getAsNumber(web3.utils.fromAscii('P'), { from: owner, value: 101 });
+      await this.delegatedSource.distributeFee({ from: owner });
+      (await this.delegatedSource.getStakeInProvider(this.aliceSource.address, alice)).toString().should.eq('96');
+      await this.delegatedSource.withdraw(owner, 60, this.ownerSource.address, { from: owner });
+      (await this.comm.balanceOf(owner)).toString().should.eq('1062');
+      await this.delegatedSource.getAsNumber(web3.utils.fromAscii('P'), { from: owner, value: 100 });
+      await this.delegatedSource.getAsNumber(web3.utils.fromAscii('P'), { from: owner, value: 100 });
+      await this.delegatedSource.distributeFee({ from: owner });
+      (await this.delegatedSource.getStakeInProvider(this.aliceSource.address, alice)).toString().should.eq('163');
     });
   });
 });

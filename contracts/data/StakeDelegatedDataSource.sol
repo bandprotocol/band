@@ -6,16 +6,18 @@ import "./DelegatedDataSource.sol";
 import "../CommunityCore.sol";
 import "../ParametersBase.sol";
 import "../feeless/Feeless.sol";
+import "../utils/Fractional.sol";
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 
 contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless, Ownable {
+  using Fractional for uint256;
   using SafeMath for uint256;
 
-  event DataSourceRegistered(address indexed dataSource, address owner, uint256 stake);
-  event DataSourceRemoved(address indexed dataSource, address owner, uint256 stake);
-  event DataSourceVoted(address indexed dataSource, address indexed voter, uint256 stake, uint256 ownership);
-  event DataSourceWithdrawn(address indexed dataSource, address indexed voter, uint256 withdraw);
+  event DataSourceRegistered(address indexed dataSource, address owner);
+  event DataSourceRemoved(address indexed dataSource);
+  event DataSourceStakeChanged(address indexed dataSource, uint256 newStake);
+  event DataSourceOwnershipChanged(address indexed dataSource, address indexed voter, uint256 newVoterOwnership, uint256 newTotalOwnership);
 
   enum DataProviderStatus{
     Nothing,
@@ -35,11 +37,15 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
 
   ERC20Interface public token;
   ParametersBase public params;
-  // DataProvider[] private dataProviders;
+  CommunityCore public core;
 
-  constructor(CommunityCore core) public {
-    token = core.commToken();
-    params = core.params();
+  uint256 public undistributedReward;
+
+
+  constructor(CommunityCore _core) public {
+    token = _core.commToken();
+    params = _core.params();
+    core = _core;
   }
 
   function getProviderPublicOwnership(address dataSource, address voter)
@@ -49,8 +55,22 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     return providers[dataSource].publicOwnerships[voter];
   }
 
+  function getStakeInProvider(address dataSource, address voter)
+    public view
+    returns (uint256)
+  {
+    DataProvider storage provider = providers[dataSource];
+    if (provider.totalPublicOwnership == 0)
+      return 0;
+    return provider.publicOwnerships[voter].mul(provider.stake).div(provider.totalPublicOwnership);
+  }
+
   function getActiveDataSourceCount() public view returns (uint256) {
     return Math.min(dataSources.length, params.get("data:active_data_source_count"));
+  }
+
+  function getQueryPrice() public view returns (uint256) {
+    return params.get("data:query_price");
   }
 
   function register(address owner, uint256 stake, address dataSource)
@@ -67,7 +87,9 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     });
     providers[dataSource].publicOwnerships[owner] = stake;
     dataSources.push(dataSource);
-    emit DataSourceRegistered(dataSource, owner, stake);
+    emit DataSourceRegistered(dataSource, owner);
+    emit DataSourceStakeChanged(dataSource, stake);
+    emit DataSourceOwnershipChanged(dataSource, owner, stake, stake);
     _repositionUp(dataSources.length.sub(1));
   }
 
@@ -75,35 +97,33 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     public
     requireToken(token, voter, stake)
   {
+    _vote(voter, stake, dataSource);
     DataProvider storage provider = providers[dataSource];
-    require(stake > 0 && provider.currentStatus == DataProviderStatus.Active && provider.totalPublicOwnership != 0);
-    uint256 newStake = provider.stake.add(stake);
-    uint256 newTotalPublicOwnership = newStake.mul(provider.totalPublicOwnership).div(provider.stake);
-    uint256 newVoterPublicOwnership = provider.publicOwnerships[voter].add(newTotalPublicOwnership.sub(provider.totalPublicOwnership));
-    provider.publicOwnerships[voter] = newVoterPublicOwnership;
-    provider.stake = newStake;
-    provider.totalPublicOwnership = newTotalPublicOwnership;
-    emit DataSourceVoted(dataSource, voter, stake, newVoterPublicOwnership);
+    emit DataSourceStakeChanged(dataSource, provider.stake);
     _repositionUp(_findDataSourceIndex(dataSource));
   }
 
-  function withdraw(address voter, address dataSource) public feeless(voter) {
+  function withdraw(address voter, uint256 withdrawOwnership, address dataSource) public feeless(voter) {
     DataProvider storage provider = providers[dataSource];
-    uint256 voterOwnership = provider.publicOwnerships[voter];
-    require(voterOwnership > 0);
-    uint256 newOwnership = provider.totalPublicOwnership.sub(voterOwnership);
+    require(withdrawOwnership > 0 && withdrawOwnership <= provider.publicOwnerships[voter]);
+    uint256 newOwnership = provider.totalPublicOwnership.sub(withdrawOwnership);
     uint256 newStake = provider.stake.mul(newOwnership).div(provider.totalPublicOwnership);
     uint256 withdrawAmount = provider.stake.sub(newStake);
+    uint256 newVoterOwnership = provider.publicOwnerships[voter].sub(withdrawOwnership);
     provider.stake = newStake;
     provider.totalPublicOwnership = newOwnership;
-    provider.publicOwnerships[voter] = 0;
+    provider.publicOwnerships[voter] = newVoterOwnership;
     require(token.transfer(voter, withdrawAmount));
-    emit DataSourceWithdrawn(dataSource, voter, withdrawAmount);
+
+    emit DataSourceStakeChanged(dataSource, newStake);
+    emit DataSourceOwnershipChanged(dataSource, voter, newVoterOwnership, newOwnership);
     if (provider.currentStatus == DataProviderStatus.Active) {
       _repositionDown(_findDataSourceIndex(dataSource));
     }
 
-    if (provider.owner == voter && provider.currentStatus == DataProviderStatus.Active) {
+    if (provider.owner == voter && 
+        getStakeInProvider(dataSource, provider.owner) < params.get("data:min_provider_stake") &&
+        provider.currentStatus == DataProviderStatus.Active) {
       kick(dataSource);
     }
   }
@@ -113,15 +133,30 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     require(provider.currentStatus == DataProviderStatus.Active);
     address owner = provider.owner;
     uint256 ownerOwnership = provider.publicOwnerships[owner];
-    uint256 currentOwnerStake = 0;
-    if (provider.totalPublicOwnership > 0) {
-      currentOwnerStake = provider.stake.mul(ownerOwnership).div(provider.totalPublicOwnership);
-      require(currentOwnerStake < params.get("data:min_provider_stake"));
-    }
+    require(getStakeInProvider(dataSource, owner) < params.get("data:min_provider_stake"));
     provider.currentStatus = DataProviderStatus.Removed;
-    emit DataSourceRemoved(dataSource, owner, currentOwnerStake);
+    emit DataSourceRemoved(dataSource);
     _repositionDown(_findDataSourceIndex(dataSource));
     dataSources.pop();
+  }
+
+  ////////////////////////////////////////////////////////////
+  function distributeFee() public {
+    require(address(this).balance > 0);
+    // TODO: Convert eth in this contract to community token
+    undistributedReward = undistributedReward.add(core.convertEthToToken.value(address(this).balance)());
+    uint256 totalProviderCount = getActiveDataSourceCount();
+    uint256 providerReward = undistributedReward.div(totalProviderCount);
+    uint256 ownerPercentage = params.get("data:owner_percentage");
+    uint256 ownerReward = ownerPercentage.multipliedBy(providerReward);
+    uint256 stakeIncreased = providerReward.sub(ownerReward);
+    for(uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {
+      DataProvider storage provider = providers[dataSources[dataSourceIndex]];
+      provider.stake = provider.stake.add(stakeIncreased);
+      _vote(provider.owner, ownerReward, dataSources[dataSourceIndex]);
+      undistributedReward = undistributedReward.sub(providerReward);
+      emit DataSourceStakeChanged(dataSources[dataSourceIndex], provider.stake);
+    }
   }
 
   ////////////////////////////////////////////////////////////
@@ -177,5 +212,18 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     address temp = dataSources[left];
     dataSources[left] = dataSources[right];
     dataSources[right] = temp;
+  }
+
+  function _vote(address voter, uint256 stake, address dataSource) internal {
+    DataProvider storage provider = providers[dataSource];
+    require(stake > 0 && provider.currentStatus == DataProviderStatus.Active && provider.totalPublicOwnership != 0);
+    uint256 newStake = provider.stake.add(stake);
+    uint256 newTotalPublicOwnership = newStake.mul(provider.totalPublicOwnership).div(provider.stake);
+    uint256 newVoterPublicOwnership = provider.publicOwnerships[voter].add(newTotalPublicOwnership.sub(provider.totalPublicOwnership));
+    provider.publicOwnerships[voter] = newVoterPublicOwnership;
+    provider.stake = newStake;
+    provider.totalPublicOwnership = newTotalPublicOwnership;
+    
+    emit DataSourceOwnershipChanged(dataSource, voter, newVoterPublicOwnership, newTotalPublicOwnership);
   }
 }
