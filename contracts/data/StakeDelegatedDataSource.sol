@@ -132,7 +132,6 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     DataProvider storage provider = providers[dataSource];
     require(provider.currentStatus == DataProviderStatus.Active);
     address owner = provider.owner;
-    uint256 ownerOwnership = provider.publicOwnerships[owner];
     require(getStakeInProvider(dataSource, owner) < params.get("data:min_provider_stake"));
     provider.currentStatus = DataProviderStatus.Removed;
     emit DataSourceRemoved(dataSource);
