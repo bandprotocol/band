@@ -122,7 +122,7 @@ contract('BandFactory', ([owner, alice, bob]) => {
       this.core = await CommunityCore.at(addressCore);
       this.curve = await BondingCurve.at(await this.core.bondingCurve());
       this.params = await Parameters.at(await this.core.params());
-      this.token = await CommunityToken.at(await this.core.commToken());
+      this.token = await CommunityToken.at(await this.core.token());
     });
     it('should create new community', async () => {
       (await this.token.name()).should.eq('CoinHatcher');

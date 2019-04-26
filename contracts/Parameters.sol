@@ -1,5 +1,6 @@
 pragma solidity 0.5.0;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./ParametersBase.sol";
@@ -14,7 +15,7 @@ import "./voting/VotingInterface.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is ParametersBase, ResolveListener, Feeless {
+contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
   using SafeMath for uint256;
 
   event ProposalProposed(  // A new proposal is proposed.
@@ -60,27 +61,13 @@ contract Parameters is ParametersBase, ResolveListener, Feeless {
   uint256 public nextProposalNonce = 1;
   mapping (uint256 => Proposal) public proposals;
 
-  /**
-   * @dev Create parameters contract. Initially set of key-value pairs can be
-   * given in this constructor.
-   */
-  constructor(
-    CommunityToken _token,
-    VotingInterface _voting,
-    bytes32[] memory keys,
-    uint256[] memory values
-  )
-    public
-  {
+  constructor(CommunityToken _token, VotingInterface _voting) public {
     token = _token;
     voting = _voting;
-
-    require(keys.length == values.length);
-    for (uint256 idx = 0; idx < keys.length; ++idx) {
-      params[keys[idx]] = values[idx];
-      emit ParameterChanged(keys[idx], values[idx]);
-    }
   }
+
+  // function addParameter(bytes32 key, uint256 value) public onlyOwner {
+  // }
 
   /**
    * @dev Return the value at the given key. Throw if the value is not set.

@@ -8,7 +8,6 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BandFactory = artifacts.require('BandFactory');
 const CommitRevealVoting = artifacts.require('CommitRevealVoting');
-const RewardDistributor = artifacts.require('RewardDistributor');
 
 require('chai').should();
 
@@ -490,107 +489,6 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       (await this.curve.curveMultiplier())
         .toString()
         .should.eq('1108033240997229916');
-    });
-  });
-
-  context('Checking reward distribution feature', () => {
-    beforeEach(async () => {
-      const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await this.band.transferAndCall(
-        owner,
-        this.curve.address,
-        20000,
-        '0x' + calldata.slice(2, 10),
-        '0x' + calldata.slice(138),
-        { from: owner },
-      );
-      this.reward = await RewardDistributor.new(this.comm.address, {
-        from: owner,
-      });
-      // Owner sends some revenue to the contract
-      await this.comm.transfer(this.reward.address, 10, { from: owner });
-      this.merkle = new Merkle();
-      this.merkle.insert(owner, 5);
-      this.merkle.insert(alice, 10);
-      this.merkle.insert(bob, 15);
-      this.merkle.insert(carol, 20);
-    });
-
-    it('should not allow non-owner to report reward', async () => {
-      await shouldFail.reverting(
-        this.reward.addRewardDistribution(this.merkle.root, 50, {
-          from: alice,
-        }),
-      );
-    });
-
-    context('After owner report reward', async () => {
-      beforeEach(async () => {
-        await this.reward.addRewardDistribution(this.merkle.root, 50, {
-          from: owner,
-        });
-      });
-
-      it('should allow withdraw reward', async () => {
-        await this.reward.claimReward(
-          alice,
-          1,
-          10,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('2');
-      });
-
-      it('should not allow members to withdraw with invalid value', async () => {
-        await this.reward.claimReward(
-          alice,
-          1,
-          10,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('2');
-        (await this.reward.unwithdrawnReward()).toString().should.eq('8');
-      });
-
-      it('should allow another reward distribution', async () => {
-        // Owner sends some revenue to the contract for the next period
-        await this.comm.transfer(this.reward.address, 10, { from: owner });
-        // Alice claims reward of first period
-        await this.reward.claimReward(
-          alice,
-          1,
-          10,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('2');
-        (await this.reward.unwithdrawnReward()).toString().should.eq('8');
-
-        this.merkle.insert(alice, 60);
-        await this.reward.addRewardDistribution(this.merkle.root, 100, {
-          from: owner,
-        });
-
-        await this.reward.claimReward(
-          alice,
-          2,
-          60,
-          this.merkle.getProof(alice)[1],
-          {
-            from: alice,
-          },
-        );
-        (await this.comm.balanceOf(alice)).toString().should.eq('8');
-        (await this.reward.unwithdrawnReward()).toString().should.eq('12');
-      });
     });
   });
 });

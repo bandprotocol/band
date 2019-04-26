@@ -1,20 +1,21 @@
-const TokenFactory = artifacts.require('TokenFactory');
+const BandRegistry = artifacts.require('BandRegistry');
+const BondingCurveFactory = artifacts.require('BondingCurveFactory');
+const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
-const CoreFactory = artifacts.require('CoreFactory');
-const BandFactory = artifacts.require('BandFactory');
+const TCDFactory = artifacts.require('TCDFactory');
 const TCRFactory = artifacts.require('TCRFactory');
-const DelegatStakeDelegatedDataSourceFactory = artifacts.require(
-  'StakeDelegatedDataSourceFactory',
-);
 
 module.exports = function(deployer) {
-  deployer.deploy(
-    BandFactory,
-    '100000000000000000000000000',
-    TokenFactory.address,
-    ParametersFactory.address,
-    CoreFactory.address,
-  );
-  deployer.deploy(TCRFactory);
-  deployer.deploy(DelegatStakeDelegatedDataSourceFactory);
+  deployer.then(async () => {
+    const registry = await deployer.deploy(
+      BandRegistry,
+      BondingCurveFactory.address,
+      CommunityTokenFactory.address,
+      ParametersFactory.address,
+      TCDFactory.address,
+      TCRFactory.address,
+    );
+    const band = await registry.band();
+    console.log(band);
+  });
 };

@@ -1,9 +1,13 @@
-const TokenFactory = artifacts.require('TokenFactory');
+const BondingCurveFactory = artifacts.require('BondingCurveFactory');
+const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
-const CoreFactory = artifacts.require('CoreFactory');
+const TCDFactory = artifacts.require('TCDFactory');
+const TCRFactory = artifacts.require('TCRFactory');
 
 module.exports = function(deployer) {
-  deployer.deploy(TokenFactory);
+  deployer.deploy(BondingCurveFactory);
+  deployer.deploy(CommunityTokenFactory);
   deployer.deploy(ParametersFactory);
-  deployer.deploy(CoreFactory);
+  deployer.deploy(TCDFactory);
+  deployer.deploy(TCRFactory);
 };

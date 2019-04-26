@@ -2,7 +2,7 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
-import "./DelegatedDataSource.sol";
+import "./TCDBase.sol";
 import "../CommunityCore.sol";
 import "../ParametersBase.sol";
 import "../feeless/Feeless.sol";
@@ -10,7 +10,8 @@ import "../utils/Fractional.sol";
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 
-contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless, Ownable {
+
+contract TCD is TCDBase, ERC20Acceptor, Feeless {
   using Fractional for uint256;
   using SafeMath for uint256;
 
@@ -43,7 +44,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
 
 
   constructor(CommunityCore _core) public {
-    token = _core.commToken();
+    token = _core.token();
     params = _core.params();
     core = _core;
   }
@@ -121,7 +122,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
       _repositionDown(_findDataSourceIndex(dataSource));
     }
 
-    if (provider.owner == voter && 
+    if (provider.owner == voter &&
         getStakeInProvider(dataSource, provider.owner) < params.get("data:min_provider_stake") &&
         provider.currentStatus == DataProviderStatus.Active) {
       kick(dataSource);
@@ -222,7 +223,7 @@ contract StakeDelegatedDataSource is DelegatedDataSource, ERC20Acceptor, Feeless
     provider.publicOwnerships[voter] = newVoterPublicOwnership;
     provider.stake = newStake;
     provider.totalPublicOwnership = newTotalPublicOwnership;
-    
+
     emit DataSourceOwnershipChanged(dataSource, voter, newVoterPublicOwnership, newTotalPublicOwnership);
   }
 }

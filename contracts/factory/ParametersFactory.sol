@@ -5,17 +5,12 @@ import "../Parameters.sol";
 import "../feeless/ExecutionDelegator.sol";
 
 
-contract ParametersFactory{
-  function create(
-    CommunityToken token,
-    VotingInterface voting,
-    bytes32[] calldata keys,
-    uint256[] calldata values
-  )
+contract ParametersFactory {
+  function create(CommunityToken token, VotingInterface voting)
     external
     returns (Parameters)
   {
-    Parameters params = new Parameters(token, voting, keys, values);
+    Parameters params = new Parameters(token, voting);
     params.setExecDelegator(msg.sender);
     return params;
   }

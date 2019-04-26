@@ -10,7 +10,7 @@ import "../utils/ArrayUtils.sol";
  * @dev Base implementation of delegated data source. Support aggregation of data from multiple
  * underlying sources. Concrete implementation must fill "dataSources" with source addresses.
  */
-contract DelegatedDataSource {
+contract TCDBase {
   using SafeMath for uint256;
 
   address[] public dataSources;
@@ -26,6 +26,8 @@ contract DelegatedDataSource {
     _;
   }
 
+  function getQueryPrice() public view returns (uint256);
+
   function getActiveDataSourceCount() public view returns (uint256) {
     return dataSources.length;
   }
@@ -34,29 +36,25 @@ contract DelegatedDataSource {
     return dataSources.length;
   }
 
-  function getAsNumber(bytes32 key) 
-    public payable requirePayment 
-    returns (uint256) 
+  function getAsNumber(bytes32 key)
+    public payable requirePayment
+    returns (uint256)
   {
     return ArrayUtils.getMedian(_loadDataAt(key));
   }
 
-  function getAsBytes32(bytes32 key) 
-    public payable requirePayment 
-    returns (bytes32) 
+  function getAsBytes32(bytes32 key)
+    public payable requirePayment
+    returns (bytes32)
   {
     return bytes32(ArrayUtils.getMajority(_loadDataAt(key)));
   }
 
-  function getAsBool(bytes32 key) 
-    public payable requirePayment 
-    returns (bool) 
+  function getAsBool(bytes32 key)
+    public payable requirePayment
+    returns (bool)
   {
     return ArrayUtils.getMajority(_loadDataAt(key)) != 0;
-  }
-
-  function getQueryPrice() public view returns (uint256) {
-    return 0;
   }
 
   ////////////////////////////////////////////////////////////
@@ -68,7 +66,6 @@ contract DelegatedDataSource {
       address source = dataSources[index];
       (bool ok, bytes memory ret) = source.call(abi.encodeWithSignature("get(bytes32)", key));
       if (!ok || ret.length < 32) continue;
-      // TODO: Distribute rewards to provider
       uint256 value;
       assembly { value := mload(add(ret, 0x20)) }
       rawdata[rawdataLength++] = value;

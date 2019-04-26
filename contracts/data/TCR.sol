@@ -127,7 +127,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     public
   {
     prefix = _prefix;
-    token = _core.commToken();
+    token = _core.token();
     params = _core.params();
     voting = _voting;
     setExecDelegator(token.execDelegator());
