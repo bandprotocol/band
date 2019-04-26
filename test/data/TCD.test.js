@@ -83,11 +83,18 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     await this.band.transferAndCall(
       owner,
       this.curve.address,
-      10000000,
+      7000000,
       '0x' + calldata4.slice(2, 10),
       '0x' + calldata4.slice(138),
       { from: owner },
     );
+
+    await this.band.approve(this.exchange.address, '10000000', {
+      from: _,
+    });
+
+    await this.exchange.addBand(_, 10000000, {from:_});
+    await this.exchange.setExchangeRate('1000000000000000000000', { from:_ });
 
     await this.comm.approve(this.tcd.address, '1000', {
       from: owner,
@@ -457,32 +464,37 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         from: owner,
         value: 100,
       });
-      await this.tcd.distributeFee({ from: owner });
+
+      await this.tcd.distributeFee(12, { from: owner });
+
       (await this.comm.balanceOf(owner)).toString().should.eq('960');
       (await this.comm.balanceOf(alice)).toString().should.eq('970');
       (await this.comm.balanceOf(bob)).toString().should.eq('980');
       (await this.comm.balanceOf(carol)).toString().should.eq('980');
       (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
         .toString()
-        .should.eq('63');
+        .should.eq('34');
 
       await this.tcd.withdraw(carol, 10, this.ownerSource.address, {
         from: carol,
       });
-      (await this.comm.balanceOf(carol)).toString().should.eq('994');
+      (await this.comm.balanceOf(carol)).toString().should.eq('991');
 
       await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
         from: owner,
         value: 101,
       });
-      await this.tcd.distributeFee({ from: owner });
+
+      await this.tcd.distributeFee(12 , { from: owner });
+
       (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
         .toString()
-        .should.eq('96');
-      await this.tcd.withdraw(owner, 60, this.ownerSource.address, {
+        .should.eq('38');
+      await this.tcd.withdraw(owner, 10, this.ownerSource.address, {
         from: owner,
       });
-      (await this.comm.balanceOf(owner)).toString().should.eq('1062');
+
+      (await this.comm.balanceOf(owner)).toString().should.eq('972');
       await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
@@ -491,10 +503,10 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         from: owner,
         value: 100,
       });
-      await this.tcd.distributeFee({ from: owner });
+      await this.tcd.distributeFee(24, { from: owner });
       (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
         .toString()
-        .should.eq('163');
+        .should.eq('46');
     });
   });
 });
