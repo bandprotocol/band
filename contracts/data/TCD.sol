@@ -3,9 +3,12 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./TCDBase.sol";
+import "../BandSimpleExchange.sol";
+import "../BandToken.sol";
 import "../CommunityToken.sol";
 import "../ParametersBase.sol";
 import "../feeless/Feeless.sol";
+import "../bonding/BondingCurve.sol";
 import "../utils/Fractional.sol";
 import "../token/ERC20Acceptor.sol";
 
@@ -34,14 +37,26 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
   }
 
   mapping (address => DataProvider) public providers;
+  BandToken public band;
   CommunityToken public token;
   ParametersBase public params;
+  BandSimpleExchange public exchange;
+  BondingCurve public bondingCurve;
   uint256 public undistributedReward;
 
-
-  constructor(CommunityToken _token, ParametersBase _params) public {
+  constructor(
+    BandToken _band,
+    CommunityToken _token, 
+    ParametersBase _params,
+    BondingCurve _bondingCurve,
+    BandSimpleExchange _exchange
+  ) public {
+    band = _band;
     token = _token;
     params = _params;
+    bondingCurve = _bondingCurve;
+    exchange = _exchange;
+    band.approve(address(_bondingCurve), 2 ** 256 - 1);
     setExecDelegator(token.execDelegator());
   }
 
@@ -137,10 +152,11 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
   }
 
   ////////////////////////////////////////////////////////////
-  function distributeFee() public {
+  function distributeFee(uint256 tokenAmount) public {
     require(address(this).balance > 0);
-    // TODO: Convert eth in this contract to community token
-    undistributedReward = 0; // undistributedReward.add(core.convertEthToToken.value(address(this).balance)());
+    exchange.convertFromEthToBand.value(address(this).balance)();
+    bondingCurve.buy(address(this), band.balanceOf(address(this)), tokenAmount);
+    undistributedReward = undistributedReward.add(tokenAmount);
     uint256 totalProviderCount = getActiveDataSourceCount();
     uint256 providerReward = undistributedReward.div(totalProviderCount);
     uint256 ownerPercentage = params.get("data:owner_revenue_pct");

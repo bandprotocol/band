@@ -1,5 +1,6 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
+const BandSimpleExchange = artifacts.require('BandSimpleExchange');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -38,6 +39,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     this.core = await CommunityCore.at(data1.receipt.logs[0].args.community);
     this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
+    this.exchange = await BandSimpleExchange.at(await this.factory.exchange());
     this.params = await Parameters.at(await this.core.params());
     this.voting = await SimpleVoting.at(await this.factory.simpleVoting());
     const data2 = await this.core.createTCD(10, 3, '500000000000000000', 100);
@@ -179,7 +181,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await shouldFail.reverting(this.tcd.kick(alice, { from: alice }));
     });
     it('should be able to kick if owner stake < min_provider_stake', async () => {
-      (await this.params.getZeroable(
+      (await this.params.get(
         web3.utils.fromAscii('data:min_provider_stake'),
       ))
         .toNumber()
@@ -202,7 +204,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await time.increase(time.duration.seconds(60));
       // resolvePoll
       await this.voting.resolvePoll(this.params.address, 1, { from: alice });
-      (await this.params.getZeroable(
+      (await this.params.get(
         web3.utils.fromAscii('data:min_provider_stake'),
       ))
         .toNumber()

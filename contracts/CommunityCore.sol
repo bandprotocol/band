@@ -65,7 +65,9 @@ contract CommunityCore {
     params.set("data:max_provider_count", maxProviderCount);
     params.set("data:owner_revenue_pct", ownerRevenuePct);
     params.set("data:query_price", queryPrice);
-    tcd = registry.tcdFactory().create(token, params);
+    tcd = registry.tcdFactory().create(
+      band, token, params, bondingCurve, registry.exchange()
+    );
     emit TCDCreated(tcd);
   }
 
@@ -93,10 +95,5 @@ contract CommunityCore {
     params.set(prefix.append("min_participation_pct"), minParticipationPct);
     params.set(prefix.append("support_required_pct"), supportRequiredPct);
     emit TCRCreated(tcr[prefix]);
-  }
-
-  function convertEthToToken() public payable returns (uint256) {
-    bondingCurve.inflate(msg.sender, msg.value);
-    return msg.value;
   }
 }
