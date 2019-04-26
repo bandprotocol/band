@@ -3,19 +3,20 @@ pragma solidity 0.5.0;
 import "../CommunityToken.sol";
 import "../Parameters.sol";
 import "../CommunityCore.sol";
+import "../voting/CommitRevealVoting.sol";
 
 
 contract CoreFactory{
   function create(
-    BandToken _bandToken,
-    CommunityToken _commToken,
-    Parameters _params,
-    uint256[] calldata _expressions
+    BandToken bandToken,
+    CommunityToken commToken,
+    Parameters params,
+    uint256[] calldata expressions
   )
     external
     returns (CommunityCore)
   {
-    return new CommunityCore(_bandToken, _commToken, _params, _expressions);
+    return new CommunityCore(bandToken, commToken, params, expressions);
   }
 }
 

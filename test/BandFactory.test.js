@@ -8,8 +8,6 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const CommunityCore = artifacts.require('CommunityCore');
 
-const CommitRevealVoting = artifacts.require('CommitRevealVoting');
-
 require('chai').should();
 
 contract('BandFactory', ([owner, alice, bob]) => {
@@ -108,8 +106,6 @@ contract('BandFactory', ([owner, alice, bob]) => {
       await this.contract.createNewCommunity(
         'CoinHatcher',
         'XCH',
-        18,
-        CommitRevealVoting.address,
         [
           web3.utils.fromAscii('core:reward_period'),
           web3.utils.fromAscii('core:reward_edit_period'),

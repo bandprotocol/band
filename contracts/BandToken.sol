@@ -111,8 +111,7 @@ contract BandToken is ERC20Base("BandToken", "BAND", 18) {
     uint8 end,
     uint256 value
   )
-    public
-    onlyOwner
+    public onlyOwner
     returns (bool)
   {
     require(start < cliff);

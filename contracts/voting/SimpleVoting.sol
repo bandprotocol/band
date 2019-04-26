@@ -58,16 +58,14 @@ contract SimpleVoting is VotingInterface, Feeless {
   }
 
   function getPollState(address pollContract, uint256 pollID)
-    public
-    view
+    public view
     returns (ResolveListener.PollState)
   {
     return polls[pollContract][pollID].pollState;
   }
 
   function getPollTotalVote(address pollContract, uint256 pollID)
-    public
-    view
+    public view
     returns (uint256 yesCount, uint256 noCount)
   {
     Poll storage poll = polls[pollContract][pollID];
@@ -75,8 +73,7 @@ contract SimpleVoting is VotingInterface, Feeless {
   }
 
   function getPollUserVote(address pollContract, uint256 pollID, address voter)
-    public
-    view
+    public view
     returns (uint256 yesWeight, uint256 noWeight)
   {
     Poll storage poll = polls[pollContract][pollID];
@@ -126,8 +123,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     return true;
   }
 
-  function castVote(
-    address sender,
+  function castVote(address sender,
     address pollContract,
     uint256 pollID,
     uint256 yesWeight,
@@ -139,18 +135,13 @@ contract SimpleVoting is VotingInterface, Feeless {
   {
     Poll storage poll = polls[pollContract][pollID];
     require(now < poll.expirationTime);
-
-    // Get the weight, which is the voting power at the block before the
-    // poll is initiated.
     uint256 totalWeight = poll.token.historicalVotingPowerAtNonce(
       sender,
       poll.snapshotNonce
     );
     require(yesWeight.add(noWeight) <= totalWeight);
-
     uint256 previousYesWeight = poll.yesWeights[sender];
     uint256 previousNoWeight = poll.noWeights[sender];
-
     poll.yesCount = poll.yesCount.sub(previousYesWeight).add(yesWeight);
     poll.noCount = poll.noCount.sub(previousNoWeight).add(noWeight);
     poll.yesWeights[sender] = yesWeight;
@@ -184,8 +175,7 @@ contract SimpleVoting is VotingInterface, Feeless {
   }
 
   function get(ParametersBase params, bytes8 prefix, bytes24 key)
-    internal
-    view
+    internal view
     returns (uint256)
   {
     uint8 prefixSize = 0;

@@ -2,19 +2,22 @@ pragma solidity 0.5.0;
 
 import "../CommunityToken.sol";
 import "../Parameters.sol";
+import "../feeless/ExecutionDelegator.sol";
 
 
 contract ParametersFactory{
   function create(
-    CommunityToken _token,
-    VotingInterface _voting,
-    bytes32[] calldata _keys,
-    uint256[] calldata _values
+    CommunityToken token,
+    VotingInterface voting,
+    bytes32[] calldata keys,
+    uint256[] calldata values
   )
     external
     returns (Parameters)
   {
-    return new Parameters(_token, _voting, _keys, _values);
+    Parameters params = new Parameters(token, voting, keys, values);
+    params.setExecDelegator(msg.sender);
+    return params;
   }
 }
 

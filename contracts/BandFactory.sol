@@ -2,14 +2,14 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-import "./feeless/ExecutionDelegator.sol";
 
 import "./BandToken.sol";
 import "./CommunityCore.sol";
 import "./CommunityToken.sol";
 import "./Parameters.sol";
-import "./voting/VotingInterface.sol";
-
+import "./feeless/ExecutionDelegator.sol";
+import "./voting/CommitRevealVoting.sol";
+import "./voting/SimpleVoting.sol";
 import "./factory/TokenFactory.sol";
 import "./factory/ParametersFactory.sol";
 import "./factory/CoreFactory.sol";
@@ -32,6 +32,8 @@ contract BandFactory is Ownable, ExecutionDelegator {
 
   BandToken public band;
   CommunityCore[] public cores;
+  SimpleVoting public simpleVoting;
+  CommitRevealVoting public commitRevealVoting;
 
   TokenFactory public tokenFactory;
   ParametersFactory public parametersFactory;
@@ -46,6 +48,8 @@ contract BandFactory is Ownable, ExecutionDelegator {
     public
   {
     band = new BandToken(_totalSupply, msg.sender);
+    simpleVoting = new SimpleVoting();
+    commitRevealVoting = new CommitRevealVoting();
     tokenFactory = _tokenFactory;
     parametersFactory = _parametersFactory;
     coreFactory = _coreFactory;
@@ -56,8 +60,6 @@ contract BandFactory is Ownable, ExecutionDelegator {
   function createNewCommunity(
     string calldata _name,
     string calldata _symbol,
-    uint8 _decimals,
-    VotingInterface _voting,
     bytes32[] calldata _keys,
     uint256[] calldata _values,
     uint256[] calldata _expressions
@@ -65,11 +67,9 @@ contract BandFactory is Ownable, ExecutionDelegator {
     external
     returns(bool)
   {
-    CommunityToken token = tokenFactory.create(_name, _symbol, _decimals);
-    Parameters params = parametersFactory.create(token, _voting, _keys, _values);
+    CommunityToken token = tokenFactory.create(_name, _symbol);
+    Parameters params = parametersFactory.create(token, simpleVoting, _keys, _values);
     CommunityCore core = coreFactory.create(band, token, params, _expressions);
-    token.setExecDelegator(address(this));
-    params.setExecDelegator(address(this));
     token.transferOwnership(address(core.bondingCurve()));
     cores.push(core);
     emit CommunityCreated(

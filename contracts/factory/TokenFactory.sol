@@ -4,17 +4,13 @@ import "../CommunityToken.sol";
 
 
 contract TokenFactory{
-  function create(
-    string calldata _name,
-    string calldata _symbol,
-    uint8 _decimals
-  )
+  function create(string calldata _name, string calldata _symbol)
     external
     returns (CommunityToken)
   {
-    CommunityToken token = new CommunityToken(_name, _symbol, _decimals);
+    CommunityToken token = new CommunityToken(_name, _symbol, 18);
+    token.setExecDelegator(msg.sender);
     token.transferOwnership(msg.sender);
     return token;
   }
 }
-

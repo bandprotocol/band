@@ -386,7 +386,6 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     } else {
       revert();
     }
-
     return true;
   }
 
