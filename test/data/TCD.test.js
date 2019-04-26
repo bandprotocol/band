@@ -15,45 +15,37 @@ require('chai').should();
 contract('TCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.factory = await BandRegistry.deployed();
-    this.band = await BandToken.new(100000000, owner, { from: owner });
-    this.comm = await CommunityToken.new('TestSDD', 'SDD', 18, {
+    this.band = await BandToken.at(await this.factory.band());
+    await this.band.transfer(_, await this.band.balanceOf(owner), {
       from: owner,
     });
-    this.voting = await SimpleVoting.new({ from: owner });
-    this.params = await Parameters.new(
-      this.comm.address,
-      this.voting.address,
-      [
-        web3.utils.fromAscii('params:expiration_time'),
-        web3.utils.fromAscii('params:support_required_pct'),
-        web3.utils.fromAscii('params:min_participation_pct'),
-        web3.utils.fromAscii('data:min_provider_stake'),
-        web3.utils.fromAscii('data:active_data_source_count'),
-        web3.utils.fromAscii('data:query_price'),
-        web3.utils.fromAscii('data:owner_percentage'),
-      ],
-      [60, '5', '5', '10', 3, 100, '500000000000000000'],
-      { from: owner },
-    );
-    this.core = await CommunityCore.new(
-      this.band.address,
-      this.comm.address,
-      this.params.address,
+    await this.band.transfer(_, await this.band.balanceOf(alice), {
+      from: alice,
+    });
+    await this.band.transfer(_, await this.band.balanceOf(bob), {
+      from: bob,
+    });
+    await this.band.transfer(owner, 100000000, { from: _ });
+    const data1 = await this.factory.createCommunity(
+      'CoinHatcher',
+      'CHT',
       [8, 1, 0, 2],
-      {
-        from: owner,
-      },
+      '0',
+      '60',
+      '5',
+      '5',
     );
+    this.core = await CommunityCore.at(data1.receipt.logs[0].args.community);
+    this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.tcd = await TCD.new(this.core.address);
-    await this.tcd.setExecDelegator(this.factory.address);
-    await this.params.setExecDelegator(this.factory.address);
-    await this.voting.setExecDelegator(this.factory.address);
+    this.params = await Parameters.at(await this.core.params());
+    this.voting = await SimpleVoting.at(await this.factory.simpleVoting());
+    const data2 = await this.core.createTCD(10, 3, '500000000000000000', 100);
+    this.tcd = await TCD.at(data2.receipt.logs[0].args.tcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
     await this.band.transfer(carol, 10000000, { from: owner });
-    await this.comm.transferOwnership(this.curve.address, { from: owner });
     // alice buy 1000 SDD
     const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(

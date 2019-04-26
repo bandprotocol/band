@@ -7,6 +7,7 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
+const SimpleVoting = artifacts.require('SimpleVoting');
 const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
@@ -14,63 +15,43 @@ require('chai').should();
 contract('TCR', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.factory = await BandRegistry.deployed();
-    this.band = await BandToken.new(100000000, owner, { from: owner });
-    this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
+    this.band = await BandToken.at(await this.factory.band());
+    await this.band.transfer(_, await this.band.balanceOf(owner), {
       from: owner,
     });
-    this.voting = await CommitRevealVoting.new({ from: owner });
-    this.params = await Parameters.new(
-      this.comm.address,
-      this.voting.address,
-      [
-        web3.utils.fromAscii('params:commit_time'),
-        web3.utils.fromAscii('params:reveal_time'),
-        web3.utils.fromAscii('params:support_required_pct'),
-        web3.utils.fromAscii('params:min_participation_pct'),
-        web3.utils.fromAscii('tcr:dispensation_percentage'),
-        web3.utils.fromAscii('tcr:min_deposit'),
-        web3.utils.fromAscii('tcr:apply_stage_length'),
-        web3.utils.fromAscii('tcr:commit_time'),
-        web3.utils.fromAscii('tcr:reveal_time'),
-        web3.utils.fromAscii('tcr:support_required_pct'),
-        web3.utils.fromAscii('tcr:min_participation_pct'),
-      ],
-      [
-        60,
-        60,
-        '500000000000000000',
-        '500000000000000000',
-        '300000000000000000',
-        100,
-        300,
-        30,
-        30,
-        '500000000000000000',
-        '500000000000000000',
-      ],
-      { from: owner },
-    );
-    this.core = await CommunityCore.new(
-      this.band.address,
-      this.comm.address,
-      this.params.address,
+    await this.band.transfer(_, await this.band.balanceOf(alice), {
+      from: alice,
+    });
+    await this.band.transfer(_, await this.band.balanceOf(bob), {
+      from: bob,
+    });
+    await this.band.transfer(owner, 100000000, { from: _ });
+    const data1 = await this.factory.createCommunity(
+      'CoinHatcher',
+      'CHT',
       [8, 1, 0, 2],
-      {
-        from: owner,
-      },
+      '0',
+      '60',
+      '500000000000000000',
+      '500000000000000000',
     );
+    this.core = await CommunityCore.at(data1.receipt.logs[0].args.community);
+    this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.tcr = await TCR.new(
+    this.params = await Parameters.at(await this.core.params());
+    this.sVoting = await SimpleVoting.at(await this.factory.simpleVoting());
+    this.voting = await CommitRevealVoting.at(
+      await this.factory.commitRevealVoting(),
+    );
+    const data2 = await this.core.createTCR(
       web3.utils.fromAscii('tcr:'),
-      this.core.address,
-      this.voting.address,
-      //  if x <= 60
-      //    return 1e18
-      //  else if x <= 120
-      //    return 1e18 - (5e17 * (x-60))/60
-      //  else
-      //    return 5e17
       [
+        //  if x <= 60
+        //    return 1e18
+        //  else if x <= 120
+        //    return 1e18 - (5e17 * (x-60))/60
+        //  else
+        //    return 5e17
         18,
         14,
         1,
@@ -99,13 +80,19 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
         0,
         '500000000000000000',
       ],
-      { from: owner },
+      100, // min deposit
+      300, // apply stage length
+      '300000000000000000', // dispensationp percentage
+      30, // commit time
+      30, // reveal time
+      '500000000000000000', // min participation
+      '500000000000000000', // support required
     );
+    this.tcr = await TCR.at(data2.receipt.logs[0].args.tcr);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
     await this.band.transfer(carol, 10000000, { from: owner });
-    await this.comm.transferOwnership(this.curve.address, { from: owner });
     // alice buy 1000 XCH
     const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
@@ -794,46 +781,25 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
         },
       );
       // start vote for new min_deposit
-      const commits = [[alice, 600, 0], [bob, 600, 0], [carol, 0, 600]];
+      const votes = [[alice, 600, 0], [bob, 600, 0], [carol, 0, 600]];
       const proposeID = 1;
       // everyone commit
-      for (const [person, yes, no] of commits) {
-        await this.voting.commitVote(
-          person,
-          this.params.address,
-          proposeID,
-          web3.utils.soliditySha3(yes, no, salt),
-          '0x00',
-          yes + no,
-          0,
-          { from: person },
-        );
-      }
-      (await this.voting.polls(this.params.address, proposeID)).totalCount
-        .toNumber()
-        .should.eq(1800);
-      await time.increase(time.duration.seconds(60));
-      // everyone reveal
-      for (const [person, yes, no] of commits) {
-        await this.voting.revealVote(
+      for (const [person, yes, no] of votes) {
+        await this.sVoting.castVote(
           person,
           this.params.address,
           proposeID,
           yes,
           no,
-          salt,
-          {
-            from: person,
-          },
+          { from: person },
         );
       }
       await time.increase(time.duration.seconds(60));
-      // alice resolve
-      await this.voting.resolvePoll(this.params.address, proposeID, {
+      await this.sVoting.resolvePoll(this.params.address, proposeID, {
         from: alice,
       });
     });
-    it('New min_deposit should has new value', async () => {
+    it('New min_deposit should have new value', async () => {
       (await this.tcr.get(web3.utils.fromAscii('min_deposit')))
         .toNumber()
         .should.eq(newMinDeposit);

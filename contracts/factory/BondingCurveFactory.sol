@@ -15,11 +15,13 @@ contract BondingCurveFactory {
     external
     returns (BondingCurve)
   {
-    return new ParameterizedBondingCurve(
+    BondingCurve curve = new ParameterizedBondingCurve(
       collateralToken,
       bondedToken,
       collateralExpressionTree,
       params
     );
+    curve.transferOwnership(msg.sender);
+    return curve;
   }
 }

@@ -123,7 +123,8 @@ contract SimpleVoting is VotingInterface, Feeless {
     return true;
   }
 
-  function castVote(address sender,
+  function castVote(
+    address sender,
     address pollContract,
     uint256 pollID,
     uint256 yesWeight,

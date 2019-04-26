@@ -2,9 +2,10 @@ pragma solidity 0.5.0;
 
 import "./BandRegistryBase.sol";
 import "./CommunityCore.sol";
+import "./feeless/ExecutionDelegator.sol";
 
 
-contract BandRegistry is BandRegistryBase {
+contract BandRegistry is BandRegistryBase, ExecutionDelegator {
   event CommunityCreated(CommunityCore community);
 
   constructor(

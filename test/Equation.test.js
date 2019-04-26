@@ -1,10 +1,15 @@
 const { shouldFail } = require('openzeppelin-test-helpers');
 
 const EquationMock = artifacts.require('EquationMock');
+const Equation = artifacts.require('Equation');
 
 require('chai').should();
 
 contract('EquationMock', ([_, owner]) => {
+  beforeEach(async () => {
+    await EquationMock.link(Equation, await Equation.deployed());
+  });
+
   context('Invalid equation', () => {
     it('should fail if an operand is missed: (+) (4)', async () => {
       await shouldFail.reverting(EquationMock.new([4, 1], { from: owner }));

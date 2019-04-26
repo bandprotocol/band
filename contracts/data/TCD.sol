@@ -63,7 +63,7 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
   }
 
   function getActiveDataSourceCount() public view returns (uint256) {
-    return Math.min(dataSources.length, params.get("data:active_data_source_count"));
+    return Math.min(dataSources.length, params.get("data:max_provider_count"));
   }
 
   function getQueryPrice() public view returns (uint256) {
@@ -143,13 +143,15 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
     undistributedReward = 0; // undistributedReward.add(core.convertEthToToken.value(address(this).balance)());
     uint256 totalProviderCount = getActiveDataSourceCount();
     uint256 providerReward = undistributedReward.div(totalProviderCount);
-    uint256 ownerPercentage = params.get("data:owner_percentage");
+    uint256 ownerPercentage = params.get("data:owner_revenue_pct");
     uint256 ownerReward = ownerPercentage.multipliedBy(providerReward);
     uint256 stakeIncreased = providerReward.sub(ownerReward);
     for(uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {
       DataProvider storage provider = providers[dataSources[dataSourceIndex]];
       provider.stake = provider.stake.add(stakeIncreased);
-      _vote(provider.owner, ownerReward, dataSources[dataSourceIndex]);
+      if (ownerReward > 0) {
+        _vote(provider.owner, ownerReward, dataSources[dataSourceIndex]);
+      }
       undistributedReward = undistributedReward.sub(providerReward);
       emit DataSourceStakeChanged(dataSources[dataSourceIndex], provider.stake);
     }

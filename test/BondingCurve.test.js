@@ -1,5 +1,4 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
-const { Merkle } = require('../lib/merkle');
 
 const BandToken = artifacts.require('BandToken');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -7,66 +6,41 @@ const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BandRegistry = artifacts.require('BandRegistry');
-const CommitRevealVoting = artifacts.require('CommitRevealVoting');
+const SimpleVoting = artifacts.require('SimpleVoting');
 
 require('chai').should();
 
-contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
+contract('BondingCurve', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
     this.factory = await BandRegistry.deployed();
-    this.band = await BandToken.new(1000000, owner, { from: owner });
-    await this.band.transfer(alice, 100000, { from: owner });
-    await this.band.transfer(bob, 100000, { from: owner });
-    this.comm = await CommunityToken.new('CoinHatcher', 'XCH', 18, {
+    this.band = await BandToken.at(await this.factory.band());
+    await this.band.transfer(_, await this.band.balanceOf(owner), {
       from: owner,
     });
-    this.voting = await CommitRevealVoting.new({ from: owner });
-    this.params = await Parameters.new(
-      this.comm.address,
-      this.voting.address,
-      [
-        web3.utils.fromAscii('params:commit_time'),
-        web3.utils.fromAscii('params:reveal_time'),
-        web3.utils.fromAscii('params:support_required_pct'),
-        web3.utils.fromAscii('params:min_participation_pct'),
-      ],
-      [60, 60, 80, 10],
-      { from: owner },
-    );
-    this.core = await CommunityCore.new(
-      this.band.address,
-      this.comm.address,
-      this.params.address,
-      [8, 1, 0, 2],
-      {
-        from: owner,
-      },
-    );
-    this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    await this.comm.transferOwnership(this.curve.address, { from: owner });
-    // Alice buys 100 tokens to get voting power. Will sell it back soon.
-    const buyCalldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-    await this.band.transferAndCall(
-      alice,
-      this.curve.address,
-      100000,
-      '0x' + buyCalldata.slice(2, 10),
-      '0x' + buyCalldata.slice(138),
-      { from: alice },
-    );
+    await this.band.transfer(_, await this.band.balanceOf(alice), {
+      from: alice,
+    });
+    await this.band.transfer(_, await this.band.balanceOf(bob), {
+      from: bob,
+    });
 
-    // Alice sells 100 tokens back
-    const sellCalldata = this.curve.contract.methods
-      .sell(_, 0, 100)
-      .encodeABI();
-    await this.comm.transferAndCall(
-      alice,
-      this.curve.address,
-      100,
-      '0x' + sellCalldata.slice(2, 10),
-      '0x' + sellCalldata.slice(138),
-      { from: alice },
+    await this.band.transfer(owner, 1000000, { from: _ });
+    await this.band.transfer(alice, 100000, { from: owner });
+    await this.band.transfer(bob, 100000, { from: owner });
+    const data = await this.factory.createCommunity(
+      'CoinHatcher',
+      'CHT',
+      [8, 1, 0, 2],
+      '0',
+      '60',
+      '100000000000000000',
+      '800000000000000000',
     );
+    this.core = await CommunityCore.at(data.receipt.logs[0].args.community);
+    this.comm = await CommunityToken.at(await this.core.token());
+    this.curve = await BondingCurve.at(await this.core.bondingCurve());
+    this.params = await Parameters.at(await this.core.params());
+    this.voting = await SimpleVoting.at(await this.factory.simpleVoting());
   });
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
@@ -189,8 +163,6 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should be able to sell/transferAndCall feelessly', async () => {
-      await this.comm.setExecDelegator(this.factory.address);
-
       const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
         alice,
@@ -269,27 +241,16 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.params.propose(
         owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('curve:inflation_rate')],
+        [web3.utils.fromAscii('bonding:inflation_rate')],
         [38580246914],
         {
           from: owner,
         },
       );
-      await this.voting.commitVote(
-        alice,
-        this.params.address,
-        1,
-        web3.utils.soliditySha3(100, 0, 42),
-        '0x00',
-        100,
-        0,
-        { from: alice },
-      );
-      await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(alice, this.params.address, 1, 100, 0, 42, {
+      await this.voting.castVote(alice, this.params.address, 1, 100, 0, {
         from: alice,
       });
-      await time.increase(time.duration.days(30) - time.duration.seconds(60));
+      await time.increase(time.duration.days(30));
       await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
@@ -314,28 +275,17 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.params.propose(
         owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('curve:inflation_rate')],
+        [web3.utils.fromAscii('bonding:inflation_rate')],
         [27777777777778],
         {
           from: owner,
         },
       );
 
-      await this.voting.commitVote(
-        alice,
-        this.params.address,
-        1,
-        web3.utils.soliditySha3(100, 0, 42),
-        '0x00',
-        100,
-        0,
-        { from: alice },
-      );
-      await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(alice, this.params.address, 1, 100, 0, 42, {
+      await this.voting.castVote(alice, this.params.address, 1, 100, 0, {
         from: alice,
       });
-      await time.increase(time.duration.hours(1) - time.duration.seconds(60));
+      await time.increase(time.duration.hours(1));
       await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       // First sale
       await time.increase(time.duration.hours(9));
@@ -394,28 +344,17 @@ contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
       await this.params.propose(
         alice,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-        [web3.utils.fromAscii('curve:liquidity_fee')],
+        [web3.utils.fromAscii('bonding:liquidity_spread')],
         [200000000000],
         {
           from: alice,
         },
       );
 
-      await this.voting.commitVote(
-        alice,
-        this.params.address,
-        1,
-        web3.utils.soliditySha3(100, 0, 42),
-        '0x00',
-        100,
-        0,
-        { from: alice },
-      );
-      await time.increase(time.duration.seconds(60));
-      await this.voting.revealVote(alice, this.params.address, 1, 100, 0, 42, {
+      await this.voting.castVote(alice, this.params.address, 1, 100, 0, {
         from: alice,
       });
-      await time.increase(time.duration.seconds(60));
+      await time.increase(time.duration.seconds(120));
       await this.voting.resolvePoll(this.params.address, 1, { from: alice });
     });
 

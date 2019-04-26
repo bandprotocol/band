@@ -21,7 +21,7 @@ contract ParameterizedBondingCurve is BondingCurve {
   }
 
   function getRevenueBeneficiary() public view returns (address) {
-    address beneficiary = address(params.getZeroable("curve:revenue_beneficary"));
+    address beneficiary = address(params.get("bonding:revenue_beneficary"));
     if (beneficiary == address(0)) {
       return super.getRevenueBeneficiary();
     } else {
@@ -30,11 +30,11 @@ contract ParameterizedBondingCurve is BondingCurve {
   }
 
   function getInflationRateNumerator() public view returns (uint256) {
-    return params.getZeroable("bonding:inflation_rate");
+    return params.get("bonding:inflation_rate");
   }
 
   function getLiquiditySpreadNumerator() public view returns (uint256) {
-    return params.getZeroable("bonding:liquidity_spread");
+    return params.get("bonding:liquidity_spread");
   }
 
   function setInflationRate(uint256) public {

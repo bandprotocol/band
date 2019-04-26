@@ -70,15 +70,6 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
    * @dev Return the value at the given key. Throw if the value is not set.
    */
   function get(bytes32 key) public view returns (uint256) {
-    uint256 value = params[key];
-    require(value != 0);
-    return value;
-  }
-
-  /**
-   * @dev Similar to get function, but returns 0 instead of throwing.
-   */
-  function getZeroable(bytes32 key) public view returns (uint256) {
     return params[key];
   }
 
@@ -96,6 +87,7 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
 
   function set(bytes32 key, uint256 value) public onlyOwner {
     params[key] = value;
+    emit ParameterChanged(key, value);
   }
 
   /**
@@ -140,7 +132,7 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
         bytes32 key = proposal.changes[index].key;
         uint256 value = proposal.changes[index].value;
         params[key] = value;
-        emit ParameterChanged(key,value);
+        emit ParameterChanged(key, value);
       }
       emit ProposalAccepted(proposalID);
     } else {
