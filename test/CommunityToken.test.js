@@ -1,7 +1,7 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const CommunityToken = artifacts.require('CommunityToken');
-const BandFactory = artifacts.require('BandFactory');
+const BandRegistry = artifacts.require('BandRegistry');
 
 require('chai').should();
 
@@ -10,7 +10,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     this.contract = await CommunityToken.new('CoinHatcher', 'XCH', 36, {
       from: owner,
     });
-    this.factory = await BandFactory.deployed();
+    this.factory = await BandRegistry.deployed();
   });
 
   it('should contain correct token detail', async () => {

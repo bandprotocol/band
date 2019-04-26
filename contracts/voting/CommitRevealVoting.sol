@@ -5,6 +5,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./VotingInterface.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Fractional.sol";
+import "../utils/KeyUtils.sol";
 
 /**
  * @title CommitRevealVoting
@@ -12,6 +13,7 @@ import "../utils/Fractional.sol";
 contract CommitRevealVoting is VotingInterface, Feeless {
   using SafeMath for uint256;
   using Fractional for uint256;
+  using KeyUtils for bytes8;
 
   event PollCreated(  // A poll is created.
     address indexed pollContract,
@@ -145,10 +147,10 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     pollMustNotExist(msg.sender, pollID)
     returns (bool)
   {
-    uint256 commitEndTime = now.add(get(params, prefix, "commit_time"));
-    uint256 revealEndTime = commitEndTime.add(get(params, prefix, "reveal_time"));
-    uint256 voteMinParticipationPct = get(params, prefix, "min_participation_pct");
-    uint256 voteSupportRequiredPct = get(params, prefix, "support_required_pct");
+    uint256 commitEndTime = now.add(params.get(prefix.append("commit_time")));
+    uint256 revealEndTime = commitEndTime.add(params.get(prefix.append("reveal_time")));
+    uint256 voteMinParticipationPct = params.get(prefix.append("min_participation_pct"));
+    uint256 voteSupportRequiredPct = params.get(prefix.append("support_required_pct"));
 
     require(revealEndTime < 2 ** 64);
     require(commitEndTime < revealEndTime);
@@ -290,13 +292,5 @@ contract CommitRevealVoting is VotingInterface, Feeless {
       return 0;
     }
     return keccak256(abi.encodePacked(weight, commit));
-  }
-
-  function get(ParametersBase params, bytes8 prefix, bytes24 key) internal view returns (uint256) {
-    uint8 prefixSize = 0;
-    while (prefixSize < 8 && prefix[prefixSize] != byte(0)) {
-      ++prefixSize;
-    }
-    return params.get(bytes32(prefix) | (bytes32(key) >> (8 * prefixSize)));
   }
 }

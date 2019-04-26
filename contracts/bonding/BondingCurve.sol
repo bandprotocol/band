@@ -32,7 +32,7 @@ contract BondingCurve is Ownable, ERC20Acceptor {
   uint256 public lastInflationTime = now;
 
   uint256 internal _inflationRateNumerator;
-  uint256 internal _liquidityFeeNumerator;
+  uint256 internal _liquiditySpreadNumerator;
   uint256 public constant RATIONAL_DENOMINATOR = 1e18;
 
   constructor(
@@ -75,8 +75,8 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     return _inflationRateNumerator;
   }
 
-  function getLiquidityFeeNumerator() public view returns (uint256) {
-    return _liquidityFeeNumerator;
+  function getLiquiditySpreadNumerator() public view returns (uint256) {
+    return _liquiditySpreadNumerator;
   }
 
   function setInflationRate(uint256 inflationRateNumerator) public onlyOwner {
@@ -84,9 +84,9 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     _inflationRateNumerator = inflationRateNumerator;
   }
 
-  function setLiquidityFee(uint256 liquidityFeeNumerator) public onlyOwner {
-    require(liquidityFeeNumerator < RATIONAL_DENOMINATOR);
-    _liquidityFeeNumerator = liquidityFeeNumerator;
+  function setLiquiditySpread(uint256 liquiditySpreadNumerator) public onlyOwner {
+    require(liquiditySpreadNumerator < RATIONAL_DENOMINATOR);
+    _liquiditySpreadNumerator = liquiditySpreadNumerator;
   }
 
   function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
@@ -94,16 +94,16 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     requireToken(collateralToken, buyer, priceLimit)
   {
     _adjustAutoInflation();
-    uint256 liquidityFee = buyAmount.mul(getLiquidityFeeNumerator()).div(RATIONAL_DENOMINATOR);
-    uint256 totalMintAmount = buyAmount.add(liquidityFee);
+    uint256 liquiditySpread = buyAmount.mul(getLiquiditySpreadNumerator()).div(RATIONAL_DENOMINATOR);
+    uint256 totalMintAmount = buyAmount.add(liquiditySpread);
     uint256 buyPrice = getBuyPrice(totalMintAmount);
     require(buyPrice > 0 && buyPrice <= priceLimit);
     if (priceLimit > buyPrice) {
       require(collateralToken.transfer(buyer, priceLimit.sub(buyPrice)));
     }
     require(bondedToken.mint(buyer, buyAmount));
-    if (liquidityFee > 0) {
-      _rewardBondingCurveOwner(liquidityFee);
+    if (liquiditySpread > 0) {
+      _rewardBondingCurveOwner(liquiditySpread);
     }
     currentMintedTokens = currentMintedTokens.add(totalMintAmount);
     currentCollateral = currentCollateral.add(buyPrice);

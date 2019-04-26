@@ -11,7 +11,7 @@ contract ParametersFactory {
     returns (Parameters)
   {
     Parameters params = new Parameters(token, voting);
-    params.setExecDelegator(msg.sender);
+    params.transferOwnership(msg.sender);
     return params;
   }
 }

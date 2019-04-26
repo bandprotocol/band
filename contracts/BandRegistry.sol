@@ -8,6 +8,8 @@ contract BandRegistry is BandRegistryBase {
   event CommunityCreated(CommunityCore community);
 
   constructor(
+    SimpleVoting _simpleVoting,
+    CommitRevealVoting _commitRevealVoting,
     BondingCurveFactory _bondingCurveFactory,
     CommunityTokenFactory _communityTokenFactory,
     ParametersFactory _parametersFactory,
@@ -15,8 +17,8 @@ contract BandRegistry is BandRegistryBase {
     TCRFactory _tcrFactory
   ) public {
     band = new BandToken(msg.sender);
-    simpleVoting = new SimpleVoting();
-    commitRevealVoting = new CommitRevealVoting();
+    simpleVoting = _simpleVoting;
+    commitRevealVoting = _commitRevealVoting;
     bondingCurveFactory = _bondingCurveFactory;
     communityTokenFactory = _communityTokenFactory;
     parametersFactory = _parametersFactory;
@@ -28,7 +30,7 @@ contract BandRegistry is BandRegistryBase {
     string calldata name,
     string calldata symbol,
     uint256[] calldata bondingCollateralEquation,
-    uint256 bondingLiquidityFee,
+    uint256 bondingLiquiditySpread,
     uint256 paramsExpirationTime,
     uint256 paramsMinParticipationPct,
     uint256 paramsSupportRequiredPct
@@ -38,7 +40,7 @@ contract BandRegistry is BandRegistryBase {
       name,
       symbol,
       bondingCollateralEquation,
-      bondingLiquidityFee,
+      bondingLiquiditySpread,
       paramsExpirationTime,
       paramsMinParticipationPct,
       paramsSupportRequiredPct

@@ -4,14 +4,16 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-import "../CommunityCore.sol";
-
+import "../CommunityToken.sol";
+import "../ParametersBase.sol";
 import "../token/ERC20Acceptor.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Equation.sol";
 import "../utils/Fractional.sol";
+import "../utils/KeyUtils.sol";
 import "../voting/ResolveListener.sol";
 import "../voting/VotingInterface.sol";
+
 
 /**
  * @title TCR
@@ -23,6 +25,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
   using Equation for Equation.Node[];
+  using KeyUtils for bytes8;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
     bytes32 data,
@@ -120,15 +123,16 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
 
   constructor(
     bytes8 _prefix,
-    CommunityCore _core,
+    CommunityToken _token,
+    ParametersBase _params,
     VotingInterface _voting,
     uint256[] memory _expressions
   )
     public
   {
     prefix = _prefix;
-    token = _core.token();
-    params = _core.params();
+    token = _token;
+    params = _params;
     voting = _voting;
     setExecDelegator(token.execDelegator());
     depositDecayFunction.init(_expressions);
@@ -175,11 +179,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
    * with this contract's prefix to get the absolute key.
    */
   function get(bytes24 key) public view returns (uint256) {
-    uint8 prefixSize = 0;
-    while (prefixSize < 8 && prefix[prefixSize] != byte(0)) {
-      ++prefixSize;
-    }
-    return params.get(bytes32(prefix) | (bytes32(key) >> (8 * prefixSize)));
+    return params.get(prefix.append(key));
   }
 
   /**

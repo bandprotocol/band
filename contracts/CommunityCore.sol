@@ -2,30 +2,35 @@ pragma solidity 0.5.0;
 
 import "./BandRegistryBase.sol";
 import "./BandToken.sol";
-import "./CommunityCore.sol";
 import "./CommunityToken.sol";
-import "./ParametersBase.sol";
+import "./Parameters.sol";
 import "./bonding/BondingCurve.sol";
 import "./data/TCD.sol";
 import "./data/TCR.sol";
+import "./utils/KeyUtils.sol";
 
 
 contract CommunityCore {
+  using KeyUtils for bytes8;
+
   event TCDCreated(TCD tcd);
   event TCRCreated(TCR tcr);
 
   BandRegistryBase public registry;
   BandToken public band;
   CommunityToken public token;
-  ParametersBase public params;
+  Parameters public params;
   BondingCurve public bondingCurve;
+
+  TCD public tcd;
+  mapping (bytes8 => TCR) public tcr;
 
   constructor(
     BandRegistryBase _registry,
     string memory name,
     string memory symbol,
     uint256[] memory bondingCollateralEquation,
-    uint256 bondingLiquidityFee,
+    uint256 bondingLiquiditySpread,
     uint256 paramsExpirationTime,
     uint256 paramsMinParticipationPct,
     uint256 paramsSupportRequiredPct
@@ -40,16 +45,13 @@ contract CommunityCore {
       bondingCollateralEquation,
       params
     );
+    token.setExecDelegator(address(registry));
+    params.setExecDelegator(address(registry));
     token.transferOwnership(address(bondingCurve));
-
-    // commToken = _commToken;
-    // params = _params;
-    // bondingCurve = new ParameterizedBondingCurve(
-    //   ERC20Interface(address(_bandToken)),
-    //   ERC20Interface(address(_commToken)),
-    //   _expressions,
-    //   _params
-    // );
+    params.set("bonding:liquidity_spread", bondingLiquiditySpread);
+    params.set("params:expiration_time", paramsExpirationTime);
+    params.set("params:min_participation_pct", paramsMinParticipationPct);
+    params.set("params:support_required_pct", paramsSupportRequiredPct);
   }
 
   function createTCD(
@@ -58,7 +60,13 @@ contract CommunityCore {
     uint256 ownerRevenuePct,
     uint256 queryPrice
   ) external {
-    // TODO
+    require(address(tcd) == address(0));
+    params.set("data:min_provider_stake", minProviderStake);
+    params.set("data:max_provider_count", maxProviderCount);
+    params.set("data:owner_revenue_pct", ownerRevenuePct);
+    params.set("data:query_price", queryPrice);
+    tcd = registry.tcdFactory().create(token, params);
+    emit TCDCreated(tcd);
   }
 
   function createTCR(
@@ -72,7 +80,19 @@ contract CommunityCore {
     uint256 minParticipationPct,
     uint256 supportRequiredPct
   ) external {
-    // TODO
+    require(prefix != bytes8("bonding:") && prefix != bytes8("params:") && prefix != bytes8("data:"));
+    require(address(tcr[prefix]) == address(0));
+    tcr[prefix] = registry.tcrFactory().create(
+      prefix, token, params, registry.commitRevealVoting(), decayFunction
+    );
+    params.set(prefix.append("min_deposit"), minDeposit);
+    params.set(prefix.append("apply_stage_length"), applyStageLength);
+    params.set(prefix.append("dispensation_percentage"), dispensationPercentage);
+    params.set(prefix.append("commit_time"), commitTime);
+    params.set(prefix.append("reveal_time"), revealTime);
+    params.set(prefix.append("min_participation_pct"), minParticipationPct);
+    params.set(prefix.append("support_required_pct"), supportRequiredPct);
+    emit TCRCreated(tcr[prefix]);
   }
 
   function convertEthToToken() public payable returns (uint256) {

@@ -6,14 +6,14 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const BandFactory = artifacts.require('BandFactory');
+const BandRegistry = artifacts.require('BandRegistry');
 const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 
 require('chai').should();
 
 contract('CommunityCore', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
-    this.factory = await BandFactory.deployed();
+    this.factory = await BandRegistry.deployed();
     this.band = await BandToken.new(1000000, owner, { from: owner });
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });

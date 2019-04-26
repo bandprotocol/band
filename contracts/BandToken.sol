@@ -45,8 +45,8 @@ contract BandToken is ERC20Base("BandToken", "BAND", 18) {
    * token creator.
    */
   constructor(address creator) public {
-    // Transfer ownership of BandToken from BandRegistry to original creator
     transferOwnership(creator);
+    setExecDelegator(msg.sender);
     // Populate eomTimestamps for every month from the start of Q3 2019.
     // until the end of Q2 2023, for the total of 4 years (48 months).
     eomTimestamps[0] = 1564617600;  // End of 2019/07

@@ -3,12 +3,11 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./TCDBase.sol";
-import "../CommunityCore.sol";
+import "../CommunityToken.sol";
 import "../ParametersBase.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Fractional.sol";
 import "../token/ERC20Acceptor.sol";
-import "../token/ERC20Interface.sol";
 
 
 contract TCD is TCDBase, ERC20Acceptor, Feeless {
@@ -35,18 +34,15 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
   }
 
   mapping (address => DataProvider) public providers;
-
-  ERC20Interface public token;
+  CommunityToken public token;
   ParametersBase public params;
-  CommunityCore public core;
-
   uint256 public undistributedReward;
 
 
-  constructor(CommunityCore _core) public {
-    token = _core.token();
-    params = _core.params();
-    core = _core;
+  constructor(CommunityToken _token, ParametersBase _params) public {
+    token = _token;
+    params = _params;
+    setExecDelegator(token.execDelegator());
   }
 
   function getProviderPublicOwnership(address dataSource, address voter)
@@ -144,7 +140,7 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
   function distributeFee() public {
     require(address(this).balance > 0);
     // TODO: Convert eth in this contract to community token
-    undistributedReward = undistributedReward.add(core.convertEthToToken.value(address(this).balance)());
+    undistributedReward = 0; // undistributedReward.add(core.convertEthToToken.value(address(this).balance)());
     uint256 totalProviderCount = getActiveDataSourceCount();
     uint256 providerReward = undistributedReward.div(totalProviderCount);
     uint256 ownerPercentage = params.get("data:owner_percentage");

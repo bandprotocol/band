@@ -66,9 +66,6 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
     voting = _voting;
   }
 
-  // function addParameter(bytes32 key, uint256 value) public onlyOwner {
-  // }
-
   /**
    * @dev Return the value at the given key. Throw if the value is not set.
    */
@@ -95,6 +92,10 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
   {
     KeyValue memory keyValue = proposals[proposalID].changes[changeIndex];
     return (keyValue.key, keyValue.value);
+  }
+
+  function set(bytes32 key, uint256 value) public onlyOwner {
+    params[key] = value;
   }
 
   /**

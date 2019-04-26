@@ -30,11 +30,11 @@ contract ParameterizedBondingCurve is BondingCurve {
   }
 
   function getInflationRateNumerator() public view returns (uint256) {
-    return params.getZeroable("curve:inflation_rate");
+    return params.getZeroable("bonding:inflation_rate");
   }
 
-  function getLiquidityFeeNumerator() public view returns (uint256) {
-    return params.getZeroable("curve:liquidify_fee");
+  function getLiquiditySpreadNumerator() public view returns (uint256) {
+    return params.getZeroable("bonding:liquidity_spread");
   }
 
   function setInflationRate(uint256) public {

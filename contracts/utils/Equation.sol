@@ -131,7 +131,7 @@ library Equation {
    * @param self storage pointer to equation data to initialize.
    * @param _expressions array of opcodes/values to initialize.
    */
-  function init(Node[] storage self, uint256[] memory _expressions) internal {
+  function init(Node[] storage self, uint256[] calldata _expressions) external {
     // Init should only be called when the equation is not yet initialized.
     assert(self.length == 0);
 
@@ -164,7 +164,7 @@ library Equation {
    * @dev Calculate the Y position from the X position for this equation.
    */
   function calculate(Node[] storage self, uint256 xValue)
-    internal
+    external
     view
     returns (uint256)
   {

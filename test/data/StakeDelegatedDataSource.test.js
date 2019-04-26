@@ -1,7 +1,7 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
-const BandFactory = artifacts.require('BandFactory');
+const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
@@ -14,7 +14,7 @@ require('chai').should();
 
 contract('TCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
-    this.factory = await BandFactory.deployed();
+    this.factory = await BandRegistry.deployed();
     this.band = await BandToken.new(100000000, owner, { from: owner });
     this.comm = await CommunityToken.new('TestSDD', 'SDD', 18, {
       from: owner,

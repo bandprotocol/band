@@ -56,7 +56,7 @@ library Equation {
    * of the each value's domain. The end result must be in uint256 range.
    */
 
-  struct Data{
+  struct Data {
     uint256 opcode;
     uint256[] constants;
     uint8 equationLength;
