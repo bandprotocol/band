@@ -9,6 +9,8 @@ const TCDFactory = artifacts.require('TCDFactory');
 const TCRFactory = artifacts.require('TCRFactory');
 
 module.exports = function (deployer, network, accounts) {
+  deployer.deploy(SimpleVoting);
+  deployer.deploy(CommitRevealVoting);
   deployer.then(async () => {
     const registry = await deployer.deploy(
       BandRegistry,
@@ -25,5 +27,5 @@ module.exports = function (deployer, network, accounts) {
 
     await (await CommitRevealVoting.deployed()).setExecDelegator(registry.address);
     await (await SimpleVoting.deployed()).setExecDelegator(registry.address);
-  });
+  }).catch(console.log);
 };

@@ -123,7 +123,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     (await this.contract.balanceOf(carol))
       .toNumber()
       .should.eq((cap.carol += 20));
-    (await this.factory.execNonces(alice)).toNumber().should.eq(nonce.alice);
+    (await this.factory.lastMsTimes(alice)).toNumber().should.eq(nonce.alice);
 
     data = this.contract.contract.methods
       .transferFeeless(bob, carol, 30)
@@ -146,7 +146,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     (await this.contract.balanceOf(carol))
       .toNumber()
       .should.eq((cap.carol += 30));
-    (await this.factory.execNonces(bob)).toNumber().should.eq(nonce.bob);
+    (await this.factory.lastMsTimes(bob)).toNumber().should.eq(nonce.bob);
   });
 
   // context('Vote delegation feature', async () => {
@@ -215,9 +215,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
   //       carol: (await this.contract.votingPowerOf(carol)).toNumber(),
   //     };
   //     const nonce = {
-  //       alice: (await this.factory.execNonces(alice)).toNumber(),
-  //       bob: (await this.factory.execNonces(bob)).toNumber(),
-  //       carol: (await this.factory.execNonces(owner)).toNumber(),
+  //       alice: (await this.factory.lastMsTimes(alice)).toNumber(),
+  //       bob: (await this.factory.lastMsTimes(bob)).toNumber(),
+  //       carol: (await this.factory.lastMsTimes(owner)).toNumber(),
   //     };
   //     let data = this.contract.contract.methods
   //       .delegateVote(alice, carol)
@@ -264,9 +264,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
   //       carol: (await this.contract.votingPowerOf(carol)).toNumber(),
   //     };
   //     const nonce = {
-  //       alice: (await this.factory.execNonces(alice)).toNumber(),
-  //       bob: (await this.factory.execNonces(bob)).toNumber(),
-  //       carol: (await this.factory.execNonces(owner)).toNumber(),
+  //       alice: (await this.factory.lastMsTimes(alice)).toNumber(),
+  //       bob: (await this.factory.lastMsTimes(bob)).toNumber(),
+  //       carol: (await this.factory.lastMsTimes(owner)).toNumber(),
   //     };
 
   //     await this.contract.delegateVote(alice, carol, { from: alice });

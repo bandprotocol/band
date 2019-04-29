@@ -1,7 +1,7 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const CommunityCore = artifacts.require('CommunityCore');
 
-module.exports = function(deployer) {
+module.exports = function (deployer) {
   deployer.then(async () => {
     const registry = await BandRegistry.deployed();
     const data = await registry.createCommunity(
@@ -70,5 +70,5 @@ module.exports = function(deployer) {
       '100000000000000000',
       '500000000000000000',
     );
-  });
+  }).catch(console.log);
 };

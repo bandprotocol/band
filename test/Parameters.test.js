@@ -283,11 +283,11 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .toString()
           .should.eq('60');
         // check nonce of each user
-        (await this.factory.execNonces(alice))
+        (await this.factory.lastMsTimes(alice))
           .toNumber()
           .should.eq(nonce.alice);
-        (await this.factory.execNonces(bob)).toNumber().should.eq(nonce.bob);
-        (await this.factory.execNonces(owner))
+        (await this.factory.lastMsTimes(bob)).toNumber().should.eq(nonce.bob);
+        (await this.factory.lastMsTimes(owner))
           .toNumber()
           .should.eq(nonce.owner);
       });
