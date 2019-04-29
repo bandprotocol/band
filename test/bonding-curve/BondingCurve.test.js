@@ -1,12 +1,14 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BondingCurve = artifacts.require('BondingCurve');
+const Equation = artifacts.require('Equation');
 const ERC20Base = artifacts.require('ERC20Base');
 
 require('chai').should();
 
 contract('BondingCurve', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
+    await BondingCurve.link(Equation, await Equation.deployed());
     this.collateralToken = await ERC20Base.new('CollateralToken', 'CLT', 18, {
       from: owner,
     });
@@ -191,7 +193,9 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
         '0x' + calldata.slice(138),
         { from: alice },
       );
-      await this.curve.setLiquidityFee('100000000000000000', { from: owner });
+      await this.curve.setLiquiditySpread('100000000000000000', {
+        from: owner,
+      });
     });
 
     it('should collect revenue of 1 token if Alice buys 10 more tokens', async () => {

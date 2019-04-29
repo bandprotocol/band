@@ -21,7 +21,7 @@ contract ParameterizedBondingCurve is BondingCurve {
   }
 
   function getRevenueBeneficiary() public view returns (address) {
-    address beneficiary = address(params.get("bonding:revenue_beneficary"));
+    address beneficiary = address(params.get("bonding:revenue_beneficiary"));
     if (beneficiary == address(0)) {
       return super.getRevenueBeneficiary();
     } else {

@@ -18,17 +18,14 @@ contract ExecutionDelegator {
     bytes4 funcInterface
   );
 
-  /**
-  * @dev Keep track nonce of each user
-  */
+  // Mapping from address to lastMsTime of delegated execution
   mapping (address => uint256) public execNonces;
 
   /**
   * @dev Verify that the signature of sender is consistent with nonce and data
   */
   function verify(address sender, uint256 nonce, bytes memory data, bytes memory sig)
-    internal
-    pure
+    internal pure
     returns (bool)
   {
     bytes32 hash = ECDSA.toEthSignedMessageHash(
@@ -41,6 +38,7 @@ contract ExecutionDelegator {
   * @dev Perform delegated execution
   * @param sender The address that wants to send this transaction feelessly
   * @param to Address of contract that the sender wants to call
+  * @param msTime Time at which the transaction is signed. Must not be older or newer than 1 hour
   * @param funcInterface Signature of the function in the contract "to" to call
   * @param data Bytes-encoded arguments of the function, excluding the first parameter (sender)
   * @param senderSig Signature of user for (nonce, data)
@@ -49,14 +47,18 @@ contract ExecutionDelegator {
     address sender,
     address to,
     bytes4 funcInterface,
+    uint256 msTime,
     bytes memory data,
     bytes memory senderSig
   ) public {
-    uint256 nonce = execNonces[sender];
-    require(verify(sender, nonce, data, senderSig));
-    execNonces[sender] = nonce.add(1);
-    (bool ok,) = to.call(abi.encodePacked(funcInterface,uint256(sender),data));
+    uint256 lastMsTime = execNonces[sender];
+    require(msTime > lastMsTime);
+    require(msTime > now.sub(3600).mul(1000)); // Must not be older than 1 hour
+    require(msTime < now.add(3600).mul(1000)); // Must not be newer than 1 hour
+    require(verify(sender, msTime, data, senderSig));
+    execNonces[sender] = msTime;
+    (bool ok,) = to.call(abi.encodePacked(funcInterface,  uint256(sender), data));
     require(ok);
-    emit SendDelegatedExecution(msg.sender, sender, to, nonce, funcInterface);
+    emit SendDelegatedExecution(msg.sender, sender, to, msTime, funcInterface);
   }
 }

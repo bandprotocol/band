@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
@@ -204,9 +204,9 @@ contract('Parameters', ([_, owner, alice, bob]) => {
 
       it('should support feeless execution', async () => {
         const nonce = {
-          alice: (await this.factory.execNonces(alice)).toNumber(),
-          bob: (await this.factory.execNonces(bob)).toNumber(),
-          owner: (await this.factory.execNonces(owner)).toNumber(),
+          alice: (await time.latest()).toNumber() * 1000,
+          bob: (await time.latest()).toNumber() * 1000,
+          owner: (await time.latest()).toNumber() * 1000,
         };
         let data = await this.params.contract.methods
           .propose(
@@ -218,32 +218,32 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .encodeABI();
         let dataNoFuncSig = '0x' + data.slice(10 + 64);
         let sig = await web3.eth.sign(
-          web3.utils.soliditySha3(nonce.owner++, dataNoFuncSig),
+          web3.utils.soliditySha3(++nonce.owner, dataNoFuncSig),
           owner,
         );
         await this.factory.sendDelegatedExecution(
           owner,
           this.params.address,
           '0x' + data.slice(2, 10),
+          nonce.owner,
           dataNoFuncSig,
           sig,
           { from: alice },
         );
-        // set voting's execDelegator to factory.
-        await this.voting.setExecDelegator(this.factory.address);
         // alice commit vote
         data = await this.voting.contract.methods
           .castVote(alice, this.params.address, 1, 100, 0)
           .encodeABI();
         dataNoFuncSig = '0x' + data.slice(10 + 64);
         sig = await web3.eth.sign(
-          web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+          web3.utils.soliditySha3(++nonce.alice, dataNoFuncSig),
           alice,
         );
         await this.factory.sendDelegatedExecution(
           alice,
           this.voting.address,
           '0x' + data.slice(2, 10),
+          nonce.alice,
           dataNoFuncSig,
           sig,
           { from: owner },
@@ -254,13 +254,14 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .encodeABI();
         dataNoFuncSig = '0x' + data.slice(10 + 64);
         sig = await web3.eth.sign(
-          web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+          web3.utils.soliditySha3(++nonce.bob, dataNoFuncSig),
           bob,
         );
         await this.factory.sendDelegatedExecution(
           bob,
           this.voting.address,
           '0x' + data.slice(2, 10),
+          nonce.bob,
           dataNoFuncSig,
           sig,
           { from: owner },

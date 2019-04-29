@@ -40,6 +40,7 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
   ) external {
     CommunityCore community = new CommunityCore(
       this,
+      msg.sender,
       name,
       symbol,
       bondingCollateralEquation,

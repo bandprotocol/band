@@ -10,7 +10,7 @@ const SimpleVoting = artifacts.require('SimpleVoting');
 
 require('chai').should();
 
-contract('BondingCurve', ([_, owner, alice, bob]) => {
+contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
     this.factory = await BandRegistry.deployed();
     this.band = await BandToken.at(await this.factory.band());
@@ -35,6 +35,7 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
       '60',
       '100000000000000000',
       '800000000000000000',
+      { from: _ },
     );
     this.core = await CommunityCore.at(data.receipt.logs[0].args.community);
     this.comm = await CommunityToken.at(await this.core.token());
@@ -199,7 +200,7 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
         )
         .encodeABI();
 
-      const nonce = (await this.factory.execNonces(alice)).toNumber();
+      const nonce = (await time.latest()).toNumber() * 1000;
       const dataNoFuncSig = '0x' + calldata4.slice(10 + 64);
       const sig = await web3.eth.sign(
         web3.utils.soliditySha3(nonce, dataNoFuncSig),
@@ -210,6 +211,7 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
         alice,
         this.comm.address,
         '0x' + calldata4.slice(2, 10),
+        nonce,
         dataNoFuncSig,
         sig,
         { from: bob },
@@ -263,7 +265,7 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('88100');
       (await this.comm.balanceOf(alice)).toString().should.eq('110');
-      (await this.comm.balanceOf(this.core.address)).toString().should.eq('10');
+      (await this.comm.balanceOf(_)).toString().should.eq('10');
       (await this.comm.totalSupply()).toString().should.eq('120');
       (await this.curve.curveMultiplier())
         .toString()
@@ -300,9 +302,7 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('90975');
       (await this.comm.balanceOf(alice)).toString().should.eq('90');
-      (await this.comm.balanceOf(this.core.address))
-        .toString()
-        .should.eq('100');
+      (await this.comm.balanceOf(_)).toString().should.eq('100');
       (await this.comm.totalSupply()).toString().should.eq('190');
       (await this.curve.curveMultiplier())
         .toString()
@@ -319,9 +319,7 @@ contract('BondingCurve', ([_, owner, alice, bob]) => {
       );
       (await this.band.balanceOf(alice)).toString().should.eq('91444');
       (await this.comm.balanceOf(alice)).toString().should.eq('80');
-      (await this.comm.balanceOf(this.core.address))
-        .toString()
-        .should.eq('290');
+      (await this.comm.balanceOf(_)).toString().should.eq('290');
       (await this.comm.totalSupply()).toString().should.eq('370');
       (await this.curve.curveMultiplier())
         .toString()

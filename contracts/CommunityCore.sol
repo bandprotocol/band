@@ -27,6 +27,7 @@ contract CommunityCore {
 
   constructor(
     BandRegistryBase _registry,
+    address creator,
     string memory name,
     string memory symbol,
     uint256[] memory bondingCollateralEquation,
@@ -49,6 +50,7 @@ contract CommunityCore {
     params.setExecDelegator(address(registry));
     token.transferOwnership(address(bondingCurve));
     params.set("bonding:liquidity_spread", bondingLiquiditySpread);
+    params.set("bonding:revenue_beneficiary", uint256(creator));
     params.set("params:expiration_time", paramsExpirationTime);
     params.set("params:min_participation_pct", paramsMinParticipationPct);
     params.set("params:support_required_pct", paramsSupportRequiredPct);

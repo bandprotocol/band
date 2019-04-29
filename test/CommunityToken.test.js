@@ -94,9 +94,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       carol: (await this.contract.balanceOf(carol)).toNumber(),
     };
     const nonce = {
-      alice: (await this.factory.execNonces(alice)).toNumber(),
-      bob: (await this.factory.execNonces(bob)).toNumber(),
-      carol: (await this.factory.execNonces(owner)).toNumber(),
+      alice: (await time.latest()).toNumber() * 1000,
+      bob: (await time.latest()).toNumber() * 1000,
+      carol: (await time.latest()).toNumber() * 1000,
     };
 
     let data = this.contract.contract.methods
@@ -104,13 +104,15 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       .encodeABI();
     let dataNoFuncSig = '0x' + data.slice(10 + 64);
     let sig = await web3.eth.sign(
-      web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
+      web3.utils.soliditySha3(++nonce.alice, dataNoFuncSig),
       alice,
     );
+
     await this.factory.sendDelegatedExecution(
       alice,
       this.contract.address,
       '0x' + data.slice(2, 10),
+      nonce.alice,
       dataNoFuncSig,
       sig,
       { from: bob },
@@ -128,13 +130,14 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       .encodeABI();
     dataNoFuncSig = '0x' + data.slice(10 + 64);
     sig = await web3.eth.sign(
-      web3.utils.soliditySha3(nonce.bob++, dataNoFuncSig),
+      web3.utils.soliditySha3(++nonce.bob, dataNoFuncSig),
       bob,
     );
     await this.factory.sendDelegatedExecution(
       bob,
       this.contract.address,
       '0x' + data.slice(2, 10),
+      nonce.bob,
       dataNoFuncSig,
       sig,
       { from: owner },
