@@ -7,6 +7,7 @@ import { bandBalanceSelector } from 'selectors/balances'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentCommunityClientSelector } from 'selectors/current'
 import BN from 'utils/bignumber'
+import { Utils } from 'band.js'
 import { isPositiveNumber } from 'utils/helper'
 
 class BuySellModal extends React.Component {
@@ -84,7 +85,7 @@ class BuySellModal extends React.Component {
     }
     let amountStatusChecking = false
     try {
-      amountStatusChecking = BN.parse(this.state[type].amount).gt(
+      amountStatusChecking = Utils.toBlockchainUnit(this.state[type].amount).gt(
         this.props.tokenBalance,
       )
     } catch (e) {
@@ -126,7 +127,7 @@ class BuySellModal extends React.Component {
     }
 
     if (isPositiveNumber(priceLimit)) {
-      const priceLimitBN = BN.parse(parseFloat(priceLimit))
+      const priceLimitBN = Utils.toBlockchainUnit(priceLimit)
       this.setState({
         [type]: {
           ...this.state[type],
