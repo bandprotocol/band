@@ -35,39 +35,25 @@ function* handleTxChannel({ type, txHash, title }) {
 
 function* handleBuyToken({ address, amount, priceLimit }) {
   const client = yield select(currentCommunityClientSelector, { address })
-  const transaction = yield client.createBuyTransaction(amount, priceLimit)
-  transaction.send().once('transactionHash', txHash => {
-    txChannel.put({
-      txHash,
-      title: `Buy ${Utils.fromBlockchainUnit(amount)} tokens`,
-      type: 'BUY',
-    })
-  })
+  const transaction = yield client.createBuyTransaction({ amount, priceLimit })
   yield put(hideModal())
+  const txHash = yield transaction.sendFeeless()
+  txChannel.put({
+    txHash,
+    title: `Buy ${Utils.fromBlockchainUnit(amount)} tokens`,
+    type: 'BUY',
+  })
 }
 
 function* handleSellToken({ address, amount, priceLimit }) {
   const client = yield select(currentCommunityClientSelector, { address })
-  const transaction = yield client.createSellTransaction(amount, priceLimit)
-  transaction.send().once('transactionHash', txHash => {
-    txChannel.put({
-      txHash,
-      title: `Sell ${Utils.fromBlockchainUnit(amount)} tokens`,
-      type: 'SELL',
-    })
-  })
+  const transaction = yield client.createSellTransaction({ amount, priceLimit })
   yield put(hideModal())
-}
-
-function* handleClaimReward({ address, rewardID }) {
-  const client = yield select(currentCommunityClientSelector, { address })
-  const transaction = yield client.createClaimRewardTransaction(rewardID)
-  transaction.send().once('transactionHash', txHash => {
-    txChannel.put({
-      txHash,
-      title: `Claim reward #${rewardID}`,
-      type: 'REWARD',
-    })
+  const txHash = yield transaction.sendFeeless()
+  txChannel.put({
+    txHash,
+    title: `Sell ${Utils.fromBlockchainUnit(amount)} tokens`,
+    type: 'SELL',
   })
 }
 
@@ -79,20 +65,17 @@ function* handleProposeProposal({ address, title, reason, changes }) {
     }),
   )
 
-  const parameterClient = (yield select(currentCommunityClientSelector, {
-    address,
-  })).parameter()
+  const client = yield select(currentCommunityClientSelector, { address })
 
-  const transaction = yield parameterClient.createProposalTransaction(
+  const transaction = yield client.createProposeTransaction({
     reasonHash,
-    Object.keys(changes),
-    Object.values(changes),
-  )
-
-  transaction.send().once('transactionHash', txHash => {
-    txChannel.put({ txHash, title: `Propose ${title}`, type: 'PROPOSE' })
+    keys: Object.keys(changes),
+    values: Object.values(changes),
   })
+
   yield put(hideModal())
+  const txHash = yield transaction.sendFeeless()
+  txChannel.put({ txHash, title: `Propose ${title}`, type: 'PROPOSE' })
 }
 
 function* handleVoteProposal({ address, proposalId, vote }) {
@@ -100,23 +83,20 @@ function* handleVoteProposal({ address, proposalId, vote }) {
   if (!user) {
     yield put(showModal('LOGIN'))
   }
-  const parameterClient = (yield select(currentCommunityClientSelector, {
-    address,
-  })).parameter()
+  const client = yield select(currentCommunityClientSelector, { address })
 
-  const votingPower = yield parameterClient.getVotingPower(proposalId)
-  const transaction = yield parameterClient.createCastVoteTransaction(
+  const votingPower = yield client.parameter().getVotingPower(proposalId)
+  const transaction = yield client.createProposalVoteTransaction({
     proposalId,
-    vote ? votingPower : '0',
-    vote ? '0' : votingPower,
-  )
+    yesVote: vote ? votingPower : '0',
+    noVote: vote ? '0' : votingPower,
+  })
 
-  transaction.send().once('transactionHash', txHash => {
-    txChannel.put({
-      txHash,
-      title: `Vote ${vote ? 'accept' : 'reject'}`,
-      type: 'VOTE',
-    })
+  const txHash = yield transaction.sendFeeless()
+  txChannel.put({
+    txHash,
+    title: `Vote ${vote ? 'accept' : 'reject'}`,
+    type: 'VOTE',
   })
 }
 
@@ -132,7 +112,6 @@ export default function*() {
   yield takeEvery(txChannel, handleTxChannel)
   yield takeEvery(BUY_TOKEN, handleBuyToken)
   yield takeEvery(SELL_TOKEN, handleSellToken)
-  yield takeEvery(CLAIM_REWARD, handleClaimReward)
   yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
   yield takeEvery(VOTE_PROPOSAL, handleVoteProposal)
   yield takeEvery(DUMP_TXS, handleDumpTxs)

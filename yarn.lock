@@ -2477,15 +2477,16 @@ band-wallet@^0.2.8:
     uuid "^3.3.2"
     web3-provider-engine "^14.2.0"
 
-band.js@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.1.4.tgz#49f571c9a3a5d867b2a6a7854fe15f9f0d7d5c16"
-  integrity sha512-vHOHG9SJJH3LhQGnNgFoXhbeDIspgQgKGnLATf6+6hzvI2vu7MoA4+dCQbt0ZmXNaVCHAFamjPQN8PZthZYoFg==
+band.js@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.1.7.tgz#94a064292742d6391d9ab40f61aaee3832a37cd4"
+  integrity sha512-URrsAUF6FeTc9FToq5EODg4Da2X/HoJJK7J+ozvUXgIdl+VCC6bpgT/KQfkuKKfuqemvjj04wQLI2NHplVnWmg==
   dependencies:
     "@types/qs" "^6.5.1"
     axios "^0.18.0"
     bignumber.js "^8.0.1"
     bs58 "^4.0.1"
+    delay "^4.2.0"
     ipfs-http-client "^30.1.0"
     ipfs-mini "^1.1.5"
     koa "^2.7.0"
@@ -4131,6 +4132,11 @@ del@^3.0.0:
     p-map "^1.1.1"
     pify "^3.0.0"
     rimraf "^2.2.8"
+
+delay@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/delay/-/delay-4.2.0.tgz#3f6c39dbd28aef50355e670fecee050ef01242ce"
+  integrity sha512-EBX+pZE4qSowGAMr6M0cLiPRQu2Kus/qTNLO7c+EoXpTPJH9ApFdHX+cQU1WsSHXgwhLyidfZ5Hxuq6ctWhSdw==
 
 delayed-stream@~1.0.0:
   version "1.0.0"
