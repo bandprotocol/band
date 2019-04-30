@@ -71,7 +71,7 @@ function* baseInitialize() {
   const bandAddress = query.allContracts.nodes[0].address
   yield put(
     // TODO: Mock on price and last24hr
-    saveBandInfo(bandAddress, '1000000000000000000000000', 1.03, 6.28),
+    saveBandInfo(bandAddress, '1000000000000000000000000', 1.0, 0),
   )
   const communityDetails = yield Utils.graphqlRequest(`{
     allCommunities {
