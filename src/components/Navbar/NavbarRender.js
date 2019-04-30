@@ -165,12 +165,12 @@ export default ({
     <Nav>
       <PageContainer fullWidth>
         <Flex alignItems="center">
-          {/* <Link dark="true" to="/">
+          <Link dark="true" to="/">
             <Image src={LogoSrc} width={16} ml={4} />
             <Bold ml={[0, 3]}>Band Protocol</Bold>
           </Link>
           <Flex ml="auto">
-            <Link dark="true" to="/create-community" px={1}>
+            {/* <Link dark="true" to="/create-community" px={1}>
               <Flex px={3} alignItems="center">
                 <Image src={AddCommunity} width={18} height={18} mx="8px" />
                 <Text color="#4a4a4a" fontWeight="500" fontSize="16px">
