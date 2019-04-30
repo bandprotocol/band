@@ -82,7 +82,6 @@ function* handleLoadProposals({ address }) {
       )
 
       const vote = proposal.proposalVotesByParameterAddressAndProposalId.nodes
-      console.warn(vote)
       if (changes.filter(c => c.deleted).length !== 0) {
         return {
           deleted: true,
