@@ -104,8 +104,9 @@ function* baseInitialize() {
         dapp.address,
         dapp.tokenByCommunityAddress.address,
         dapp.organization,
-        `https://ipfs.bandprotocol.com/api/v0/cat/${dapp.logo}`,
-        `https://ipfs.bandprotocol.com/api/v0/cat/${dapp.banner}`,
+        dapp.logo && `https://ipfs.bandprotocol.com/api/v0/cat/${dapp.logo}`,
+        dapp.banner &&
+          `https://ipfs.bandprotocol.com/api/v0/cat/${dapp.banner}`,
         dapp.description,
         dapp.website,
         (parseFloat(dapp.curveByCommunityAddress.price) *
