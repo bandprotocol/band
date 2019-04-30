@@ -20,11 +20,7 @@ export default ({ title, value, unit, valueUsd, graphSrc }) => (
       <Flex flex={1}>
         <Text fontSize="12px">{title}</Text>
       </Flex>
-      <Flex flex={1} justifyContent="flex-end">
-        <Text fontSize="12px" color="#42c47f">
-          +5.32%
-        </Text>
-      </Flex>
+      <Flex flex={1} justifyContent="flex-end" />
     </Flex>
     <Flex mt="5px">
       <Text
