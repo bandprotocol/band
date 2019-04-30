@@ -158,7 +158,7 @@ export const getParameterDetail = name =>
       type: 'IPFS',
       description: 'Link to banner of the community',
     },
-    liqudity_spread: {
+    liquidity_spread: {
       type: 'PERCENTAGE',
       description: 'The percentage of the spread between buy and sell price of community token',
     },
