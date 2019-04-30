@@ -165,7 +165,7 @@ export default ({
     <Nav>
       <PageContainer fullWidth>
         <Flex alignItems="center">
-          <Link dark="true" to="/">
+          {/* <Link dark="true" to="/">
             <Image src={LogoSrc} width={16} ml={4} />
             <Bold ml={[0, 3]}>Band Protocol</Bold>
           </Link>
@@ -177,7 +177,7 @@ export default ({
                   Create Community
                 </Text>
               </Flex>
-            </Link>
+            </Link> */}
             {balance !== undefined ? (
               <ClickOutSide onClickOutside={onClickOutside}>
                 <Flex flexDirection="row" mr={4} alignItems="center">
