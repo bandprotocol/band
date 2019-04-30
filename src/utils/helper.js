@@ -39,7 +39,7 @@ export const convertFromChain = (value, type) => {
   } else if (type === 'IPFS') {
     return ['0x' + opad(BigNumber(value.toString()).toString(16), 64), '']
   }
-  return value.toString()
+  return [value.toString(), '']
 }
 
 export const convertToChain = (value, type, unit) => {
@@ -158,16 +158,28 @@ export const getParameterDetail = name =>
       type: 'IPFS',
       description: 'Link to banner of the community',
     },
-    liqudity_fee: {
+    liqudity_spread: {
       type: 'PERCENTAGE',
-      description: 'The percentage of the liquidty fee for ...',
+      description: 'The percentage of the spread between buy and sell price of community token',
     },
-    inflation_rate: {
-      type: 'PERCENTAGE',
-      description: 'The percentage of the inflation rate on this community',
-    },
-    tcr_address: {
+    revenue_beneficiary: {
       type: 'ADDRESS',
-      description: 'The address of tcr contract',
+      description: 'The address of the revenue beneficiary from bonding curve spread',
+    },
+    max_provider_count: {
+      type: 'NUMBER',
+      description: 'Maximum number of active providers at any given time',
+    },
+    min_provider_stake: {
+      type: 'TOKEN',
+      description: 'Minimum amount of token a provider needs to stake',
+    },
+    owner_revenue_pct: {
+      type: 'PERCENTAGE',
+      description: 'Percentage of revenue going directly to data providers',
+    },
+    query_price: {
+      type: 'TOKEN',
+      description: 'Cost of ÐApps to query one data point in ETH',
     },
   }[name] || { type: 'Unknown', description: 'UNKNOWN' })
