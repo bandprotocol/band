@@ -1,7 +1,6 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
@@ -11,7 +10,7 @@ import "../utils/Equation.sol";
 /**
  * @title BondingCurve
  */
-contract BondingCurve is Ownable, ERC20Acceptor {
+contract BondingCurve is ERC20Acceptor {
   using Equation for Equation.Node[];
   using SafeMath for uint256;
 
@@ -30,8 +29,6 @@ contract BondingCurve is Ownable, ERC20Acceptor {
   uint256 public curveMultiplier = 1e18;
   uint256 public lastInflationTime = now;
 
-  uint256 internal _inflationRateNumerator;
-  uint256 internal _liquiditySpreadNumerator;
   uint256 public constant RATIONAL_DENOMINATOR = 1e18;
 
   constructor(
@@ -44,6 +41,10 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     collateralEquation.init(collateralExpressionTree);
     emit CurveMultiplierChange(0, curveMultiplier);
   }
+
+  function getRevenueBeneficiary() public view returns (address);
+  function getInflationRateNumerator() public view returns (uint256);
+  function getLiquiditySpreadNumerator() public view returns (uint256);
 
   function getCollateralAtSupply(uint256 tokenSupply) public view returns (uint256) {
     uint256 collateralFromEquation = collateralEquation.calculate(tokenSupply);
@@ -64,28 +65,6 @@ contract BondingCurve is Ownable, ERC20Acceptor {
     require(currentSupply >= tokenValue);
     uint256 nextSupply = getBondingCurveSupplyPoint().sub(tokenValue);
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
-  }
-
-  function getRevenueBeneficiary() public view returns (address) {
-    return owner();
-  }
-
-  function getInflationRateNumerator() public view returns (uint256) {
-    return _inflationRateNumerator;
-  }
-
-  function getLiquiditySpreadNumerator() public view returns (uint256) {
-    return _liquiditySpreadNumerator;
-  }
-
-  function setInflationRate(uint256 inflationRateNumerator) public onlyOwner {
-    require(inflationRateNumerator < RATIONAL_DENOMINATOR);
-    _inflationRateNumerator = inflationRateNumerator;
-  }
-
-  function setLiquiditySpread(uint256 liquiditySpreadNumerator) public onlyOwner {
-    require(liquiditySpreadNumerator < RATIONAL_DENOMINATOR);
-    _liquiditySpreadNumerator = liquiditySpreadNumerator;
   }
 
   function buy(address buyer, uint256 priceLimit, uint256 buyAmount)

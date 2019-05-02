@@ -21,7 +21,6 @@ contract BondingCurveFactory {
       collateralExpressionTree,
       params
     );
-    curve.transferOwnership(msg.sender);
     return curve;
   }
 }
