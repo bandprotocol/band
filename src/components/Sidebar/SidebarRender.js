@@ -9,11 +9,13 @@ import MockProfileSrc from 'images/mock-profile.svg'
 import DetailSrc from 'images/detailInactive.svg'
 import GovernanceSrc from 'images/govInactive.svg'
 import ProposalSrc from 'images/voteInactive.svg'
+import DataProviderInactive from 'images/dataProviderInactive.svg'
 
 // Image active
 import DetailActiveSrc from 'images/detailActive.svg'
 import GovernanceActiveSrc from 'images/govActive.svg'
 import ProposalActiveSrc from 'images/voteActive.svg'
+import DataProviderActive from 'images/dataProviderActive.svg'
 
 const Left = styled.div`
   width: 275px;
@@ -120,6 +122,13 @@ export default ({
             imgSrcInactive={ProposalSrc}
           >
             Proposal
+          </Tab>
+          <Tab
+            link={`/community/${address}/provider`}
+            imgSrcActive={DataProviderActive}
+            imgSrcInactive={DataProviderInactive}
+          >
+            Data providers
           </Tab>
         </Text>
       </Flex>

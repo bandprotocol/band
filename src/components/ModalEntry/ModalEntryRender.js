@@ -6,6 +6,8 @@ import ModalContainer from 'components/ModalContainer'
 import LoginModal from 'components/LoginModal'
 import BuySellModal from 'components/BuySellModal'
 import ProposeModal from 'components/ProposeModal'
+import DWModal from 'components/DWModal'
+import BecomeProviderModal from 'components/BecomeProviderModal'
 
 export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
@@ -20,6 +22,14 @@ export default ({ modalName, data, hideModal }) => (
         changes={data.changes}
         communityAddress={data.communityAddress}
       />
+    ) : modalName === 'DW' ? (
+      <DWModal
+        actionType={data.actionType}
+        sourceAddress={data.sourceAddress}
+        communityAddress={data.communityAddress}
+      />
+    ) : modalName === 'BEPROVIDER' ? (
+      alert('BEPROVIDER') && <BecomeProviderModal />
     ) : null}
   </ModalContainer>
 )

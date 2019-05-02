@@ -26,6 +26,7 @@ import parameterSaga from 'sagas/parameters'
 import proposalSaga from 'sagas/proposals'
 import transferSaga from 'sagas/transfer'
 import holderSaga from 'sagas/holder'
+import tcdSaga from 'sagas/tcd'
 
 import BandWallet from 'band-wallet'
 import { Utils } from 'band.js'
@@ -46,7 +47,7 @@ function* baseInitialize() {
   window.BandWallet = new BandWallet(
     process.env.NODE_ENV === 'production'
       ? 'https://wallet.bandprotocol.com'
-      : 'http://localhost:3001',
+      : 'https://wallet.bandprotocol.com', //'http://localhost:3001',
     {
       walletPosition: {
         top: 80,
@@ -229,6 +230,7 @@ export default function*() {
     fork(proposalSaga),
     fork(transferSaga),
     fork(holderSaga),
+    fork(tcdSaga),
   ])
   yield* baseInitialize()
 }

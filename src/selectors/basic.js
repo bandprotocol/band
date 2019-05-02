@@ -7,6 +7,7 @@ export const holderSelector = state => state.get('holder')
 export const tokenSelector = state => state.get('token')
 export const priceSelector = state => state.get('price')
 export const rewardSelector = state => state.get('reward')
+export const tcdSelector = state => state.get('tcd')
 export const blockNumberSelector = state =>
   state.getIn(['transaction', 'currentBlock'])
 export const transactionSelector = state => state.getIn(['transaction', 'txs'])

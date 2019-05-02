@@ -54,7 +54,8 @@ function* handleLoadProposals({ address }) {
           deleted: true,
         }
       }
-      const [prefix, name] = Object.keys(proposal.changes)[0].split(':')
+      const keys = Object.keys(proposal.changes)[0]
+      const [prefix, name] = keys ? keys.split(':') : [null, null]
       if (!name)
         return {
           deleted: true,

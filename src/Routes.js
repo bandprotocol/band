@@ -8,7 +8,8 @@ import CommunitiesPage from 'pages/Communities'
 import CommunityDetailPage from 'pages/CommunityDetail'
 import CommunityRewardPage from 'pages/CommunityReward'
 import CommunityGovernancePage from 'pages/CommunityGovernance'
-import CommuntyProposalPage from 'pages/CommunityProposal'
+import CommunityProposalPage from 'pages/CommunityProposal'
+import CommunityDataProviderPage from 'pages/CommunityDataProvider'
 import CreateCommunityPage from 'pages/CreateCommunity'
 
 export default ({ match, location }) => (
@@ -49,7 +50,15 @@ export default ({ match, location }) => (
                 <Route
                   path="/community/:community/proposal"
                   render={({ match }) => (
-                    <CommuntyProposalPage
+                    <CommunityProposalPage
+                      communityAddress={match.params.community}
+                    />
+                  )}
+                />
+                <Route
+                  path="/community/:community/provider"
+                  render={({ match }) => (
+                    <CommunityDataProviderPage
                       communityAddress={match.params.community}
                     />
                   )}
