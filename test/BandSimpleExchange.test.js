@@ -7,7 +7,7 @@ require('chai').should();
 
 contract('BandSimpleExchange', ([owner, alice]) => {
   beforeEach(async () => {
-    this.band = await BandToken.new(owner, { from: owner });
+    this.band = await BandToken.new({ from: owner });
     this.bse = await BandSimpleExchange.new(this.band.address, { from: owner });
     await this.bse.setExchangeRate('10000000000000000000', { from: owner });
     await this.band.mint(owner, 100000000, { from: owner });

@@ -10,16 +10,16 @@ import "../Parameters.sol";
 import "../feeless/Feeless.sol";
 import "../bonding/BondingCurve.sol";
 import "../utils/Fractional.sol";
-import "../token/ERC20Acceptor.sol";
 
 
-contract TCD is TCDBase, ERC20Acceptor, Feeless {
+contract TCD is TCDBase, Feeless {
   using Fractional for uint256;
   using SafeMath for uint256;
 
   event DataSourceRegistered(address indexed dataSource, address owner);
   event DataSourceRemoved(address indexed dataSource);
   event DataSourceStakeChanged(address indexed dataSource, uint256 newStake);
+  event DataSourceVoterTokenLockChanged(address indexed dataSource, address indexed voter, uint256 newtokenLock);
   event DataSourceOwnershipChanged(address indexed dataSource, address indexed voter, uint256 newVoterOwnership, uint256 newTotalOwnership);
 
   enum DataProviderStatus{
@@ -33,6 +33,7 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
     address owner;
     uint256 stake;
     uint256 totalPublicOwnership;
+    mapping (address => uint256) tokenLocks;
     mapping (address => uint256) publicOwnerships;
   }
 
@@ -87,8 +88,9 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
 
   function register(address owner, uint256 stake, address dataSource)
     public
-    requireToken(token, owner, stake)
+    feeless(owner)
   {
+    require(token.lock(owner, stake));
     require(providers[dataSource].currentStatus == DataProviderStatus.Nothing);
     require(stake > 0 && stake >= params.get("data:min_provider_stake"));
     providers[dataSource] = DataProvider({
@@ -98,20 +100,26 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
       totalPublicOwnership: stake
     });
     providers[dataSource].publicOwnerships[owner] = stake;
+    providers[dataSource].tokenLocks[owner] = stake;
     dataSources.push(dataSource);
     emit DataSourceRegistered(dataSource, owner);
-    emit DataSourceStakeChanged(dataSource, stake);
     emit DataSourceOwnershipChanged(dataSource, owner, stake, stake);
+    emit DataSourceStakeChanged(dataSource, stake);
+    emit DataSourceVoterTokenLockChanged(dataSource, owner, stake);
     _repositionUp(dataSources.length.sub(1));
   }
 
   function vote(address voter, uint256 stake, address dataSource)
     public
-    requireToken(token, voter, stake)
+    feeless(voter)
   {
-    _vote(voter, stake, dataSource);
+    require(token.lock(voter, stake));
     DataProvider storage provider = providers[dataSource];
+    uint256 newVoterTokenLock = provider.tokenLocks[voter].add(stake);
+    provider.tokenLocks[voter] = newVoterTokenLock;
+    _vote(voter, stake, dataSource);
     emit DataSourceStakeChanged(dataSource, provider.stake);
+    emit DataSourceVoterTokenLockChanged(dataSource, voter, newVoterTokenLock);
     _repositionUp(_findDataSourceIndex(dataSource));
   }
 
@@ -119,16 +127,27 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
     DataProvider storage provider = providers[dataSource];
     require(withdrawOwnership > 0 && withdrawOwnership <= provider.publicOwnerships[voter]);
     uint256 newOwnership = provider.totalPublicOwnership.sub(withdrawOwnership);
-    uint256 newStake = provider.stake.mul(newOwnership).div(provider.totalPublicOwnership);
-    uint256 withdrawAmount = provider.stake.sub(newStake);
+    uint256 currentVoterStake = getStakeInProvider(dataSource, voter);
+
+    if (currentVoterStake > provider.tokenLocks[voter]){
+      uint256 unrealizedStake = currentVoterStake.sub(provider.tokenLocks[voter]);
+      require(token.transfer(voter, unrealizedStake));
+      require(token.lock(voter, unrealizedStake));
+    }
+
+    uint256 withdrawAmount = provider.stake.mul(withdrawOwnership).div(provider.totalPublicOwnership);
+    uint256 newStake = provider.stake.sub(withdrawAmount);
+    uint256 newVoterTokenLock = currentVoterStake.sub(withdrawAmount);
     uint256 newVoterOwnership = provider.publicOwnerships[voter].sub(withdrawOwnership);
     provider.stake = newStake;
     provider.totalPublicOwnership = newOwnership;
     provider.publicOwnerships[voter] = newVoterOwnership;
-    require(token.transfer(voter, withdrawAmount));
+    provider.tokenLocks[voter] = newVoterTokenLock;
+    require(token.unlock(voter, withdrawAmount));
 
-    emit DataSourceStakeChanged(dataSource, newStake);
     emit DataSourceOwnershipChanged(dataSource, voter, newVoterOwnership, newOwnership);
+    emit DataSourceStakeChanged(dataSource, newStake);
+    emit DataSourceVoterTokenLockChanged(dataSource, voter, newVoterTokenLock);
     if (provider.currentStatus == DataProviderStatus.Active) {
       _repositionDown(_findDataSourceIndex(dataSource));
     }

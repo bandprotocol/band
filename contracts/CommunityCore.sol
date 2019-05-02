@@ -71,6 +71,7 @@ contract CommunityCore {
     tcd = registry.tcdFactory().create(
       band, token, params, bondingCurve, registry.exchange()
     );
+    token.addCapper(address(tcd));
     emit TCDCreated(tcd);
   }
 

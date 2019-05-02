@@ -11,6 +11,8 @@ contract CommunityTokenFactory {
     CommunityToken token = new CommunityToken(name, symbol, 18);
     token.addMinter(msg.sender);
     token.renounceMinter();
+    token.addCapper(msg.sender);
+    token.renounceCapper();
     return token;
   }
 }

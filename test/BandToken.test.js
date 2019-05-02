@@ -6,7 +6,7 @@ require('chai').should();
 
 contract('BandToken', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
-    this.contract = await BandToken.new(owner, { from: owner });
+    this.contract = await BandToken.new({ from: owner });
     await this.contract.mint(owner, 1000000000, { from: owner });
     await this.contract.transfer(alice, 1000, { from: owner });
   });
