@@ -6,7 +6,7 @@ contract TCRFactory {
   function create(
     bytes8 prefix,
     CommunityToken token,
-    ParametersBase params,
+    Parameters params,
     VotingInterface voting,
     uint256[] calldata expressions
   )

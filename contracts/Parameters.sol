@@ -3,7 +3,6 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-import "./ParametersBase.sol";
 import "./feeless/Feeless.sol";
 import "./voting/ResolveListener.sol";
 import "./voting/VotingInterface.sol";
@@ -15,7 +14,7 @@ import "./voting/VotingInterface.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
+contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
   using SafeMath for uint256;
 
   event ProposalProposed(  // A new proposal is proposed.
@@ -73,12 +72,8 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
     return params[key];
   }
 
-  /**
-   * @dev Return the 'changeIndex'^th change of the given proposal.
-   */
   function getProposalChange(uint256 proposalID, uint256 changeIndex)
-    public
-    view
+    public view
     returns (bytes32, uint256)
   {
     KeyValue memory keyValue = proposals[proposalID].changes[changeIndex];
@@ -101,12 +96,7 @@ contract Parameters is Ownable, ParametersBase, ResolveListener, Feeless {
     require(keys.length == values.length);
     uint256 proposalID = nextProposalNonce;
     nextProposalNonce = proposalID.add(1);
-
-    emit ProposalProposed(
-      proposalID,
-      sender,
-      reasonHash
-    );
+    emit ProposalProposed(proposalID, sender, reasonHash);
     proposals[proposalID].changeCount = keys.length;
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];

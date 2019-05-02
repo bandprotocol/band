@@ -5,7 +5,7 @@ import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 import "../CommunityToken.sol";
-import "../ParametersBase.sol";
+import "../Parameters.sol";
 import "../token/ERC20Acceptor.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Equation.sol";
@@ -85,9 +85,9 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
 
   CommunityToken public token;
   VotingInterface public voting;
-  ParametersBase public params;
+  Parameters public params;
 
-  // Namespace prefix for all Parameters (See ParametersBase.sol) in this TCR
+  // Namespace prefix for all Parameters (See Parameters.sol) in this TCR
   bytes8 public prefix;
 
   // A TCR entry is considered to exist in 'entries' map iff its
@@ -124,7 +124,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   constructor(
     bytes8 _prefix,
     CommunityToken _token,
-    ParametersBase _params,
+    Parameters _params,
     VotingInterface _voting,
     uint256[] memory _expressions
   )

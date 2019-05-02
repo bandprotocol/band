@@ -6,7 +6,7 @@ import "./TCDBase.sol";
 import "../BandSimpleExchange.sol";
 import "../BandToken.sol";
 import "../CommunityToken.sol";
-import "../ParametersBase.sol";
+import "../Parameters.sol";
 import "../feeless/Feeless.sol";
 import "../bonding/BondingCurve.sol";
 import "../utils/Fractional.sol";
@@ -39,15 +39,15 @@ contract TCD is TCDBase, ERC20Acceptor, Feeless {
   mapping (address => DataProvider) public providers;
   BandToken public band;
   CommunityToken public token;
-  ParametersBase public params;
+  Parameters public params;
   BandSimpleExchange public exchange;
   BondingCurve public bondingCurve;
   uint256 public undistributedReward;
 
   constructor(
     BandToken _band,
-    CommunityToken _token, 
-    ParametersBase _params,
+    CommunityToken _token,
+    Parameters _params,
     BondingCurve _bondingCurve,
     BandSimpleExchange _exchange
   ) public {

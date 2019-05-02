@@ -141,7 +141,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     CommunityToken token,
     uint256 pollID,
     bytes8 prefix,
-    ParametersBase params
+    VotingParameters params
   )
     public
     pollMustNotExist(msg.sender, pollID)

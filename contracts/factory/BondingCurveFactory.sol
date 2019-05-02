@@ -2,7 +2,7 @@ pragma solidity 0.5.0;
 
 import "../bonding/ParameterizedBondingCurve.sol";
 import "../token/ERC20Interface.sol";
-import "../ParametersBase.sol";
+import "../Parameters.sol";
 
 
 contract BondingCurveFactory {
@@ -10,7 +10,7 @@ contract BondingCurveFactory {
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
     uint256[] calldata collateralExpressionTree,
-    ParametersBase params
+    Parameters params
   )
     external
     returns (BondingCurve)
