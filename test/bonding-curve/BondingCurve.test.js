@@ -23,7 +23,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     );
     await this.collateralToken.mint(alice, '100000', { from: owner });
     await this.collateralToken.mint(bob, '100000', { from: owner });
-    await this.bondedToken.transferOwnership(this.curve.address, {
+    await this.bondedToken.addMinter(this.curve.address, {
       from: owner,
     });
   });

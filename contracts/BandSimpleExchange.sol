@@ -1,5 +1,6 @@
 pragma solidity 0.5.0;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "./token/ERC20Acceptor.sol";
 
 import "./utils/Fractional.sol";

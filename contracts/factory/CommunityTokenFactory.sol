@@ -9,7 +9,8 @@ contract CommunityTokenFactory {
     returns (CommunityToken)
   {
     CommunityToken token = new CommunityToken(name, symbol, 18);
-    token.transferOwnership(msg.sender);
+    token.addMinter(msg.sender);
+    token.renounceMinter();
     return token;
   }
 }

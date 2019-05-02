@@ -44,8 +44,7 @@ contract BandToken is ERC20Base("BandToken", "BAND", 18) {
    * @dev BandToken constructor. All of the available tokens are minted to the
    * token creator.
    */
-  constructor(address creator) public {
-    transferOwnership(creator);
+  constructor() public {
     setExecDelegator(msg.sender);
     // Populate eomTimestamps for every month from the start of Q3 2019.
     // until the end of Q2 2023, for the total of 4 years (48 months).
@@ -110,7 +109,7 @@ contract BandToken is ERC20Base("BandToken", "BAND", 18) {
     uint8 end,
     uint256 value
   )
-    public onlyOwner
+    public onlyMinter
     returns (bool)
   {
     require(start < cliff);

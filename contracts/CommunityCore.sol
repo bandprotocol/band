@@ -48,7 +48,8 @@ contract CommunityCore {
     );
     token.setExecDelegator(address(registry));
     params.setExecDelegator(address(registry));
-    token.transferOwnership(address(bondingCurve));
+    token.addMinter(address(bondingCurve));
+    token.renounceMinter();
     params.set("bonding:liquidity_spread", bondingLiquiditySpread);
     params.set("bonding:revenue_beneficiary", uint256(creator));
     params.set("params:expiration_time", paramsExpirationTime);

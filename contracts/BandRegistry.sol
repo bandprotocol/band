@@ -17,7 +17,8 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
     TCDFactory _tcdFactory,
     TCRFactory _tcrFactory
   ) public {
-    band = new BandToken(msg.sender);
+    band = new BandToken();
+    band.addMinter(msg.sender);
     exchange = new BandSimpleExchange(band);
     exchange.transferOwnership(msg.sender);
     simpleVoting = _simpleVoting;

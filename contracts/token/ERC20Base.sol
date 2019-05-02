@@ -1,13 +1,13 @@
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 
 import "./ERC20Interface.sol";
 import "../feeless/Feeless.sol";
 
 
-contract ERC20Base is ERC20Interface, ERC20, Feeless, Ownable {
+contract ERC20Base is ERC20Interface, ERC20, Feeless, MinterRole {
   string public name;
   string public symbol;
   uint8 public decimals = 18;
@@ -38,12 +38,12 @@ contract ERC20Base is ERC20Interface, ERC20, Feeless, Ownable {
     return true;
   }
 
-  function mint(address to, uint256 value) public onlyOwner returns (bool) {
+  function mint(address to, uint256 value) public onlyMinter returns (bool) {
     _mint(to, value);
     return true;
   }
 
-  function burn(address from, uint256 value) public onlyOwner returns (bool) {
+  function burn(address from, uint256 value) public onlyMinter returns (bool) {
     _burn(from, value);
     return true;
   }

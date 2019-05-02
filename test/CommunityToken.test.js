@@ -55,7 +55,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       await shouldFail.reverting(
         this.contract.mint(alice, 1000000, { from: alice }),
       );
-      await this.contract.transferOwnership(alice, { from: owner });
+      await this.contract.addMinter(alice, { from: owner });
       await this.contract.mint(alice, 1000000, { from: alice });
 
       const totalSupply = await this.contract.totalSupply();
