@@ -33,17 +33,7 @@ class ProviderList extends React.Component {
   }
 
   componentDidMount() {
-    console.warn('DidMount', !!this.props.user)
-    if (this.props.user) {
-      this.props.loadTcds()
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    console.warn('DidUpdate', prevProps.user !== this.props.user)
-    if (prevProps.user !== this.props.user) {
-      this.props.loadTcds()
-    }
+    this.props.loadTcds()
   }
 
   onChangePage(selectedPage) {

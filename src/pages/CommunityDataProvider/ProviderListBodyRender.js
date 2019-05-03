@@ -40,7 +40,6 @@ const DWButton = styled(Button).attrs({
 
 const HistoryRow = ({
   user,
-  index,
   rank,
   detail,
   dataSourceAddress,
@@ -50,6 +49,7 @@ const HistoryRow = ({
   userOwnership,
   totalOwnership,
   stake,
+  status,
   showDepositWithdraw,
   txLink,
 }) => (
@@ -59,13 +59,13 @@ const HistoryRow = ({
       minWidth: 0,
       overflow: 'hidden',
       height: '60px',
-      borderLeft: rank <= 5 ? '8px solid #a2b0ea' : 'none',
+      borderLeft: status === 'LISTED' ? '8px solid #a2b0ea' : 'none',
       borderBottom: '1px solid rgba(227, 227, 227, 0.5)',
     }}
-    bg={index % 2 === 0 ? 'white' : '#f9fbff'}
+    bg={status === 'LISTED' ? '#f9fbff' : 'white'}
     alignItems="center"
   >
-    <Tab width={rank <= 5 ? '45px' : '60px'} justifyContent="center">
+    <Tab width={status === 'LISTED' ? '45px' : '60px'} justifyContent="center">
       <Text color={colors.text} fontSize="14px">
         {rank}
       </Text>
@@ -168,9 +168,11 @@ const HistoryRow = ({
           style={{ maxHeight: '35px' }}
           justifyContent="center"
         >
-          <Flex>
-            <Image src={ArrowDown} width="14px" height="14px" />
-          </Flex>{' '}
+          {user && (
+            <Flex>
+              <Image src={ArrowDown} width="14px" height="14px" />
+            </Flex>
+          )}{' '}
           <Flex>Deposit</Flex>
         </Flex>
       </DWButton>
@@ -198,9 +200,11 @@ const HistoryRow = ({
           style={{ maxHeight: '35px' }}
           justifyContent="center"
         >
-          <Flex>
-            <Image src={ArrowUp} width="14px" height="14px" />{' '}
-          </Flex>
+          {user && (
+            <Flex>
+              <Image src={ArrowUp} width="14px" height="14px" />{' '}
+            </Flex>
+          )}
           <Flex>Withdraw</Flex>
         </Flex>
       </DWButton>
@@ -225,13 +229,13 @@ export default ({ user, items, showDepositWithdraw }) => {
           userStake,
           totalOwnership,
           userOwnership,
+          status,
         } = item
-
+        console.warn(item)
         return (
           <HistoryRow
             user={user}
             key={i}
-            index={i}
             detail={detail}
             rank={rank}
             dataSourceAddress={dataSourceAddress}
@@ -240,6 +244,7 @@ export default ({ user, items, showDepositWithdraw }) => {
             userStake={userStake}
             userOwnership={userOwnership}
             stake={stake}
+            status={status}
             totalOwnership={totalOwnership}
             showDepositWithdraw={showDepositWithdraw}
             txLink={`https://rinkeby.etherscan.io/address/${dataSourceAddress}`}

@@ -56,6 +56,7 @@ export default ({
   usdBalance,
   symbol,
   address,
+  hasTcd,
 }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
@@ -123,13 +124,15 @@ export default ({
           >
             Proposal
           </Tab>
-          <Tab
-            link={`/community/${address}/provider`}
-            imgSrcActive={DataProviderActive}
-            imgSrcInactive={DataProviderInactive}
-          >
-            Data providers
-          </Tab>
+          {hasTcd && (
+            <Tab
+              link={`/community/${address}/provider`}
+              imgSrcActive={DataProviderActive}
+              imgSrcInactive={DataProviderInactive}
+            >
+              Data providers
+            </Tab>
+          )}
         </Text>
       </Flex>
     </Flex>

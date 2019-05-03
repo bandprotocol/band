@@ -1,11 +1,10 @@
 import { createSelector } from 'reselect'
-import { List } from 'immutable'
 import { tcdSelector, addressSelector } from 'selectors/basic'
 
 export const tcdsSelector = createSelector(
   [tcdSelector, addressSelector],
   (tcds, address) => {
-    if (!tcds.get(address)) return List()
+    if (!tcds.get(address)) return null
     return tcds.get(address)
   },
 )

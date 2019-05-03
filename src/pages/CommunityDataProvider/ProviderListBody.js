@@ -38,16 +38,6 @@ const mapStateToProps = (
     page: currentPage,
     pageSize,
   })
-    .sort((a, b) => {
-      if (a.stake.lt(b.stake)) {
-        return 1
-      }
-      if (a.stake.gt(b.stake)) {
-        return -1
-      }
-      return 0
-    })
-    .map((item, i) => ({ ...item, rank: i + 1 }))
   while (items.length < pageSize) {
     items.push(null)
   }

@@ -47,7 +47,7 @@ function* baseInitialize() {
   window.BandWallet = new BandWallet(
     process.env.NODE_ENV === 'production'
       ? 'https://wallet.bandprotocol.com'
-      : 'http://localhost:3001',
+      : 'https://wallet.bandprotocol.com', //'http://localhost:3001',
     {
       walletPosition: {
         top: 80,
