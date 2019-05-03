@@ -21,6 +21,8 @@ contract TCD is TCDBase, Feeless {
   event DataSourceStakeChanged(address indexed dataSource, uint256 newStake);
   event DataSourceVoterTokenLockChanged(address indexed dataSource, address indexed voter, uint256 newtokenLock);
   event DataSourceOwnershipChanged(address indexed dataSource, address indexed voter, uint256 newVoterOwnership, uint256 newTotalOwnership);
+  event OwnerWithdrawReceiptCreated(uint256 receiptIndex, address indexed owner, uint256 amount, uint64 withdrawTime);
+  event OwnerWithdrawReceiptUnlocked(uint256 receiptIndex, address indexed owner, uint256 amount);
 
   enum DataProviderStatus{
     Nothing,
@@ -36,6 +38,15 @@ contract TCD is TCDBase, Feeless {
     mapping (address => uint256) tokenLocks;
     mapping (address => uint256) publicOwnerships;
   }
+
+  struct ProviderWithdrawReceipt {
+    address owner;
+    uint256 amount;
+    uint64 withdrawTime;
+    bool isWithdrawn;
+  }
+
+  ProviderWithdrawReceipt[] public withdrawReceipts;
 
   mapping (address => DataProvider) public providers;
   BandToken public band;
@@ -84,6 +95,10 @@ contract TCD is TCDBase, Feeless {
 
   function getQueryPrice() public view returns (uint256) {
     return params.get("data:query_price");
+  }
+
+  function getOwnerDelayWithdrawTime() public view returns (uint256) {
+    return params.get("data:withdraw_delay");
   }
 
   function register(address owner, uint256 stake, address dataSource)
@@ -143,7 +158,23 @@ contract TCD is TCDBase, Feeless {
     provider.totalPublicOwnership = newOwnership;
     provider.publicOwnerships[voter] = newVoterOwnership;
     provider.tokenLocks[voter] = newVoterTokenLock;
-    require(token.unlock(voter, withdrawAmount));
+
+    if (voter == provider.owner) {
+      uint256 delay = getOwnerDelayWithdrawTime();
+      if (delay == 0){
+        require(token.unlock(voter, withdrawAmount));
+      } else {
+        withdrawReceipts.push(ProviderWithdrawReceipt({
+          owner: provider.owner,
+          amount: withdrawAmount,
+          withdrawTime: uint64(now.add(delay)),
+          isWithdrawn: false
+        }));
+        emit OwnerWithdrawReceiptCreated(withdrawReceipts.length - 1, provider.owner, withdrawAmount, uint64(now.add(delay)));
+      }
+    } else {
+      require(token.unlock(voter, withdrawAmount));
+    }
 
     emit DataSourceOwnershipChanged(dataSource, voter, newVoterOwnership, newOwnership);
     emit DataSourceStakeChanged(dataSource, newStake);
@@ -190,6 +221,14 @@ contract TCD is TCDBase, Feeless {
       undistributedReward = undistributedReward.sub(providerReward);
       emit DataSourceStakeChanged(dataSources[dataSourceIndex], provider.stake);
     }
+  }
+
+  function unlockTokenFromReceipt(uint256 receiptId) public {
+    ProviderWithdrawReceipt storage receipt = withdrawReceipts[receiptId];
+    require(!receipt.isWithdrawn && now >= receipt.withdrawTime);
+    receipt.isWithdrawn = true;
+    require(token.unlock(receipt.owner, receipt.amount));
+    emit OwnerWithdrawReceiptUnlocked(receiptId, receipt.owner, receipt.amount);
   }
 
   ////////////////////////////////////////////////////////////
