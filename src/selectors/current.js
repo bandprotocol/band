@@ -20,3 +20,8 @@ export const currentCommunityClientSelector = createSelector(
   [currentSelector, addressSelector],
   (current, address) => current.getIn(['client', 'communities', address]),
 )
+
+export const currentTCDClientSelector = createSelector(
+  [currentSelector, addressSelector],
+  (current, address) => current.getIn(['client', 'tcds', address]),
+)

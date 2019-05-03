@@ -43,8 +43,6 @@ function* handleLoadTcds({ user, commAddress }) {
       `,
   )
 
-  window.tcds = [rawTcds, user]
-
   const tcds = rawTcds.map(
     ({
       address,
@@ -92,6 +90,8 @@ function* handleLoadTcds({ user, commAddress }) {
               owner,
               userStake,
               ownerStake,
+              userOwnership: new BN(voterToOwnership[user] || '0'),
+              ownerOwnership: new BN(voterToOwnership[owner] || '0'),
               totalOwnership: new BN(totalOwnership),
             }
           },

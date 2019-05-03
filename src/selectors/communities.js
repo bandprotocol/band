@@ -13,8 +13,9 @@ export const nameAndAddressCommunitySelector = createSelector(
   communities =>
     communities.map((community, address) =>
       Map({
-        name: community.name,
         address,
+        name: community.name,
+        tcds: community.get('tcds'),
       }),
     ),
 )

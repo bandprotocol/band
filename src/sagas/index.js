@@ -74,29 +74,37 @@ function* baseInitialize() {
     // TODO: Mock on price and last24hr
     saveBandInfo(bandAddress, '1000000000000000000000000', 1.0, 0),
   )
-  const communityDetails = yield Utils.graphqlRequest(`{
-    allCommunities {
-      nodes {
-        name
-        address
-        organization
-        website
-        logo
-        banner
-        description
-        tokenByCommunityAddress{
+  const communityDetails = yield Utils.graphqlRequest(
+    `
+    {
+      allCommunities {
+        nodes {
+          name
           address
-          symbol
-          totalSupply
-        }
-        curveByCommunityAddress{
-          price
-          collateralEquation
+          organization
+          website
+          logo
+          banner
+          description
+          tokenByCommunityAddress {
+            address
+            symbol
+            totalSupply
+          }
+          curveByCommunityAddress {
+            price
+            collateralEquation
+          }
+          tcdsByCommunityAddress {
+            nodes {
+              address
+            }
+          }
         }
       }
     }
-  }
-  `)
+  `,
+  )
   for (const dapp of communityDetails.allCommunities.nodes) {
     yield put(
       saveCommunityInfo(
@@ -118,6 +126,7 @@ function* baseInitialize() {
         0,
         new BN(dapp.tokenByCommunityAddress.totalSupply),
         dapp.curveByCommunityAddress.collateralEquation,
+        dapp.tcdsByCommunityAddress.nodes.map(({ address }) => address),
       ),
     )
   }

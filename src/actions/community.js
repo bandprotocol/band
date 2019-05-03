@@ -16,6 +16,7 @@ export const saveCommunityInfo = (
   last24Hrs,
   totalSupply,
   collateralEquation,
+  tcds,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
@@ -32,6 +33,7 @@ export const saveCommunityInfo = (
   last24Hrs,
   totalSupply,
   collateralEquation,
+  tcds,
 })
 
 export const saveCommunityClient = (address, client) => ({

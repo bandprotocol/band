@@ -1,7 +1,7 @@
 import createReducer from 'reducers/creator'
 
 import { SAVE_COMMUNITY_INFO, SAVE_CT_BALANCE, REMOVE_BALANCE } from 'actions'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
 const handleSaveCommunityInfo = (
   state,
@@ -20,6 +20,7 @@ const handleSaveCommunityInfo = (
     last24Hrs,
     totalSupply,
     collateralEquation,
+    tcds,
   },
 ) =>
   state.set(
@@ -39,6 +40,7 @@ const handleSaveCommunityInfo = (
       last24Hrs,
       totalSupply,
       collateralEquation,
+      tcds: List([...tcds]),
     }),
   )
 

@@ -11,12 +11,16 @@ export const dataProvidersSelector = createSelector(
   [tcdSelector, addressSelector, pageSelector, pageSizeSelector],
   (tcds, address, page, pageSize) => {
     const tcdsByComm = tcds.get(address)
-    if (!tcdsByComm || tcdsByComm.length === 0 || !tcdsByComm[0].dataProviders)
-      return List()
-    return tcdsByComm[0].dataProviders.slice(
-      (page - 1) * pageSize,
-      page * pageSize,
+    if (
+      !tcdsByComm ||
+      tcdsByComm.size === 0 ||
+      !tcdsByComm.get(0).get('dataProviders')
     )
+      return List()
+    const tmpTcd = tcdsByComm.get(0).toJS()
+    return tmpTcd.dataProviders
+      .map(dp => ({ ...dp, tcdAddress: tmpTcd.address }))
+      .slice((page - 1) * pageSize, page * pageSize)
   },
 )
 

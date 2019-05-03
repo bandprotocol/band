@@ -69,8 +69,8 @@ const ProviderListHeader = ({ symbol }) => (
 
 export default props => {
   const {
+    user,
     symbol,
-    dataProviders,
     numberOfHolders,
     communityAddress,
     currentPage,
@@ -88,6 +88,7 @@ export default props => {
       {numberOfHolders > 0 ? (
         <React.Fragment>
           <ProviderListBody
+            user={user}
             communityAddress={communityAddress}
             currentPage={currentPage}
             pageSize={pageSize}

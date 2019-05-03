@@ -33,7 +33,17 @@ class ProviderList extends React.Component {
   }
 
   componentDidMount() {
-    this.props.loadTcds()
+    console.warn('DidMount', !!this.props.user)
+    if (this.props.user) {
+      this.props.loadTcds()
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    console.warn('DidUpdate', prevProps.user !== this.props.user)
+    if (prevProps.user !== this.props.user) {
+      this.props.loadTcds()
+    }
   }
 
   onChangePage(selectedPage) {
@@ -41,15 +51,18 @@ class ProviderList extends React.Component {
       currentPage: selectedPage,
     })
   }
+
   render() {
     const { currentPage } = this.state
     const {
+      user,
       symbol,
       communityAddress,
       pageSize,
       numberOfHolders,
       showBeProvider,
     } = this.props
+    // console.warn(this.props)
     return (
       <Flex
         style={{ borderRadius: '10px' }}
@@ -65,14 +78,15 @@ class ProviderList extends React.Component {
                 height: '40px',
               }}
             >
-              <CustomButton oncClick={() => console.warn('sdsdsdsds')}>
-                Become a provider xxx
+              <CustomButton onClick={() => showBeProvider()}>
+                Become a provider
               </CustomButton>
             </Flex>
           </Flex>
         </Flex>
         <Flex>
           <ProviderListRender
+            user={user}
             symbol={symbol}
             numberOfHolders={numberOfHolders}
             communityAddress={communityAddress}
@@ -99,10 +113,9 @@ const mapStateToProps = (state, { communityAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, { user, communityAddress }) => ({
+  user,
   loadTcds: () => dispatch(loadTcds(user, communityAddress)),
-  showBeProvider: () =>
-    alert('showBeProvider') &&
-    dispatch(showModal('BEPROVIDER', { communityAddress })),
+  showBeProvider: () => dispatch(showModal('BEPROVIDER')),
 })
 
 export default withRouter(

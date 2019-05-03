@@ -7,7 +7,8 @@ import transit from 'transit-immutable-js'
 import {
   BUY_TOKEN,
   SELL_TOKEN,
-  CLAIM_REWARD,
+  TCD_DEPOSIT,
+  TCD_WITHDRAW,
   PROPOSE_PROPOSAL,
   VOTE_PROPOSAL,
   addTx,
@@ -18,6 +19,7 @@ import {
 } from 'actions'
 
 import {
+  currentTCDClientSelector,
   currentCommunityClientSelector,
   currentUserSelector,
 } from 'selectors/current'
@@ -31,6 +33,40 @@ const txChannel = channel()
 function* handleTxChannel({ type, txHash, title }) {
   yield put(addTx(txHash, title, type))
   yield put(dumpTxs())
+}
+
+function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
+  const client = yield select(currentTCDClientSelector, { address: tcdAddress })
+  const transaction = yield client.createVoteDataSourceTransaction({
+    dataSource: sourceAddress,
+    stake,
+  })
+  yield put(hideModal())
+  const txHash = yield transaction.sendFeeless()
+  txChannel.put({
+    txHash,
+    title: `Deposit ${Utils.fromBlockchainUnit(stake)} tokens`,
+    type: 'DEPOSIT',
+  })
+}
+
+function* handleTcdWithdraw({
+  tcdAddress,
+  sourceAddress,
+  ownership /* ownership */,
+}) {
+  const client = yield select(currentTCDClientSelector, { address: tcdAddress })
+  const transaction = yield client.createWithdrawDataSourceTransaction({
+    dataSource: sourceAddress,
+    withdrawOwnership: ownership,
+  })
+  yield put(hideModal())
+  const txHash = yield transaction.sendFeeless()
+  txChannel.put({
+    txHash,
+    title: `Withdraw ${Utils.fromBlockchainUnit(ownership)} tokens`,
+    type: 'WITHDRAW',
+  })
 }
 
 function* handleBuyToken({ address, amount, priceLimit }) {
@@ -111,6 +147,8 @@ function* handleDumpTxs() {
 export default function*() {
   yield takeEvery(txChannel, handleTxChannel)
   yield takeEvery(BUY_TOKEN, handleBuyToken)
+  yield takeEvery(TCD_DEPOSIT, handleTcdDeposit)
+  yield takeEvery(TCD_WITHDRAW, handleTcdWithdraw)
   yield takeEvery(SELL_TOKEN, handleSellToken)
   yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
   yield takeEvery(VOTE_PROPOSAL, handleVoteProposal)

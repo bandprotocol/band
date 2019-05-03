@@ -2,19 +2,38 @@ import { connect } from 'react-redux'
 import BN from 'bn.js'
 import { withRouter } from 'react-router-dom'
 import { showModal } from 'actions'
+
 import ProviderListBodyRender from './ProviderListBodyRender'
 
 import { dataProvidersSelector } from 'selectors/dataProvider'
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  showDW: (actionType, sourceAddress) =>
-    dispatch(showModal('DW', { actionType, sourceAddress, communityAddress })),
+  showDepositWithdraw: (
+    actionType,
+    tcdAddress,
+    dataSourceAddress,
+    userOwnership,
+    stake,
+    totalOwnership,
+  ) =>
+    dispatch(
+      showModal('DEPOSITWITHDRAW', {
+        actionType,
+        tcdAddress,
+        dataSourceAddress,
+        userOwnership,
+        stake,
+        totalOwnership,
+        communityAddress,
+      }),
+    ),
 })
 
 const mapStateToProps = (
   state,
-  { communityAddress, currentPage, pageSize },
+  { communityAddress, currentPage, pageSize, user },
 ) => {
+  console.warn('fuuuuuu', { communityAddress, currentPage, pageSize, user })
   const items = dataProvidersSelector(state, {
     address: communityAddress,
     page: currentPage,
@@ -33,7 +52,7 @@ const mapStateToProps = (
   while (items.length < pageSize) {
     items.push(null)
   }
-  return { items }
+  return { user, items }
 }
 
 export default withRouter(

@@ -6,6 +6,7 @@ import {
   setUserAddress,
   saveBandClient,
   saveCommunityClient,
+  saveTCDClient,
   removeBalance,
   reloadBalance,
 } from 'actions'
@@ -40,12 +41,12 @@ function* handleUpdateProvider({ address, provider }) {
   const dapps = yield select(nameAndAddressCommunitySelector)
 
   for (const dapp of dapps.valueSeq()) {
-    yield put(
-      saveCommunityClient(
-        dapp.get('address'),
-        yield bandClient.at(dapp.get('address')),
-      ),
-    )
+    const commClient = yield bandClient.at(dapp.get('address'))
+    const commAddress = dapp.get('address')
+    yield put(saveCommunityClient(commAddress, commClient))
+    for (const address of dapp.get('tcds').valueSeq()) {
+      yield put(saveTCDClient(address, yield commClient.tcd(address)))
+    }
   }
 }
 

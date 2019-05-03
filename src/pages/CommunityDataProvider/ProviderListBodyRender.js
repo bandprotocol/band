@@ -4,22 +4,51 @@ import { colors } from 'ui'
 import { Flex, Text, Button, Image, AbsoluteLink } from 'ui/common'
 import OutImg from 'images/out.svg'
 
-const Tab = styled(Flex).attrs({
+const Tab = styled(Flex).attrs(props => ({
   letterSpacing: '0.5px',
   px: '10px',
-})`
+}))`
   min-width: 0;
 `
 
+const DWButton = styled(Button).attrs({
+  fontSize: '14px',
+})`
+  width: 95px;
+  max-width: 95px;
+  padding: 10px 5px;
+  cursor: ${props => (props.user ? 'pointer' : 'default')};
+  background-color: ${props => (props.user ? props.color : '#e3e6ef')};
+  color: ${props => (props.user ? props.bg : 'white')};
+  transition: all 0.25s;
+
+  ${props =>
+    props.user &&
+    `&:hover {
+      box-shadow: 0 3px 3px 0 ${props.hoverShadowColor};
+  }`}
+
+  ${props =>
+    props.user &&
+    `&:active {
+      box-shadow: 0 0px 0px 0 #4a4a4a;
+      background-color: ${props.activeColor};
+  }`}
+`
+
 const HistoryRow = ({
+  user,
   index,
   rank,
   detail,
-  address,
+  dataSourceAddress,
+  tcdAddress,
   ownerStake,
   userStake,
+  userOwnership,
+  totalOwnership,
   stake,
-  showDW,
+  showDepositWithdraw,
   txLink,
 }) => (
   <Flex
@@ -63,7 +92,7 @@ const HistoryRow = ({
           position: 'relative',
         }}
       >
-        {address}
+        {dataSourceAddress}
       </Text>
       <AbsoluteLink href={txLink}>
         <Image
@@ -84,7 +113,7 @@ const HistoryRow = ({
           overflow: 'hidden',
         }}
       >
-        {ownerStake}
+        {ownerStake.pretty()}
       </Text>
     </Tab>
     <Tab flex={16} justifyContent="center">
@@ -97,7 +126,7 @@ const HistoryRow = ({
           overflow: 'hidden',
         }}
       >
-        {stake}
+        {stake.pretty()}
       </Text>
     </Tab>
     <Tab flex={16} justifyContent="center">
@@ -110,34 +139,56 @@ const HistoryRow = ({
           overflow: 'hidden',
         }}
       >
-        {userStake}
+        {userStake.pretty()}
       </Text>
     </Tab>
     <Flex flex={25} flexDirection="row" justifyContent="flex-end" pr="30px">
-      <Button
-        style={{ width: '95px', maxWidth: '95px', padding: '5px' }}
+      <DWButton
+        user={user}
         bg="#dcf5f1"
         color="#24bf97"
-        fontSize="14px"
-        onClick={() => showDW('DEPOSIT', address)}
+        hoverShadowColor="#a6e7c4"
+        activeColor="#2bbe70"
+        onClick={() =>
+          user &&
+          showDepositWithdraw(
+            'DEPOSIT',
+            tcdAddress,
+            dataSourceAddress,
+            userOwnership,
+            stake,
+            totalOwnership,
+          )
+        }
       >
-        ↑ Deposit
-      </Button>
+        <i className="fas fa-arrow-down" /> Deposit
+      </DWButton>
       <Flex mx="10px" />
-      <Button
-        style={{ width: '95px', maxWidth: '95px', padding: '10px 5px' }}
+      <DWButton
+        user={user}
         bg="#feefef"
+        hoverShadowColor="#ffb4ac"
+        activeColor="#e34c4c"
         color="#ec6363"
-        fontSize="14px"
-        onClick={() => showDW('WITHDRAW', address)}
+        onClick={() =>
+          user &&
+          showDepositWithdraw(
+            'WITHDRAW',
+            tcdAddress,
+            dataSourceAddress,
+            userOwnership,
+            stake,
+            totalOwnership,
+          )
+        }
       >
-        ↓ Withdraw
-      </Button>
+        <i className="fas fa-arrow-up" /> Withdraw
+      </DWButton>
     </Flex>
   </Flex>
 )
 
-export default ({ items, showDW }) => {
+export default ({ user, items, showDepositWithdraw }) => {
   return (
     <React.Fragment>
       {items.map((item, i) => {
@@ -146,23 +197,31 @@ export default ({ items, showDW }) => {
         }
         const {
           rank,
+          tcdAddress,
           dataSourceAddress,
           detail,
           ownerStake,
           stake,
           userStake,
+          totalOwnership,
+          userOwnership,
         } = item
+
         return (
           <HistoryRow
+            user={user}
             key={i}
             index={i}
             detail={detail}
             rank={rank}
-            address={dataSourceAddress}
-            ownerStake={ownerStake.pretty()}
-            userStake={userStake.pretty()}
-            stake={stake.pretty()}
-            showDW={showDW}
+            dataSourceAddress={dataSourceAddress}
+            tcdAddress={tcdAddress}
+            ownerStake={ownerStake}
+            userStake={userStake}
+            userOwnership={userOwnership}
+            stake={stake}
+            totalOwnership={totalOwnership}
+            showDepositWithdraw={showDepositWithdraw}
             txLink={`https://rinkeby.etherscan.io/address/${dataSourceAddress}`}
           />
         )
