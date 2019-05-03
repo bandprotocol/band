@@ -2,13 +2,13 @@ import { connect } from 'react-redux'
 
 import { withRouter } from 'react-router-dom'
 
-import { numHolders } from 'selectors/holder'
+import { numDataProviders } from 'selectors/tcd'
 
 import PaginationRender from './PaginationRender'
 
 const mapStateToProps = (state, { communityAddress, pageSize }) => ({
   numberOfPages: Math.ceil(
-    numHolders(state, {
+    numDataProviders(state, {
       address: communityAddress,
     }) / pageSize,
   ),

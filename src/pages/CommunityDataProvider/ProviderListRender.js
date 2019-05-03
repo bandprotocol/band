@@ -71,7 +71,7 @@ export default props => {
   const {
     user,
     symbol,
-    numberOfHolders,
+    numDataProviders,
     communityAddress,
     currentPage,
     onChangePage,
@@ -85,7 +85,7 @@ export default props => {
       flexDirection="column"
     >
       <ProviderListHeader symbol={symbol} />
-      {numberOfHolders > 0 ? (
+      {numDataProviders > 0 ? (
         <React.Fragment>
           <ProviderListBody
             user={user}
@@ -111,10 +111,10 @@ export default props => {
           <Flex flexDirection="column" alignItems="center">
             <Image src={MockProposal} />
             <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-              No rich list right now!
+              No data provider list right now!
             </Text>
             <Text fontSize={1} py={1}>
-              Buy token to become the first holder.
+              Click "Become a provider" to become the first provider.
             </Text>
           </Flex>
         </Flex>

@@ -6,7 +6,7 @@ import { communityDetailSelector } from 'selectors/communities'
 import { connect } from 'react-redux'
 
 import { withRouter } from 'react-router-dom'
-import { numHolders } from 'selectors/holder'
+import { numDataProviders } from 'selectors/tcd'
 import { loadTcds, showModal } from 'actions'
 
 const CustomButton = styled(Button).attrs({
@@ -59,7 +59,7 @@ class ProviderList extends React.Component {
       symbol,
       communityAddress,
       pageSize,
-      numberOfHolders,
+      numDataProviders,
       showBeProvider,
     } = this.props
     // console.warn(this.props)
@@ -88,7 +88,7 @@ class ProviderList extends React.Component {
           <ProviderListRender
             user={user}
             symbol={symbol}
-            numberOfHolders={numberOfHolders}
+            numDataProviders={numDataProviders}
             communityAddress={communityAddress}
             currentPage={currentPage}
             onChangePage={this.onChangePage.bind(this)}
@@ -106,7 +106,7 @@ const mapStateToProps = (state, { communityAddress }) => {
   })
   return {
     symbol: community && community.get('symbol'),
-    numberOfHolders: numHolders(state, {
+    numDataProviders: numDataProviders(state, {
       address: communityAddress,
     }),
   }

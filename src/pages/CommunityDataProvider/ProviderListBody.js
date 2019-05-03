@@ -33,7 +33,6 @@ const mapStateToProps = (
   state,
   { communityAddress, currentPage, pageSize, user },
 ) => {
-  console.warn('fuuuuuu', { communityAddress, currentPage, pageSize, user })
   const items = dataProvidersSelector(state, {
     address: communityAddress,
     page: currentPage,

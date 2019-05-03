@@ -154,9 +154,14 @@ class DepositWithdrawModal extends React.Component {
       tcdAddress,
       dispatchWithdraw,
       valueOnChain,
+      totalOwnership,
+      stake,
     } = this.state
     if (this.verifyValueOnChain(valueOnChain)) {
-      dispatchWithdraw(tcdAddress, dataSourceAddress, this.state.valueOnChain)
+      const withdrawOwnershipAmount = valueOnChain
+        .mul(totalOwnership)
+        .div(stake)
+      dispatchWithdraw(tcdAddress, dataSourceAddress, withdrawOwnershipAmount)
     }
   }
 

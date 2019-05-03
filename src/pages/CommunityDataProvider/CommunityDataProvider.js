@@ -10,7 +10,6 @@ import { Flex, Text } from 'ui/common'
 class CommunityDataProvider extends React.Component {
   render() {
     const { user, communityAddress } = this.props
-    console.warn('xiiiiiii', { user, communityAddress })
     return (
       <PageContainer withSidebar>
         <Flex flexDirection="row">

@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { colors } from 'ui'
 import { Flex, Text, Button, Image, AbsoluteLink } from 'ui/common'
 import OutImg from 'images/out.svg'
+import ArrowUp from 'images/arrowUp.svg'
+import ArrowDown from 'images/arrowDown.svg'
 
 const Tab = styled(Flex).attrs(props => ({
   letterSpacing: '0.5px',
@@ -18,8 +20,8 @@ const DWButton = styled(Button).attrs({
   max-width: 95px;
   padding: 10px 5px;
   cursor: ${props => (props.user ? 'pointer' : 'default')};
-  background-color: ${props => (props.user ? props.color : '#e3e6ef')};
-  color: ${props => (props.user ? props.bg : 'white')};
+  background-color: ${props => (props.user ? props.bg : '#e3e6ef')};
+  color: ${props => (props.user ? props.color : 'white')};
   transition: all 0.25s;
 
   ${props =>
@@ -31,7 +33,7 @@ const DWButton = styled(Button).attrs({
   ${props =>
     props.user &&
     `&:active {
-      box-shadow: 0 0px 0px 0 #4a4a4a;
+      box-shadow: 0 0px 0px 0 ${props.color};
       background-color: ${props.activeColor};
   }`}
 `
@@ -148,7 +150,7 @@ const HistoryRow = ({
         bg="#dcf5f1"
         color="#24bf97"
         hoverShadowColor="#a6e7c4"
-        activeColor="#2bbe70"
+        activeColor="#d2efeb"
         onClick={() =>
           user &&
           showDepositWithdraw(
@@ -161,14 +163,23 @@ const HistoryRow = ({
           )
         }
       >
-        <i className="fas fa-arrow-down" /> Deposit
+        <Flex
+          flexDirection="row"
+          style={{ maxHeight: '35px' }}
+          justifyContent="center"
+        >
+          <Flex>
+            <Image src={ArrowDown} width="14px" height="14px" />
+          </Flex>{' '}
+          <Flex>Deposit</Flex>
+        </Flex>
       </DWButton>
       <Flex mx="10px" />
       <DWButton
         user={user}
         bg="#feefef"
         hoverShadowColor="#ffb4ac"
-        activeColor="#e34c4c"
+        activeColor="#f4e1e1"
         color="#ec6363"
         onClick={() =>
           user &&
@@ -182,7 +193,16 @@ const HistoryRow = ({
           )
         }
       >
-        <i className="fas fa-arrow-up" /> Withdraw
+        <Flex
+          flexDirection="row"
+          style={{ maxHeight: '35px' }}
+          justifyContent="center"
+        >
+          <Flex>
+            <Image src={ArrowUp} width="14px" height="14px" />{' '}
+          </Flex>
+          <Flex>Withdraw</Flex>
+        </Flex>
       </DWButton>
     </Flex>
   </Flex>
