@@ -231,7 +231,6 @@ export default ({ user, items, showDepositWithdraw }) => {
           userOwnership,
           status,
         } = item
-        console.warn(item)
         return (
           <HistoryRow
             user={user}

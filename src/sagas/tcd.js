@@ -83,6 +83,7 @@ function* handleLoadTcds({ user, commAddress }) {
                   .mul(new BN(stake))
                   .div(new BN(totalOwnership))
               }
+              // console.warn(voterToOwnership[user])
               return {
                 dataSourceAddress,
                 detail,

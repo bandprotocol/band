@@ -194,9 +194,24 @@ class DepositWithdrawModal extends React.Component {
           style={{ position: 'relative' }}
         >
           <Text color="#4a4a4a" fontSize="14px" lineHeight={1.43}>
-            Spicy jalapeno bacon ipsum dolor amet sirloin strip steak
-            venisonalcatra cupim pork belly sausage bacon andouille Meatloaf
-            turkey tenderloin ground
+            {actionType === 'DEPOSIT' ? (
+              <React.Fragment>
+                Deposit your tokens to delegate data curation right to the
+                provider. In return, you are entitle to a portion of fee that
+                the provider earn.{' '}
+                <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
+                  Learn more
+                </a>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                Withdraw your staked tokens from the provider. You will no
+                longer earn the portion of curation fee you entitle to.{' '}
+                <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
+                  Learnmore
+                </a>
+              </React.Fragment>
+            )}
           </Text>
           <Flex my="30px">
             <Flex style={{ position: 'absolute', right: '50px' }}>
