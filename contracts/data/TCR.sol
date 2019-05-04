@@ -11,7 +11,6 @@ import "../feeless/Feeless.sol";
 import "../utils/Equation.sol";
 import "../utils/Fractional.sol";
 import "../utils/KeyUtils.sol";
-import "../voting/ResolveListener.sol";
 import "../voting/VotingInterface.sol";
 
 

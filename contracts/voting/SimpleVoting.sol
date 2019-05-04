@@ -32,7 +32,7 @@ contract SimpleVoting is VotingInterface, Feeless {
   );
 
   struct Poll {
-    CommunityToken token;
+    SnapshotToken token;
     uint256 snapshotNonce;          // The votingPowerNonce to count voting power
     uint256 expirationTime;         // Expiration timestamp of commit period
     uint256 voteSupportRequiredPct; // Threshold % for detemining poll result
@@ -81,7 +81,7 @@ contract SimpleVoting is VotingInterface, Feeless {
   }
 
   function startPoll(
-    CommunityToken token,
+    SnapshotToken token,
     uint256 pollID,
     bytes8 prefix,
     VotingParameters params

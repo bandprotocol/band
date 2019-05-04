@@ -7,9 +7,7 @@ import "../feeless/Feeless.sol";
 import "../utils/Fractional.sol";
 import "../utils/KeyUtils.sol";
 
-/**
- * @title CommitRevealVoting
- */
+/// @title title CommitRevealVoting
 contract CommitRevealVoting is VotingInterface, Feeless {
   using SafeMath for uint256;
   using Fractional for uint256;
@@ -24,12 +22,6 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     uint256 voteMinParticipation,
     uint256 voteSupportRequired,
     uint256 snapshotNonce
-  );
-
-  event PollResolved(  // A poll is resolved.
-    address indexed pollContract,
-    uint256 indexed pollID,
-    ResolveListener.PollState pollState
   );
 
   event VoteCommitted(  // A vote is committed by a user.
@@ -56,7 +48,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
   }
 
   struct Poll {
-    CommunityToken token; // The address of community token contract for voting power reference
+    SnapshotToken token; // The address of community token contract for voting power reference
 
     uint256 snapshotNonce;          // The votingPowerNonce to count voting power
     uint256 commitEndTime;          // Expiration timestamp of commit period
@@ -138,7 +130,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
   }
 
   function startPoll(
-    CommunityToken token,
+    SnapshotToken token,
     uint256 pollID,
     bytes8 prefix,
     VotingParameters params

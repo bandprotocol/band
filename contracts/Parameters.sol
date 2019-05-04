@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./feeless/Feeless.sol";
-import "./voting/ResolveListener.sol";
 import "./voting/VotingInterface.sol";
 
 /*
@@ -44,7 +43,7 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
 
   mapping (bytes32 => uint256) public params;
 
-  CommunityToken public token;
+  SnapshotToken public token;
   VotingInterface public voting;
 
   struct KeyValue {
@@ -60,7 +59,7 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
   uint256 public nextProposalNonce = 1;
   mapping (uint256 => Proposal) public proposals;
 
-  constructor(CommunityToken _token, VotingInterface _voting) public {
+  constructor(SnapshotToken _token, VotingInterface _voting) public {
     token = _token;
     voting = _voting;
   }
