@@ -148,7 +148,7 @@ contract CommitRevealVoting is VotingInterface, Feeless {
     require(commitEndTime < revealEndTime);
     require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
     require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
-    uint256 voteMinParticipation = voteMinParticipationPct.multipliedBy(token.totalSupply());
+    uint256 voteMinParticipation = voteMinParticipationPct.mulFrac(token.totalSupply());
 
     Poll storage poll = polls[msg.sender][pollID];
     poll.snapshotNonce = token.votingPowerChangeNonce();

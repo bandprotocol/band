@@ -33,7 +33,7 @@ contract BandSimpleExchange is Ownable, ERC20Acceptor {
     returns(uint256)
   {
     address(uint160(owner())).transfer(msg.value);
-    uint256 bandAmount = exchangeRate.multipliedBy(msg.value);
+    uint256 bandAmount = exchangeRate.mulFrac(msg.value);
     bandToken.transfer(address(msg.sender), bandAmount);
     return bandAmount;
   }

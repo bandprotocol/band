@@ -210,7 +210,7 @@ contract TCD is TCDBase, Feeless {
     uint256 totalProviderCount = getActiveDataSourceCount();
     uint256 providerReward = undistributedReward.div(totalProviderCount);
     uint256 ownerPercentage = params.get("data:owner_revenue_pct");
-    uint256 ownerReward = ownerPercentage.multipliedBy(providerReward);
+    uint256 ownerReward = ownerPercentage.mulFrac(providerReward);
     uint256 stakeIncreased = providerReward.sub(ownerReward);
     for(uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {
       DataProvider storage provider = providers[dataSources[dataSourceIndex]];

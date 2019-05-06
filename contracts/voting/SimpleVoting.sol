@@ -97,7 +97,7 @@ contract SimpleVoting is VotingInterface, Feeless {
     require(expirationTime < 2 ** 64);
     require(voteMinParticipationPct > 0 && voteMinParticipationPct <= Fractional.getDenominator());
     require(voteSupportRequiredPct > 0 && voteSupportRequiredPct <= Fractional.getDenominator());
-    uint256 voteMinParticipation = voteMinParticipationPct.multipliedBy(token.totalSupply());
+    uint256 voteMinParticipation = voteMinParticipationPct.mulFrac(token.totalSupply());
 
     uint256 snapshotNonce = token.votingPowerChangeNonce();
     polls[msg.sender][pollID] = Poll({

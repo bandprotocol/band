@@ -10,7 +10,7 @@ library Fractional {
     return DENOMINATOR;
   }
 
-  function multipliedBy(uint256 numerator, uint256 value) internal pure returns(uint256) {
+  function mulFrac(uint256 numerator, uint256 value) internal pure returns(uint256) {
     return numerator.mul(value).div(DENOMINATOR);
   }
 }

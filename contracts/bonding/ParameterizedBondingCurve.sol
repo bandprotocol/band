@@ -4,6 +4,7 @@ import "./BondingCurve.sol";
 import "../Parameters.sol";
 
 
+/// @title ParameterizedBondingCurve
 contract ParameterizedBondingCurve is BondingCurve {
 
   Parameters public params;

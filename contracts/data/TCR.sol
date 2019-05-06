@@ -195,7 +195,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     if (now < entry.listedAt) {
       return minDeposit;
     } else {
-      return depositDecayFunction.calculate(now.sub(entry.listedAt)).multipliedBy(minDeposit);
+      return depositDecayFunction.calculate(now.sub(entry.listedAt)).mulFrac(minDeposit);
     }
   }
 
@@ -348,7 +348,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     // The reward for winning side leader (challenger/entry owner) is
     // half of the poll (their stake) plus the dispensation percentage of the remaining.
     uint256 halfRewardPool = rewardPool.div(2);
-    uint256 leaderReward = dispensationPercentage.multipliedBy(halfRewardPool).add(halfRewardPool);
+    uint256 leaderReward = dispensationPercentage.mulFrac(halfRewardPool).add(halfRewardPool);
 
     if (pollState == PollState.Yes) {
       // Automatically claim reward for challenger
