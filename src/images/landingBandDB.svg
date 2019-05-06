@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="372" height="103" viewBox="0 0 372 103">
+    <defs>
+        <linearGradient id="a" x1="0%" x2="89.421%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#36406E"/>
+            <stop offset="75.924%" stop-color="#B0B0E9" stop-opacity=".654"/>
+            <stop offset="100%" stop-color="#C2C2FA" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="b" x1="0%" x2="89.421%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#C2C2FA" stop-opacity="0"/>
+            <stop offset="24.076%" stop-color="#B0B0E9" stop-opacity=".654"/>
+            <stop offset="100%" stop-color="#252A45"/>
+        </linearGradient>
+        <linearGradient id="c" x1="0%" x2="89.044%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#C2C2FA" stop-opacity="0"/>
+            <stop offset="24.076%" stop-color="#B0B0E9" stop-opacity=".654"/>
+            <stop offset="100%" stop-color="#252945"/>
+        </linearGradient>
+        <linearGradient id="d" x1="0%" x2="89.421%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#C2C2FA" stop-opacity="0"/>
+            <stop offset="24.076%" stop-color="#B0B0E9" stop-opacity=".654"/>
+            <stop offset="100%" stop-color="#252945"/>
+        </linearGradient>
+        <linearGradient id="e" x1="10.174%" x2="79.339%" y1="42.352%" y2="54.459%">
+            <stop offset="0%" stop-color="#252945"/>
+            <stop offset="75.924%" stop-color="#B0B0E9" stop-opacity=".654"/>
+            <stop offset="100%" stop-color="#C2C2FA" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="h" x1="0%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#3F4668"/>
+            <stop offset="100%" stop-color="#2B314F"/>
+        </linearGradient>
+        <ellipse id="g" cx="41.5" cy="58" rx="41.5" ry="15"/>
+        <filter id="f" width="184.3%" height="333.3%" x="-30.1%" y="-83.3%" filterUnits="objectBoundingBox">
+            <feOffset dx="10" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="10"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0.137254902 0 0 0 0 0.152941176 0 0 0 0 0.254901961 0 0 0 0.54649257 0"/>
+        </filter>
+        <linearGradient id="i" x1="6.157%" y1="53.322%" y2="50%">
+            <stop offset="0%" stop-color="#363F6C"/>
+            <stop offset="100%" stop-color="#404A7D"/>
+        </linearGradient>
+        <linearGradient id="j" x1="19.327%" x2="79.331%" y1="54.196%" y2="43.982%">
+            <stop offset="0%" stop-color="#46538C"/>
+            <stop offset="100%" stop-color="#51598B"/>
+        </linearGradient>
+        <linearGradient id="k" x1="93.875%" x2="10.718%" y1="43.896%" y2="52.472%">
+            <stop offset="0%" stop-color="#8B93C4"/>
+            <stop offset="100%" stop-color="#5462A1"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path stroke="url(#a)" stroke-dasharray="0,5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M57.457 61.5H409"/>
+        <path stroke="url(#b)" stroke-dasharray="0,5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M0 53.5l81 8"/>
+        <path stroke="url(#c)" stroke-dasharray="0,5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M0 80.5l78.5-19"/>
+        <path stroke="url(#d)" stroke-dasharray="0,5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M49.5 93.5l29-32"/>
+        <path stroke="url(#e)" stroke-dasharray="0,5" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M148.5 93.5L84 65.5"/>
+        <g transform="translate(37)">
+            <use fill="#000" filter="url(#f)" xlink:href="#g"/>
+            <use fill="url(#h)" xlink:href="#g"/>
+            <path fill="url(#i)" d="M41.5 59C64.42 59 83 52.508 83 44.5c0-3.636-3.83-6.96-10.16-9.505C65.233 31.935 54.014 30 41.5 30 18.58 30 0 36.492 0 44.5S18.58 59 41.5 59z"/>
+            <ellipse cx="41.5" cy="29.5" fill="url(#j)" rx="41.5" ry="14.5"/>
+            <ellipse cx="41.5" cy="14.5" fill="url(#k)" rx="41.5" ry="14.5"/>
+        </g>
+    </g>
+</svg>
