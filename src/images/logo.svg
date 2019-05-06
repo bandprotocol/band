@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="179" height="33" viewBox="0 0 179 33">
+    <g fill="#FFF" fill-rule="evenodd">
+        <path fill-rule="nonzero" d="M16.5 0C7.387 0 0 7.387 0 16.5S7.387 33 16.5 33 33 25.613 33 16.5A16.5 16.5 0 0 0 16.5 0zm6.786 23.392l-6.895 3.987v.001h-.003v-.001L9.49 23.39V9.594l.007.004 6.89-3.978 4.42 2.468.002-.002v6.23l-2.152-1.236V9.327l-2.269-1.293-4.748 2.746v11.437l4.749 2.746 4.748-2.737.023-4.7-6.748-3.915 2.168-1.14 6.722 3.92-.016 7zm-5.597-7.34l1.662.955-4.938 2.811V14.15l1.734 1.023v1.702l1.542-.823z"/>
+        <text font-family="Avenir-Heavy, Avenir" font-size="18" font-weight="600" letter-spacing="1.2">
+            <tspan x="46" y="22">Band Protoco</tspan> <tspan x="175.024" y="22">l</tspan>
+        </text>
+    </g>
+</svg>

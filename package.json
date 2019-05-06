@@ -5,6 +5,7 @@
   "dependencies": {
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
+    "react-mailchimp-subscribe": "^2.1.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.4",
     "rebass": "^3.0.1",
