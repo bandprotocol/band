@@ -7,6 +7,7 @@ const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const SimpleVoting = artifacts.require('SimpleVoting');
+const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 require('chai').should();
 
@@ -24,10 +25,12 @@ contract('Parameters', ([_, owner, alice, bob]) => {
       await this.band.transfer(_, await this.band.balanceOf(bob), {
         from: bob,
       });
+
+      const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
       const data = await this.factory.createCommunity(
         'CoinHatcher',
         'CHT',
-        [8, 1, 0, 2],
+        testCurve.address,
         '0',
         '60',
         '600000000000000000',

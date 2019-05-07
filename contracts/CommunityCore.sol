@@ -8,6 +8,7 @@ import "./bonding/BondingCurve.sol";
 import "./data/TCD.sol";
 import "./data/TCR.sol";
 import "./utils/KeyUtils.sol";
+import "./utils/Expression.sol";
 
 
 contract CommunityCore {
@@ -30,7 +31,7 @@ contract CommunityCore {
     address creator,
     string memory name,
     string memory symbol,
-    uint256[] memory bondingCollateralEquation,
+    ExpressionInterface collateralExpression,
     uint256 bondingLiquiditySpread,
     uint256 paramsExpirationTime,
     uint256 paramsMinParticipationPct,
@@ -43,7 +44,7 @@ contract CommunityCore {
     bondingCurve = BondingCurveFactory.create(
       band,
       token,
-      bondingCollateralEquation,
+      collateralExpression,
       params
     );
     token.setExecDelegator(address(_registry));
@@ -79,7 +80,7 @@ contract CommunityCore {
 
   function createTCR(
     bytes8 prefix,
-    uint256[] calldata decayFunction,
+    ExpressionInterface decayFunction,
     uint256 minDeposit,
     uint256 applyStageLength,
     uint256 dispensationPercentage,

@@ -12,10 +12,10 @@ contract ParameterizedBondingCurve is BondingCurve {
   constructor(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
-    uint256[] memory collateralExpressionTree,
+    ExpressionInterface collateralExpression,
     Parameters _params
   )
-    BondingCurve(collateralToken, bondedToken, collateralExpressionTree)
+    BondingCurve(collateralToken, bondedToken, collateralExpression)
     public
   {
     params = _params;

@@ -3,6 +3,7 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 const BondingCurveMock = artifacts.require('BondingCurveMock');
 const Equation = artifacts.require('Equation');
 const ERC20Base = artifacts.require('ERC20Base');
+const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 require('chai').should();
 
@@ -15,10 +16,11 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     this.bondedToken = await ERC20Base.new('BondedToken', 'BDT', 18, {
       from: owner,
     });
+    const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
     this.curve = await BondingCurveMock.new(
       this.collateralToken.address,
       this.bondedToken.address,
-      [8, 1, 0, 2],
+      testCurve.address,
       { from: owner },
     );
     await this.collateralToken.mint(alice, '100000', { from: owner });

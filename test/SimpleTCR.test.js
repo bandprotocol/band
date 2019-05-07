@@ -9,6 +9,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const SimpleVoting = artifacts.require('SimpleVoting');
 const CommitRevealVoting = artifacts.require('CommitRevealVoting');
+const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 require('chai').should();
 
@@ -26,10 +27,11 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
       from: bob,
     });
     await this.band.transfer(owner, 100000000, { from: _ });
+    const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
     const data1 = await this.factory.createCommunity(
       'CoinHatcher',
       'CHT',
-      [8, 1, 0, 2],
+      testCurve.address,
       '0',
       '60',
       '500000000000000000',
@@ -43,43 +45,45 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
     this.voting = await CommitRevealVoting.at(
       await this.factory.commitRevealVoting(),
     );
+
+    //  if x <= 60
+    //    return 1e18
+    //  else if x <= 120
+    //    return 1e18 - (5e17 * (x-60))/60
+    //  else
+    //    return 5e17
+    const testDecay = await BondingCurveExpression.new([
+      18,
+      14,
+      1,
+      0,
+      60,
+      0,
+      '1000000000000000000',
+      18,
+      14,
+      1,
+      0,
+      120,
+      5,
+      0,
+      '1000000000000000000',
+      7,
+      6,
+      0,
+      '500000000000000000',
+      5,
+      1,
+      0,
+      60,
+      0,
+      60,
+      0,
+      '500000000000000000',
+    ]);
     const data2 = await this.core.createTCR(
       web3.utils.fromAscii('tcr:'),
-      [
-        //  if x <= 60
-        //    return 1e18
-        //  else if x <= 120
-        //    return 1e18 - (5e17 * (x-60))/60
-        //  else
-        //    return 5e17
-        18,
-        14,
-        1,
-        0,
-        60,
-        0,
-        '1000000000000000000',
-        18,
-        14,
-        1,
-        0,
-        120,
-        5,
-        0,
-        '1000000000000000000',
-        7,
-        6,
-        0,
-        '500000000000000000',
-        5,
-        1,
-        0,
-        60,
-        0,
-        60,
-        0,
-        '500000000000000000',
-      ],
+      testDecay.address,
       100, // min deposit
       300, // apply stage length
       '300000000000000000', // dispensationp percentage
@@ -756,7 +760,6 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
     const entryHash = web3.utils.soliditySha3('some entry');
     const reasonHash = web3.utils.soliditySha3('some reason');
     const newMinDeposit = 500;
-    const salt = 99;
     beforeEach(async () => {
       // create entry
       const calldata = await this.tcr.contract.methods

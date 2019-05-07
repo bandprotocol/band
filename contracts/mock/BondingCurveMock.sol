@@ -12,8 +12,8 @@ contract BondingCurveMock is Ownable, BondingCurve {
   constructor(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
-    uint256[] memory collateralExpressionTree
-  ) public BondingCurve(collateralToken,  bondedToken, collateralExpressionTree) {}
+    ExpressionInterface collateralExpression
+  ) public BondingCurve(collateralToken,  bondedToken, collateralExpression) {}
 
   function getRevenueBeneficiary() public view returns (address) {
     return owner();

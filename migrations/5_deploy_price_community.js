@@ -4,6 +4,7 @@ const CommunityCore = artifacts.require('CommunityCore');
 const TCD = artifacts.require('TCD');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
+const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 module.exports = function(deployer, network, accounts) {
   deployer
@@ -21,28 +22,7 @@ module.exports = function(deployer, network, accounts) {
       const priceTx = await registry.createCommunity(
         'PriceFeedCommunity',
         'PFC',
-        [
-          '18',
-          '12',
-          '1',
-          '0',
-          '228652525963663850000000',
-          '7',
-          '6',
-          '0',
-          '12500000000000188000',
-          '1',
-          '0',
-          '228652525963663850000000',
-          '20',
-          '0',
-          '12500000000000188000',
-          '1',
-          '0',
-          '228652525963663850000000',
-          '0',
-          '5000000',
-        ],
+        BondingCurveExpression.address,
         '0',
         '86400',
         '50000000000000000',

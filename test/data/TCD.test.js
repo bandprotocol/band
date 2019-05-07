@@ -10,6 +10,7 @@ const Parameters = artifacts.require('Parameters');
 const SimpleVoting = artifacts.require('SimpleVoting');
 const TCD = artifacts.require('TCD');
 const TrustedDataSource = artifacts.require('TrustedDataSource');
+const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 require('chai').should();
 
@@ -27,10 +28,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       from: bob,
     });
     await this.band.transfer(owner, 100000000, { from: _ });
+    const testCurve = await BondingCurveExpression.new([1]);
     const data1 = await this.factory.createCommunity(
       'CoinHatcher',
       'CHT',
-      [1],
+      testCurve.address,
       '0',
       '60',
       '5',
@@ -564,10 +566,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
   });
   context('Withdraw delay', () => {
     beforeEach(async () => {
+      const testCurve = await BondingCurveExpression.new([1]);
       const data1 = await this.factory.createCommunity(
         'CoinHatcher',
         'CHT',
-        [1],
+        testCurve.address,
         '0',
         '60',
         '5',

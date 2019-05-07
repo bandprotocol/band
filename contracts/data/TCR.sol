@@ -8,7 +8,7 @@ import "../CommunityToken.sol";
 import "../Parameters.sol";
 import "../token/ERC20Acceptor.sol";
 import "../feeless/Feeless.sol";
-import "../utils/Equation.sol";
+import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 import "../utils/KeyUtils.sol";
 import "../voting/VotingInterface.sol";
@@ -23,7 +23,6 @@ import "../voting/VotingInterface.sol";
 contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
-  using Equation for Equation.Node[];
   using KeyUtils for bytes8;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
@@ -80,7 +79,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     uint256 reward
   );
 
-  Equation.Node[] public depositDecayFunction;
+  ExpressionInterface public depositDecayFunction;
 
   CommunityToken public token;
   VotingInterface public voting;
@@ -125,7 +124,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     CommunityToken _token,
     Parameters _params,
     VotingInterface _voting,
-    uint256[] memory _expressions
+    ExpressionInterface decayFunction
   )
     public
   {
@@ -134,7 +133,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     params = _params;
     voting = _voting;
     setExecDelegator(token.execDelegator());
-    depositDecayFunction.init(_expressions);
+    depositDecayFunction = decayFunction;
   }
 
   modifier entryMustExist(bytes32 data) {
@@ -195,7 +194,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     if (now < entry.listedAt) {
       return minDeposit;
     } else {
-      return depositDecayFunction.calculate(now.sub(entry.listedAt)).mulFrac(minDeposit);
+      return depositDecayFunction.evaluate(now.sub(entry.listedAt)).mulFrac(minDeposit);
     }
   }
 

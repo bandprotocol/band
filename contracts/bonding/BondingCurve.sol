@@ -4,14 +4,13 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
-import "../utils/Equation.sol";
+import "../utils/Expression.sol";
 
 
 /**
  * @title BondingCurve
  */
 contract BondingCurve is ERC20Acceptor {
-  using Equation for Equation.Node[];
   using SafeMath for uint256;
 
   event Buy(address indexed buyer, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
@@ -22,7 +21,7 @@ contract BondingCurve is ERC20Acceptor {
 
   ERC20Interface public collateralToken;
   ERC20Interface public bondedToken;
-  Equation.Node[] public collateralEquation;
+  ExpressionInterface public collateralExpression;
 
   uint256 public currentMintedTokens;
   uint256 public currentCollateral;
@@ -34,11 +33,11 @@ contract BondingCurve is ERC20Acceptor {
   constructor(
     ERC20Interface _collateralToken,
     ERC20Interface _bondedToken,
-    uint256[] memory collateralExpressionTree
+    ExpressionInterface _collateralExpression
   ) public {
     collateralToken = _collateralToken;
     bondedToken = _bondedToken;
-    collateralEquation.init(collateralExpressionTree);
+    collateralExpression = _collateralExpression;
     emit CurveMultiplierChange(0, curveMultiplier);
   }
 
@@ -47,7 +46,7 @@ contract BondingCurve is ERC20Acceptor {
   function getLiquiditySpreadNumerator() public view returns (uint256);
 
   function getCollateralAtSupply(uint256 tokenSupply) public view returns (uint256) {
-    uint256 collateralFromEquation = collateralEquation.calculate(tokenSupply);
+    uint256 collateralFromEquation = collateralExpression.evaluate(tokenSupply);
     return collateralFromEquation.mul(curveMultiplier).div(RATIONAL_DENOMINATOR);
   }
 
@@ -135,7 +134,7 @@ contract BondingCurve is ERC20Acceptor {
   }
 
   function _adjustcurveMultiplier() internal {
-    uint256 collateralRaw = collateralEquation.calculate(getBondingCurveSupplyPoint());
+    uint256 collateralRaw = collateralExpression.evaluate(getBondingCurveSupplyPoint());
     require(currentCollateral >= 0);
     require(collateralRaw >= 0);
     uint256 nextCurveMultiplier = RATIONAL_DENOMINATOR.mul(currentCollateral).div(collateralRaw);
