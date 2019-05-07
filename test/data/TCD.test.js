@@ -7,7 +7,6 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const SimpleVoting = artifacts.require('SimpleVoting');
 const TCD = artifacts.require('TCD');
 const TrustedDataSource = artifacts.require('TrustedDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
@@ -43,7 +42,6 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.exchange = await BandSimpleExchange.at(await this.factory.exchange());
     this.params = await Parameters.at(await this.core.params());
-    this.voting = await SimpleVoting.at(await this.factory.simpleVoting());
     const data2 = await this.core.createTCD(
       10,
       3,
@@ -203,12 +201,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       // castVote
-      await this.voting.castVote(alice, this.params.address, 1, 50, 0, {
+      await this.params.voteOnProposal(alice, 0, true, {
         from: alice,
       });
-      await time.increase(time.duration.seconds(60));
-      // resolvePoll
-      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       (await this.params.get(web3.utils.fromAscii('data:min_provider_stake')))
         .toNumber()
         .should.eq(20);

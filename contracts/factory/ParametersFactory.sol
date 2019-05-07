@@ -6,11 +6,11 @@ import "../feeless/ExecutionDelegator.sol";
 
 
 library ParametersFactory {
-  function create(CommunityToken token, VotingInterface voting)
+  function create(CommunityToken token)
     external
     returns (Parameters)
   {
-    Parameters params = new Parameters(token, voting);
+    Parameters params = new Parameters(token);
     return params;
   }
 }

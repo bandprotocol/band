@@ -7,7 +7,6 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const SimpleVoting = artifacts.require('SimpleVoting');
 const CommitRevealVoting = artifacts.require('CommitRevealVoting');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
@@ -41,7 +40,6 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
     this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.params = await Parameters.at(await this.core.params());
-    this.sVoting = await SimpleVoting.at(await this.factory.simpleVoting());
     this.voting = await CommitRevealVoting.at(
       await this.factory.commitRevealVoting(),
     );
@@ -784,23 +782,15 @@ contract('TCR', ([_, owner, alice, bob, carol]) => {
         },
       );
       // start vote for new min_deposit
-      const votes = [[alice, 600, 0], [bob, 600, 0], [carol, 0, 600]];
-      const proposeID = 1;
+      const votes = [[alice, true], [bob, false], [carol, true]];
+      const proposeID = 0;
       // everyone commit
-      for (const [person, yes, no] of votes) {
-        await this.sVoting.castVote(
-          person,
-          this.params.address,
-          proposeID,
-          yes,
-          no,
-          { from: person },
-        );
+      for (const [person, accepted] of votes) {
+        await this.params.voteOnProposal(person, proposeID, accepted, {
+          from: person,
+        });
       }
       await time.increase(time.duration.seconds(60));
-      await this.sVoting.resolvePoll(this.params.address, proposeID, {
-        from: alice,
-      });
     });
     it('New min_deposit should have new value', async () => {
       (await this.tcr.get(web3.utils.fromAscii('min_deposit')))

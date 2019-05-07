@@ -4,7 +4,11 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 import "./feeless/Feeless.sol";
+import "./utils/Fractional.sol";
+import "./utils/KeyUtils.sol";
+
 import "./voting/VotingInterface.sol";
+import "./token/SnapshotToken.sol";
 
 /*
  * @title Parameters
@@ -13,21 +17,35 @@ import "./voting/VotingInterface.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
+contract Parameters is Ownable, VotingParameters, Feeless {
   using SafeMath for uint256;
+  using Fractional for uint256;
+  using KeyUtils for bytes8;
 
   event ProposalProposed(  // A new proposal is proposed.
-    uint256 indexed proposalID,
+    uint256 indexed proposalId,
     address indexed proposer,
-    bytes32 reasonHash
+    bytes32 reasonHash,
+    uint256 expirationTime,
+    uint256 totalVotingPower,
+    uint256 voteMinParticipation,
+    uint256 voteSupportRequiredPct,
+    uint256 snapshotNonce
+  );
+
+  event ProposalVoted(  // A vote is casted onp proposal by a user
+    uint256 indexed proposalId,
+    address indexed voter,
+    bool vote,
+    uint256 votingPower
   );
 
   event ProposalAccepted( // A proposol is accepted.
-    uint256 indexed proposalID
+    uint256 indexed proposalId
   );
 
   event ProposalRejected( // A proposol is rejected.
-    uint256 indexed proposalID
+    uint256 indexed proposalId
   );
 
   event ParameterChanged(  // A parameter is changed.
@@ -36,20 +54,20 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
   );
 
   event ParameterProposed(  // A parameter change is proposed.
-    uint256 indexed proposalID,
+    uint256 indexed proposalId,
     bytes32 indexed key,
     uint256 value
   );
 
-  struct ExitedValue {
-    bool exited;
+  struct ExistedValue {
+    bool existed;
     uint256 value;
   }
 
-  mapping (bytes32 => ExitedValue) public params;
-
   SnapshotToken public token;
-  VotingInterface public voting;
+  mapping (bytes32 => ExistedValue) public params;
+
+  enum ProposalState { Invalid, Active, Yes, No, Inconclusive }
 
   struct KeyValue {
     bytes32 key;
@@ -57,37 +75,49 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
   }
 
   struct Proposal {
-    uint256 changeCount;
-    mapping (uint256 => KeyValue) changes;
+    uint256 changesCount;               // The number of parameter changes
+    mapping (uint256 => KeyValue) changes;  // The list of parameter changes in proposal
+    uint256 snapshotNonce;              // The votingPowerNonce to count voting power
+    uint256 expirationTime;             // Expiration timestamp of commit period
+    uint256 voteSupportRequiredPct;     // Threshold % for detemining poll result
+    uint256 voteMinParticipation;       // The minimum # of votes required
+    uint256 totalVotingPower;           // The total voting power at this snapshotNonce
+    uint256 yesCount;                   // The current total number of YES votes
+    uint256 noCount;                    // The current total number of NO votes
+    mapping (address => bool) isVoted;  // Mapping for check who already voted
+    ProposalState proposalState;                // The state of this proposal.
   }
 
-  uint256 public nextProposalNonce = 1;
-  mapping (uint256 => Proposal) public proposals;
+  Proposal[] public proposals;
 
-  constructor(SnapshotToken _token, VotingInterface _voting) public {
+  modifier proposalMustBeActive(uint256 proposalId) {
+    require(proposals[proposalId].proposalState == ProposalState.Active);
+    _;
+  }
+
+  constructor(SnapshotToken _token) public {
     token = _token;
-    voting = _voting;
   }
 
   /**
    * @dev Return the value at the given key. Revert if the value is not set.
    */
   function get(bytes32 key) public view returns (uint256) {
-    ExitedValue storage param = params[key];
-    require(param.exited);
+    ExistedValue storage param = params[key];
+    require(param.existed);
     return param.value;
   }
 
-  function getProposalChange(uint256 proposalID, uint256 changeIndex)
+  function getProposalChange(uint256 proposalId, uint256 changeIndex)
     public view
     returns (bytes32, uint256)
   {
-    KeyValue memory keyValue = proposals[proposalID].changes[changeIndex];
+    KeyValue memory keyValue = proposals[proposalId].changes[changeIndex];
     return (keyValue.key, keyValue.value);
   }
 
   function set(bytes32 key, uint256 value) public onlyOwner {
-    params[key].exited = true;
+    params[key].existed = true;
     params[key].value = value;
     emit ParameterChanged(key, value);
   }
@@ -101,41 +131,126 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
     returns (uint256)
   {
     require(keys.length == values.length);
-    uint256 proposalID = nextProposalNonce;
-    nextProposalNonce = proposalID.add(1);
-    emit ProposalProposed(proposalID, sender, reasonHash);
-    proposals[proposalID].changeCount = keys.length;
+    uint256 proposalId = proposals.length;
+    // Get parameter for create proposal
+    uint256 expirationTime = now.add(get("params:expiration_time"));
+    uint256 voteMinParticipationPct = get("params:min_participation_pct");
+    uint256 voteSupportRequiredPct = get( "params:support_required_pct");
+    uint256 voteMinParticipation = voteMinParticipationPct.mulFrac(token.totalSupply());
+
+    proposals.push(Proposal({
+      changesCount: keys.length,
+      snapshotNonce: token.votingPowerChangeNonce(),
+      expirationTime: expirationTime,
+      voteSupportRequiredPct: voteSupportRequiredPct,
+      voteMinParticipation: voteMinParticipation,
+      totalVotingPower: token.totalSupply(),
+      yesCount: 0,
+      noCount: 0,
+      proposalState: ProposalState.Active
+    }));
+
+    emit ProposalProposed(
+      proposalId,
+      sender,
+      reasonHash,
+      token.totalSupply(),
+      expirationTime,
+      voteSupportRequiredPct,
+      voteMinParticipation,
+      token.votingPowerChangeNonce()
+    );
+
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];
       uint256 value = values[index];
-      emit ParameterProposed(proposalID, key, value);
-      proposals[proposalID].changes[index] = KeyValue(key, value);
+      emit ParameterProposed(proposalId, key, value);
+      proposals[proposalId].changes[index] = (KeyValue({key: key, value: value}));
     }
-    require(voting.startPoll(token, proposalID, "params:", this));
-    return proposalID;
+
+
+    return proposalId;
+  }
+
+  function voteOnProposal(
+    address sender,
+    uint256 proposalId,
+    bool accepted
+  )
+    public
+    feeless(sender)
+    proposalMustBeActive(proposalId)
+  {
+    Proposal storage proposal = proposals[proposalId];
+    require(now < proposal.expirationTime);
+    require(!proposal.isVoted[sender]);
+    uint256 votingPower = token.historicalVotingPowerAtNonce(
+      sender,
+      proposal.snapshotNonce
+    );
+    require(votingPower > 0);
+    if (accepted) {
+      proposal.yesCount = proposal.yesCount.add(votingPower);
+    } else {
+      proposal.noCount = proposal.noCount.add(votingPower);
+    }
+    proposal.isVoted[sender] = true;
+    emit ProposalVoted(proposalId, sender, accepted, votingPower);
+
+    // Auto resolve
+    // Check yesVote more than totalVotingPower * voteSupportRequiredPct
+    uint256 minVoteToAccepted = proposal.voteSupportRequiredPct.mulFrac(proposal.totalVotingPower);
+    if (proposal.yesCount >= minVoteToAccepted) {
+      _acceptProposal(proposalId);
+      return;
+    }
+    uint256 minVoteToRejected = proposal.totalVotingPower.sub(minVoteToAccepted);
+    if (proposal.noCount > minVoteToRejected) {
+      _rejectProposal(proposalId);
+    }
   }
 
   /**
-   * @dev Called by the voting contract once the poll is resolved.
+   * @dev Call to resolve a proposal
    */
-  function onResolved(uint256 proposalID, PollState pollState)
+  function resolve(uint256 proposalId)
     public
-    returns (bool)
+    proposalMustBeActive(proposalId)
   {
-    require(msg.sender == address(voting));
-    Proposal storage proposal = proposals[proposalID];
-    if (pollState == PollState.Yes) {
-      for (uint256 index = 0; index < proposal.changeCount; ++index) {
-        bytes32 key = proposal.changes[index].key;
-        uint256 value = proposal.changes[index].value;
-        params[key].exited = true;
-        params[key].value = value;
-        emit ParameterChanged(key, value);
+    Proposal storage proposal = proposals[proposalId];
+    require(now >= proposal.expirationTime);
+
+    uint256 yesCount = proposal.yesCount;
+    uint256 noCount = proposal.noCount;
+    uint256 totalCount = yesCount.add(noCount);
+
+    if (totalCount >= proposal.voteMinParticipation) {
+      if (yesCount.mul(Fractional.getDenominator()) >= proposal.voteSupportRequiredPct.mul(totalCount)) {
+        _acceptProposal(proposalId);
+      } else {
+        _rejectProposal(proposalId);
       }
-      emit ProposalAccepted(proposalID);
     } else {
-      emit ProposalRejected(proposalID);
+      _rejectProposal(proposalId);
     }
-    return true;
+  }
+
+  function _acceptProposal(uint256 proposalId) internal {
+    Proposal storage proposal = proposals[proposalId];
+    proposal.proposalState = ProposalState.Yes;
+    for (uint256 index = 0; index < proposal.changesCount; ++index) {
+      bytes32 key = proposal.changes[index].key;
+      uint256 value = proposal.changes[index].value;
+      params[key].existed = true;
+      params[key].value = value;
+      emit ParameterChanged(key, value);
+    }
+    emit ProposalAccepted(proposalId);
+  }
+
+  function _rejectProposal(uint256 proposalId) internal {
+    Proposal storage proposal = proposals[proposalId];
+    proposal.proposalState = ProposalState.No;
+    emit ProposalRejected(proposalId);
   }
 }

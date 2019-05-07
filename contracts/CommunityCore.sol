@@ -40,7 +40,7 @@ contract CommunityCore {
     registry = _registry;
     band = _registry.band();
     token = CommunityTokenFactory.create(name, symbol);
-    params = ParametersFactory.create(token, _registry.simpleVoting());
+    params = ParametersFactory.create(token);
     bondingCurve = BondingCurveFactory.create(
       band,
       token,

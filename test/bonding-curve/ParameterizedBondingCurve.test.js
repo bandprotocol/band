@@ -6,7 +6,6 @@ const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BandRegistry = artifacts.require('BandRegistry');
-const SimpleVoting = artifacts.require('SimpleVoting');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 require('chai').should();
@@ -44,7 +43,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.params = await Parameters.at(await this.core.params());
-    this.voting = await SimpleVoting.at(await this.factory.simpleVoting());
   });
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
@@ -252,11 +250,10 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
           from: owner,
         },
       );
-      await this.voting.castVote(alice, this.params.address, 1, 100, 0, {
+      await this.params.voteOnProposal(alice, 0, true, {
         from: alice,
       });
       await time.increase(time.duration.days(30));
-      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
         alice,
@@ -287,11 +284,10 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         },
       );
 
-      await this.voting.castVote(alice, this.params.address, 1, 100, 0, {
+      await this.params.voteOnProposal(alice, 0, true, {
         from: alice,
       });
       await time.increase(time.duration.hours(1));
-      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
       // First sale
       await time.increase(time.duration.hours(9));
       const calldata = this.curve.contract.methods.sell(_, 0, 0).encodeABI();
@@ -352,11 +348,10 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         },
       );
 
-      await this.voting.castVote(alice, this.params.address, 1, 100, 0, {
+      await this.params.voteOnProposal(alice, 0, true, {
         from: alice,
       });
       await time.increase(time.duration.seconds(120));
-      await this.voting.resolvePoll(this.params.address, 1, { from: alice });
     });
 
     it('should impose commission on purchases', async () => {
