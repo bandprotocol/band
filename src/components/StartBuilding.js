@@ -32,6 +32,10 @@ const FilledButton = styled(Button)`
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
   background-color: #6b7df5;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 `
 
 const OutlineButton = styled(Button)`
@@ -44,6 +48,10 @@ const OutlineButton = styled(Button)`
   border-radius: 6px;
   border: solid 1px ${props => props.borderColor};
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 `
 
 export default ({ style = {}, ...props }) => (

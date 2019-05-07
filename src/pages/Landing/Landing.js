@@ -27,6 +27,7 @@ import HeroSrc from 'images/hero.png'
 import BandInTheMiddle from 'images/band-overview.png'
 import Sequoia from 'images/sequoia.svg'
 import Dunamu from 'images/dunamu.svg'
+import Seax from 'images/seax.png'
 import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
@@ -35,7 +36,7 @@ import AppCHT from 'images/appCoinhatcher.svg'
 import AppDS from 'images/appDataSource.svg'
 import LandingBandDB from 'images/landing-band-database.png'
 import LandingDataGov from 'images/landing-data-governance.png'
-import Seax from 'images/seax.png'
+
 import SSExample1 from 'images/SSExample1.png'
 import SSExample2 from 'images/SSExample2.png'
 
@@ -50,6 +51,10 @@ const FilledButton = styled(Button)`
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
   background-color: #6b7df5;
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 `
 
 const OutlineButton = styled(Button)`
@@ -62,6 +67,10 @@ const OutlineButton = styled(Button)`
   border-radius: 6px;
   border: solid 1px ${props => props.borderColor};
   cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
 `
 
 export default class LandingPage extends React.Component {
@@ -205,7 +214,7 @@ export default class LandingPage extends React.Component {
                   <Image src={Dunamu} width="245px" />
                 </Flex>
                 <Flex mt="35px">
-                  <Image src={Seax} width="110px" height="50px" />
+                  <Image src={Seax} width="105px" height="45px" />
                 </Flex>
               </Flex>
               <Flex mx="18px" />
