@@ -35,42 +35,42 @@ export default () => {
         <Flex flexDirection="column" alignItems="center" mb={4}>
           <Box mt={5} mb={2}>
             <H1 textAlign="center" dark>
-              Token Curated Registries
+              Why Band Protocol
             </H1>
           </Box>
           <Text textAlign="center" width="860px" fontSize={2} lineHeight={1.94}>
-            Centralized information providers are susceptible to corruption and
-            malicious behavior without appropriate checks and balances. Token
-            Curated Registries enables decentralized, reliable and more
-            transparent way to crowd-source information.
+            Availability and reliability are the two main problems when
+            incorporating data into any application. Band Protocol solves the
+            problem using incentive structures of token to make sure data is
+            accurate, while utilizing open nature of blockchain to distribute
+            data.
           </Text>
-          <Image src={TCRSrc} my={5} height="280px" />
-          <Card bg="#f0f2ff" pt={4} pb={5} px="42px" width="780px">
+          <Flex my="100px" />
+          <Card bg="#f0f2ff" py="40px" px="42px" width="780px">
             <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
-              Token curated registries provide a more reliable and transparent
-              data organization mechanism. Band combines various data sources in
-              order to ensure that particular registries can provide meaningful
-              data quickly and reliably for users at any time.
+              Band is an end-to-end solution for unparalleled data curation. We
+              utilize state of the art technology to provide a component layer
+              solution for managing data in the Web3 technology stack.
               <br />
               <br />
-              As the Band ecosystem grows with more data overtime, the
-              registries continue to become more expansive with a larger volume
-              of data in the feed for anyone to utilize with ease.
+              Band provides a standard framework for community curated data
+              governance. This in turn enables Band to create a socially
+              scalable method for the widespread adoption and integration of
+              trusted data that all dApps can utilize.
             </Text>
-            <Flex justifyContent="center">
-              <Button variant="outline" style={{ color: '#545454' }}>
-                Explore Datasets
-              </Button>
-              <Button variant="primary" ml={5}>
-                Developer Reference
-              </Button>
-            </Flex>
           </Card>
         </Flex>
-        <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
+        <Flex
+          flexDirection="column"
+          alignItems="center"
+          mb={5}
+          mt={5}
+          style={{ borderTop: '1px solid #e2e2e2' }}
+          pt="50px"
+        >
           <Box mb={2}>
             <H1 textAlign="center" dark>
-              How TCRs work
+              Two problems we solve
             </H1>
           </Box>
           <Image src={TCRWorkSrc} my={4} />

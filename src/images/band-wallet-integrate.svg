@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="682" height="104" viewBox="0 0 682 104">
+    <g fill="none" fill-rule="evenodd">
+        <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(-6 -28)">
+            <tspan x="0" y="100">1</tspan>
+        </text>
+        <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(-6 -28)">
+            <tspan x="30" y="73">Install </tspan> <tspan x="30" y="100">dependencies</tspan>
+        </text>
+        <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(236 -28)">
+            <tspan x="0" y="100">2</tspan>
+        </text>
+        <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(236 -28)">
+            <tspan x="30" y="73">Connect wallet </tspan> <tspan x="30" y="100">provider with </tspan> <tspan x="30" y="127">Web3.js</tspan>
+        </text>
+        <g>
+            <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(511 -28)">
+                <tspan x="0" y="100">3</tspan>
+            </text>
+            <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(511 -28)">
+                <tspan x="30" y="73">Add your token </tspan> <tspan x="30" y="100">to Band Wallet </tspan> <tspan x="30" y="127">Registries</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

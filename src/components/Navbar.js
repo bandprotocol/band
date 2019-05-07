@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
+import { Link as RouterLink } from 'react-router-dom'
 import {
   Link,
   Bold,
@@ -45,9 +46,10 @@ const Nav = styled.nav`
 
 const SubMenu = styled(Flex).attrs({
   px: '20px',
-  py: '35px',
+  justifyContent: 'center',
   flexDirection: 'column',
 })`
+  height: 100%;
   transition: all 0.25s;
   cursor: pointer;
   &:hover {
@@ -55,7 +57,7 @@ const SubMenu = styled(Flex).attrs({
   }
 `
 
-const NavMenu = ({ isSelected, title, links, tabs }) => {
+const NavMenu = ({ isSelected, title, tabs }) => {
   return (
     <Flex
       style={{
@@ -77,38 +79,38 @@ const NavMenu = ({ isSelected, title, links, tabs }) => {
         px="30px"
         alignItems="center"
       >
-        <Link to={links[0]}>
-          <Text color="#7c84a6" fontSize="20px">
-            {title}
-          </Text>
-        </Link>
+        <Text color="#7c84a6" fontSize="20px">
+          {title}
+        </Text>
       </Flex>
       <Flex flexDirection="row" style={{ height: '100%' }}>
         {tabs.map((tab, i) => {
           return (
-            <SubMenu flex={1}>
-              <Text color="white" fontSize="40px">
-                {i + 1}
-              </Text>
-              <Flex mt="80px" style={{ height: '60px' }}>
+            <Link to={tab.link} key={i}>
+              <SubMenu flex={1}>
+                <Text color="white" fontSize="40px">
+                  {i + 1}
+                </Text>
+                <Flex mt="80px" style={{ height: '60px' }}>
+                  <Text
+                    color="white"
+                    fontWeight={500}
+                    fontSize="14px"
+                    lineHeight={1.5}
+                  >
+                    {tab.title}
+                  </Text>
+                </Flex>
                 <Text
                   color="white"
-                  fontWeight={500}
-                  fontSize="14px"
-                  lineHeight={1.5}
+                  fontWeight={300}
+                  fontSize="13px"
+                  lineHeight={1.69}
                 >
-                  {tab.title}
+                  {tab.content}
                 </Text>
-              </Flex>
-              <Text
-                color="white"
-                fontWeight={300}
-                fontSize="13px"
-                lineHeight={1.69}
-              >
-                {tab.content}
-              </Text>
-            </SubMenu>
+              </SubMenu>
+            </Link>
           )
         })}
       </Flex>
@@ -119,6 +121,16 @@ const NavMenu = ({ isSelected, title, links, tabs }) => {
 const Navbar = props => {
   const [showMenu, setShowMenu] = useState(false)
   const [selectedTab, setSelectedTab] = useState(-1)
+
+  useEffect(() => {
+    const handleScroll = function() {
+      console.log('opopopopopop')
+    }
+    window.document.body.addEventListener('scroll', handleScroll)
+
+    return () =>
+      window.document.body.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const selectTab = tabId => {
     setSelectedTab(tabId)
@@ -200,7 +212,7 @@ const Navbar = props => {
   const renderDesktop = () => {
     const { pathname } = props.location
     return (
-      <Flex ml="auto" style={{ position: 'relative' }}>
+      <Flex alignItems="center" onScroll={() => console.log('dfdfdfdfs')}>
         <Box ml="40px">
           <Link to="/why-band">
             <Text fontSize="16px">Why Band?</Text>
@@ -217,10 +229,10 @@ const Navbar = props => {
           <NavMenu
             isSelected={selectedTab === 0}
             title="Products"
-            links={['/products/tcd']}
             tabs={[
               {
                 title: 'Data Tokenization',
+                link: '/products/dataTokenization',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -228,6 +240,7 @@ const Navbar = props => {
               },
               {
                 title: 'Token Curated DataSources',
+                link: '/products/tcd',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -235,6 +248,7 @@ const Navbar = props => {
               },
               {
                 title: 'Token Curated Registries',
+                link: '/products/tcr',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -242,6 +256,7 @@ const Navbar = props => {
               },
               {
                 title: 'Band Web3 Wallet',
+                link: '/products/wallet',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -249,6 +264,7 @@ const Navbar = props => {
               },
               {
                 title: 'Private Data Sharing',
+                link: '/products/privateDataSharing',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -268,10 +284,10 @@ const Navbar = props => {
           <NavMenu
             isSelected={selectedTab === 1}
             title="Explorers"
-            links={['/explorers']}
             tabs={[
               {
                 title: 'Governance Portal',
+                link: '/explorers',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -279,6 +295,7 @@ const Navbar = props => {
               },
               {
                 title: 'Dataset Explorer',
+                link: '/explorers',
                 content: `Spicy jalapeno bacon
             ipsum dolor amet pork
             chop short loin meatball
@@ -303,7 +320,17 @@ const Navbar = props => {
 
   return (
     <Nav>
-      <PageContainer>
+      <Flex
+        bg={showMenu ? '#252b4a' : 'rgba(0,0,0,0)'}
+        style={{
+          margin: '0 auto',
+          height: '100%',
+          width: '940px',
+          transition: 'all 0.5s',
+        }}
+        px="30px"
+        alignItems="center"
+      >
         <Flex
           bg="#2a304e"
           style={{
@@ -319,14 +346,17 @@ const Navbar = props => {
           onClick={() => selectTab(-1)}
           onMouseOver={() => selectTab(-1)}
         />
-        <Flex alignItems="center">
-          <Link dark to="/">
-            <Image src={LogoSrc} height={32} mr={3} />
-          </Link>
-
-          {isMobile() ? renderMobile() : renderDesktop()}
+        <Flex width={1}>
+          <Flex style={{ minWidth: '180px' }}>
+            <Link dark to="/">
+              <Image src={LogoSrc} height={32} mr={3} />
+            </Link>
+          </Flex>
+          <Flex width={1} justifyContent="flex-end">
+            {isMobile() ? renderMobile() : renderDesktop()}
+          </Flex>
         </Flex>
-      </PageContainer>
+      </Flex>
     </Nav>
   )
 }
