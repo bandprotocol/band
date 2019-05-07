@@ -20,8 +20,11 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
-import HeroSrc from 'images/landing-hero.svg'
-import BandInTheMiddle from 'images/bandInTheMiddle.svg'
+import FeatureCard from 'components/FeatureCard'
+import StartBuilding from 'components/StartBuilding'
+
+import HeroSrc from 'images/hero.png'
+import BandInTheMiddle from 'images/band-overview.png'
 import Sequoia from 'images/sequoia.svg'
 import Dunamu from 'images/dunamu.svg'
 import Reddit from 'images/reddit.svg'
@@ -30,9 +33,8 @@ import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import AppCHT from 'images/appCoinhatcher.svg'
 import AppDS from 'images/appDataSource.svg'
-import LandingBandDB from 'images/landingBandDB.svg'
-import LandingDataGov from 'images/landingDataGov.svg'
-import LandingStartBuilding from 'images/landingStartBuilding.svg'
+import LandingBandDB from 'images/landing-band-database.png'
+import LandingDataGov from 'images/landing-data-governance.png'
 import Seax from 'images/seax.png'
 import SSExample1 from 'images/SSExample1.png'
 import SSExample2 from 'images/SSExample2.png'
@@ -68,7 +70,7 @@ export default class LandingPage extends React.Component {
       <Box style={{ color: '#ffffff' }}>
         <Box style={{ background: colors.gradient.dark }}>
           <PageContainer>
-            <Flex py={5}>
+            <Flex py="150px">
               <Box flex={1}>
                 <Text
                   lineHeight={1.6}
@@ -100,9 +102,9 @@ export default class LandingPage extends React.Component {
                   <FilledButton>Start Building</FilledButton>
                 </Flex>
               </Box>
-              <Box flex={1}>
-                <Image src={HeroSrc} height="320" />
-              </Box>
+              <Flex flex={1} justifyContent="flex-end" alignItems="center">
+                <Image src={HeroSrc} height="340px" />
+              </Flex>
             </Flex>
             <Flex
               bg="#36406e"
@@ -132,29 +134,24 @@ export default class LandingPage extends React.Component {
                 </Text>
               </Flex>
               <Flex alignItems="center" mt="35px">
-                <Button
-                  bg="rgba(0,0,0,0)"
-                  fontWeight={400}
-                  fontSize="20px"
-                  lineHeight={1.45}
-                >
+                <Text fontWeight={400} fontSize="20px" lineHeight={1.45} mr={3}>
                   Example Usecases
-                </Button>
-                <Text color="#5eebbe" fontSize="20px">
+                </Text>
+                <Text color="#5eebbe" fontSize="18px">
                   <i className="fas fa-arrow-right" />
                 </Text>
               </Flex>
             </Flex>
-            <Box pt={6} pb={6}>
+            <Box pt={6} pb={5}>
               <Text
                 textAlign="center"
                 fontWeight={900}
                 fontSize="34px"
                 letterSpacing="1.3px"
+                mb={3}
               >
                 Band Protocol Provides
               </Text>
-              <Flex my="5px" />
               <Text
                 color="#f7f8ff"
                 textAlign="center"
@@ -166,108 +163,25 @@ export default class LandingPage extends React.Component {
               </Text>
             </Box>
             <Flex flexDirection="row" justifyContent="center">
-              <Flex
-                bg="#f7f8ff"
-                style={{
-                  width: '425px',
-                  height: '325px',
-                  borderRadius: '10px',
-                  boxShadow: '0 23px 20px 0 rgba(0, 0, 0, 0.25)',
-                }}
-                flexDirection="column"
+              <FeatureCard
+                subtitle="Develop using"
+                title="Band Datasets"
+                content="Take advantage of Token Curated DataSource as a trusted source of crypto price, sport and loterry."
+                linkText="Integrate Data with your DApps"
+                mr="36px"
               >
-                <Flex pt="30px" pl="30px" flexDirection="column">
-                  <Text color="#6b8bf5" fontWeight={900}>
-                    Develop using
-                  </Text>
-                  <Flex my="5px" />
-                  <Text color="#2b314f" fontWeight={900} fontSize="24px">
-                    Band Datasets
-                  </Text>
-                  <Flex my="5px" />
-                  <Text
-                    fontWeight={300}
-                    lineHeight={1.57}
-                    color="#4c4c4c"
-                    fontSize="14px"
-                  >
-                    Take advantage of Token Curated DataSource as a trusted
-                    source of crypto price, sport and loterry.
-                  </Text>
-                </Flex>
-                <Flex my="15px" />
-                <Image src={LandingBandDB} width="100%" />
-                <Flex
-                  pl="30px"
-                  style={{
-                    borderTop: '1px solid #eaeeff',
-                    position: 'relative',
-                    height: '100%',
-                  }}
-                  alignItems="center"
-                >
-                  <Text color="#252945">Integrate Data with your DApps</Text>
-                  <Flex style={{ position: 'absolute', right: '30px' }}>
-                    <Text color="#6b8bf5" fontWeight={900}>
-                      <i className="fas fa-chevron-right" />
-                    </Text>
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Flex mx="18px" />
-              <Flex
-                bg="#f7f8ff"
-                style={{
-                  width: '425px',
-                  height: '325px',
-                  borderRadius: '10px',
-                  boxShadow: '0 23px 20px 0 rgba(0, 0, 0, 0.25)',
-                }}
-                flexDirection="column"
+                <Image src={LandingBandDB} height="92px" />
+              </FeatureCard>
+              <FeatureCard
+                subtitle="Participate in"
+                title="Data Governance"
+                content="Stake on data providers you trust and earn provider fee."
+                linkText="Governance Portal"
               >
-                <Flex
-                  pt="30px"
-                  pl="30px"
-                  flexDirection="column"
-                  style={{ maxWidth: '240px' }}
-                >
-                  <Text color="#6b8bf5" fontWeight={900}>
-                    Participate in
-                  </Text>
-                  <Flex my="5px" />
-                  <Text color="#2b314f" fontWeight={900} fontSize="24px">
-                    Data Governance
-                  </Text>
-                  <Flex my="5px" />
-                  <Text
-                    fontWeight={300}
-                    lineHeight={1.57}
-                    color="#4c4c4c"
-                    fontSize="14px"
-                  >
-                    Stake on data providers you trust and earn provider fee.
-                  </Text>
-                </Flex>
-                <Flex mt="30px" pl="30px" mb="30px">
-                  <Image src={LandingDataGov} width="213px" />
-                </Flex>
-                <Flex
-                  pl="30px"
-                  style={{
-                    borderTop: '1px solid #eaeeff',
-                    position: 'relative',
-                    height: '100%',
-                  }}
-                  alignItems="center"
-                >
-                  <Text color="#252945">Governance Portal</Text>
-                  <Flex style={{ position: 'absolute', right: '30px' }}>
-                    <Text color="#6b8bf5" fontWeight={900}>
-                      <i className="fas fa-chevron-right" />
-                    </Text>
-                  </Flex>
-                </Flex>
-              </Flex>
+                <Box mt="30px" pl="30px">
+                  <Image src={LandingDataGov} width="215px" />
+                </Box>
+              </FeatureCard>
             </Flex>
             <Flex mt="75px" flexDirection="row" justifyContent="center">
               <Flex
@@ -280,7 +194,7 @@ export default class LandingPage extends React.Component {
                 pl="40px"
               >
                 <Flex>
-                  <Text fontSize="22px" fontWeight={900} color="#8d94bf">
+                  <Text fontSize="22px" fontWeight={600} color="#8d94bf">
                     Partnerships Featuring
                   </Text>
                 </Flex>
@@ -305,7 +219,7 @@ export default class LandingPage extends React.Component {
                 }}
               >
                 <Flex>
-                  <Text fontSize="22px" fontWeight={900} color="#8d94bf">
+                  <Text fontSize="22px" fontWeight={600} color="#8d94bf">
                     Join Band Protocol Community
                   </Text>
                 </Flex>
@@ -347,7 +261,11 @@ export default class LandingPage extends React.Component {
           Img1={SSExample1}
           Img2={SSExample1}
           Img3={SSExample1}
-        />
+        >
+          <Text textAlign="center" fontWeight="600" fontSize="32px">
+            Applications Developed with Band Protocol
+          </Text>
+        </LandingShowcase>
         <LandingShowcase
           background="#21253f"
           title="Community Curated Data Feed for DApps"
@@ -362,58 +280,7 @@ export default class LandingPage extends React.Component {
           Img3={SSExample2}
         />
         <Box py={5} style={{ background: '#17192e' }}>
-          <PageContainer>
-            <Flex
-              pt="65px"
-              pb="35px"
-              px="100px"
-              style={{
-                borderRadius: '10px',
-                boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
-                background: 'linear-gradient(to left, #6083ff, #8266ff)',
-              }}
-            >
-              <Flex style={{ width: '620px' }} flexDirection="column">
-                <Text fontWeight="600" fontSize="32px">
-                  Want to start building?
-                </Text>
-                <Flex my="10px" />
-                <Text fontSize="20px">
-                  Integrating your product right away with Band Protocol SDK
-                </Text>
-                <Flex mt="40px">
-                  <a
-                    href="https://developer.bandprotocol.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <OutlineButton
-                      borderColor="white"
-                      style={{
-                        width: '220px',
-                      }}
-                    >
-                      Technical Doc
-                    </OutlineButton>
-                  </a>
-                  <Flex mx="10px" />
-                  <FilledButton
-                    style={{
-                      width: '220px',
-                      backgroundImage:
-                        'linear-gradient(249deg, #454366, #3a3d5a)',
-                    }}
-                  >
-                    Developer Portal
-                  </FilledButton>
-                </Flex>
-              </Flex>
-              <Flex>
-                <Image src={LandingStartBuilding} width="266px" />
-              </Flex>
-            </Flex>
-            <Flex />
-          </PageContainer>
+          <StartBuilding />
         </Box>
       </Box>
     )

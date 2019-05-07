@@ -27,6 +27,7 @@ const Nav = styled.nav`
   position: sticky;
   top: 0;
   background: ${colors.background.dark};
+  z-index: 999;
 
   ${media.mobile} {
     height: 60px;
@@ -127,32 +128,31 @@ class Navbar extends React.Component {
 
   renderDesktop() {
     const { pathname } = this.props.location
-    console.log('pathname', pathname, pathname === '/developers')
     return (
       <Flex ml="auto">
-        <Box ml={4}>
+        <Box ml="40px">
           <Link to="/why-band">
-            <Text fontSize="14px">Why Band?</Text>
+            <Text fontSize="16px">Why Band?</Text>
           </Link>
         </Box>
-        <Box ml={4}>
+        <Box ml="40px">
           <Link to="/products/tcd">
-            <Text fontSize="14px">Products</Text>
+            <Text fontSize="16px">Products</Text>
           </Link>
         </Box>
-        <Box ml={4}>
+        <Box ml="40px">
           <Link to="/explorers">
-            <Text fontSize="14px">Explorers</Text>
+            <Text fontSize="16px">Explorers</Text>
           </Link>
         </Box>
-        <Box ml={4}>
+        <Box ml="40px">
           <Link to="/company">
-            <Text fontSize="14px">Company</Text>
+            <Text fontSize="16px">Company</Text>
           </Link>
         </Box>
-        <Box ml={4}>
+        <Box ml="40px">
           <AbsoluteLink target="_blank" to="https://medium.com/bandprotocol">
-            <Text fontSize="14px">Blog</Text>
+            <Text fontSize="16px">Blog</Text>
           </AbsoluteLink>
         </Box>
       </Flex>

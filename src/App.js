@@ -14,7 +14,9 @@ import Navbar from 'components/Navbar'
 import Footer from 'components/Footer'
 
 import LandingPage from 'pages/Landing'
+import CompanyPage from 'pages/Company'
 import TCDPage from 'pages/products/TCD'
+import TCRPage from 'pages/products/TCR'
 import NotFoundPage from 'pages/404'
 
 export default class App extends Component {
@@ -27,6 +29,8 @@ export default class App extends Component {
             <Switch>
               <Route exact path="/" component={LandingPage} />
               <Route exact path="/products/tcd" component={TCDPage} />
+              <Route exact path="/products/tcr" component={TCRPage} />
+              <Route exact path="/company" component={CompanyPage} />
               <Route path="/" component={NotFoundPage} />
             </Switch>
             <Footer />

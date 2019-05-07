@@ -7,11 +7,11 @@ import MailchimpSubscribe from 'react-mailchimp-subscribe'
 const Input = styled.input`
   appearance: none;
   padding: ${p => (p.large ? '8px 12px 8px 28px' : '4px 9px 4px 20px')};
-  border-radius: 4px;
+  border-radius: 3px;
   background: white;
   border: 0;
   outline: 0;
-  font-size: ${p => (p.large ? 16 : 14)}px;
+  font-size: 13px;
   width: ${p => (p.large ? 350 : 250)}px;
   outline: none;
   transition: all 0.2s;
@@ -24,7 +24,7 @@ const Input = styled.input`
 const Container = styled.div`
   display: flex;
   background: #ffffff;
-  border-radius: 4px;
+  border-radius: 3px;
   max-width: calc(100vw - 40px);
 `
 
@@ -75,11 +75,11 @@ export default class Subscribe extends React.Component {
                 <Button
                   variant="primary"
                   style={{
-                    fontSize: large ? 13 : 12,
+                    fontSize: 11,
                     borderBottomLeftRadius: 0,
                     borderTopLeftRadius: 0,
-                    padding: large ? '1em 2em' : '0.8em 1em',
-                    fontWeight: 700,
+                    padding: '1em 2em',
+                    fontWeight: 500,
                     marginLeft: 'auto',
                   }}
                   onClick={() => subscribe({ EMAIL: this.state.value })}

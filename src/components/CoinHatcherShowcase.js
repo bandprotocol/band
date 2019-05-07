@@ -12,63 +12,18 @@ export default class LandingShowcase extends React.Component {
     this.setState({ selectedTab: tabId })
   }
   render() {
-    const {
-      background,
-      title,
-      description,
-      link1,
-      link2,
-      Logo,
-      Img1,
-      Img2,
-      Img3,
-      children,
-    } = this.props
+    const { background, Img1, Img2, Img3, children } = this.props
     const { selectedTab } = this.state
     const getWHByTab = tab =>
       tab === selectedTab
         ? { width: '410px', height: '335px', opacity: 1 }
-        : { width: '360px', height: '270px', opacity: 0.4 }
+        : { width: '360px', height: '270px', opacity: 0.6 }
     return (
-      <Box py={5} style={{ background: background }}>
+      <Box pb={4} mx="-80px" style={{ background: background }}>
         <PageContainer>
           {children}
-          <Flex flexDirection="row" justifyContent="center" mt="70px">
-            <Image src={Logo} width="181px" />
-            <Flex ml="110px" flexDirection="column" style={{ width: '620px' }}>
-              <Text fontSize="18px">{title}</Text>
-              <Flex mt="20px">
-                <Text fontSize="16px" color="#8d94bf" lineHeight={1.75}>
-                  {description}
-                </Text>
-              </Flex>
-              <Flex flexDirection="row" mt="20px">
-                <Flex fontSize="16px" mr="85px">
-                  <a
-                    style={{ color: 'white' }}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={'https://' + link1.toLowerCase()}
-                  >
-                    {link1}
-                  </a>
-                  <Flex mx="5px" />
-                  <Text color="#6b8bf5" fontSize="18px">
-                    <i className="fas fa-arrow-right" />
-                  </Text>
-                </Flex>
-                <Flex fontSize="16px">
-                  {link2}
-                  <Flex mx="5px" />
-                  <Text color="#6b8bf5" fontSize="18px">
-                    <i className="fas fa-arrow-right" />
-                  </Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
+
           <Flex
-            mt="50px"
             align="flex-end"
             flexDirection="row"
             style={{ height: '335px' }}
@@ -126,32 +81,32 @@ export default class LandingShowcase extends React.Component {
               onClick={() => this.onSelectTab(0)}
               style={{
                 width: '48px',
-                height: '4px',
+                height: '6px',
                 borderRadius: '1px',
                 cursor: 'pointer',
               }}
-              bg={selectedTab === 0 ? '#6b8bf5' : '#f7f8ff'}
+              bg={selectedTab === 0 ? '#6b8bf5' : '#cdd3ff'}
             />
             <Flex
               mx="10px"
               onClick={() => this.onSelectTab(1)}
               style={{
                 width: '48px',
-                height: '4px',
+                height: '6px',
                 borderRadius: '1px',
                 cursor: 'pointer',
               }}
-              bg={selectedTab === 1 ? '#6b8bf5' : '#f7f8ff'}
+              bg={selectedTab === 1 ? '#6b8bf5' : '#cdd3ff'}
             />
             <Flex
               onClick={() => this.onSelectTab(2)}
               style={{
                 width: '48px',
-                height: '4px',
+                height: '6px',
                 borderRadius: '1px',
                 cursor: 'pointer',
               }}
-              bg={selectedTab === 2 ? '#6b8bf5' : '#f7f8ff'}
+              bg={selectedTab === 2 ? '#6b8bf5' : '#cdd3ff'}
             />
           </Flex>
         </PageContainer>

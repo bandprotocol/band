@@ -19,49 +19,13 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
+import FeatureCard from 'components/FeatureCard'
+import StartBuilding from 'components/StartBuilding'
+
 import TCDSrc from 'images/product-tcd.svg'
 import TCDWorkSrc from 'images/tcd-work.svg'
-import TCDPriceFeed from 'images/tcd-price-feed.svg'
-import TCDCrossChain from 'images/tcd-cross-chain.svg'
-
-const UseCaseCard = ({ title, topic, description, image, footer, link }) => (
-  <Card
-    pt={4}
-    px={4}
-    style={{
-      width: '405px',
-      borderRadius: '10px',
-      boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
-      backgroundColor: '#ffffff',
-    }}
-  >
-    <Flex flexDirection="column" style={{ height: '100%' }}>
-      <Text fontSize={1} fontWeight="bold" color="#6b8bf5" mb={2}>
-        {title}
-      </Text>
-      <Text fontSize={4} fontWeight="bold" color="#2b314f" mb={3}>
-        {topic}
-      </Text>
-      <Text fontSize={0} color="#4c4c4c" mb={4}>
-        {description}
-      </Text>
-      <Flex flexDirection="column">
-        <Image src={image} />
-      </Flex>
-      <Flex flexDirection="column" mt="auto">
-        <Box mx="-32px" style={{ borderBottom: '1px solid #fafafa' }} />
-        <Flex>
-          <Text fontSize={1} color="#252945" py={3}>
-            {footer}
-          </Text>
-          <Text fontSize={1} color="#6b8bf5" fontWeight="bold" py={3} ml="auto">
-            >
-          </Text>
-        </Flex>
-      </Flex>
-    </Flex>
-  </Card>
-)
+import TCDPriceFeed from 'images/tcd-price-feed.png'
+import TCDCrossChain from 'images/tcd-cross-chain.png'
 
 export default class LandingPage extends React.Component {
   render() {
@@ -85,7 +49,7 @@ export default class LandingPage extends React.Component {
               a network of data providers curated by community members.
             </Text>
             <Image src={TCDSrc} my={5} />
-            <Card bg="#fafafa" pt={4} pb={5} px="42px" width="780px">
+            <Card bg="#f0f2ff" pt={4} pb={5} px="42px" width="780px">
               <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
                 Without access to external data and APIs the use cases for DApps
                 are limited. Existing data feed solutions such as oracles are
@@ -108,7 +72,7 @@ export default class LandingPage extends React.Component {
               </Flex>
             </Card>
           </Flex>
-          <Flex flexDirection="column" alignItems="center" mb={5}>
+          <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
             <Box mb={2}>
               <H1 textAlign="center" dark>
                 How TCDs work
@@ -117,9 +81,9 @@ export default class LandingPage extends React.Component {
             <Image src={TCDWorkSrc} my={4} />
           </Flex>
         </PageContainer>
-        <Box bg="#fafafa">
+        <Box bg="#f0f2ff">
           <PageContainer>
-            <Flex flexDirection="column" alignItems="center" mb={5}>
+            <Flex flexDirection="column" alignItems="center" pb={5}>
               <Box mt={5} mb={2}>
                 <H1 textAlign="center" dark>
                   Use Cases
@@ -135,44 +99,41 @@ export default class LandingPage extends React.Component {
                 the function of a particular dApp. Examples include:
               </Text>
               <Flex justifyContent="center" mt={5}>
-                <UseCaseCard
-                  title="On-chain, decentralized"
-                  topic="Market Price Feeds"
-                  description="Take crypto-fiat price feed to power decentralized lendings, exchanges and payment services."
-                  image={TCDPriceFeed}
-                  footer="Integrate Price Feed in DeFi"
-                />
-                <Flex width="36px" />
-                <UseCaseCard
-                  title="Trustless Reports of"
-                  topic="Cross-chain Events"
-                  description="Enable multi-chain atomic swap, supercharge DApps, and make true blockchain-agnostic apps."
-                  image={TCDCrossChain}
-                  footer="Explore Ideas"
-                />
+                <FeatureCard
+                  subtitle="On-chain, decentralized"
+                  title="Market Price Feeds"
+                  content="Take crypto-fiat price feed to power decentralized lendings, exchanges and payment services."
+                  linkText="Integrate Price Feed in DeFi"
+                  style={{
+                    boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
+                    background: '#ffffff',
+                  }}
+                  mr="36px"
+                >
+                  <Image mt="auto" src={TCDPriceFeed} width="100%" />
+                </FeatureCard>
+
+                <FeatureCard
+                  subtitle="Trustless Reports of"
+                  title="Cross-chain Events"
+                  content="Enable multi-chain atomic swap, supercharge DApps, and make true blockchain-agnostic apps."
+                  style={{
+                    boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
+                    background: '#ffffff',
+                  }}
+                  linkText="Explore Ideas"
+                >
+                  <Box ml={4} mt="auto">
+                    <Image src={TCDCrossChain} height="105px" />
+                  </Box>
+                </FeatureCard>
               </Flex>
             </Flex>
           </PageContainer>
         </Box>
-        <Box py={5} style={{ background: '#17192e', color: '#ffffff' }}>
-          <PageContainer>
-            <Card
-              borderRadius="10px"
-              boxShadow="0 5px 20px rgba(0, 0, 0, 0.15)"
-              py={4}
-              style={{
-                background: 'linear-gradient(to left, #6083ff, #8266ff)',
-              }}
-            >
-              <Text textAlign="center" fontWeight="600" fontSize="32px">
-                Want to start building?
-              </Text>
-              <Text textAlign="center" fontWeight="600" fontSize="32px">
-                Bun: Don't code this
-              </Text>
-            </Card>
-            <Flex />
-          </PageContainer>
+        <Box bg="#f0f2ff" style={{ height: 180 }} />
+        <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
+          <StartBuilding style={{ transform: 'translateY(-50%)' }} />
         </Box>
       </Box>
     )
