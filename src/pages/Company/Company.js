@@ -136,9 +136,9 @@ const JobTab = ({ title, description, setSelectedTab, isSelected }) => (
 )
 
 const JobTabs = () => {
-  const [selectedTab, setSelectedTab] = useState(1)
+  const [selectedTab, setSelectedTab] = useState(-1)
   return (
-    <Flex flexDirection="row">
+    <Flex flexDirection="row" onMouseLeave={() => setSelectedTab(-1)}>
       <JobTab
         title="Mobile
     App Engineer"
@@ -148,16 +148,16 @@ const JobTabs = () => {
       />
       <Flex mx="15px" />
       <JobTab
-        title="Mobile
-    App Engineer"
+        title="Frontend
+        Engineer"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 1}
         setSelectedTab={() => setSelectedTab(1)}
       />
       <Flex mx="15px" />
       <JobTab
-        title="Mobile
-    App Engineer"
+        title="Backend
+        Engineer"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 2}
         setSelectedTab={() => setSelectedTab(2)}
@@ -304,7 +304,10 @@ export default class LandingPage extends React.Component {
             </Flex>
             <Flex flexDirection="row" mt="50px">
               <TeamComponent name="Prin Rangsiruji" title="Developer" />
-              <TeamComponent name="Mean" title="Administrator" />
+              <TeamComponent
+                name="Atchanata Klunrit"
+                title="Operation and legal office"
+              />
               <Flex flex={1} />
             </Flex>
           </Box>
