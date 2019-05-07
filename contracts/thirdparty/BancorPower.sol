@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
@@ -81,15 +81,15 @@ library BancorPower {
             return (generalExp(baseLogTimesExp >> (MAX_PRECISION - precision), precision), precision);
         }
     }
-    
+
     /**
     *   c >= 10^18
     *
      */
     function log(uint256 _c, uint256 _baseN, uint256 _baseD) internal pure returns (uint256) {
-        // require(_baseN < MAX_NUM) 
+        // require(_baseN < MAX_NUM)
         require(_baseN >= _baseD);
-        
+
         uint256 baseLog;
         uint256 base = _baseN * FIXED_1 / _baseD;
         if (base < OPT_LOG_MAX_VAL) {

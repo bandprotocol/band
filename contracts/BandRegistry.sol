@@ -10,12 +10,7 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
 
   constructor(
     SimpleVoting _simpleVoting,
-    CommitRevealVoting _commitRevealVoting,
-    BondingCurveFactory _bondingCurveFactory,
-    CommunityTokenFactory _communityTokenFactory,
-    ParametersFactory _parametersFactory,
-    TCDFactory _tcdFactory,
-    TCRFactory _tcrFactory
+    CommitRevealVoting _commitRevealVoting
   ) public {
     band = new BandToken();
     band.addMinter(msg.sender);
@@ -23,11 +18,6 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
     exchange.transferOwnership(msg.sender);
     simpleVoting = _simpleVoting;
     commitRevealVoting = _commitRevealVoting;
-    bondingCurveFactory = _bondingCurveFactory;
-    communityTokenFactory = _communityTokenFactory;
-    parametersFactory = _parametersFactory;
-    tcdFactory = _tcdFactory;
-    tcrFactory = _tcrFactory;
   }
 
   function createCommunity(

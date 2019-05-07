@@ -2,7 +2,7 @@ pragma solidity 0.5.0;
 
 import "../data/TCR.sol";
 
-contract TCRFactory {
+library TCRFactory {
   function create(
     bytes8 prefix,
     CommunityToken token,

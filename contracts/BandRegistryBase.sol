@@ -18,10 +18,4 @@ contract BandRegistryBase {
   // Voting Contracts
   SimpleVoting public simpleVoting;
   CommitRevealVoting public commitRevealVoting;
-  // Factory Contracts
-  BondingCurveFactory public bondingCurveFactory;
-  CommunityTokenFactory public communityTokenFactory;
-  ParametersFactory public parametersFactory;
-  TCDFactory public tcdFactory;
-  TCRFactory public tcrFactory;
 }

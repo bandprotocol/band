@@ -70,8 +70,8 @@ contract BondingCurve is ERC20Acceptor {
   function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
     public
     requireToken(collateralToken, buyer, priceLimit)
+    _adjustAutoInflation
   {
-    _adjustAutoInflation();
     uint256 liquiditySpread = buyAmount.mul(getLiquiditySpreadNumerator()).div(RATIONAL_DENOMINATOR);
     uint256 totalMintAmount = buyAmount.add(liquiditySpread);
     uint256 buyPrice = getBuyPrice(totalMintAmount);
@@ -91,8 +91,8 @@ contract BondingCurve is ERC20Acceptor {
   function sell(address seller, uint256 sellAmount, uint256 priceLimit)
     public
     requireToken(bondedToken, seller, sellAmount)
+    _adjustAutoInflation
   {
-    _adjustAutoInflation();
     uint256 sellPrice = getSellPrice(sellAmount);
     require(sellPrice > 0 && sellPrice >= priceLimit);
     require(bondedToken.burn(address(this), sellAmount));
@@ -118,7 +118,7 @@ contract BondingCurve is ERC20Acceptor {
     emit RevenueCollect(beneficiary, rewardAmount);
   }
 
-  function _adjustAutoInflation() internal {
+  modifier _adjustAutoInflation() {
     uint256 currentSupply = getBondingCurveSupplyPoint();
     if (currentSupply != 0 && lastInflationTime < now) {
       uint256 pastSeconds = now.sub(lastInflationTime);
@@ -131,6 +131,7 @@ contract BondingCurve is ERC20Acceptor {
       }
     }
     lastInflationTime = now;
+    _;
   }
 
   function _adjustcurveMultiplier() internal {

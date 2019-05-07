@@ -38,16 +38,16 @@ contract CommunityCore {
   ) public {
     registry = _registry;
     band = _registry.band();
-    token = _registry.communityTokenFactory().create(name, symbol);
-    params = _registry.parametersFactory().create(token, _registry.simpleVoting());
-    bondingCurve = _registry.bondingCurveFactory().create(
+    token = CommunityTokenFactory.create(name, symbol);
+    params = ParametersFactory.create(token, _registry.simpleVoting());
+    bondingCurve = BondingCurveFactory.create(
       band,
       token,
       bondingCollateralEquation,
       params
     );
-    token.setExecDelegator(address(registry));
-    params.setExecDelegator(address(registry));
+    token.setExecDelegator(address(_registry));
+    params.setExecDelegator(address(_registry));
     token.addMinter(address(bondingCurve));
     token.renounceMinter();
     params.set("bonding:liquidity_spread", bondingLiquiditySpread);
@@ -70,7 +70,7 @@ contract CommunityCore {
     params.set("data:owner_revenue_pct", ownerRevenuePct);
     params.set("data:query_price", queryPrice);
     params.set("data:withdraw_delay", withdrawDelay);
-    tcd = registry.tcdFactory().create(
+    tcd = TCDFactory.create(
       band, token, params, bondingCurve, registry.exchange()
     );
     token.addCapper(address(tcd));
@@ -90,7 +90,7 @@ contract CommunityCore {
   ) external {
     require(prefix != bytes8("bonding:") && prefix != bytes8("params:") && prefix != bytes8("data:"));
     require(address(tcr[prefix]) == address(0));
-    tcr[prefix] = registry.tcrFactory().create(
+    tcr[prefix] = TCRFactory.create(
       prefix, token, params, registry.commitRevealVoting(), decayFunction
     );
     params.set(prefix.append("min_deposit"), minDeposit);

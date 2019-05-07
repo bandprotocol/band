@@ -5,7 +5,7 @@ import "../token/ERC20Interface.sol";
 import "../Parameters.sol";
 
 
-contract BondingCurveFactory {
+library BondingCurveFactory {
   function create(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,

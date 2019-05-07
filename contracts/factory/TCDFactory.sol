@@ -7,7 +7,7 @@ import "../Parameters.sol";
 import "../bonding/BondingCurve.sol";
 import "../data/TCD.sol";
 
-contract TCDFactory {
+library TCDFactory {
   function create(
     BandToken band,
     CommunityToken token,
