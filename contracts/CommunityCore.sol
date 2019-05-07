@@ -53,6 +53,7 @@ contract CommunityCore {
     token.renounceMinter();
     params.set("bonding:liquidity_spread", bondingLiquiditySpread);
     params.set("bonding:revenue_beneficiary", uint256(creator));
+    params.set("bonding:inflation_rate", 0);
     params.set("params:expiration_time", paramsExpirationTime);
     params.set("params:min_participation_pct", paramsMinParticipationPct);
     params.set("params:support_required_pct", paramsSupportRequiredPct);

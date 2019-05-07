@@ -41,7 +41,12 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
     uint256 value
   );
 
-  mapping (bytes32 => uint256) public params;
+  struct ExitedValue {
+    bool exited;
+    uint256 value;
+  }
+
+  mapping (bytes32 => ExitedValue) public params;
 
   SnapshotToken public token;
   VotingInterface public voting;
@@ -65,10 +70,12 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
   }
 
   /**
-   * @dev Return the value at the given key. Throw if the value is not set.
+   * @dev Return the value at the given key. Revert if the value is not set.
    */
   function get(bytes32 key) public view returns (uint256) {
-    return params[key];
+    ExitedValue storage param = params[key];
+    require(param.exited);
+    return param.value;
   }
 
   function getProposalChange(uint256 proposalID, uint256 changeIndex)
@@ -80,7 +87,8 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
   }
 
   function set(bytes32 key, uint256 value) public onlyOwner {
-    params[key] = value;
+    params[key].exited = true;
+    params[key].value = value;
     emit ParameterChanged(key, value);
   }
 
@@ -120,7 +128,8 @@ contract Parameters is Ownable, VotingParameters, ResolveListener, Feeless {
       for (uint256 index = 0; index < proposal.changeCount; ++index) {
         bytes32 key = proposal.changes[index].key;
         uint256 value = proposal.changes[index].value;
-        params[key] = value;
+        params[key].exited = true;
+        params[key].value = value;
         emit ParameterChanged(key, value);
       }
       emit ProposalAccepted(proposalID);

@@ -1,4 +1,4 @@
-const { time } = require('openzeppelin-test-helpers');
+const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
@@ -77,6 +77,11 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .toString()
           .should.eq('800000000000000000');
       });
+      it('should revert if key does not exited', async () => {
+        await shouldFail.reverting(
+          this.params.get(web3.utils.fromAscii('params:support_require_pct')),
+        );
+      });
     });
 
     context('Checking parameter requirements', () => {
@@ -137,6 +142,39 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         (await this.voting.polls(this.params.address, 1)).pollState
           .toString()
           .should.be.eq('2');
+      });
+
+      it('should revert if it does not resolve and can get value if proposal was resolved', async () => {
+        await this.params.propose(
+          owner,
+          '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
+          [web3.utils.fromAscii('example_proposal')],
+          [1000000],
+          {
+            from: owner,
+          },
+        );
+
+        await shouldFail.reverting(
+          this.params.get(web3.utils.fromAscii('example_proposal')),
+        );
+
+        // castVote
+        await this.voting.castVote(alice, this.params.address, 1, 60, 0, {
+          from: alice,
+        });
+        await this.voting.castVote(bob, this.params.address, 1, 60, 0, {
+          from: bob,
+        });
+
+        await time.increase(time.duration.seconds(60));
+
+        // resolvePoll
+        await this.voting.resolvePoll(this.params.address, 1, { from: alice });
+
+        (await this.params.get(web3.utils.fromAscii('example_proposal')))
+          .toNumber()
+          .should.be.eq(1000000);
       });
 
       it('should be No case(votes Yes less than support_required_pct)', async () => {
