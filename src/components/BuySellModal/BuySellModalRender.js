@@ -200,6 +200,7 @@ const Advance = ({
   const acceptablePriceChange = ratio
     .mul(BN.parse(type === 'buy' ? 100 + 1.0 * priceChange : 100 - priceChange))
     .div(BN.parse(100.0))
+    .clamp(BN.parse(10000000), BN.parse(0))
   return (
     <Box
       bg="#ffffff"
@@ -256,11 +257,12 @@ const Advance = ({
                     <Text fontSize="12px">BAND</Text>
                   </Flex>
                   <AmountInput
-                    type="text"
+                    type="text" 
                     name="priceLimit"
                     value={priceLimit}
                     placeholder="Price Limit ex. 10000.00"
                     onChange={e => handlePriceLimit(e)}
+                    style={{ width: '90%' }}
                   />
                 </Flex>
               </Flex>
@@ -302,6 +304,7 @@ const Advance = ({
                     value={priceChange}
                     placeholder="Price change ex. 10"
                     onChange={e => handlePriceChange(e)}
+                    style={{ width: '90%' }}
                   />
                 </Flex>
               </Flex>

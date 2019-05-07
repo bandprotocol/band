@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import BuySellModalRender from './BuySellModalRender'
 import { buyToken, sellToken } from 'actions'
 import { bandBalanceSelector } from 'selectors/balances'

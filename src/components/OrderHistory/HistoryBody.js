@@ -16,11 +16,9 @@ const mapStateToProps = (
     page: currentPage,
     pageSize,
   }).toJS()
-  console.log(items)
   while (items.length < pageSize) {
     items.push(null)
   }
-  console.log(items)
   return { items }
 }
 

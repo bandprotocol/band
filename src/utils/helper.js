@@ -160,11 +160,13 @@ export const getParameterDetail = name =>
     },
     liquidity_spread: {
       type: 'PERCENTAGE',
-      description: 'The percentage of the spread between buy and sell price of community token',
+      description:
+        'The percentage of the spread between buy and sell price of community token',
     },
     revenue_beneficiary: {
       type: 'ADDRESS',
-      description: 'The address of the revenue beneficiary from bonding curve spread',
+      description:
+        'The address of the revenue beneficiary from bonding curve spread',
     },
     max_provider_count: {
       type: 'NUMBER',

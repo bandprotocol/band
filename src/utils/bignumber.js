@@ -72,5 +72,15 @@ BN.prototype.calculatePrice = function(amount) {
   ).pretty()
 }
 
+BN.prototype.clamp = function(max, min) {
+  if (this.gte(max)) {
+    return new BN(max)
+  } else if (this.lte(min)) {
+    return new BN(min)
+  } else {
+    return this
+  }
+}
+
 window.BN = BN
 export default BN

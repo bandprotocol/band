@@ -1,13 +1,8 @@
 import React from 'react'
-
 import TransferHistoryRender from './TransferHistoryRender'
-
 import { connect } from 'react-redux'
-
 import { withRouter } from 'react-router-dom'
-
 import { loadTransferHistory } from 'actions'
-
 import { noTransferSelector } from 'selectors/transfer'
 
 class TransferHistory extends React.Component {

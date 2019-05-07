@@ -1,13 +1,8 @@
 import React from 'react'
-
 import OrderHistoryRender from './OrderHistoryRender'
-
 import { connect } from 'react-redux'
-
 import { withRouter } from 'react-router-dom'
-
 import { loadOrderHistory } from 'actions'
-
 import { noOrderSelector } from 'selectors/order'
 
 class OrderHistory extends React.Component {
@@ -32,16 +27,11 @@ class OrderHistory extends React.Component {
   }
 
   render() {
-    const options = [
-      { value: 'all', label: 'All Orders' },
-      { value: 'mine', label: 'My Orders' },
-    ]
     const { selectedOption, currentPage } = this.state
     const { communityAddress, pageSize, numOrders } = this.props
     return (
       <OrderHistoryRender
         numOrders={numOrders}
-        options={options}
         selectedOption={selectedOption}
         onChange={this.onChange.bind(this)}
         communityAddress={communityAddress}

@@ -10,9 +10,15 @@ function* handleLoadTransferHistory({ address }) {
     `
       {
         communityByAddress(address: "${address}") {
-          tokenByCommunityAddress{
-            transfersByTokenAddress{
-              nodes{
+          tokenByCommunityAddress {
+            transfersByTokenAddress(
+              orderBy: TIMESTAMP_DESC
+              filter: {
+                sender: { notEqualTo: "0x0000000000000000000000000000000000000000" }
+                receiver: { notEqualTo: "0x0000000000000000000000000000000000000000" }
+              }
+            ) {
+              nodes {
                 sender
                 receiver
                 value

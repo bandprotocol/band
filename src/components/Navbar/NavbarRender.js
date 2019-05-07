@@ -5,6 +5,7 @@ import Profile from 'images/profile.svg'
 import EthPurple from 'images/ethPurple.svg'
 import Wallet from 'images/wallet.svg'
 import AddCommunity from 'images/add-community.svg'
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Link, Bold, Image, Flex, Box, Text, Card } from 'ui/common'
 import media from 'ui/media'
 
@@ -146,12 +147,41 @@ const BlockTransactions = styled(Card).attrs({
   `}
 `
 
+const SignOutDropDown = styled(Card).attrs({
+  boxShadow:
+    '0 2px 16px 0 rgba(33, 43, 54, 0.08), 0 14px 18px 0 rgba(0, 0, 0, 0.07)',
+  borderRadius: 4,
+  padding: 3,
+})`
+  text-align: center;
+  line-height: 30px;
+  position: absolute;
+  top: 68px;
+  right: 25px;
+  background: #ffffff;
+  width: 100px;
+  transition: all 250ms;
+  overflow: auto;
+  ${p =>
+    p.show
+      ? `
+  opacity: 1;
+`
+      : `
+  opacity: 0;
+  pointer-events: none;
+`}
+`
+
 export default ({
   showWallet,
+  showSignOut,
+  toggleSignOut,
+  signOut,
+  user,
   balance,
   isBND,
   toggleBalance,
-  showLogin,
   txs,
   onClickOutside,
   showBlockTransactions,
@@ -213,13 +243,35 @@ export default ({
                     <Image src={EthPurple} width={40} height={40} />
                     {pending.length !== 0 && <Badge bg={colors.red} />}
                   </DropdownButton>
-                  <Flex ml="15px" mr="10px">
-                    <Image src={Profile} width={40} height={40} />
+                  <Flex
+                    alignItems="center"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => toggleSignOut()}
+                  >
+                    <Flex ml="15px" mr="10px">
+                      {!!user && (
+                        <Jazzicon
+                          diameter={40}
+                          seed={jsNumberForAddress(user)}
+                        />
+                      )}
+                    </Flex>
+                    <Text color="#8868ff">
+                      <i className="fas fa-sort-down" />
+                    </Text>
                   </Flex>
-                  <Text color="#8868ff">
-                    <i className="fas fa-sort-down" />
-                  </Text>
                 </Flex>
+                <SignOutDropDown show={showSignOut}>
+                  <Text
+                    block
+                    size={14}
+                    color="#8868ff"
+                    style={{ cursor: 'pointer' }}
+                    onClick={signOut}
+                  >
+                    Sign Out
+                  </Text>
+                </SignOutDropDown>
                 <BlockTransactions show={showBlockTransactions}>
                   <Text
                     block
@@ -245,7 +297,7 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : (
-              <SignIn onClick={showLogin}>Sign in</SignIn>
+              <SignIn onClick={showWallet}>Sign in</SignIn>
             )}
           </Flex>
         </Flex>

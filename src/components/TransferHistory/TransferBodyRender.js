@@ -78,26 +78,24 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
   </Flex>
 )
 
-export default ({ items }) => {
-  return (
-    <React.Fragment>
-      {items.map((item, i) => {
-        if (!item) {
-          return <Flex width={1} key={i} style={{ height: '60px' }} />
-        }
-        const { txHash, from, to, quantity, timeStamp } = item
-        return (
-          <HistoryRow
-            index={i}
-            from={from}
-            to={to}
-            quantity={quantity.pretty()}
-            timeStamp={timeStamp.formal()}
-            key={i}
-            txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
-          />
-        )
-      })}
-    </React.Fragment>
-  )
-}
+export default ({ items }) => (
+  <React.Fragment>
+    {items.map((item, i) => {
+      if (!item) {
+        return <Flex width={1} key={i} style={{ height: '60px' }} />
+      }
+      const { txHash, from, to, quantity, timeStamp } = item
+      return (
+        <HistoryRow
+          index={i}
+          from={from}
+          to={to}
+          quantity={quantity.pretty()}
+          timeStamp={timeStamp.formal()}
+          key={i}
+          txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
+        />
+      )
+    })}
+  </React.Fragment>
+)

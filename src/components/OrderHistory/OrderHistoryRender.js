@@ -44,7 +44,6 @@ export default ({
   onChangePage,
   pageSize,
 }) => {
-  console.log(numOrders)
   return (
     <Flex
       style={{ borderRadius: '10px' }}
