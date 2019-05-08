@@ -10,6 +10,8 @@ import {
 import { ThemeProvider } from 'styled-components'
 import theme from 'ui/theme'
 
+import ScrollToTop from 'components/ScrollToTop'
+
 import Navbar from 'components/Navbar'
 import Footer from 'components/Footer'
 
@@ -29,6 +31,7 @@ export default class App extends Component {
       <ThemeProvider theme={theme}>
         <Router>
           <React.Fragment>
+            <ScrollToTop />
             <Navbar />
             <Switch>
               <Route exact path="/" component={LandingPage} />
@@ -37,12 +40,12 @@ export default class App extends Component {
               <Route exact path="/products/wallet" component={WalletPage} />
               <Route
                 exact
-                path="/products/dataTokenization"
+                path="/products/data-tokenization"
                 component={DataTokenization}
               />
               <Route
                 exact
-                path="/products/privateDataSharing"
+                path="/products/private-sharing"
                 component={PrivateDataSharing}
               />
               <Route exact path="/company" component={CompanyPage} />

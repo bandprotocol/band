@@ -46,7 +46,7 @@ export default () => {
             data.
           </Text>
           <Flex my="100px" />
-          <Card bg="#f0f2ff" py="40px" px="42px" width="780px">
+          <Card bg="#f6f8ff" py="40px" px="42px" width="780px">
             <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
               Band is an end-to-end solution for unparalleled data curation. We
               utilize state of the art technology to provide a component layer
@@ -76,7 +76,7 @@ export default () => {
           <Image src={TCRWorkSrc} my={4} />
         </Flex>
       </PageContainer>
-      <Box bg="#f0f2ff">
+      <Box bg="#f6f8ff">
         <PageContainer>
           <Flex flexDirection="column" alignItems="center" pb={5}>
             <Box mt={5} mb={2}>
@@ -105,7 +105,7 @@ export default () => {
           />
         </PageContainer>
       </Box>
-      <Box bg="#f0f2ff" style={{ height: 180 }} />
+      <Box bg="#f6f8ff" style={{ height: 180 }} />
       <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
         <StartBuilding style={{ transform: 'translateY(-50%)' }} />
       </Box>

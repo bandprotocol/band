@@ -11,7 +11,7 @@ export default {
   background: {
     dark: '#2b314f',
     darkBlue: '#36406e',
-    lighter: '#fafafa',
+    lighter: '#f6f8ff',
     light: '#ffffff',
   },
   gradient: {

@@ -43,7 +43,7 @@ export default () => {
             network of data providers curated by community members.
           </Text>
           <Image src={TCDSrc} my="30px" />
-          <Card bg="#f0f2ff" pt={4} pb={5} px="42px" width="780px">
+          <Card bg="#f6f8ff" pt={4} pb={5} px="42px" width="780px">
             <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
               Without access to external data and APIs the use cases for DApps
               are limited. Existing data feed solutions such as oracles are
@@ -75,7 +75,7 @@ export default () => {
           <Image src={TCDWorkSrc} my={4} />
         </Flex>
       </PageContainer>
-      <Box bg="#f0f2ff">
+      <Box bg="#f6f8ff">
         <PageContainer>
           <Flex flexDirection="column" alignItems="center" pb={5}>
             <Box mt={5} mb={2}>
@@ -125,7 +125,7 @@ export default () => {
           </Flex>
         </PageContainer>
       </Box>
-      <Box bg="#f0f2ff" style={{ height: 180 }} />
+      <Box bg="#f6f8ff" style={{ height: 180 }} />
       <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
         <StartBuilding style={{ transform: 'translateY(-50%)' }} />
       </Box>

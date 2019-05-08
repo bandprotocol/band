@@ -43,7 +43,7 @@ export default () => {
             the Band ecosystem.
           </Text>
           <Image src={WalletSrc} my={5} height="280px" />
-          <Card bg="#f0f2ff" pt={4} pb={5} px="42px" width="780px">
+          <Card bg="#f6f8ff" pt={4} pb={5} px="42px" width="780px">
             <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
               The Band Web 3 wallet is especially designed to support a diverse
               array of dApps and functionalities. Users can store the tokens
@@ -93,7 +93,7 @@ export default () => {
             and user-centric privacy
           </Text>
           <Flex my="50px" />
-          <Card bg="#f0f2ff" py="50px" px="42px" width="780px">
+          <Card bg="#f6f8ff" py="50px" px="42px" width="780px">
             <Text textAlign="center" fontSize={2} lineHeight={1.94}>
               Band is keenly focused on ensuring that all data on the platform
               is trusted and reliable. As a result, we equip our data curation
@@ -106,7 +106,7 @@ export default () => {
         </Flex>
         <Flex mb="100px" />
       </PageContainer>
-      <Box bg="#f0f2ff" style={{ height: 180 }} />
+      <Box bg="#ffffff" style={{ height: 180 }} />
       <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
         <StartBuilding style={{ transform: 'translateY(-50%)' }} />
       </Box>

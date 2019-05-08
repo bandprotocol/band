@@ -188,7 +188,7 @@ export default class LandingPage extends React.Component {
               management of data.
             </Text>
             <Image src={CompanySrc} my={5} />
-            <Card bg="#fafafa" px="45px" py="25px" width="840px">
+            <Card bg="#f6f8ff" px="45px" py="25px" width="840px">
               <Text
                 textAlign="center"
                 fontSize="18px"
@@ -312,7 +312,7 @@ export default class LandingPage extends React.Component {
             </Flex>
           </Box>
         </PageContainer>
-        <Box bg="#fafafa" mt="60px" pb="60px">
+        <Box bg="#f6f8ff" mt="60px" pb="60px">
           <H1 textAlign="center" dark pt="50px">
             <Text color="#2a304e" fontSize="38px" lineHeight={1.5}>
               We're Hiring!

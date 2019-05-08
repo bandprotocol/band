@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
-import { Link as RouterLink } from 'react-router-dom'
 import {
   Link,
   Bold,
@@ -46,7 +45,7 @@ const Nav = styled.nav`
 
 const SubMenu = styled(Flex).attrs({
   px: '20px',
-  justifyContent: 'center',
+  pt: 4,
   flexDirection: 'column',
 })`
   height: 100%;
@@ -61,12 +60,11 @@ const NavMenu = ({ isSelected, title, tabs }) => {
   return (
     <Flex
       style={{
-        width: '940px',
+        width: '1000px',
         height: isSelected ? '405px' : '0px',
-        position: 'fixed',
-        left: '50%',
+        position: 'absolute',
+        left: '0',
         top: '80px',
-        marginLeft: '-470px',
         transition: 'all 0.25s',
         opacity: isSelected ? 1 : 0,
         pointerEvents: isSelected ? 'all' : 'none',
@@ -85,9 +83,15 @@ const NavMenu = ({ isSelected, title, tabs }) => {
       </Flex>
       <Flex flexDirection="row" style={{ height: '100%' }}>
         {tabs.map((tab, i) => {
+          const LinkComponent = tab.link ? Link : AbsoluteLink
           return (
-            <Link to={tab.link} key={i}>
-              <SubMenu flex={1}>
+            <LinkComponent
+              to={tab.link}
+              href={tab.href}
+              key={i}
+              style={{ flex: 1, textDecoration: 'none' }}
+            >
+              <SubMenu>
                 <Text color="white" fontSize="40px">
                   {i + 1}
                 </Text>
@@ -110,7 +114,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                   {tab.content}
                 </Text>
               </SubMenu>
-            </Link>
+            </LinkComponent>
           )
         })}
       </Flex>
@@ -131,6 +135,15 @@ const Navbar = props => {
     return () =>
       window.document.body.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const prevLocation = useRef()
+  useEffect(() => {
+    if (props.location !== prevLocation.current) {
+      setShowMenu(false)
+      setSelectedTab(-1)
+    }
+    prevLocation.current = props.location
+  })
 
   const selectTab = tabId => {
     setSelectedTab(tabId)
@@ -212,17 +225,28 @@ const Navbar = props => {
   const renderDesktop = () => {
     const { pathname } = props.location
     return (
-      <Flex alignItems="center" onScroll={() => console.log('dfdfdfdfs')}>
+      <Flex
+        alignItems="center"
+        onScroll={() => console.log('dfdfdfdfs')}
+        onMouseOver={() => selectTab(-1)}
+      >
         <Box ml="40px">
           <Link to="/why-band">
             <Text fontSize="16px">Why Band?</Text>
           </Link>
         </Box>
-        <Box ml="40px" onMouseOver={() => selectTab(0)}>
+        <Flex
+          alignItems="center"
+          style={{ height: '100%' }}
+          ml="40px"
+          onMouseOver={e => {
+            e.stopPropagation()
+            selectTab(0)
+          }}
+        >
           <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
             <Text fontSize="16px">Products</Text>
-            <Flex mx="2px" />
-            <Text pt="2px" color="#6b8bf5" fontSize="12px">
+            <Text ml={2} pt="2px" color="#6b8bf5" fontSize="12px">
               <i className="fas fa-chevron-down" />
             </Text>
           </Flex>
@@ -232,52 +256,44 @@ const Navbar = props => {
             tabs={[
               {
                 title: 'Data Tokenization',
-                link: '/products/dataTokenization',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                link: '/products/data-tokenization',
+                content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
               {
                 title: 'Token Curated DataSources',
                 link: '/products/tcd',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                content: `Build robust, decentralized data feed from a network of data providers`,
               },
               {
                 title: 'Token Curated Registries',
                 link: '/products/tcr',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                content: `Build reliable, more transparent crowd-source information through crypto-incentized data curation`,
               },
               {
                 title: 'Band Web3 Wallet',
                 link: '/products/wallet',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                content: `An all-in-one, UX optimized Web3 wallet for Ethereum DApps`,
               },
               {
                 title: 'Private Data Sharing',
-                link: '/products/privateDataSharing',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                link: '/products/private-sharing',
+                content: `Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`,
               },
             ]}
           />
-        </Box>
-        <Box ml="40px" onMouseOver={() => selectTab(1)}>
+        </Flex>
+        <Flex
+          alignItems="center"
+          style={{ height: '100%' }}
+          ml="40px"
+          onMouseOver={e => {
+            e.stopPropagation()
+            selectTab(1)
+          }}
+        >
           <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
             <Text fontSize="16px">Explorers</Text>
-            <Flex mx="2px" />
-            <Text pt="2px" color="#6b8bf5" fontSize="12px">
+            <Text ml={2} pt="2px" color="#6b8bf5" fontSize="12px">
               <i className="fas fa-chevron-down" />
             </Text>
           </Flex>
@@ -287,23 +303,17 @@ const Navbar = props => {
             tabs={[
               {
                 title: 'Governance Portal',
-                link: '/explorers',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                href: 'https://data.bandprotocol.com',
+                content: `Join data curation community, stake tokens on data prodicers and vote on governance parameters`,
               },
               {
                 title: 'Dataset Explorer',
-                link: '/explorers',
-                content: `Spicy jalapeno bacon
-            ipsum dolor amet pork
-            chop short loin meatball
-            fatback capicola.`,
+                href: 'https://data.bandprotocol.com',
+                content: `Explore dataset availables by Band Protocol and learn how to integrate with the DApps`,
               },
             ]}
           />
-        </Box>
+        </Flex>
         <Box ml="40px">
           <Link to="/company">
             <Text fontSize="16px">Company</Text>
@@ -325,8 +335,9 @@ const Navbar = props => {
         style={{
           margin: '0 auto',
           height: '100%',
-          width: '940px',
+          width: '1000px',
           transition: 'all 0.5s',
+          position: 'relative',
         }}
         px="30px"
         alignItems="center"

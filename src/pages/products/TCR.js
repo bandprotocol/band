@@ -45,7 +45,7 @@ export default () => {
             transparent way to crowd-source information.
           </Text>
           <Image src={TCRSrc} my={5} height="280px" />
-          <Card bg="#f0f2ff" pt={4} pb={5} px="42px" width="780px">
+          <Card bg="#f6f8ff" pt={4} pb={5} px="42px" width="780px">
             <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
               Token curated registries provide a more reliable and transparent
               data organization mechanism. Band combines various data sources in
@@ -76,7 +76,7 @@ export default () => {
           <Image src={TCRWorkSrc} my={4} />
         </Flex>
       </PageContainer>
-      <Box bg="#f0f2ff">
+      <Box bg="#f6f8ff">
         <PageContainer>
           <Flex flexDirection="column" alignItems="center" pb={5}>
             <Box mt={5} mb={2}>
@@ -105,7 +105,7 @@ export default () => {
           />
         </PageContainer>
       </Box>
-      <Box bg="#f0f2ff" style={{ height: 180 }} />
+      <Box bg="#f6f8ff" style={{ height: 180 }} />
       <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
         <StartBuilding style={{ transform: 'translateY(-50%)' }} />
       </Box>
