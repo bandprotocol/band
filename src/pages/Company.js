@@ -31,6 +31,8 @@ import DealSrc from 'images/featured/deal.png'
 
 import JumpstartSrc from 'images/featured/jumpstart.png'
 import Linkedin from 'images/linkedin.svg'
+import Git from 'images/github-logo.svg'
+import Behance from 'images/behance-logo.svg'
 import WeRHiring from 'images/we-re-hiring.svg'
 
 import Sequoia from 'images/sequoiaGray.svg'
@@ -77,7 +79,7 @@ const ApplyButton = styled(Button)`
   transition: all 0.5s;
 `
 
-const TeamComponent = ({ faceImg, name, title }) => (
+const TeamComponent = ({ faceImg, name, title, type }) => (
   <Flex flex={1} flexDirection="column" alignItems="center">
     {faceImg ? (
       <Image src={faceImg} width="120px" height="120px" />
@@ -92,7 +94,15 @@ const TeamComponent = ({ faceImg, name, title }) => (
         {name}
       </Text>
       <Flex mx="5px" />
-      <Image src={Linkedin} width="20px" height="20px" />
+      <Image
+        src={
+          (type === 0 && Git) ||
+          (type === 1 && Linkedin) ||
+          (type === 2 && Behance)
+        }
+        width="20px"
+        height="20px"
+      />
     </Flex>
     <Text color="#4a4a4a" fontWeight={300} fontSize="16px">
       {title}
@@ -109,7 +119,7 @@ const JobTab = ({ title, description, setSelectedTab, isSelected }) => (
       width: '290px',
       height: '260px',
       borderRadius: '4px',
-      border: isSelected ? 'solid 1px #6b8bf5' : 'solid 1px #c9ced4',
+      border: isSelected ? 'solid 1px #6b8bf5' : 'solid 1px #abbbff',
       boxShadow: isSelected ? '0 20px 29px 0 rgba(216, 216, 216, 0.5)' : 'none',
       transform: isSelected ? 'scale(1.05)' : 'none',
       transition: 'all 0.5s',
@@ -288,18 +298,21 @@ export default () => {
               faceImg={Man}
               name="Soravis Srinawakoon"
               title="CEO and Co-Founder"
+              type={0}
             />
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Swit}
               name="Soravis Srinawakoon"
               title="CTO and Co-Founder"
+              type={0}
             />
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Paul}
               name="Paul Chonpimai"
               title="CPO and Co-Founder"
+              type={0}
             />
           </Flex>
           <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
@@ -307,26 +320,30 @@ export default () => {
               faceImg={Bun}
               name="Bun Uthaitirat"
               title="Chief Fun Officer and Developer"
+              type={0}
             />
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Peach}
               name="Kanisorn Thongprapaisaenh"
               title="Developer"
+              type={0}
             />
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Ming}
               name="Subongkoch Maneerat"
               title="UX/UI Designer"
+              type={2}
             />
           </Flex>
           <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
-            <TeamComponent name="Prin Rangsiruji" title="Developer" />
+            <TeamComponent name="Prin Rangsiruji" title="Developer" type={0} />
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               name="Atchanata Klunrit"
               title="Operation and legal office"
+              type={1}
             />
             <Flex flex={1} />
           </Flex>
