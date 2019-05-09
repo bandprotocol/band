@@ -208,7 +208,7 @@ export default () => {
             bg="#f6f8ff"
             px="45px"
             py="25px"
-            width={['calc(100vw - 40px)', '840px']}
+            width={['calc(100vw - 40px)', '940px']}
           >
             <Text
               textAlign={['left', 'center']}
@@ -426,13 +426,19 @@ export default () => {
               </Text>
             </Flex>
             <Flex mt="40px">
-              <Image src={Sequoia} width="148px" />
+              <AbsoluteLink href="https://www.sequoiacap.com/">
+                <Image src={Sequoia} width="148px" />
+              </AbsoluteLink>
             </Flex>
             <Flex mt="35px">
-              <Image src={Dunamu} width="245px" />
+              <AbsoluteLink href="http://www.dunamupartners.com/">
+                <Image src={Dunamu} width="245px" />
+              </AbsoluteLink>
             </Flex>
             <Flex mt="35px">
-              <Image src={Seax} width="105px" height="45px" />
+              <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
+                <Image src={Seax} width="105px" height="45px" />
+              </AbsoluteLink>
             </Flex>
           </Flex>
           {_isMobile && <Flex mx="18px" />}
@@ -450,27 +456,55 @@ export default () => {
                 Join Band Protocol {_isMobile && <br />} Community
               </Text>
             </Flex>
-            <Flex fontSize="18px" mt="40px" alignItems="center" color="#7c84a6">
-              <Image src={Reddit} width="30px" />
-              <Flex mx="20px" />
-              Reddit
-              <Flex mx="20px" />
-            </Flex>
-            <Flex fontSize="18px" mt="35px" alignItems="center" color="#7c84a6">
-              <Image src={Telegram} width="30px" />
-              <Flex mx="20px" />
-              Telegram
-            </Flex>
-            <Flex fontSize="18px" mt="35px" alignItems="center" color="#7c84a6">
-              <Image src={Medium} width="30px" />
-              <Flex mx="20px" />
-              Medium
-            </Flex>
-            <Flex fontSize="18px" mt="35px" alignItems="center" color="#7c84a6">
-              <Image src={Twitter} width="30px" />
-              <Flex mx="20px" />
-              Twitter
-            </Flex>
+            <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
+              <Flex
+                fontSize="18px"
+                mt="40px"
+                alignItems="center"
+                color="#7c84a6"
+              >
+                <Image src={Reddit} width="30px" />
+                <Flex mx="20px" />
+                Reddit
+                <Flex mx="20px" />
+              </Flex>
+            </AbsoluteLink>
+            <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
+              <Flex
+                fontSize="18px"
+                mt="35px"
+                alignItems="center"
+                color="#7c84a6"
+              >
+                <Image src={Telegram} width="30px" />
+                <Flex mx="20px" />
+                Telegram
+              </Flex>
+            </AbsoluteLink>
+            <AbsoluteLink href="https://medium.com/bandprotocol">
+              <Flex
+                fontSize="18px"
+                mt="35px"
+                alignItems="center"
+                color="#7c84a6"
+              >
+                <Image src={Medium} width="30px" />
+                <Flex mx="20px" />
+                Medium
+              </Flex>
+            </AbsoluteLink>
+            <AbsoluteLink href="https://twitter.com/bandprotocol">
+              <Flex
+                fontSize="18px"
+                mt="35px"
+                alignItems="center"
+                color="#7c84a6"
+              >
+                <Image src={Twitter} width="30px" />
+                <Flex mx="20px" />
+                Twitter
+              </Flex>
+            </AbsoluteLink>
           </Flex>
         </Flex>
       </Box>
