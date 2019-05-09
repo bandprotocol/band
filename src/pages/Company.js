@@ -79,7 +79,7 @@ const ApplyButton = styled(Button)`
   transition: all 0.5s;
 `
 
-const TeamComponent = ({ faceImg, name, title, type }) => (
+const TeamComponent = ({ faceImg, name, title, type, link }) => (
   <Flex flex={1} flexDirection="column" alignItems="center">
     {faceImg ? (
       <Image src={faceImg} width="120px" height="120px" />
@@ -94,15 +94,17 @@ const TeamComponent = ({ faceImg, name, title, type }) => (
         {name}
       </Text>
       <Flex mx="5px" />
-      <Image
-        src={
-          (type === 0 && Git) ||
-          (type === 1 && Linkedin) ||
-          (type === 2 && Behance)
-        }
-        width="20px"
-        height="20px"
-      />
+      <AbsoluteLink href={link}>
+        <Image
+          src={
+            (type === 0 && Git) ||
+            (type === 1 && Linkedin) ||
+            (type === 2 && Behance)
+          }
+          width="20px"
+          height="20px"
+        />
+      </AbsoluteLink>
     </Flex>
     <Text color="#4a4a4a" fontWeight={300} fontSize="16px">
       {title}
@@ -266,10 +268,10 @@ export default () => {
             <Featured href="https://www.dealstreetasia.com/stories/sequoia-india-band-protocol-121721/">
               <Image height={['39px', '65px']} src={DealSrc} />
             </Featured>
-            <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
+            <Featured href="https://sg.news.yahoo.com/blockchain-based-information-curation-startup-band-protocol-secures-010013124.html">
               <Image height={['26px', '32px']} src={YahooNewsSrc} />
             </Featured>
-            <Featured href="https://sg.news.yahoo.com/blockchain-based-information-curation-startup-band-protocol-secures-010013124.html">
+            <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
               <Image height={['18px', '31px']} src={CoinDeskSrc} />
             </Featured>
             <Featured href="https://jumpstartmag.com/blog/band-protocol-raises-us3-million-seed-funding-led-by-sequoia-india-to-give-power-back-to-internet">
@@ -298,6 +300,7 @@ export default () => {
               faceImg={Man}
               name="Soravis Srinawakoon"
               title="CEO and Co-Founder"
+              link={'https://github.com/Soravis'}
               type={0}
             />
             {_isMobile && <Flex my="15px" />}
@@ -305,6 +308,7 @@ export default () => {
               faceImg={Swit}
               name="Soravis Srinawakoon"
               title="CTO and Co-Founder"
+              link={'https://github.com/sorawit'}
               type={0}
             />
             {_isMobile && <Flex my="15px" />}
@@ -312,6 +316,7 @@ export default () => {
               faceImg={Paul}
               name="Paul Chonpimai"
               title="CPO and Co-Founder"
+              link={'https://github.com/smiled0g'}
               type={0}
             />
           </Flex>
@@ -320,6 +325,7 @@ export default () => {
               faceImg={Bun}
               name="Bun Uthaitirat"
               title="Chief Fun Officer and Developer"
+              link={'https://github.com/taobun'}
               type={0}
             />
             {_isMobile && <Flex my="15px" />}
@@ -327,6 +333,7 @@ export default () => {
               faceImg={Peach}
               name="Kanisorn Thongprapaisaenh"
               title="Developer"
+              link={'https://github.com/evilpeach'}
               type={0}
             />
             {_isMobile && <Flex my="15px" />}
@@ -334,19 +341,30 @@ export default () => {
               faceImg={Ming}
               name="Subongkoch Maneerat"
               title="UX/UI Designer"
+              link={'https://www.behance.net/minggnim'}
               type={2}
             />
           </Flex>
-          <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
-            <TeamComponent name="Prin Rangsiruji" title="Developer" type={0} />
-            {_isMobile && <Flex my="15px" />}
-            <TeamComponent
-              name="Atchanata Klunrit"
-              title="Operation and legal office"
-              type={1}
-            />
-            <Flex flex={1} />
-          </Flex>
+          {false && (
+            <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
+              <TeamComponent
+                name="Prin Rangsiruji"
+                link={'https://github.com/prin-r'}
+                title="Developer"
+                type={0}
+              />
+              {_isMobile && <Flex my="15px" />}
+              <TeamComponent
+                name="Atchanata Klunrit"
+                title="Operation and legal office"
+                link={
+                  'https://www.linkedin.com/in/atchanata-klunrit-05b3a9131/'
+                }
+                type={1}
+              />
+              <Flex flex={1} />
+            </Flex>
+          )}
         </Box>
       </PageContainer>
       <Box bg="#f6f8ff" mt="60px" pb="60px">

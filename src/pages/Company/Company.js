@@ -255,10 +255,10 @@ export default () => {
             <Featured href="https://www.dealstreetasia.com/stories/sequoia-india-band-protocol-121721/">
               <Image height={['39px', '65px']} src={DealSrc} />
             </Featured>
-            <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
+            <Featured href="https://sg.news.yahoo.com/blockchain-based-information-curation-startup-band-protocol-secures-010013124.html">
               <Image height={['26px', '32px']} src={YahooNewsSrc} />
             </Featured>
-            <Featured href="https://sg.news.yahoo.com/blockchain-based-information-curation-startup-band-protocol-secures-010013124.html">
+            <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
               <Image height={['18px', '31px']} src={CoinDeskSrc} />
             </Featured>
             <Featured href="https://jumpstartmag.com/blog/band-protocol-raises-us3-million-seed-funding-led-by-sequoia-india-to-give-power-back-to-internet">
