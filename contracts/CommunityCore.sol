@@ -93,7 +93,7 @@ contract CommunityCore {
     require(prefix != bytes8("bonding:") && prefix != bytes8("params:") && prefix != bytes8("data:"));
     require(address(tcr[prefix]) == address(0));
     tcr[prefix] = TCRFactory.create(
-      prefix, token, params, registry.commitRevealVoting(), decayFunction
+      prefix, token, params, decayFunction
     );
     params.set(prefix.append("min_deposit"), minDeposit);
     params.set(prefix.append("apply_stage_length"), applyStageLength);

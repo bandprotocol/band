@@ -7,7 +7,6 @@ import "./feeless/Feeless.sol";
 import "./utils/Fractional.sol";
 import "./utils/KeyUtils.sol";
 
-import "./voting/VotingInterface.sol";
 import "./token/SnapshotToken.sol";
 
 /*
@@ -17,7 +16,7 @@ import "./token/SnapshotToken.sol";
  * configuration of everything in the community, including inflation rate,
  * vote quorums, proposal expiration timeout, etc.
  */
-contract Parameters is Ownable, VotingParameters, Feeless {
+contract Parameters is Ownable, Feeless {
   using SafeMath for uint256;
   using Fractional for uint256;
   using KeyUtils for bytes8;

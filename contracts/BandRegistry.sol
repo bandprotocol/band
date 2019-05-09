@@ -9,13 +9,11 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
   event CommunityCreated(CommunityCore community);
 
   constructor(
-    CommitRevealVoting _commitRevealVoting
   ) public {
     band = new BandToken();
     band.addMinter(msg.sender);
     exchange = new BandSimpleExchange(band);
     exchange.transferOwnership(msg.sender);
-    commitRevealVoting = _commitRevealVoting;
   }
 
   function createCommunity(

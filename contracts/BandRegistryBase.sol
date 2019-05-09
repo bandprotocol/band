@@ -2,7 +2,6 @@ pragma solidity 0.5.0;
 
 import "./BandToken.sol";
 import "./BandSimpleExchange.sol";
-import "./voting/CommitRevealVoting.sol";
 import "./factory/BondingCurveFactory.sol";
 import "./factory/CommunityTokenFactory.sol";
 import "./factory/ParametersFactory.sol";
@@ -14,6 +13,4 @@ contract BandRegistryBase {
   // BAND Contracts
   BandToken public band;
   BandSimpleExchange public exchange;
-  // Voting Contracts
-  CommitRevealVoting public commitRevealVoting;
 }

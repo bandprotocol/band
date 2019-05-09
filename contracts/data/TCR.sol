@@ -11,7 +11,6 @@ import "../feeless/Feeless.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 import "../utils/KeyUtils.sol";
-import "../voting/VotingInterface.sol";
 
 
 /**
@@ -20,7 +19,7 @@ import "../voting/VotingInterface.sol";
  * @dev TCR contract implements Token Curated Registry logic, with reward
  * distribution allocated equally to both winning and losing sides.
  */
-contract TCR is ResolveListener, Feeless, ERC20Acceptor {
+contract TCR is Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
   using KeyUtils for bytes8;
@@ -48,33 +47,48 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
 
   event ChallengeInitiated(  // An new challenge is initiated.
     bytes32 indexed data,
-    uint256 indexed challengeID,
+    uint256 indexed challengeId,
     address indexed challenger,
+    uint256 stake,
     bytes32 reasonData,
-    uint256 stake
+    uint256 proposerVote,
+    uint256 challengeVote
+  );
+
+  event ChallengeVoteCommitted(  // A challenge vote is committed by voter
+    uint256 indexed challengeId,
+    address indexed voter,
+    bytes32 commitValue
+  );
+
+  event ChallengeVoteRevealed(   // A challenge vote is revealed
+    uint256 indexed challengeId,
+    address indexed voter,
+    bool voteKeep,
+    uint256 weight
   );
 
   event ChallengeSuccess(  // A challenge is successful.
     bytes32 indexed data,
-    uint256 indexed challengeID,
+    uint256 indexed challengeId,
     uint256 voterRewardPool,
     uint256 challengerReward
   );
 
   event ChallengeFailed(  // A challenge has failed.
     bytes32 indexed data,
-    uint256 indexed challengeID,
+    uint256 indexed challengeId,
     uint256 voterRewardPool,
     uint256 proposerReward
   );
 
   event ChallengeInconclusive(  // A challenge is not conclusive
     bytes32 indexed data,
-    uint256 indexed challengeID
+    uint256 indexed challengeId
   );
 
   event ChallengeRewardClaimed(  // A reward is claimed by a user.
-    uint256 indexed challengeID,
+    uint256 indexed challengeId,
     address indexed voter,
     uint256 reward
   );
@@ -82,7 +96,6 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   ExpressionInterface public depositDecayFunction;
 
   CommunityToken public token;
-  VotingInterface public voting;
   Parameters public params;
 
   // Namespace prefix for all Parameters (See Parameters.sol) in this TCR
@@ -91,22 +104,37 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   // A TCR entry is considered to exist in 'entries' map iff its
   // 'listedAt' is nonzero.
   struct Entry {
-    address proposer;             // The entry proposer
-    uint256 withdrawableDeposit;  // Amount token that is not on challenge stake
-    uint256 listedAt;             // Expiration time of entry's 'pending' status
-    uint256 challengeID;          // ID of challenge, applicable if not zero
+    address proposer;        // The entry proposer
+    uint256 deposit;         // Amount token that is not on challenge stake
+    uint256 listedAt;        // Expiration time of entry's 'pending' status
+    uint256 challengeId;     // Id of challenge, applicable if not zero
   }
+  enum ChallengeState { Invalid, Open, Kept, Removed, Inconclusive }
 
+  enum VoteStatus { Nothing, Committed, VoteKeep, VoteRemove, Claimed }
   // A challenge represent a challenge for a TCR entry. All challenges ever
   // existed are stored in 'challenges' map below.
   struct Challenge {
-    bytes32 entryData;      // The hash of data that is in question
-    bytes32 reasonData;     // The hash of reason for this challenge
-    address challenger;     // The challenger
-    uint256 rewardPool;     // Remaining reward pool. Relevant after resolved.
-    uint256 remainingVotes; // Remaining voting power to claim rewards.
+    bytes32 entryData;            // The hash of data that is in question
+    bytes32 reasonData;           // The hash of reason for this challenge
+    address challenger;           // The challenger
+    uint256 rewardPool;           // Remaining reward pool. Relevant after resolved.
+    uint256 remainingRewardVotes; // Remaining voting power to claim rewards.
 
-    mapping (address => bool) claims;  // Whether the user has claimed rewards.
+    uint256 commitEndTime;
+    uint256 revealEndTime;
+    uint256 snapshotNonce;
+
+    uint256 voteRemoveRequiredPct;
+    uint256 voteMinParticipation;
+
+    uint256 keepCount;
+    uint256 removeCount;
+    uint256 totalCommitCount;
+
+    mapping (address => bytes32) voteCommits;
+    mapping (address => VoteStatus) voteStatuses;
+    ChallengeState state;
   }
 
   // Mapping of entry to its metadata. An entry is considered exist if its
@@ -116,14 +144,13 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   // Mapping of all changes ever exist in this contract.
   mapping (uint256 => Challenge) public challenges;
 
-  // The ID of the next challenge.
+  // The Id of the next challenge.
   uint256 nextChallengeNonce = 1;
 
   constructor(
     bytes8 _prefix,
     CommunityToken _token,
     Parameters _params,
-    VotingInterface _voting,
     ExpressionInterface decayFunction
   )
     public
@@ -131,7 +158,6 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     prefix = _prefix;
     token = _token;
     params = _params;
-    voting = _voting;
     setExecDelegator(token.execDelegator());
     depositDecayFunction = decayFunction;
   }
@@ -146,8 +172,8 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     _;
   }
 
-  modifier challengeMustExist(uint256 challengeID) {
-    require(challengeID > 0 && challengeID < nextChallengeNonce);
+  modifier challengeMustExist(uint256 challengeId) {
+    require(challengeId > 0 && challengeId < nextChallengeNonce);
     _;
   }
 
@@ -160,16 +186,8 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     return listedAt > 0 && now >= listedAt;
   }
 
-  /**
-   * @dev Return true iff the given voter has claimed reward for the given
-   * challenge.
-   */
-  function hasClaimedReward(uint256 challengeID, address voter)
-    public
-    view
-    returns (bool)
-  {
-    return challenges[challengeID].claims[voter];
+  function getVoteStatus(uint256 challengeId, address voter) public view returns (VoteStatus) {
+    return challenges[challengeId].voteStatuses[voter];
   }
 
   /**
@@ -203,17 +221,17 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
    * 'min_deposit'. Application will get auto-approved if no challenge happens
    * during the first 'apply_stage_length' seconds.
    */
-  function applyEntry(address proposer, uint256 deposit, bytes32 data)
+  function applyEntry(address proposer, uint256 stake, bytes32 data)
     external
-    requireToken(ERC20Interface(address(token)), proposer, deposit)
+    requireToken(ERC20Interface(address(token)), proposer, stake)
     entryMustNotExist(data)
   {
-    require(deposit >= get("min_deposit"));
+    require(stake >= get("min_deposit"));
     Entry storage entry = entries[data];
     entry.proposer = proposer;
-    entry.withdrawableDeposit = deposit;
+    entry.deposit = stake;
     entry.listedAt = now.add(get("apply_stage_length"));
-    emit ApplicationSubmitted(data, proposer, entry.listedAt, deposit);
+    emit ApplicationSubmitted(data, proposer, entry.listedAt, stake);
   }
 
   /**
@@ -227,7 +245,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   {
     Entry storage entry = entries[data];
     require(entry.proposer == depositor);
-    entry.withdrawableDeposit = entry.withdrawableDeposit.add(amount);
+    entry.deposit = entry.deposit.add(amount);
     emit EntryDeposited(data, amount);
   }
 
@@ -240,12 +258,12 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   {
     Entry storage entry = entries[data];
     require(entry.proposer == sender);
-    if (entry.challengeID == 0) {
-      require(entry.withdrawableDeposit >= amount.add(currentMinDeposit(data)));
+    if (entry.challengeId == 0) {
+      require(entry.deposit >= amount.add(currentMinDeposit(data)));
     } else {
-      require(entry.withdrawableDeposit >= amount);
+      require(entry.deposit >= amount);
     }
-    entry.withdrawableDeposit = entry.withdrawableDeposit.sub(amount);
+    entry.deposit = entry.deposit.sub(amount);
     require(token.transfer(sender, amount));
     emit EntryWithdrawn(data, amount);
   }
@@ -260,7 +278,7 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
   {
     Entry storage entry = entries[data];
     require(entry.proposer == sender);
-    require(entry.challengeID == 0);
+    require(entry.challengeId == 0);
     deleteEntry(data);
     emit EntryExited(data);
   }
@@ -279,38 +297,74 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
     public
     requireToken(ERC20Interface(address(token)), challenger, challengeDeposit)
     entryMustExist(data)
-    returns (uint256)
   {
     Entry storage entry = entries[data];
-    require(entry.challengeID == 0);
-    require(entry.proposer != challenger);
-
-    uint256 stake = Math.min(entry.withdrawableDeposit, currentMinDeposit(data));
+    require(entry.challengeId == 0 && entry.proposer != challenger);
+    uint256 stake = Math.min(entry.deposit, currentMinDeposit(data));
     require(challengeDeposit >= stake);
 
     if (challengeDeposit != stake) {
       require(token.transfer(challenger, challengeDeposit.sub(stake)));
     }
 
-    entry.withdrawableDeposit = entry.withdrawableDeposit.sub(stake);
-    uint256 challengeID = nextChallengeNonce;
-    entry.challengeID = challengeID;
-    challenges[challengeID].entryData = data;
-    challenges[challengeID].reasonData = reasonData;
-    challenges[challengeID].challenger = challenger;
-    challenges[challengeID].rewardPool = stake.mul(2);
-    // Increment the nonce for the next challenge.
-    nextChallengeNonce = challengeID.add(1);
-    emit ChallengeInitiated(data, challengeID, challenger, reasonData, stake.mul(2));
-    require(
-      voting.startPoll(
-        token,
-        challengeID,
-        prefix,
-        params
-      )
-    );
-    return challengeID;
+    entry.deposit = entry.deposit.sub(stake);
+    uint256 challengeId = nextChallengeNonce;
+    uint256 proposerVote = token.historicalVotingPowerAtNonce(entry.proposer, token.votingPowerChangeNonce());
+    uint256 challengerVote = token.historicalVotingPowerAtNonce(challenger, token.votingPowerChangeNonce());
+    nextChallengeNonce = challengeId.add(1);
+    challenges[challengeId] = Challenge({
+      entryData: data,
+      reasonData: reasonData,
+      challenger: challenger,
+      rewardPool: stake,
+      remainingRewardVotes: 0,
+      commitEndTime: now.add(get("commit_time")),
+      revealEndTime: now.add(get("commit_time")).add(get("reveal_time")),
+      snapshotNonce: token.votingPowerChangeNonce(),
+      voteRemoveRequiredPct: get("support_required_pct"),
+      voteMinParticipation: get("min_participation_pct").mulFrac(token.totalSupply()),
+      keepCount: proposerVote,
+      removeCount: challengerVote,
+      totalCommitCount: proposerVote.add(challengerVote),
+      state: ChallengeState.Open
+    });
+    entry.challengeId = challengeId;
+    challenges[challengeId].voteStatuses[entry.proposer] = VoteStatus.VoteKeep;
+    challenges[challengeId].voteStatuses[challenger] = VoteStatus.VoteRemove;
+    emit ChallengeInitiated(data, challengeId, challenger, stake, reasonData, proposerVote, challengerVote);
+  }
+
+  function commitVote(address voter, uint256 challengeId, bytes32 commitValue)
+    public
+    feeless(voter)
+  {
+    Challenge storage challenge = challenges[challengeId];
+    require(challenge.state == ChallengeState.Open && now < challenge.commitEndTime);
+    require(challenge.voteStatuses[voter] == VoteStatus.Nothing);
+    challenge.voteCommits[voter] = commitValue;
+    challenge.voteStatuses[voter] = VoteStatus.Committed;
+    uint256 weight = token.historicalVotingPowerAtNonce(voter, challenge.snapshotNonce);
+    challenge.totalCommitCount = challenge.totalCommitCount.add(weight);
+    emit ChallengeVoteCommitted(challengeId, voter, commitValue);
+  }
+
+  function revealVote(address voter, uint256 challengeId, bool voteKeep, uint256 salt)
+    public
+  {
+    Challenge storage challenge = challenges[challengeId];
+    require(challenge.state == ChallengeState.Open);
+    require(now >= challenge.commitEndTime && now < challenge.revealEndTime);
+    require(challenge.voteStatuses[voter] == VoteStatus.Committed);
+    require(challenge.voteCommits[voter] == keccak256(abi.encodePacked(voteKeep, salt)));
+    uint256 weight = token.historicalVotingPowerAtNonce(voter, challenge.snapshotNonce);
+    if (voteKeep) {
+      challenge.keepCount = challenge.keepCount.add(weight);
+      challenge.voteStatuses[voter] = VoteStatus.VoteKeep;
+    } else {
+      challenge.removeCount = challenge.removeCount.add(weight);
+      challenge.voteStatuses[voter] = VoteStatus.VoteRemove;
+    }
+    emit ChallengeVoteRevealed(challengeId, voter, voteKeep, weight);
   }
 
   /**
@@ -318,117 +372,106 @@ contract TCR is ResolveListener, Feeless, ERC20Acceptor {
    * removed and the challenger gets the reward. Otherwise, the entry's
    * 'withdrawableDeposit' gets bumped by the reward.
    */
-  function onResolved(uint256 challengeID, PollState pollState)
-    public
-    challengeMustExist(challengeID)
-    returns (bool)
-  {
-    require(msg.sender == address(voting));
-    Challenge storage challenge = challenges[challengeID];
+  function resolveChallenge(uint256 challengeId) public {
+    Challenge storage challenge = challenges[challengeId];
+    require(challenge.state == ChallengeState.Open);
+    ChallengeState result = _getChallengeResult(challenge);
+    challenge.state = result;
     bytes32 data = challenge.entryData;
     Entry storage entry = entries[data];
-    assert(entry.challengeID == challengeID);
-    // After the challenge is resolved, this entry won't have ongoing challenge.
-    entry.challengeID = 0;
-
-    (uint256 yesCount, uint256 noCount) =
-      voting.getPollTotalVote(address(this), challengeID);
-    // We call the following two functions prior to checking `pollState` to avoid
-    // "Stack too deep" error due to Solidity/EVM's limitation of DUPn opcodes.
-    (uint256 challengerYesCount, ) =
-      voting.getPollUserVote(address(this), challengeID, challenge.challenger);
-    (, uint256 proposerNoCount) =
-      voting.getPollUserVote(address(this), challengeID, entry.proposer);
-
-    uint256 rewardPool = challenge.rewardPool;
-    uint256 dispensationPercentage = get("dispensation_percentage");
-    require(dispensationPercentage <= Fractional.getDenominator());
-
-    // The reward for winning side leader (challenger/entry owner) is
-    // half of the poll (their stake) plus the dispensation percentage of the remaining.
-    uint256 halfRewardPool = rewardPool.div(2);
-    uint256 leaderReward = dispensationPercentage.mulFrac(halfRewardPool).add(halfRewardPool);
-
-    if (pollState == PollState.Yes) {
-      // Automatically claim reward for challenger
-      leaderReward = leaderReward.add(
-        rewardPool.sub(leaderReward).mul(challengerYesCount).div(yesCount)
-      );
-      // Challenge succeeds. Challenger gets reward. Entry gets removed.
-      require(token.transfer(challenge.challenger, leaderReward));
+    assert(entry.challengeId == challengeId);
+    entry.challengeId = 0;
+    uint256 challengerStake = challenge.rewardPool;
+    uint256 winnerExtraReward = get("dispensation_percentage").mulFrac(challengerStake);
+    uint256 winnerTotalReward = challengerStake.add(winnerExtraReward);
+    uint256 rewardPool = challengerStake.sub(winnerExtraReward);
+    if (result == ChallengeState.Kept) {
+      // Get reward from voting
+      uint256 proposerVote = token.historicalVotingPowerAtNonce(entry.proposer, challenge.snapshotNonce);
+      uint256 proposerVoteReward = rewardPool.mul(proposerVote).div(challenge.keepCount);
+      winnerTotalReward = winnerTotalReward.add(proposerVoteReward);
+      entry.deposit = entry.deposit.add(winnerTotalReward);
+      challenge.rewardPool = rewardPool.sub(proposerVoteReward);
+      challenge.remainingRewardVotes = challenge.keepCount.sub(proposerVote);
+      challenge.voteStatuses[entry.proposer] = VoteStatus.Claimed;
+      emit ChallengeFailed(data, challengeId, challenge.rewardPool, winnerTotalReward);
+    } else if (result == ChallengeState.Removed) {
+      uint256 challengeVote = token.historicalVotingPowerAtNonce(challenge.challenger, challenge.snapshotNonce);
+      uint256 challengeVoteReward = rewardPool.mul(challengeVote).div(challenge.removeCount);
+      winnerTotalReward = winnerTotalReward.add(challengeVoteReward);
+      require(token.transfer(challenge.challenger, winnerTotalReward));
+      challenge.rewardPool = rewardPool.sub(challengeVoteReward);
+      challenge.remainingRewardVotes = challenge.removeCount.sub(challengeVote);
       deleteEntry(data);
-      // The remaining reward is distributed among Yes voters.
-      challenge.rewardPool = rewardPool.sub(leaderReward);
-      challenge.remainingVotes = yesCount.sub(challengerYesCount);
-      challenge.claims[challenge.challenger] = true;
-      emit ChallengeSuccess(data, challengeID, challenge.rewardPool, leaderReward);
-    } else if (pollState == PollState.No) {
-      // Automatically claim reward for the entry
-      leaderReward = leaderReward.add(
-        rewardPool.sub(leaderReward).mul(proposerNoCount).div(noCount)
-      );
-      // Challenge fails. Entry deposit is added by reward.
-      entry.withdrawableDeposit = entry.withdrawableDeposit.add(leaderReward);
-      // The remaining reward is distributed among No voters.
-      challenge.rewardPool = rewardPool.sub(leaderReward);
-      challenge.remainingVotes = noCount.sub(proposerNoCount);
-      challenge.claims[entry.proposer] = true;
-      emit ChallengeFailed(data, challengeID, challenge.rewardPool, leaderReward);
-    } else if (pollState == PollState.Inconclusive) {
-      // Inconclusive. Both challenger and entry owner get half of the pool
-      // back. The reward pool then becomes zero. Too bad for voters.
-      require(token.transfer(challenge.challenger, halfRewardPool));
-      entry.withdrawableDeposit = entry.withdrawableDeposit.add(halfRewardPool);
+      challenge.voteStatuses[challenge.challenger] = VoteStatus.Claimed;
+      emit ChallengeSuccess(data, challengeId, challenge.rewardPool, winnerTotalReward);
+    } else if (result == ChallengeState.Inconclusive) {
+      entry.deposit = entry.deposit.add(challengerStake);
+      require(token.transfer(challenge.challenger, challengerStake));
       challenge.rewardPool = 0;
-      emit ChallengeInconclusive(data, challengeID);
+      emit ChallengeInconclusive(data, challengeId);
     } else {
-      revert();
+      assert(false);
     }
-    return true;
   }
 
   /**
    * @dev Claim reward for the given challenge. The claimer must already reveal
    * the vote that is consistent with vote result.
    */
-  function claimReward(address rewardOwner, uint256 challengeID)
-    public
-    challengeMustExist(challengeID)
+  function claimReward(address voter, uint256 challengeId) public {
+    Challenge storage challenge = challenges[challengeId];
+    require(challenge.remainingRewardVotes > 0);
+    if (challenge.state == ChallengeState.Kept) {
+      require(challenge.voteStatuses[voter] == VoteStatus.VoteKeep);
+    } else if (challenge.state == ChallengeState.Removed) {
+      require(challenge.voteStatuses[voter] == VoteStatus.VoteRemove);
+    } else {
+      revert();
+    }
+    challenge.voteStatuses[voter] = VoteStatus.Claimed;
+    uint256 weight = token.historicalVotingPowerAtNonce(voter, challenge.snapshotNonce);
+    if (weight > 0) {
+      uint256 remainingRewardPool = challenge.rewardPool;
+      uint256 remainingRewardVotes = challenge.remainingRewardVotes;
+      uint256 reward = remainingRewardPool.mul(weight).div(remainingRewardVotes);
+      challenge.remainingRewardVotes = remainingRewardVotes.sub(weight);
+      challenge.rewardPool = remainingRewardPool.sub(reward);
+      require(token.transfer(voter, reward));
+      emit ChallengeRewardClaimed(challengeId, voter, reward);
+    }
+  }
+
+  function _getChallengeResult(Challenge storage challenge)
+    internal
+    view
+    returns (ChallengeState)
   {
-    Challenge storage challenge = challenges[challengeID];
-    // A challenge must already be resolved with reward pending to be withdrawn
-    require(challenge.remainingVotes > 0);
-    require(!challenge.claims[rewardOwner]);
-
-    challenge.claims[rewardOwner] = true;
-
-    PollState pollState = voting.getPollState(address(this), challengeID);
-    require(pollState == PollState.Yes || pollState == PollState.No);
-
-    (uint256 yesCount, uint256 noCount) =
-      voting.getPollUserVote(address(this), challengeID, rewardOwner);
-
-    uint256 claimableCount = (pollState == PollState.Yes) ? yesCount : noCount;
-    uint256 rewardPool = challenge.rewardPool;
-    uint256 remainingVotes = challenge.remainingVotes;
-    uint256 reward = rewardPool.mul(claimableCount).div(remainingVotes);
-
-    challenge.remainingVotes = remainingVotes.sub(claimableCount);
-    challenge.rewardPool = rewardPool.sub(reward);
-
-    require(reward != 0);
-    require(token.transfer(rewardOwner, reward));
-    emit ChallengeRewardClaimed(challengeID, rewardOwner, reward);
+    assert(challenge.state == ChallengeState.Open);
+    require(now >= challenge.commitEndTime);
+    if (challenge.totalCommitCount < challenge.voteMinParticipation) {
+      return ChallengeState.Inconclusive;
+    }
+    uint256 keepCount = challenge.keepCount;
+    uint256 removeCount = challenge.removeCount;
+    if (keepCount == 0 && removeCount == 0) {
+      return ChallengeState.Inconclusive;
+    }
+    if (removeCount.mul(Fractional.getDenominator()) >= challenge.voteRemoveRequiredPct.mul(keepCount.add(removeCount))) {
+      return ChallengeState.Removed;
+    } else {
+      return ChallengeState.Kept;
+    }
   }
 
   /**
    * @dev Delete the given TCR entry and refund the token to entry owner
    */
   function deleteEntry(bytes32 data) internal {
-    uint256 withdrawableDeposit = entries[data].withdrawableDeposit;
+    uint256 entryDeposit = entries[data].deposit;
     address proposer = entries[data].proposer;
-    if (withdrawableDeposit > 0) {
-      require(token.transfer(proposer, withdrawableDeposit));
+    if (entryDeposit > 0) {
+      require(token.transfer(proposer, entryDeposit));
     }
     delete entries[data];
   }
