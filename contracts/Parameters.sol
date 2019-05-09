@@ -24,12 +24,7 @@ contract Parameters is Ownable, Feeless {
   event ProposalProposed(  // A new proposal is proposed.
     uint256 indexed proposalId,
     address indexed proposer,
-    bytes32 reasonHash,
-    uint256 expirationTime,
-    uint256 totalVotingPower,
-    uint256 voteMinParticipation,
-    uint256 voteSupportRequiredPct,
-    uint256 snapshotNonce
+    bytes32 reasonHash
   );
 
   event ProposalVoted(  // A vote is casted onp proposal by a user
@@ -131,18 +126,13 @@ contract Parameters is Ownable, Feeless {
   {
     require(keys.length == values.length);
     uint256 proposalId = proposals.length;
-    // Get parameter for create proposal
-    uint256 expirationTime = now.add(get("params:expiration_time"));
-    uint256 voteMinParticipationPct = get("params:min_participation_pct");
-    uint256 voteSupportRequiredPct = get( "params:support_required_pct");
-    uint256 voteMinParticipation = voteMinParticipationPct.mulFrac(token.totalSupply());
 
     proposals.push(Proposal({
       changesCount: keys.length,
       snapshotNonce: token.votingPowerChangeNonce(),
-      expirationTime: expirationTime,
-      voteSupportRequiredPct: voteSupportRequiredPct,
-      voteMinParticipation: voteMinParticipation,
+      expirationTime: now.add(get("params:expiration_time")),
+      voteSupportRequiredPct: get( "params:support_required_pct"),
+      voteMinParticipation: get("params:min_participation_pct").mulFrac(token.totalSupply()),
       totalVotingPower: token.totalSupply(),
       yesCount: 0,
       noCount: 0,
@@ -152,12 +142,7 @@ contract Parameters is Ownable, Feeless {
     emit ProposalProposed(
       proposalId,
       sender,
-      reasonHash,
-      token.totalSupply(),
-      expirationTime,
-      voteSupportRequiredPct,
-      voteMinParticipation,
-      token.votingPowerChangeNonce()
+      reasonHash
     );
 
     for (uint256 index = 0; index < keys.length; ++index) {
