@@ -19,32 +19,58 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
-import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
-import CoinHatcherShowcase from 'components/CoinHatcherShowcase'
 
 import WalletSrc from 'images/walletExample.svg'
 import WalletIntegrate from 'images/band-wallet-integrate.svg'
-
-import SSExample1 from 'images/SSExample1.png'
+import W3Img from 'images/web-3-js.svg'
+import TrustlessCredentialStore from 'images/trustlessCredentialStore.svg'
+import NoExtensionsRequired from 'images/noExtensionsRequired.svg'
+import DomainWhitelist from 'images/internet-1.svg'
 
 export default () => {
+  const _isMobile = isMobile()
   return (
     <Box>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
-          <Box mt={5} mb={3}>
-            <H1 textAlign="center" dark>
+          <Box mt={[4, 5]} mb={[3, 4]}>
+            <Text
+              textAlign="center"
+              fontSize={['24px', '38px']}
+              fontWeight={900}
+              color="#2a304e"
+            >
               Band Web3 Wallet
-            </H1>
+            </Text>
           </Box>
-          <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
+          <Text
+            textAlign={['left', 'center']}
+            width={['calc(100vw - 40px)', '860px']}
+            fontSize={['16px', '18px']}
+            lineHeight={[1.63, 1.94]}
+          >
             A all-in-one wallet for any function you may want to carry out in
             the Band ecosystem.
           </Text>
-          <Image src={WalletSrc} my={5} height="280px" />
-          <Card bg="#f6f8ff" pt={4} pb={5} px="42px" width="780px">
-            <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
+          <Image
+            src={WalletSrc}
+            my={['30px', '70px']}
+            width={['calc(100vw - 40px)', '580px']}
+          />
+          <Card
+            bg="#f6f8ff"
+            pt={4}
+            pb={['30px', 5]}
+            px={['20px', '40px']}
+            width={['calc(100vw - 40px)', '840px']}
+          >
+            <Text
+              textAlign={['left', 'center']}
+              color="#4c4c4c"
+              fontSize={['16px', '18px']}
+              lineHeight={[1.63, 1.94]}
+            >
               The Band Web 3 wallet is especially designed to support a diverse
               array of dApps and functionalities. Users can store the tokens
               they receive in these wallets and use them for transactions
@@ -52,17 +78,31 @@ export default () => {
               user-centric design that provides high levels of security and
               multi-platform support.
             </Text>
-            <Flex justifyContent="center">
+            <Flex
+              mt={['30px', '50px']}
+              justifyContent="center"
+              flexDirection={['column-reverse', 'row']}
+            >
               <Button
                 variant="outline"
-                style={{ color: '#545454', width: '200px' }}
+                style={{
+                  color: '#545454',
+                  height: '45px',
+                  width: _isMobile ? '200px' : '185px',
+                  padding: _isMobile ? '5px' : '0px',
+                }}
               >
                 Demo
               </Button>
+              {_isMobile && <Flex my="5px" />}
               <Button
                 variant="primary"
-                ml={5}
-                style={{ width: '240px', padding: '0px' }}
+                ml={[0, 5]}
+                style={{
+                  height: '45px',
+                  width: _isMobile ? '200px' : '240px',
+                  padding: _isMobile ? '5px' : '0px',
+                }}
               >
                 Integrate Band Web3 Wallet
               </Button>
@@ -72,7 +112,7 @@ export default () => {
         <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
           <Box mb={2}>
             <H1 textAlign="center" dark>
-              How to Integrate Band Wallet
+              Integrate in 3 Simple Steps
             </H1>
           </Box>
           <Image src={WalletIntegrate} my={4} />
@@ -82,33 +122,84 @@ export default () => {
           flexDirection="column"
           alignItems="center"
           style={{ borderTop: '1px solid #e2e2e2' }}
+          mb={['430px', '200px']}
         >
-          <Box mt={5} mb={3}>
+          <Box mt={5} mb={'50px'}>
             <H1 textAlign="center" dark>
-              Security
+              Features
             </H1>
           </Box>
-          <Text>
-            Band provides unmatched security to ensure constant data integrity
-            and user-centric privacy
-          </Text>
-          <Flex my="50px" />
-          <Card bg="#f6f8ff" py="50px" px="42px" width="780px">
-            <Text textAlign="center" fontSize={2} lineHeight={1.94}>
-              Band is keenly focused on ensuring that all data on the platform
-              is trusted and reliable. As a result, we equip our data curation
-              infrastructure with proper incentive mechanisms to avoid any large
-              scale security attacks or threats. In addition, we properly create
-              a system that is able to protect against typical inadequacies
-              faced by oracles.
-            </Text>
-          </Card>
+          <Flex
+            width={['calc(100vw - 40px)', '660px']}
+            flexDirection={['column', 'row']}
+          >
+            <Flex flex={1} flexDirection="column">
+              <Image src={W3Img} width="100px" />
+              <Text my="20px" fontSize="24px">
+                Web3.js Compatible
+              </Text>
+              <Text lineHeight={1.5}>
+                Developers can integrate Band Wallet into any existing DApp. The
+                API exposes Web3Provider instance just like Metamask
+              </Text>
+            </Flex>
+            <Flex
+              flex={1}
+              mt={['30px', '0px']}
+              ml={['0px', '100px']}
+              flexDirection="column"
+            >
+              <Image src={TrustlessCredentialStore} width="100px" />
+              <Text my="20px" fontSize="24px">
+                Trustless Credential Store
+              </Text>
+              <Text lineHeight={1.5}>
+                Band Wallet enables registration and sign-in functionalities for
+                DApps, without compromising security and private key ownership
+              </Text>
+            </Flex>
+          </Flex>
+          <Flex
+            width={['calc(100vw - 40px)', '660px']}
+            flexDirection={['column', 'row']}
+            mt={['30px', '50px']}
+          >
+            <Flex flex={1} flexDirection="column">
+              <Image src={NoExtensionsRequired} width="100px" />
+              <Text my="20px" fontSize="24px">
+                No Extensions Required
+              </Text>
+              <Text lineHeight={1.5}>
+                Developers can integrate Band Wallet into any existing DApp. The
+                API exposes Web3Provider instance just like Metamask
+              </Text>
+            </Flex>
+            <Flex
+              flex={1}
+              mt={['30px', '0px']}
+              ml={['0px', '100px']}
+              flexDirection="column"
+            >
+              <Image src={DomainWhitelist} width="100px" />
+              <Text my="20px" fontSize="24px">
+                Domain Whitelist
+              </Text>
+              <Text lineHeight={1.5}>
+                Nobody likes pesky confirmation popups. Band Wallet allows users
+                to whitelist domain and bypass confirmations in low-value
+                transactions
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
-        <Flex mb="100px" />
       </PageContainer>
-      <Box bg="#ffffff" style={{ height: 180 }} />
-      <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
-        <StartBuilding style={{ transform: 'translateY(-50%)' }} />
+      <Box
+        mb={['-350px', '-80px']}
+        style={{ background: '#17192e', color: '#ffffff' }}
+      >
+        <StartBuilding
+          style={{ transform: `translateY(-${_isMobile ? 60 : 50}%)` }}
+        />
       </Box>
     </Box>
   )

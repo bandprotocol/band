@@ -9,12 +9,13 @@ export default ({
   link,
   style = {},
   children,
+  isMobile,
   ...props
 }) => (
   <Flex
     bg="#f7f8ff"
     style={{
-      width: '425px',
+      width: isMobile ? 'calc(100vw - 40px)' : '425px',
       height: '325px',
       borderRadius: '10px',
       boxShadow: '0 23px 20px 0 rgba(0, 0, 0, 0.25)',
@@ -39,6 +40,7 @@ export default ({
     {children}
     <Flex
       pl="30px"
+      pb={isMobile ? '10px' : '0px'}
       style={{
         borderTop: '1px solid #eaeeff',
         position: 'relative',
@@ -49,7 +51,12 @@ export default ({
       alignItems="center"
     >
       <Text color="#252945">{linkText}</Text>
-      <Flex style={{ position: 'absolute', right: '30px' }}>
+      <Flex
+        style={{
+          position: 'absolute',
+          right: '30px',
+        }}
+      >
         <Text color="#6b8bf5" fontWeight={900}>
           <i className="fas fa-chevron-right" />
         </Text>

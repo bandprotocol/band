@@ -54,58 +54,77 @@ const OutlineButton = styled(Button)`
   }
 `
 
-export default ({ style = {}, ...props }) => (
-  <PageContainer>
-    <Flex
-      pt="65px"
-      pb="35px"
-      px="80px"
-      mx="-40px"
-      style={{
-        borderRadius: '10px',
-        boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
-        background: 'linear-gradient(to left, #6083ff, #8266ff)',
-        ...style,
-      }}
-      {...props}
-    >
-      <Flex style={{ width: '620px' }} flexDirection="column">
-        <Text fontWeight="600" fontSize="32px">
-          Want to start building?
-        </Text>
-        <Flex my="10px" />
-        <Text fontSize="20px">
-          Integrating your product right away with Band Protocol SDK
-        </Text>
-        <Flex mt="40px">
-          <a
-            href="https://developer.bandprotocol.com/"
-            target="_blank"
-            rel="noopener noreferrer"
+export default ({ style = {}, ...props }) => {
+  const _isMobile = isMobile()
+  return (
+    <PageContainer>
+      <Flex
+        pt={['45px', '65px']}
+        pb={['0px', '35px']}
+        px={['0px', '80px']}
+        mx={['0px', '-40px']}
+        style={{
+          borderRadius: '10px',
+          boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
+          background: 'linear-gradient(to left, #6083ff, #8266ff)',
+          width: _isMobile ? 'calc(100vw - 40px)' : 'auto',
+          ...style,
+        }}
+        {...props}
+        flexDirection={['column', 'row']}
+      >
+        <Flex
+          style={{ width: _isMobile ? 'calc(100vw - 40px)' : '620px' }}
+          flexDirection="column"
+          alignItems={['center', 'flex-start']}
+        >
+          <Text
+            fontWeight="600"
+            fontSize={['24px', '32px']}
+            textAlign={['center', 'left']}
+            lineHeight={[1.5, 1]}
           >
-            <OutlineButton
-              borderColor="white"
+            Want to {_isMobile && <br />} start building?
+          </Text>
+          <Flex my="10px" />
+          <Text
+            fontSize={['16px', '20px']}
+            lineHeight={[1.63, 1]}
+            textAlign={['center', 'left']}
+          >
+            Integrating your product right {_isMobile && <br />} away with Band
+            Protocol SDK
+          </Text>
+          <Flex mt="40px" flexDirection={['column-reverse', 'row']}>
+            <a
+              href="https://developer.bandprotocol.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <OutlineButton
+                borderColor="white"
+                style={{
+                  width: '220px',
+                }}
+              >
+                Technical Doc
+              </OutlineButton>
+            </a>
+            <Flex mx={['0px', '10px']} my={['10px', '0px']} />
+            <FilledButton
               style={{
                 width: '220px',
+                backgroundImage: 'linear-gradient(249deg, #454366, #3a3d5a)',
               }}
             >
-              Technical Doc
-            </OutlineButton>
-          </a>
-          <Flex mx="10px" />
-          <FilledButton
-            style={{
-              width: '220px',
-              backgroundImage: 'linear-gradient(249deg, #454366, #3a3d5a)',
-            }}
-          >
-            Developer Portal
-          </FilledButton>
+              Developer Portal
+            </FilledButton>
+          </Flex>
         </Flex>
+        <Box flex="0 0 266px" ml="auto" mt={['40px', '0px']}>
+          <Image src={LandingStartBuilding} />
+        </Box>
       </Flex>
-      <Box flex="0 0 266px" ml="auto">
-        <Image src={LandingStartBuilding} />
-      </Box>
-    </Flex>
-  </PageContainer>
-)
+    </PageContainer>
+  )
+}

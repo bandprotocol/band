@@ -138,7 +138,7 @@ export default class LandingPage extends React.Component {
             </Flex>
           </Flex>
         </PageContainer>
-        <Box bg="#f6f8ff">
+        <Box bg="#fafafa">
           <PageContainer />
         </Box>
         <Box bg="#ffffff" style={{ height: 180 }} />

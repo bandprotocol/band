@@ -15,26 +15,54 @@ export default ({
   Img3,
   children,
 }) => {
+  const _isMobile = isMobile()
   const [selectedTab, setSelectedTab] = useState(1)
+  const offset = _isMobile ? '40' : '80'
   const getWHByTab = tab =>
     tab === selectedTab
-      ? { width: '410px', height: '335px', opacity: 1 }
-      : { width: '360px', height: '270px', opacity: 0.4 }
+      ? { transform: 'scale(1)', opacity: 1, zIndex: 1 }
+      : {
+          transform: `scale(0.8) translateY(30px) translateX(${(tab === 0 &&
+            offset) ||
+            (tab === 1 && '0') ||
+            (tab === 2 && '-' + offset)}px)`,
+          opacity: 0.4,
+          zIndex: 0,
+        }
 
   return (
-    <Box py={5} style={{ background: background }}>
+    <Box
+      pt={children ? ['45px', 5] : ['10px', '10px']}
+      pb={['45px', 5]}
+      style={{ background: background }}
+    >
       <PageContainer>
         {children}
-        <Flex flexDirection="row" justifyContent="center" mt="70px">
-          <Image src={Logo} width="181px" />
-          <Flex ml="110px" flexDirection="column" style={{ width: '620px' }}>
+        <Flex
+          flexDirection={['column', 'row']}
+          justifyContent="center"
+          mt={['20px', '70px']}
+        >
+          <Flex
+            width={[1, '181px']}
+            style={{ minWidth: '181px' }}
+            justifyContent="center"
+          >
+            <Image src={Logo} width="181px" />
+          </Flex>
+          <Flex
+            ml={['0px', '110px']}
+            mt={['20px', '0px']}
+            flexDirection="column"
+            style={{ width: ['calc(100vw - 40px)', '620px'] }}
+          >
             <Text fontSize="18px">{title}</Text>
             <Flex mt="20px">
               <Text fontSize="16px" color="#8d94bf" lineHeight={1.75}>
                 {description}
               </Text>
             </Flex>
-            <Flex flexDirection="row" mt="20px">
+            <Flex flexDirection={['column', 'row']} mt="20px">
               <Flex fontSize="16px" mr="85px">
                 <a
                   style={{ color: 'white' }}
@@ -49,7 +77,7 @@ export default ({
                   <i className="fas fa-arrow-right" />
                 </Text>
               </Flex>
-              <Flex fontSize="16px">
+              <Flex fontSize="16px" mt={['20px', '0px']}>
                 {link2}
                 <Flex mx="5px" />
                 <Text color="#6b8bf5" fontSize="18px">
@@ -67,51 +95,57 @@ export default ({
           alignItems="flex-end"
         >
           <Flex
-            mx="3px"
             style={{
               borderRadius: '4px',
               overflow: 'hidden',
               cursor: 'pointer',
               transition: 'all 0.5s',
               ...getWHByTab(0),
+              width: ['calc(100vw - 20px)', '410px'],
+              height: ['calc((100vw - 20px) * 0.8)', '335px'],
             }}
           >
             <Image
               src={Img1}
-              {...getWHByTab(0)}
+              width={['calc(100vw - 20px)', '410px']}
+              height={['calc((100vw - 20px) * 0.8)', '335px']}
               onClick={() => setSelectedTab(0)}
             />
           </Flex>
           <Flex
-            mx="3px"
             style={{
               borderRadius: '4px',
               overflow: 'hidden',
               cursor: 'pointer',
               transition: 'all 0.5s',
               ...getWHByTab(1),
+              width: ['calc(100vw - 20px)', '410px'],
+              height: ['calc((100vw - 20px) * 0.8)', '335px'],
             }}
           >
             <Image
               src={Img2}
-              {...getWHByTab(1)}
+              width={['calc(100vw - 20px)', '410px']}
+              height={['calc((100vw - 20px) * 0.8)', '335px']}
               onClick={() => setSelectedTab(1)}
             />
             <Flex />
           </Flex>
           <Flex
-            mx="3px"
             style={{
               borderRadius: '4px',
               overflow: 'hidden',
               cursor: 'pointer',
               transition: 'all 0.5s',
               ...getWHByTab(2),
+              width: ['calc(100vw - 20px)', '410px'],
+              height: ['calc((100vw - 20px) * 0.8)', '335px'],
             }}
           >
             <Image
               src={Img3}
-              {...getWHByTab(2)}
+              width={['calc(100vw - 20px)', '410px']}
+              height={['calc((100vw - 20px) * 0.8)', '335px']}
               onClick={() => setSelectedTab(2)}
             />
           </Flex>

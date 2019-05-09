@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="573" viewBox="0 0 180 573">
+    <g fill="none" fill-rule="evenodd">
+        <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(-6 -29)">
+            <tspan x="0" y="100">1</tspan>
+        </text>
+        <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(-6 -29)">
+            <tspan x="30" y="73">Community </tspan> <tspan x="30" y="100">creates curation </tspan> <tspan x="30" y="127">guideline</tspan>
+        </text>
+        <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(0 138)">
+            <tspan x="0" y="100">2</tspan>
+        </text>
+        <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(0 138)">
+            <tspan x="30" y="73">Data owners </tspan> <tspan x="30" y="100">propose content </tspan> <tspan x="30" y="127">to TCR</tspan>
+        </text>
+        <g>
+            <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(0 305)">
+                <tspan x="0" y="100">3</tspan>
+            </text>
+            <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(0 305)">
+                <tspan x="30" y="73">Token holders </tspan> <tspan x="30" y="100">monitor content </tspan> <tspan x="30" y="127">qualities</tspan>
+            </text>
+        </g>
+        <g>
+            <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(0 472)">
+                <tspan x="0" y="100">4</tspan>
+            </text>
+            <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(0 472)">
+                <tspan x="30" y="73">Users consumes </tspan> <tspan x="30" y="100">curated data</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

@@ -62,7 +62,7 @@ const OutlineButton = styled(Button)`
   font-size: 16px;
   font-weight: 500;
   background-color: rgba(0, 0, 0, 0);
-  width: 182px;
+  width: ${props => (props.isMobile ? '196px' : '182px')};
   height: 46px;
   border-radius: 6px;
   border: solid 1px ${props => props.borderColor};
@@ -74,17 +74,29 @@ const OutlineButton = styled(Button)`
 `
 
 export default () => {
+  const _isMobile = isMobile()
   return (
     <Box style={{ color: '#ffffff' }}>
       <Box style={{ background: colors.gradient.dark }}>
         <PageContainer>
-          <Flex py="150px">
+          <Flex py={['50px', '150px']} flexDirection={['column', 'row']}>
+            {_isMobile && (
+              <Flex
+                flex={1}
+                style={{ minWidth: 'calc(100vw - 40px)' }}
+                bg="reds"
+                justifyContent="flex-end"
+                alignItems="center"
+              >
+                <Image src={HeroSrc} />
+              </Flex>
+            )}
             <Box flex={1}>
               <Text
                 lineHeight={1.6}
                 fletterSpacing="1px"
                 ontWeight="600"
-                fontSize="40px"
+                fontSize={['24px', '40px']}
                 fontFamily="Avenir-Heavy"
               >
                 Decentralized
@@ -94,7 +106,7 @@ export default () => {
               <Flex mt="25px" style={{ maxWidth: '390px' }}>
                 <Text
                   color="#f7f8ff"
-                  fontSize="24px"
+                  fontSize={['16px', '24px']}
                   lineHeight={1.54}
                   fontWeight={300}
                 >
@@ -102,34 +114,39 @@ export default () => {
                   stack
                 </Text>
               </Flex>
-              <Flex mt="30px">
-                <OutlineButton borderColor="#6b7df5">Learn More</OutlineButton>
-                <Flex mx="10px" />
-                <FilledButton>Start Building</FilledButton>
+              <Flex mt="30px" flexDirection={['column-reverse', 'row']}>
+                <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
+                  Learn More
+                </OutlineButton>
+                <Flex mx={['0px', '10px']} my={['10px', '0px']} />
+                <FilledButton isMobile={_isMobile}>Start Building</FilledButton>
               </Flex>
             </Box>
-            <Flex flex={1} justifyContent="flex-end" alignItems="center">
-              <Image src={HeroSrc} height="340px" />
-            </Flex>
+            {!_isMobile && (
+              <Flex flex={1} justifyContent="flex-end" alignItems="center">
+                <Image src={HeroSrc} height="340px" />
+              </Flex>
+            )}
           </Flex>
           <Flex
             bg="#36406e"
             py="40px"
+            px={['20px', '0px']}
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
             style={{
-              width: '940px',
-              height: '370px',
+              width: ['calc(100vw - 40px)', '729px'],
+              height: ['290px', '370px'],
               boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
               borderRadius: '10px',
             }}
           >
-            <Image src={BandInTheMiddle} width="729px" />
-            <Flex style={{ maxWidth: '650px' }}>
+            <Image src={BandInTheMiddle} width={['auto', '729px']} />
+            <Flex style={{ maxWidth: '650px' }} my={['20px', '0px']}>
               <Text
                 textAlign="center"
-                fontSize="20px"
+                fontSize={['14px', '20px']}
                 fontWeight={300}
                 lineHeight={1.65}
               >
@@ -138,37 +155,45 @@ export default () => {
                 smart contract datasets rather than through external oracles.
               </Text>
             </Flex>
-            <Flex alignItems="center" mt="35px">
-              <Text fontWeight={400} fontSize="20px" lineHeight={1.45} mr={3}>
+            <Flex alignItems="center" mt={['20px', '35px']}>
+              <Text
+                fontWeight={400}
+                fontSize={['16px', '20px']}
+                lineHeight={1.45}
+                mr={[2, 3]}
+              >
                 Example Usecases
               </Text>
-              <Text color="#5eebbe" fontSize="18px">
+              <Text color="#5eebbe" fontSize={['16px', '18px']}>
                 <i className="fas fa-arrow-right" />
               </Text>
             </Flex>
           </Flex>
-          <Box pt={6} pb={5}>
+          <Box pt={['40px', 6]} pb={[4, 5]}>
             <Text
-              textAlign="center"
+              textAlign={['left', 'center']}
               fontWeight={900}
-              fontSize="34px"
+              fontSize={['24px', '34px']}
               letterSpacing="1.3px"
+              lineHeight={[1.33, 1]}
               mb={3}
             >
-              Band Protocol Provides
+              Band Protocol {_isMobile && <br />}Provides
             </Text>
             <Text
               color="#f7f8ff"
-              textAlign="center"
               fontWeight={400}
-              fontSize="25px"
-              lineHeight={1.16}
+              textAlign={['left', 'center']}
+              fontSize={['16px', '25px']}
+              lineHeight={[1.63, 1.16]}
             >
-              Reliable Datasets for Enterprises, Developers and Communities
+              Reliable Datasets for Enterprises, {_isMobile && <br />}Developers
+              and Communities
             </Text>
           </Box>
-          <Flex flexDirection="row" justifyContent="center">
+          <Flex flexDirection={['column', 'row']} justifyContent="center">
             <FeatureCard
+              isMobile={_isMobile}
               subtitle="Develop using"
               title="Band Datasets"
               content="Take advantage of Token Curated DataSource as a trusted source of crypto price, sport and loterry."
@@ -178,6 +203,8 @@ export default () => {
               <Image src={LandingBandDB} height="92px" />
             </FeatureCard>
             <FeatureCard
+              isMobile={_isMobile}
+              mt={_isMobile ? '20px' : '0px'}
               subtitle="Participate in"
               title="Data Governance"
               content="Stake on data providers you trust and earn provider fee."
@@ -188,22 +215,31 @@ export default () => {
               </Box>
             </FeatureCard>
           </Flex>
-          <Flex mt="75px" flexDirection="row" justifyContent="center">
+          <Flex
+            mt={['50px', '75px']}
+            flexDirection={['column', 'row']}
+            justifyContent="center"
+          >
             <Flex
               bg="rgba(0,0,0,0)"
               flexDirection="column"
               style={{
                 width: '425px',
-                height: '325px',
+                height: ['auto', '325px'],
               }}
-              pl="40px"
+              pl={['0px', '50px']}
+              mb={['40px', '0px']}
             >
               <Flex>
-                <Text fontSize="22px" fontWeight={600} color="#8d94bf">
+                <Text
+                  fontSize={['20px', '22px']}
+                  fontWeight={600}
+                  color="#8d94bf"
+                >
                   Partnerships Featuring
                 </Text>
               </Flex>
-              <Flex mt="40px">
+              <Flex mt={['30px', '40px']}>
                 <Image src={Sequoia} width="148px" />
               </Flex>
               <Flex mt="35px">
@@ -213,22 +249,26 @@ export default () => {
                 <Image src={Seax} width="105px" height="45px" />
               </Flex>
             </Flex>
-            <Flex mx="18px" />
+            {!_isMobile && <Flex mx="18px" />}
             <Flex
               bg="rgba(0,0,0,0)"
               flexDirection="column"
-              px="40px"
+              px={['0px', '40px']}
               style={{
                 width: '425px',
                 height: '325px',
               }}
             >
               <Flex>
-                <Text fontSize="22px" fontWeight={600} color="#8d94bf">
-                  Join Band Protocol Community
+                <Text
+                  fontSize={['20px', '22px']}
+                  fontWeight={600}
+                  color="#8d94bf"
+                >
+                  Join Band Protocol {_isMobile && <br />}Community
                 </Text>
               </Flex>
-              <Flex fontSize="18px" mt="40px" alignItems="center">
+              <Flex fontSize="18px" mt={['30px', '40px']} alignItems="center">
                 <Image src={Reddit} width="30px" />
                 <Flex mx="20px" />
                 Reddit
@@ -267,8 +307,13 @@ export default () => {
         Img2={SSExample1}
         Img3={SSExample1}
       >
-        <Text textAlign="center" fontWeight="600" fontSize="32px">
-          Applications Developed with Band Protocol
+        <Text
+          textAlign={['left', 'center']}
+          fontWeight="600"
+          fontSize={['24px', '32px']}
+          lineHeight={[1.33, 1]}
+        >
+          Applications Developed {_isMobile && <br />} with Band Protocol
         </Text>
       </LandingShowcase>
       <LandingShowcase

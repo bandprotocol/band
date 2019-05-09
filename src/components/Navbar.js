@@ -18,6 +18,16 @@ import { withRouter } from 'react-router-dom'
 import LogoSrc from 'images/logo.svg'
 import MenuBurgerSrc from 'images/menu-burger.svg'
 import MenuCloseSrc from 'images/menu-close.svg'
+
+import MenuDT from 'images/menu_dt.svg'
+import MenuPDS from 'images/menu_pds.svg'
+import MenuTCD from 'images/menu_tcd.svg'
+import MenuTCR from 'images/menu-tcr.svg'
+import MenuWallet from 'images/menu_wallet.svg'
+
+import GovernancePortalImg from 'images/governancePortal.svg'
+import DatasetExplorerImg from 'images/datasetExplorer.svg'
+
 import { colors } from 'ui'
 
 const Nav = styled.nav`
@@ -56,6 +66,28 @@ const SubMenu = styled(Flex).attrs({
   }
 `
 
+const MainMenuText = styled(Text).attrs({
+  color: 'white',
+  fontSize: '20px',
+})`
+  font-size: 16px;
+  transition: all 0.25s;
+  &:hover {
+    color: #bfcdff;
+  }
+`
+
+const getImg = id =>
+  [
+    MenuDT,
+    MenuTCD,
+    MenuTCR,
+    MenuWallet,
+    MenuPDS,
+    GovernancePortalImg,
+    DatasetExplorerImg,
+  ][id]
+
 const NavMenu = ({ isSelected, title, tabs }) => {
   return (
     <Flex
@@ -92,9 +124,9 @@ const NavMenu = ({ isSelected, title, tabs }) => {
               style={{ flex: 1, textDecoration: 'none' }}
             >
               <SubMenu>
-                <Text color="white" fontSize="40px">
-                  {i + 1}
-                </Text>
+                <Flex style={{ minHeight: '70px' }} alignItems="center">
+                  <Image src={getImg(tab.imgIndex)} height={tab.imgHeight} />
+                </Flex>
                 <Flex mt="80px" style={{ height: '60px' }}>
                   <Text
                     color="white"
@@ -125,19 +157,26 @@ const NavMenu = ({ isSelected, title, tabs }) => {
 const Navbar = props => {
   const [showMenu, setShowMenu] = useState(false)
   const [selectedTab, setSelectedTab] = useState(-1)
+  const [scrollTop, setScrollTop] = useState(0)
+  const [oldScrollTop, setOldScrollTop] = useState(0)
+  const [deltaScroll, setDeltaScroll] = useState(0)
+
+  const handleScroll = e => {
+    setScrollTop(parseInt(e.target.scrollTop))
+  }
 
   useEffect(() => {
-    const handleScroll = function() {
-      console.log('opopopopopop')
-    }
     window.document.body.addEventListener('scroll', handleScroll)
-
     return () =>
       window.document.body.removeEventListener('scroll', handleScroll)
   }, [])
 
   const prevLocation = useRef()
   useEffect(() => {
+    if (oldScrollTop !== scrollTop) {
+      setDeltaScroll(scrollTop - oldScrollTop)
+      setOldScrollTop(scrollTop)
+    }
     if (props.location !== prevLocation.current) {
       setShowMenu(false)
       setSelectedTab(-1)
@@ -225,14 +264,10 @@ const Navbar = props => {
   const renderDesktop = () => {
     const { pathname } = props.location
     return (
-      <Flex
-        alignItems="center"
-        onScroll={() => console.log('dfdfdfdfs')}
-        onMouseOver={() => selectTab(-1)}
-      >
+      <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
         <Box ml="40px">
           <Link to="/why-band">
-            <Text fontSize="16px">Why Band?</Text>
+            <MainMenuText>Why Band?</MainMenuText>
           </Link>
         </Box>
         <Flex
@@ -245,7 +280,7 @@ const Navbar = props => {
           }}
         >
           <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
-            <Text fontSize="16px">Products</Text>
+            <MainMenuText>Products</MainMenuText>
             <Text ml={2} pt="2px" color="#6b8bf5" fontSize="12px">
               <i className="fas fa-chevron-down" />
             </Text>
@@ -257,26 +292,36 @@ const Navbar = props => {
               {
                 title: 'Data Tokenization',
                 link: '/products/data-tokenization',
+                imgIndex: 0,
+                imgHeight: '46px',
                 content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
               {
                 title: 'Token Curated DataSources',
                 link: '/products/tcd',
+                imgIndex: 1,
+                imgHeight: '67px',
                 content: `Build robust, decentralized data feed from a network of data providers`,
               },
               {
                 title: 'Token Curated Registries',
                 link: '/products/tcr',
+                imgIndex: 2,
+                imgHeight: '28px',
                 content: `Build reliable, more transparent crowd-source information through crypto-incentized data curation`,
               },
               {
                 title: 'Band Web3 Wallet',
                 link: '/products/wallet',
+                imgIndex: 3,
+                imgHeight: '49px',
                 content: `An all-in-one, UX optimized Web3 wallet for Ethereum DApps`,
               },
               {
                 title: 'Private Data Sharing',
                 link: '/products/private-sharing',
+                imgIndex: 4,
+                imgHeight: '47px',
                 content: `Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`,
               },
             ]}
@@ -292,7 +337,7 @@ const Navbar = props => {
           }}
         >
           <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
-            <Text fontSize="16px">Explorers</Text>
+            <MainMenuText>Explorers</MainMenuText>
             <Text ml={2} pt="2px" color="#6b8bf5" fontSize="12px">
               <i className="fas fa-chevron-down" />
             </Text>
@@ -304,11 +349,15 @@ const Navbar = props => {
               {
                 title: 'Governance Portal',
                 href: 'https://data.bandprotocol.com',
+                imgIndex: 5,
+                imgHeight: '50px',
                 content: `Join data curation community, stake tokens on data prodicers and vote on governance parameters`,
               },
               {
                 title: 'Dataset Explorer',
                 href: 'https://data.bandprotocol.com',
+                imgIndex: 6,
+                imgHeight: '46px',
                 content: `Explore dataset availables by Band Protocol and learn how to integrate with the DApps`,
               },
             ]}
@@ -316,12 +365,12 @@ const Navbar = props => {
         </Flex>
         <Box ml="40px">
           <Link to="/company">
-            <Text fontSize="16px">Company</Text>
+            <MainMenuText>Company</MainMenuText>
           </Link>
         </Box>
         <Box ml="40px">
           <AbsoluteLink target="_blank" to="https://medium.com/bandprotocol">
-            <Text fontSize="16px">Blog</Text>
+            <MainMenuText>Blog</MainMenuText>
           </AbsoluteLink>
         </Box>
       </Flex>
@@ -329,7 +378,27 @@ const Navbar = props => {
   }
 
   return (
-    <Nav>
+    <Nav
+      style={{
+        transition: 'all 350ms',
+        position: 'sticky',
+        transform: `translateY(${deltaScroll <= 0 ? '0px' : '-80px'})`,
+      }}
+    >
+      <Flex
+        bg="#2a304e"
+        style={{
+          position: 'absolute',
+          width: '100vw',
+          height: '100vh',
+          top: '80px',
+          opacity: showMenu ? 0.5 : 0,
+          pointerEvents: showMenu ? 'all' : 'none',
+          transition: 'all 0.5s',
+        }}
+        onClick={() => selectTab(-1)}
+        onMouseOver={() => selectTab(-1)}
+      />
       <Flex
         bg={showMenu ? '#252b4a' : 'rgba(0,0,0,0)'}
         style={{
@@ -342,21 +411,6 @@ const Navbar = props => {
         px="30px"
         alignItems="center"
       >
-        <Flex
-          bg="#2a304e"
-          style={{
-            position: 'fixed',
-            width: '100%',
-            height: '100%',
-            top: '80px',
-            left: '0px',
-            opacity: showMenu ? 0.5 : 0,
-            pointerEvents: showMenu ? 'all' : 'none',
-            transition: 'all 0.5s',
-          }}
-          onClick={() => selectTab(-1)}
-          onMouseOver={() => selectTab(-1)}
-        />
         <Flex width={1}>
           <Flex style={{ minWidth: '180px' }}>
             <Link dark to="/">

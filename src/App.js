@@ -25,37 +25,33 @@ import PrivateDataSharing from 'pages/products/PrivateDataSharing'
 import DataTokenization from 'pages/products/DataTokenization'
 import NotFoundPage from 'pages/404'
 
-export default class App extends Component {
-  render() {
-    return (
-      <ThemeProvider theme={theme}>
-        <Router>
-          <React.Fragment>
-            <ScrollToTop />
-            <Navbar />
-            <Switch>
-              <Route exact path="/" component={LandingPage} />
-              <Route exact path="/products/tcd" component={TCDPage} />
-              <Route exact path="/products/tcr" component={TCRPage} />
-              <Route exact path="/products/wallet" component={WalletPage} />
-              <Route
-                exact
-                path="/products/data-tokenization"
-                component={DataTokenization}
-              />
-              <Route
-                exact
-                path="/products/private-sharing"
-                component={PrivateDataSharing}
-              />
-              <Route exact path="/company" component={CompanyPage} />
-              <Route exact path="/why-band" component={WhyBand} />
-              <Route path="/" component={NotFoundPage} />
-            </Switch>
-            <Footer />
-          </React.Fragment>
-        </Router>
-      </ThemeProvider>
-    )
-  }
-}
+export default () => (
+  <ThemeProvider theme={theme}>
+    <Router>
+      <React.Fragment>
+        <ScrollToTop />
+        <Navbar />
+        <Switch>
+          <Route exact path="/" component={LandingPage} />
+          <Route exact path="/products/tcd" component={TCDPage} />
+          <Route exact path="/products/tcr" component={TCRPage} />
+          <Route exact path="/products/wallet" component={WalletPage} />
+          <Route
+            exact
+            path="/products/data-tokenization"
+            component={DataTokenization}
+          />
+          <Route
+            exact
+            path="/products/private-sharing"
+            component={PrivateDataSharing}
+          />
+          <Route exact path="/company" component={CompanyPage} />
+          <Route exact path="/why-band" component={WhyBand} />
+          <Route path="/" component={NotFoundPage} />
+        </Switch>
+        <Footer />
+      </React.Fragment>
+    </Router>
+  </ThemeProvider>
+)

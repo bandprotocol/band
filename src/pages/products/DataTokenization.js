@@ -19,30 +19,57 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
-import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
-
-import TCRSrc from 'images/tcr.svg'
+import DataTokenization from 'images/dataTokenization.svg'
+import IssuanceImg from 'images/start-up.svg'
+import GovernanceImg from 'images/governanceImg.svg'
+import StakingImg from 'images/coins.svg'
 
 export default () => {
+  const _isMobile = isMobile()
   return (
     <Box>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
-          <Box mt={5} mb={2}>
-            <H1 textAlign="center" dark>
+          <Box mt={[4, 5]} mb={[3, 4]}>
+            <Text
+              textAlign="center"
+              fontSize={['24px', '38px']}
+              fontWeight={900}
+              color="#2a304e"
+            >
               Data Tokenization
-            </H1>
+            </Text>
           </Box>
-          <Text textAlign="center" width="860px" fontSize={2} lineHeight={1.94}>
+          <Text
+            textAlign={['left', 'center']}
+            width={['calc(100vw - 40px)', '860px']}
+            fontSize={['16px', '18px']}
+            lineHeight={[1.63, 1.94]}
+          >
             In Web 2.0, users lack data sovereignty as most business models rely
             on user data for monetization. Web 3.0 provides an opportunity for
             new business models to emerge where users retain control and
             sovereignty over their data through tokenization.
           </Text>
-          <Flex my="100px" />
-          <Card bg="#f6f8ff" py="50px" px="80px" width="940px">
-            <Text textAlign="center" fontSize={2} lineHeight={1.94} mb={4}>
+          <Image
+            src={DataTokenization}
+            my={['30px', '70px']}
+            width={['calc(100vw - 40px)', '620px']}
+          />
+          <Card
+            bg="#f6f8ff"
+            pt={4}
+            pb={['30px', 5]}
+            px={['20px', '40px']}
+            width={['calc(100vw - 40px)', '840px']}
+          >
+            <Text
+              textAlign={['left', 'center']}
+              color="#4c4c4c"
+              fontSize={['16px', '18px']}
+              lineHeight={[1.63, 1.94]}
+            >
               For effective data tokenization there must be standard frameworks
               for token issuance and valuation. Band has devised innovative
               bonding curves to effectively manage token issuance, liquidity and
@@ -55,33 +82,61 @@ export default () => {
               tokenized solutions with ease.
             </Text>
             <Flex justifyContent="center">
-              <Button variant="primary">Create data-curation community</Button>
+              <Button
+                variant="primary"
+                fontSize="16px"
+                mt={['30px', '45px']}
+                style={{
+                  height: '45px',
+                  width: _isMobile ? '250px' : '280px',
+                  padding: _isMobile ? '0px' : null,
+                }}
+              >
+                Create data-curation community
+              </Button>
             </Flex>
           </Card>
         </Flex>
-        <Flex my="50px" />
+        <Flex my={['15px', '35px']} />
       </PageContainer>
-      <Box bg="#f6f8ff">
+      <Box bg="#fafafa" mb={['425px', '0px']}>
         <PageContainer>
-          <Flex flexDirection="column" alignItems="center" pb={5}>
-            <Box mt={5} mb={2}>
-              <H1 textAlign="center" dark>
+          <Flex flexDirection="column" alignItems="center" pb={[5, '200px']}>
+            <Box mt={['45px', 5]} mb={['25px', 2]}>
+              <Text
+                textAlign="center"
+                fontSize={['24px', '38px']}
+                fontWeight={900}
+                color="#2a304e"
+              >
                 Use Cases
-              </H1>
+              </Text>
             </Box>
             <Text
               textAlign="center"
-              width="555px"
-              fontSize={2}
-              lineHeight={1.94}
+              width={['calc(100vw - 40px)', '555px']}
+              fontSize={['16px', '18px']}
+              lineHeight={[1.63, 1.94]}
             >
               Data tokenization includes a plethora of use cases across the Band
               ecosystem Some prominent examples include:
             </Text>
-            <Flex justifyContent="center" mt={6} width={1}>
-              <Flex mx="40px" />
-              <Flex flex={1} flexDirection="column">
-                <Text color="#2a304e" fontSize="24px" fontWeight={900}>
+            <Flex
+              justifyContent="center"
+              alignItems={['center', 'flex-start']}
+              flexDirection={['column', 'row']}
+              mt={['30px', '70px']}
+              width={1}
+            >
+              <Flex mx={['0px', '40px']} my={['30px', '0px']} />
+              <Flex flex={1} flexDirection="column" alignItems="flex-start">
+                <Image src={IssuanceImg} height="100px" />
+                <Text
+                  mt="35px"
+                  color="#2a304e"
+                  fontSize="24px"
+                  fontWeight={900}
+                >
                   Issuance
                 </Text>
                 <Flex mt="15px" style={{ maxWidth: '240px' }}>
@@ -90,9 +145,15 @@ export default () => {
                   </Text>
                 </Flex>
               </Flex>
-              <Flex mx="40px" />
-              <Flex flex={1} flexDirection="column">
-                <Text color="#2a304e" fontSize="24px" fontWeight={900}>
+              <Flex mx={['0px', '40px']} my={['30px', '0px']} />
+              <Flex flex={1} flexDirection="column" alignItems="flex-start">
+                <Image src={GovernanceImg} height="100px" />
+                <Text
+                  mt="35px"
+                  color="#2a304e"
+                  fontSize="24px"
+                  fontWeight={900}
+                >
                   Governance
                 </Text>
                 <Flex mt="15px" style={{ maxWidth: '240px' }}>
@@ -101,9 +162,15 @@ export default () => {
                   </Text>
                 </Flex>
               </Flex>
-              <Flex mx="40px" />
-              <Flex flex={1} flexDirection="column">
-                <Text color="#2a304e" fontSize="24px" fontWeight={900}>
+              <Flex mx={['0px', '40px']} my={['30px', '0px']} />
+              <Flex flex={1} flexDirection="column" alignItems="flex-start">
+                <Image src={StakingImg} height="100px" />
+                <Text
+                  mt="35px"
+                  color="#2a304e"
+                  fontSize="24px"
+                  fontWeight={900}
+                >
                   Staking
                 </Text>
                 <Flex mt="15px" style={{ maxWidth: '240px' }}>
@@ -117,9 +184,13 @@ export default () => {
           </Flex>
         </PageContainer>
       </Box>
-      <Box bg="#f6f8ff" style={{ height: 180 }} />
-      <Box mb="-80px" style={{ background: '#17192e', color: '#ffffff' }}>
-        <StartBuilding style={{ transform: 'translateY(-50%)' }} />
+      <Box
+        mb={['-350px', '-80px']}
+        style={{ background: '#17192e', color: '#ffffff' }}
+      >
+        <StartBuilding
+          style={{ transform: `translateY(-${_isMobile ? 60 : 50}%)` }}
+        />
       </Box>
     </Box>
   )
