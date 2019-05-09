@@ -30,5 +30,8 @@
     "trailingComma": "all",
     "semi": false,
     "singleQuote": true
+  },
+  "devDependencies": {
+    "babel-plugin-macros": "^2.5.1"
   }
 }

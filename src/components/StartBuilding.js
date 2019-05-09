@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import LandingStartBuilding from 'images/landing-start-building.png'
 
@@ -26,12 +26,21 @@ const FilledButton = styled(Button)`
   font-size: 16px;
   font-weight: 500;
   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
+  width: 220px;
   height: 46px;
-  border-radius: 6px;
+  border-radius: 2px;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #6b7df5;
   cursor: pointer;
+  background-color: #454366;
+  transition: all 0.25s;
+
+  &:hover {
+    background-color: #302d61;
+  }
+
+  &:active {
+    background-color: #302d61;
+  }
 
   &:focus {
     outline: none;
@@ -45,9 +54,20 @@ const OutlineButton = styled(Button)`
   background-color: rgba(0, 0, 0, 0);
   width: 182px;
   height: 46px;
-  border-radius: 6px;
+  border-radius: 2px;
   border: solid 1px ${props => props.borderColor};
   cursor: pointer;
+  transition: all 0.25s;
+
+  &:hover {
+    background-color: #302d61;
+    border: none;
+  }
+
+  &:active {
+    background-color: #302d61;
+    border: none;
+  }
 
   &:focus {
     outline: none;
@@ -116,14 +136,7 @@ export default ({ style = {}, ...props }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FilledButton
-                style={{
-                  width: '220px',
-                  backgroundImage: 'linear-gradient(249deg, #454366, #3a3d5a)',
-                }}
-              >
-                Developer Portal
-              </FilledButton>
+              <FilledButton>Developer Portal</FilledButton>
             </a>
           </Flex>
         </Flex>

@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
 import {
@@ -91,6 +91,14 @@ export default () => {
                     height: '45px',
                     width: _isMobile ? '250px' : '280px',
                     padding: _isMobile ? '0px' : null,
+                  }}
+                  css={{
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:active': {
+                      backgroundColor: '#5269ff',
+                    },
                   }}
                 >
                   Create data-curation community

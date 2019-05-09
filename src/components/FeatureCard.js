@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components/macro'
 import { Flex, Text, AbsoluteLink } from 'ui/common'
 
 export default ({
@@ -44,7 +45,7 @@ export default ({
       </Flex>
       <Flex my={['15px', '20px']} />
       {children}
-      <AbsoluteLink href={link}>
+      <AbsoluteLink href={link} style={{ textDecoration: 'none' }}>
         <Flex
           pl="30px"
           pb={isMobile ? '10px' : '0px'}
@@ -56,8 +57,24 @@ export default ({
           mt="auto"
           flex="0 0 60px"
           alignItems="center"
+          css={{
+            i: { transition: 'transform 200ms' },
+            '&:hover i': {
+              transform: 'translateX(5px)',
+            },
+          }}
         >
-          <Text color="#252945">{linkText}</Text>
+          <Text
+            color="#252945"
+            css={{
+              transition: 'all 200ms',
+              '&:hover': {
+                color: '#6b8bf5',
+              },
+            }}
+          >
+            {linkText}
+          </Text>
           <Flex
             style={{
               position: 'absolute',

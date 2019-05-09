@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
 import {
@@ -226,11 +226,24 @@ export default () => {
               <AbsoluteLink href="https://data.bandprotocol.com">
                 <Button
                   variant="outline"
+                  color="#545454"
                   style={{
-                    color: '#545454',
                     height: '45px',
                     width: _isMobile ? '196px' : null,
                     padding: _isMobile ? '5px' : null,
+                  }}
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      backgroundColor: '#6b7df5',
+                      color: 'white',
+                    },
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:active': {
+                      backgroundColor: '#5269ff',
+                    },
                   }}
                 >
                   Explore Datasets
@@ -245,6 +258,15 @@ export default () => {
                     height: '45px',
                     width: _isMobile ? '196px' : null,
                     padding: _isMobile ? '5px' : null,
+                  }}
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:active': {
+                      backgroundColor: '#5269ff',
+                    },
                   }}
                 >
                   Developer Reference

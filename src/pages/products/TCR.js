@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
 import {
@@ -284,6 +284,14 @@ export default () => {
                     height: '45px',
                     width: _isMobile ? '196px' : null,
                     padding: _isMobile ? '5px' : null,
+                  }}
+                  css={{
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:active': {
+                      backgroundColor: '#5269ff',
+                    },
                   }}
                 >
                   Developer Reference

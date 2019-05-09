@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import {
   Link,
@@ -38,7 +38,15 @@ const Container = styled(Box)`
 
 const SmallIcon = ({ ml, href, src }) => (
   <Flex ml={ml} alignItems="center" justifyContent="center">
-    <AbsoluteLink href={href}>
+    <AbsoluteLink
+      href={href}
+      css={{
+        transition: 'all 0.2s',
+        '&:hover': {
+          filter: 'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
+        },
+      }}
+    >
       <Box mx={2}>
         <Image src={src} width="26px" />
       </Box>

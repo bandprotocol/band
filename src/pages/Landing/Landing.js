@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import LandingShowcase from 'components/LandingShowcase'
 import { colors } from 'ui'
@@ -57,6 +57,12 @@ const FilledButton = styled(Button)`
   background-color: #6b7df5;
   cursor: pointer;
 
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #5269ff;
+  }
+
   &:focus {
     outline: none;
   }
@@ -72,6 +78,16 @@ const OutlineButton = styled(Button)`
   border-radius: 6px;
   border: solid 1px ${props => props.borderColor};
   cursor: pointer;
+
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #6b7df5;
+  }
+
+  &:active {
+    background-color: #5269ff;
+  }
 
   &:focus {
     outline: none;
@@ -180,6 +196,12 @@ export default () => {
                 fontSize={['16px', '20px']}
                 lineHeight={1.45}
                 mr={[2, 3]}
+                css={{
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    color: '#bfcdff',
+                  },
+                }}
               >
                 Example Usecases
               </Text>
@@ -260,17 +282,44 @@ export default () => {
                   Partnerships Featuring
                 </Text>
               </Flex>
-              <Flex mt={['30px', '40px']}>
+              <Flex
+                mt={['30px', '40px']}
+                css={{
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    filter:
+                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                  },
+                }}
+              >
                 <AbsoluteLink href="https://www.sequoiacap.com/">
                   <Image src={Sequoia} width="148px" />
                 </AbsoluteLink>
               </Flex>
-              <Flex mt="35px">
+              <Flex
+                mt="35px"
+                css={{
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    filter:
+                      'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
+                  },
+                }}
+              >
                 <AbsoluteLink href="http://www.dunamupartners.com/">
                   <Image src={Dunamu} width="245px" />
                 </AbsoluteLink>
               </Flex>
-              <Flex mt="35px">
+              <Flex
+                mt="35px"
+                css={{
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    filter:
+                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                  },
+                }}
+              >
                 <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
                   <Image src={Seax} width="105px" height="45px" />
                 </AbsoluteLink>
@@ -301,6 +350,13 @@ export default () => {
                   mt="40px"
                   alignItems="center"
                   color="white"
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      filter:
+                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
                 >
                   <Image src={Reddit} width="30px" />
                   <Flex mx="20px" />
@@ -314,6 +370,13 @@ export default () => {
                   mt="35px"
                   alignItems="center"
                   color="white"
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      filter:
+                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
                 >
                   <Image src={Telegram} width="30px" />
                   <Flex mx="20px" />
@@ -326,6 +389,13 @@ export default () => {
                   mt="35px"
                   alignItems="center"
                   color="white"
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      filter:
+                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
                 >
                   <Image src={Medium} width="30px" />
                   <Flex mx="20px" />
@@ -338,6 +408,13 @@ export default () => {
                   mt="35px"
                   alignItems="center"
                   color="white"
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      filter:
+                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
                 >
                   <Image src={Twitter} width="30px" />
                   <Flex mx="20px" />

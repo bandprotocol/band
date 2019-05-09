@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { colors } from 'ui'
 import {
@@ -91,7 +91,19 @@ export default () => {
                 target="_self"
                 href="mailto:connect@bandprotocol.com"
               >
-                <Button variant="primary">Contact Us</Button>
+                <Button
+                  variant="primary"
+                  css={{
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:active': {
+                      backgroundColor: '#5269ff',
+                    },
+                  }}
+                >
+                  Contact Us
+                </Button>
               </AbsoluteLink>
             </Flex>
           </Card>

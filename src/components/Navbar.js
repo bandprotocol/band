@@ -381,7 +381,11 @@ const Navbar = props => {
           </Link>
         </Box>
         <Box ml="40px">
-          <AbsoluteLink target="_blank" to="https://medium.com/bandprotocol">
+          <AbsoluteLink
+            style={{ textDecoration: 'none' }}
+            target="_blank"
+            to="https://medium.com/bandprotocol"
+          >
             <MainMenuText>Blog</MainMenuText>
           </AbsoluteLink>
         </Box>

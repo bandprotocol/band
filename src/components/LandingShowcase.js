@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
+import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import { Flex, Text, Image, Box, Link } from 'ui/common'
+import { Flex, Text, Image, Box, Link, AbsoluteLink } from 'ui/common'
 import { isMobile } from 'ui/media'
 
 export default ({
@@ -64,14 +65,13 @@ export default ({
             </Flex>
             <Flex flexDirection={['column', 'row']} mt="20px">
               <Flex fontSize="16px" mr="85px">
-                <a
-                  style={{ color: 'white' }}
+                <AbsoluteLink
                   target="_blank"
                   rel="noopener noreferrer"
                   href={'https://' + link1.toLowerCase()}
                 >
                   {link1}
-                </a>
+                </AbsoluteLink>
                 <Flex mx="5px" />
                 <Text color="#6b8bf5" fontSize="18px">
                   <i className="fas fa-arrow-right" />
@@ -79,7 +79,12 @@ export default ({
               </Flex>
               <Flex fontSize="16px" mt={['20px', '0px']}>
                 <Link
-                  style={{ color: 'white' }}
+                  css={{
+                    transition: 'all 0.2s',
+                    '&:hover': {
+                      color: '#bfcdff',
+                    },
+                  }}
                   to={
                     link2.indexOf('DataSource') >= 0
                       ? 'products/tcd'

@@ -1,8 +1,23 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import colors from './colors'
-import { Text, Image as BaseImage, Flex, Box, Button, Card } from 'rebass'
+import {
+  Text as BaseText,
+  Image as BaseImage,
+  Flex as BaseFlex,
+  Box as BaseBox,
+  Button as BaseButton,
+  Card as BaseCard,
+} from 'rebass'
 import { Link as RouterLink } from 'react-router-dom'
+
+export const Text = styled(BaseText)``
+export const Flex = styled(BaseFlex)``
+export const Box = styled(BaseBox)``
+export const Button = styled(BaseButton)`
+  border-radius: 2px;
+`
+export const Card = styled(BaseCard)``
 
 export const Bold = styled(Text).attrs({
   fontWeight: 700,
@@ -60,11 +75,12 @@ export const Link = styled(RouterLink)`
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  color: ${p => (p.dark ? colors.blue.dark : colors.blue.normal)};
+  color: ${p => (p.dark ? colors.blue.dark : p.color ? p.color : 'white')};
   transition: color 250ms;
 
   &:hover {
-    color: ${p => (p.dark ? colors.blue.normal : colors.blue.dark)};
+    color: ${p =>
+      p.dark ? colors.blue.normal : p.hoverColor ? p.hoverColor : '#bfcdff'};
   }
 `
 
@@ -73,12 +89,12 @@ export const AbsoluteLink = styled.a.attrs({
   target: props => props.target || '_blank',
   rel: 'noopener',
 })`
-  text-decoration: underline;
-  color: ${p => (p.dark ? colors.blue.dark : colors.blue.normal)};
+  text-decoration: none;
+  color: ${p => (p.dark ? colors.blue.dark : p.color ? p.color : 'white')};
   transition: color 250ms;
 
   &:hover {
-    color: ${p => (p.dark ? colors.blue.normal : colors.blue.dark)};
+    color: ${p => (p.dark && colors.blue.normal) || p.hoverColor || '#bfcdff'};
   }
 `
 
@@ -88,5 +104,3 @@ export const BackgroundCard = styled(Card)`
   background-position: center;
   background-repeat: no-repeat;
 `
-
-export { Text, Flex, Box, Button, Card }
