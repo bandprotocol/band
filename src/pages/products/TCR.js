@@ -49,7 +49,7 @@ import Animate7Src from 'images/animate-tcr/animate-7.png'
 import Animate8Src from 'images/animate-tcr/animate-8.png'
 import Animate9Src from 'images/animate-tcr/animate-9.png'
 import Animate10Src from 'images/animate-tcr/animate-10.png'
-import Animat119Src from 'images/animate-tcr/animate-11.png'
+import Animate11Src from 'images/animate-tcr/animate-11.png'
 
 const animatorSteps = [
   {
@@ -78,7 +78,128 @@ const animatorSteps = [
   },
 ]
 
-const animatorSpites = []
+const animatorSpites = [
+  {
+    src: Animate1Src,
+    height: 110,
+    steps: [
+      [1, 198, 195, 0, 1.4], //
+      [1, 287, 195], //
+      [1, 334, 195], //
+      [1, 101, 195, 0, 1.2], //
+    ],
+  },
+  {
+    src: Animate2Src,
+    height: 167,
+    steps: [
+      [0, 110, 161], //
+      [1, 122, 161, 300], //
+      [0, 110, 161], //
+      [0, 110, 161], //
+    ],
+  },
+  {
+    src: Animate3Src,
+    height: 151,
+    steps: [
+      [0, 150, 167], //
+      [1, 160, 167, 600], //
+      [1, 54, 167], //
+      [0, 54, 167], //
+    ],
+  },
+  {
+    src: Animate4Src,
+    height: 167,
+    steps: [
+      [0, 181, 150], //
+      [1, 181, 161, 800], //
+      [1, 56, 161], //
+      [0, 56, 161], //
+    ],
+  },
+  {
+    src: Animate5Src,
+    height: 150,
+    steps: [
+      [0, 180, 130], //
+      [1, 180, 141, 800], //
+      [0, 180, 130], //
+      [0, 180, 130], //
+    ],
+  },
+  {
+    src: Animate6Src,
+    height: 190,
+    steps: [
+      [0, 179, 157], //
+      [0, 179, 157], //
+      [1, 159, 157, 300], //
+      [0, 179, 157], //
+    ],
+  },
+  {
+    src: Animate7Src,
+    height: 29,
+    steps: [
+      [0, 244, 165], //
+      [0, 244, 165], //
+      [1, 244, 172, 500], //
+      [0, 244, 165], //
+    ],
+  },
+  {
+    src: Animate8Src,
+    height: 29,
+    steps: [
+      [0, 244, 232], //
+      [0, 244, 232], //
+      [1, 244, 239, 700], //
+      [0, 244, 232], //
+    ],
+  },
+  {
+    src: Animate7Src,
+    height: 29,
+    steps: [
+      [0, 244, 299], //
+      [0, 244, 299], //
+      [1, 244, 306, 900], //
+      [0, 244, 299], //
+    ],
+  },
+  {
+    src: Animate9Src,
+    height: 137,
+    steps: [
+      [0, 275, 184], //
+      [0, 275, 184], //
+      [1, 282, 184, 900], //
+      [0, 275, 184], //
+    ],
+  },
+  {
+    src: Animate10Src,
+    height: 148,
+    steps: [
+      [0, 220, 170], //
+      [0, 220, 170], //
+      [0, 220, 170], //
+      [1, 230, 170, 300], //
+    ],
+  },
+  {
+    src: Animate11Src,
+    height: 137,
+    steps: [
+      [0, 355, 185], //
+      [0, 355, 185], //
+      [0, 355, 185], //
+      [1, 363, 185, 600], //
+    ],
+  },
+]
 
 export default () => {
   const _isMobile = isMobile()
@@ -168,7 +289,7 @@ export default () => {
           </Card>
         </Flex>
 
-        {true ? (
+        {isMobile() ? (
           <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
             <Box mb={2}>
               <H1 textAlign="center" dark>

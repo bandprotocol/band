@@ -133,6 +133,7 @@ export class AnimationScene extends React.Component {
           position: 'relative',
           position: 'sticky',
           top: 'calc(50vh - 190px)',
+          // border: 'solid 1px #ccc',
           zIndex: 2,
         }}
       >
