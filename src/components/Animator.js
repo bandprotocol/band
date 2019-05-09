@@ -132,12 +132,12 @@ export class AnimationScene extends React.Component {
           height: 500,
           position: 'relative',
           position: 'sticky',
-          top: 'calc(50vh - 160px)',
+          top: '240px',
           // border: 'solid 1px #ccc',
           zIndex: 2,
         }}
       >
-        {spites.map(({ src, height, width, steps }, i) => (
+        {spites.map(({ src, height, width, steps, style = {} }, i) => (
           <Image
             key={i}
             src={src}
@@ -148,6 +148,7 @@ export class AnimationScene extends React.Component {
               position: 'absolute',
               top: 0,
               left: 0,
+              ...style,
               ...this.getStyle(steps),
             }}
           />
