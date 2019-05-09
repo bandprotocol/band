@@ -404,7 +404,7 @@ const Navbar = props => {
         m={['-20px', '0px']}
         style={{
           position: 'absolute',
-          width: '100vw',
+          width: '100%',
           height: '100vh',
           top: '80px',
           opacity: showMenu ? 0.5 : 0,
