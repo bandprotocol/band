@@ -398,7 +398,9 @@ const Navbar = props => {
       style={{
         transition: 'all 350ms',
         position: 'sticky',
-        transform: `translateY(${deltaScroll <= 0 ? '0px' : '-80px'})`,
+        transform: `translateY(${
+          deltaScroll <= 0 || scrollTop < 80 ? '0px' : '-80px'
+        })`,
       }}
     >
       <Flex
@@ -406,7 +408,7 @@ const Navbar = props => {
         m={['-20px', '0px']}
         style={{
           position: 'absolute',
-          width: '100vw',
+          width: '100%',
           height: '100vh',
           top: '80px',
           opacity: showMenu ? 0.5 : 0,
