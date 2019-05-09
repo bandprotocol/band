@@ -23,7 +23,7 @@ export default class Animator extends React.Component {
 
   onScroll() {
     const diff = this.container.current.getBoundingClientRect().top - 400
-    const step = diff < 0 ? Math.floor(Math.abs(diff) / 400) : -1
+    const step = diff < 0 ? Math.floor(Math.abs(diff) / 500) : -1
     if (this.state.currentStep !== step && step < 4) {
       this.setState({ currentStep: step })
     }
@@ -85,13 +85,13 @@ export default class Animator extends React.Component {
               currentStep={this.state.currentStep}
               spites={spites}
             />
-            <Box style={{ width: 500, marginBottom: 100 }}>
+            <Box style={{ width: 500 }}>
               {steps.map(({ renderText }, i) => (
                 <Flex
                   alignItems="center"
                   justifyContent="flex-end"
                   style={{
-                    height: '400px',
+                    height: '500px',
                     width: '100%',
                   }}
                 >
@@ -132,7 +132,7 @@ export class AnimationScene extends React.Component {
           height: 500,
           position: 'relative',
           position: 'sticky',
-          top: 'calc(50vh - 190px)',
+          top: 'calc(50vh - 160px)',
           // border: 'solid 1px #ccc',
           zIndex: 2,
         }}
