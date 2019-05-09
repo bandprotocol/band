@@ -241,7 +241,9 @@ export default () => {
               link="https://data.bandprotocol.com/"
               mr="36px"
             >
-              <Image src={LandingBandDB} height="92px" />
+              <Box mt="0px">
+                <Image src={LandingBandDB} height="92px" />
+              </Box>
             </FeatureCard>
             <FeatureCard
               isMobile={_isMobile}

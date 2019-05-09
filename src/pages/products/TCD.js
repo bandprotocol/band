@@ -341,7 +341,9 @@ export default () => {
                 }}
                 mr={['0px', '36px']}
               >
-                <Image mt="auto" src={TCDPriceFeed} width="100%" />
+                <Box mt={['30px', '0px']}>
+                  <Image mt="auto" src={TCDPriceFeed} width="100%" />
+                </Box>
               </FeatureCard>
               <FeatureCard
                 subtitle="Trustless Reports of"

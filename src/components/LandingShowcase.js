@@ -18,18 +18,43 @@ export default ({
 }) => {
   const _isMobile = isMobile()
   const [selectedTab, setSelectedTab] = useState(1)
-  const offset = _isMobile ? '40' : '80'
-  const getWHByTab = tab =>
-    tab === selectedTab
-      ? { transform: 'scale(1)', opacity: 1, zIndex: 1 }
-      : {
-          transform: `scale(0.8) translateY(30px) translateX(${(tab === 0 &&
-            offset) ||
-            (tab === 1 && '0') ||
-            (tab === 2 && '-' + offset)}px)`,
-          opacity: 0.4,
-          zIndex: 0,
-        }
+  const offset = _isMobile ? '100' : '280'
+  const getWHByTab = tab => {
+    if (tab === selectedTab) {
+      return { transform: 'scale(1)', opacity: 1, zIndex: 1 }
+    }
+    const styleObj = { opacity: 0.4, zIndex: 0 }
+    if (selectedTab === 0 && tab === 1) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(${offset}px)`,
+      }
+    } else if (selectedTab === 0 && tab === 2) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(-${offset}px)`,
+      }
+    } else if (selectedTab === 1 && tab === 0) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(-${offset}px)`,
+      }
+    } else if (selectedTab === 1 && tab === 2) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(${offset}px)`,
+      }
+    } else if (selectedTab === 2 && tab === 0) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(${offset}px)`,
+      }
+    }
+    return {
+      ...styleObj,
+      transform: `scale(0.8) translateY(30px) translateX(-${offset}px)`,
+    }
+  }
 
   return (
     <Box
@@ -101,11 +126,12 @@ export default ({
           </Flex>
         </Flex>
         <Flex
-          mt="50px"
-          align="flex-end"
+          mt={['calc(100vw - 20px)', '355px']}
           flexDirection="row"
-          style={{ height: '335px' }}
           alignItems="flex-end"
+          justifyContent="center"
+          style={{ position: 'relative' }}
+          bg="green"
         >
           <Flex
             style={{
@@ -113,9 +139,8 @@ export default ({
               overflow: 'hidden',
               cursor: 'pointer',
               transition: 'all 0.5s',
+              position: 'absolute',
               ...getWHByTab(0),
-              width: ['calc(100vw - 20px)', '410px'],
-              height: ['calc((100vw - 20px) * 0.8)', '335px'],
             }}
           >
             <Image
@@ -131,9 +156,8 @@ export default ({
               overflow: 'hidden',
               cursor: 'pointer',
               transition: 'all 0.5s',
+              position: 'absolute',
               ...getWHByTab(1),
-              width: ['calc(100vw - 20px)', '410px'],
-              height: ['calc((100vw - 20px) * 0.8)', '335px'],
             }}
           >
             <Image
@@ -150,9 +174,8 @@ export default ({
               overflow: 'hidden',
               cursor: 'pointer',
               transition: 'all 0.5s',
+              position: 'absolute',
               ...getWHByTab(2),
-              width: ['calc(100vw - 20px)', '410px'],
-              height: ['calc((100vw - 20px) * 0.8)', '335px'],
             }}
           >
             <Image

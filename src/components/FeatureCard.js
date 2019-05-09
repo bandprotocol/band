@@ -66,6 +66,7 @@ export default ({
         >
           <Text
             color="#252945"
+            fontSize={['14px', '16px']}
             css={{
               transition: 'all 200ms',
               '&:hover': {
