@@ -429,7 +429,6 @@ export default () => {
               <AbsoluteLink
                 href="https://www.sequoiacap.com/"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
@@ -443,7 +442,6 @@ export default () => {
               <AbsoluteLink
                 href="http://www.dunamupartners.com/"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
@@ -457,7 +455,6 @@ export default () => {
               <AbsoluteLink
                 href="https://www.linkedin.com/company/seax-ventures/"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
@@ -490,7 +487,6 @@ export default () => {
                 alignItems="center"
                 color="#7c84a6"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
@@ -510,7 +506,6 @@ export default () => {
                 alignItems="center"
                 color="#7c84a6"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
@@ -529,7 +524,6 @@ export default () => {
                 alignItems="center"
                 color="#7c84a6"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
@@ -548,7 +542,6 @@ export default () => {
                 alignItems="center"
                 color="#7c84a6"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',

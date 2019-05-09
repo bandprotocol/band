@@ -427,7 +427,7 @@ const Navbar = props => {
           transition: 'all 0.5s',
           position: 'relative',
         }}
-        px="30px"
+        px={[3, '30px']}
         alignItems="center"
       >
         <Flex width={1}>

@@ -80,7 +80,6 @@ export default ({
               <Flex fontSize="16px" mt={['20px', '0px']}>
                 <Link
                   css={{
-                    transition: 'all 0.2s',
                     '&:hover': {
                       color: '#bfcdff',
                     },

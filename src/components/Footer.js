@@ -41,7 +41,6 @@ const SmallIcon = ({ ml, href, src }) => (
     <AbsoluteLink
       href={href}
       css={{
-        transition: 'all 0.2s',
         '&:hover': {
           filter: 'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
         },

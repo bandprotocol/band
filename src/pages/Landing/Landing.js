@@ -197,7 +197,6 @@ export default () => {
                 lineHeight={1.45}
                 mr={[2, 3]}
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     color: '#bfcdff',
                   },
@@ -285,7 +284,6 @@ export default () => {
               <Flex
                 mt={['30px', '40px']}
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
@@ -299,7 +297,6 @@ export default () => {
               <Flex
                 mt="35px"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
@@ -313,7 +310,6 @@ export default () => {
               <Flex
                 mt="35px"
                 css={{
-                  transition: 'all 0.2s',
                   '&:hover': {
                     filter:
                       'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
@@ -351,7 +347,6 @@ export default () => {
                   alignItems="center"
                   color="white"
                   css={{
-                    transition: 'all 0.2s',
                     '&:hover': {
                       filter:
                         'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
@@ -371,7 +366,6 @@ export default () => {
                   alignItems="center"
                   color="white"
                   css={{
-                    transition: 'all 0.2s',
                     '&:hover': {
                       filter:
                         'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
@@ -390,7 +384,6 @@ export default () => {
                   alignItems="center"
                   color="white"
                   css={{
-                    transition: 'all 0.2s',
                     '&:hover': {
                       filter:
                         'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
@@ -409,7 +402,6 @@ export default () => {
                   alignItems="center"
                   color="white"
                   css={{
-                    transition: 'all 0.2s',
                     '&:hover': {
                       filter:
                         'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
