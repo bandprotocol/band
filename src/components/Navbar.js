@@ -204,15 +204,21 @@ const Navbar = props => {
             top: 0,
             right: 0,
             height: '100vh',
-            width: 'calc(100vw - 60px)',
+            width: 'calc(100vw)',
             transition: 'all 400ms',
-            background: colors.purple.normal,
+            background: '#202541',
             transform: showMenu ? '' : 'translateX(100%)',
             boxShadow: showMenu ? '-20px 0 50px 0 rgba(0, 0, 0, 0.25)' : 'none',
           }}
         >
           <Flex flexDirection="column">
-            <Flex flex="0 0 60px" pr="26px" mb={4} alignItems="center">
+            <Flex
+              flex="0 0 60px"
+              pr="26px"
+              mb={4}
+              alignItems="center"
+              flexDirection="row"
+            >
               <Image
                 src={MenuCloseSrc}
                 width="24px"
@@ -221,37 +227,43 @@ const Navbar = props => {
               />
             </Flex>
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+              <Link to="/why-band" onClick={() => setShowMenu(false)}>
+                <SemiBold color="#fff" fontSize="18px">
+                  Why Band?
+                </SemiBold>
+              </Link>
+            </Flex>
+            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+              <Link to="/products/tcd" onClick={() => setShowMenu(false)}>
+                <SemiBold color="#fff" fontSize="18px">
+                  Products
+                </SemiBold>
+              </Link>
+            </Flex>
+            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
               <AbsoluteLink
-                href="https://app.bandprotocol.com"
+                href="https://medium.com/bandprotocol"
                 onClick={() => setShowMenu(false)}
               >
                 <SemiBold color="#fff" fontSize="18px">
-                  Application
+                  Explorers
                 </SemiBold>
               </AbsoluteLink>
             </Flex>
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/developers" onClick={() => setShowMenu(false)}>
+              <Link to="/company" onClick={() => setShowMenu(false)}>
                 <SemiBold color="#fff" fontSize="18px">
-                  Developers
-                </SemiBold>
-              </Link>
-            </Flex>
-            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/about" onClick={() => setShowMenu(false)}>
-                <SemiBold color="#fff" fontSize="18px">
-                  About
+                  Company
                 </SemiBold>
               </Link>
             </Flex>
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
               <AbsoluteLink
-                target="_self"
-                to="mailto:connect@bandprotocol.com"
+                href="https://medium.com/bandprotocol"
                 onClick={() => setShowMenu(false)}
               >
                 <SemiBold color="#fff" fontSize="18px">
-                  Contact Us
+                  Blog
                 </SemiBold>
               </AbsoluteLink>
             </Flex>
@@ -387,6 +399,7 @@ const Navbar = props => {
     >
       <Flex
         bg="#2a304e"
+        m={['-20px', '0px']}
         style={{
           position: 'absolute',
           width: '100vw',

@@ -111,14 +111,20 @@ export default ({ style = {}, ...props }) => {
               </OutlineButton>
             </a>
             <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-            <FilledButton
-              style={{
-                width: '220px',
-                backgroundImage: 'linear-gradient(249deg, #454366, #3a3d5a)',
-              }}
+            <a
+              href="https://data.bandprotocol.com/"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Developer Portal
-            </FilledButton>
+              <FilledButton
+                style={{
+                  width: '220px',
+                  backgroundImage: 'linear-gradient(249deg, #454366, #3a3d5a)',
+                }}
+              >
+                Developer Portal
+              </FilledButton>
+            </a>
           </Flex>
         </Flex>
         <Box flex="0 0 266px" ml="auto" mt={['40px', '0px']}>

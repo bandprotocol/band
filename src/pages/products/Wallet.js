@@ -61,7 +61,7 @@ export default () => {
           <Card
             bg="#f6f8ff"
             pt={4}
-            pb={['30px', 5]}
+            pb={['30px', 4]}
             px={['20px', '40px']}
             width={['calc(100vw - 40px)', '840px']}
           >
@@ -78,7 +78,7 @@ export default () => {
               user-centric design that provides high levels of security and
               multi-platform support.
             </Text>
-            <Flex
+            {/* <Flex
               mt={['30px', '50px']}
               justifyContent="center"
               flexDirection={['column-reverse', 'row']}
@@ -106,7 +106,7 @@ export default () => {
               >
                 Integrate Band Web3 Wallet
               </Button>
-            </Flex>
+            </Flex> */}
           </Card>
         </Flex>
         <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>

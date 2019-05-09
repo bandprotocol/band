@@ -28,7 +28,9 @@ import TCRSrc from 'images/tcr.svg'
 import TCRWorkSrc from 'images/tcr-work.png'
 import TCRWorkVertSrc from 'images/tcr-work-vert.svg'
 
-import SSExample1 from 'images/SSExample1.png'
+import SSExample1 from 'images/chtss1@3x.png'
+import SSExample2 from 'images/chtssMid.jpg'
+import SSExample3 from 'images/chtssRight.png'
 
 import Step1Src from 'images/animate-tcr/step-1.png'
 import Step2Src from 'images/animate-tcr/step-2.png'
@@ -262,7 +264,7 @@ export default () => {
               justifyContent="center"
               flexDirection={['column-reverse', 'row']}
             >
-              <Button
+              {/* <Button
                 variant="outline"
                 style={{
                   color: '#545454',
@@ -273,18 +275,20 @@ export default () => {
               >
                 Explore Datasets
               </Button>
-              {_isMobile && <Flex my="10px" />}
-              <Button
-                variant="primary"
-                ml={[0, 5]}
-                style={{
-                  height: '45px',
-                  width: _isMobile ? '196px' : null,
-                  padding: _isMobile ? '5px' : null,
-                }}
-              >
-                Developer Reference
-              </Button>
+              {_isMobile && <Flex my="10px" />} */}
+
+              <AbsoluteLink href="https://developer.bandprotocol.com/docs/tcr.html">
+                <Button
+                  variant="primary"
+                  style={{
+                    height: '45px',
+                    width: _isMobile ? '196px' : null,
+                    padding: _isMobile ? '5px' : null,
+                  }}
+                >
+                  Developer Reference
+                </Button>
+              </AbsoluteLink>
             </Flex>
           </Card>
         </Flex>
@@ -339,8 +343,8 @@ export default () => {
           </Flex>
           <CoinHatcherShowcase
             Img1={SSExample1}
-            Img2={SSExample1}
-            Img3={SSExample1}
+            Img2={SSExample2}
+            Img3={SSExample3}
           />
         </PageContainer>
       </Box>

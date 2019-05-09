@@ -87,7 +87,12 @@ export default () => {
               without revealing sensitive information to the public.
             </Text>
             <Flex justifyContent="center" mt={[3, 4]}>
-              <Button variant="primary">Contact Us</Button>
+              <AbsoluteLink
+                target="_self"
+                href="mailto:connect@bandprotocol.com"
+              >
+                <Button variant="primary">Contact Us</Button>
+              </AbsoluteLink>
             </Flex>
           </Card>
         </Flex>

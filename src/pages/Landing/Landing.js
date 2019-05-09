@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
 import LandingShowcase from 'components/LandingShowcase'
@@ -37,8 +37,13 @@ import AppDS from 'images/appDataSource.svg'
 import LandingBandDB from 'images/landing-band-database.png'
 import LandingDataGov from 'images/landing-data-governance.png'
 
-import SSExample1 from 'images/SSExample1.png'
-import SSExample2 from 'images/SSExample2.png'
+import SSExample1 from 'images/chtss1@3x.png'
+import SSExample2 from 'images/chtssMid.jpg'
+import SSExample3 from 'images/chtssRight.png'
+
+import SSExample4 from 'images/dsss1@3x.jpg'
+import SSExample5 from 'images/dsss2@3x.jpg'
+import SSExample6 from 'images/dsss3@3x.png'
 
 const FilledButton = styled(Button)`
   color: white;
@@ -74,6 +79,7 @@ const OutlineButton = styled(Button)`
 `
 
 export default () => {
+  const exRef = useRef(null)
   const _isMobile = isMobile()
   return (
     <Box style={{ color: '#ffffff' }}>
@@ -115,11 +121,17 @@ export default () => {
                 </Text>
               </Flex>
               <Flex mt="30px" flexDirection={['column-reverse', 'row']}>
-                <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
-                  Learn More
-                </OutlineButton>
+                <AbsoluteLink href="https://developer.bandprotocol.com/">
+                  <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
+                    Learn More
+                  </OutlineButton>
+                </AbsoluteLink>
                 <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-                <FilledButton isMobile={_isMobile}>Start Building</FilledButton>
+                <Link to="why-band">
+                  <FilledButton isMobile={_isMobile}>
+                    Start Building
+                  </FilledButton>
+                </Link>
               </Flex>
             </Box>
             {!_isMobile && (
@@ -155,7 +167,14 @@ export default () => {
                 smart contract datasets rather than through external oracles.
               </Text>
             </Flex>
-            <Flex alignItems="center" mt={['20px', '35px']}>
+            <Flex
+              alignItems="center"
+              mt={['20px', '35px']}
+              onClick={() =>
+                window.document.body.scrollTo(0, exRef.current.offsetTop - 45)
+              }
+              style={{ cursor: 'pointer' }}
+            >
               <Text
                 fontWeight={400}
                 fontSize={['16px', '20px']}
@@ -198,6 +217,7 @@ export default () => {
               title="Band Datasets"
               content="Take advantage of Token Curated DataSource as a trusted source of crypto price, sport and loterry."
               linkText="Integrate Data with your DApps"
+              link="https://data.bandprotocol.com/"
               mr="36px"
             >
               <Image src={LandingBandDB} height="92px" />
@@ -209,6 +229,7 @@ export default () => {
               title="Data Governance"
               content="Stake on data providers you trust and earn provider fee."
               linkText="Governance Portal"
+              link="https://app-wip.rinkeby.bandprotocol.com/"
             >
               <Box mt="30px" pl="30px">
                 <Image src={LandingDataGov} width="215px" />
@@ -240,13 +261,19 @@ export default () => {
                 </Text>
               </Flex>
               <Flex mt={['30px', '40px']}>
-                <Image src={Sequoia} width="148px" />
+                <AbsoluteLink href="https://www.sequoiacap.com/">
+                  <Image src={Sequoia} width="148px" />
+                </AbsoluteLink>
               </Flex>
               <Flex mt="35px">
-                <Image src={Dunamu} width="245px" />
+                <AbsoluteLink href="http://www.dunamupartners.com/">
+                  <Image src={Dunamu} width="245px" />
+                </AbsoluteLink>
               </Flex>
               <Flex mt="35px">
-                <Image src={Seax} width="105px" height="45px" />
+                <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
+                  <Image src={Seax} width="105px" height="45px" />
+                </AbsoluteLink>
               </Flex>
             </Flex>
             {!_isMobile && <Flex mx="18px" />}
@@ -268,27 +295,55 @@ export default () => {
                   Join Band Protocol {_isMobile && <br />}Community
                 </Text>
               </Flex>
-              <Flex fontSize="18px" mt={['30px', '40px']} alignItems="center">
-                <Image src={Reddit} width="30px" />
-                <Flex mx="20px" />
-                Reddit
-                <Flex mx="20px" />
-              </Flex>
-              <Flex fontSize="18px" mt="35px" alignItems="center">
-                <Image src={Telegram} width="30px" />
-                <Flex mx="20px" />
-                Telegram
-              </Flex>
-              <Flex fontSize="18px" mt="35px" alignItems="center">
-                <Image src={Medium} width="30px" />
-                <Flex mx="20px" />
-                Medium
-              </Flex>
-              <Flex fontSize="18px" mt="35px" alignItems="center">
-                <Image src={Twitter} width="30px" />
-                <Flex mx="20px" />
-                Twitter
-              </Flex>
+              <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
+                <Flex
+                  fontSize="18px"
+                  mt="40px"
+                  alignItems="center"
+                  color="white"
+                >
+                  <Image src={Reddit} width="30px" />
+                  <Flex mx="20px" />
+                  Reddit
+                  <Flex mx="20px" />
+                </Flex>
+              </AbsoluteLink>
+              <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
+                <Flex
+                  fontSize="18px"
+                  mt="35px"
+                  alignItems="center"
+                  color="white"
+                >
+                  <Image src={Telegram} width="30px" />
+                  <Flex mx="20px" />
+                  Telegram
+                </Flex>
+              </AbsoluteLink>
+              <AbsoluteLink href="https://medium.com/bandprotocol">
+                <Flex
+                  fontSize="18px"
+                  mt="35px"
+                  alignItems="center"
+                  color="white"
+                >
+                  <Image src={Medium} width="30px" />
+                  <Flex mx="20px" />
+                  Medium
+                </Flex>
+              </AbsoluteLink>
+              <AbsoluteLink href="https://twitter.com/bandprotocol">
+                <Flex
+                  fontSize="18px"
+                  mt="35px"
+                  alignItems="center"
+                  color="white"
+                >
+                  <Image src={Twitter} width="30px" />
+                  <Flex mx="20px" />
+                  Twitter
+                </Flex>
+              </AbsoluteLink>
             </Flex>
           </Flex>
         </PageContainer>
@@ -304,10 +359,11 @@ export default () => {
         link2="Token Curated Registries"
         Logo={AppCHT}
         Img1={SSExample1}
-        Img2={SSExample1}
-        Img3={SSExample1}
+        Img2={SSExample2}
+        Img3={SSExample3}
       >
         <Text
+          ref={exRef}
           textAlign={['left', 'center']}
           fontWeight="600"
           fontSize={['24px', '32px']}
@@ -325,9 +381,9 @@ export default () => {
         link1="data.bandprotocol.com"
         link2="Token Curated DataSource"
         Logo={AppDS}
-        Img1={SSExample2}
-        Img2={SSExample2}
-        Img3={SSExample2}
+        Img1={SSExample4}
+        Img2={SSExample5}
+        Img3={SSExample6}
       />
       <Box py={5} style={{ background: '#17192e' }}>
         <StartBuilding />

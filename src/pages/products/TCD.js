@@ -199,7 +199,7 @@ export default () => {
             pt={4}
             pb={['30px', 5]}
             px="42px"
-            width={['calc(100vw - 40px)', '840px']}
+            width={['calc(100vw - 40px)', '940px']}
           >
             <Text
               textAlign={['left', 'center']}
@@ -220,32 +220,36 @@ export default () => {
             </Text>
             <Flex
               justifyContent="center"
-              mt={['30px', '0px']}
+              mt={['30px', '40px']}
               flexDirection={['column-reverse', 'row']}
             >
-              <Button
-                variant="outline"
-                style={{
-                  color: '#545454',
-                  height: '45px',
-                  width: _isMobile ? '196px' : null,
-                  padding: _isMobile ? '5px' : null,
-                }}
-              >
-                Explore Datasets
-              </Button>
+              <AbsoluteLink href="https://data.bandprotocol.com">
+                <Button
+                  variant="outline"
+                  style={{
+                    color: '#545454',
+                    height: '45px',
+                    width: _isMobile ? '196px' : null,
+                    padding: _isMobile ? '5px' : null,
+                  }}
+                >
+                  Explore Datasets
+                </Button>
+              </AbsoluteLink>
               {_isMobile && <Flex my="10px" />}
-              <Button
-                variant="primary"
-                ml={[0, 5]}
-                style={{
-                  height: '45px',
-                  width: _isMobile ? '196px' : null,
-                  padding: _isMobile ? '5px' : null,
-                }}
-              >
-                Developer Reference
-              </Button>
+              <AbsoluteLink href="https://developer.bandprotocol.com/docs/tcd.html">
+                <Button
+                  variant="primary"
+                  ml={[0, 5]}
+                  style={{
+                    height: '45px',
+                    width: _isMobile ? '196px' : null,
+                    padding: _isMobile ? '5px' : null,
+                  }}
+                >
+                  Developer Reference
+                </Button>
+              </AbsoluteLink>
             </Flex>
           </Card>
         </Flex>
@@ -307,6 +311,7 @@ export default () => {
                 title="Market Price Feeds"
                 content="Take crypto-fiat price feed to power decentralized lendings, exchanges and payment services."
                 linkText="Integrate Price Feed in DeFi"
+                link={'https://data.bandprotocol.com/dataset/price'}
                 isMobile={_isMobile}
                 style={{
                   boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
@@ -321,6 +326,7 @@ export default () => {
                 title="Cross-chain Events"
                 content="Enable multi-chain atomic swap, supercharge DApps, and make true blockchain-agnostic apps."
                 linkText="Explore Ideas"
+                link={'https://developer.bandprotocol.com/'}
                 isMobile={_isMobile}
                 style={{
                   boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
@@ -328,7 +334,7 @@ export default () => {
                 }}
                 mt={['30px', 0]}
               >
-                <Box ml={4} mt={['-20px', 'auto']}>
+                <Box ml={4} mt={['-20px', '-15px']}>
                   <Image src={TCDCrossChain} height={['105px', '105px']} />
                 </Box>
               </FeatureCard>

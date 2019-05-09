@@ -72,27 +72,27 @@ export default () => {
                 Products
               </H4>
               <Box mb={[3, '20px']}>
-                <Link to="/product/tokenization">
+                <Link to="/products/data-tokenization">
                   <Text fontSize="14px">Data Tokenization</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/product/tcd">
+                <Link to="/products/tcd">
                   <Text fontSize="14px">Token Curated DataSource</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/product/tcr">
+                <Link to="/products/tcr">
                   <Text fontSize="14px">Token Curated Registries</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/product/wallet">
+                <Link to="/products/wallet">
                   <Text fontSize="14px">Band Web3 Wallet</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/product/private-sharing">
+                <Link to="/products/private-sharing">
                   <Text fontSize="14px">Private Data Sharing</Text>
                 </Link>
               </Box>

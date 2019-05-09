@@ -82,18 +82,20 @@ export default () => {
               tokenized solutions with ease.
             </Text>
             <Flex justifyContent="center">
-              <Button
-                variant="primary"
-                fontSize="16px"
-                mt={['30px', '45px']}
-                style={{
-                  height: '45px',
-                  width: _isMobile ? '250px' : '280px',
-                  padding: _isMobile ? '0px' : null,
-                }}
-              >
-                Create data-curation community
-              </Button>
+              <AbsoluteLink href="https://developer.bandprotocol.com/">
+                <Button
+                  variant="primary"
+                  fontSize="16px"
+                  mt={['30px', '45px']}
+                  style={{
+                    height: '45px',
+                    width: _isMobile ? '250px' : '280px',
+                    padding: _isMobile ? '0px' : null,
+                  }}
+                >
+                  Create data-curation community
+                </Button>
+              </AbsoluteLink>
             </Flex>
           </Card>
         </Flex>

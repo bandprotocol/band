@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PageContainer from 'components/PageContainer'
-import { Flex, Text, Image, Box } from 'ui/common'
+import { Flex, Text, Image, Box, Link } from 'ui/common'
 import { isMobile } from 'ui/media'
 
 export default ({
@@ -78,7 +78,16 @@ export default ({
                 </Text>
               </Flex>
               <Flex fontSize="16px" mt={['20px', '0px']}>
-                {link2}
+                <Link
+                  style={{ color: 'white' }}
+                  to={
+                    link2.indexOf('DataSource') >= 0
+                      ? 'products/tcd'
+                      : 'products/tcr'
+                  }
+                >
+                  {link2}
+                </Link>
                 <Flex mx="5px" />
                 <Text color="#6b8bf5" fontSize="18px">
                   <i className="fas fa-arrow-right" />
