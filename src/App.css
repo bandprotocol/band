@@ -187,6 +187,7 @@ a:not(:hover) {
 html {
   overflow: hidden;
   background: #2a304e;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -194,6 +195,7 @@ body {
   height: 100%;
   max-width: 100vw;
   overflow: hidden;
+  scroll-behavior: smooth;
 }
 
 body {

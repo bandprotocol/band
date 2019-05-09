@@ -154,8 +154,56 @@ const NavMenu = ({ isSelected, title, tabs }) => {
   )
 }
 
+const SubMenuMobile = ({
+  closeMenu,
+  link,
+  isAbsolute,
+  imgIndex,
+  imgHeight,
+  title,
+  description,
+}) => {
+  return isAbsolute ? (
+    <AbsoluteLink to={link} onClick={closeMenu}>
+      <Flex
+        flexDirection="column"
+        alignItems="flex-start"
+        style={{ maxWidth: '220px' }}
+        mb="50px"
+      >
+        <Image src={getImg(imgIndex)} height={imgHeight} />
+        <SemiBold color="#fff" fontSize="14px" mt="30px">
+          {title}
+        </SemiBold>
+        <Text mt="20px" fontSize="13px" lineHeight={1.69}>
+          {description}
+        </Text>
+      </Flex>
+    </AbsoluteLink>
+  ) : (
+    <Link to={link} onClick={closeMenu}>
+      <Flex
+        flexDirection="column"
+        alignItems="flex-start"
+        style={{ maxWidth: '220px' }}
+        mb="50px"
+      >
+        <Image src={getImg(imgIndex)} height={imgHeight} />
+        <SemiBold color="#fff" fontSize="14px" mt="30px">
+          {title}
+        </SemiBold>
+        <Text mt="20px" fontSize="13px" lineHeight={1.69}>
+          {description}
+        </Text>
+      </Flex>
+    </Link>
+  )
+}
+
 const Navbar = props => {
   const [showMenu, setShowMenu] = useState(false)
+  const [showTier2Index, setShowTier2Index] = useState(0)
+
   const [selectedTab, setSelectedTab] = useState(-1)
   const [scrollTop, setScrollTop] = useState(0)
   const [oldScrollTop, setOldScrollTop] = useState(0)
@@ -189,6 +237,16 @@ const Navbar = props => {
     setShowMenu(tabId >= 0)
   }
 
+  const closeMenu = () => {
+    setShowMenu(false)
+    setShowTier2Index(0)
+    window.document.body.scrollLeft = 0
+  }
+
+  const back = () => {
+    setShowTier2Index(0)
+  }
+
   const renderMobile = () => {
     return (
       <React.Fragment>
@@ -201,11 +259,12 @@ const Navbar = props => {
         <Card
           style={{
             position: 'fixed',
-            top: 0,
+            top: deltaScroll <= 0 || scrollTop < 80 ? '0px' : '80px',
             right: 0,
-            height: '100vh',
+            height: 'calc(100vh)',
             width: 'calc(100vw)',
             transition: 'all 400ms',
+            overflow: 'hidden',
             background: '#202541',
             transform: showMenu ? '' : 'translateX(100%)',
             boxShadow: showMenu ? '-20px 0 50px 0 rgba(0, 0, 0, 0.25)' : 'none',
@@ -221,37 +280,42 @@ const Navbar = props => {
             >
               <Image
                 src={MenuCloseSrc}
-                width="24px"
+                width="20px"
                 style={{ marginLeft: 'auto' }}
-                onClick={() => setShowMenu(false)}
+                onClick={closeMenu}
               />
             </Flex>
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/why-band" onClick={() => setShowMenu(false)}>
+              <Link to="/why-band" onClick={closeMenu}>
                 <SemiBold color="#fff" fontSize="18px">
                   Why Band?
                 </SemiBold>
               </Link>
             </Flex>
-            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/products/tcd" onClick={() => setShowMenu(false)}>
-                <SemiBold color="#fff" fontSize="18px">
-                  Products
-                </SemiBold>
-              </Link>
+            <Flex
+              flex="0 0 60px"
+              pr="26px"
+              alignItems="center"
+              pl={5}
+              onClick={() => setShowTier2Index(1)}
+            >
+              <SemiBold color="#fff" fontSize="18px">
+                Products
+              </SemiBold>
+            </Flex>
+            <Flex
+              flex="0 0 60px"
+              pr="26px"
+              alignItems="center"
+              pl={5}
+              onClick={() => setShowTier2Index(2)}
+            >
+              <SemiBold color="#fff" fontSize="18px">
+                Explorers
+              </SemiBold>
             </Flex>
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <AbsoluteLink
-                href="https://medium.com/bandprotocol"
-                onClick={() => setShowMenu(false)}
-              >
-                <SemiBold color="#fff" fontSize="18px">
-                  Explorers
-                </SemiBold>
-              </AbsoluteLink>
-            </Flex>
-            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/company" onClick={() => setShowMenu(false)}>
+              <Link to="/company" onClick={closeMenu}>
                 <SemiBold color="#fff" fontSize="18px">
                   Company
                 </SemiBold>
@@ -260,7 +324,7 @@ const Navbar = props => {
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
               <AbsoluteLink
                 href="https://medium.com/bandprotocol"
-                onClick={() => setShowMenu(false)}
+                onClick={closeMenu}
               >
                 <SemiBold color="#fff" fontSize="18px">
                   Blog
@@ -268,6 +332,153 @@ const Navbar = props => {
               </AbsoluteLink>
             </Flex>
           </Flex>
+          {/* product menu */}
+          <Card
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              height: 'calc(100vh)',
+              width: 'calc(100vw)',
+              transition: 'all 400ms',
+              overflow: 'auto',
+              background: '#202541',
+              transform: showTier2Index === 1 ? '' : 'translateX(100%)',
+            }}
+          >
+            <Flex flexDirection="column">
+              <Flex
+                flex="0 0 60px"
+                pr="26px"
+                mb={4}
+                alignItems="center"
+                flexDirection="row"
+                style={{ cursor: 'pointer' }}
+                pl="30px"
+                onClick={back}
+              >
+                <Text fontSize="20px" color="white">
+                  <i className="fas fa-chevron-left" />
+                </Text>
+                <Text fontSize="20px" color="white" ml="20px">
+                  Product
+                </Text>
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/products/data-tokenization"
+                  imgIndex={0}
+                  imgHeight="46px"
+                  title="Data Tokenization"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/products/tcd"
+                  imgIndex={1}
+                  imgHeight="67px"
+                  title="Token Curated DataSources"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/products/tcr"
+                  imgIndex={2}
+                  imgHeight="28px"
+                  title="Token Curated Registries"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/products/wallet"
+                  imgIndex={3}
+                  imgHeight="49px"
+                  title="Band Web3 Wallet"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/products/private-sharing"
+                  imgIndex={4}
+                  imgHeight="47px"
+                  title="Private Data Sharing"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+            </Flex>
+          </Card>
+          {/* explorer menu */}
+          <Card
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              height: 'calc(100vh)',
+              width: 'calc(100vw)',
+              transition: 'all 400ms',
+              overflow: 'auto',
+              background: '#202541',
+              transform: showTier2Index === 2 ? '' : 'translateX(100%)',
+            }}
+          >
+            <Flex flexDirection="column">
+              <Flex
+                flex="0 0 60px"
+                pr="26px"
+                mb={4}
+                alignItems="center"
+                flexDirection="row"
+                style={{ cursor: 'pointer' }}
+                pl="30px"
+                onClick={back}
+              >
+                <Text fontSize="20px" color="white">
+                  <i className="fas fa-chevron-left" />
+                </Text>
+                <Text fontSize="20px" color="white" ml="20px">
+                  Explorers
+                </Text>
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="https://data.bandprotocol.com"
+                  isAbsolute={true}
+                  imgIndex={5}
+                  imgHeight="50px"
+                  title="Governance Portal"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="https://data.bandprotocol.com"
+                  isAbsolute={true}
+                  imgIndex={6}
+                  imgHeight="46px"
+                  title="Dataset Explorer"
+                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
+              meatball fatback capicola.`}
+                />
+              </Flex>
+            </Flex>
+          </Card>
         </Card>
       </React.Fragment>
     )

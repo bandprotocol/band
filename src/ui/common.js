@@ -28,6 +28,9 @@ export const Bold = styled(Text).attrs({
 export const SemiBold = styled(Text).attrs({
   fontWeight: 500,
 })`
+  &:hover {
+    color: #bfcdff;
+  }
   display: inline-block;
 `
 
