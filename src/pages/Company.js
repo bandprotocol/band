@@ -31,7 +31,7 @@ import DealSrc from 'images/featured/deal.png'
 
 import JumpstartSrc from 'images/featured/jumpstart.png'
 import Linkedin from 'images/linkedin.svg'
-import WeRHiring from 'images/weRHiring.svg'
+import WeRHiring from 'images/we-re-hiring.svg'
 
 import Sequoia from 'images/sequoiaGray.svg'
 import Dunamu from 'images/dunamuGray.svg'
