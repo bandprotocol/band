@@ -19,6 +19,8 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
+import Animator from 'components/Animator'
+
 import StartBuilding from 'components/StartBuilding'
 import CoinHatcherShowcase from 'components/CoinHatcherShowcase'
 
@@ -27,6 +29,56 @@ import TCRWorkSrc from 'images/tcr-work.png'
 import TCRWorkVertSrc from 'images/tcr-work-vert.svg'
 
 import SSExample1 from 'images/SSExample1.png'
+
+import Step1Src from 'images/animate-tcr/step-1.png'
+import Step2Src from 'images/animate-tcr/step-2.png'
+import Step3Src from 'images/animate-tcr/step-3.png'
+import Step4Src from 'images/animate-tcr/step-4.png'
+import Step1ActiveSrc from 'images/animate-tcr/step-1-active.png'
+import Step2ActiveSrc from 'images/animate-tcr/step-2-active.png'
+import Step3ActiveSrc from 'images/animate-tcr/step-3-active.png'
+import Step4ActiveSrc from 'images/animate-tcr/step-4-active.png'
+
+import Animate1Src from 'images/animate-tcr/animate-1.png'
+import Animate2Src from 'images/animate-tcr/animate-2.png'
+import Animate3Src from 'images/animate-tcr/animate-3.png'
+import Animate4Src from 'images/animate-tcr/animate-4.png'
+import Animate5Src from 'images/animate-tcr/animate-5.png'
+import Animate6Src from 'images/animate-tcr/animate-6.png'
+import Animate7Src from 'images/animate-tcr/animate-7.png'
+import Animate8Src from 'images/animate-tcr/animate-8.png'
+import Animate9Src from 'images/animate-tcr/animate-9.png'
+import Animate10Src from 'images/animate-tcr/animate-10.png'
+import Animat119Src from 'images/animate-tcr/animate-11.png'
+
+const animatorSteps = [
+  {
+    src: Step1Src,
+    srcActive: Step1ActiveSrc,
+    renderText: () =>
+      'Token Curated Registry (TCR) is a method for a community to collectively curate a list of data directly. The eligibility of data is governed by a community-defined curation guideline.',
+  },
+  {
+    src: Step2Src,
+    srcActive: Step2ActiveSrc,
+    renderText: () =>
+      'When an applicant wish to include his or her data in the list, he or she needs to propose the data to the TCR while staking tokens.',
+  },
+  {
+    src: Step3Src,
+    srcActive: Step3ActiveSrc,
+    renderText: () =>
+      "To uphold quality of the contents, token holders challenge low-quality data which open a community-wide voting. If the challenger wins, he or she takes a portion of the applicant's stake and vice versa.",
+  },
+  {
+    src: Step4Src,
+    srcActive: Step4ActiveSrc,
+    renderText: () =>
+      'Data in TCRs are publicly available. The more users trust the data, the higher demands for applicant to add more data to the list. ',
+  },
+]
+
+const animatorSpites = []
 
 export default () => {
   const _isMobile = isMobile()
@@ -115,14 +167,31 @@ export default () => {
             </Flex>
           </Card>
         </Flex>
-        <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
-          <Box mb={2}>
-            <H1 textAlign="center" dark>
-              How TCRs work
-            </H1>
-          </Box>
-          <Image src={_isMobile ? TCRWorkVertSrc : TCRWorkSrc} my={4} />
-        </Flex>
+
+        {true ? (
+          <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
+            <Box mb={2}>
+              <H1 textAlign="center" dark>
+                How TCRs work
+              </H1>
+            </Box>
+            <Image src={_isMobile ? TCRWorkVertSrc : TCRWorkSrc} my={4} />
+          </Flex>
+        ) : (
+          <Flex
+            flexDirection="column"
+            alignItems="center"
+            mb={5}
+            mt={['30px', 5]}
+            pb="400px"
+          >
+            <Animator
+              title="How TCRs work"
+              steps={animatorSteps}
+              spites={animatorSpites}
+            />
+          </Flex>
+        )}
       </PageContainer>
       <Box bg="#f6f8ff" mb={['425px', '0px']}>
         <PageContainer>
