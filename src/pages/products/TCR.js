@@ -227,7 +227,7 @@ export default () => {
           <Flex mt={['15px', '0px']} width={['calc(100vw - 40px)', 'auto']}>
             <Text
               textAlign={['left', 'center']}
-              width="860px"
+              width={['auto', '860px']}
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >

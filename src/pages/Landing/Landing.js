@@ -38,7 +38,7 @@ import LandingBandDB from 'images/landing-band-database.png'
 import LandingDataGov from 'images/landing-data-governance.png'
 
 import SSExample1 from 'images/chtss1@3x.png'
-import SSExample2 from 'images/chtssMid.jpg'
+import SSExample2 from 'images/chtssMid.png'
 import SSExample3 from 'images/chtssRight.png'
 
 import SSExample4 from 'images/dsss1@3x.jpg'
@@ -268,7 +268,7 @@ export default () => {
               bg="rgba(0,0,0,0)"
               flexDirection="column"
               style={{
-                width: '425px',
+                width: ['auto', '425px'],
                 height: ['auto', '325px'],
               }}
               pl={['0px', '50px']}
@@ -329,7 +329,7 @@ export default () => {
               flexDirection="column"
               px={['0px', '40px']}
               style={{
-                width: '425px',
+                width: ['auto', '425px'],
                 height: '325px',
               }}
             >

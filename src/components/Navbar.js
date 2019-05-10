@@ -25,8 +25,12 @@ import MenuTCD from 'images/menu_tcd.svg'
 import MenuTCR from 'images/menu-tcr.svg'
 import MenuWallet from 'images/menu_wallet.svg'
 
+import MenuDTDark from 'images/menu_dt_dark.svg'
+import MenuPDSDark from 'images/menu_pds_dark.svg'
+
 import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.svg'
+import DatasetExplorerDarkImg from 'images/datasetExplorerDark.svg'
 
 import { colors } from 'ui'
 
@@ -86,9 +90,13 @@ const getImg = id =>
     MenuPDS,
     GovernancePortalImg,
     DatasetExplorerImg,
+    MenuDTDark,
+    MenuPDSDark,
+    DatasetExplorerDarkImg,
   ][id]
 
 const NavMenu = ({ isSelected, title, tabs }) => {
+  const [currentTab, setCurrentTab] = useState(-1)
   return (
     <Flex
       style={{
@@ -116,16 +124,21 @@ const NavMenu = ({ isSelected, title, tabs }) => {
       <Flex flexDirection="row" style={{ height: '100%' }}>
         {tabs.map((tab, i) => {
           const LinkComponent = tab.link ? Link : AbsoluteLink
+          const imgIndex = Array.isArray(tab.imgIndex)
+            ? tab.imgIndex[currentTab === i && tab.imgIndex.length > 0 ? 1 : 0]
+            : tab.imgIndex
           return (
             <LinkComponent
               to={tab.link}
               href={tab.href}
               key={i}
               style={{ flex: 1, textDecoration: 'none' }}
+              onMouseOver={() => setCurrentTab(i)}
+              onMouseLeave={() => setCurrentTab(-1)}
             >
               <SubMenu>
                 <Flex style={{ minHeight: '70px' }} alignItems="center">
-                  <Image src={getImg(tab.imgIndex)} height={tab.imgHeight} />
+                  <Image src={getImg(imgIndex)} height={tab.imgHeight} />
                 </Flex>
                 <Flex mt="80px" style={{ height: '60px' }}>
                   <Text
@@ -268,6 +281,7 @@ const Navbar = props => {
             background: '#202541',
             transform: showMenu ? '' : 'translateX(100%)',
             boxShadow: showMenu ? '-20px 0 50px 0 rgba(0, 0, 0, 0.25)' : 'none',
+            minHeight: '0px',
           }}
         >
           <Flex flexDirection="column">
@@ -344,9 +358,10 @@ const Navbar = props => {
               overflow: 'auto',
               background: '#202541',
               transform: showTier2Index === 1 ? '' : 'translateX(100%)',
+              minHeight: '0px',
             }}
           >
-            <Flex flexDirection="column">
+            <Box flexDirection="column" style={{ minHeight: '0px' }}>
               <Flex
                 flex="0 0 60px"
                 pr="26px"
@@ -368,11 +383,10 @@ const Navbar = props => {
                 <SubMenuMobile
                   closeMenu={closeMenu}
                   link="/products/data-tokenization"
-                  imgIndex={0}
+                  imgIndex={7}
                   imgHeight="46px"
                   title="Data Tokenization"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`Standard tokenization frameworks and incentive stuctures for data in Web 3.0`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
@@ -382,8 +396,7 @@ const Navbar = props => {
                   imgIndex={1}
                   imgHeight="67px"
                   title="Token Curated DataSources"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`Build robust, decentralized data feed from a network of data providers`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
@@ -393,8 +406,7 @@ const Navbar = props => {
                   imgIndex={2}
                   imgHeight="28px"
                   title="Token Curated Registries"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`Build reliable, more transparent crowd-source information through crypto-incentized data curation`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
@@ -404,22 +416,20 @@ const Navbar = props => {
                   imgIndex={3}
                   imgHeight="49px"
                   title="Band Web3 Wallet"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`An all-in-one, UX optimized Web3 wallet for Ethereum DApps`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
                   link="/products/private-sharing"
-                  imgIndex={4}
+                  imgIndex={8}
                   imgHeight="47px"
                   title="Private Data Sharing"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`}
                 />
               </Flex>
-            </Flex>
+            </Box>
           </Card>
           {/* explorer menu */}
           <Card
@@ -461,8 +471,7 @@ const Navbar = props => {
                   imgIndex={5}
                   imgHeight="50px"
                   title="Governance Portal"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`Join data curation community, stake tokens on data prodicers and vote on governance parameters`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
@@ -470,11 +479,10 @@ const Navbar = props => {
                   closeMenu={closeMenu}
                   link="https://data.bandprotocol.com"
                   isAbsolute={true}
-                  imgIndex={6}
+                  imgIndex={9}
                   imgHeight="46px"
                   title="Dataset Explorer"
-                  description={`Spicy jalapeno bacon ipsum dolor amet pork chop short loin
-              meatball fatback capicola.`}
+                  description={`Explore dataset availables by Band Protocol and learn how to integrate with the DApps`}
                 />
               </Flex>
             </Flex>
@@ -515,7 +523,7 @@ const Navbar = props => {
               {
                 title: 'Data Tokenization',
                 link: '/products/data-tokenization',
-                imgIndex: 0,
+                imgIndex: [7, 0],
                 imgHeight: '46px',
                 content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
@@ -543,7 +551,7 @@ const Navbar = props => {
               {
                 title: 'Private Data Sharing',
                 link: '/products/private-sharing',
-                imgIndex: 4,
+                imgIndex: [8, 4],
                 imgHeight: '47px',
                 content: `Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`,
               },
@@ -579,7 +587,7 @@ const Navbar = props => {
               {
                 title: 'Dataset Explorer',
                 href: 'https://data.bandprotocol.com',
-                imgIndex: 6,
+                imgIndex: [9, 6],
                 imgHeight: '46px',
                 content: `Explore dataset availables by Band Protocol and learn how to integrate with the DApps`,
               },

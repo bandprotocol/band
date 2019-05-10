@@ -415,7 +415,7 @@ export default () => {
             bg="rgba(0,0,0,0)"
             flexDirection="column"
             style={{
-              width: '425px',
+              width: ['auto', '425px'],
               height: '325px',
             }}
             pl="40px"
@@ -471,7 +471,7 @@ export default () => {
             flexDirection="column"
             px="40px"
             style={{
-              width: '425px',
+              width: ['auto', '425px'],
               height: '325px',
             }}
           >
