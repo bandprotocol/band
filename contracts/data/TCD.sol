@@ -3,7 +3,7 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./TCDBase.sol";
-import "../BandSimpleExchange.sol";
+import "../exchange/BandExchangeInterface.sol";
 import "../BandToken.sol";
 import "../CommunityToken.sol";
 import "../Parameters.sol";
@@ -54,7 +54,7 @@ contract TCD is TCDBase, Feeless {
   BandToken public band;
   CommunityToken public token;
   Parameters public params;
-  BandSimpleExchange public exchange;
+  BandExchangeInterface public exchange;
   BondingCurve public bondingCurve;
   uint256 public undistributedReward;
   bytes8 public prefix;
@@ -65,7 +65,7 @@ contract TCD is TCDBase, Feeless {
     CommunityToken _token,
     Parameters _params,
     BondingCurve _bondingCurve,
-    BandSimpleExchange _exchange
+    BandExchangeInterface _exchange
   ) public {
     prefix = _prefix;
     band = _band;

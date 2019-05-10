@@ -23,7 +23,6 @@ contract('BandSimpleExchange', ([owner, alice]) => {
     });
     it('Owner should be able to add BandToken to exchange', async () => {
       const ownerPrevBalance = await this.band.balanceOf(owner);
-      const exchangePrevBalance = await this.band.balanceOf(this.bse.address);
 
       await this.bse.addBand(owner, 50000, { from: owner });
 

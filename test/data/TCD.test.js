@@ -15,18 +15,16 @@ require('chai').should();
 
 contract('TCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
-    this.factory = await BandRegistry.deployed();
-    this.band = await BandToken.at(await this.factory.band());
-    await this.band.transfer(_, await this.band.balanceOf(owner), {
+    this.band = await BandToken.new({ from: owner });
+    await this.band.mint(owner, 100000000, { from: owner });
+    this.exchange = await BandSimpleExchange.new(this.band.address, {
       from: owner,
     });
-    await this.band.transfer(_, await this.band.balanceOf(alice), {
-      from: alice,
-    });
-    await this.band.transfer(_, await this.band.balanceOf(bob), {
-      from: bob,
-    });
-    await this.band.transfer(owner, 100000000, { from: _ });
+    this.factory = await BandRegistry.new(
+      this.band.address,
+      this.exchange.address,
+      { from: owner },
+    );
     const testCurve = await BondingCurveExpression.new([1]);
     const data1 = await this.factory.createCommunity(
       'CoinHatcher',
@@ -40,7 +38,6 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     this.core = await CommunityCore.at(data1.receipt.logs[0].args.community);
     this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.exchange = await BandSimpleExchange.at(await this.factory.exchange());
     this.params = await Parameters.at(await this.core.params());
     const data2 = await this.core.createTCD(
       web3.utils.fromAscii('data:'),
@@ -97,11 +94,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     );
 
     await this.band.approve(this.exchange.address, '10000000', {
-      from: _,
+      from: owner,
     });
 
-    await this.exchange.addBand(_, 10000000, { from: _ });
-    await this.exchange.setExchangeRate('1000000000000000000000', { from: _ });
+    await this.exchange.addBand(owner, 10000000, { from: owner });
+    await this.exchange.setExchangeRate('1000000000000000000000', {
+      from: owner,
+    });
   });
   context('Registration', () => {
     it('check setting of tcd', async () => {

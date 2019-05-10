@@ -1,17 +1,17 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./token/ERC20Acceptor.sol";
 
-import "./utils/Fractional.sol";
-import "./BandToken.sol";
+import "../token/ERC20Acceptor.sol";
+import "../utils/Fractional.sol";
+import "./BandExchangeInterface.sol";
 
 
-contract BandSimpleExchange is Ownable, ERC20Acceptor {
+contract BandSimpleExchange is Ownable, ERC20Acceptor, BandExchangeInterface {
   using Fractional for uint256;
 
-  uint256 public exchangeRate = 1e18;
   BandToken public bandToken;
+  uint256 public exchangeRate = 1e18;
 
   constructor(BandToken _bandToken) public {
     bandToken = _bandToken;
@@ -29,8 +29,9 @@ contract BandSimpleExchange is Ownable, ERC20Acceptor {
   }
 
   function convertFromEthToBand()
-    public payable
-    returns(uint256)
+    public
+    payable
+    returns (uint256)
   {
     address(uint160(owner())).transfer(msg.value);
     uint256 bandAmount = exchangeRate.mulFrac(msg.value);

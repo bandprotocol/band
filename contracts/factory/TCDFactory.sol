@@ -1,6 +1,6 @@
 pragma solidity 0.5.0;
 
-import "../BandSimpleExchange.sol";
+import "../exchange/BandExchangeInterface.sol";
 import "../BandToken.sol";
 import "../CommunityToken.sol";
 import "../Parameters.sol";
@@ -14,7 +14,7 @@ library TCDFactory {
     CommunityToken token,
     Parameters params,
     BondingCurve bondingCurve,
-    BandSimpleExchange exchange
+    BandExchangeInterface exchange
   ) external returns (TCD) {
     return new TCD(prefix, band, token, params, bondingCurve, exchange);
   }

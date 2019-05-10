@@ -5,6 +5,7 @@ const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
 const TCDFactory = artifacts.require('TCDFactory');
 const TCRFactory = artifacts.require('TCRFactory');
+const BandSimpleExchange = artifacts.require('BandSimpleExchange');
 
 module.exports = function(deployer, network, accounts) {
   deployer.link(BondingCurveFactory, BandRegistry);
@@ -14,9 +15,10 @@ module.exports = function(deployer, network, accounts) {
   deployer.link(TCRFactory, BandRegistry);
   deployer
     .then(async () => {
-      const registry = await deployer.deploy(BandRegistry);
-      const band = await BandToken.at(await registry.band());
+      const band = await deployer.deploy(BandToken);
+      const exchange = await deployer.deploy(BandSimpleExchange, band.address);
       await band.mint(accounts[0], '100000000000000000000000000');
+      await deployer.deploy(BandRegistry, band.address, exchange.address);
     })
     .catch(console.log);
 };
