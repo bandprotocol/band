@@ -130,7 +130,6 @@ export class AnimationScene extends React.Component {
         style={{
           width: 500,
           height: 500,
-          position: 'relative',
           position: 'sticky',
           top: '240px',
           // border: 'solid 1px #ccc',
