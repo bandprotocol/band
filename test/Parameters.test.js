@@ -60,6 +60,51 @@ contract('Parameters', ([_, owner, alice, bob]) => {
       });
     });
 
+    context('Set function for owner', () => {
+      beforeEach(async () => {
+        this.params = await Parameters.new(this.comm.address, { from: owner });
+      });
+      it('Should set new parameter by owner', async () => {
+        await this.params.set(web3.utils.fromAscii('test:param1'), 30000, {
+          from: owner,
+        });
+
+        (await this.params.get(web3.utils.fromAscii('test:param1')))
+          .toNumber()
+          .should.eq(30000);
+      });
+
+      it('Should revert if set by other', async () => {
+        await shouldFail.reverting(
+          this.params.set(web3.utils.fromAscii('test:param1'), 30000, {
+            from: bob,
+          }),
+        );
+
+        await shouldFail.reverting(
+          this.params.get(web3.utils.fromAscii('test:param1')),
+        );
+      });
+
+      it('Should cannot set data if key already existed', async () => {
+        await this.params.set(web3.utils.fromAscii('test:param1'), 30000, {
+          from: owner,
+        });
+
+        (await this.params.get(web3.utils.fromAscii('test:param1')))
+          .toNumber()
+          .should.eq(30000);
+
+        await this.params.set(web3.utils.fromAscii('test:param1'), 200, {
+          from: owner,
+        });
+
+        (await this.params.get(web3.utils.fromAscii('test:param1')))
+          .toNumber()
+          .should.eq(30000);
+      });
+    });
+
     context('Checking parameter requirements', () => {
       it('should be Reject (participants less than minimum participation)', async () => {
         // alice buy 100 XCH

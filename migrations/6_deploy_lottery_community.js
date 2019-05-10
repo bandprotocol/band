@@ -36,6 +36,7 @@ module.exports = function(deployer, network, accounts) {
       );
 
       const lotteryTCDTx = await lotteryFeedCommunity.createTCD(
+        web3.utils.fromAscii('data:'),
         '500000000000000000000',
         '3',
         '500000000000000000',

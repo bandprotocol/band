@@ -10,11 +10,13 @@ import "../Parameters.sol";
 import "../feeless/Feeless.sol";
 import "../bonding/BondingCurve.sol";
 import "../utils/Fractional.sol";
+import "../utils/KeyUtils.sol";
 
 
 contract TCD is TCDBase, Feeless {
   using Fractional for uint256;
   using SafeMath for uint256;
+  using KeyUtils for bytes8;
 
   event DataSourceRegistered(address indexed dataSource, address owner);
   event DataSourceRemoved(address indexed dataSource);
@@ -55,14 +57,17 @@ contract TCD is TCDBase, Feeless {
   BandSimpleExchange public exchange;
   BondingCurve public bondingCurve;
   uint256 public undistributedReward;
+  bytes8 public prefix;
 
   constructor(
+    bytes8 _prefix,
     BandToken _band,
     CommunityToken _token,
     Parameters _params,
     BondingCurve _bondingCurve,
     BandSimpleExchange _exchange
   ) public {
+    prefix = _prefix;
     band = _band;
     token = _token;
     params = _params;
@@ -90,15 +95,15 @@ contract TCD is TCDBase, Feeless {
   }
 
   function getActiveDataSourceCount() public view returns (uint256) {
-    return Math.min(dataSources.length, params.get("data:max_provider_count"));
+    return Math.min(dataSources.length, params.get(prefix.append("max_provider_count")));
   }
 
   function getQueryPrice() public view returns (uint256) {
-    return params.get("data:query_price");
+    return params.get(prefix.append("query_price"));
   }
 
   function getOwnerDelayWithdrawTime() public view returns (uint256) {
-    return params.get("data:withdraw_delay");
+    return params.get(prefix.append("withdraw_delay"));
   }
 
   function register(address owner, uint256 stake, address dataSource)
@@ -107,7 +112,7 @@ contract TCD is TCDBase, Feeless {
   {
     require(token.lock(owner, stake));
     require(providers[dataSource].currentStatus == DataProviderStatus.Nothing);
-    require(stake > 0 && stake >= params.get("data:min_provider_stake"));
+    require(stake > 0 && stake >= params.get(prefix.append("min_provider_stake")));
     providers[dataSource] = DataProvider({
       currentStatus: DataProviderStatus.Active,
       owner: owner,
@@ -184,7 +189,7 @@ contract TCD is TCDBase, Feeless {
     }
 
     if (provider.owner == voter &&
-        getStakeInProvider(dataSource, provider.owner) < params.get("data:min_provider_stake") &&
+        getStakeInProvider(dataSource, provider.owner) < params.get(prefix.append("min_provider_stake")) &&
         provider.currentStatus == DataProviderStatus.Active) {
       kick(dataSource);
     }
@@ -194,7 +199,7 @@ contract TCD is TCDBase, Feeless {
     DataProvider storage provider = providers[dataSource];
     require(provider.currentStatus == DataProviderStatus.Active);
     address owner = provider.owner;
-    require(getStakeInProvider(dataSource, owner) < params.get("data:min_provider_stake"));
+    require(getStakeInProvider(dataSource, owner) < params.get(prefix.append("min_provider_stake")));
     provider.currentStatus = DataProviderStatus.Removed;
     emit DataSourceRemoved(dataSource);
     _repositionDown(_findDataSourceIndex(dataSource));
@@ -209,7 +214,7 @@ contract TCD is TCDBase, Feeless {
     undistributedReward = undistributedReward.add(tokenAmount);
     uint256 totalProviderCount = getActiveDataSourceCount();
     uint256 providerReward = undistributedReward.div(totalProviderCount);
-    uint256 ownerPercentage = params.get("data:owner_revenue_pct");
+    uint256 ownerPercentage = params.get(prefix.append("owner_revenue_pct"));
     uint256 ownerReward = ownerPercentage.mulFrac(providerReward);
     uint256 stakeIncreased = providerReward.sub(ownerReward);
     for(uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {

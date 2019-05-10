@@ -23,7 +23,6 @@ contract CommunityCore {
   Parameters public params;
   BondingCurve public bondingCurve;
 
-  TCD public tcd;
   mapping (bytes8 => TCR) public tcr;
 
   constructor(
@@ -60,20 +59,20 @@ contract CommunityCore {
   }
 
   function createTCD(
+    bytes8 prefix,
     uint256 minProviderStake,
     uint256 maxProviderCount,
     uint256 ownerRevenuePct,
     uint256 queryPrice,
     uint256 withdrawDelay
   ) external {
-    require(address(tcd) == address(0));
-    params.set("data:min_provider_stake", minProviderStake);
-    params.set("data:max_provider_count", maxProviderCount);
-    params.set("data:owner_revenue_pct", ownerRevenuePct);
-    params.set("data:query_price", queryPrice);
-    params.set("data:withdraw_delay", withdrawDelay);
-    tcd = TCDFactory.create(
-      band, token, params, bondingCurve, registry.exchange()
+    params.set(prefix.append("min_provider_stake"), minProviderStake);
+    params.set(prefix.append("max_provider_count"), maxProviderCount);
+    params.set(prefix.append("owner_revenue_pct"), ownerRevenuePct);
+    params.set(prefix.append("query_price"), queryPrice);
+    params.set(prefix.append("withdraw_delay"), withdrawDelay);
+    TCD tcd = TCDFactory.create(
+      prefix, band, token, params, bondingCurve, registry.exchange()
     );
     token.addCapper(address(tcd));
     emit TCDCreated(tcd);

@@ -34,6 +34,7 @@ module.exports = function(deployer, network, accounts) {
       );
 
       const sportTCDTx = await sportFeedCommunity.createTCD(
+        web3.utils.fromAscii('data:'),
         '500000000000000000000',
         '2',
         '500000000000000000',

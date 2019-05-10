@@ -37,6 +37,7 @@ module.exports = function(deployer, network, accounts) {
       );
 
       const priceTCDTx = await priceFeedCommunity.createTCD(
+        web3.utils.fromAscii('data:'),
         '500000000000000000000',
         '5',
         '500000000000000000',

@@ -43,6 +43,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     this.exchange = await BandSimpleExchange.at(await this.factory.exchange());
     this.params = await Parameters.at(await this.core.params());
     const data2 = await this.core.createTCD(
+      web3.utils.fromAscii('data:'),
       10,
       3,
       '500000000000000000',
@@ -576,6 +577,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       this.curve = await BondingCurve.at(await this.core.bondingCurve());
 
       const data2 = await this.core.createTCD(
+        web3.utils.fromAscii('data:'),
         10,
         3,
         '500000000000000000',
@@ -721,6 +723,86 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       });
       (await this.comm.unlockedBalanceOf(carol)).toNumber().should.eq(998);
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1008);
+    });
+  });
+
+  context('Mutiple TCD', () => {
+    beforeEach(async () => {
+      const data2 = await this.core.createTCD(
+        web3.utils.fromAscii('data:'),
+        1000,
+        5,
+        '120000000000000000',
+        1000,
+        20,
+      );
+      this.tcd2 = await TCD.at(data2.receipt.logs[0].args.tcd);
+
+      const data3 = await this.core.createTCD(
+        web3.utils.fromAscii('qd:'),
+        1000,
+        5,
+        '120000000000000000',
+        1000,
+        20,
+      );
+      this.tcd3 = await TCD.at(data3.receipt.logs[0].args.tcd);
+    });
+
+    it('Should not set new parameter to data: prefix', async () => {
+      (await this.params.get(web3.utils.fromAscii('data:min_provider_stake')))
+        .toNumber()
+        .should.eq(10);
+      (await this.params.get(web3.utils.fromAscii('data:max_provider_count')))
+        .toNumber()
+        .should.eq(3);
+      (await this.params.get(web3.utils.fromAscii('data:owner_revenue_pct')))
+        .toString()
+        .should.eq('500000000000000000');
+      (await this.params.get(web3.utils.fromAscii('data:query_price')))
+        .toNumber()
+        .should.eq(100);
+      (await this.params.get(web3.utils.fromAscii('data:withdraw_delay')))
+        .toNumber()
+        .should.eq(0);
+    });
+    it('Should set new parameter to qd: prefix', async () => {
+      (await this.params.get(web3.utils.fromAscii('qd:min_provider_stake')))
+        .toNumber()
+        .should.eq(1000);
+      (await this.params.get(web3.utils.fromAscii('qd:max_provider_count')))
+        .toNumber()
+        .should.eq(5);
+      (await this.params.get(web3.utils.fromAscii('qd:owner_revenue_pct')))
+        .toString()
+        .should.eq('120000000000000000');
+      (await this.params.get(web3.utils.fromAscii('qd:query_price')))
+        .toNumber()
+        .should.eq(1000);
+      (await this.params.get(web3.utils.fromAscii('qd:withdraw_delay')))
+        .toNumber()
+        .should.eq(20);
+    });
+    it('Should stake with 2 TCD', async () => {
+      await this.tcd.register(owner, 600, owner, { from: owner });
+      await shouldFail.reverting(
+        this.tcd.register(owner, 600, alice, { from: owner }),
+      );
+      await this.tcd2.register(owner, 600, bob, { from: owner });
+      await this.tcd3.register(owner, 1000, alice, { from: owner });
+
+      await shouldFail.reverting(this.comm.transfer(bob, 10, { from: owner }));
+      await this.tcd3.withdraw(owner, 200, alice, { from: owner });
+      (await this.comm.balanceOf(owner)).toNumber().should.eq(1000);
+      (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(0);
+      await shouldFail.reverting(this.comm.transfer(bob, 10, { from: owner }));
+
+      await time.increase(time.duration.seconds(20));
+      await this.tcd3.unlockTokenFromReceipt(0);
+      await shouldFail.reverting(this.comm.transfer(bob, 210, { from: owner }));
+      await this.comm.transfer(bob, 10, { from: owner });
+      (await this.comm.balanceOf(owner)).toNumber().should.eq(990);
+      (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(190);
     });
   });
 });

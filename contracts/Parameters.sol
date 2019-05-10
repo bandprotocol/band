@@ -110,10 +110,18 @@ contract Parameters is Ownable, Feeless {
     return (keyValue.key, keyValue.value);
   }
 
-  function set(bytes32 key, uint256 value) public onlyOwner {
+  function set(bytes32 key, uint256 value)
+    public
+    onlyOwner
+    returns (bool)
+  {
+    if (params[key].existed) {
+      return value == params[key].value;
+    }
     params[key].existed = true;
     params[key].value = value;
     emit ParameterChanged(key, value);
+    return true;
   }
 
   /**
