@@ -83,6 +83,7 @@ export default ({ style = {}, ...props }) => {
         pb={['0px', '35px']}
         px={['0px', '80px']}
         mx={['0px', '-40px']}
+        color="white"
         style={{
           borderRadius: '10px',
           boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',

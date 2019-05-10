@@ -61,6 +61,7 @@ export default ({
       pt={children ? ['45px', 5] : ['10px', '10px']}
       pb={['45px', 5]}
       style={{ background: background }}
+      color="white"
     >
       <PageContainer>
         {children}

@@ -19,15 +19,8 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
-import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
-import CoinHatcherShowcase from 'components/CoinHatcherShowcase'
-
-import WalletSrc from 'images/walletExample.svg'
-import PrivateDataSrc from 'images/privateData.svg'
-import WalletIntegrate from 'images/band-wallet-integrate.svg'
-
-import SSExample1 from 'images/SSExample1.png'
+import PrivateDataSrc from 'images/privateData.png'
 
 export default () => {
   const _isMobile = isMobile()

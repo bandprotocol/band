@@ -98,8 +98,8 @@ export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
   return (
-    <Box style={{ color: '#ffffff' }}>
-      <Box style={{ background: colors.gradient.dark }}>
+    <Box style={{ color: colors.gradient.dark }}>
+      <Box style={{ background: colors.gradient.dark }} pb={['0px', '100px']}>
         <PageContainer>
           <Flex py={['50px', '150px']} flexDirection={['column', 'row']}>
             {_isMobile && (
@@ -120,6 +120,7 @@ export default () => {
                 ontWeight="600"
                 fontSize={['24px', '40px']}
                 fontFamily="Avenir-Heavy"
+                color="white"
               >
                 Decentralized
                 <br />
@@ -168,6 +169,7 @@ export default () => {
               height: ['290px', '370px'],
               boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
               borderRadius: '10px',
+              color: 'white',
             }}
           >
             <Image src={BandInTheMiddle} width={['auto', '729px']} />
@@ -217,6 +219,7 @@ export default () => {
               letterSpacing="1.3px"
               lineHeight={[1.33, 1]}
               mb={3}
+              color="white"
             >
               Band Protocol {_isMobile && <br />}Provides
             </Text>
@@ -261,18 +264,15 @@ export default () => {
           </Flex>
           <Flex
             mt={['50px', '75px']}
+            px={['0px', '20px']}
             flexDirection={['column', 'row']}
             justifyContent="center"
           >
             <Flex
-              bg="rgba(0,0,0,0)"
+              flex={1}
               flexDirection="column"
-              style={{
-                width: ['auto', '425px'],
-                height: ['auto', '325px'],
-              }}
-              pl={['0px', '50px']}
-              mb={['40px', '0px']}
+              pb={['40px', '0px']}
+              ml={['0px', '10%']}
             >
               <Flex>
                 <Text
@@ -323,16 +323,7 @@ export default () => {
                 </AbsoluteLink>
               </Flex>
             </Flex>
-            {!_isMobile && <Flex mx="18px" />}
-            <Flex
-              bg="rgba(0,0,0,0)"
-              flexDirection="column"
-              px={['0px', '40px']}
-              style={{
-                width: ['auto', '425px'],
-                height: '325px',
-              }}
-            >
+            <Flex flex={1} flexDirection="column" ml={['0px', '10%']}>
               <Flex>
                 <Text
                   fontSize={['20px', '22px']}
