@@ -98,8 +98,15 @@ export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
   return (
-    <Box style={{ color: colors.gradient.dark }} mt="-80px" pt="40px">
-      <Box style={{ background: colors.gradient.dark }} pb={['0px', '100px']}>
+    <Box
+      style={{ background: colors.gradient.dark, color: colors.gradient.dark }}
+      mt="-80px"
+    >
+      <Box
+        style={{ background: colors.gradient.dark }}
+        pt="60px"
+        pb={['0px', '100px']}
+      >
         <PageContainer>
           <Flex py={['50px', '150px']} flexDirection={['column', 'row']}>
             {_isMobile && (
