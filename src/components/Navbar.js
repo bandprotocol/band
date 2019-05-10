@@ -626,8 +626,9 @@ const Navbar = props => {
   return (
     <Nav
       style={{
+        width: '100vw',
         transition: 'all 350ms',
-        position: 'sticky',
+        position: 'fixed',
         transform: `translateY(${
           deltaScroll <= 0 || scrollTop < 80 ? '0px' : '-80px'
         })`,

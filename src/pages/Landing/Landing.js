@@ -98,7 +98,7 @@ export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
   return (
-    <Box style={{ color: colors.gradient.dark }}>
+    <Box style={{ color: colors.gradient.dark }} mt="-80px" pt="40px">
       <Box style={{ background: colors.gradient.dark }} pb={['0px', '100px']}>
         <PageContainer>
           <Flex py={['50px', '150px']} flexDirection={['column', 'row']}>
@@ -244,7 +244,7 @@ export default () => {
               link="https://data.bandprotocol.com/"
               mr="36px"
             >
-              <Box mt="0px">
+              <Box mt={['20px', '0px']}>
                 <Image src={LandingBandDB} height="92px" />
               </Box>
             </FeatureCard>
@@ -257,7 +257,7 @@ export default () => {
               linkText="Governance Portal"
               link="https://app-wip.rinkeby.bandprotocol.com/"
             >
-              <Box mt="30px" pl="30px">
+              <Box mt="33px" pl="30px">
                 <Image src={LandingDataGov} width="215px" />
               </Box>
             </FeatureCard>
@@ -323,7 +323,12 @@ export default () => {
                 </AbsoluteLink>
               </Flex>
             </Flex>
-            <Flex flex={1} flexDirection="column" ml={['0px', '10%']}>
+            <Flex
+              flex={1}
+              pb={['40px', '0px']}
+              flexDirection="column"
+              ml={['0px', '10%']}
+            >
               <Flex>
                 <Text
                   fontSize={['20px', '22px']}

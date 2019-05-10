@@ -10,9 +10,18 @@ export default ({ background, Img1, Img2, Img3, children }) => {
 
   const getWHByTab = tab => {
     if (tab === selectedTab) {
-      return { transform: 'scale(1)', opacity: 1, zIndex: 1 }
+      return {
+        transform: 'scale(1)',
+        opacity: 1,
+        zIndex: 1,
+        boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.25)',
+      }
     }
-    const styleObj = { opacity: 0.4, zIndex: 0 }
+    const styleObj = {
+      opacity: 0.4,
+      zIndex: 0,
+      boxShadow: 'none',
+    }
     if (selectedTab === 0 && tab === 1) {
       return {
         ...styleObj,
@@ -119,7 +128,16 @@ export default ({ background, Img1, Img2, Img3, children }) => {
             transition: 'all 0.5s',
           }}
           bg={selectedTab === 0 ? '#6b8bf5' : '#ced4ff'}
-        />
+        >
+          <Flex
+            bg="#6b8bf5"
+            flex={1}
+            style={{
+              opacity: selectedTab === 0 ? 1 : 0,
+              filter: `blur(${selectedTab === 0 ? 5 : 0}px)`,
+            }}
+          />
+        </Flex>
         <Flex
           mx="10px"
           onClick={() => setSelectedTab(1)}
@@ -131,7 +149,16 @@ export default ({ background, Img1, Img2, Img3, children }) => {
             transition: 'all 0.5s',
           }}
           bg={selectedTab === 1 ? '#6b8bf5' : '#ced4ff'}
-        />
+        >
+          <Flex
+            bg="#6b8bf5"
+            flex={1}
+            style={{
+              opacity: selectedTab === 1 ? 1 : 0,
+              filter: `blur(${selectedTab === 1 ? 5 : 0}px)`,
+            }}
+          />
+        </Flex>
         <Flex
           onClick={() => setSelectedTab(2)}
           style={{
@@ -142,7 +169,16 @@ export default ({ background, Img1, Img2, Img3, children }) => {
             transition: 'all 0.5s',
           }}
           bg={selectedTab === 2 ? '#6b8bf5' : '#ced4ff'}
-        />
+        >
+          <Flex
+            bg="#6b8bf5"
+            flex={1}
+            style={{
+              opacity: selectedTab === 2 ? 1 : 0,
+              filter: `blur(${selectedTab === 2 ? 5 : 0}px)`,
+            }}
+          />
+        </Flex>
       </Flex>
     </Box>
   )
