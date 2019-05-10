@@ -126,12 +126,11 @@ export default ({
           </Flex>
         </Flex>
         <Flex
-          mt={['calc(100vw - 20px)', '355px']}
+          mt={['calc(75vw - 20px)', '355px']}
           flexDirection="row"
           alignItems="flex-end"
           justifyContent="center"
           style={{ position: 'relative' }}
-          bg="green"
         >
           <Flex
             style={{
@@ -145,8 +144,8 @@ export default ({
           >
             <Image
               src={Img1}
-              width={['calc(100vw - 20px)', '410px']}
-              height={['calc((100vw - 20px) * 0.8)', '335px']}
+              width={['calc(75vw - 15px)', '410px']}
+              height={['calc((75vw - 15px) * 0.8)', '335px']}
               onClick={() => setSelectedTab(0)}
             />
           </Flex>
@@ -162,8 +161,8 @@ export default ({
           >
             <Image
               src={Img2}
-              width={['calc(100vw - 20px)', '410px']}
-              height={['calc((100vw - 20px) * 0.8)', '335px']}
+              width={['calc(75vw - 15px)', '410px']}
+              height={['calc((75vw - 15px) * 0.8)', '335px']}
               onClick={() => setSelectedTab(1)}
             />
             <Flex />
@@ -180,8 +179,8 @@ export default ({
           >
             <Image
               src={Img3}
-              width={['calc(100vw - 20px)', '410px']}
-              height={['calc((100vw - 20px) * 0.8)', '335px']}
+              width={['calc(75vw - 15px)', '410px']}
+              height={['calc((75vw - 15px) * 0.8)', '335px']}
               onClick={() => setSelectedTab(2)}
             />
           </Flex>

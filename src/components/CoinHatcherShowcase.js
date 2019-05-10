@@ -4,105 +4,145 @@ import { Flex, Text, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
 
 export default ({ background, Img1, Img2, Img3, children }) => {
+  const _isMobile = isMobile()
   const [selectedTab, setSelectedTab] = useState(1)
+  const offset = _isMobile ? '100' : '280'
 
-  const onSelectTab = tabId => {
-    setSelectedTab(tabId)
+  const getWHByTab = tab => {
+    if (tab === selectedTab) {
+      return { transform: 'scale(1)', opacity: 1, zIndex: 1 }
+    }
+    const styleObj = { opacity: 0.4, zIndex: 0 }
+    if (selectedTab === 0 && tab === 1) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(${offset}px)`,
+      }
+    } else if (selectedTab === 0 && tab === 2) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(-${offset}px)`,
+      }
+    } else if (selectedTab === 1 && tab === 0) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(-${offset}px)`,
+      }
+    } else if (selectedTab === 1 && tab === 2) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(${offset}px)`,
+      }
+    } else if (selectedTab === 2 && tab === 0) {
+      return {
+        ...styleObj,
+        transform: `scale(0.8) translateY(30px) translateX(${offset}px)`,
+      }
+    }
+    return {
+      ...styleObj,
+      transform: `scale(0.8) translateY(30px) translateX(-${offset}px)`,
+    }
   }
 
-  const getWHByTab = tab =>
-    tab === selectedTab
-      ? { width: '410px', height: '335px', opacity: 1 }
-      : { width: '360px', height: '270px', opacity: 0.6 }
   return (
     <Box pb={4} mx="-80px" style={{ background: background }}>
       <PageContainer>
         {children}
-
         <Flex
-          align="flex-end"
+          mt={['calc(75vw - 20px)', '355px']}
           flexDirection="row"
-          style={{ height: '335px' }}
           alignItems="flex-end"
+          justifyContent="center"
+          style={{ position: 'relative' }}
         >
           <Flex
-            mx="3px"
             style={{
               borderRadius: '4px',
               overflow: 'hidden',
+              cursor: 'pointer',
               transition: 'all 0.5s',
+              position: 'absolute',
               ...getWHByTab(0),
             }}
           >
             <Image
               src={Img1}
-              {...getWHByTab(0)}
-              onClick={() => onSelectTab(0)}
+              width={['calc(75vw - 15px)', '410px']}
+              height={['calc((75vw - 15px) * 0.8)', '335px']}
+              onClick={() => setSelectedTab(0)}
             />
           </Flex>
           <Flex
-            mx="3px"
             style={{
               borderRadius: '4px',
               overflow: 'hidden',
+              cursor: 'pointer',
               transition: 'all 0.5s',
+              position: 'absolute',
               ...getWHByTab(1),
             }}
           >
             <Image
               src={Img2}
-              {...getWHByTab(1)}
-              onClick={() => onSelectTab(1)}
+              width={['calc(75vw - 15px)', '410px']}
+              height={['calc((75vw - 15px) * 0.8)', '335px']}
+              onClick={() => setSelectedTab(1)}
             />
             <Flex />
           </Flex>
           <Flex
-            mx="3px"
             style={{
               borderRadius: '4px',
               overflow: 'hidden',
+              cursor: 'pointer',
               transition: 'all 0.5s',
+              position: 'absolute',
               ...getWHByTab(2),
             }}
           >
             <Image
               src={Img3}
-              {...getWHByTab(2)}
-              onClick={() => onSelectTab(2)}
+              width={['calc(75vw - 15px)', '410px']}
+              height={['calc((75vw - 15px) * 0.8)', '335px']}
+              onClick={() => setSelectedTab(2)}
             />
           </Flex>
         </Flex>
         <Flex mt="35px" flexDirection="row" justifyContent="center">
           <Flex
-            onClick={() => onSelectTab(0)}
+            onClick={() => setSelectedTab(0)}
             style={{
               width: '48px',
-              height: '6px',
+              height: '4px',
               borderRadius: '1px',
               cursor: 'pointer',
+              transition: 'all 0.5s',
             }}
-            bg={selectedTab === 0 ? '#6b8bf5' : '#cdd3ff'}
+            bg={selectedTab === 0 ? '#6b8bf5' : '#ced4ff'}
           />
           <Flex
             mx="10px"
-            onClick={() => onSelectTab(1)}
+            onClick={() => setSelectedTab(1)}
             style={{
               width: '48px',
-              height: '6px',
+              height: '4px',
               borderRadius: '1px',
               cursor: 'pointer',
+              transition: 'all 0.5s',
             }}
-            bg={selectedTab === 1 ? '#6b8bf5' : '#cdd3ff'}
+            bg={selectedTab === 1 ? '#6b8bf5' : '#ced4ff'}
           />
           <Flex
-            onClick={() => onSelectTab(2)}
+            onClick={() => setSelectedTab(2)}
             style={{
               width: '48px',
-              height: '6px',
+              height: '4px',
               borderRadius: '1px',
               cursor: 'pointer',
+              transition: 'all 0.5s',
             }}
-            bg={selectedTab === 2 ? '#6b8bf5' : '#cdd3ff'}
+            bg={selectedTab === 2 ? '#6b8bf5' : '#ced4ff'}
           />
         </Flex>
       </PageContainer>

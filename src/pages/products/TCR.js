@@ -329,7 +329,7 @@ export default () => {
       </PageContainer>
       <Box bg="#f6f8ff" mb={['425px', '0px']}>
         <PageContainer>
-          <Flex flexDirection="column" alignItems="center" pb={5}>
+          <Flex flexDirection="column" alignItems="center" pb={[0, 5]}>
             <Box mt={5} mb={2}>
               <H1 textAlign="center" dark>
                 Use Cases
@@ -346,7 +346,7 @@ export default () => {
               on providing accurate cryptocurrency price, volume, news and
               research data.
             </Text>
-            <Flex justifyContent="center" mt={['35px', 4]} mb={['35px', 0]}>
+            <Flex justifyContent="center" mt={['35px', 4]}>
               <Button variant="primary">Go to CoinHatcher</Button>
             </Flex>
           </Flex>

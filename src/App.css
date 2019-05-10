@@ -188,12 +188,13 @@ html {
   overflow: hidden;
   background: #2a304e;
   scroll-behavior: smooth;
+  max-width: calc(100vw);
 }
 
 html,
 body {
   height: 100%;
-  max-width: 100vw;
+  max-width: calc(100vw);
   overflow: hidden;
   scroll-behavior: smooth;
 }
