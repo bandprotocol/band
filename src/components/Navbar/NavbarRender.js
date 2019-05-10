@@ -1,22 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
-import EthPurple from 'images/ethPurple.svg'
-import Wallet from 'images/wallet.svg'
+import ethBlue from 'images/ethBlue.svg'
+import Wallet from 'images/blueWallet.svg'
 // import AddCommunity from 'images/add-community.svg'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { Link, Bold, Image, Flex, Box, Text, Card } from 'ui/common'
+import { Link, Image, Flex, Box, Text, Card } from 'ui/common'
 import media from 'ui/media'
-
 import PendingTransaction from 'components/PendingTransaction'
 import ClickOutSide from 'react-click-outside'
-
-import LogoSrc from 'images/logo.svg'
+import LogoSrc from 'images/blueBandLogo.svg'
 import { colors } from 'ui'
 
 const Nav = styled.nav`
   display: flex;
-  height: 80px;
+  height: 60px;
   align-items: center;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07);
   position: sticky;
@@ -97,13 +95,14 @@ const DropdownButton = styled(Flex)`
   height: 40px;
   line-height: 30px;
   color: #fff;
-  border-radius: 3px;
   z-index: 9999999;
   cursor: pointer;
+  border-radius: 50%;
   transition: all 250ms;
   background: transparent;
   &:hover {
     background: #f0f2f9;
+    border-radius: 50%;
   }
 `
 
@@ -195,8 +194,8 @@ export default ({
       <PageContainer fullWidth>
         <Flex alignItems="center">
           <Link dark="true" to="/">
-            <Image src={LogoSrc} width={16} ml={4} />
-            <Bold ml={[0, 3]}>Band Protocol</Bold>
+            <Image src={LogoSrc} width={166} ml={4} />
+            {/* <Bold ml={[0, 3]}>Band Protocol</Bold> */}
           </Link>
           <Flex ml="auto">
             {/* <Link dark="true" to="/create-community" px={1}>
@@ -239,8 +238,19 @@ export default ({
                     />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
-                    <Image src={EthPurple} width={40} height={40} />
-                    {pending.length !== 0 && <Badge bg={colors.red} />}
+                    <Flex
+                      justifyContent="center"
+                      bg="#f8fafd"
+                      alignItems="center"
+                      style={{
+                        height: '40px',
+                        width: '40px',
+                        borderRadius: '50%',
+                      }}
+                    >
+                      <Image src={ethBlue} width={30} height={30} />
+                      {pending.length !== 0 && <Badge bg={colors.red} />}
+                    </Flex>
                   </DropdownButton>
                   <Flex
                     alignItems="center"
@@ -255,7 +265,7 @@ export default ({
                         />
                       )}
                     </Flex>
-                    <Text color="#8868ff">
+                    <Text color="#7688f4" fontSize={4}>
                       <i className="fas fa-sort-down" />
                     </Text>
                   </Flex>
@@ -264,7 +274,7 @@ export default ({
                   <Text
                     block
                     size={14}
-                    color="#8868ff"
+                    color="#7688f4"
                     style={{ cursor: 'pointer' }}
                     onClick={signOut}
                   >

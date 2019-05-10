@@ -13,19 +13,10 @@ import { dispatchAsync } from 'utils/reduxSaga'
 const CustomButton = styled(Button).attrs({
   fontSize: '16px',
   fontWeight: 500,
-  bg: '#7c84a6',
+  variant: 'blue',
+  px: '17px',
 })`
-  border-radius: 6px;
-  transition: 0.5s all;
-  cursor: pointer;
-  &:hover {
-    box-shadow: 0 3px 5px 0 rgba(180, 187, 218, 0.5);
-  }
-
-  &:active {
-    background-color: #626b90;
-    box-shadow: 0 0px 0px 0;
-  }
+  padding: 9px 17px;
 `
 
 class ProviderList extends React.Component {

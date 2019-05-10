@@ -15,7 +15,7 @@ class CommunityDataProvider extends React.Component {
         <Flex flexDirection="row">
           <Flex justifyContent="center" alignItems="center">
             <Flex mr="10px" mb="3px">
-              <Text fontFamily="Avenir-Heavy" color="#4a4a4a" fontSize="24px">
+              <Text fontFamily="Avenir-Heavy" color="#4a4a4a" fontSize="15px">
                 Data providers
               </Text>
             </Flex>

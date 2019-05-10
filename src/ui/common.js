@@ -90,14 +90,14 @@ export const BackgroundCard = styled(Card)`
 `
 
 export const HighlightNavLink = styled(NavLink)`
-  color: white;
+  color: #ffffff;
   text-decoration: none;
   &.is-active {
     font-weight: 700;
-    color: ${colors.purple.normal};
+    color: ${colors.blue.text};
     & > * {
       background: white;
-      color: #4e3ca9;
+      color: ${colors.blue.text};
     }
 
     & .img-active {
@@ -120,8 +120,8 @@ export const HighlightNavLink = styled(NavLink)`
   &:hover {
     :not(.is-active) {
       & > * {
-        background: #3f3f4c;
-        color: #ffffff;
+        background: #95a3e1;
+        color: ${colors.blue.text};
       }
     }
   }

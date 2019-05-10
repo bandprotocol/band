@@ -9,7 +9,7 @@ const ProviderListHeader = ({ symbol }) => (
   <Flex
     flexDirection="row"
     py={3}
-    bg="#dee2f0"
+    bg="#f5f7ff"
     style={{ minHeight: '50px' }}
     alignItems="center"
   >

@@ -19,6 +19,7 @@ const DWButton = styled(Button).attrs({
   width: 95px;
   max-width: 95px;
   padding: 10px 5px;
+  border-radius: 17.5px;
   cursor: ${props => (props.user ? 'pointer' : 'default')};
   background-color: ${props => (props.user ? props.bg : '#e3e6ef')};
   color: ${props => (props.user ? props.color : 'white')};
@@ -59,7 +60,7 @@ const HistoryRow = ({
       minWidth: 0,
       overflow: 'hidden',
       height: '60px',
-      borderLeft: status === 'LISTED' ? '8px solid #a2b0ea' : 'none',
+      borderLeft: status === 'LISTED' ? '8px solid #718bff' : 'none',
       borderBottom: '1px solid rgba(227, 227, 227, 0.5)',
     }}
     bg={status === 'LISTED' ? '#f9fbff' : 'white'}

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="26" viewBox="0 0 14 26">
+    <defs>
+        <linearGradient id="a" x1="104.746%" x2="34.26%" y1="43.36%" y2="60.572%">
+            <stop offset="0%" stop-color="#B2B2E7"/>
+            <stop offset="100%" stop-color="#6262A5"/>
+        </linearGradient>
+        <path id="b" d="M0 .017h6.34v11.536H0z"/>
+        <linearGradient id="d" x1="18.642%" x2="50%" y1="0%" y2="59.299%">
+            <stop offset="0%" stop-color="#6174C7"/>
+            <stop offset="100%" stop-color="#ABB7F4"/>
+        </linearGradient>
+        <path id="e" d="M.014.036h6.34v15.38H.014z"/>
+        <linearGradient id="f" x1="37.709%" x2="57.109%" y1="7.544%" y2="74.563%">
+            <stop offset="0%" stop-color="#B3C1F9"/>
+            <stop offset="100%" stop-color="#8898E7"/>
+        </linearGradient>
+        <path id="h" d="M0 .036h6.34v15.38H0z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path fill="url(#a)" d="M1.564 14.114l6.356 3.85 6.352-3.85-6.357-3.85z" transform="translate(-1.053 -.199)"/>
+        <g transform="matrix(-1 0 0 1 13.25 13.783)">
+            <mask id="c" fill="#fff">
+                <use xlink:href="#b"/>
+            </mask>
+            <path fill="#CED5FF" d="M6.34 3.862L0 .017l6.34 11.536z" mask="url(#c)"/>
+        </g>
+        <path fill="url(#d)" d="M12.669 13.998L6.334 25.533v-7.69z" transform="matrix(-1 0 0 1 13.25 -.199)"/>
+        <g transform="matrix(-1 0 0 1 6.928 .092)">
+            <mask id="g" fill="#fff">
+                <use xlink:href="#e"/>
+            </mask>
+            <path fill="url(#f)" d="M-.002 15.423l6.335-3.844L-.007.043z" mask="url(#g)"/>
+        </g>
+        <g transform="matrix(-1 0 0 1 13.25 .092)">
+            <mask id="i" fill="#fff">
+                <use xlink:href="#h"/>
+            </mask>
+            <path fill="#CED5FF" d="M0 11.571L6.335.036l.005 15.38z" mask="url(#i)"/>
+        </g>
+    </g>
+</svg>

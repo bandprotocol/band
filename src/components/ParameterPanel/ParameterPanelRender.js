@@ -18,7 +18,7 @@ const PrefixSelect = styled(Select).attrs({
 `
 
 const ProposeButton = styled(Button).attrs({
-  variant: 'grey',
+  variant: 'blue',
 })`
   padding: 0;
   width: 210px;

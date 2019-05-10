@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { Box, Text, Flex, Image } from 'rebass'
 import TooltipIcon from 'images/icon-reason.svg'
-import TooltipHoverIcon from 'images/tooltip-hover.svg'
 
 const PopupBox = styled(Box)`
   z-index: 1000000000;
@@ -81,7 +80,7 @@ export default class Tooltip extends React.Component {
         }}
       >
         <Image
-          src={this.state.show ? TooltipHoverIcon : TooltipIcon}
+          src={TooltipIcon}
           width={size || '20px'}
           height={size || '20px'}
           onMouseLeave={() =>
