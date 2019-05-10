@@ -84,7 +84,7 @@ export default ({
         flex={1}
         px="40px"
         style={{
-          height: '50px',
+          lineHeight: '50px',
         }}
         onClick={() => toggleShow()}
       >
@@ -94,7 +94,7 @@ export default ({
           justifyContent="space-between"
         >
           {/* Left */}
-          <Flex>
+          <Flex alignItems="center">
             <Text
               color={colors.purple.blueberry}
               fontSize={1}

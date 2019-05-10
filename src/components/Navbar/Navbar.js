@@ -63,7 +63,9 @@ class Navbar extends React.Component {
         signOut={() => this.signOut()}
         toggleSignOut={this.toggleSignOut.bind(this)}
         toggleBalance={this.toggleBalance.bind(this)}
-        onClickOutside={() => this.setState({ showBlockTransactions: false })}
+        onClickOutside={() =>
+          this.setState({ showBlockTransactions: false, showSignOut: false })
+        }
         toggleShowBlockTransactions={this.toggleBlockTransactions.bind(this)}
       />
     )

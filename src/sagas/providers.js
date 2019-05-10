@@ -15,7 +15,6 @@ import { nameAndAddressCommunitySelector } from 'selectors/communities'
 import { currentBandClientSelector } from 'selectors/current'
 
 function* handleUpdateProvider({ address, provider }) {
-  yield put(removeBalance())
   if (address) {
     yield put(setUserAddress(address))
     yield put(
@@ -27,6 +26,7 @@ function* handleUpdateProvider({ address, provider }) {
     )
     yield put(reloadBalance())
   } else {
+    yield put(removeBalance())
     yield put(setUserAddress(null))
     yield put(
       saveBandClient(

@@ -4,20 +4,26 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { loadOrderHistory } from 'actions'
 import { noOrderSelector } from 'selectors/order'
+import { dispatchAsync } from 'utils/reduxSaga'
 
 class OrderHistory extends React.Component {
   state = {
     currentPage: 1,
+    fetching: true,
   }
 
-  componentDidMount() {
-    this.props.loadOrderHistory()
+  async componentDidMount() {
+    await this.props.loadOrderHistory()
+    this.setState({
+      fetching: false,
+    })
+    this.checker = setInterval(() => {
+      this.props.loadOrderHistory()
+    }, 3000)
   }
 
-  onChange(selectedOption) {
-    if (selectedOption.value !== this.state.selectedOption.value)
-      this.setState({ selectedOption, currentPage: 1 })
-    else this.setState({ selectedOption })
+  componentWillUnmount() {
+    clearInterval(this.checker)
   }
 
   onChangePage(selectedPage) {
@@ -27,17 +33,11 @@ class OrderHistory extends React.Component {
   }
 
   render() {
-    const { selectedOption, currentPage } = this.state
-    const { communityAddress, pageSize, numOrders } = this.props
     return (
       <OrderHistoryRender
-        numOrders={numOrders}
-        selectedOption={selectedOption}
-        onChange={this.onChange.bind(this)}
-        communityAddress={communityAddress}
-        currentPage={currentPage}
+        {...this.state}
+        {...this.props}
         onChangePage={this.onChangePage.bind(this)}
-        pageSize={pageSize}
       />
     )
   }
@@ -52,8 +52,10 @@ const mapStateToProps = (state, { communityAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadOrderHistory: () => dispatch(loadOrderHistory(communityAddress)),
+  loadOrderHistory: () =>
+    dispatchAsync(dispatch, loadOrderHistory(communityAddress)),
 })
+
 export default withRouter(
   connect(
     mapStateToProps,

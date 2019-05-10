@@ -1,7 +1,8 @@
-import { takeEvery, put, select } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects'
 import { LOAD_TCDS, addTcds } from 'actions'
 import { Utils } from 'band.js'
 import BN from 'bn.js'
+import { takeEveryAsync } from 'utils/reduxSaga'
 
 function* handleLoadTcds({ user, commAddress }) {
   const {
@@ -116,5 +117,5 @@ function* handleLoadTcds({ user, commAddress }) {
 }
 
 export default function*() {
-  yield takeEvery(LOAD_TCDS, handleLoadTcds)
+  yield takeEveryAsync(LOAD_TCDS, handleLoadTcds)
 }

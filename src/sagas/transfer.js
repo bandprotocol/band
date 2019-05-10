@@ -1,7 +1,7 @@
-import { takeEvery, put } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects'
 import { LOAD_TRANSFER_HISTORY, addTransfers } from 'actions'
 import { Utils } from 'band.js'
-
+import { takeEveryAsync } from 'utils/reduxSaga'
 import BN from 'utils/bignumber'
 import moment from 'utils/moment'
 
@@ -47,5 +47,5 @@ function* handleLoadTransferHistory({ address }) {
 }
 
 export default function*() {
-  yield takeEvery(LOAD_TRANSFER_HISTORY, handleLoadTransferHistory)
+  yield takeEveryAsync(LOAD_TRANSFER_HISTORY, handleLoadTransferHistory)
 }

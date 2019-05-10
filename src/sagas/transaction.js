@@ -1,7 +1,6 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
 import { Utils } from 'band.js'
 import { channel } from 'redux-saga'
-
 import transit from 'transit-immutable-js'
 
 import {
@@ -23,6 +22,7 @@ import {
   currentCommunityClientSelector,
   currentUserSelector,
 } from 'selectors/current'
+import { walletSelector } from 'selectors/wallet'
 
 import { transactionSelector } from 'selectors/basic'
 
@@ -117,23 +117,25 @@ function* handleProposeProposal({ address, title, reason, changes }) {
 function* handleVoteProposal({ address, proposalId, vote }) {
   const user = yield select(currentUserSelector)
   if (!user) {
-    yield put(showModal('LOGIN'))
+    const wallet = yield select(walletSelector)
+    wallet.showWallet()
+  } else {
+    const client = yield select(currentCommunityClientSelector, { address })
+
+    const votingPower = yield client.parameter().getVotingPower(proposalId)
+    const transaction = yield client.createProposalVoteTransaction({
+      proposalId,
+      yesVote: vote ? votingPower : '0',
+      noVote: vote ? '0' : votingPower,
+    })
+
+    const txHash = yield transaction.sendFeeless()
+    txChannel.put({
+      txHash,
+      title: `Vote ${vote ? 'accept' : 'reject'}`,
+      type: 'VOTE',
+    })
   }
-  const client = yield select(currentCommunityClientSelector, { address })
-
-  const votingPower = yield client.parameter().getVotingPower(proposalId)
-  const transaction = yield client.createProposalVoteTransaction({
-    proposalId,
-    yesVote: vote ? votingPower : '0',
-    noVote: vote ? '0' : votingPower,
-  })
-
-  const txHash = yield transaction.sendFeeless()
-  txChannel.put({
-    txHash,
-    title: `Vote ${vote ? 'accept' : 'reject'}`,
-    type: 'VOTE',
-  })
 }
 
 function* handleDumpTxs() {

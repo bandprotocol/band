@@ -12,6 +12,7 @@ import proposal from 'reducers/proposal'
 import transfer from 'reducers/transfer'
 import holder from 'reducers/holder'
 import tcd from 'reducers/tcd'
+import fetch from 'reducers/fetch'
 
 export default combineReducers({
   band,
@@ -26,4 +27,5 @@ export default combineReducers({
   transfer,
   holder,
   tcd,
+  fetch,
 })

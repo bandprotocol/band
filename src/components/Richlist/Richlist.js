@@ -1,20 +1,29 @@
 import React from 'react'
-
 import RichlistRender from './RichlistRender'
-
 import { connect } from 'react-redux'
-
 import { withRouter } from 'react-router-dom'
 import { numHolders } from 'selectors/holder'
 import { loadHolders } from 'actions'
+import { dispatchAsync } from 'utils/reduxSaga'
 
 class Richlist extends React.Component {
   state = {
     currentPage: 1,
+    fetching: true,
   }
 
-  componentDidMount() {
-    this.props.loadHolders()
+  async componentDidMount() {
+    await this.props.loadHolders()
+    this.setState({
+      fetching: false,
+    })
+    this.checker = setInterval(() => {
+      this.props.loadHolders()
+    }, 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.checker)
   }
 
   onChangePage(selectedPage) {
@@ -24,13 +33,12 @@ class Richlist extends React.Component {
   }
 
   render() {
-    const { currentPage } = this.state
     const { communityAddress, pageSize, numberOfHolders } = this.props
     return (
       <RichlistRender
+        {...this.state}
         numberOfHolders={numberOfHolders}
         communityAddress={communityAddress}
-        currentPage={currentPage}
         onChangePage={this.onChangePage.bind(this)}
         pageSize={pageSize}
       />
@@ -47,7 +55,7 @@ const mapStateToProps = (state, { communityAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadHolders: () => dispatch(loadHolders(communityAddress)),
+  loadHolders: () => dispatchAsync(dispatch, loadHolders(communityAddress)),
 })
 
 export default withRouter(

@@ -9,7 +9,15 @@ import { loadProposals, loadParameters } from 'actions'
 class CommunityProposal extends React.Component {
   componentDidMount() {
     this.props.loadProposals()
+    this.checker = setInterval(() => {
+      this.props.loadProposals()
+    }, 3000)
   }
+
+  componentWillUnmount() {
+    clearInterval(this.checker)
+  }
+
   render() {
     const { communityAddress } = this.props
     return (

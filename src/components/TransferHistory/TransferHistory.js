@@ -4,14 +4,26 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { loadTransferHistory } from 'actions'
 import { noTransferSelector } from 'selectors/transfer'
+import { dispatchAsync } from 'utils/reduxSaga'
 
 class TransferHistory extends React.Component {
   state = {
     currentPage: 1,
+    fetching: true,
   }
 
-  componentDidMount() {
-    this.props.loadTransferHistory()
+  async componentDidMount() {
+    await this.props.loadTransferHistory()
+    this.setState({
+      fetching: false,
+    })
+    this.checker = setInterval(() => {
+      this.props.loadTransferHistory()
+    }, 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.checker)
   }
 
   onChangePage(selectedPage) {
@@ -21,15 +33,11 @@ class TransferHistory extends React.Component {
   }
 
   render() {
-    const { currentPage } = this.state
-    const { communityAddress, pageSize, numTransfers } = this.props
     return (
       <TransferHistoryRender
-        numTransfers={numTransfers}
-        communityAddress={communityAddress}
-        currentPage={currentPage}
+        {...this.props}
+        {...this.state}
         onChangePage={this.onChangePage.bind(this)}
-        pageSize={pageSize}
       />
     )
   }
@@ -44,7 +52,8 @@ const mapStateToProps = (state, { communityAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadTransferHistory: () => dispatch(loadTransferHistory(communityAddress)),
+  loadTransferHistory: () =>
+    dispatchAsync(dispatch, loadTransferHistory(communityAddress)),
 })
 
 export default withRouter(

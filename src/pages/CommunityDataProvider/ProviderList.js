@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { numDataProviders } from 'selectors/tcd'
 import { loadTcds, showModal } from 'actions'
+import { dispatchAsync } from 'utils/reduxSaga'
 
 const CustomButton = styled(Button).attrs({
   fontSize: '16px',
@@ -30,10 +31,14 @@ const CustomButton = styled(Button).attrs({
 class ProviderList extends React.Component {
   state = {
     currentPage: 1,
+    fetching: true,
   }
 
-  componentDidMount() {
-    this.props.loadTcds()
+  async componentDidMount() {
+    await this.props.loadTcds()
+    this.setState({
+      fetching: false,
+    })
   }
 
   onChangePage(selectedPage) {
@@ -43,7 +48,7 @@ class ProviderList extends React.Component {
   }
 
   render() {
-    const { currentPage } = this.state
+    const { currentPage, fetching } = this.state
     const {
       user,
       symbol,
@@ -78,6 +83,7 @@ class ProviderList extends React.Component {
           <ProviderListRender
             user={user}
             symbol={symbol}
+            fetching={fetching}
             numDataProviders={numDataProviders}
             communityAddress={communityAddress}
             currentPage={currentPage}
@@ -104,7 +110,7 @@ const mapStateToProps = (state, { communityAddress }) => {
 
 const mapDispatchToProps = (dispatch, { user, communityAddress }) => ({
   user,
-  loadTcds: () => dispatch(loadTcds(user, communityAddress)),
+  loadTcds: () => dispatchAsync(dispatch, loadTcds(user, communityAddress)),
   showBeProvider: () => dispatch(showModal('BEPROVIDER')),
 })
 

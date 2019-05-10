@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import './App.css'
 import { ThemeProvider } from 'styled-components'
 import theme from 'ui/theme'
@@ -7,22 +8,32 @@ import Navbar from 'components/Navbar'
 import TransactionPopup from 'components/TransactionPopup'
 import ModalEntry from 'components/ModalEntry'
 import Routes from 'Routes'
+import FullLoadingPage from 'pages/FullLoading'
+import { fetchSelector } from 'selectors/basic'
 
 class App extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <Router>
-          <React.Fragment>
-            <Navbar />
-            <TransactionPopup />
-            <Route component={Routes} />
-            <ModalEntry />
-          </React.Fragment>
-        </Router>
+        {this.props.fetching ? (
+          <FullLoadingPage />
+        ) : (
+          <Router>
+            <React.Fragment>
+              <Navbar />
+              <TransactionPopup />
+              <Route component={Routes} />
+              <ModalEntry />
+            </React.Fragment>
+          </Router>
+        )}
       </ThemeProvider>
     )
   }
 }
 
-export default App
+const mapStateToProps = state => ({
+  fetching: fetchSelector(state),
+})
+
+export default connect(mapStateToProps)(App)

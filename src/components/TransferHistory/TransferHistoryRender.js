@@ -3,6 +3,7 @@ import TransferPagination from 'components/Pagination/TransferPagination'
 import TransferBody from './TransferBody'
 import MockProposal from 'images/mock-proposal.svg'
 import { Flex, Text, Image } from 'ui/common'
+import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const TransferHistoryHeader = () => (
   <Flex
@@ -38,52 +39,61 @@ const TransferHistoryHeader = () => (
 
 export default ({
   numTransfers,
+  fetching,
   communityAddress,
   currentPage,
   onChangePage,
   pageSize,
-}) => {
-  return (
-    <Flex
-      style={{ borderRadius: '10px' }}
-      width={1}
-      bg="white"
-      flexDirection="column"
-    >
-      <TransferHistoryHeader />
-      {numTransfers > 0 ? (
-        <React.Fragment>
-          <TransferBody
-            communityAddress={communityAddress}
-            currentPage={currentPage}
-            pageSize={pageSize}
-          />
-          <TransferPagination
-            communityAddress={communityAddress}
-            pageSize={pageSize}
-            currentPage={currentPage}
-            onChangePage={onChangePage}
-          />
-        </React.Fragment>
-      ) : (
-        <Flex
-          width={1}
-          justifyContent="center"
-          alignItems="center"
-          fontWeight={500}
-          style={{ height: '600px' }}
-        >
-          <Flex flexDirection="column" alignItems="center">
-            <Image src={MockProposal} />
-            <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-              No Transfer right now!
-            </Text>
-            <Text fontSize={1} py={1}>
-              Transfer token to list the first transaction of this community!
-            </Text>
-          </Flex>
+}) => (
+  <Flex
+    style={{ borderRadius: '10px' }}
+    width={1}
+    bg="white"
+    flexDirection="column"
+  >
+    <TransferHistoryHeader />
+    {fetching ? (
+      <Flex
+        width={1}
+        justifyContent="center"
+        alignItems="center"
+        fontWeight={500}
+        style={{ height: '600px' }}
+      >
+        <CircleLoadingSpinner radius="80px" />
+      </Flex>
+    ) : numTransfers > 0 ? (
+      <React.Fragment>
+        <TransferBody
+          communityAddress={communityAddress}
+          currentPage={currentPage}
+          pageSize={pageSize}
+        />
+        <TransferPagination
+          communityAddress={communityAddress}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onChangePage={onChangePage}
+        />
+      </React.Fragment>
+    ) : (
+      <Flex
+        width={1}
+        justifyContent="center"
+        alignItems="center"
+        fontWeight={500}
+        style={{ height: '600px' }}
+      >
+        <Flex flexDirection="column" alignItems="center">
+          <Image src={MockProposal} />
+          <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
+            No Transfer right now!
+          </Text>
+          <Text fontSize={1} py={1}>
+            Transfer token to list the first transaction of this community!
+          </Text>
         </Flex>
-      )}
-    </Flex>
-  )
-}
+      </Flex>
+    )}
+  </Flex>
+)

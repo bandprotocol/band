@@ -1,7 +1,8 @@
-import { takeEvery, put, select, delay } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects'
 import { LOAD_HOLDERS, addHolders } from 'actions'
 import { Utils } from 'band.js'
 import BN from 'bn.js'
+import { takeEveryAsync } from 'utils/reduxSaga'
 
 function* handleLoadHolders({ address }) {
   const {
@@ -45,5 +46,5 @@ function* handleLoadHolders({ address }) {
 }
 
 export default function*() {
-  yield takeEvery(LOAD_HOLDERS, handleLoadHolders)
+  yield takeEveryAsync(LOAD_HOLDERS, handleLoadHolders)
 }

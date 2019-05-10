@@ -13,6 +13,7 @@ export const blockNumberSelector = state =>
 export const transactionSelector = state => state.getIn(['transaction', 'txs'])
 export const parameterSelector = state => state.get('parameter')
 export const proposalSelector = state => state.get('proposal')
+export const fetchSelector = state => state.get('fetch')
 export const addressSelector = (_, { address }) => address
 export const nameSelector = (_, { name }) => name
 export const typeSelector = (_, { type }) => type

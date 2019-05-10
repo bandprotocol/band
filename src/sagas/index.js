@@ -34,6 +34,7 @@ import BN from 'utils/bignumber'
 
 import transit from 'transit-immutable-js'
 import { List, fromJS } from 'immutable'
+import { toggleFetch } from 'actions'
 
 // import web3
 import Web3 from 'web3'
@@ -44,6 +45,8 @@ const INFURA_KEY =
 const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_KEY))
 
 function* baseInitialize() {
+  // start fetching state
+  yield put(toggleFetch(true))
   window.BandWallet = new BandWallet(
     process.env.NODE_ENV === 'production'
       ? 'https://wallet.bandprotocol.com'
@@ -137,6 +140,8 @@ function* baseInitialize() {
   yield fork(checkTransaction)
   // Update user address and balance after fetch all data
   yield fork(checkProvider)
+  // stop fetching state
+  yield put(toggleFetch(false))
 }
 
 function* checkTransaction() {
@@ -198,7 +203,6 @@ function* checkProvider() {
   while (true) {
     const web3 = yield select(web3Selector)
     window.bandClient = yield select(currentBandClientSelector)
-    const userState = yield select(currentUserSelector)
     const userAddress =
       (web3 &&
         (yield new Promise((resolve, reject) => {
@@ -208,22 +212,20 @@ function* checkProvider() {
           })
         }))) ||
       null
-    if (userAddress !== userState) {
-      yield put(updateProvider(userAddress, web3 && web3.currentProvider))
-      if (userAddress) {
-        // Load transaction history here!
-        const rawTxState = localStorage.getItem(`txs-${userAddress}`)
-        if (rawTxState) {
-          const txState = transit.fromJSON(rawTxState)
-          yield put(saveTxs(0, txState, true))
-        } else {
-          yield put(saveTxs(0, List(), true))
-        }
+    yield put(updateProvider(userAddress, web3 && web3.currentProvider))
+    if (userAddress) {
+      // Load transaction history here!
+      const rawTxState = localStorage.getItem(`txs-${userAddress}`)
+      if (rawTxState) {
+        const txState = transit.fromJSON(rawTxState)
+        yield put(saveTxs(0, txState, true))
       } else {
         yield put(saveTxs(0, List(), true))
       }
+    } else {
+      yield put(saveTxs(0, List(), true))
     }
-    yield delay(100)
+    yield delay(3000)
   }
 }
 

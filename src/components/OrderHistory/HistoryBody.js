@@ -1,10 +1,6 @@
 import { connect } from 'react-redux'
-
 import { withRouter } from 'react-router-dom'
-
 import HistoryBodyRender from './HistoryBodyRender'
-
-import { loadOrderHistory } from 'actions'
 import { orderHistorySelector } from 'selectors/order'
 
 const mapStateToProps = (
@@ -22,12 +18,4 @@ const mapStateToProps = (
   return { items }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadOrderHistory: () => dispatch(loadOrderHistory(communityAddress)),
-})
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(HistoryBodyRender),
-)
+export default withRouter(connect(mapStateToProps)(HistoryBodyRender))

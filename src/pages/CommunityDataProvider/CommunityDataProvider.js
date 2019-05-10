@@ -53,9 +53,4 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CommunityDataProvider)
+export default connect(mapStateToProps)(CommunityDataProvider)

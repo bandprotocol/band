@@ -1,6 +1,6 @@
-import { takeEvery, put } from 'redux-saga/effects'
+import { take, fork, put } from 'redux-saga/effects'
 import { LOAD_ORDER_HISTORY, addOrders } from 'actions'
-
+import { takeEveryAsync } from 'utils/reduxSaga'
 import { Utils } from 'band.js'
 
 function* handleLoadHistory({ address }) {
@@ -24,5 +24,5 @@ function* handleLoadHistory({ address }) {
 }
 
 export default function*() {
-  yield takeEvery(LOAD_ORDER_HISTORY, handleLoadHistory)
+  yield takeEveryAsync(LOAD_ORDER_HISTORY, handleLoadHistory)
 }

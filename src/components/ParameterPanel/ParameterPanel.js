@@ -1,12 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import ParameterPanelRender from './ParameterPanelRender'
-
 import { currentUserSelector } from 'selectors/current'
-
 import { prefixListSelector } from 'selectors/parameter'
 import { loadParameters, showModal } from 'actions'
+import { walletSelector } from 'selectors/wallet'
 
 class ParameterPanel extends React.Component {
   state = {
@@ -29,6 +27,14 @@ class ParameterPanel extends React.Component {
           this.props.prefixList.length > 0 ? this.props.prefixList[0] : null,
       })
     }
+  }
+
+  showWallet() {
+    const { wallet } = this.props
+    if (!wallet) {
+      return
+    }
+    wallet.showWallet()
   }
 
   onPrefixChange(newPreifx) {
@@ -72,27 +78,25 @@ class ParameterPanel extends React.Component {
         handleParameterChange={this.handleParameterChange.bind(this)}
         submitChanges={this.submitChanges.bind(this)}
         prefixList={this.props.prefixList}
-        signin={this.props.signin}
+        signin={() => this.showWallet()}
         logedin={this.props.logedin}
       />
     )
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
-  return {
-    prefixList: prefixListSelector(state, { address: communityAddress }).map(
-      prefix => ({ value: prefix, label: prefix }),
-    ),
-    logedin: !!currentUserSelector(state),
-  }
-}
+const mapStateToProps = (state, { communityAddress }) => ({
+  prefixList: prefixListSelector(state, { address: communityAddress }).map(
+    prefix => ({ value: prefix, label: prefix }),
+  ),
+  logedin: !!currentUserSelector(state),
+  wallet: walletSelector(state),
+})
 
 const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   loadParameters: () => dispatch(loadParameters(communityAddress)),
   onSubmit: changes =>
     dispatch(showModal('PROPOSE', { changes, communityAddress })),
-  signin: () => dispatch(showModal('LOGIN', {})),
 })
 
 export default connect(
