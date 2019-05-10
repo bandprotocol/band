@@ -57,6 +57,15 @@ const Nav = styled.nav`
   }
 `
 
+const NavWarper = styled(Flex)`
+  position: fixed;
+  background: red;
+  width: 100vw;
+  height: 100vh;
+  opacity 0.5;
+  pointer-events: none;
+`
+
 const SubMenu = styled(Flex).attrs({
   px: '20px',
   pt: 4,
@@ -275,7 +284,7 @@ const Navbar = props => {
             top: deltaScroll <= 0 || scrollTop < 80 ? '0px' : '80px',
             right: 0,
             height: 'calc(100vh)',
-            width: 'calc(100vw)',
+            width: showMenu ? 'calc(100vw)' : '0px',
             transition: 'all 400ms',
             overflow: 'hidden',
             background: '#202541',
@@ -365,6 +374,7 @@ const Navbar = props => {
               <Flex
                 flex="0 0 60px"
                 pr="26px"
+                mt="20px"
                 mb={4}
                 alignItems="center"
                 flexDirection="row"
@@ -445,10 +455,11 @@ const Navbar = props => {
               transform: showTier2Index === 2 ? '' : 'translateX(100%)',
             }}
           >
-            <Flex flexDirection="column">
+            <Box flexDirection="column" style={{ minHeight: '0px' }}>
               <Flex
                 flex="0 0 60px"
                 pr="26px"
+                mt="20px"
                 mb={4}
                 alignItems="center"
                 flexDirection="row"
@@ -485,7 +496,7 @@ const Navbar = props => {
                   description={`Explore dataset availables by Band Protocol and learn how to integrate with the DApps`}
                 />
               </Flex>
-            </Flex>
+            </Box>
           </Card>
         </Card>
       </React.Fragment>
@@ -650,7 +661,9 @@ const Navbar = props => {
         alignItems="center"
       >
         <Flex width={1}>
-          <Flex style={{ minWidth: '180px' }}>
+          <Flex
+            style={{ minWidth: '180px', zIndex: showTier2Index === 0 ? 1 : 0 }}
+          >
             <Link dark to="/">
               <Image src={LogoSrc} height={32} mr={3} />
             </Link>
