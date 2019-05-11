@@ -119,7 +119,7 @@ const renderTCR = tcr => {
     <React.Fragment>
       <Box mt="24px" mb="20px">
         <Field label="Governance Method">Token Curated Registry</Field>
-        <Field label="Governance Method">{numEntries}</Field>
+        <Field label="Total Entries">{numEntries}</Field>
       </Box>
       <Box pt="20px" style={{ borderTop: 'solid 1px #dee2f0' }}>
         <Text fontSize="14px" fontWeight="500" color="#777777">
@@ -284,7 +284,7 @@ export default props => {
             fontWeight="900"
             color="#393939"
           >
-            DATA SUMMARY
+            DATASET ACTIVITIES
           </Text>
           {tcd && renderTCD(tcd, totalSupply)}
           {tcr && renderTCR(tcr)}
