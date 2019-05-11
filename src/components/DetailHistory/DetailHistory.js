@@ -42,7 +42,7 @@ export default class DetailHistory extends React.Component {
     const { communityAddress, pageSize } = this.props
     return (
       <Flex
-        style={{ borderRadius: '10px', border: 'solid 1px #e9eaea' }}
+        style={{ borderRadius: '10px', border: 'solid 1px #dee2f0' }}
         flexDirection="column"
         bg="white"
         width={1}

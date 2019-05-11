@@ -8,7 +8,7 @@ import ParameterInput from 'components/ParameterInput'
 import { convertFromChain } from 'utils/helper'
 
 const WhiteCard = styled(Card).attrs({
-  border: 'solid 1px #e9eaea',
+  border: 'solid 1px #dee2f0',
   bg: '#ffffff',
   width: '365px',
   mb: 3,

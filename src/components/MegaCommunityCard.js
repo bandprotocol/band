@@ -89,7 +89,7 @@ export default ({
     bg="#fff"
     my={3}
     mx="16px"
-    border="solid 1px #e9eaea"
+    border="solid 1px #dee2f0"
     css={{
       alignSelf: 'flex-start',
       ...(onClick

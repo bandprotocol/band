@@ -154,7 +154,7 @@ export default {
     dashboard: {
       background: '#ffffff',
       borderRadius: '10px',
-      border: 'solid 1px #e9eaea',
+      border: 'solid 1px #dee2f0',
       padding: '10px 24px',
     },
   },
