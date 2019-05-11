@@ -101,6 +101,29 @@ function* baseInitialize() {
           tcdsByCommunityAddress {
             nodes {
               address
+              activeDataSourceCount
+              minStake
+              dataProvidersByAggregateContract(filter: {status: {notEqualTo: "REMOVED"}}) {
+                nodes {
+                  totalOwnership
+                }
+              }
+            }
+          }
+          tcrsByCommunityAddress {
+            nodes {
+              listedEntries: entriesByTcrAddress(filter: {status: {equalTo: "LISTED"}}) {
+                totalCount
+              }
+              appliedEntries: entriesByTcrAddress(filter: {status: {equalTo: "APPLIED"}}) {
+                totalCount
+              }
+              challengedEntries: entriesByTcrAddress(filter: {status: {equalTo: "CHALLENGED"}}) {
+                totalCount
+              }
+              rejectedEntries: entriesByTcrAddress(filter: {status: {equalTo: "REJECTED"}}) {
+                totalCount
+              }
             }
           }
         }
@@ -129,7 +152,16 @@ function* baseInitialize() {
         0,
         new BN(dapp.tokenByCommunityAddress.totalSupply),
         dapp.curveByCommunityAddress.collateralEquation,
-        dapp.tcdsByCommunityAddress.nodes.map(({ address }) => address),
+        dapp.tcdsByCommunityAddress.nodes,
+        dapp.tcrsByCommunityAddress.nodes[0] && {
+          listed: dapp.tcrsByCommunityAddress.nodes[0].listedEntries.totalCount,
+          applied:
+            dapp.tcrsByCommunityAddress.nodes[0].appliedEntries.totalCount,
+          challenged:
+            dapp.tcrsByCommunityAddress.nodes[0].challengedEntries.totalCount,
+          rejected:
+            dapp.tcrsByCommunityAddress.nodes[0].rejectedEntries.totalCount,
+        },
       ),
     )
   }

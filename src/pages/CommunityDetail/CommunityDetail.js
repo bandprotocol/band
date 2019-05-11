@@ -43,6 +43,8 @@ const mapStateToProps = (state, { communityAddress }) => {
     marketCap: community.get('marketCap'),
     totalSupply: community.get('totalSupply'),
     collateralEquation: community.get('collateralEquation'),
+    tcd: community.get('tcds').get(0),
+    tcr: community.get('tcr'),
   }
 }
 

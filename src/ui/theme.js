@@ -62,7 +62,8 @@ export default {
       boxShadow: '0 1px 7px 0 rgba(0, 0, 0, 0.05)',
       borderRadius: '20px',
       '&:hover': {
-        boxShadow: '0 3px 5px 0 rgba(180, 187, 218, 0.5)',
+        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
+        backgroundColor: '#66709c',
       },
       '&:active': {
         backgroundColor: colors.background.darkGrey,
@@ -81,7 +82,8 @@ export default {
       transition: 'all 250ms',
       borderRadius: '20px',
       '&:hover': {
-        boxShadow: '0 3px 3px 0 #a6e7c4',
+        backgroundColor: '#5675ff',
+        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
       },
     },
     submit: {

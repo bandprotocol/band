@@ -137,6 +137,7 @@
 
 /* Credits */
 .highcharts-credits {
+  display: none;
   cursor: pointer;
   fill: #999999;
   font-size: 0.7em;
@@ -222,8 +223,8 @@ g.highcharts-series,
 /* Series options */
 /* Default colors */
 .highcharts-color-0 {
-  fill: #987cff;
-  stroke: #987cff;
+  fill: #496bff;
+  stroke: #496bff;
 }
 
 .highcharts-color-1 {
@@ -272,9 +273,13 @@ g.highcharts-series,
 }
 
 .highcharts-area {
-  fill: #ede8ff;
-  fill-opacity: 0.75;
+  fill: url(#areaGradient);
+  fill-opacity: 0.15;
   stroke-width: 0;
+}
+
+.highcharts-graph {
+  stroke: url(#lineGradient);
 }
 
 .highcharts-markers {
@@ -660,7 +665,7 @@ text.highcharts-data-label {
 
 .highcharts-button-pressed {
   font-weight: bold;
-  fill: #8868ff;
+  fill: #496bff;
   stroke: #cccccc;
 }
 

@@ -10,8 +10,12 @@ import { allTxsSelector } from 'selectors/transaction'
 const Container = styled(Box)`
   position: absolute;
   bottom: 0;
-  right: 0;
-  width: 366px;
+  right: 20px;
+  width: 360px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  overflow: hidden;
   max-height: 500px;
   z-index: 20;
   transform: translateY(${p => (p.show ? 0 : 100)}%);
@@ -27,7 +31,7 @@ const TxnContainer = styled(Box)`
 
 const MainBar = styled(Flex)`
   padding: 0 12px;
-  line-height: 30px;
+  line-height: 36px;
   background: #5973e7;
   cursor: pointer;
   transition: background 250ms;
@@ -66,7 +70,7 @@ class TransactionPopup extends React.Component {
     return txns ? (
       <Container show={!!txns.length}>
         <MainBar onClick={this.toggleExpand.bind(this)}>
-          <Text color="#ffffff" size={14}>
+          <Text fontWeight="600" color="#ffffff" size={13}>
             Transactions ({txns.length})
           </Text>
           <Box flex={1} />
@@ -79,11 +83,11 @@ class TransactionPopup extends React.Component {
               />
             </Text>
           </Box>
-          <Box ml={3}>
+          {/* <Box ml={3}>
             <Text color="#ffffff" size={24}>
               <i className="ion ion-md-close" />
             </Text>
-          </Box>
+          </Box> */}
         </MainBar>
         <TxnContainer
           maxHeight={this.state.expand ? `${txns.length * 95}px` : 0}

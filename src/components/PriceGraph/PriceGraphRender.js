@@ -1,17 +1,12 @@
 import React from 'react'
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
-
 import { colors } from 'ui'
-
 import { Box } from 'ui/common'
-
 import moment from 'utils/moment'
-
 import './style.css'
 
 const options = {
-  colors: [colors.purple.normal],
   navigator: {
     enabled: false,
   },
@@ -26,9 +21,8 @@ const options = {
   },
   xAxis: {
     ordinal: false,
-    title: {
-      text: 'Token supply',
-    },
+    title: false,
+    gapGridLineWidth: 0,
   },
   yAxis: {
     tickPixelInterval: 35,
@@ -43,32 +37,26 @@ const options = {
     min: 0,
   },
   rangeSelector: {
-    buttons: [
-      {
-        type: 'month',
-        count: 1,
-        text: '1 M',
-      },
-      {
-        type: 'month',
-        count: 3,
-        text: '3 M',
-      },
-      {
-        type: 'month',
-        count: 6,
-        text: '6 M',
-      },
-      {
-        type: 'year',
-        count: 1,
-        text: '1 Y',
-      },
-      {
-        type: 'all',
-        text: 'All',
-      },
-    ],
+    enabled: false,
+    // buttons: [
+    //   {
+    //     type: 'hour',
+    //     count: 1,
+    //     text: '1h',
+    //   },
+    //   {
+    //     type: 'day',
+    //     count: 1,
+    //     text: '1D',
+    //   },
+    //   {
+    //     type: 'all',
+    //     count: 1,
+    //     text: 'All',
+    //   },
+    // ],
+    // selected: 1,
+    // inputEnabled: false,
   },
   plotOptions: {
     line: {
@@ -95,41 +83,68 @@ class HighChartGraph extends React.Component {
       height = 330,
     } = this.props
     return (
-      <HighchartsReact
-        highcharts={Highcharts}
-        constructorType={'stockChart'}
-        options={{
-          ...options,
-          series: [
-            {
-              data,
-              events: {
-                mouseOut: onMouseOut,
-              },
-              point: {
+      <React.Fragment>
+        <svg height={0}>
+          <defs>
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#496BFF" />
+              <stop offset="100%" stopColor="#6FCBFF" />
+            </linearGradient>
+            <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="rgba(0, 104, 255, 1)" />
+              <stop offset="100%" stopColor="rgba(0, 104, 255, 0.15)" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <HighchartsReact
+          highcharts={Highcharts}
+          constructorType={'stockChart'}
+          options={{
+            ...options,
+            series: [
+              {
+                data,
                 events: {
-                  mouseOver: onMouseOverPoint,
+                  mouseOut: onMouseOut,
                 },
-              },
-              type: 'area',
-              threshold: null,
-              fillColor: '#ede8ff',
-            },
-          ],
+                point: {
+                  events: {
+                    mouseOver: onMouseOverPoint,
+                  },
+                },
+                type: 'area',
 
-          chart: {
-            width,
-            height,
-            styledMode: true,
-          },
-        }}
-      />
+                threshold: null,
+              },
+            ],
+
+            chart: {
+              width,
+              height: height - 20,
+              styledMode: true,
+            },
+          }}
+        />
+      </React.Fragment>
     )
   }
 }
 
 class Graph extends React.PureComponent {
   state = { hovering: null }
+
+  shouldComponentUpdate(prevProps) {
+    return (
+      prevProps.height !== this.props.height ||
+      prevProps.width !== this.props.width ||
+      !prevProps.data ||
+      !Array.isArray(prevProps.data) ||
+      prevProps.data.slice(-1).length < 1 ||
+      !this.props.data.slice(-1)[0] ||
+      prevProps.data.slice(-1)[0][0] !== this.props.data.slice(-1)[0][0]
+    )
+  }
+
   render() {
     const { data, height, width } = this.props
     return (

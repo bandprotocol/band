@@ -44,7 +44,7 @@ function* handleUpdateProvider({ address, provider }) {
     const commClient = yield bandClient.at(dapp.get('address'))
     const commAddress = dapp.get('address')
     yield put(saveCommunityClient(commAddress, commClient))
-    for (const address of dapp.get('tcds').valueSeq()) {
+    for (const { address } of dapp.get('tcds').valueSeq()) {
       yield put(saveTCDClient(address, yield commClient.tcd(address)))
     }
   }

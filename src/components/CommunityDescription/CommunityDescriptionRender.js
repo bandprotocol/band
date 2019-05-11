@@ -64,13 +64,12 @@ export default ({
       <Box
         ml={4}
         mr="-14px"
-        flex="0 0 350px"
+        flex="0 0 270px"
         style={{
           backgroundImage: `url(${banner})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          width: '350px',
-          height: '150px',
+          height: '135px',
           borderRadius: '6px',
         }}
       />

@@ -17,6 +17,7 @@ export const saveCommunityInfo = (
   totalSupply,
   collateralEquation,
   tcds,
+  tcr,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
@@ -34,6 +35,7 @@ export const saveCommunityInfo = (
   totalSupply,
   collateralEquation,
   tcds,
+  tcr,
 })
 
 export const saveCommunityClient = (address, client) => ({

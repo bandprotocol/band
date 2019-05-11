@@ -21,6 +21,7 @@ const handleSaveCommunityInfo = (
     totalSupply,
     collateralEquation,
     tcds,
+    tcr,
   },
 ) =>
   state.set(
@@ -41,6 +42,7 @@ const handleSaveCommunityInfo = (
       totalSupply,
       collateralEquation,
       tcds: List([...tcds]),
+      tcr: tcr,
     }),
   )
 
