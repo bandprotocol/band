@@ -58,7 +58,7 @@ const ProposalList = ({
             Go to
             <Link
               dark="true"
-              to={`/community/${communityAddress}/governance`}
+              to={`/community/${communityAddress}/parameters`}
               px="5px"
               underline
             >

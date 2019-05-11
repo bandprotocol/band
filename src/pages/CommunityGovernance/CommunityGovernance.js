@@ -14,7 +14,7 @@ const CommunityGovernance = ({ communityAddress, name, address }) => (
       links={[
         { path: `/community/${communityAddress}`, label: name },
         {
-          path: `/community/${communityAddress}/governance`,
+          path: `/community/${communityAddress}/parameters`,
           label: 'Parameters',
         },
       ]}

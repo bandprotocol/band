@@ -144,18 +144,18 @@ export default ({
             Overview
           </Tab>
           <Tab
-            link={`/community/${address}/governance`}
+            link={`/community/${address}/parameters`}
             imgSrcActive={GovernanceActiveSrc}
             imgSrcInactive={GovernanceSrc}
           >
-            Governance
+            Parameters
           </Tab>
           <Tab
             link={`/community/${address}/proposal`}
             imgSrcActive={ProposalActiveSrc}
             imgSrcInactive={ProposalSrc}
           >
-            Proposal
+            Proposals
           </Tab>
           {hasTcd && (
             <Tab

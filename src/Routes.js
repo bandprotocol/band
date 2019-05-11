@@ -40,7 +40,7 @@ export default ({ match, location }) => (
                   )}
                 />
                 <Route
-                  path="/community/:community/governance"
+                  path="/community/:community/parameters"
                   render={({ match }) => (
                     <CommunityGovernancePage
                       communityAddress={match.params.community}

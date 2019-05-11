@@ -18,8 +18,8 @@ class CommunityDataProvider extends React.Component {
           links={[
             { path: `/community/${communityAddress}`, label: name },
             {
-              path: `/community/${communityAddress}/governance`,
-              label: 'Parameters',
+              path: `/community/${communityAddress}/provider`,
+              label: 'Data Providers',
             },
           ]}
         />

@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "band-app-test"
+    "default": "band-app-test",
+    "app": "band-protocol-app"
   }
 }
