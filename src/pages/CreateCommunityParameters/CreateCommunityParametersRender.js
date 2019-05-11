@@ -87,7 +87,7 @@ export default ({ kvs, setKeyValue }) => (
   <Flex
     flexDirection="column"
     alignItems="center"
-    style={{ height: '600px' }}
+    style={{ height: '460px' }}
     mt="40px"
   >
     {/* Header */}

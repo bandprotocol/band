@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "band-app-test",
-    "app": "band-protocol-app"
+    "default": "band-protocol-app",
+    "wip": "band-app-test"
   }
 }

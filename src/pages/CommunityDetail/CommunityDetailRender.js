@@ -247,11 +247,11 @@ export default props => {
         <Flex flexDirection="column" mx="6px" my="-4px">
           <MiniGraph
             title="Market Cap"
-            value={BN.parse(marketCap).shortPretty()}
-            unit="BAND"
-            subValue={`${BN.parse(marketCap)
+            value={BN.parse(marketCap)
               .bandToUSD(bandPrice)
-              .shortPretty()} USD`}
+              .shortPretty()}
+            unit="USD"
+            subValue={`${BN.parse(marketCap).shortPretty()} BAND`}
           />
           <MiniGraph
             title={'Token Supply'}

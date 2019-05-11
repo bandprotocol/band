@@ -91,7 +91,7 @@ export default ({
         justifyContent="center"
         alignItems="center"
         fontWeight={500}
-        style={{ height: '600px' }}
+        style={{ height: '460px' }}
       >
         <CircleLoadingSpinner radius="80px" />
       </Flex>
@@ -116,7 +116,7 @@ export default ({
         justifyContent="center"
         alignItems="center"
         fontWeight={500}
-        style={{ height: '600px' }}
+        style={{ height: '460px' }}
       >
         <Flex flexDirection="column" alignItems="center">
           <Image src={MockProposal} />

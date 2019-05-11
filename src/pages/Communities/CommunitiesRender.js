@@ -98,6 +98,7 @@ export default ({
                 <MegaCommunityCard
                   key={i}
                   community={community}
+                  bandPrice={bandPrice}
                   onClick={() =>
                     history.push(`/community/${community.address}/overview`)
                   }
