@@ -7,7 +7,7 @@ import OutImg from 'images/out.svg'
 const HistoryRow = ({ index, time, price, amount, type, txLink }) => (
   <Flex
     flexDirection="row"
-    style={{ minWidth: 0, overflow: 'hidden', height: '60px' }}
+    style={{ minWidth: 0, overflow: 'hidden', height: '40px' }}
     bg={index % 2 === 0 ? 'white' : '#f9fbff'}
     alignItems="center"
   >
@@ -17,12 +17,12 @@ const HistoryRow = ({ index, time, price, amount, type, txLink }) => (
       </Text>
     </Flex>
     <Flex flex={1}>
-      <Text color={colors.text} fontSize={0}>
+      <Text fontFamily="code" color={colors.text} fontSize={0}>
         {price}
       </Text>
     </Flex>
     <Flex flex={1} justifyContent="flex-end">
-      <Text color={colors.text} fontSize={0}>
+      <Text fontFamily="code" color={colors.text} fontSize={0}>
         {amount}
       </Text>
     </Flex>
@@ -43,7 +43,7 @@ export default ({ items }) => (
   <React.Fragment>
     {items.map((item, i) => {
       if (!item) {
-        return <Flex width={1} key={i} style={{ height: '60px' }} />
+        return <Flex width={1} key={i} style={{ height: 48 }} />
       }
       const { time, price, amount, type, txHash } = item
       return (

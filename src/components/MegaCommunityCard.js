@@ -88,7 +88,8 @@ export default ({
     p="14px"
     bg="#fff"
     my={3}
-    mx="20px"
+    mx="16px"
+    border="solid 1px #e9eaea"
     css={{
       alignSelf: 'flex-start',
       ...(onClick
@@ -96,8 +97,6 @@ export default ({
             cursor: 'pointer',
             transition: 'all 200ms',
             boxShadow: '0 0 0 0 #ffffff',
-            border: '0px solid #ffffff',
-
             '&:hover': {
               boxShadow: '0 10px 17px 0 #e6e9f5',
             },

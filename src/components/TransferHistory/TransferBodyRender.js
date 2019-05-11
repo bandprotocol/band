@@ -6,7 +6,7 @@ import TxHashLink from 'components/TxHashLink'
 const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
   <Flex
     flexDirection="row"
-    style={{ minWidth: 0, overflow: 'hidden', height: '60px' }}
+    style={{ minWidth: 0, overflow: 'hidden', height: '40px' }}
     bg={index % 2 === 0 ? 'white' : '#f9fbff'}
     alignItems="center"
   >
@@ -20,6 +20,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
     >
       <Text
         color={colors.text}
+        fontFamily="code"
         fontSize={0}
         style={{
           textOverflow: 'ellipsis',
@@ -40,6 +41,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
     >
       <Text
         color={colors.text}
+        fontFamily="code"
         fontSize={0}
         style={{
           textOverflow: 'ellipsis',
@@ -56,6 +58,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
         minWidth: 0,
       }}
       justifyContent="flex-end"
+      fontFamily="code"
     >
       <Text color={colors.text} fontSize={0}>
         {quantity}
@@ -82,7 +85,7 @@ export default ({ items }) => (
   <React.Fragment>
     {items.map((item, i) => {
       if (!item) {
-        return <Flex width={1} key={i} style={{ height: '60px' }} />
+        return <Flex width={1} key={i} style={{ height: 48 }} />
       }
       const { txHash, from, to, quantity, timeStamp } = item
       return (

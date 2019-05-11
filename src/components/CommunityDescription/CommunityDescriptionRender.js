@@ -1,7 +1,82 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text } from 'ui/common'
+import { Card, Box, Flex, Text } from 'ui/common'
 import TxHashLink from 'components/TxHashLink'
+
+const Field = ({ label, children }) => (
+  <Flex my={2} style={{ lineHeight: '24px' }}>
+    <Text
+      fontSize="14px"
+      fontWeight="500"
+      color="#6976b7"
+      textAlign="right"
+      style={{ width: 110 }}
+      mr={2}
+    >
+      {label}:
+    </Text>
+    <Text fontSize="14px">{children}</Text>
+  </Flex>
+)
+
+const Address = styled(Text).attrs(() => ({
+  fontFamily: 'code',
+}))`
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  whitespace: nowrap;
+`
+
+export default ({
+  name,
+  banner,
+  link,
+  organization,
+  description,
+  address,
+  tokenAddr,
+}) => (
+  <Card variant="dashboard">
+    <Flex>
+      <Box mr={3}>
+        <Text fontSize="15px" mt="12px" mb={3} fontWeight="900" color="#393939">
+          DATASET INFORMATION
+        </Text>
+        <Description>{description}</Description>
+      </Box>
+
+      <Box
+        ml="auto"
+        flex="0 0 260px"
+        alignSelf="center"
+        style={{ borderLeft: 'solid 1px #f2f4f9' }}
+      >
+        <Field label="Website">{new URL(link).hostname}</Field>
+        <Field label="Organization">{organization}</Field>
+        <Field label="Core Contract">
+          <Address>{address}</Address>
+        </Field>
+        <Field label="ERC-20">
+          <Address>{tokenAddr}</Address>
+        </Field>
+      </Box>
+      <Box
+        ml={4}
+        mr="-14px"
+        flex="0 0 350px"
+        style={{
+          backgroundImage: `url(${banner})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '350px',
+          height: '150px',
+          borderRadius: '6px',
+        }}
+      />
+    </Flex>
+  </Card>
+)
 
 const Description = styled(Text)`
   overflow: hidden;
@@ -10,219 +85,6 @@ const Description = styled(Text)`
   -webkit-box-orient: vertical;
   word-break: break-all;
   -webkit-line-clamp: 4;
-  line-height: 1.64;
+  line-height: 1.6;
   font-size: 14px;
 `
-
-export default ({
-  name,
-  link,
-  organization,
-  description,
-  address,
-  tokenAddr,
-}) => {
-  return (
-    <Flex style={{ minHeight: '180px' }} flexDirection="row">
-      <Flex
-        flexDirection="column"
-        flex={1}
-        style={{
-          borderRadius: '10px',
-          padding: '10px 20px',
-          maxWidth: '50%',
-          overflow: 'hidden',
-        }}
-        mr="30px"
-        bg="white"
-      >
-        <Flex
-          flexDirection="row"
-          style={{ borderBottom: '1px solid #f2f4f9' }}
-          py="20px"
-          pl="10px"
-          alignItems="center"
-        >
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Community:
-            </Text>
-          </Flex>
-          <Text
-            fontSize={0}
-            lineHeight={1.64}
-            style={{ wordBreak: 'break-word' }}
-          >
-            {name}
-          </Text>
-        </Flex>
-        <Flex
-          flexDirection="row"
-          style={{ borderBottom: '1px solid #f2f4f9' }}
-          py="20px"
-          pl="10px"
-          alignItems="center"
-        >
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Organization:
-            </Text>
-          </Flex>
-          <Text
-            fontSize={0}
-            lineHeight={1.64}
-            style={{ wordBreak: 'break-word' }}
-          >
-            {organization}
-          </Text>
-        </Flex>
-        <Flex flexDirection="row" py="20px" pl="10px" alignItems="center">
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Description:
-            </Text>
-          </Flex>
-          <Description>{description}</Description>
-        </Flex>
-      </Flex>
-      <Flex
-        flexDirection="column"
-        flex={1}
-        style={{
-          borderRadius: '10px',
-          padding: '10px 20px',
-          maxWidth: '50%',
-          overflow: 'hidden',
-        }}
-        bg="white"
-      >
-        <Flex
-          flexDirection="row"
-          style={{ borderBottom: '1px solid #f2f4f9' }}
-          py="20px"
-          pl="10px"
-          alignItems="center"
-        >
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Website:
-            </Text>
-          </Flex>
-          <Flex mr="10px" style={{ minWidth: 0 }}>
-            <Text
-              fontSize={0}
-              lineHeight={1.64}
-              color="#4a4a4a"
-              style={{
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-              }}
-            >
-              {link}
-            </Text>
-          </Flex>
-          <TxHashLink href={link} />
-        </Flex>
-        <Flex
-          flexDirection="row"
-          style={{ borderBottom: '1px solid #f2f4f9' }}
-          py="20px"
-          pl="10px"
-          alignItems="center"
-        >
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Contract:
-            </Text>
-          </Flex>
-          <Flex mr="10px" style={{ minWidth: 0 }}>
-            <Text
-              fontSize={0}
-              lineHeight={1.64}
-              color="#4a4a4a"
-              style={{
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-              }}
-            >
-              {address}
-            </Text>
-          </Flex>
-          <TxHashLink
-            href={`https://rinkeby.etherscan.io/address/${address}`}
-          />
-        </Flex>
-        <Flex
-          flexDirection="row"
-          style={{ borderBottom: '1px solid #f2f4f9' }}
-          py="20px"
-          pl="10px"
-          alignItems="center"
-        >
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Token:
-            </Text>
-          </Flex>
-          <Flex mr="10px" style={{ minWidth: 0 }}>
-            <Text
-              fontSize={0}
-              lineHeight={1.64}
-              style={{
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-              }}
-            >
-              {tokenAddr}
-            </Text>
-          </Flex>
-          <TxHashLink
-            href={`https://rinkeby.etherscan.io/address/${tokenAddr}`}
-          />
-        </Flex>
-        <Flex flexDirection="row" py="20px" pl="10px" alignItems="center">
-          <Flex
-            mr="10px"
-            style={{ minWidth: '90px' }}
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            <Text color="#4e3ca9" fontSize={1} lineHeight={1.64}>
-              Transferable:
-            </Text>
-          </Flex>
-          <Text fontSize={0} lineHeight={1.64}>
-            {'Yes'}
-          </Text>
-        </Flex>
-      </Flex>
-    </Flex>
-  )
-}

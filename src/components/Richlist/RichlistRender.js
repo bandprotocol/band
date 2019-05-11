@@ -6,30 +6,24 @@ import MockProposal from 'images/mock-proposal.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const RichlistHeader = () => (
-  <Flex
-    flexDirection="row"
-    py={3}
-    bg="#f5f7ff"
-    style={{ minHeight: '60px' }}
-    alignItems="center"
-  >
+  <Flex flexDirection="row" py={3} bg="#f5f7ff" alignItems="center">
     <Flex ml="30px" flex={2}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Rank
       </Text>
     </Flex>
     <Flex flex={5} ml="10px">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Address
       </Text>
     </Flex>
     <Flex flex={3} justifyContent="flex-end">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Quantity
       </Text>
     </Flex>
     <Flex flex={2} justifyContent="flex-end" mr="30px">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Percentage
       </Text>
     </Flex>

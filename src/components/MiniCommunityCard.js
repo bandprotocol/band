@@ -8,14 +8,15 @@ const MiniCard = styled(Flex).attrs({
   flexDirection: 'row',
   justifyContent: 'flex-start',
   alignItems: 'center',
-  mx: '5px',
+  mx: '12px',
+  mb: '8px',
 })`
   cursor: pointer;
   background-color: #f6f7fc;
-  width: 370px;
+  width: 360px;
   height: 105px;
   border-radius: 10px;
-  padding: 10px;
+  padding: 8px;
 
   &: hover {
     background-color: #ffffff;

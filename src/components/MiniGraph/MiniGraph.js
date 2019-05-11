@@ -1,38 +1,22 @@
 import React from 'react'
-import { Flex, Text } from 'ui/common'
+import { Flex, Card, Text } from 'ui/common'
 import graphYellow from 'images/graphYellow.svg'
 
-export default ({ title, value, unit, valueUsd, graphSrc }) => (
-  <Flex
-    style={{
-      height: '140px',
-      borderRadius: '10px',
-      backgroundSize: 'cover',
-      backgroundPosition: 'bottom',
-      backgroundImage: `url(${graphSrc || graphYellow})`,
-    }}
-    flexDirection="column"
-    bg="white"
-    width={1}
-    p="20px"
-  >
-    <Flex flexDirection="row">
-      <Flex flex={1}>
-        <Text fontSize="12px">{title}</Text>
-      </Flex>
-      <Flex flex={1} justifyContent="flex-end" />
+export default ({ title, value, unit, subValue }) => (
+  <Card variant="dashboard" my="4px" style={{ width: 260 }}>
+    <Flex flexDirection="column">
+      <Text py={2} fontSize="14px" fontWeight="500" color="#777777">
+        {title}
+      </Text>
+      <Text mt="8px" fontSize="24px" letterSpacing="0.1px" fontWeight={500}>
+        {`${value}`}
+        <Text ml={2} fontSize="0.7em" style={{ display: 'inline-block' }}>
+          {unit}
+        </Text>
+      </Text>
+      <Text fontSize="16px" fontWeight="500" lineHeight="2.2em" color="#757575">
+        {subValue}
+      </Text>
     </Flex>
-    <Flex mt="5px">
-      <Text
-        fontSize="22px"
-        letterSpacing="0.2px"
-        fontWeight={500}
-      >{`${value} ${unit}`}</Text>
-    </Flex>
-    <Flex flexDirection="row" mt="3px">
-      <Flex flex={1}>
-        <Text fontSize="12px">{valueUsd && `${valueUsd} USD`}</Text>
-      </Flex>
-    </Flex>
-  </Flex>
+  </Card>
 )

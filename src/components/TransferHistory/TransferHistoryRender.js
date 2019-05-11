@@ -6,30 +6,24 @@ import { Flex, Text, Image } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const TransferHistoryHeader = () => (
-  <Flex
-    flexDirection="row"
-    py={3}
-    bg="#f5f7ff"
-    style={{ minHeight: '60px' }}
-    alignItems="center"
-  >
+  <Flex flexDirection="row" py={3} bg="#f5f7ff" alignItems="center">
     <Flex ml="30px" flex={5}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         From
       </Text>
     </Flex>
     <Flex ml="15px" flex={5}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         To
       </Text>
     </Flex>
     <Flex flex={2} justifyContent="flex-end">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Quantity
       </Text>
     </Flex>
     <Flex flex={4} justifyContent="flex-end">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Timestamp
       </Text>
     </Flex>

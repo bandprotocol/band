@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
+import { Image, Flex, Text, Bold, Box, HighlightNavLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
 import BalanceWallet from 'images/balanceWallet.svg'
@@ -19,7 +19,8 @@ import ProposalActiveSrc from 'images/voteActive.svg'
 import DataProviderActive from 'images/dataProviderActive.svg'
 
 const Left = styled.div`
-  width: 275px;
+  width: 220px;
+  flex: 0 0 220px;
   height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
@@ -31,17 +32,28 @@ const Left = styled.div`
 
 const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
   <HighlightNavLink to={link} activeClassName="is-active">
-    <Flex
-      flexDirection="row"
-      alignItems="center"
-      py={3}
-      my={1}
-      pl={4}
-      style={{ borderRadius: '22.5px' }}
-    >
-      <Image className="img-active" src={imgSrcActive} width="20px" />
-      <Image className="img-inactive" src={imgSrcInactive} width="20px" />
-      <Text px={3}>{children}</Text>
+    <Flex py={1} px={3} style={{ height: 52 }}>
+      <Flex
+        flex={1}
+        flexDirection="row"
+        alignItems="center"
+        className="tab"
+        pl={3}
+      >
+        <Image
+          className="img-active"
+          src={imgSrcActive}
+          width="20px"
+          height="20px"
+        />
+        <Image
+          className="img-inactive"
+          src={imgSrcInactive}
+          width="20px"
+          height="20px"
+        />
+        <Text px={3}>{children}</Text>
+      </Flex>
     </Flex>
   </HighlightNavLink>
 )
@@ -64,12 +76,16 @@ export default ({
         height="80px"
         m={3}
         borderRadius="50%"
+        style={{
+          border: 'solid 6px #ffffff',
+          boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
+        }}
       />
       <Flex mb="20px">
         <Text
           py={1}
-          fontSize={0}
-          fontWeight={500}
+          fontSize="15px"
+          fontWeight={600}
           color="white"
           style={{ textTransform: 'uppercase' }}
         >
@@ -80,17 +96,22 @@ export default ({
         <CircleLoadingSpinner radius="25px" />
       ) : (
         <Flex
-          bg="#95a3e1"
           width="90%"
           flexDirection="column"
           justifyContent="center"
-          px={4}
-          py="20px"
-          style={{ borderRadius: '7px' }}
+          px="18px"
+          py="12px"
+          style={{
+            borderRadius: '7px',
+            background:
+              'linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.16))',
+          }}
         >
           <Flex flexDirection="row" alignItems="center">
-            <Image src={BalanceWallet} width="18px" mr={2} />
-            <Text color="white">Your balance</Text>
+            <Image src={BalanceWallet} width="18px" mr={2} mb={1} />
+            <Text fontSize="12px" lineHeight="20px" color="white">
+              YOUR BALANCE
+            </Text>
           </Flex>
           <Flex mt="20px">
             <Text color="white" fontSize="18px" fontWeight={500}>
@@ -104,11 +125,14 @@ export default ({
             ml="-10%"
             style={{ height: '1px', width: '120%' }}
           />
-          <Text color="white">{`≈ ${usdBalance.pretty()} USD`}</Text>
+          <Text
+            fontSize="12px"
+            color="white"
+          >{`≈ ${usdBalance.pretty()} USD`}</Text>
         </Flex>
       )}
-      <Flex flexDirection="column" py={4} width="90%">
-        <Bold pl={4} pb={3} fontSize={0} color="#a6c1ff">
+      <Flex flexDirection="column" py={4} width={[1]}>
+        <Bold px={4} pb={3} fontSize="12px" color="#a6c1ff">
           MENU
         </Bold>
         <Flex flexDirection="column" width="100%" justifyContent="center">

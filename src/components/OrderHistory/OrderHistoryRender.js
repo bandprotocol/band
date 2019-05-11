@@ -6,30 +6,24 @@ import MockProposal from 'images/mock-proposal.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const HistoryHeader = () => (
-  <Flex
-    flexDirection="row"
-    py={3}
-    bg="#f5f7ff"
-    style={{ minHeight: '60px' }}
-    alignItems="center"
-  >
+  <Flex flexDirection="row" py={3} bg="#f5f7ff" alignItems="center">
     <Flex ml="30px" flex={1}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Time
       </Text>
     </Flex>
     <Flex flex={1}>
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
-        Price(BAND)
+      <Text fontSize="14px" fontWeight={600}>
+        Price (BAND)
       </Text>
     </Flex>
     <Flex flex={1} justifyContent="flex-end">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Amount
       </Text>
     </Flex>
     <Flex flex={1} justifyContent="flex-end">
-      <Text color="#4a4a4a" fontSize="16px" fontWeight={500}>
+      <Text fontSize="14px" fontWeight={600}>
         Type
       </Text>
     </Flex>

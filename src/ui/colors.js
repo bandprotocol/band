@@ -2,8 +2,8 @@ export default {
   purple: {
     light: '#aa93ff',
     blueberry: '#4e3ca9',
-    normal: '#8868ff',
-    dark: '#4e3ca9',
+    normal: '#5973e7', // '#8868ff',
+    dark: '#3b57d1', // '#4e3ca9',
   },
   background: {
     lighter: '#fafbff',
@@ -14,7 +14,7 @@ export default {
   },
   text: {
     grey: '#7c84a6',
-    normal: '#4a4a4a',
+    normal: '#2a304e',
   },
   green: {
     normal: '#42c47f',

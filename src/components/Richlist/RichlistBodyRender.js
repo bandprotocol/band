@@ -5,7 +5,7 @@ import { Flex, Text } from 'ui/common'
 const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
   <Flex
     flexDirection="row"
-    style={{ minWidth: 0, overflow: 'hidden', height: '60px' }}
+    style={{ minWidth: 0, overflow: 'hidden', height: '40px' }}
     bg={index % 2 === 0 ? 'white' : '#f9fbff'}
     alignItems="center"
   >
@@ -29,6 +29,7 @@ const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
       letterSpacing="0.5px"
     >
       <Text
+        fontFamily="code"
         color={colors.text}
         fontSize={0}
         style={{
@@ -50,6 +51,7 @@ const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
     >
       <Text
         color={colors.text}
+        fontFamily="code"
         fontSize={0}
         style={{
           textOverflow: 'ellipsis',
@@ -71,6 +73,7 @@ const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
     >
       <Text
         color={colors.text}
+        fontFamily="code"
         fontSize={0}
         style={{
           textOverflow: 'ellipsis',
@@ -90,7 +93,7 @@ export default ({ items }) => {
     <React.Fragment>
       {items.map((item, i) => {
         if (!item) {
-          return <Flex width={1} key={i} style={{ height: '60px' }} />
+          return <Flex width={1} key={i} style={{ height: 48 }} />
         }
         const { rank, tokenAddress, address, balance, percentage } = item
         return (

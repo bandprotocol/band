@@ -6,6 +6,7 @@ export default {
   colors: {
     text: colors.text.normal,
     purple: colors.purple.normal,
+    blue: colors.blue.text,
     'purple-dark': colors.purple.dark,
     'bg-light': colors.background.light,
     'bg-lighter': colors.background.lighter,
@@ -13,6 +14,7 @@ export default {
   space: [0, 4, 8, 16, 32, 64, 128, 256],
   fonts: {
     sans: 'Avenir',
+    code: 'Source Code Pro',
   },
   shadows: {
     small: '0 0 4px rgba(0, 0, 0, .125)',
@@ -57,6 +59,8 @@ export default {
       backgroundColor: colors.text.grey,
       border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
+      boxShadow: '0 1px 7px 0 rgba(0, 0, 0, 0.05)',
+      borderRadius: '20px',
       '&:hover': {
         boxShadow: '0 3px 5px 0 rgba(180, 187, 218, 0.5)',
       },
@@ -73,9 +77,12 @@ export default {
       color: 'white',
       backgroundColor: '#718bff',
       border: `solid 0px ${colors.text.grey}`,
-      boxShadow: '0 3px 5px 0 rgba(0, 0, 0, 0.2)',
+      boxShadow: '0 1px 7px 0 rgba(0, 0, 0, 0.05)',
       transition: 'all 250ms',
       borderRadius: '20px',
+      '&:hover': {
+        boxShadow: '0 3px 3px 0 #a6e7c4',
+      },
     },
     submit: {
       fontFamily: 'Avenir',
@@ -140,6 +147,13 @@ export default {
       border: `solid 1px #e7ecff`,
       borderRadius: 4,
       background: '#fff',
+    },
+
+    dashboard: {
+      background: '#ffffff',
+      borderRadius: '10px',
+      border: 'solid 1px #e9eaea',
+      padding: '10px 24px',
     },
   },
 }

@@ -1,22 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
-import ethBlue from 'images/ethBlue.svg'
+import Eth from 'images/eth.png'
 import Wallet from 'images/blueWallet.svg'
+import Profile from 'images/profile.png'
 // import AddCommunity from 'images/add-community.svg'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Link, Image, Flex, Box, Text, Card } from 'ui/common'
 import media from 'ui/media'
 import PendingTransaction from 'components/PendingTransaction'
 import ClickOutSide from 'react-click-outside'
-import LogoSrc from 'images/blueBandLogo.svg'
+
+import LogoSrc from 'images/logo-dark.png'
 import { colors } from 'ui'
 
 const Nav = styled.nav`
   display: flex;
   height: 60px;
   align-items: center;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
   position: sticky;
   top: 0;
   background: #ffffff;
@@ -49,7 +51,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
       {isBND ? (
-        <Text mr={0} color="#4a4a4a" fontSize="16px" fontWeight={500}>
+        <Text mr={0} color="#4a4a4a" fontSize="15px" fontWeight={500}>
           BND
         </Text>
       ) : (
@@ -57,12 +59,12 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
           color="#d1d1d1"
           onClick={toggle}
           fontWeight={500}
-          fontSize="16px"
+          fontSize="15px"
         >
           BND
         </TextClickable>
       )}
-      <Text px={1} color={colors.text.grey} fontSize="16px">
+      <Text px={1} color={colors.text.grey} fontSize="15px">
         |
       </Text>
       {isBND ? (
@@ -80,7 +82,9 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
         </Text>
       )}
       <Flex
-        ml="10px"
+        ml={3}
+        mr={1}
+        mb={0}
         style={{ cursor: 'pointer' }}
         onClick={() => showWallet()}
       >
@@ -91,18 +95,17 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
 }
 
 const DropdownButton = styled(Flex)`
-  width: 40px;
-  height: 40px;
-  line-height: 30px;
+  width: 36px;
+  height: 36px;
   color: #fff;
+  border-radius: 50%;
   z-index: 9999999;
   cursor: pointer;
   border-radius: 50%;
   transition: all 250ms;
-  background: transparent;
+  border-radius: 50%;
   &:hover {
-    background: #f0f2f9;
-    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
   }
 `
 
@@ -194,8 +197,13 @@ export default ({
       <PageContainer fullWidth>
         <Flex alignItems="center">
           <Link dark="true" to="/">
-            <Image src={LogoSrc} width={166} ml={4} />
-            {/* <Bold ml={[0, 3]}>Band Protocol</Bold> */}
+            <Flex
+              justifyContent="center"
+              alignItems="center"
+              style={{ height: 60, width: 220 }}
+            >
+              <Image src={LogoSrc} height={34} />
+            </Flex>
           </Link>
           <Flex ml="auto">
             {/* <Link dark="true" to="/create-community" px={1}>
@@ -213,19 +221,19 @@ export default ({
                     flexDirection="row"
                     alignItems="center"
                     justifyContent="space-between"
-                    bg="#f2f4f9"
+                    bg="#F8FAFD"
                     mr="20px"
                     pl="20px"
                     pr="10px"
                     style={{
                       minHeight: '40px',
-                      borderRadius: '4px',
+                      borderRadius: '20px',
                       minWidth: '280px',
                     }}
                   >
                     <Text
                       mr={2}
-                      fontSize="16px"
+                      fontSize="15px"
                       fontWeight={500}
                       color="#4a4a4a"
                     >
@@ -238,36 +246,11 @@ export default ({
                     />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
-                    <Flex
-                      justifyContent="center"
-                      bg="#f8fafd"
-                      alignItems="center"
-                      style={{
-                        height: '40px',
-                        width: '40px',
-                        borderRadius: '50%',
-                      }}
-                    >
-                      <Image src={ethBlue} width={30} height={30} />
-                      {pending.length !== 0 && <Badge bg={colors.red} />}
-                    </Flex>
+                    <Image src={Eth} width={36} height={36} />
+                    {pending.length !== 0 && <Badge bg={colors.red} />}
                   </DropdownButton>
-                  <Flex
-                    alignItems="center"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => toggleSignOut()}
-                  >
-                    <Flex ml="15px" mr="10px">
-                      {!!user && (
-                        <Jazzicon
-                          diameter={40}
-                          seed={jsNumberForAddress(user)}
-                        />
-                      )}
-                    </Flex>
-                    <Text color="#7688f4" fontSize={4}>
-                      <i className="fas fa-sort-down" />
-                    </Text>
+                  <Flex ml="15px" mr="10px">
+                    <Image src={Profile} width={36} height={36} />
                   </Flex>
                 </Flex>
                 <SignOutDropDown show={showSignOut}>

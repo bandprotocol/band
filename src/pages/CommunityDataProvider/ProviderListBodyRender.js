@@ -218,7 +218,7 @@ export default ({ user, items, showDepositWithdraw }) => {
     <React.Fragment>
       {items.map((item, i) => {
         if (!item) {
-          return <Flex width={1} key={i} style={{ height: '60px' }} />
+          return <Flex width={1} key={i} style={{ height: 48 }} />
         }
         const {
           rank,

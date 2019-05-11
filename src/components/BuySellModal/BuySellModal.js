@@ -57,6 +57,12 @@ class BuySellModal extends React.Component {
     const { type } = this.state
     const { amount, priceLimit, price } = this.state[type]
     const { onBuy, onSell } = this.props
+    console.log(
+      'Clicked',
+      type,
+      BN.parse(parseFloat(amount)).toString(),
+      priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+    )
     if (type === 'buy') {
       onBuy(
         BN.parse(parseFloat(amount)),

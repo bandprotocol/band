@@ -92,12 +92,25 @@ export const BackgroundCard = styled(Card)`
 export const HighlightNavLink = styled(NavLink)`
   color: #ffffff;
   text-decoration: none;
+  font-size: 14px;
+
+  & .tab {
+    color: #ffffff;
+    border-radius: 24px;
+  }
+
   &.is-active {
     font-weight: 700;
-    color: ${colors.blue.text};
-    & > * {
-      background: white;
+
+    & .tab {
+      opacity: 1;
       color: ${colors.blue.text};
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+      background-image: linear-gradient(
+        257deg,
+        rgba(255, 255, 255, 0.8),
+        rgba(255, 255, 255, 0.9) 100%
+      );
     }
 
     & .img-active {
@@ -119,9 +132,12 @@ export const HighlightNavLink = styled(NavLink)`
 
   &:hover {
     :not(.is-active) {
-      & > * {
-        background: #95a3e1;
-        color: ${colors.blue.text};
+      & .tab {
+        background-image: linear-gradient(
+          257deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.2) 100%
+        );
       }
     }
   }
