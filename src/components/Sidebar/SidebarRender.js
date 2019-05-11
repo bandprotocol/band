@@ -137,11 +137,11 @@ export default ({
         </Bold>
         <Flex flexDirection="column" width="100%" justifyContent="center">
           <Tab
-            link={`/community/${address}/detail`}
+            link={`/community/${address}/overview`}
             imgSrcActive={DetailActiveSrc}
             imgSrcInactive={DetailSrc}
           >
-            Detail
+            Overview
           </Tab>
           <Tab
             link={`/community/${address}/governance`}

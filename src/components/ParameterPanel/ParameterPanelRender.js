@@ -50,11 +50,18 @@ export default ({
 }) => (
   <Flex flexDirection="column" my={3}>
     <Flex alignItems="center">
-      <Text color={colors.text.normal} fontSize={4} fontWeight="bold" mr={2}>
-        Governance
+      <Text
+        mr={2}
+        fontSize="18px"
+        mt="12px"
+        mb={3}
+        fontWeight="900"
+        color="#393939"
+      >
+        PARAMETERS
       </Text>
       <ToolTip
-        bg={colors.text.grey}
+        bg="#ffffff"
         width="410px"
         textBg="#b2b6be"
         textColor={colors.text.normal}
@@ -74,7 +81,7 @@ export default ({
       </Box>
     ) : (
       <React.Fragment>
-        <Flex py={4} alignItems="center">
+        <Flex pt={3} pb={4} alignItems="center">
           <Text fontSize={1} color={colors.text.normal} mr={2}>
             Parameter Group:
           </Text>

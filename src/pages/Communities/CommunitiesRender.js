@@ -25,7 +25,7 @@ const YourCommunities = ({ yourCommunities, bandPrice, history }) => {
               community={yourCommunity}
               bandPrice={bandPrice}
               onClick={() =>
-                history.push(`/community/${yourCommunity.address}/detail`)
+                history.push(`/community/${yourCommunity.address}/overview`)
               }
             />
           ))}
@@ -56,7 +56,7 @@ const FeatureCommunity = ({ featureCommunities, bandPrice, history }) => {
               bandPrice={bandPrice}
               style={{}}
               onClick={() =>
-                history.push(`/community/${featureCommunity.address}/detail`)
+                history.push(`/community/${featureCommunity.address}/overview`)
               }
             />
           ))}
@@ -84,16 +84,22 @@ export default ({
         {/* All Communities */}
         <Box style={{ width: '100%', height: '100%' }}>
           <PageContainer dashboard>
-            <Text fontSize="16px" color={colors.text.normal} fontWeight="600">
+            <Text
+              fontSize="16px"
+              mt="12px"
+              mb={3}
+              fontWeight="900"
+              color="#393939"
+            >
               ALL COMMUNITIES
             </Text>
-            <Flex flexWrap="wrap" mt={3} mx="-16px" justifyContent="flex-start">
+            <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
               {communities.map((community, i) => (
                 <MegaCommunityCard
                   key={i}
                   community={community}
                   onClick={() =>
-                    history.push(`/community/${community.address}/detail`)
+                    history.push(`/community/${community.address}/overview`)
                   }
                 />
               ))}

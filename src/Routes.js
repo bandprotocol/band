@@ -24,7 +24,7 @@ export default ({ match, location }) => (
               <Sidebar communityAddress={match.params.community} />
               <Switch>
                 <Route
-                  path="/community/:community/detail"
+                  path="/community/:community/overview"
                   render={({ match }) => (
                     <CommunityDetailPage
                       communityAddress={match.params.community}
@@ -68,7 +68,7 @@ export default ({ match, location }) => (
                   exact
                   render={({ match }) => (
                     <Redirect
-                      to={`/community/${match.params.community}/detail`}
+                      to={`/community/${match.params.community}/overview`}
                     />
                   )}
                 />

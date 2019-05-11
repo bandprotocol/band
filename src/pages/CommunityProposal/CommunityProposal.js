@@ -1,5 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { communityDetailSelector } from 'selectors/communities'
+import Breadcrumb from 'components/Breadcrumb'
 import PageContainer from 'components/PageContainer'
 import ProposalList from 'components/ProposalList'
 import { Flex } from 'ui/common'
@@ -19,12 +21,21 @@ class CommunityProposal extends React.Component {
   }
 
   render() {
-    const { communityAddress } = this.props
+    const { communityAddress, name } = this.props
     return (
       <PageContainer withSidebar>
+        <Breadcrumb
+          links={[
+            { path: `/community/${communityAddress}`, label: name },
+            {
+              path: `/community/${communityAddress}/proposal`,
+              label: 'Proposal',
+            },
+          ]}
+        />
         <Flex pb="50px" style={{ borderBottom: '1px solid #cbcfe3' }}>
           <ProposalList
-            title={'Open Proposal'}
+            title={'OPEN PROPOSALS'}
             description={
               'Recently proposed change in governance parameter. Please vote before each proposal expires.'
             }
@@ -34,7 +45,7 @@ class CommunityProposal extends React.Component {
         </Flex>
         <Flex mt="25px">
           <ProposalList
-            title={'Past Proposal'}
+            title={'PAST PROPOSALS'}
             isActive={false}
             communityAddress={communityAddress}
           />
@@ -51,7 +62,18 @@ const mapDispatchToProps = (dispatch, { communityAddress }) => ({
   },
 })
 
+const mapStateToProps = (state, { communityAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: communityAddress,
+  })
+
+  return {
+    name: community.get('name'),
+    address: community.get('address'),
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps,
 )(CommunityProposal)

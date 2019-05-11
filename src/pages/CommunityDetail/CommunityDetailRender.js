@@ -9,6 +9,7 @@ import { calculateCollateralAt } from 'utils/equation'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Graph from 'components/PriceGraph'
 import Decimal from 'decimal.js'
+import Breadcrumb from 'components/Breadcrumb'
 
 const Field = ({ label, children }) => (
   <Box mb="14px">
@@ -148,6 +149,8 @@ const renderTCR = tcr => {
 
 export default props => {
   const {
+    name,
+    address,
     numberOfHolders,
     communityAddress,
     showBuy,
@@ -164,6 +167,12 @@ export default props => {
 
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
+      <Breadcrumb
+        links={[
+          { path: `/community/${address}`, label: name },
+          { path: `/community/${address}/overview`, label: 'Overview' },
+        ]}
+      />
       <CommunityDescription communityAddress={communityAddress} />
       <Flex flexDirection="row" mt="12px" mx="-6px">
         <Card flex={1} variant="dashboard" mx="6px">
