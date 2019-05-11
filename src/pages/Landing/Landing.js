@@ -52,7 +52,7 @@ const FilledButton = styled(Button)`
   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
   width: 196px;
   height: 46px;
-  border-radius: 6px;
+  border-radius: 2px;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
   background-color: #6b7df5;
   cursor: pointer;
@@ -75,7 +75,7 @@ const OutlineButton = styled(Button)`
   background-color: rgba(0, 0, 0, 0);
   width: ${props => (props.isMobile ? '196px' : '182px')};
   height: 46px;
-  border-radius: 6px;
+  border-radius: 2px;
   border: solid 1px ${props => props.borderColor};
   cursor: pointer;
 
@@ -145,17 +145,17 @@ export default () => {
                 </Text>
               </Flex>
               <Flex mt="30px" flexDirection={['column-reverse', 'row']}>
-                <AbsoluteLink href="https://developer.bandprotocol.com/">
+                <Link to="why-band">
                   <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
                     Learn More
                   </OutlineButton>
-                </AbsoluteLink>
+                </Link>
                 <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-                <Link to="why-band">
+                <AbsoluteLink href="https://developer.bandprotocol.com/">
                   <FilledButton isMobile={_isMobile}>
                     Start Building
                   </FilledButton>
-                </Link>
+                </AbsoluteLink>
               </Flex>
             </Box>
             {!_isMobile && (
@@ -251,7 +251,7 @@ export default () => {
               link="https://data.bandprotocol.com/"
               mr="36px"
             >
-              <Box mt={['20px', '0px']}>
+              <Box mt={['0px', '0px']}>
                 <Image src={LandingBandDB} height="92px" />
               </Box>
             </FeatureCard>

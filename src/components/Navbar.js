@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
 import {
@@ -55,15 +55,6 @@ const Nav = styled.nav`
       color: #bfcdff;
     }
   }
-`
-
-const NavWarper = styled(Flex)`
-  position: fixed;
-  background: red;
-  width: 100vw;
-  height: 100vh;
-  opacity 0.5;
-  pointer-events: none;
 `
 
 const SubMenu = styled(Flex).attrs({
@@ -228,30 +219,58 @@ const Navbar = props => {
 
   const [selectedTab, setSelectedTab] = useState(-1)
   const [scrollTop, setScrollTop] = useState(0)
-  const [oldScrollTop, setOldScrollTop] = useState(0)
   const [deltaScroll, setDeltaScroll] = useState(0)
 
-  const handleScroll = e => {
-    setScrollTop(parseInt(e.target.scrollTop))
-  }
+  const scrollHistory = useRef()
 
-  useEffect(() => {
-    window.document.body.addEventListener('scroll', handleScroll)
-    return () =>
-      window.document.body.removeEventListener('scroll', handleScroll)
-  }, [])
+  const handleScroll = useCallback(
+    e => {
+      const newST = e.target.scrollTop
+      if (!scrollHistory.current) {
+        scrollHistory.current = []
+      }
+      scrollHistory.current =
+        scrollHistory.current.length > 2
+          ? scrollHistory.current
+              .concat(newST)
+              .slice(scrollHistory.current.length - 2)
+          : scrollHistory.current.concat(newST)
+
+      if (scrollHistory.current.length < 2 || scrollHistory.current[0] === 0) {
+        setScrollTop(newST)
+      } else if (
+        scrollHistory.current.length > 2 &&
+        ((scrollHistory.current[0] < scrollHistory.current[1] &&
+          scrollHistory.current[1] > scrollHistory.current[2]) ||
+          (scrollHistory.current[0] > scrollHistory.current[1] &&
+            scrollHistory.current[1] < scrollHistory.current[2]))
+      ) {
+        setScrollTop(newST)
+      }
+    },
+    [scrollTop],
+  )
 
   const prevLocation = useRef()
   useEffect(() => {
-    if (oldScrollTop !== scrollTop) {
-      setDeltaScroll(scrollTop - oldScrollTop)
-      setOldScrollTop(scrollTop)
+    window.document.body.addEventListener('scroll', handleScroll)
+    if (scrollHistory.current) {
+      const tmpSH = scrollHistory.current
+      if (
+        tmpSH.length > 1 &&
+        tmpSH[tmpSH.length - 1] !== tmpSH[tmpSH.length - 2]
+      ) {
+        setDeltaScroll(tmpSH[tmpSH.length - 1] - tmpSH[tmpSH.length - 2])
+      }
     }
     if (props.location !== prevLocation.current) {
       setShowMenu(false)
       setSelectedTab(-1)
     }
     prevLocation.current = props.location
+
+    return () =>
+      window.document.body.removeEventListener('scroll', handleScroll)
   })
 
   const selectTab = tabId => {
@@ -281,8 +300,8 @@ const Navbar = props => {
         <Card
           style={{
             position: 'fixed',
-            top: deltaScroll <= 0 || scrollTop < 80 ? '0px' : '80px',
             right: 0,
+            top: '0px',
             height: 'calc(100vh)',
             width: showMenu ? 'calc(100vw)' : '0px',
             transition: 'all 400ms',
@@ -504,7 +523,7 @@ const Navbar = props => {
   }
 
   const renderDesktop = () => {
-    const { pathname } = props.location
+    // const { pathname } = props.location
     return (
       <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
         <Box ml="40px">
@@ -629,9 +648,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${
-          deltaScroll <= 0 || scrollTop < 80 ? '0px' : '-80px'
-        })`,
+        transform: `translateY(${deltaScroll > 0 ? '-80px' : '0px'})`,
       }}
     >
       <Flex
