@@ -42,12 +42,13 @@ const VoteButton = styled(Button)`
 const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
   (isVoted || isActive) && (
     <Flex
-      mt="40px"
+      mt="28px"
       flexDirection="column"
-      style={{
-        // borderBottom: isVoted ? '1px solid #cbcfe3' : 'none',
-        minHeight: '100px',
-      }}
+      style={
+        {
+          // borderBottom: isVoted ? '1px solid #cbcfe3' : 'none',
+        }
+      }
     >
       <Text
         fontWeight="900"
@@ -58,7 +59,7 @@ const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
       >
         YOUR VOTE FOR THIS PROPOSAL
       </Text>
-      <Flex my="25px" justifyContent="center">
+      <Flex mt="24px" mb="4px" justifyContent="center">
         {((isActive && !isVoted) || isSupport) && (
           <VoteButton
             selected={isSupport}

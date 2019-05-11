@@ -56,7 +56,7 @@ class ProviderList extends React.Component {
         bg="white"
         width={1}
       >
-        <Flex width={1} flexDirection="row" py="20px" px="30px">
+        <Flex width={1} flexDirection="row" py="10px" px="20px">
           <Flex width={1} justifyContent="flex-end">
             <Flex
               style={{

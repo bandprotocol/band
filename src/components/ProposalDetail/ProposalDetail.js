@@ -1,13 +1,16 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
+const WithBottomBorder = styled(Flex)`
+  &:not(:last-child) {
+    border-bottom: 1px solid #e6eaff;
+  }
+`
+
 export default ({ title, description, current, changeTo }) => (
-  <Flex
-    py="20px"
-    flexDirection="column"
-    style={{ borderBottom: '1px solid #cbcfe3' }}
-  >
+  <WithBottomBorder py="18px" flexDirection="column" style={{}}>
     <Text fontWeight="500" color={colors.blue.dark}>
       {title}
     </Text>
@@ -51,5 +54,5 @@ export default ({ title, description, current, changeTo }) => (
         </Flex>
       </Flex>
     </Flex>
-  </Flex>
+  </WithBottomBorder>
 )

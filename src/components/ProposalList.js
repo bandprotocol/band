@@ -48,24 +48,26 @@ const ProposalList = ({
         <CircleLoadingSpinner radius="60px" />
       </Box>
     ) : proposals.length === 0 ? (
-      <Flex flexDirection="column" mt="50px" alignItems="center">
-        <Image src={MockProposal} />
-        <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-          No proposal right now!
-        </Text>
-        <Text fontSize={1} py={1}>
-          Go to
-          <Link
-            dark="true"
-            to={`/community/${communityAddress}/governance`}
-            px="5px"
-            underline
-          >
-            Governance
-          </Link>
-          Page to propose the new change.
-        </Text>
-      </Flex>
+      isActive ? (
+        <Flex flexDirection="column" mt="50px" alignItems="center">
+          <Image src={MockProposal} />
+          <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
+            No proposal right now!
+          </Text>
+          <Text fontSize={1} py={1}>
+            Go to
+            <Link
+              dark="true"
+              to={`/community/${communityAddress}/governance`}
+              px="5px"
+              underline
+            >
+              Governance
+            </Link>
+            Page to propose the new change.
+          </Text>
+        </Flex>
+      ) : null
     ) : (
       <Flex flexDirection="column" mt="30px">
         {proposals.map(proposal => (

@@ -80,11 +80,14 @@ export default ({
       <Flex
         flexDirection="column"
         justifyContent="center"
-        bg="#dee2f0"
+        bg={show ? '#f8faff' : '#ffffff'}
         flex={1}
         px="40px"
         style={{
           lineHeight: '50px',
+          cursor: 'pointer',
+
+          borderBottom: show ? 'solid 1px #f0f3f7' : 'none',
         }}
         onClick={() => toggleShow()}
       >
@@ -188,10 +191,10 @@ export default ({
       >
         <Flex
           flexDirection="column"
-          bg={colors.background.paleGrey}
+          bg="#f8faff"
           py="22px"
           px={4}
-          style={{ borderRadius: '6px' }}
+          style={{ borderRadius: '6px', border: 'solid 1px #f0f3f7' }}
         >
           <Text fontWeight="500" color={colors.blue.dark} fontSize={1}>
             Reason for Change
@@ -222,9 +225,9 @@ export default ({
         <Flex
           mt="20px"
           flexDirection="column"
-          bg={colors.background.paleGrey}
           px={4}
-          style={{ borderRadius: '6px' }}
+          bg="#f8faff"
+          style={{ borderRadius: '6px', border: 'solid 1px #f0f3f7' }}
         >
           {changes.map(change => {
             const { type, description } = getParameterDetail(change.name)

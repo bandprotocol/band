@@ -53,7 +53,7 @@ export default ({
       <Text
         mr={2}
         fontSize="18px"
-        mt="12px"
+        mt="16px"
         mb={3}
         fontWeight="900"
         color="#393939"
