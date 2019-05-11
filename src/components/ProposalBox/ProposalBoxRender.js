@@ -247,12 +247,6 @@ export default ({
             )
           })}
 
-          <YourVote
-            isVoted={vote !== 'NOT VOTED'}
-            isSupport={vote === 'SUPPORT'}
-            isActive={isActive}
-            proposalId={proposalId}
-          />
           {(!isActive || vote !== 'NOT VOTED') && (
             <ParticipationStatus
               percentParticipant={yesVote
@@ -279,6 +273,12 @@ export default ({
             />
           )}
         </Flex>
+        <YourVote
+          isVoted={vote !== 'NOT VOTED'}
+          isSupport={vote === 'SUPPORT'}
+          isActive={isActive}
+          proposalId={proposalId}
+        />
       </FlexDropDown>
     </Flex>
   )

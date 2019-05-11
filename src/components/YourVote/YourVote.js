@@ -34,46 +34,53 @@ const VoteButton = styled(Button)`
       `}
 
   font-size: 14px;
-  border-radius: 6px;
-  width: 135px;
-  height: 35px;
+  border-radius: 20px;
+  width: 120px;
+  height: 40px;
 `
 
 const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
   (isVoted || isActive) && (
     <Flex
-      mt="20px"
+      mt="40px"
       flexDirection="column"
       style={{
-        borderBottom: isVoted ? '1px solid #cbcfe3' : 'none',
+        // borderBottom: isVoted ? '1px solid #cbcfe3' : 'none',
         minHeight: '100px',
       }}
     >
-      <Text fontWeight="500" color={colors.blue.dark}>
-        Your Vote:
+      <Text
+        fontWeight="900"
+        color="#393939"
+        fontSize="15px"
+        textAlign="center"
+        style={{ letterSpacing: '0.5px' }}
+      >
+        YOUR VOTE FOR THIS PROPOSAL
       </Text>
-      <Flex my="25px">
+      <Flex my="25px" justifyContent="center">
+        {((isActive && !isVoted) || isSupport) && (
+          <VoteButton
+            selected={isSupport}
+            colorVote={colors.blue.light}
+            colorShadow="#abbafc"
+            onClick={() => vote(true)}
+            disabled={isVoted}
+            mx="5px"
+          >
+            APPROVE
+          </VoteButton>
+        )}
         {((isActive && !isVoted) || (!isSupport && isVoted)) && (
           <VoteButton
             selected={!isSupport && isVoted}
             colorVote="#ff6757"
             colorShadow="ffb4ac"
             onClick={() => vote(false)}
-            mr="35px"
             disabled={isVoted}
+            mx="5px"
           >
             REJECT
-          </VoteButton>
-        )}
-        {((isActive && !isVoted) || isSupport) && (
-          <VoteButton
-            selected={isSupport}
-            colorVote="#42c47f"
-            colorShadow="a6e7c4"
-            onClick={() => vote(true)}
-            disabled={isVoted}
-          >
-            SUPPORT
           </VoteButton>
         )}
       </Flex>
