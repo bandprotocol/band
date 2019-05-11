@@ -216,16 +216,15 @@ const SubMenuMobile = ({
 const Navbar = props => {
   const [showMenu, setShowMenu] = useState(false)
   const [showTier2Index, setShowTier2Index] = useState(0)
-
   const [selectedTab, setSelectedTab] = useState(-1)
-  const [scrollTop, setScrollTop] = useState(0)
-  const [deltaScroll, setDeltaScroll] = useState(0)
+  const [scrollDir, setScrollDir] = useState(0)
 
   const scrollHistory = useRef()
+  const prevLocation = useRef()
 
   const handleScroll = useCallback(
     e => {
-      const newST = e.target.scrollTop
+      const newST = Math.floor(e.target.scrollTop)
       if (!scrollHistory.current) {
         scrollHistory.current = []
       }
@@ -236,39 +235,32 @@ const Navbar = props => {
               .slice(scrollHistory.current.length - 2)
           : scrollHistory.current.concat(newST)
 
-      if (scrollHistory.current.length < 2 || scrollHistory.current[0] === 0) {
-        setScrollTop(newST)
-      } else if (
-        scrollHistory.current.length > 2 &&
-        ((scrollHistory.current[0] < scrollHistory.current[1] &&
-          scrollHistory.current[1] > scrollHistory.current[2]) ||
-          (scrollHistory.current[0] > scrollHistory.current[1] &&
-            scrollHistory.current[1] < scrollHistory.current[2]))
-      ) {
-        setScrollTop(newST)
+      if (scrollHistory.current.length === 1) {
+        setScrollDir(1)
+      } else if (scrollHistory.current.length > 2) {
+        if (
+          scrollHistory.current[0] < scrollHistory.current[1] &&
+          scrollHistory.current[1] > scrollHistory.current[2]
+        ) {
+          setScrollDir(0)
+        } else if (
+          scrollHistory.current[0] > scrollHistory.current[1] &&
+          scrollHistory.current[1] < scrollHistory.current[2]
+        ) {
+          setScrollDir(1)
+        }
       }
     },
-    [scrollTop],
+    [scrollDir],
   )
 
-  const prevLocation = useRef()
   useEffect(() => {
     window.document.body.addEventListener('scroll', handleScroll)
-    if (scrollHistory.current) {
-      const tmpSH = scrollHistory.current
-      if (
-        tmpSH.length > 1 &&
-        tmpSH[tmpSH.length - 1] !== tmpSH[tmpSH.length - 2]
-      ) {
-        setDeltaScroll(tmpSH[tmpSH.length - 1] - tmpSH[tmpSH.length - 2])
-      }
-    }
     if (props.location !== prevLocation.current) {
       setShowMenu(false)
       setSelectedTab(-1)
     }
     prevLocation.current = props.location
-
     return () =>
       window.document.body.removeEventListener('scroll', handleScroll)
   })
@@ -648,7 +640,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${deltaScroll > 0 ? '-80px' : '0px'})`,
+        transform: `translateY(${scrollDir === 0 ? '0px' : '-80px'})`,
       }}
     >
       <Flex
