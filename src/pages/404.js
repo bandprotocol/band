@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, Box, Text } from 'rebass'
 
-export default props => (
+export default () => (
   <Flex
     flexDirection="column"
     alignItems="center"
