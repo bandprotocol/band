@@ -88,6 +88,7 @@ export default class Animator extends React.Component {
             <Box style={{ width: 500 }}>
               {steps.map(({ renderText }, i) => (
                 <Flex
+                  key={i}
                   alignItems="center"
                   justifyContent="flex-end"
                   style={{

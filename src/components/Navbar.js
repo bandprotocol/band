@@ -15,7 +15,7 @@ import {
 import media, { isMobile } from 'ui/media'
 import { withRouter } from 'react-router-dom'
 
-import LogoSrc from 'images/logo.svg'
+import LogoSrc from 'images/logo.png'
 import MenuBurgerSrc from 'images/menu-burger.svg'
 import MenuCloseSrc from 'images/menu-close.svg'
 
@@ -217,40 +217,37 @@ const Navbar = props => {
   const [showMenu, setShowMenu] = useState(false)
   const [showTier2Index, setShowTier2Index] = useState(0)
   const [selectedTab, setSelectedTab] = useState(-1)
-  const [scrollDir, setScrollDir] = useState(0)
+  const [showNav, setShowNav] = useState(true)
 
   const scrollHistory = useRef()
 
   const handleScroll = useCallback(
     e => {
       const newST = Math.floor(e.target.scrollTop)
-      if (!scrollHistory.current) {
-        scrollHistory.current = []
+      if (!scrollHistory.current || scrollHistory.current.length === 0) {
+        scrollHistory.current = [0]
       }
-      scrollHistory.current =
-        scrollHistory.current.length > 2
-          ? scrollHistory.current
-              .concat(newST)
-              .slice(scrollHistory.current.length - 2)
-          : scrollHistory.current.concat(newST)
-
       if (scrollHistory.current.length === 1) {
-        setScrollDir(1)
-      } else if (scrollHistory.current.length > 2) {
+        setShowNav(false)
+      } else {
         if (
           scrollHistory.current[0] < scrollHistory.current[1] &&
-          scrollHistory.current[1] > scrollHistory.current[2]
+          scrollHistory.current[1] > newST
         ) {
-          setScrollDir(0)
+          setShowNav(true)
         } else if (
           scrollHistory.current[0] > scrollHistory.current[1] &&
-          scrollHistory.current[1] < scrollHistory.current[2]
+          scrollHistory.current[1] < newST
         ) {
-          setScrollDir(1)
+          setShowNav(false)
         }
       }
+      scrollHistory.current = [
+        scrollHistory.current[scrollHistory.current.length - 1],
+        newST,
+      ]
     },
-    [scrollDir],
+    [showNav],
   )
 
   useEffect(() => {
@@ -634,7 +631,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${scrollDir === 0 ? '0px' : '-80px'})`,
+        transform: `translateY(${showNav ? '0px' : '-80px'})`,
       }}
     >
       <Flex
@@ -668,7 +665,7 @@ const Navbar = props => {
           <Flex
             style={{ minWidth: '180px', zIndex: showTier2Index === 0 ? 1 : 0 }}
           >
-            <Link dark to="/">
+            <Link to="/">
               <Image src={LogoSrc} height={32} mr={3} />
             </Link>
           </Flex>
