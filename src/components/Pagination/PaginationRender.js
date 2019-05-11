@@ -6,7 +6,7 @@ import colors from 'ui/colors'
 const LeftRight = styled(Text).attrs({
   mx: '2px',
   fontSize: '25px',
-  color: colors.purple.dark,
+  color: colors.blue.light,
 })`
   cursor: pointer;
   border-radius: 3px;
@@ -43,8 +43,8 @@ const TextClickable = styled(Text).attrs({
     transition: background-color 300ms linear;
   }
 
-  color: ${p => (p.disabled ? '#ffffff' : colors.purple.dark)};
-  background: ${p => (p.disabled ? colors.purple.dark : '#ffffff')};
+  color: ${p => (p.disabled ? '#ffffff' : colors.blue.light)};
+  background: ${p => (p.disabled ? colors.blue.light : '#ffffff')};
   pointer-events: ${p => (p.disabled ? 'none' : 'auto')};
 `
 
@@ -145,14 +145,14 @@ export default ({ currentPage, numberOfPages, onChangePage }) => (
       onClick={() => onChangePage(1)}
       left
     >
-      <DoubleLeftArrow color={colors.purple.dark} />
+      <DoubleLeftArrow color={colors.blue.light} />
     </LeftRight>
     <LeftRight
       disabled={currentPage === 1}
       onClick={() => onChangePage(currentPage - 1)}
       left
     >
-      <LeftArrow color={colors.purple.dark} />
+      <LeftArrow color={colors.blue.light} />
     </LeftRight>
     {/* inside */}
     <NumberPage
@@ -165,14 +165,14 @@ export default ({ currentPage, numberOfPages, onChangePage }) => (
       onClick={() => onChangePage(currentPage + 1)}
       right
     >
-      <RightArrow color={colors.purple.dark} />
+      <RightArrow color={colors.blue.light} />
     </LeftRight>
     <LeftRight
       disabled={currentPage === numberOfPages}
       onClick={() => onChangePage(numberOfPages)}
       right
     >
-      <DoubleRightArrow color={colors.purple.dark} />
+      <DoubleRightArrow color={colors.blue.light} />
     </LeftRight>
     <Text
       fontSize="12px"

@@ -24,7 +24,7 @@ const FlexDropDown = styled(Flex)`
 const VotedOval = ({ width }) => (
   <Flex width={width}>
     <Flex
-      bg={colors.purple.normal}
+      bg={colors.blue.dark}
       flexDirection="column"
       justifyContent="center"
       style={{ borderRadius: '10px', width: '50px', height: '18px' }}
@@ -96,10 +96,10 @@ export default ({
           {/* Left */}
           <Flex alignItems="center">
             <Text
-              color={colors.purple.blueberry}
+              color={colors.blue.dark}
               fontSize={1}
               width="80px"
-              fontWeight="600"
+              fontWeight="400"
             >
               {'#' + prefix}
             </Text>
@@ -125,7 +125,7 @@ export default ({
             {isActive ? (
               <React.Fragment>
                 <Text
-                  color={colors.purple.normal}
+                  color={colors.blue.normal}
                   fontSize={16}
                   fontWeight="regular"
                   textAlign="right"
@@ -193,7 +193,7 @@ export default ({
           px={4}
           style={{ borderRadius: '6px' }}
         >
-          <Text fontWeight="500" color={colors.purple.blueberry} fontSize={1}>
+          <Text fontWeight="500" color={colors.blue.dark} fontSize={1}>
             Reason for Change
           </Text>
           <Flex mt="20px">
@@ -203,11 +203,7 @@ export default ({
           </Flex>
           <Flex mt="20px">
             <Flex mr="10px">
-              <Text
-                fontSize={0}
-                fontWeight="500"
-                color={colors.purple.blueberry}
-              >
+              <Text fontSize={0} fontWeight="500" color={colors.blue.dark}>
                 By:
               </Text>
             </Flex>

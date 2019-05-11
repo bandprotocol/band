@@ -25,7 +25,9 @@ export default {
     dark: '#ff6757',
   },
   blue: {
+    light: '#718bff',
     normal: '#5973e7',
+    dark: '#2741b4',
     text: '#3b57d1',
   },
 }

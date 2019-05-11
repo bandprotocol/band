@@ -49,7 +49,7 @@ const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
         minHeight: '100px',
       }}
     >
-      <Text fontWeight="500" color={colors.purple.blueberry}>
+      <Text fontWeight="500" color={colors.blue.dark}>
         Your Vote:
       </Text>
       <Flex my="25px">

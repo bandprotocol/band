@@ -18,14 +18,14 @@ export default class ProposalItem extends React.Component {
     return (
       <Box>
         <ProposalHeader bg="#e7ecff" pl={4} pr={3}>
-          <Text color={colors.purple.normal} fontSize={1}>
+          <Text color={colors.blue.normal} fontSize={1}>
             #{prefix}
           </Text>
           <Text color={colors.text.normal} fontSize={1} ml={3}>
             {title}
           </Text>
           <Flex flex={1} />
-          <Text color={colors.purple.normal} fontSize={1}>
+          <Text color={colors.blue.normal} fontSize={1}>
             Expiry date:
           </Text>
           <Text color={colors.text.normal} fontSize={1} ml={2}>

@@ -24,7 +24,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
         flexDirection="column"
         style={{ height: '100%', padding: '28px 40px 28px 21px' }}
       >
-        <Text fontSize={1} fontWeight="bold" color={colors.purple.dark}>
+        <Text fontSize={1} fontWeight="bold" color={colors.blue.dark}>
           {name}
         </Text>
         <Text color={colors.text.grey} fontSize={0} lineHeight={1.43} mt={3}>
@@ -32,7 +32,7 @@ export default ({ name, value, detail, isEdit, handleParameterChange }) => {
         </Text>
         <Flex flex={1} />
         <Flex alignItems="center" py={1} mt={3} style={{ height: '30px' }}>
-          <Text fontSize={0} color={colors.purple.dark} mr={3}>
+          <Text fontSize={0} color={colors.blue.dark} mr={3}>
             Value:
           </Text>
           {isEdit ? (

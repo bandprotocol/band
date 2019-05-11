@@ -15,7 +15,7 @@ export default ({
       <Flex>
         <Flex flexDirection="column">
           <Flex alignItems="center" mb={3}>
-            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
               Participation
             </Text>
             <ToolTip
@@ -29,7 +29,7 @@ export default ({
               {`If less than ${minParticipation}% of all voting power participate,
               the proposal is canceled and no parameter changes will be applied.`}
             </ToolTip>
-            <Text fontWeight="500" mx={2} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mx={2} color={colors.blue.dark}>
               :
             </Text>
             <ProgressBar
@@ -41,7 +41,7 @@ export default ({
             />
           </Flex>
           <Flex>
-            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
               Status
             </Text>{' '}
             : Minimum participation
@@ -53,7 +53,7 @@ export default ({
       <Flex>
         <Flex flexDirection="column">
           <Flex alignItems="center" mb={3}>
-            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
               Result
             </Text>
             <ToolTip
@@ -69,7 +69,7 @@ export default ({
               Otherwise the proposal will not be
               successful.`}
             </ToolTip>
-            <Text fontWeight="500" mx={2} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mx={2} color={colors.blue.dark}>
               :
             </Text>
             <ProgressBar
@@ -81,7 +81,7 @@ export default ({
             />
           </Flex>
           <Flex>
-            <Text fontWeight="500" mr={1} color={colors.purple.blueberry}>
+            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
               Status
             </Text>
             {percentReject < supportRequiredPct ? ': Approved' : ': Rejected'}

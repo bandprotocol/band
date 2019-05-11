@@ -289,7 +289,7 @@ export default ({
                     weight="semibold"
                     color="#ffffff"
                     style={{
-                      background: colors.purple.normal,
+                      background: colors.blue.normal,
                       position: 'sticky',
                       top: 0,
                       paddingLeft: 16,
