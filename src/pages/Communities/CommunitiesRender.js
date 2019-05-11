@@ -91,7 +91,7 @@ export default ({
               fontWeight="900"
               color="#393939"
             >
-              ALL COMMUNITIES
+              ALL DATASETS
             </Text>
             <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
               {communities.map((community, i) => (
