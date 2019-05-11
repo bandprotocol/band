@@ -8,7 +8,7 @@ export default ({ title, description, current, changeTo }) => (
     flexDirection="column"
     style={{ borderBottom: '1px solid #cbcfe3' }}
   >
-    <Text fontWeight="500" color={colors.purple.blueberry}>
+    <Text fontWeight="500" color={colors.blue.dark}>
       {title}
     </Text>
     <Flex mt="20px">
@@ -19,7 +19,7 @@ export default ({ title, description, current, changeTo }) => (
     <Flex flexDirection="row" flex={1} mt="20px">
       <Flex width={1 / 5}>
         <Flex mr="10px">
-          <Text fontSize={0} fontWeight="500" color={colors.purple.blueberry}>
+          <Text fontSize={0} fontWeight="500" color={colors.blue.dark}>
             Current:
           </Text>
         </Flex>
@@ -40,7 +40,7 @@ export default ({ title, description, current, changeTo }) => (
       </Flex>
       <Flex width={1 / 5}>
         <Flex mr="10px">
-          <Text fontSize={0} fontWeight="500" color={colors.purple.blueberry}>
+          <Text fontSize={0} fontWeight="500" color={colors.blue.dark}>
             Change to:
           </Text>
         </Flex>

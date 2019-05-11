@@ -28,11 +28,11 @@ const TxnContainer = styled(Box)`
 const MainBar = styled(Flex)`
   padding: 0 12px;
   line-height: 30px;
-  background: #8868ff;
+  background: #5973e7;
   cursor: pointer;
   transition: background 250ms;
   &:hover {
-    background: #6253d4;
+    background: #2741b4;
   }
 `
 

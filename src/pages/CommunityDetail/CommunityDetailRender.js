@@ -10,7 +10,7 @@ import CommunityDescription from 'components/CommunityDescription'
 import DetailHistory from 'components/DetailHistory'
 import CurveGraph from 'components/CurveGraph'
 import BN from 'utils/bignumber'
-import { calculatePriceAt } from 'utils/equation'
+import { calculateCollateralAt, calculatePriceAt } from 'utils/equation'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Graph from 'components/PriceGraph'
 
@@ -39,22 +39,10 @@ export default props => {
     collateralEquation,
   } = props
 
-  const dataset = []
-  if (collateralEquation) {
-    const bnTotalSupply = BN.parse(totalSupply)
-    for (let mult = 0; mult <= 20; mult++) {
-      const supplyPoint = bnTotalSupply.muln(mult).divn(10)
-      dataset.push({
-        x: supplyPoint.pretty(),
-        y: calculatePriceAt(collateralEquation, supplyPoint.toString()),
-      })
-    }
-  }
-
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <CommunityDescription communityAddress={communityAddress} />
-      <Flex flexDirection="row" mt="24px" mx="-6px">
+      <Flex flexDirection="row" mt="12px" mx="-6px">
         <Card flex={1} variant="dashboard" mx="6px">
           <Text
             mt={1}
@@ -137,12 +125,23 @@ export default props => {
             title={'Token Supply'}
             value={BN.parse(totalSupply).shortPretty()}
             unit={symbol}
-            subValue={`BAND as collateral`}
+            subValue={`${BN.parse(
+              calculateCollateralAt(
+                collateralEquation,
+                BN.parse(totalSupply).toString(),
+              ).toFixed(0),
+            ).pretty()} BAND collateral`}
           />
           <MiniGraph
             title="Total Address"
             value={numberOfHolders}
-            unit="holders"
+            unit="Holders"
+            subValue={
+              numberOfHolders > 0 &&
+              `${BN.parse(totalSupply)
+                .div(BN.parse(numberOfHolders.toString()))
+                .pretty()} CHT on average`
+            }
           />
         </Flex>
         <Card flex="0 0 290px" variant="dashboard" mx="6px">
@@ -159,7 +158,7 @@ export default props => {
         </Card>
       </Flex>
 
-      <Flex mt="24px">
+      <Flex mt="12px">
         <DetailHistory communityAddress={communityAddress} pageSize={10} />
       </Flex>
     </PageContainer>

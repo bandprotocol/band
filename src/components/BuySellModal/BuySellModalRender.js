@@ -218,7 +218,7 @@ const Advance = ({
           <Text
             flex={1}
             fontSize="13px"
-            color={colors.purple.dark}
+            color={colors.blue.dark}
             fontWeight="bold"
             letterSpacing="-0.16px"
           >
@@ -257,7 +257,7 @@ const Advance = ({
                     <Text fontSize="12px">BAND</Text>
                   </Flex>
                   <AmountInput
-                    type="text" 
+                    type="text"
                     name="priceLimit"
                     value={priceLimit}
                     placeholder="Price Limit ex. 10000.00"

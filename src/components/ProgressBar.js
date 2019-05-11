@@ -59,7 +59,7 @@ export default ({ isResult, percent, minimum, ...others }) => {
           >
             <Flex
               width={percent / 100}
-              bg={!isResult ? colors.purple.normal : '#ec6363'}
+              bg={!isResult ? colors.blue.normal : '#ec6363'}
               style={{ height: '10px', borderRadius: '2px' }}
             />
           </Flex>
