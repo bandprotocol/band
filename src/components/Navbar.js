@@ -220,7 +220,6 @@ const Navbar = props => {
   const [showNav, setShowNav] = useState(true)
 
   const scrollHistory = useRef()
-  const prevLocation = useRef()
 
   const handleScroll = useCallback(
     e => {
@@ -252,14 +251,10 @@ const Navbar = props => {
   )
 
   useEffect(() => {
-    if (props.location !== prevLocation.current) {
-      setShowMenu(false)
-      setSelectedTab(-1)
-    }
     window.document.body.addEventListener('scroll', handleScroll)
     return () =>
       window.document.body.removeEventListener('scroll', handleScroll)
-  })
+  }, [])
 
   const selectTab = tabId => {
     setSelectedTab(tabId)
