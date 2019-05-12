@@ -224,6 +224,7 @@ const Navbar = props => {
 
   const handleScroll = useCallback(
     e => {
+      if (e.target.scrollTop < 80) return
       const newST = Math.floor(e.target.scrollTop)
       if (!scrollHistory.current || scrollHistory.current.length === 0) {
         scrollHistory.current = [0]
