@@ -21,8 +21,8 @@ import { isMobile } from 'ui/media'
 
 import StartBuilding from 'components/StartBuilding'
 
-import WalletSrc from 'images/walletExample.svg'
-import WalletIntegrate from 'images/band-wallet-integrate.svg'
+import WalletSrc from 'images/walletExample.png'
+import WalletIntegrate from 'images/band-wallet-integrate.png'
 import W3Img from 'images/web-3-js.svg'
 import TrustlessCredentialStore from 'images/trustlessCredentialStore.svg'
 import NoExtensionsRequired from 'images/noExtensionsRequired.svg'
@@ -78,44 +78,19 @@ export default () => {
               user-centric design that provides high levels of security and
               multi-platform support.
             </Text>
-            {/* <Flex
-              mt={['30px', '50px']}
-              justifyContent="center"
-              flexDirection={['column-reverse', 'row']}
-            >
-              <Button
-                variant="outline"
-                style={{
-                  color: '#545454',
-                  height: '45px',
-                  width: _isMobile ? '200px' : '185px',
-                  padding: _isMobile ? '5px' : '0px',
-                }}
-              >
-                Demo
-              </Button>
-              {_isMobile && <Flex my="5px" />}
-              <Button
-                variant="primary"
-                ml={[0, 5]}
-                style={{
-                  height: '45px',
-                  width: _isMobile ? '200px' : '240px',
-                  padding: _isMobile ? '5px' : '0px',
-                }}
-              >
-                Integrate Band Web3 Wallet
-              </Button>
-            </Flex> */}
           </Card>
         </Flex>
-        <Flex flexDirection="column" alignItems="center" mb={5} mt={5}>
+        <Flex flexDirection="column" alignItems="center" my={['30px', '50px']}>
           <Box mb={2}>
             <H1 textAlign="center" dark>
               Integrate in 3 Simple Steps
             </H1>
           </Box>
-          <Image src={WalletIntegrate} my={4} />
+          <Image
+            src={WalletIntegrate}
+            width={['calc(100vw - 20px)', '700px']}
+            my={4}
+          />
         </Flex>
         <Flex
           width={1}
@@ -124,7 +99,7 @@ export default () => {
           style={{ borderTop: '1px solid #e2e2e2' }}
           mb={['430px', '200px']}
         >
-          <Box mt={5} mb={'50px'}>
+          <Box my={['30px', '50px']}>
             <H1 textAlign="center" dark>
               Features
             </H1>
@@ -134,7 +109,9 @@ export default () => {
             flexDirection={['column', 'row']}
           >
             <Flex flex={1} flexDirection="column">
-              <Image src={W3Img} width="100px" />
+              <Flex style={{ height: '100px' }}>
+                <Image src={W3Img} width="100px" />
+              </Flex>
               <Text my="20px" fontSize="24px">
                 Web3.js Compatible
               </Text>
@@ -149,7 +126,9 @@ export default () => {
               ml={['0px', '100px']}
               flexDirection="column"
             >
-              <Image src={TrustlessCredentialStore} width="100px" />
+              <Flex style={{ height: '100px' }}>
+                <Image src={TrustlessCredentialStore} width="100px" />
+              </Flex>
               <Text my="20px" fontSize="24px">
                 Trustless Credential Store
               </Text>
@@ -165,7 +144,9 @@ export default () => {
             mt={['30px', '50px']}
           >
             <Flex flex={1} flexDirection="column">
-              <Image src={NoExtensionsRequired} width="100px" />
+              <Flex style={{ height: '100px' }}>
+                <Image src={NoExtensionsRequired} width="100px" />
+              </Flex>
               <Text my="20px" fontSize="24px">
                 No Extensions Required
               </Text>
@@ -180,7 +161,9 @@ export default () => {
               ml={['0px', '100px']}
               flexDirection="column"
             >
-              <Image src={DomainWhitelist} width="100px" />
+              <Flex style={{ height: '100px' }}>
+                <Image src={DomainWhitelist} width="100px" />
+              </Flex>
               <Text my="20px" fontSize="24px">
                 Domain Whitelist
               </Text>

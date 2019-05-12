@@ -24,9 +24,9 @@ import Animator from 'components/Animator'
 import StartBuilding from 'components/StartBuilding'
 import CoinHatcherShowcase from 'components/CoinHatcherShowcase'
 
-import TCRSrc from 'images/tcr.svg'
+import TCRSrc from 'images/tcr.png'
 import TCRWorkSrc from 'images/tcr-work.png'
-import TCRWorkVertSrc from 'images/tcr-work-vert.svg'
+import TCRWorkVertSrc from 'images/tcr-work-vert.png'
 
 import SSExample1 from 'images/chtss1@3x.png'
 import SSExample2 from 'images/chtssMid.jpg'
@@ -237,7 +237,11 @@ export default () => {
               transparent way to crowd-source information.
             </Text>
           </Flex>
-          <Image src={TCRSrc} my={[0, 5]} height="280px" />
+          <Image
+            src={TCRSrc}
+            my={[4, 5]}
+            width={['calc(100vw - 40px)', '800px']}
+          />
           <Card
             bg="#f6f8ff"
             pt={4}
@@ -309,7 +313,11 @@ export default () => {
                 How TCRs work
               </H1>
             </Box>
-            <Image src={_isMobile ? TCRWorkVertSrc : TCRWorkSrc} my={4} />
+            <Image
+              src={_isMobile ? TCRWorkVertSrc : TCRWorkSrc}
+              width={['50vw', 'auto']}
+              my={4}
+            />
           </Flex>
         ) : (
           <Flex
