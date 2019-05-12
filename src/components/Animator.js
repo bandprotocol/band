@@ -43,7 +43,7 @@ export default class Animator extends React.Component {
             height: 240,
             background: '#ffffff',
             position: 'sticky',
-            top: 0,
+            top: -80,
             width: '100%',
           }}
         >

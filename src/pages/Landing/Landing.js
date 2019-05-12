@@ -108,7 +108,11 @@ export default () => {
         pb={['0px', '100px']}
       >
         <PageContainer>
-          <Flex py={['50px', '150px']} flexDirection={['column', 'row']}>
+          <Flex
+            pt={['50px', '150px']}
+            pb={['50px', '60px']}
+            flexDirection={['column', 'row']}
+          >
             {_isMobile && (
               <Flex
                 flex={1}
@@ -144,18 +148,18 @@ export default () => {
                   stack
                 </Text>
               </Flex>
-              <Flex mt="30px" flexDirection={['column-reverse', 'row']}>
-                <Link to="why-band">
-                  <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
-                    Learn More
-                  </OutlineButton>
-                </Link>
-                <Flex mx={['0px', '10px']} my={['10px', '0px']} />
+              <Flex mt="24px" flexDirection={['column-reverse', 'row']}>
                 <AbsoluteLink href="https://developer.bandprotocol.com/">
                   <FilledButton isMobile={_isMobile}>
                     Start Building
                   </FilledButton>
                 </AbsoluteLink>
+                <Flex mx={['0px', '10px']} my={['10px', '0px']} />
+                <Link to="why-band">
+                  <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
+                    Learn More
+                  </OutlineButton>
+                </Link>
               </Flex>
             </Box>
             {!_isMobile && (
@@ -163,6 +167,132 @@ export default () => {
                 <Image src={HeroSrc} height="340px" />
               </Flex>
             )}
+          </Flex>
+          <Flex
+            justifyContent="flex-start"
+            flexWrap="wrap"
+            pb={['60px', '120px']}
+          >
+            <Box mr="60px">
+              <Text
+                fontSize={['20px', '20px']}
+                fontWeight={600}
+                color="#8d94bf"
+              >
+                Join the discussions
+              </Text>
+
+              <Flex flex={1} mt="16px" mb="32px" pb={['10px', '0px']}>
+                <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
+                  <Flex
+                    mr="24px"
+                    alignItems="center"
+                    color="white"
+                    css={{
+                      '&:hover': {
+                        filter:
+                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                      },
+                    }}
+                  >
+                    <Image src={Telegram} width="32px" />
+                  </Flex>
+                </AbsoluteLink>
+                <AbsoluteLink href="https://twitter.com/bandprotocol">
+                  <Flex
+                    mr="24px"
+                    alignItems="center"
+                    color="white"
+                    css={{
+                      '&:hover': {
+                        filter:
+                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                      },
+                    }}
+                  >
+                    <Image src={Twitter} width="32px" />
+                  </Flex>
+                </AbsoluteLink>
+                <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
+                  <Flex
+                    mr="24px"
+                    alignItems="center"
+                    color="white"
+                    css={{
+                      '&:hover': {
+                        filter:
+                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                      },
+                    }}
+                  >
+                    <Image src={Reddit} width="32px" />
+                  </Flex>
+                </AbsoluteLink>
+                <AbsoluteLink href="https://medium.com/bandprotocol">
+                  <Flex
+                    alignItems="center"
+                    color="white"
+                    css={{
+                      '&:hover': {
+                        filter:
+                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                      },
+                    }}
+                  >
+                    <Image src={Medium} width="32px" />
+                  </Flex>
+                </AbsoluteLink>
+              </Flex>
+            </Box>
+            <Box>
+              <Text
+                fontSize={['20px', '20px']}
+                fontWeight={600}
+                color="#8d94bf"
+              >
+                Backed by
+              </Text>
+              <Flex mt="20px" alignItems="flex-end">
+                <Flex
+                  mr={['12px', '28px']}
+                  css={{
+                    '&:hover': {
+                      filter:
+                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
+                >
+                  <AbsoluteLink href="https://www.sequoiacap.com/">
+                    <Image src={Sequoia} height="20px" />
+                  </AbsoluteLink>
+                </Flex>
+                <Flex
+                  mr={['12px', '28px']}
+                  css={{
+                    '&:hover': {
+                      filter:
+                        'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
+                >
+                  <AbsoluteLink href="http://www.dunamupartners.com/">
+                    <Image src={Dunamu} height="20px" />
+                  </AbsoluteLink>
+                </Flex>
+                <Flex
+                  css={{
+                    '&:hover': {
+                      filter:
+                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                    },
+                  }}
+                >
+                  <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
+                    <Image mb="-4px" src={Seax} height="24px" width="70px" />
+                  </AbsoluteLink>
+                </Flex>
+              </Flex>
+            </Box>
           </Flex>
           <Flex
             bg="#36406e"
@@ -241,7 +371,11 @@ export default () => {
               and Communities
             </Text>
           </Box>
-          <Flex flexDirection={['column', 'row']} justifyContent="center">
+          <Flex
+            pb={5}
+            flexDirection={['column', 'row']}
+            justifyContent="center"
+          >
             <FeatureCard
               isMobile={_isMobile}
               subtitle="Develop using"
@@ -268,157 +402,6 @@ export default () => {
                 <Image src={LandingDataGov} width="215px" />
               </Box>
             </FeatureCard>
-          </Flex>
-          <Flex
-            mt={['50px', '75px']}
-            px={['0px', '20px']}
-            flexDirection={['column', 'row']}
-            justifyContent="center"
-          >
-            <Flex
-              flex={1}
-              flexDirection="column"
-              pb={['40px', '0px']}
-              ml={['0px', '10%']}
-            >
-              <Flex>
-                <Text
-                  fontSize={['20px', '22px']}
-                  fontWeight={600}
-                  color="#8d94bf"
-                >
-                  Partnerships Featuring
-                </Text>
-              </Flex>
-              <Flex
-                mt={['30px', '40px']}
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                  },
-                }}
-              >
-                <AbsoluteLink href="https://www.sequoiacap.com/">
-                  <Image src={Sequoia} width="148px" />
-                </AbsoluteLink>
-              </Flex>
-              <Flex
-                mt="35px"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
-                  },
-                }}
-              >
-                <AbsoluteLink href="http://www.dunamupartners.com/">
-                  <Image src={Dunamu} width="245px" />
-                </AbsoluteLink>
-              </Flex>
-              <Flex
-                mt="35px"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                  },
-                }}
-              >
-                <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
-                  <Image src={Seax} width="105px" height="45px" />
-                </AbsoluteLink>
-              </Flex>
-            </Flex>
-            <Flex
-              flex={1}
-              pb={['40px', '0px']}
-              flexDirection="column"
-              ml={['0px', '10%']}
-            >
-              <Flex>
-                <Text
-                  fontSize={['20px', '22px']}
-                  fontWeight={600}
-                  color="#8d94bf"
-                >
-                  Join Band Protocol {_isMobile && <br />}Community
-                </Text>
-              </Flex>
-              <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
-                <Flex
-                  fontSize="18px"
-                  mt="40px"
-                  alignItems="center"
-                  color="white"
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <Image src={Reddit} width="30px" />
-                  <Flex mx="20px" />
-                  Reddit
-                  <Flex mx="20px" />
-                </Flex>
-              </AbsoluteLink>
-              <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
-                <Flex
-                  fontSize="18px"
-                  mt="35px"
-                  alignItems="center"
-                  color="white"
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <Image src={Telegram} width="30px" />
-                  <Flex mx="20px" />
-                  Telegram
-                </Flex>
-              </AbsoluteLink>
-              <AbsoluteLink href="https://medium.com/bandprotocol">
-                <Flex
-                  fontSize="18px"
-                  mt="35px"
-                  alignItems="center"
-                  color="white"
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <Image src={Medium} width="30px" />
-                  <Flex mx="20px" />
-                  Medium
-                </Flex>
-              </AbsoluteLink>
-              <AbsoluteLink href="https://twitter.com/bandprotocol">
-                <Flex
-                  fontSize="18px"
-                  mt="35px"
-                  alignItems="center"
-                  color="white"
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <Image src={Twitter} width="30px" />
-                  <Flex mx="20px" />
-                  Twitter
-                </Flex>
-              </AbsoluteLink>
-            </Flex>
           </Flex>
         </PageContainer>
       </Box>
