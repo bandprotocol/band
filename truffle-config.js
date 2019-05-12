@@ -31,6 +31,12 @@ module.exports = {
       gas: 6800000,
       skipDryRun: true,
     },
+    ourTestNet: {
+      host: '54.179.172.200',
+      port: 8545,
+      network_id: '*',
+      gasPrice: 1000000000,
+    },
   },
   solc: {
     optimizer: {
