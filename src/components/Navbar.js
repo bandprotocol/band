@@ -380,6 +380,7 @@ const Navbar = props => {
               background: '#202541',
               transform: showTier2Index === 1 ? '' : 'translateX(100%)',
               minHeight: '0px',
+              paddingBottom: '50px',
             }}
           >
             <Box flexDirection="column" style={{ minHeight: '0px' }}>
