@@ -63,7 +63,7 @@ export default () => {
             pt={4}
             pb={['30px', '30px']}
             px={['20px', '40px']}
-            width={['calc(100vw - 40px)', '840px']}
+            width={['calc(100vw - 40px)', '640px']}
           >
             <Text
               textAlign={['left', 'center']}
