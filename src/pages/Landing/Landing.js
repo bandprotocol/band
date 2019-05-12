@@ -262,7 +262,7 @@ export default () => {
               title="Data Governance"
               content="Stake on data providers you trust and earn provider fee."
               linkText="Governance Portal"
-              link="https://app-wip.rinkeby.bandprotocol.com/"
+              link="https://app.bandprotocol.com/"
             >
               <Box mt="33px" pl="30px">
                 <Image src={LandingDataGov} width="215px" />

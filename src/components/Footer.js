@@ -112,7 +112,7 @@ export default () => {
               <Box mb={[3, '20px']}>
                 <AbsoluteLink
                   target="_blank"
-                  href="https://app-wip.rinkeby.bandprotocol.com"
+                  href="https://app.bandprotocol.com"
                 >
                   <Text fontSize="14px">Governance Portal</Text>
                 </AbsoluteLink>
