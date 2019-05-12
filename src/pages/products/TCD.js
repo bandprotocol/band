@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import { colors } from 'ui'
 import {
   Flex,
   Text,
@@ -24,9 +23,8 @@ import StartBuilding from 'components/StartBuilding'
 
 import Animator from 'components/Animator'
 
-import TCDSrc from 'images/product-tcd.svg'
-import TCDWorkSrc from 'images/tcd-work.svg'
-import TCDWorkSrcVert from 'images/tcd-work-vert.svg'
+import TCDSrc from 'images/product-tcd.png'
+import TCDWorkSrcVert from 'images/tcd-work-vert.png'
 import TCDPriceFeed from 'images/tcd-price-feed.png'
 import TCDCrossChain from 'images/tcd-cross-chain.png'
 
@@ -193,7 +191,11 @@ export default () => {
             Token Curated DataSources (TCDs). TCDs serve robust data feed from a
             network of data providers curated by community members.
           </Text>
-          <Image src={TCDSrc} my="30px" />
+          <Image
+            src={TCDSrc}
+            width={['calc(100vw - 20px)', '825px']}
+            my="30px"
+          />
           <Card
             bg="#f6f8ff"
             pt={4}
@@ -283,7 +285,7 @@ export default () => {
                 How TCDs work
               </H1>
             </Box>
-            <Image src={TCDWorkSrcVert} my={4} />
+            <Image src={TCDWorkSrcVert} width={'calc(50vw)'} my={4} />
           </Flex>
         ) : (
           <Flex

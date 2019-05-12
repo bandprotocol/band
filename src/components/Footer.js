@@ -12,11 +12,10 @@ import {
   SemiBold,
   AbsoluteLink,
 } from 'ui/common'
-import { colors } from 'ui'
 import { isMobile } from 'ui/media'
 import Subscribe from 'components/Subscribe'
 
-import LogoSrc from 'images/logo.svg'
+import LogoSrc from 'images/logo.png'
 
 import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
@@ -172,14 +171,6 @@ export default () => {
               ml="12px"
               bg
             />
-            {/* <SmallIcon to="/" icon="fab fa-facebook-square fa-fw" />
-                <SmallIcon to="/" ml="10px" icon="fab fa-linkedin fa-fw" />
-                <SmallIcon
-                  to="/"
-                  ml="10px"
-                  icon="fab fa-twitter-square fa-fw"
-                />
-                <SmallIcon to="/" ml="12px" icon="fab fa-instagram fa-fw" bg /> */}
           </Flex>
         </Flex>
       </PageContainer>

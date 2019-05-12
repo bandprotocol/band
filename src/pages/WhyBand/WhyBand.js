@@ -19,11 +19,9 @@ import {
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
-import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
-import CoinHatcherShowcase from 'components/CoinHatcherShowcase'
 
-import WhyBand from 'images/whyband.svg'
+import WhyBand from 'images/whyband.png'
 import SDAImg from 'images/solve-data-availability.svg'
 import SDRImg from 'images/solve-data-reliability.svg'
 
@@ -50,10 +48,10 @@ export default () => {
             lineHeight={[1.63, 1.94]}
           >
             Availability and reliability are the two main problems when
-            incorporating data into any application. Band Protocol solves the
-            problem using incentive structures of token to make sure data is
-            accurate, while utilizing open nature of blockchain to distribute
-            data.
+            incorporating data into any decentralized application. Band Protocol
+            solves this problem by using incentive structures of tokens to
+            ensure data accuracy, while utilizing the openness of blockchain to
+            distribute data.
           </Text>
           <Image
             src={WhyBand}
@@ -63,7 +61,7 @@ export default () => {
           <Card
             bg="#f6f8ff"
             pt={4}
-            pb={['30px', 5]}
+            pb={['30px', '30px']}
             px={['20px', '40px']}
             width={['calc(100vw - 40px)', '840px']}
           >
@@ -73,15 +71,39 @@ export default () => {
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >
-              Band is an end-to-end solution for unparalleled data curation. We
-              utilize state of the art technology to provide a component layer
-              solution for managing data in the Web3 technology stack.
-              <br />
-              <br />
-              Band provides a standard framework for community curated data
-              governance. This in turn enables Band to create a socially
-              scalable method for the widespread adoption and integration of
-              trusted data that all dApps can utilize.
+              Applications in Web3.0 are function by distributing the incentive
+              across participants of the network, as compared to centralized
+              entities in Web2.0. Band provides a standard framework for the
+              decentralized management of data, serving as a fundamental query
+              layer by providing reliable data for applications that require;
+              {_isMobile ? (
+                <React.Fragment>
+                  <br />
+                  <br />
+                  • Off-chain oracles
+                  <br />
+                  • Identity management
+                  <br />
+                  • KYC / AML
+                  <br />
+                  • Ranking <br />
+                  • Data source for smart contracts
+                  <br />
+                </React.Fragment>
+              ) : (
+                <Text width={1} textAlign="left" pl="30%">
+                  <br />
+                  • Off-chain oracles
+                  <br />
+                  • Identity management
+                  <br />
+                  • KYC / AML
+                  <br />
+                  • Ranking <br />
+                  • Data source for smart contracts
+                  <br />
+                </Text>
+              )}
             </Text>
           </Card>
         </Flex>

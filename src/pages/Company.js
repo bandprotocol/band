@@ -21,8 +21,6 @@ import media, { isMobile } from 'ui/media'
 
 import StartBuilding from 'components/StartBuilding'
 
-import CompanySrc from 'images/company.svg'
-
 import CoinDeskSrc from 'images/featured/coindesk.png'
 import YahooNewsSrc from 'images/featured/yahoo-news.png'
 import TechInAsiaSrc from 'images/featured/tech-in-asia.png'
@@ -193,18 +191,8 @@ export default () => {
               Company
             </Text>
           </Box>
-          <Text
-            textAlign={['left', 'center']}
-            width={['calc(100vw - 40px)', '780px']}
-            fontSize={['16px', '18px']}
-            lineHeight={[1.63, 1.94]}
-          >
-            Band Protocol is a protocol for decentralized data governance. We
-            provide open-source standard and framework for the decentralized
-            management of data.
-          </Text>
-          <Image src={CompanySrc} my={[4, 5]} />
           <Card
+            mt={['30px', '50px']}
             bg="#f6f8ff"
             px="45px"
             py="25px"
@@ -216,11 +204,15 @@ export default () => {
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >
+              Band Protocol is a protocol for decentralized data governance. We
+              provide an open-source standard and framework for the
+              decentralized management of data.
+              <br />
+              <br />
               Band Protocol was created to solve the issues plaguing current
               data infrastructures and decentralized technologies as a whole. It
               is estimated that over 1.2 million terabytes of data is stored on
-              the web and currently much of this is unstructured data or
-              unreliable data.
+              the web and currently much of this is unstructured or unreliable.
               <br />
               <br />
               Band Protocol is a component layer solution for managing data in
@@ -410,22 +402,15 @@ export default () => {
           mt={['25px', '45px']}
           flexDirection={['column', 'row']}
           justifyContent="center"
+          width={1}
         >
           <Flex
-            bg="rgba(0,0,0,0)"
-            flexDirection="column"
-            style={{
-              width: ['auto', '425px'],
-              height: '325px',
-            }}
-            pl="40px"
+            flexDirection={['column', 'row']}
+            justifyContent="center"
+            width={['calc(100vw - 20px)', '800px']}
+            mb={['80px', '45px']}
           >
-            <Flex>
-              <Text fontSize="22px" fontWeight={600} color="#4a4a4a">
-                Partnerships Featuring
-              </Text>
-            </Flex>
-            <Flex mt="40px">
+            <Flex flex={1} justifyContent="center" alignItems="center">
               <AbsoluteLink
                 href="https://www.sequoiacap.com/"
                 css={{
@@ -435,10 +420,15 @@ export default () => {
                   },
                 }}
               >
-                <Image src={Sequoia} width="148px" />
+                <Image src={Sequoia} width={['105px', 'auto']} />
               </AbsoluteLink>
             </Flex>
-            <Flex mt="35px">
+            <Flex
+              mt={[3, 0]}
+              flex={1}
+              justifyContent="center"
+              alignItems="center"
+            >
               <AbsoluteLink
                 href="http://www.dunamupartners.com/"
                 css={{
@@ -448,10 +438,15 @@ export default () => {
                   },
                 }}
               >
-                <Image src={Dunamu} width="245px" />
+                <Image src={Dunamu} width={['105px', 'auto']} />
               </AbsoluteLink>
             </Flex>
-            <Flex mt="35px">
+            <Flex
+              mt={[3, 0]}
+              flex={1}
+              justifyContent="center"
+              alignItems="center"
+            >
               <AbsoluteLink
                 href="https://www.linkedin.com/company/seax-ventures/"
                 css={{
@@ -461,98 +456,9 @@ export default () => {
                   },
                 }}
               >
-                <Image src={Seax} width="105px" height="45px" />
+                <Image src={Seax} width="105px" />
               </AbsoluteLink>
             </Flex>
-          </Flex>
-          {_isMobile && <Flex mx="18px" />}
-          <Flex
-            bg="rgba(0,0,0,0)"
-            flexDirection="column"
-            px="40px"
-            style={{
-              width: ['auto', '425px'],
-              height: '325px',
-            }}
-          >
-            <Flex mt={['-60px', '0px']}>
-              <Text fontSize="22px" fontWeight={600} color="#4a4a4a">
-                Join Band Protocol {_isMobile && <br />} Community
-              </Text>
-            </Flex>
-            <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
-              <Flex
-                fontSize="18px"
-                mt="40px"
-                alignItems="center"
-                color="#7c84a6"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
-                  },
-                }}
-              >
-                <Image src={Reddit} width="30px" />
-                <Flex mx="20px" />
-                Reddit
-                <Flex mx="20px" />
-              </Flex>
-            </AbsoluteLink>
-            <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
-              <Flex
-                fontSize="18px"
-                mt="35px"
-                alignItems="center"
-                color="#7c84a6"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
-                  },
-                }}
-              >
-                <Image src={Telegram} width="30px" />
-                <Flex mx="20px" />
-                Telegram
-              </Flex>
-            </AbsoluteLink>
-            <AbsoluteLink href="https://medium.com/bandprotocol">
-              <Flex
-                fontSize="18px"
-                mt="35px"
-                alignItems="center"
-                color="#7c84a6"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
-                  },
-                }}
-              >
-                <Image src={Medium} width="30px" />
-                <Flex mx="20px" />
-                Medium
-              </Flex>
-            </AbsoluteLink>
-            <AbsoluteLink href="https://twitter.com/bandprotocol">
-              <Flex
-                fontSize="18px"
-                mt="35px"
-                alignItems="center"
-                color="#7c84a6"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia(1) brightness(0.9) saturate(4) hue-rotate(196deg)',
-                  },
-                }}
-              >
-                <Image src={Twitter} width="30px" />
-                <Flex mx="20px" />
-                Twitter
-              </Flex>
-            </AbsoluteLink>
           </Flex>
         </Flex>
       </Box>
