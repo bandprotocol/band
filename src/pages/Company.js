@@ -36,10 +36,6 @@ import WeRHiring from 'images/we-re-hiring.svg'
 import Sequoia from 'images/sequoiaGray.svg'
 import Dunamu from 'images/dunamuGray.svg'
 import Seax from 'images/seaxGray.png'
-import Reddit from 'images/redditGray.svg'
-import Telegram from 'images/telegramGray.svg'
-import Medium from 'images/mediumGray.svg'
-import Twitter from 'images/twitterGray.svg'
 
 import Man from 'images/team/man.png'
 import Swit from 'images/team/swit.png'
@@ -75,6 +71,10 @@ const ApplyButton = styled(Button)`
   font-size: 18px;
   font-weight: 300;
   transition: all 0.5s;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
 `
 
 const TeamComponent = ({ faceImg, name, title, type, link }) => (
@@ -110,7 +110,7 @@ const TeamComponent = ({ faceImg, name, title, type, link }) => (
   </Flex>
 )
 
-const JobTab = ({ title, description, setSelectedTab, isSelected }) => (
+const JobTab = ({ title, link, description, setSelectedTab, isSelected }) => (
   <Flex
     bg="white"
     flexDirection="column"
@@ -137,7 +137,9 @@ const JobTab = ({ title, description, setSelectedTab, isSelected }) => (
         {description}
       </Text>
     </Flex>
-    <ApplyButton isSelected={isSelected}>Apply</ApplyButton>
+    <AbsoluteLink href={link} style={{ cursor: 'pointer' }}>
+      <ApplyButton isSelected={isSelected}>Apply</ApplyButton>
+    </AbsoluteLink>
   </Flex>
 )
 
@@ -151,6 +153,7 @@ const JobTabs = () => {
       <JobTab
         title="Mobile
     App Engineer"
+        link="https://angel.co/company/bandprotocol/jobs/435214-mobile-app-engineer"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 0}
         setSelectedTab={() => setSelectedTab(0)}
@@ -159,6 +162,7 @@ const JobTabs = () => {
       <JobTab
         title="Frontend
         Engineer"
+        link="https://angel.co/company/bandprotocol/jobs/435215-frontend-engineer"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 1}
         setSelectedTab={() => setSelectedTab(1)}
@@ -167,6 +171,7 @@ const JobTabs = () => {
       <JobTab
         title="Backend
         Engineer"
+        link="https://angel.co/company/bandprotocol/jobs/435216-backend-engineer"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 2}
         setSelectedTab={() => setSelectedTab(2)}
