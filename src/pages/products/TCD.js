@@ -50,7 +50,7 @@ const animatorSteps = [
     src: Step1Src,
     srcActive: Step1ActiveSrc,
     renderText: () =>
-      'Token Curate DataSource (TCD) is a method for a community to collectively govern and manage data. It is suitable for curating objective information with large amount of data volume such as asset prices, blockchain transactions, and real-world events.',
+      'Token Curate DataSources (TCD) is a method for a community to collectively govern and manage data. It is suitable for curating objective information with large amount of data volume such as asset prices, blockchain transactions, and real-world events.',
   },
   {
     src: Step2Src,

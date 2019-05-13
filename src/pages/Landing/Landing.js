@@ -46,7 +46,7 @@ import SSExample5 from 'images/dsssMid.png'
 import SSExample6 from 'images/dsssRight.png'
 
 const FilledButton = styled(Button)`
-  font-family: Avenir-Medium;
+  font-family: Avenir;
   color: white;
   font-size: 16px;
   font-weight: 500;
@@ -70,7 +70,7 @@ const FilledButton = styled(Button)`
 `
 
 const OutlineButton = styled(Button)`
-  font-family: Avenir-Medium;
+  font-family: Avenir;
   color: #f7f8ff;
   font-size: 16px;
   font-weight: 500;
@@ -130,9 +130,8 @@ export default () => {
               <Text
                 lineHeight={1.6}
                 fletterSpacing="1px"
-                ontWeight="600"
+                fontWeight={600}
                 fontSize={['32px', '40px']}
-                fontFamily="Avenir-Heavy"
                 color="white"
                 textAlign={['center', 'left']}
                 mt={['30px', '0px']}
@@ -273,7 +272,7 @@ export default () => {
               Backed by
             </Text>
             <Flex
-              mt="40px"
+              mt={['30px', '20px']}
               alignItems="center"
               flexDirection={['column', 'row']}
             >
@@ -443,7 +442,7 @@ export default () => {
         description={`is designed as a community governed and managed price
           feed for decentralized applications. New possibilities will be opened for decentralized applications that rely on external real-world information such as price feed`}
         link1="data.bandprotocol.com"
-        link2="Token-Curated DataSource"
+        link2="Token-Curated DataSources"
         Logo={AppDS}
         logoHeight={['80px', '125px']}
         Img1={SSExample4}

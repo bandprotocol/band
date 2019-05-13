@@ -292,7 +292,7 @@ const Navbar = props => {
             position: 'fixed',
             right: 0,
             top: '0px',
-            height: 'calc(100vh)',
+            height: '100vh',
             width: showMenu ? 'calc(100vw)' : '0px',
             transition: 'all 400ms',
             overflow: 'hidden',
@@ -370,7 +370,7 @@ const Navbar = props => {
               position: 'absolute',
               top: 0,
               right: 0,
-              height: 'calc(100vh)',
+              height: '100%',
               width: 'calc(100vw)',
               transition: 'all 400ms',
               overflow: 'auto',
@@ -457,7 +457,7 @@ const Navbar = props => {
               position: 'absolute',
               top: 0,
               right: 0,
-              height: 'calc(100vh)',
+              height: '100%',
               width: 'calc(100vw)',
               transition: 'all 400ms',
               overflow: 'auto',
@@ -639,7 +639,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${showNav ? '0px' : '-70px'})`,
+        transform: `translateY(${!showNav && !setShowMenu ? '-70px' : '0px'})`,
       }}
     >
       <Flex

@@ -15,7 +15,7 @@ export const Text = styled(BaseText)``
 export const Flex = styled(BaseFlex)``
 export const Box = styled(BaseBox)``
 export const Button = styled(BaseButton)`
-  font-family: Avenir-Medium;
+  font-family: Avenir;
   border-radius: 2px;
 `
 export const Card = styled(BaseCard)``
