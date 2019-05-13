@@ -131,26 +131,33 @@ export default () => {
                 lineHeight={1.6}
                 fletterSpacing="1px"
                 ontWeight="600"
-                fontSize={['24px', '40px']}
+                fontSize={['32px', '40px']}
                 fontFamily="Avenir-Heavy"
                 color="white"
+                textAlign={['center', 'left']}
+                mt={['30px', '0px']}
               >
                 Decentralized
                 <br />
                 Data Governance
               </Text>
-              <Flex mt="25px" style={{ maxWidth: '390px' }}>
+              <Flex mt="25px" style={{ maxWidth: ['320px', '390px'] }}>
                 <Text
                   color="#f7f8ff"
-                  fontSize={['16px', '24px']}
+                  fontSize={['20px', '24px']}
                   lineHeight={1.54}
                   fontWeight={300}
+                  textAlign={['center', 'left']}
                 >
                   An open standard for decentralized management of data in Web3
                   stack
                 </Text>
               </Flex>
-              <Flex mt="24px" flexDirection={['column', 'row']}>
+              <Flex
+                mt={['40px', '24px']}
+                alignItems={['center', 'flex-start']}
+                flexDirection={['column', 'row']}
+              >
                 <AbsoluteLink href="https://developer.bandprotocol.com/">
                   <FilledButton isMobile={_isMobile}>
                     Start Building
@@ -173,12 +180,18 @@ export default () => {
                   fontSize={['20px', '20px']}
                   fontWeight={500}
                   color="#8d94bf"
-                  mr="30px"
+                  mr={['0px', '30px']}
                   mb={['20px', '0px']}
+                  mt={['30px', '0px']}
+                  textAlign={['center', 'left']}
                 >
                   Join Our Community :
                 </Text>
-                <Flex flex={1} alignItems="center">
+                <Flex
+                  flex={1}
+                  justifyContent={['center', 'left']}
+                  alignItems="center"
+                >
                   <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
                     <Flex
                       mr="24px"
@@ -336,9 +349,7 @@ export default () => {
             <Flex
               alignItems="center"
               mt={['20px', '35px']}
-              onClick={() =>
-                window.document.body.scrollTo(0, exRef.current.offsetTop - 45)
-              }
+              onClick={() => window.scrollTo(0, exRef.current.offsetTop)}
               style={{ cursor: 'pointer' }}
             >
               <Text
@@ -361,22 +372,24 @@ export default () => {
           </Flex>
           <Box pt={['40px', 6]} pb={[4, 5]}>
             <Text
-              textAlign={['left', 'center']}
+              textAlign={['center', 'center']}
               fontWeight={900}
               fontSize={['24px', '34px']}
               letterSpacing="1.3px"
               lineHeight={[1.33, 1]}
               mb={3}
+              mt={['30px', '0px']}
               color="white"
             >
-              Band Protocol {_isMobile && <br />}Provides
+              Band Protocol Provides
             </Text>
             <Text
               color="#f7f8ff"
               fontWeight={400}
-              textAlign={['left', 'center']}
+              textAlign={['center', 'center']}
               fontSize={['16px', '25px']}
               lineHeight={[1.63, 1.16]}
+              mb={[4, 0]}
             >
               Reliable Datasets for Enterprises, {_isMobile && <br />}Developers
               and Communities
@@ -439,10 +452,10 @@ export default () => {
       >
         <Text
           ref={exRef}
-          textAlign={['left', 'center']}
+          textAlign={['center', 'center']}
           fontWeight="600"
           fontSize={['24px', '32px']}
-          lineHeight={[1.33, 1]}
+          lineHeight={[1.6, 1]}
         >
           Applications Developed {_isMobile && <br />} with Band Protocol
         </Text>

@@ -222,8 +222,8 @@ const Navbar = props => {
 
   const handleScroll = useCallback(
     e => {
-      if (e.target.scrollTop < 80) return
-      const newST = Math.floor(e.target.scrollTop)
+      if (e.target.documentElement.scrollTop < 80) return
+      const newST = Math.floor(e.target.documentElement.scrollTop)
       if (!scrollHistory.current || scrollHistory.current.length === 0) {
         scrollHistory.current = [0]
       }
@@ -259,9 +259,8 @@ const Navbar = props => {
   })
 
   useEffect(() => {
-    window.document.body.addEventListener('scroll', handleScroll)
-    return () =>
-      window.document.body.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const selectTab = tabId => {
@@ -272,7 +271,7 @@ const Navbar = props => {
   const closeMenu = () => {
     setShowMenu(false)
     setShowTier2Index(0)
-    window.document.body.scrollLeft = 0
+    window.scrollLeft = 0
   }
 
   const back = () => {

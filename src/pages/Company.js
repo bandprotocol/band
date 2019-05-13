@@ -453,7 +453,7 @@ export default () => {
           <Flex
             flexDirection={['column', 'row']}
             justifyContent="center"
-            width={['calc(100vw - 20px)', '800px']}
+            width={['auto', '800px']}
             mb={['80px', '45px']}
           >
             <Flex flex={1} justifyContent="center" alignItems="center">

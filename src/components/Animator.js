@@ -14,11 +14,11 @@ export default class Animator extends React.Component {
   }
 
   componentDidMount() {
-    window.document.body.addEventListener('scroll', this.onScroll)
+    window.addEventListener('scroll', this.onScroll)
   }
 
   componentWillUnmount() {
-    window.document.body.removeEventListener('scroll', this.onScroll)
+    window.removeEventListener('scroll', this.onScroll)
   }
 
   onScroll() {
