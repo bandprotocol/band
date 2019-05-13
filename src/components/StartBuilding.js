@@ -22,6 +22,7 @@ import {
 import { isMobile } from 'ui/media'
 
 const FilledButton = styled(Button)`
+  font-family: Avenir-Medium;
   color: white;
   font-size: 16px;
   font-weight: 500;
@@ -48,6 +49,7 @@ const FilledButton = styled(Button)`
 `
 
 const OutlineButton = styled(Button)`
+  font-family: Avenir-Medium;
   color: #f7f8ff;
   font-size: 16px;
   font-weight: 500;

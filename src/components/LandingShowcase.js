@@ -192,7 +192,7 @@ export default ({
             />
           </Flex>
         </Flex>
-        <Flex mt="35px" flexDirection="row" justifyContent="center">
+        <Flex mt="60px" flexDirection="row" justifyContent="center">
           <Flex
             onClick={() => setSelectedTab(0)}
             style={{
