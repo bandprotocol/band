@@ -53,7 +53,7 @@ function* baseInitialize() {
       : 'http://localhost:3000',
     {
       walletPosition: {
-        top: 80,
+        top: 60,
         right: 130,
       },
       approvalPosition: {

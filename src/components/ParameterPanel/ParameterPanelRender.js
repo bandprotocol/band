@@ -13,9 +13,16 @@ const PrefixSelect = styled(Select).attrs({
 })`
   width: 200px;
   border-radius: 4px;
-  border: solid 1px #e7ecff;
   background-color: #ffffff;
+  line-height: 30px;
 `
+
+const selectStyles = {
+  control: (styles, { isDisabled }) => ({
+    ...styles,
+    border: isDisabled ? '1px solid #cccccc' : '1px solid #718bff',
+  }),
+}
 
 const ProposeButton = styled(Button).attrs({
   variant: 'blue',
@@ -91,6 +98,7 @@ export default ({
             options={prefixList}
             onChange={onChangePrefix}
             isDisabled={isEdit}
+            styles={selectStyles}
           />
           <Flex ml="auto">
             {isEdit ? (

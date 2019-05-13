@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
 import Eth from 'images/eth.png'
 import Wallet from 'images/blueWallet.svg'
-import Profile from 'images/profile.png'
 // import AddCommunity from 'images/add-community.svg'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Link, Image, Flex, Box, Text, Card } from 'ui/common'
@@ -249,8 +248,22 @@ export default ({
                     <Image src={Eth} width={36} height={36} />
                     {pending.length !== 0 && <Badge bg={colors.red} />}
                   </DropdownButton>
-                  <Flex ml="15px" mr="10px">
-                    <Image src={Profile} width={36} height={36} />
+                  <Flex
+                    alignItems="center"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => toggleSignOut()}
+                  >
+                    <Flex ml="15px" mr="10px">
+                      {!!user && (
+                        <Jazzicon
+                          diameter={36}
+                          seed={jsNumberForAddress(user)}
+                        />
+                      )}
+                    </Flex>
+                    <Text color="#7688f4" fontSize={3}>
+                      <i className="fas fa-sort-down" />
+                    </Text>
                   </Flex>
                 </Flex>
                 <SignOutDropDown show={showSignOut}>

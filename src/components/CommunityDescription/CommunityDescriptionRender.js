@@ -52,13 +52,28 @@ export default ({
         alignSelf="center"
         style={{ borderLeft: 'solid 1px #f2f4f9' }}
       >
-        <Field label="Website">{new URL(link).hostname}</Field>
+        <Field label="Website">
+          {new URL(link).hostname}
+          <TxHashLink href={link} pl="5px" />
+        </Field>
         <Field label="Organization">{organization}</Field>
         <Field label="Core Contract">
-          <Address>{address}</Address>
+          <Flex flexDirection="row" alignItems="center">
+            <Address>{address}</Address>
+            <TxHashLink
+              href={`https://rinkeby.etherscan.io/address/${address}`}
+              pl="5px"
+            />
+          </Flex>
         </Field>
         <Field label="ERC-20">
-          <Address>{tokenAddr}</Address>
+          <Flex flexDirection="row" alignItems="center">
+            <Address>{tokenAddr}</Address>
+            <TxHashLink
+              href={`https://rinkeby.etherscan.io/address/${tokenAddr}`}
+              pl="5px"
+            />
+          </Flex>
         </Field>
       </Box>
       <Box
