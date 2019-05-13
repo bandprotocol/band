@@ -639,7 +639,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${!showNav && !setShowMenu ? '-70px' : '0px'})`,
+        transform: `translateY(${!showNav && !showMenu ? '-70px' : '0px'})`,
       }}
     >
       <Flex
