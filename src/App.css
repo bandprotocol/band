@@ -187,7 +187,6 @@ a:not(:hover) {
 html {
   overflow: hidden;
   background: #2a304e;
-  scroll-behavior: smooth;
   max-width: 100vw;
   -webkit-overflow-scrolling: touch;
 }
@@ -197,7 +196,6 @@ body {
   height: 100%;
   max-width: 100vw;
   overflow: hidden;
-  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
