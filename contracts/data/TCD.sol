@@ -3,12 +3,12 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./TCDBase.sol";
-import "../exchange/BandExchangeInterface.sol";
 import "../BandToken.sol";
 import "../CommunityToken.sol";
 import "../Parameters.sol";
+import "../exchange/BondingCurve.sol";
+import "../exchange/BandExchangeInterface.sol";
 import "../feeless/Feeless.sol";
-import "../bonding/BondingCurve.sol";
 import "../utils/Fractional.sol";
 
 
@@ -75,17 +75,11 @@ contract TCD is TCDBase, Feeless {
     setExecDelegator(token.execDelegator());
   }
 
-  function getProviderPublicOwnership(address dataSource, address voter)
-    public view
-    returns (uint256)
-  {
+  function getProviderPublicOwnership(address dataSource, address voter)  public view returns (uint256) {
     return providers[dataSource].publicOwnerships[voter];
   }
 
-  function getStakeInProvider(address dataSource, address voter)
-    public view
-    returns (uint256)
-  {
+  function getStakeInProvider(address dataSource, address voter) public view returns (uint256) {
     DataProvider storage provider = providers[dataSource];
     if (provider.totalPublicOwnership == 0)
       return 0;
@@ -104,10 +98,7 @@ contract TCD is TCDBase, Feeless {
     return params.get(prefix, "withdraw_delay");
   }
 
-  function register(address owner, uint256 stake, address dataSource)
-    public
-    feeless(owner)
-  {
+  function register(address owner, uint256 stake, address dataSource) public feeless(owner) {
     require(token.lock(owner, stake));
     require(providers[dataSource].currentStatus == DataProviderStatus.Nothing);
     require(stake > 0 && stake >= params.get(prefix, "min_provider_stake"));
@@ -127,10 +118,7 @@ contract TCD is TCDBase, Feeless {
     _repositionUp(dataSources.length.sub(1));
   }
 
-  function vote(address voter, uint256 stake, address dataSource)
-    public
-    feeless(voter)
-  {
+  function vote(address voter, uint256 stake, address dataSource) public feeless(voter) {
     require(token.lock(voter, stake));
     DataProvider storage provider = providers[dataSource];
     uint256 newVoterTokenLock = provider.tokenLocks[voter].add(stake);
@@ -146,13 +134,11 @@ contract TCD is TCDBase, Feeless {
     require(withdrawOwnership > 0 && withdrawOwnership <= provider.publicOwnerships[voter]);
     uint256 newOwnership = provider.totalPublicOwnership.sub(withdrawOwnership);
     uint256 currentVoterStake = getStakeInProvider(dataSource, voter);
-
     if (currentVoterStake > provider.tokenLocks[voter]){
       uint256 unrealizedStake = currentVoterStake.sub(provider.tokenLocks[voter]);
       require(token.transfer(voter, unrealizedStake));
       require(token.lock(voter, unrealizedStake));
     }
-
     uint256 withdrawAmount = provider.stake.mul(withdrawOwnership).div(provider.totalPublicOwnership);
     uint256 newStake = provider.stake.sub(withdrawAmount);
     uint256 newVoterTokenLock = currentVoterStake.sub(withdrawAmount);
@@ -161,7 +147,6 @@ contract TCD is TCDBase, Feeless {
     provider.totalPublicOwnership = newOwnership;
     provider.publicOwnerships[voter] = newVoterOwnership;
     provider.tokenLocks[voter] = newVoterTokenLock;
-
     if (voter == provider.owner) {
       uint256 delay = getOwnerDelayWithdrawTime();
       if (delay == 0){
@@ -178,14 +163,12 @@ contract TCD is TCDBase, Feeless {
     } else {
       require(token.unlock(voter, withdrawAmount));
     }
-
     emit DataSourceOwnershipChanged(dataSource, voter, newVoterOwnership, newOwnership);
     emit DataSourceStakeChanged(dataSource, newStake);
     emit DataSourceVoterTokenLockChanged(dataSource, voter, newVoterTokenLock);
     if (provider.currentStatus == DataProviderStatus.Active) {
       _repositionDown(_findDataSourceIndex(dataSource));
     }
-
     if (provider.owner == voter &&
         getStakeInProvider(dataSource, provider.owner) < params.get(prefix, "min_provider_stake") &&
         provider.currentStatus == DataProviderStatus.Active) {
@@ -204,7 +187,6 @@ contract TCD is TCDBase, Feeless {
     dataSources.pop();
   }
 
-  ////////////////////////////////////////////////////////////
   function distributeFee(uint256 tokenAmount) public {
     require(address(this).balance > 0);
     exchange.convertFromEthToBand.value(address(this).balance)();
@@ -234,7 +216,21 @@ contract TCD is TCDBase, Feeless {
     emit OwnerWithdrawReceiptUnlocked(receiptId, receipt.owner, receipt.amount);
   }
 
-  ////////////////////////////////////////////////////////////
+  function _findDataSourceIndex(address dataSource) internal view returns (uint256) {
+    for (uint256 index = 0; index < dataSources.length; ++index) {
+      if (dataSources[index] == dataSource) return index;
+    }
+    assert(false);
+  }
+
+  function _isLhsBetterThanRhs(uint256 left, uint256 right) internal view returns (bool) {
+    DataProvider storage leftProvider = providers[dataSources[left]];
+    DataProvider storage rightProvider = providers[dataSources[right]];
+    if (leftProvider.currentStatus != DataProviderStatus.Active) return false;
+    if (rightProvider.currentStatus != DataProviderStatus.Active) return true;
+    return leftProvider.stake >= rightProvider.stake;
+  }
+
   function _repositionUp(uint256 dataSourceIndex) internal {
     bool changed = false;
     for (; dataSourceIndex > 0; --dataSourceIndex) {
@@ -262,27 +258,6 @@ contract TCD is TCDBase, Feeless {
     if (changed) emit DelegatedDataSourcesChanged();
   }
 
-  function _findDataSourceIndex(address dataSource)
-    internal view
-    returns (uint256)
-  {
-    for (uint256 index = 0; index < dataSources.length; ++index) {
-      if (dataSources[index] == dataSource) return index;
-    }
-    assert(false);
-  }
-
-  function _isLhsBetterThanRhs(uint256 left, uint256 right)
-    internal view
-    returns (bool)
-  {
-    DataProvider storage leftProvider = providers[dataSources[left]];
-    DataProvider storage rightProvider = providers[dataSources[right]];
-    if (leftProvider.currentStatus != DataProviderStatus.Active) return false;
-    if (rightProvider.currentStatus != DataProviderStatus.Active) return true;
-    return leftProvider.stake >= rightProvider.stake;
-  }
-
   function _swapDataSource(uint256 left, uint256 right) internal {
     address temp = dataSources[left];
     dataSources[left] = dataSources[right];
@@ -298,7 +273,6 @@ contract TCD is TCDBase, Feeless {
     provider.publicOwnerships[voter] = newVoterPublicOwnership;
     provider.stake = newStake;
     provider.totalPublicOwnership = newTotalPublicOwnership;
-
     emit DataSourceOwnershipChanged(dataSource, voter, newVoterPublicOwnership, newTotalPublicOwnership);
   }
 }

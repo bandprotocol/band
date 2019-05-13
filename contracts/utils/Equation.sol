@@ -5,13 +5,8 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../thirdparty/BancorPower.sol";
 
 
-/**
- * @title Equation
- *
- * @dev Equation library abstracts the representation of mathematics equation.
- * As of current, an equation is basically an expression tree of constants,
- * one variable (X), and operators.
- */
+/// Equation library abstracts the representation of mathematics equation. As of current,
+/// an equation is basically an expression tree of constants, one variable (X), and operators.
 library Equation {
   using SafeMath for uint256;
 
@@ -77,10 +72,6 @@ library Equation {
     uint256 value;
   }
 
-  /**
-   * @dev An internal struct to keep track of expression type. This is to make
-   * sure than the given equation type-checks.
-   */
   enum ExprType {
     Invalid,
     Math,
@@ -132,37 +123,27 @@ library Equation {
    * @param _expressions array of opcodes/values to initialize.
    */
   function init(Node[] storage self, uint256[] calldata _expressions) external {
-    // Init should only be called when the equation is not yet initialized.
+    /// Init should only be called when the equation is not yet initialized.
     assert(self.length == 0);
-
-    // Limit expression length to < 256 to make sure gas cost is managable.
+    /// Limit expression length to < 256 to make sure gas cost is managable.
     require(_expressions.length < 256);
-
     for (uint8 idx = 0; idx < _expressions.length; ++idx) {
-      // Get the next opcode. Obviously it must be within the opcode range.
       uint256 opcode = _expressions[idx];
       require(opcode < OPCODE_INVALID);
-
       Node memory node;
       node.opcode = uint8(opcode);
-
-      // Get the node's value. Only applicable on Integer Constant case.
+      /// Get the node's value. Only applicable on Integer Constant case.
       if (opcode == OPCODE_CONST) {
         node.value = _expressions[++idx];
       }
-
       self.push(node);
     }
 
-    // Actual code to create the tree. We also assert and the end that all
-    // of the provided expressions are exhausted.
     (uint8 lastNodeIndex,) = populateTree(self, 0);
     require(lastNodeIndex == self.length - 1);
   }
 
-  /**
-   * @dev Calculate the Y position from the X position for this equation.
-   */
+  /// Calculate the Y position from the X position for this equation.
   function calculate(Node[] storage self, uint256 xValue)
     external
     view
@@ -171,9 +152,7 @@ library Equation {
     return solveMath(self, 0, xValue);
   }
 
-  /**
-   * @dev Return the number of children the given opcode node has.
-   */
+  /// Return the number of children the given opcode node has.
   function getChildrenCount(uint8 opcode) private pure returns (uint8) {
     if (opcode <= OPCODE_VAR) {
       return 0;
@@ -189,15 +168,9 @@ library Equation {
     assert(false);
   }
 
-  /**
-   * @dev Check whether the given opcode and list of expression types match.
-   * Execute revert EVM opcode on failure.
-   * @return The type of this expression itself.
-   */
+  /// Check whether the given opcode and list of expression types match. Revert on failure.
   function checkExprType(uint8 opcode, ExprType[] memory types)
-    private
-    pure
-    returns (ExprType)
+    private pure returns (ExprType)
   {
     if (opcode <= OPCODE_VAR) {
       return ExprType.Math;
@@ -239,30 +212,21 @@ library Equation {
     assert(false);
   }
 
-  /**
-   * @dev Helper function to recursively populate node information following
-   * the given pre-order node list. It inspects the opcode and recursively
-   * call populateTree(s) accordingly.
-   *
-   * @param self storage pointer to equation data to build tree.
-   * @param currentNodeIndex the index of the current node to populate info.
-   * @return An (uint8, bool). The first value represents the last
-   * (highest/rightmost) node ndex of the current subtree. The second value
-   * indicates the type that one would get from evaluating this subtree.
-   */
+  /// Helper function to recursively populate node information following the given pre-order
+  /// node list. It inspects the opcode and recursively call populateTree(s) accordingly.
+  /// @param self storage pointer to equation data to build tree.
+  /// @param currentNodeIndex the index of the current node to populate info.
+  /// @return An (uint8, bool). The first value represents the last  (highest/rightmost) node
+  /// index of the current subtree. The second value indicates the type of this subtree.
   function populateTree(Node[] storage self, uint8 currentNodeIndex)
-    private
-    returns (uint8, ExprType)
+    private returns (uint8, ExprType)
   {
     require(currentNodeIndex < self.length);
     Node storage node = self[currentNodeIndex];
-
     uint8 opcode = node.opcode;
     uint8 childrenCount = getChildrenCount(opcode);
-
     ExprType[] memory childrenTypes = new ExprType[](childrenCount);
     uint8 lastNodeIdx = currentNodeIndex;
-
     for (uint8 idx = 0; idx < childrenCount; ++idx) {
       if (idx == 0) node.child0 = lastNodeIdx + 1;
       else if (idx == 1) node.child1 = lastNodeIdx + 1;
@@ -271,24 +235,17 @@ library Equation {
       else assert(false);
       (lastNodeIdx, childrenTypes[idx]) = populateTree(self, lastNodeIdx + 1);
     }
-
     ExprType exprType = checkExprType(opcode, childrenTypes);
     return (lastNodeIdx, exprType);
   }
 
 
-  /**
-   * @dev Calculate the arithmetic value of this sub-expression at the given
-   * X position.
-   */
+  /// Calculate the arithmetic value of this sub-expression at the given X position.
   function solveMath(Node[] storage self, uint8 nodeIdx, uint256 xValue)
-    private
-    view
-    returns (uint256)
+    private view returns (uint256)
   {
     Node storage node = self[nodeIdx];
     uint8 opcode = node.opcode;
-
     if (opcode == OPCODE_CONST) {
       return node.value;
     } else if (opcode == OPCODE_VAR) {
@@ -297,19 +254,14 @@ library Equation {
       uint256 childValue = solveMath(self, node.child0, xValue);
       uint256 temp = childValue.add(1).div(2);
       uint256 result = childValue;
-
       while (temp < result) {
         result = temp;
         temp = childValue.div(temp).add(temp).div(2);
       }
-
       return result;
-
     } else if (opcode >= OPCODE_ADD && opcode <= OPCODE_PCT) {
-
       uint256 leftValue = solveMath(self, node.child0, xValue);
       uint256 rightValue = solveMath(self, node.child1, xValue);
-
       if (opcode == OPCODE_ADD) {
         return leftValue.add(rightValue);
       } else if (opcode == OPCODE_SUB) {
@@ -330,11 +282,8 @@ library Equation {
       }
     } else if (opcode == OPCODE_IF) {
       bool condValue = solveBool(self, node.child0, xValue);
-      if (condValue) {
-        return solveMath(self, node.child1, xValue);
-      } else {
-        return solveMath(self, node.child2, xValue);
-      }
+      if (condValue) return solveMath(self, node.child1, xValue);
+      else return solveMath(self, node.child2, xValue);
     } else if (opcode == OPCODE_BANCOR_LOG) {
       uint256 multiplier = solveMath(self, node.child0, xValue);
       uint256 baseN = solveMath(self, node.child1, xValue);
@@ -352,24 +301,17 @@ library Equation {
     assert(false);
   }
 
-  /**
-   * @dev Calculate the arithmetic value of this sub-expression.
-   */
+  /// Calculate the arithmetic value of this sub-expression.
   function solveBool(Node[] storage self, uint8 nodeIdx, uint256 xValue)
-    private
-    view
-    returns (bool)
+    private view returns (bool)
   {
     Node storage node = self[nodeIdx];
     uint8 opcode = node.opcode;
-
     if (opcode == OPCODE_NOT) {
       return !solveBool(self, node.child0, xValue);
     } else if (opcode >= OPCODE_EQ && opcode <= OPCODE_GE) {
-
       uint256 leftValue = solveMath(self, node.child0, xValue);
       uint256 rightValue = solveMath(self, node.child1, xValue);
-
       if (opcode == OPCODE_EQ) {
         return leftValue == rightValue;
       } else if (opcode == OPCODE_NE) {
@@ -386,25 +328,17 @@ library Equation {
     } else if (opcode >= OPCODE_AND && opcode <= OPCODE_OR) {
       bool leftBoolValue = solveBool(self, node.child0, xValue);
       if (opcode == OPCODE_AND) {
-        if (leftBoolValue)
-          return solveBool(self, node.child1, xValue);
-        else
-          return false;
+        if (leftBoolValue) return solveBool(self, node.child1, xValue);
+        else return false;
       } else if (opcode == OPCODE_OR) {
-        if (leftBoolValue)
-          return true;
-        else
-          return solveBool(self, node.child1, xValue);
+        if (leftBoolValue) return true;
+        else return solveBool(self, node.child1, xValue);
       }
     } else if (opcode == OPCODE_IF) {
       bool condValue = solveBool(self, node.child0, xValue);
-      if (condValue) {
-        return solveBool(self, node.child1, xValue);
-      } else {
-        return solveBool(self, node.child2, xValue);
-      }
+      if (condValue) return solveBool(self, node.child1, xValue);
+      else return solveBool(self, node.child2, xValue);
     }
-
     assert(false);
   }
 }

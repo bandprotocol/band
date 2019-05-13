@@ -1,8 +1,7 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-
-import "../bonding/BondingCurve.sol";
+import "../exchange/BondingCurve.sol";
 
 
 contract BondingCurveMock is Ownable, BondingCurve {

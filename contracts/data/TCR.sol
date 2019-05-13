@@ -3,7 +3,6 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-
 import "../CommunityToken.sol";
 import "../Parameters.sol";
 import "../token/ERC20Acceptor.sol";
@@ -12,95 +11,28 @@ import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 
 
-/**
- * @title TCR
- *
- * @dev TCR contract implements Token Curated Registry logic, with reward
- * distribution allocated equally to both winning and losing sides.
- */
 contract TCR is Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
 
-  event ApplicationSubmitted(  // A new entry is submitted to the TCR.
-    bytes32 data,
-    address indexed proposer,
-    uint256 listAt,
-    uint256 deposit
-  );
-
-  event EntryDeposited(  // Someone deposits token to an entry
-    bytes32 indexed data,
-    uint256 value
-  );
-
-  event EntryWithdrawn(  // Someone withdraws token from an entry
-    bytes32 indexed data,
-    uint256 value
-  );
-
-  event EntryExited(  // An entry is exited
-    bytes32 indexed data
-  );
-
-  event ChallengeInitiated(  // An new challenge is initiated.
-    bytes32 indexed data,
-    uint256 indexed challengeId,
-    address indexed challenger,
-    uint256 stake,
-    bytes32 reasonData,
-    uint256 proposerVote,
-    uint256 challengeVote
-  );
-
-  event ChallengeVoteCommitted(  // A challenge vote is committed by voter
-    uint256 indexed challengeId,
-    address indexed voter,
-    bytes32 commitValue
-  );
-
-  event ChallengeVoteRevealed(   // A challenge vote is revealed
-    uint256 indexed challengeId,
-    address indexed voter,
-    bool voteKeep,
-    uint256 weight
-  );
-
-  event ChallengeSuccess(  // A challenge is successful.
-    bytes32 indexed data,
-    uint256 indexed challengeId,
-    uint256 voterRewardPool,
-    uint256 challengerReward
-  );
-
-  event ChallengeFailed(  // A challenge has failed.
-    bytes32 indexed data,
-    uint256 indexed challengeId,
-    uint256 voterRewardPool,
-    uint256 proposerReward
-  );
-
-  event ChallengeInconclusive(  // A challenge is not conclusive
-    bytes32 indexed data,
-    uint256 indexed challengeId
-  );
-
-  event ChallengeRewardClaimed(  // A reward is claimed by a user.
-    uint256 indexed challengeId,
-    address indexed voter,
-    uint256 reward
-  );
+  event ApplicationSubmitted(bytes32 data, address indexed proposer, uint256 listAt, uint256 deposit);
+  event EntryDeposited(bytes32 indexed data, uint256 value);
+  event EntryWithdrawn(bytes32 indexed data,uint256 value);
+  event EntryExited(bytes32 indexed data);
+  event ChallengeInitiated(bytes32 indexed data, uint256 indexed challengeId, address indexed challenger, uint256 stake, bytes32 reasonData, uint256 proposerVote, uint256 challengerVote);
+  event ChallengeVoteCommitted(uint256 indexed challengeId,address indexed voter, bytes32 commitValue);
+  event ChallengeVoteRevealed(uint256 indexed challengeId,address indexed voter, bool voteKeep, uint256 weight);
+  event ChallengeSuccess(bytes32 indexed data,uint256 indexed challengeId, uint256 voterRewardPool, uint256 challengerReward);
+  event ChallengeFailed(bytes32 indexed data,uint256 indexed challengeId, uint256 voterRewardPool, uint256 proposerReward);
+  event ChallengeInconclusive(bytes32 indexed data,uint256 indexed challengeId);
+  event ChallengeRewardClaimed(uint256 indexed challengeId,address indexed voter, uint256 reward);
 
   ExpressionInterface public depositDecayFunction;
-
   CommunityToken public token;
   Parameters public params;
-
-  // Namespace prefix for all Parameters (See Parameters.sol) in this TCR
   bytes8 public prefix;
 
-  // A TCR entry is considered to exist in 'entries' map iff its
-  // 'listedAt' is nonzero.
+  /// A TCR entry is considered to exist in 'entries' map iff its 'listedAt' is nonzero.
   struct Entry {
     address proposer;        // The entry proposer
     uint256 deposit;         // Amount token that is not on challenge stake
@@ -108,41 +40,30 @@ contract TCR is Feeless, ERC20Acceptor {
     uint256 challengeId;     // Id of challenge, applicable if not zero
   }
   enum ChallengeState { Invalid, Open, Kept, Removed, Inconclusive }
-
   enum VoteStatus { Nothing, Committed, VoteKeep, VoteRemove, Claimed }
-  // A challenge represent a challenge for a TCR entry. All challenges ever
-  // existed are stored in 'challenges' map below.
+
+  /// A challenge represent a challenge for a TCR entry.
   struct Challenge {
     bytes32 entryData;            // The hash of data that is in question
     bytes32 reasonData;           // The hash of reason for this challenge
     address challenger;           // The challenger
     uint256 rewardPool;           // Remaining reward pool. Relevant after resolved.
     uint256 remainingRewardVotes; // Remaining voting power to claim rewards.
-
     uint256 commitEndTime;
     uint256 revealEndTime;
     uint256 snapshotNonce;
-
     uint256 voteRemoveRequiredPct;
     uint256 voteMinParticipation;
-
     uint256 keepCount;
     uint256 removeCount;
     uint256 totalCommitCount;
-
     mapping (address => bytes32) voteCommits;
     mapping (address => VoteStatus) voteStatuses;
     ChallengeState state;
   }
 
-  // Mapping of entry to its metadata. An entry is considered exist if its
-  // 'listedAt' is nonzero.
   mapping (bytes32 => Entry) public entries;
-
-  // Mapping of all changes ever exist in this contract.
   mapping (uint256 => Challenge) public challenges;
-
-  // The Id of the next challenge.
   uint256 nextChallengeNonce = 1;
 
   constructor(
@@ -150,9 +71,7 @@ contract TCR is Feeless, ERC20Acceptor {
     CommunityToken _token,
     Parameters _params,
     ExpressionInterface decayFunction
-  )
-    public
-  {
+  ) public {
     prefix = _prefix;
     token = _token;
     params = _params;
@@ -269,7 +188,7 @@ contract TCR is Feeless, ERC20Acceptor {
     Entry storage entry = entries[data];
     require(entry.proposer == sender);
     require(entry.challengeId == 0);
-    deleteEntry(data);
+    _deleteEntry(data);
     emit EntryExited(data);
   }
 
@@ -386,13 +305,13 @@ contract TCR is Feeless, ERC20Acceptor {
       challenge.voteStatuses[entry.proposer] = VoteStatus.Claimed;
       emit ChallengeFailed(data, challengeId, challenge.rewardPool, winnerTotalReward);
     } else if (result == ChallengeState.Removed) {
-      uint256 challengeVote = token.historicalVotingPowerAtNonce(challenge.challenger, challenge.snapshotNonce);
-      uint256 challengeVoteReward = rewardPool.mul(challengeVote).div(challenge.removeCount);
-      winnerTotalReward = winnerTotalReward.add(challengeVoteReward);
+      uint256 challengerVote = token.historicalVotingPowerAtNonce(challenge.challenger, challenge.snapshotNonce);
+      uint256 challengerVoteReward = rewardPool.mul(challengerVote).div(challenge.removeCount);
+      winnerTotalReward = winnerTotalReward.add(challengerVoteReward);
       require(token.transfer(challenge.challenger, winnerTotalReward));
-      challenge.rewardPool = rewardPool.sub(challengeVoteReward);
-      challenge.remainingRewardVotes = challenge.removeCount.sub(challengeVote);
-      deleteEntry(data);
+      challenge.rewardPool = rewardPool.sub(challengerVoteReward);
+      challenge.remainingRewardVotes = challenge.removeCount.sub(challengerVote);
+      _deleteEntry(data);
       challenge.voteStatuses[challenge.challenger] = VoteStatus.Claimed;
       emit ChallengeSuccess(data, challengeId, challenge.rewardPool, winnerTotalReward);
     } else if (result == ChallengeState.Inconclusive) {
@@ -454,10 +373,7 @@ contract TCR is Feeless, ERC20Acceptor {
     }
   }
 
-  /**
-   * @dev Delete the given TCR entry and refund the token to entry owner
-   */
-  function deleteEntry(bytes32 data) internal {
+  function _deleteEntry(bytes32 data) internal {
     uint256 entryDeposit = entries[data].deposit;
     address proposer = entries[data].proposer;
     if (entryDeposit > 0) {

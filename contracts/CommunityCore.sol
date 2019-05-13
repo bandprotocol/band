@@ -2,11 +2,11 @@ pragma solidity 0.5.0;
 
 import "./BandRegistryBase.sol";
 import "./BandToken.sol";
-import "./CommunityToken.sol";
-import "./Parameters.sol";
-import "./bonding/BondingCurve.sol";
-import "./data/TCD.sol";
-import "./data/TCR.sol";
+import "./factory/BondingCurveFactory.sol";
+import "./factory/CommunityTokenFactory.sol";
+import "./factory/ParametersFactory.sol";
+import "./factory/TCDFactory.sol";
+import "./factory/TCRFactory.sol";
 import "./utils/Expression.sol";
 
 

@@ -1,15 +1,10 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 import "../utils/Expression.sol";
 
-
-/**
- * @title BondingCurve
- */
 contract BondingCurve is ERC20Acceptor {
   using SafeMath for uint256;
 
@@ -66,6 +61,22 @@ contract BondingCurve is ERC20Acceptor {
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
   }
 
+  modifier _adjustAutoInflation() {
+    uint256 currentSupply = getBondingCurveSupplyPoint();
+    if (currentSupply != 0 && lastInflationTime < now) {
+      uint256 pastSeconds = now.sub(lastInflationTime);
+      uint256 inflatingSupply = currentSupply
+        .mul(pastSeconds).mul(getInflationRateNumerator()).div(RATIONAL_DENOMINATOR);
+      if (inflatingSupply != 0) {
+        currentMintedTokens = currentMintedTokens.add(inflatingSupply);
+        _rewardBondingCurveOwner(inflatingSupply);
+        _adjustcurveMultiplier();
+      }
+    }
+    lastInflationTime = now;
+    _;
+  }
+
   function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
     public
     requireToken(collateralToken, buyer, priceLimit)
@@ -115,22 +126,6 @@ contract BondingCurve is ERC20Acceptor {
     address beneficiary = getRevenueBeneficiary();
     require(bondedToken.mint(beneficiary, rewardAmount));
     emit RevenueCollect(beneficiary, rewardAmount);
-  }
-
-  modifier _adjustAutoInflation() {
-    uint256 currentSupply = getBondingCurveSupplyPoint();
-    if (currentSupply != 0 && lastInflationTime < now) {
-      uint256 pastSeconds = now.sub(lastInflationTime);
-      uint256 inflatingSupply = currentSupply
-        .mul(pastSeconds).mul(getInflationRateNumerator()).div(RATIONAL_DENOMINATOR);
-      if (inflatingSupply != 0) {
-        currentMintedTokens = currentMintedTokens.add(inflatingSupply);
-        _rewardBondingCurveOwner(inflatingSupply);
-        _adjustcurveMultiplier();
-      }
-    }
-    lastInflationTime = now;
-    _;
   }
 
   function _adjustcurveMultiplier() internal {

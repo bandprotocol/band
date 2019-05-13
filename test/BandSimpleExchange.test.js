@@ -12,9 +12,6 @@ contract('BandSimpleExchange', ([owner, alice]) => {
     await this.bse.setExchangeRate('10000000000000000000', { from: owner });
     await this.band.mint(owner, 100000000, { from: owner });
     await this.band.transfer(alice, 10000000, { from: owner });
-    await this.band.approve(this.bse.address, '10000000', {
-      from: owner,
-    });
   });
 
   context('Exchange Basic Functionality', () => {
@@ -24,15 +21,12 @@ contract('BandSimpleExchange', ([owner, alice]) => {
     it('Owner should be able to add BandToken to exchange', async () => {
       const ownerPrevBalance = await this.band.balanceOf(owner);
 
-      await this.bse.addBand(owner, 50000, { from: owner });
+      await this.band.transfer(this.bse.address, 50000, { from: owner });
 
       (await this.band.balanceOf(owner))
         .toNumber()
         .should.eq(ownerPrevBalance - 50000);
       (await this.band.balanceOf(this.bse.address)).toNumber().should.eq(50000);
-    });
-    it('BandToken cant be added to exchange by none owner address', async () => {
-      await shouldFail.reverting(this.bse.addBand(alice, 1, { from: alice }));
     });
     it('Owner can set exchange rate', async () => {
       (await this.bse.exchangeRate())
@@ -50,7 +44,7 @@ contract('BandSimpleExchange', ([owner, alice]) => {
     });
     it('Can convert ETH to BandToken', async () => {
       await this.bse.setExchangeRate('1000000000000000000000', { from: owner });
-      await this.bse.addBand(owner, 10000000, { from: owner });
+      await this.band.transfer(this.bse.address, 10000000, { from: owner });
 
       (await this.band.balanceOf(owner)).toString().should.eq('80000000');
       (await this.band.balanceOf(this.bse.address))

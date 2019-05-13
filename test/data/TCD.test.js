@@ -8,7 +8,7 @@ const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const TCD = artifacts.require('TCD');
-const TrustedDataSource = artifacts.require('TrustedDataSource');
+const SimpleDataSource = artifacts.require('SimpleDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 
 require('chai').should();
@@ -93,11 +93,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       { from: owner },
     );
 
-    await this.band.approve(this.exchange.address, '10000000', {
-      from: owner,
-    });
-
-    await this.exchange.addBand(owner, 10000000, { from: owner });
+    await this.band.transfer(this.exchange.address, 10000000, { from: owner });
     await this.exchange.setExchangeRate('1000000000000000000000', {
       from: owner,
     });
@@ -437,7 +433,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
   });
   context('Get', () => {
     beforeEach(async () => {
-      this.ownerSource = await TrustedDataSource.new('From owner', {
+      this.ownerSource = await SimpleDataSource.new('From owner', {
         from: owner,
       });
       await this.ownerSource.setNumber(web3.utils.fromAscii('P'), 20, {
@@ -446,7 +442,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(owner, 40, this.ownerSource.address, {
         from: owner,
       });
-      this.aliceSource = await TrustedDataSource.new('From alice', {
+      this.aliceSource = await SimpleDataSource.new('From alice', {
         from: alice,
       });
       await this.aliceSource.setNumber(web3.utils.fromAscii('P'), 20, {
@@ -455,12 +451,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(alice, 30, this.aliceSource.address, {
         from: alice,
       });
-      this.bobSource = await TrustedDataSource.new('From bob', { from: bob });
+      this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
       await this.bobSource.setNumber(web3.utils.fromAscii('P'), 10, {
         from: bob,
       });
       await this.tcd.register(bob, 20, this.bobSource.address, { from: bob });
-      this.carolSource = await TrustedDataSource.new('From carol', {
+      this.carolSource = await SimpleDataSource.new('From carol', {
         from: carol,
       });
       await this.carolSource.setNumber(web3.utils.fromAscii('P'), 11, {
@@ -625,7 +621,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x' + calldata.slice(138),
         { from: owner },
       );
-      this.ownerSource = await TrustedDataSource.new('From owner', {
+      this.ownerSource = await SimpleDataSource.new('From owner', {
         from: owner,
       });
       await this.ownerSource.setNumber(web3.utils.fromAscii('P'), 20, {
@@ -634,7 +630,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(owner, 40, this.ownerSource.address, {
         from: owner,
       });
-      this.aliceSource = await TrustedDataSource.new('From alice', {
+      this.aliceSource = await SimpleDataSource.new('From alice', {
         from: alice,
       });
       await this.aliceSource.setNumber(web3.utils.fromAscii('P'), 20, {
@@ -643,12 +639,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(alice, 30, this.aliceSource.address, {
         from: alice,
       });
-      this.bobSource = await TrustedDataSource.new('From bob', { from: bob });
+      this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
       await this.bobSource.setNumber(web3.utils.fromAscii('P'), 10, {
         from: bob,
       });
       await this.tcd.register(bob, 20, this.bobSource.address, { from: bob });
-      this.carolSource = await TrustedDataSource.new('From carol', {
+      this.carolSource = await SimpleDataSource.new('From carol', {
         from: carol,
       });
       await this.carolSource.setNumber(web3.utils.fromAscii('P'), 11, {

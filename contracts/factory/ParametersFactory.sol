@@ -6,12 +6,8 @@ import "../feeless/ExecutionDelegator.sol";
 
 
 library ParametersFactory {
-  function create(CommunityToken token)
-    external
-    returns (Parameters)
-  {
-    Parameters params = new Parameters(token);
-    return params;
+  function create(CommunityToken token) external returns (Parameters) {
+    return new Parameters(token);
   }
 }
 

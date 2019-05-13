@@ -1,6 +1,6 @@
 pragma solidity 0.5.0;
 
-import "../bonding/ParameterizedBondingCurve.sol";
+import "../exchange/ParameterizedBondingCurve.sol";
 import "../token/ERC20Interface.sol";
 import "../Parameters.sol";
 import "../utils/Expression.sol";
@@ -12,16 +12,7 @@ library BondingCurveFactory {
     ERC20Interface bondedToken,
     ExpressionInterface collateralExpression,
     Parameters params
-  )
-    external
-    returns (BondingCurve)
-  {
-    BondingCurve curve = new ParameterizedBondingCurve(
-      collateralToken,
-      bondedToken,
-      collateralExpression,
-      params
-    );
-    return curve;
+  ) external returns (BondingCurve) {
+    return new ParameterizedBondingCurve(collateralToken, bondedToken, collateralExpression, params);
   }
 }

@@ -3,10 +3,7 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/cryptography/ECDSA.sol";
 
-/**
- * @title ExecutionDelegator
- * @dev Allows trustless delegated execution of transactions.
- */
+
 contract ExecutionDelegator {
   using SafeMath for uint256;
 
@@ -18,15 +15,10 @@ contract ExecutionDelegator {
     bytes4 funcInterface
   );
 
-  // Mapping from address to lastMsTime of delegated execution
   mapping (address => uint256) public lastMsTimes;
 
-  /**
-  * @dev Verify that the signature of sender is consistent with time and data
-  */
   function verify(address sender, uint256 time, bytes memory data, bytes memory sig)
-    internal pure
-    returns (bool)
+    public pure returns (bool)
   {
     bytes32 hash = ECDSA.toEthSignedMessageHash(
       keccak256(abi.encodePacked(time, data))
@@ -34,15 +26,13 @@ contract ExecutionDelegator {
     return sender == ECDSA.recover(hash, sig);
   }
 
-  /**
-  * @dev Perform delegated execution
-  * @param sender The address that wants to send this transaction feelessly
-  * @param to Address of contract that the sender wants to call
-  * @param msTime Time at which the transaction is signed. Must not be older or newer than 1 hour
-  * @param funcInterface Signature of the function in the contract "to" to call
-  * @param data Bytes-encoded arguments of the function, excluding the first parameter (sender)
-  * @param senderSig Signature of user for (time, data)
-  */
+  /// Perform delegated execution
+  /// @param sender The address that wants to send this transaction feelessly
+  /// @param to Address of contract that the sender wants to call
+  /// @param msTime Time at which the transaction is signed. Must not be older or newer than 1 hour
+  /// @param funcInterface Signature of the function in the contract "to" to call
+  /// @param data Bytes-encoded arguments of the function, excluding the first parameter (sender)
+  /// @param senderSig Signature of user for (time, data)
   function sendDelegatedExecution(
     address sender,
     address to,

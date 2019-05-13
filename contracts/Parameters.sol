@@ -2,15 +2,11 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-
 import "./feeless/Feeless.sol";
 import "./token/SnapshotToken.sol";
 import "./utils/Fractional.sol";
 
 
-/// @title Parameters
-/// @dev Parameter contract is a one-per-community contract that maintains configuration of
-/// everything in the community, including liquidity spread, vote quorums, etc.
 contract Parameters is Ownable, Feeless {
   using SafeMath for uint256;
   using Fractional for uint256;
