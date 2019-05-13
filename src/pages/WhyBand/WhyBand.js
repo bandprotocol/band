@@ -20,6 +20,7 @@ import { isMobile } from 'ui/media'
 import StartBuilding from 'components/StartBuilding'
 
 import WhyBand from 'images/whyband.png'
+import LayersImg from 'images/layers.png'
 import SDAImg from 'images/solve-data-availability.svg'
 import SDRImg from 'images/solve-data-reliability.svg'
 
@@ -28,7 +29,7 @@ const WithDotLeft = ({ text }) => (
     <Text color="#ffca55" mr="10px" lineHeight={1.94}>
       •
     </Text>
-    <Text lineHeight={1.94}>{text}</Text>
+    <Text lineHeight={2.25}>{text}</Text>
   </Flex>
 )
 
@@ -56,9 +57,9 @@ export default () => {
           >
             Availability and reliability are the two main problems when
             incorporating data into any decentralized application. Band Protocol
-            solves this problem by using token incentive structures to ensure
-            data accuracy, while utilizing the open nature of blockchains to
-            distribute data in a fair and transparent manner.
+            solves this problem by using crypto-economic incentives structures
+            to ensure data accuracy, while utilizing the open nature of
+            blockchains to distribute data in a fair and transparent manner.
           </Text>
           <Image
             src={WhyBand}
@@ -85,23 +86,22 @@ export default () => {
               layer by providing reliable data for applications that require
               <br />
               <br />
-              {_isMobile ? (
-                <React.Fragment>
+              <Flex flexDirection={['column', 'row']}>
+                <Flex flexDirection="column" flex={1}>
                   <WithDotLeft text=" Off-chain oracles" />
                   <WithDotLeft text="Identity management" />
                   <WithDotLeft text="KYC / AML" />
                   <WithDotLeft text="Ranking" />
                   <WithDotLeft text="Data source for smart contracts" />
-                </React.Fragment>
-              ) : (
-                <Text width={1} textAlign="left" pl="15%">
-                  <WithDotLeft text=" Off-chain oracles" />
-                  <WithDotLeft text="Identity management" />
-                  <WithDotLeft text="KYC / AML" />
-                  <WithDotLeft text="Ranking" />
-                  <WithDotLeft text="Data source for smart contracts" />
-                </Text>
-              )}
+                </Flex>
+                <Flex
+                  mt={['30px', '0px']}
+                  flex={1}
+                  justifyContent={['center', 'flex-end']}
+                >
+                  <Image src={LayersImg} height={['200px', '200px']} />
+                </Flex>
+              </Flex>
             </Text>
           </Card>
         </Flex>
@@ -123,12 +123,20 @@ export default () => {
             flexDirection={['column', 'row']}
             mb={['430px', '200px']}
           >
-            <Flex flex={1} flexDirection="column">
+            <Flex
+              flex={1}
+              flexDirection="column"
+              alignItems={['center', 'flex-start']}
+            >
               <Image src={SDAImg} width="100px" />
               <Text my="20px" fontSize="24px">
                 Data Availability
               </Text>
-              <Text lineHeight={1.5}>
+              <Text
+                lineHeight={1.5}
+                width={['calc(100vw - 80px)', 'auto']}
+                textAlign={['center', 'left']}
+              >
                 Band allows DApps to access trusted data synchronously via a
                 universal Query Interface, eliminating the need to rely on
                 off-chain oracle services
@@ -139,12 +147,17 @@ export default () => {
               mt={['30px', '0px']}
               ml={['0px', '100px']}
               flexDirection="column"
+              alignItems={['center', 'flex-start']}
             >
               <Image src={SDRImg} width="100px" />
               <Text my="20px" fontSize="24px">
                 Data Reliability
               </Text>
-              <Text lineHeight={1.5}>
+              <Text
+                lineHeight={1.5}
+                width={['calc(100vw - 80px)', 'auto']}
+                textAlign={['center', 'left']}
+              >
                 Band incentivizes curators to provide high-quality,
                 non-fraudulent data through crypto-economic mechanisms
               </Text>

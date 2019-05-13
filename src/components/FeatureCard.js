@@ -48,14 +48,13 @@ export default ({
       <AbsoluteLink href={link} style={{ textDecoration: 'none' }}>
         <Flex
           pl="30px"
-          pb={isMobile ? '10px' : '0px'}
           style={{
             borderTop: '1px solid #eaeeff',
             position: 'relative',
             height: 60,
+            minHeight: 60,
+            maxHeight: 60,
           }}
-          mt="auto"
-          flex="0 0 60px"
           alignItems="center"
           css={{
             i: { transition: 'transform 200ms' },

@@ -394,9 +394,13 @@ export default () => {
               link="https://data.bandprotocol.com/"
               mr="36px"
             >
-              <Box mt={['0px', '0px']}>
-                <Image src={LandingBandDB} height="92px" />
-              </Box>
+              <Flex
+                style={{ maxHeight: '100px' }}
+                mb="auto"
+                pl={['20px', '20px']}
+              >
+                <Image src={LandingBandDB} height="80px" />
+              </Flex>
             </FeatureCard>
             <FeatureCard
               isMobile={_isMobile}
@@ -407,9 +411,13 @@ export default () => {
               linkText="Governance Portal"
               link="https://app.bandprotocol.com/"
             >
-              <Box mt="33px" pl="30px">
-                <Image src={LandingDataGov} width="215px" />
-              </Box>
+              <Flex
+                style={{ maxHeight: '100px' }}
+                mb="auto"
+                pl={['20px', '20px']}
+              >
+                <Image src={LandingDataGov} height="80px" />
+              </Flex>
             </FeatureCard>
           </Flex>
         </PageContainer>
