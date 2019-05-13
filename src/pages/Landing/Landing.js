@@ -184,7 +184,7 @@ export default () => {
                   mt={['30px', '0px']}
                   textAlign={['center', 'left']}
                 >
-                  Join Our Community :
+                  Join Our Community {!_isMobile && ':'}
                 </Text>
                 <Flex
                   flex={1}
