@@ -134,11 +134,15 @@ export default () => {
               justifyContent="center"
               alignItems={['center', 'flex-start']}
               flexDirection={['column', 'row']}
-              mt={['30px', '70px']}
+              mt={['0px', '70px']}
               width={1}
             >
               <Flex mx={['0px', '40px']} my={['30px', '0px']} />
-              <Flex flex={1} flexDirection="column" alignItems="flex-start">
+              <Flex
+                flex={1}
+                flexDirection="column"
+                alignItems={['center', 'flex-start']}
+              >
                 <Image src={IssuanceImg} height="100px" />
                 <Text
                   mt="35px"
@@ -149,13 +153,21 @@ export default () => {
                   Issuance
                 </Text>
                 <Flex mt="15px" style={{ maxWidth: '240px' }}>
-                  <Text lineHeight={1.5} color="#4c4c4c">
+                  <Text
+                    lineHeight={1.5}
+                    color="#4c4c4c"
+                    textAlign={['center', 'left']}
+                  >
                     Deposit in the bonding curve to govern each dataset
                   </Text>
                 </Flex>
               </Flex>
               <Flex mx={['0px', '40px']} my={['30px', '0px']} />
-              <Flex flex={1} flexDirection="column" alignItems="flex-start">
+              <Flex
+                flex={1}
+                flexDirection="column"
+                alignItems={['center', 'flex-start']}
+              >
                 <Image src={GovernanceImg} height="100px" />
                 <Text
                   mt="35px"
@@ -166,13 +178,21 @@ export default () => {
                   Governance
                 </Text>
                 <Flex mt="15px" style={{ maxWidth: '240px' }}>
-                  <Text lineHeight={1.5} color="#4c4c4c">
+                  <Text
+                    lineHeight={1.5}
+                    color="#4c4c4c"
+                    textAlign={['center', 'left']}
+                  >
                     Participate in a robust governance process
                   </Text>
                 </Flex>
               </Flex>
               <Flex mx={['0px', '40px']} my={['30px', '0px']} />
-              <Flex flex={1} flexDirection="column" alignItems="flex-start">
+              <Flex
+                flex={1}
+                flexDirection="column"
+                alignItems={['center', 'flex-start']}
+              >
                 <Image src={StakingImg} height="100px" />
                 <Text
                   mt="35px"
@@ -183,7 +203,11 @@ export default () => {
                   Staking
                 </Text>
                 <Flex mt="15px" style={{ maxWidth: '240px' }}>
-                  <Text lineHeight={1.5} color="#4c4c4c">
+                  <Text
+                    lineHeight={1.5}
+                    color="#4c4c4c"
+                    textAlign={['center', 'left']}
+                  >
                     Secure the network and data integrity via a delegated proof
                     of stake (DPoS) mechanism
                   </Text>
