@@ -7,7 +7,7 @@ require('chai').should();
 
 contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
-    this.contract = await CommunityToken.new('CoinHatcher', 'XCH', 36, {
+    this.contract = await CommunityToken.new('CoinHatcher', 'XCH', {
       from: owner,
     });
     this.factory = await BandRegistry.deployed();
@@ -20,7 +20,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
     name.should.eq('CoinHatcher');
     symbol.should.eq('XCH');
-    decimals.toString().should.eq('36');
+    decimals.toString().should.eq('18');
   });
 
   context('ERC-20 mint/burn features', () => {

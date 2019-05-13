@@ -25,7 +25,7 @@ contract CommunityCore {
     address creator,
     string memory name,
     string memory symbol,
-    ExpressionInterface collateralExpression,
+    Expression collateralExpression,
     uint256 bondingLiquiditySpread,
     uint256 paramsExpirationTime,
     uint256 paramsMinParticipationPct,
@@ -68,7 +68,7 @@ contract CommunityCore {
 
   function createTCR(
     bytes8 prefix,
-    ExpressionInterface decayFunction,
+    Expression decayFunction,
     uint256 minDeposit,
     uint256 applyStageLength,
     uint256 dispensationPercentage,

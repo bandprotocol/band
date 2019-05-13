@@ -3,8 +3,6 @@ pragma solidity 0.5.0;
 import "./BondingCurve.sol";
 import "../Parameters.sol";
 
-
-/// @title ParameterizedBondingCurve
 contract ParameterizedBondingCurve is BondingCurve {
 
   Parameters public params;
@@ -12,7 +10,7 @@ contract ParameterizedBondingCurve is BondingCurve {
   constructor(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
-    ExpressionInterface collateralExpression,
+    Expression collateralExpression,
     Parameters _params
   )
     BondingCurve(collateralToken, bondedToken, collateralExpression)

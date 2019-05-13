@@ -26,17 +26,10 @@ contract LockableToken is ERC20Base, CapperRole {
     return maxLock;
   }
 
-  function getLockedTokenAt(address owner, address locker)
-    public
-    view
-    returns (uint256)
-  {
+  function getLockedTokenAt(address owner, address locker) public view returns (uint256) {
     uint256 index = _getTokenLockIndex(owner, locker);
-    if (index != NOT_FOUND) {
-      return _locks[owner][index].value;
-    } else {
-      return 0;
-    }
+    if (index != NOT_FOUND) return _locks[owner][index].value;
+    else return 0;
   }
 
   function unlockedBalanceOf(address owner) public view returns (uint256) {
@@ -71,11 +64,7 @@ contract LockableToken is ERC20Base, CapperRole {
     return true;
   }
 
-  function _getTokenLockIndex(address owner, address locker)
-    internal
-    view
-    returns (uint256)
-  {
+  function _getTokenLockIndex(address owner, address locker) internal view returns (uint256) {
     TokenLock[] storage locks = _locks[owner];
     for (uint256 i = 0; i < locks.length; ++i) {
       if (locks[i].locker == locker) {

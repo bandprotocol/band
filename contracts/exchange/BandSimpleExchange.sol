@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "../utils/Fractional.sol";
 import "./BandExchangeInterface.sol";
 
-
 contract BandSimpleExchange is Ownable, BandExchangeInterface {
   using Fractional for uint256;
 

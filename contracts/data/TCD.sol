@@ -11,7 +11,6 @@ import "../exchange/BandExchangeInterface.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Fractional.sol";
 
-
 contract TCD is TCDBase, Feeless {
   using Fractional for uint256;
   using SafeMath for uint256;

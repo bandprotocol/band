@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../utils/ArrayUtils.sol";
 
-
 contract TCDBase {
   using SafeMath for uint256;
 
@@ -55,7 +54,8 @@ contract TCDBase {
       assembly { value := mload(add(ret, 0x20)) }
       rawdata[rawdataLength++] = value;
     }
-    require(rawdataLength > 0);
+    /// More than 2/3 of active data providers must be providing data
+    require(rawdataLength > 0 && rawdataLength.mul(3) > dataSources.length.mul(2));
     uint256[] memory data = new uint256[](rawdataLength);
     for (uint256 index = 0; index < rawdataLength; ++index) {
       data[index] = rawdata[index];

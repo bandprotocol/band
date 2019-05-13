@@ -7,7 +7,7 @@ library TCRFactory {
     bytes8 prefix,
     CommunityToken token,
     Parameters params,
-    ExpressionInterface decayFunction
+    Expression decayFunction
   ) external returns (TCR) {
     return new TCR(prefix, token, params, decayFunction);
   }

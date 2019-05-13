@@ -16,7 +16,7 @@ contract BondingCurve is ERC20Acceptor {
 
   ERC20Interface public collateralToken;
   ERC20Interface public bondedToken;
-  ExpressionInterface public collateralExpression;
+  Expression public collateralExpression;
 
   uint256 public currentMintedTokens;
   uint256 public currentCollateral;
@@ -28,7 +28,7 @@ contract BondingCurve is ERC20Acceptor {
   constructor(
     ERC20Interface _collateralToken,
     ERC20Interface _bondedToken,
-    ExpressionInterface _collateralExpression
+    Expression _collateralExpression
   ) public {
     collateralToken = _collateralToken;
     bondedToken = _bondedToken;

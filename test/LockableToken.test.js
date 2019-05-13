@@ -8,7 +8,7 @@ contract(
   'LockableToken',
   ([_, owner, alice, bob, carol, locker1, locker2, locker3]) => {
     beforeEach(async () => {
-      this.token = await CommunityToken.new('Test', 'T', 18, { from: owner });
+      this.token = await CommunityToken.new('Test', 'T', { from: owner });
       await this.token.mint(alice, 1000, { from: owner });
       await this.token.mint(bob, 1000, { from: owner });
       await this.token.addCapper(locker1, { from: owner });

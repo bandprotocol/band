@@ -11,7 +11,7 @@ contract BondingCurveMock is Ownable, BondingCurve {
   constructor(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
-    ExpressionInterface collateralExpression
+    Expression collateralExpression
   ) public BondingCurve(collateralToken,  bondedToken, collateralExpression) {}
 
   function getRevenueBeneficiary() public view returns (address) {

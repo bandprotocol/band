@@ -10,7 +10,6 @@ import "../feeless/Feeless.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 
-
 contract TCR is Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
@@ -27,7 +26,7 @@ contract TCR is Feeless, ERC20Acceptor {
   event ChallengeInconclusive(bytes32 indexed data,uint256 indexed challengeId);
   event ChallengeRewardClaimed(uint256 indexed challengeId,address indexed voter, uint256 reward);
 
-  ExpressionInterface public depositDecayFunction;
+  Expression public depositDecayFunction;
   CommunityToken public token;
   Parameters public params;
   bytes8 public prefix;
@@ -70,7 +69,7 @@ contract TCR is Feeless, ERC20Acceptor {
     bytes8 _prefix,
     CommunityToken _token,
     Parameters _params,
-    ExpressionInterface decayFunction
+    Expression decayFunction
   ) public {
     prefix = _prefix;
     token = _token;

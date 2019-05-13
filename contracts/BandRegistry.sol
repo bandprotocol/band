@@ -19,7 +19,7 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
   function createCommunity(
     string calldata name,
     string calldata symbol,
-    ExpressionInterface collateralExpression,
+    Expression collateralExpression,
     uint256 bondingLiquiditySpread,
     uint256 paramsExpirationTime,
     uint256 paramsMinParticipationPct,

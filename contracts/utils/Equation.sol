@@ -1,69 +1,12 @@
 pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../../bancor/BancorPower.sol";
 
-import "../thirdparty/BancorPower.sol";
-
-
-/// Equation library abstracts the representation of mathematics equation. As of current,
-/// an equation is basically an expression tree of constants, one variable (X), and operators.
 library Equation {
   using SafeMath for uint256;
 
-  /**
-   * @dev An expression tree is encoded as a set of nodes, with root node having
-   * index zero. Each node consists of 3 values:
-   *  1. opcode: the expression that the node represents. See table below.
-   * +--------+----------------------------------------+------+------------+
-   * | Opcode |              Description               | i.e. | # children |
-   * +--------+----------------------------------------+------+------------+
-   * |   00   | Integer Constant                       |   c  |      0     |
-   * |   01   | Variable                               |   X  |      0     |
-   * |   02   | Arithmetic Square Root                 |   √  |      1     |
-   * |   03   | Boolean Not Condition                  |   !  |      1     |
-   * |   04   | Arithmetic Addition                    |   +  |      2     |
-   * |   05   | Arithmetic Subtraction                 |   -  |      2     |
-   * |   06   | Arithmetic Multiplication              |   *  |      2     |
-   * |   07   | Arithmetic Division                    |   /  |      2     |
-   * |   08   | Arithmetic Exponentiation              |  **  |      2     |
-   * |   09   | Arithmetic Percentage* (see below)     |   %  |      2     |
-   * |   10   | Arithmetic Equal Comparison            |  ==  |      2     |
-   * |   11   | Arithmetic Non-Equal Comparison        |  !=  |      2     |
-   * |   12   | Arithmetic Less-Than Comparison        |  <   |      2     |
-   * |   13   | Arithmetic Greater-Than Comparison     |  >   |      2     |
-   * |   14   | Arithmetic Non-Greater-Than Comparison |  <=  |      2     |
-   * |   15   | Arithmetic Non-Less-Than Comparison    |  >=  |      2     |
-   * |   16   | Boolean And Condition                  |  &&  |      2     |
-   * |   17   | Boolean Or Condition                   |  ||  |      2     |
-   * |   18   | Ternary Operation                      |  ?:  |      3     |
-   * |   19   | Bancor's log** (see below)             |      |      3     |
-   * |   20   | Bancor's power*** (see below)          |      |      4     |
-   * +--------+----------------------------------------+------+------------+
-   *  2. children: the list of node indices of this node's sub-expressions.
-   *  Different opcode nodes will have different number of children.
-   *  3. value: the value inside the node. Currently this is only relevant for
-   *  Integer Constant (Opcode 00).
-   *
-   * An equation's data is a list of nodes. The nodes will link against
-   * each other using index as pointer. The root node of the expression tree
-   * is the first node in the list
-   *
-   * (*) Arithmetic percentage is computed by multiplying the left-hand side value
-   * with the right-hand side, and divide the result by 10^18, rounded down to
-   * uint256 integer.
-   *
-   * (**) Using BancorFormula, the opcode computes log of fractional numbers.
-   * However, this fraction's value must be more than 1. (baseN / baseD >= 1).
-   * The opcode takes 3 childrens(c, baseN, baseD), and computes (c * log(baseN / baseD))
-   * The limitation is in range of 1 <= baseN / baseD <= 58774717541114375398436826861112283890 (It comes from 1e76/FIXED_1)
-   * FIXED_1 is constant in BancorPower.sol
-   *
-   * (***) Using BancorFomula, the opcode computes exponential of fractional
-   * numbers. The opcode takes 4 children (c,baseN,baseD,expV), and computes
-   * (c * ((baseN / baseD) ^ (expV / 1e6))). See implementation for the limitation
-   * of the each value's domain. The end result must be in uint256 range.
-   */
-  struct Node {
+  struct Node {  /// See equation.txt on toplevel directory for explannation
     uint8 opcode;
     uint8 child0;
     uint8 child1;
@@ -72,11 +15,7 @@ library Equation {
     uint256 value;
   }
 
-  enum ExprType {
-    Invalid,
-    Math,
-    Boolean
-  }
+  enum ExprType { Invalid, Math, Boolean }
 
   uint8 constant OPCODE_CONST = 0;
   uint8 constant OPCODE_VAR = 1;
@@ -101,27 +40,8 @@ library Equation {
   uint8 constant OPCODE_BANCOR_POWER = 20;
   uint8 constant OPCODE_INVALID = 21;
 
-  /**
-   * @dev Initialize equation by array of opcodes/values in prefix order. Array
-   * is read as if it is the *pre-order* traversal of the expression tree.
-   * For instance, expression x^2 - 3 is encoded as: [5, 8, 1, 0, 2, 0, 3]
-   *
-   *                 5 (Opcode -)
-   *                    /  \
-   *                   /     \
-   *                /          \
-   *         8 (Opcode **)       \
-   *             /   \             \
-   *           /       \             \
-   *         /           \             \
-   *  1 (Opcode X)  0 (Opcode c)  0 (Opcode c)
-   *                     |              |
-   *                     |              |
-   *                 2 (Value)     3 (Value)
-   *
-   * @param self storage pointer to equation data to initialize.
-   * @param _expressions array of opcodes/values to initialize.
-   */
+  /// @dev Initialize equation by array of opcodes/values in prefix order. Array
+  /// is read as if it is the *pre-order* traversal of the expression tree.
   function init(Node[] storage self, uint256[] calldata _expressions) external {
     /// Init should only be called when the equation is not yet initialized.
     assert(self.length == 0);
@@ -138,17 +58,12 @@ library Equation {
       }
       self.push(node);
     }
-
     (uint8 lastNodeIndex,) = populateTree(self, 0);
     require(lastNodeIndex == self.length - 1);
   }
 
   /// Calculate the Y position from the X position for this equation.
-  function calculate(Node[] storage self, uint256 xValue)
-    external
-    view
-    returns (uint256)
-  {
+  function calculate(Node[] storage self, uint256 xValue) external view returns (uint256) {
     return solveMath(self, 0, xValue);
   }
 

@@ -10,10 +10,10 @@ require('chai').should();
 contract('BondingCurveMock', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
     await BondingCurveMock.link(Equation, await Equation.deployed());
-    this.collateralToken = await ERC20Base.new('CollateralToken', 'CLT', 18, {
+    this.collateralToken = await ERC20Base.new('CollateralToken', 'CLT', {
       from: owner,
     });
-    this.bondedToken = await ERC20Base.new('BondedToken', 'BDT', 18, {
+    this.bondedToken = await ERC20Base.new('BondedToken', 'BDT', {
       from: owner,
     });
     const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);

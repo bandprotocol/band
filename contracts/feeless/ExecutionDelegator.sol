@@ -20,9 +20,7 @@ contract ExecutionDelegator {
   function verify(address sender, uint256 time, bytes memory data, bytes memory sig)
     public pure returns (bool)
   {
-    bytes32 hash = ECDSA.toEthSignedMessageHash(
-      keccak256(abi.encodePacked(time, data))
-    );
+    bytes32 hash = ECDSA.toEthSignedMessageHash(keccak256(abi.encodePacked(time, data)));
     return sender == ECDSA.recover(hash, sig);
   }
 
