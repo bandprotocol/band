@@ -50,7 +50,7 @@ export default () => {
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
-            A all-in-one wallet for any function you may want to carry out in
+            An all-in-one wallet for any functions you may want to carry out in
             the Band ecosystem.
           </Text>
           <Image
@@ -71,7 +71,7 @@ export default () => {
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >
-              The Band Web 3 wallet is especially designed to support a diverse
+              The Band Web3 wallet is especially designed to support a diverse
               array of dApps and functionalities. Users can store the tokens
               they receive in these wallets and use them for transactions
               occurring throughout the network. All of this is done with a

@@ -27,7 +27,7 @@ export default ({
       {...props}
     >
       <Flex pt="30px" pl="30px" flexDirection="column">
-        <Text color="#6b8bf5" fontWeight={500} mb="10px">
+        <Text color="#6b8bf5" fontWeight={500} fontSize="18px" mb="10px">
           {subtitle}
         </Text>
         <Text color="#2b314f" fontWeight={700} fontSize="24px">

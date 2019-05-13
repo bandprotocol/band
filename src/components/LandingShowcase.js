@@ -11,6 +11,7 @@ export default ({
   link1,
   link2,
   Logo,
+  logoHeight,
   Img1,
   Img2,
   Img3,
@@ -79,12 +80,8 @@ export default ({
           justifyContent="center"
           mt={['20px', '70px']}
         >
-          <Flex
-            width={[1, '181px']}
-            style={{ minWidth: '181px' }}
-            justifyContent="center"
-          >
-            <Image src={Logo} width="181px" />
+          <Flex justifyContent="center" style={{ minWidth: '250px' }}>
+            <Image src={Logo} height={logoHeight} />
           </Flex>
           <Flex
             ml={['0px', '110px']}

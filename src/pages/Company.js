@@ -200,7 +200,7 @@ export default () => {
             mt={['30px', '50px']}
             bg="#f6f8ff"
             px="45px"
-            py="25px"
+            py="45px"
             width={['calc(100vw - 40px)', '940px']}
           >
             <Text
@@ -214,22 +214,22 @@ export default () => {
               decentralized management of data.
               <br />
               <br />
-              Band Protocol was created to solve the issues plaguing current
-              data infrastructures and decentralized technologies as a whole. It
-              is estimated that over 1.2 million terabytes of data is stored on
-              the web and currently much of this is unstructured or unreliable.
+              Band Protocol solves the issues plaguing current data
+              infrastructures and decentralized technologies as a whole. It is
+              estimated that over 1.2 million terabytes of data is stored on the
+              web and currently much of this is unstructured data or unreliable
+              data.
               <br />
               <br />
-              Band Protocol is a component layer solution for managing data in
-              the Web3 technology stack. With the use of an innovative token
-              framework and standardized data protocols, Band is able to create
-              a community-driven data curation ecosystem that is secure,
-              reliable and accessible.
+              Band is a protocol for managing data in the Web3 technology stack.
+              With the use of an innovative token framework and standardized
+              data protocol, Band is able to create a community-driven data
+              curation ecosystem that is secure, reliable and accessible.
               <br />
               <br />
-              Through the use of a standard framework, Band is able to provide a
-              socially scalable method for widespread adoption and integration
-              of trusted data that all dApps can utilize.
+              Through a standard framework, Band is able to provide a socially
+              scalable method for widespread adoption and integration of trusted
+              data that all dApps can utilize.
             </Text>
           </Card>
         </Flex>
@@ -262,23 +262,23 @@ export default () => {
             justifyContent="center"
             mb={['0px', '40px']}
           >
-            <Featured href="https://www.dealstreetasia.com/stories/sequoia-india-band-protocol-121721/">
-              <Image height={['39px', '65px']} src={DealSrc} />
+            <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
+              <Image height={['18px', '31px']} src={CoinDeskSrc} />
             </Featured>
             <Featured href="https://sg.news.yahoo.com/blockchain-based-information-curation-startup-band-protocol-secures-010013124.html">
               <Image height={['26px', '32px']} src={YahooNewsSrc} />
             </Featured>
-            <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
-              <Image height={['18px', '31px']} src={CoinDeskSrc} />
+            <Featured href="https://e27.co/blockchain-based-information-curation-startup-band-protocol-secures-us3m-seed-funding-20190217/">
+              <Image height={['29px', '48px']} src={E27Src} />
             </Featured>
-            <Featured href="https://jumpstartmag.com/blog/band-protocol-raises-us3-million-seed-funding-led-by-sequoia-india-to-give-power-back-to-internet">
-              <Image height={['24px', '40px']} src={JumpstartSrc} />
+            <Featured href="https://www.dealstreetasia.com/stories/sequoia-india-band-protocol-121721/">
+              <Image height={['39px', '65px']} src={DealSrc} />
             </Featured>
             <Featured href="https://www.techinasia.com/band-protocol-nets-3m-seed-funding-sequoia-india">
               <Image height={['19px', '32px']} src={TechInAsiaSrc} />
             </Featured>
-            <Featured href="https://e27.co/blockchain-based-information-curation-startup-band-protocol-secures-us3m-seed-funding-20190217/">
-              <Image height={['29px', '48px']} src={E27Src} />
+            <Featured href="https://jumpstartmag.com/blog/band-protocol-raises-us3-million-seed-funding-led-by-sequoia-india-to-give-power-back-to-internet">
+              <Image height={['24px', '40px']} src={JumpstartSrc} />
             </Featured>
           </Flex>
         </Flex>
@@ -289,7 +289,7 @@ export default () => {
               fontSize={['24px', '38px']}
               lineHeight={[1, 1.5]}
             >
-              Team & Advisors
+              Team
             </Text>
           </H1>
           <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>

@@ -43,14 +43,15 @@ export default () => {
             </Text>
           </Box>
           <Text
+            mt={['10px', '20px']}
             textAlign={['left', 'center']}
             width={['calc(100vw - 40px)', '860px']}
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
-            Band Protocol not only provides state-of-the-art open data
-            management on the blockchain, but it also facilitates private data
-            sharing for businesses that require data privacy.
+            Beyond providing an open data management on the blockchain, Band
+            Protocol also facilitates private data sharing for businesses that
+            require data privacy.
           </Text>
           {
             <Image
@@ -73,11 +74,12 @@ export default () => {
               lineHeight={[1.63, 1.94]}
             >
               Band Protocol provides a platform for businesses to share and
-              monetize data off-chain by publishing the proof on-chain. The
-              businesses can sell a chunk of data, and allow the transacting
+              monetize data off-chain by publishing the proof on-chain.
+              Businesses can sell a chunk of data, and allow the transacting
               parties to verify integrity and correctness of data via the public
-              proof. This design allows scalable and secure exchange of data
-              without revealing sensitive information to the public.
+              proof. This protocol allows scalable and secure exchange of data
+              without revealing sensitive information to the public, designed
+              specifically for private enterprises.
             </Text>
             <Flex justifyContent="center" mt={[3, 4]}>
               <AbsoluteLink

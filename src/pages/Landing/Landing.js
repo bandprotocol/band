@@ -32,18 +32,18 @@ import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
-import AppCHT from 'images/appCoinhatcher.svg'
-import AppDS from 'images/appDataSource.svg'
+import AppCHT from 'images/appCoinhatcher.png'
+import AppDS from 'images/appDataSource.png'
 import LandingBandDB from 'images/landing-band-database.png'
 import LandingDataGov from 'images/landing-data-governance.png'
 
-import SSExample1 from 'images/chtss1@3x.png'
+import SSExample1 from 'images/chtssLeft.png'
 import SSExample2 from 'images/chtssMid.png'
 import SSExample3 from 'images/chtssRight.png'
 
-import SSExample4 from 'images/dsss1@3x.jpg'
-import SSExample5 from 'images/dsss2@3x.jpg'
-import SSExample6 from 'images/dsss3@3x.png'
+import SSExample4 from 'images/dsssLeft.png'
+import SSExample5 from 'images/dsssMid.png'
+import SSExample6 from 'images/dsssRight.png'
 
 const FilledButton = styled(Button)`
   color: white;
@@ -144,11 +144,11 @@ export default () => {
                   lineHeight={1.54}
                   fontWeight={300}
                 >
-                  An open standard for decentralized management of data on Web3
+                  An open standard for decentralized management of data in Web3
                   stack
                 </Text>
               </Flex>
-              <Flex mt="24px" flexDirection={['column-reverse', 'row']}>
+              <Flex mt="24px" flexDirection={['column', 'row']}>
                 <AbsoluteLink href="https://developer.bandprotocol.com/">
                   <FilledButton isMobile={_isMobile}>
                     Start Building
@@ -161,6 +161,84 @@ export default () => {
                   </OutlineButton>
                 </Link>
               </Flex>
+              <Flex
+                mr="60px"
+                mt="30px"
+                width={1}
+                flexDirection={['column', 'row']}
+              >
+                <Text
+                  fontSize={['20px', '20px']}
+                  fontWeight={500}
+                  color="#8d94bf"
+                  mr="30px"
+                  mb={['20px', '0px']}
+                >
+                  Join Our Community :
+                </Text>
+                <Flex flex={1} alignItems="center">
+                  <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
+                    <Flex
+                      mr="24px"
+                      alignItems="center"
+                      color="white"
+                      css={{
+                        '&:hover': {
+                          filter:
+                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                        },
+                      }}
+                    >
+                      <Image src={Telegram} width="20px" />
+                    </Flex>
+                  </AbsoluteLink>
+                  <AbsoluteLink href="https://medium.com/bandprotocol">
+                    <Flex
+                      mr="24px"
+                      alignItems="center"
+                      color="white"
+                      css={{
+                        '&:hover': {
+                          filter:
+                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                        },
+                      }}
+                    >
+                      <Image src={Medium} width="20px" />
+                    </Flex>
+                  </AbsoluteLink>
+                  <AbsoluteLink href="https://twitter.com/bandprotocol">
+                    <Flex
+                      mr="24px"
+                      alignItems="center"
+                      color="white"
+                      css={{
+                        '&:hover': {
+                          filter:
+                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                        },
+                      }}
+                    >
+                      <Image src={Twitter} width="20px" />
+                    </Flex>
+                  </AbsoluteLink>
+                  <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
+                    <Flex
+                      mr="24px"
+                      alignItems="center"
+                      color="white"
+                      css={{
+                        '&:hover': {
+                          filter:
+                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                        },
+                      }}
+                    >
+                      <Image src={Reddit} width="20px" />
+                    </Flex>
+                  </AbsoluteLink>
+                </Flex>
+              </Flex>
             </Box>
             {!_isMobile && (
               <Flex flex={1} justifyContent="flex-end" alignItems="center">
@@ -169,130 +247,61 @@ export default () => {
             )}
           </Flex>
           <Flex
-            justifyContent="flex-start"
-            flexWrap="wrap"
-            pb={['60px', '120px']}
+            mx={['-15px', 'calc(780px - 100vw)']}
+            bg="#252a48"
+            alignItems="center"
+            flexDirection="column"
+            py={['30px', '50px']}
+            mb={['30px', '70px']}
           >
-            <Box mr="60px">
-              <Text
-                fontSize={['20px', '20px']}
-                fontWeight={600}
-                color="#8d94bf"
+            <Text fontSize={['20px', '20px']} fontWeight={600} color="#8d94bf">
+              Backed by
+            </Text>
+            <Flex
+              mt="40px"
+              alignItems="center"
+              flexDirection={['column', 'row']}
+            >
+              <Flex
+                mr={['0px', '28px']}
+                css={{
+                  '&:hover': {
+                    filter:
+                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                  },
+                }}
               >
-                Join the discussions
-              </Text>
-
-              <Flex flex={1} mt="16px" mb="32px" pb={['10px', '0px']}>
-                <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
-                  <Flex
-                    mr="24px"
-                    alignItems="center"
-                    color="white"
-                    css={{
-                      '&:hover': {
-                        filter:
-                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                      },
-                    }}
-                  >
-                    <Image src={Telegram} width="32px" />
-                  </Flex>
-                </AbsoluteLink>
-                <AbsoluteLink href="https://twitter.com/bandprotocol">
-                  <Flex
-                    mr="24px"
-                    alignItems="center"
-                    color="white"
-                    css={{
-                      '&:hover': {
-                        filter:
-                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                      },
-                    }}
-                  >
-                    <Image src={Twitter} width="32px" />
-                  </Flex>
-                </AbsoluteLink>
-                <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
-                  <Flex
-                    mr="24px"
-                    alignItems="center"
-                    color="white"
-                    css={{
-                      '&:hover': {
-                        filter:
-                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                      },
-                    }}
-                  >
-                    <Image src={Reddit} width="32px" />
-                  </Flex>
-                </AbsoluteLink>
-                <AbsoluteLink href="https://medium.com/bandprotocol">
-                  <Flex
-                    alignItems="center"
-                    color="white"
-                    css={{
-                      '&:hover': {
-                        filter:
-                          'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                      },
-                    }}
-                  >
-                    <Image src={Medium} width="32px" />
-                  </Flex>
+                <AbsoluteLink href="https://www.sequoiacap.com/">
+                  <Image src={Sequoia} height="20px" />
                 </AbsoluteLink>
               </Flex>
-            </Box>
-            <Box>
-              <Text
-                fontSize={['20px', '20px']}
-                fontWeight={600}
-                color="#8d94bf"
+              <Flex
+                mr={['0px', '28px']}
+                my={['20px', '0px']}
+                css={{
+                  '&:hover': {
+                    filter:
+                      'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
+                  },
+                }}
               >
-                Backed by
-              </Text>
-              <Flex mt="20px" alignItems="flex-end">
-                <Flex
-                  mr={['12px', '28px']}
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <AbsoluteLink href="https://www.sequoiacap.com/">
-                    <Image src={Sequoia} height="20px" />
-                  </AbsoluteLink>
-                </Flex>
-                <Flex
-                  mr={['12px', '28px']}
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <AbsoluteLink href="http://www.dunamupartners.com/">
-                    <Image src={Dunamu} height="20px" />
-                  </AbsoluteLink>
-                </Flex>
-                <Flex
-                  css={{
-                    '&:hover': {
-                      filter:
-                        'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                    },
-                  }}
-                >
-                  <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
-                    <Image mb="-4px" src={Seax} height="24px" width="70px" />
-                  </AbsoluteLink>
-                </Flex>
+                <AbsoluteLink href="http://www.dunamupartners.com/">
+                  <Image src={Dunamu} height="20px" />
+                </AbsoluteLink>
               </Flex>
-            </Box>
+              <Flex
+                css={{
+                  '&:hover': {
+                    filter:
+                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                  },
+                }}
+              >
+                <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
+                  <Image src={Seax} width="105px" />
+                </AbsoluteLink>
+              </Flex>
+            </Flex>
           </Flex>
           <Flex
             bg="#36406e"
@@ -317,9 +326,9 @@ export default () => {
                 fontWeight={300}
                 lineHeight={1.65}
               >
-                Band Protocol is a component layer solution for managing data in
-                the Web3 technology stack. DApps consume data via BAND public
-                smart contract datasets rather than through external oracles.
+                Band is a protocol for managing and governing data in the Web3
+                technology stack. DApps consume data via BAND public smart
+                contract datasets rather than through external oracles.
               </Text>
             </Flex>
             <Flex
@@ -341,10 +350,10 @@ export default () => {
                   },
                 }}
               >
-                Example Usecases
+                Example Use Cases
               </Text>
               <Text color="#5eebbe" fontSize={['16px', '18px']}>
-                <i className="fas fa-arrow-right" />
+                <i className="fas fa-arrow-down" />
               </Text>
             </Flex>
           </Flex>
@@ -380,7 +389,7 @@ export default () => {
               isMobile={_isMobile}
               subtitle="Develop using"
               title="Band Datasets"
-              content="Take advantage of Token Curated DataSource as a trusted source of crypto price, sport and loterry."
+              content="Take advantage of Token-Curated DataSources as a trusted source of crypto price, sport and loterry."
               linkText="Integrate Data with your DApps"
               link="https://data.bandprotocol.com/"
               mr="36px"
@@ -406,18 +415,17 @@ export default () => {
         </PageContainer>
       </Box>
       <LandingShowcase
-        background="#242944"
-        title="The Bloomberg of Crypto"
-        description={`CoinHatcher is decentralized data curated cryptocurrency
-          asset market cap, exchange data metrics, rankings & news
-          platform. Its purpose is to provide trusted and reliable
-          information for the blockchain industry.`}
-        link1="CoinHatcher.com"
-        link2="Token Curated Registries"
-        Logo={AppCHT}
-        Img1={SSExample1}
-        Img2={SSExample2}
-        Img3={SSExample3}
+        background="#21253f"
+        title="Community Curated Data Feed for DApps"
+        description={`is designed as a community governed and managed price
+          feed for decentralized applications. New possibilities will be opened for decentralized applications that rely on external real-world information such as price feed`}
+        link1="data.bandprotocol.com"
+        link2="Token-Curated DataSource"
+        Logo={AppDS}
+        logoHeight={['80px', '125px']}
+        Img1={SSExample4}
+        Img2={SSExample5}
+        Img3={SSExample6}
       >
         <Text
           ref={exRef}
@@ -430,17 +438,19 @@ export default () => {
         </Text>
       </LandingShowcase>
       <LandingShowcase
-        background="#21253f"
-        title="Community Curated Data Feed for DApps"
-        description={`is designed as a community governed and managed price
-          feed for decentralized applications. New possibilities will be opened
-          for applications such that rely on price information such as `}
-        link1="data.bandprotocol.com"
-        link2="Token Curated DataSource"
-        Logo={AppDS}
-        Img1={SSExample4}
-        Img2={SSExample5}
-        Img3={SSExample6}
+        background="#242944"
+        title="The Bloomberg of Crypto"
+        description={`Coinhatcher is decentralized crypto insight portal.
+         Building on top of token-curated registry, its purpose is to curate
+          trusted and reliable information for the blockchain industry including
+           daily news, general market data, and crypto project information`}
+        link1="CoinHatcher.com"
+        link2="Token-Curated Registry"
+        Logo={AppCHT}
+        logoHeight={['120px', '160px']}
+        Img1={SSExample1}
+        Img2={SSExample2}
+        Img3={SSExample3}
       />
       <Box py={5} style={{ background: '#17192e' }}>
         <StartBuilding />

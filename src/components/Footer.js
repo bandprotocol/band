@@ -84,12 +84,12 @@ export default () => {
               </Box>
               <Box mb={[3, '20px']}>
                 <Link to="/products/tcd">
-                  <Text fontSize="14px">Token Curated DataSource</Text>
+                  <Text fontSize="14px">Token-Curated DataSources</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
                 <Link to="/products/tcr">
-                  <Text fontSize="14px">Token Curated Registries</Text>
+                  <Text fontSize="14px">Token-Curated Registry</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
@@ -148,12 +148,6 @@ export default () => {
             justifyContent={['center', 'flex-end']}
           >
             <SmallIcon
-              href="https://www.reddit.com/r/bandprotocol"
-              src={Reddit}
-              ml="12px"
-              bg
-            />
-            <SmallIcon
               href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ"
               src={Telegram}
               ml="12px"
@@ -168,6 +162,12 @@ export default () => {
             <SmallIcon
               href="https://twitter.com/bandprotocol"
               src={Twitter}
+              ml="12px"
+              bg
+            />
+            <SmallIcon
+              href="https://www.reddit.com/r/bandprotocol"
+              src={Reddit}
               ml="12px"
               bg
             />

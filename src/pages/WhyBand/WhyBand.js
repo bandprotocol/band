@@ -1,7 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
-import { colors } from 'ui'
 import {
   Flex,
   Text,
@@ -25,6 +23,15 @@ import WhyBand from 'images/whyband.png'
 import SDAImg from 'images/solve-data-availability.svg'
 import SDRImg from 'images/solve-data-reliability.svg'
 
+const WithDotLeft = ({ text }) => (
+  <Flex flexDirection="row" style={{ lineHeight: 1.94 }}>
+    <Text color="#ffca55" mr="10px" lineHeight={1.94}>
+      •
+    </Text>
+    <Text lineHeight={1.94}>{text}</Text>
+  </Flex>
+)
+
 export default () => {
   const _isMobile = isMobile()
   return (
@@ -43,27 +50,27 @@ export default () => {
           </Box>
           <Text
             textAlign={['left', 'center']}
-            width={['calc(100vw - 40px)', '860px']}
+            width={['calc(100vw - 40px)', '780px']}
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
             Availability and reliability are the two main problems when
             incorporating data into any decentralized application. Band Protocol
-            solves this problem by using incentive structures of tokens to
-            ensure data accuracy, while utilizing the openness of blockchain to
-            distribute data.
+            solves this problem by using token incentive structures to ensure
+            data accuracy, while utilizing the open nature of blockchains to
+            distribute data in a fair and transparent manner.
           </Text>
           <Image
             src={WhyBand}
             my={['30px', '70px']}
-            width={['calc(100vw - 40px)', '890px']}
+            width={['calc(100vw - 40px)', '780px']}
           />
           <Card
             bg="#f6f8ff"
             pt={4}
-            pb={['30px', '30px']}
-            px={['20px', '40px']}
-            width={['calc(100vw - 40px)', '640px']}
+            pb={['30px', '50px']}
+            px={['20px', '65px']}
+            width={['calc(100vw - 40px)', '780px']}
           >
             <Text
               textAlign={['left', 'center']}
@@ -75,33 +82,24 @@ export default () => {
               across participants of the network, as compared to centralized
               entities in Web2.0. Band provides a standard framework for the
               decentralized management of data, serving as a fundamental query
-              layer by providing reliable data for applications that require;
+              layer by providing reliable data for applications that require
+              <br />
+              <br />
               {_isMobile ? (
                 <React.Fragment>
-                  <br />
-                  <br />
-                  • Off-chain oracles
-                  <br />
-                  • Identity management
-                  <br />
-                  • KYC / AML
-                  <br />
-                  • Ranking <br />
-                  • Data source for smart contracts
-                  <br />
+                  <WithDotLeft text=" Off-chain oracles" />
+                  <WithDotLeft text="Identity management" />
+                  <WithDotLeft text="KYC / AML" />
+                  <WithDotLeft text="Ranking" />
+                  <WithDotLeft text="Data source for smart contracts" />
                 </React.Fragment>
               ) : (
-                <Text width={1} textAlign="left" pl="30%">
-                  <br />
-                  • Off-chain oracles
-                  <br />
-                  • Identity management
-                  <br />
-                  • KYC / AML
-                  <br />
-                  • Ranking <br />
-                  • Data source for smart contracts
-                  <br />
+                <Text width={1} textAlign="left" pl="15%">
+                  <WithDotLeft text=" Off-chain oracles" />
+                  <WithDotLeft text="Identity management" />
+                  <WithDotLeft text="KYC / AML" />
+                  <WithDotLeft text="Ranking" />
+                  <WithDotLeft text="Data source for smart contracts" />
                 </Text>
               )}
             </Text>

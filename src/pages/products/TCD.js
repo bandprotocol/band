@@ -50,19 +50,19 @@ const animatorSteps = [
     src: Step1Src,
     srcActive: Step1ActiveSrc,
     renderText: () =>
-      'Token Curate DataSource (TCD) is a method for a community to collectively curate data. It is suitable for curating objective information with large amount of data volume such as price, blockchain transactions, and real-world events.',
+      'Token Curate DataSource (TCD) is a method for a community to collectively govern and manage data. It is suitable for curating objective information with large amount of data volume such as asset prices, blockchain transactions, and real-world events.',
   },
   {
     src: Step2Src,
     srcActive: Step2ActiveSrc,
     renderText: () =>
-      'A community member can become a data provider by deploying Data Source Contract and feed the data to it. He or she then registers to become a provider candidate.',
+      'A token holder can become a data provider by deploying Data Source Contract and feed the data to it. He or she then registers to become a provider candidate by staking tokens that meet the minimum requirement.',
   },
   {
     src: Step3Src,
     srcActive: Step3ActiveSrc,
     renderText: () =>
-      'Token holders elect data providers by staking their token in the name of the candidates. Top providers earn the right to serve data and collect fees in return.',
+      'Use crypto-fiat and other asset price feed to power decentralized lending, derivative trading, stablecoins, and payment services',
   },
   {
     src: Step4Src,
@@ -178,7 +178,7 @@ export default () => {
               fontWeight={900}
               color="#2a304e"
             >
-              Token Curated DataSources
+              Token-Curated DataSources
             </Text>
           </Box>
           <Text
@@ -188,8 +188,8 @@ export default () => {
             lineHeight={[1.63, 1.94]}
           >
             Band Protocol provides a standard framework for DApps to access
-            Token Curated DataSources (TCDs). TCDs serve robust data feed from a
-            network of data providers curated by community members.
+            Token-Curated DataSources (TCDs). TCDs serve robust data feed from a
+            network of data providers governed by token holders.
           </Text>
           <Image
             src={TCDSrc}
@@ -209,16 +209,18 @@ export default () => {
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >
-              Without access to external data and APIs the use cases for DApps
+              Without access to external data and APIs, the use cases for dApps
               are limited. Existing data feed solutions such as oracles are
-              either very centralized with critical single points of failure or
-              are developer unfriendly such as prediction markets which are too
-              illiquid to be practical to meet a DApp developers needs.
+              either very centralized with critical single point of failure or
+              are developer-unfriendly. Current decentralized oracle networks
+              provide asynchronous data and prediction markets are too illiquid
+              to practically meet dApp developers' needs.
               {<br />}
               {<br />}
               Many decentralized finance and betting applications suffer in
-              their security models due to their need to access to price feed
-              and external event data.
+              their security models due to their need to access price feed and
+              external event data. TCDs provide synchronous data, available to
+              be consumed by dApps within a single transaction.
             </Text>
             <Flex
               justifyContent="center"

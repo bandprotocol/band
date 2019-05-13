@@ -81,12 +81,11 @@ export default () => {
               Band will also provide toolkits for developers to deploy their own
               tokenized solutions with ease.
             </Text>
-            <Flex justifyContent="center">
+            <Flex justifyContent="center" mt={['30px', '45px']}>
               <AbsoluteLink href="https://developer.bandprotocol.com/">
                 <Button
                   variant="primary"
                   fontSize="16px"
-                  mt={['30px', '45px']}
                   style={{
                     height: '45px',
                     width: _isMobile ? '250px' : '280px',

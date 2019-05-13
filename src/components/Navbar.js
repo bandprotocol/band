@@ -36,7 +36,7 @@ import { colors } from 'ui'
 
 const Nav = styled.nav`
   display: flex;
-  height: 80px;
+  height: 70px;
   align-items: center;
   position: sticky;
   top: 0;
@@ -104,7 +104,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
         height: isSelected ? '405px' : '0px',
         position: 'absolute',
         left: '0',
-        top: '80px',
+        top: '70px',
         transition: 'all 0.25s',
         opacity: isSelected ? 1 : 0,
         pointerEvents: isSelected ? 'all' : 'none',
@@ -140,7 +140,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                 <Flex style={{ minHeight: '70px' }} alignItems="center">
                   <Image src={getImg(imgIndex)} height={tab.imgHeight} />
                 </Flex>
-                <Flex mt="80px" style={{ height: '60px' }}>
+                <Flex mt="70px" style={{ height: '60px' }}>
                   <Text
                     color="white"
                     fontWeight={500}
@@ -418,7 +418,7 @@ const Navbar = props => {
                   link="/products/tcd"
                   imgIndex={1}
                   imgHeight="67px"
-                  title="Token Curated DataSources"
+                  title="Token-Curated DataSources"
                   description={`Build robust, decentralized data feed from a network of data providers`}
                 />
               </Flex>
@@ -428,8 +428,8 @@ const Navbar = props => {
                   link="/products/tcr"
                   imgIndex={2}
                   imgHeight="28px"
-                  title="Token Curated Registries"
-                  description={`Build reliable, more transparent crowd-source information through crypto-incentized data curation`}
+                  title="Token-Curated Registry"
+                  description={`Build reliable, more transparent crowdsourced information through token-incentivized data curation`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
@@ -552,14 +552,14 @@ const Navbar = props => {
                 content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
               {
-                title: 'Token Curated DataSources',
+                title: 'Token-Curated DataSources',
                 link: '/products/tcd',
                 imgIndex: 1,
                 imgHeight: '67px',
                 content: `Build robust, decentralized data feed from a network of data providers`,
               },
               {
-                title: 'Token Curated Registries',
+                title: 'Token-Curated Registry',
                 link: '/products/tcr',
                 imgIndex: 2,
                 imgHeight: '28px',
@@ -606,14 +606,14 @@ const Navbar = props => {
                 href: 'https://data.bandprotocol.com',
                 imgIndex: 5,
                 imgHeight: '50px',
-                content: `Join data curation community, stake tokens on data prodicers and vote on governance parameters`,
+                content: `Join data governance community, stake tokens on data providers and vote on governance parameters`,
               },
               {
                 title: 'Dataset Explorer',
                 href: 'https://data.bandprotocol.com',
                 imgIndex: [9, 6],
                 imgHeight: '46px',
-                content: `Explore dataset availables by Band Protocol and learn how to integrate with the DApps`,
+                content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
               },
             ]}
           />
@@ -642,7 +642,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${showNav ? '0px' : '-80px'})`,
+        transform: `translateY(${showNav ? '0px' : '-70px'})`,
       }}
     >
       <Flex
@@ -652,7 +652,7 @@ const Navbar = props => {
           position: 'absolute',
           width: '100%',
           height: '100vh',
-          top: '80px',
+          top: '70px',
           opacity: showMenu ? 0.5 : 0,
           pointerEvents: showMenu ? 'all' : 'none',
           transition: 'all 0.5s',

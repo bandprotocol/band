@@ -28,8 +28,8 @@ import TCRSrc from 'images/tcr.png'
 import TCRWorkSrc from 'images/tcr-work.png'
 import TCRWorkVertSrc from 'images/tcr-work-vert.png'
 
-import SSExample1 from 'images/chtss1@3x.png'
-import SSExample2 from 'images/chtssMid.jpg'
+import SSExample1 from 'images/chtssLeft.png'
+import SSExample2 from 'images/chtssMid.png'
 import SSExample3 from 'images/chtssRight.png'
 
 import Step1Src from 'images/animate-tcr/step-1.png'
@@ -58,7 +58,7 @@ const animatorSteps = [
     src: Step1Src,
     srcActive: Step1ActiveSrc,
     renderText: () =>
-      'Token Curated Registry (TCR) is a method for a community to collectively curate a list of data directly. The eligibility of data is governed by a community-defined curation guideline.',
+      'Token-Curated Registry (TCR) is a method for a community to collectively curate a list of data directly. The eligibility of data is governed by a community-defined curation guideline.',
   },
   {
     src: Step2Src,
@@ -221,19 +221,19 @@ export default () => {
               color="#2a304e"
               fontWeight={900}
             >
-              Token Curated Registries
+              Token-Curated Registry
             </Text>
           </Box>
-          <Flex mt={['15px', '0px']} width={['calc(100vw - 40px)', 'auto']}>
+          <Flex mt={['15px', '15px']} width={['calc(100vw - 40px)', 'auto']}>
             <Text
               textAlign={['left', 'center']}
               width={['auto', '860px']}
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >
-              Centralized information providers are susceptible to corruption
-              and malicious behavior without appropriate checks and balances.
-              Token Curated Registries enables decentralized, reliable and more
+              Centralized data providers are susceptible to corruption and
+              malicious behavior without appropriate checks and balances.
+              Token-Curated Registry enables decentralized, reliable and more
               transparent way to crowd-source information.
             </Text>
           </Flex>
@@ -255,33 +255,24 @@ export default () => {
               lineHeight={1.94}
               mb={4}
             >
-              Token curated registries provide a more reliable and transparent
-              data organization mechanism. Band combines various data sources in
-              order to ensure that particular registries can provide meaningful
-              data quickly and reliably for users at any time.
+              Token-Curated Registry provide a more reliable and transparent
+              data organization mechanism. Anyone can directly submit data by
+              staking tokens behind each data point. Token holders are
+              incentivized to verify and maintain good dataset as the quality of
+              the date relates directly to the value of their token holding
               <br />
               <br />
-              As the Band ecosystem grows with more data overtime, the
-              registries continue to become more expansive with a larger volume
-              of data in the feed for anyone to utilize with ease.
+              Band combines various data sources in order to ensure that
+              particular registries can provide meaningful data quickly and
+              reliably for users at any time. As the Band ecosystem grows with
+              more data overtime, the registries continue to become more
+              expansive with a larger volume of data in the feed for anyone to
+              utilize with ease.
             </Text>
             <Flex
               justifyContent="center"
               flexDirection={['column-reverse', 'row']}
             >
-              {/* <Button
-                variant="outline"
-                style={{
-                  color: '#545454',
-                  height: '45px',
-                  width: _isMobile ? '196px' : null,
-                  padding: _isMobile ? '5px' : null,
-                }}
-              >
-                Explore Datasets
-              </Button>
-              {_isMobile && <Flex my="10px" />} */}
-
               <AbsoluteLink href="https://developer.bandprotocol.com/docs/tcr.html">
                 <Button
                   variant="primary"
@@ -350,12 +341,12 @@ export default () => {
               lineHeight={[1.63, 1.94]}
             >
               One of the first releases in this sector for Band will be
-              CoinHatcher, a community-curated market data platform that focuses
-              on providing accurate cryptocurrency price, volume, news and
-              research data.
+              Coinhatcher, a community-curated crypto insight platform that
+              focuses on providing accurate cryptocurrency price, volume, news
+              and research data.
             </Text>
             <Flex justifyContent="center" mt={['35px', 4]}>
-              <Button variant="primary">Go to CoinHatcher</Button>
+              <Button variant="primary">Go to Coinhatcher</Button>
             </Flex>
           </Flex>
           <CoinHatcherShowcase
