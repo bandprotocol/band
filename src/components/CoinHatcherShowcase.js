@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import PageContainer from 'components/PageContainer'
-import { Flex, Text, Image, Box } from 'ui/common'
+import { Flex, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
 
 export default ({ background, Img1, Img2, Img3, children }) => {
