@@ -88,6 +88,9 @@ export default () => {
               >
                 <Button
                   variant="primary"
+                  style={{
+                    fontSize: '16px',
+                  }}
                   css={{
                     '&:focus': {
                       outline: 'none',

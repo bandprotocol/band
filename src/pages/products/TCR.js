@@ -277,6 +277,7 @@ export default () => {
                 <Button
                   variant="primary"
                   style={{
+                    fontSize: '16px',
                     height: '45px',
                     width: _isMobile ? '196px' : null,
                     padding: _isMobile ? '5px' : null,
