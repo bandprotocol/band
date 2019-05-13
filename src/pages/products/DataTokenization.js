@@ -22,7 +22,7 @@ import { isMobile } from 'ui/media'
 import StartBuilding from 'components/StartBuilding'
 import DataTokenization from 'images/dataTokenization.png'
 import IssuanceImg from 'images/start-up.svg'
-import GovernanceImg from 'images/governanceImg.svg'
+import GovernanceImg from 'images/governanceImg.png'
 import StakingImg from 'images/coins.svg'
 
 export default () => {

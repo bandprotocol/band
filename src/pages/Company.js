@@ -77,7 +77,7 @@ const ApplyButton = styled(Button)`
   }
 `
 
-const TeamComponent = ({ faceImg, name, title, type, link }) => (
+const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
   <Flex flex={1} flexDirection="column" alignItems="center">
     {faceImg ? (
       <Image src={faceImg} width="120px" height="120px" />
@@ -107,6 +107,7 @@ const TeamComponent = ({ faceImg, name, title, type, link }) => (
     <Text color="#4a4a4a" fontWeight={300} fontSize="16px">
       {title}
     </Text>
+    {children}
   </Flex>
 )
 
@@ -299,7 +300,18 @@ export default () => {
               title="CEO and Co-Founder"
               link={'https://www.linkedin.com/in/soravis-srinawakoon-91098259/'}
               type={1}
-            />
+            >
+              <Text
+                mt="10px"
+                fontSize="14px"
+                textAlign="center"
+                lineHeight={1.57}
+              >
+                M.S. in MS&E, B.S. in CS <br />
+                Stanford University
+                <br /> Boston Consulting Group
+              </Text>
+            </TeamComponent>
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Swit}
@@ -307,7 +319,20 @@ export default () => {
               title="CTO and Co-Founder"
               link={'https://www.linkedin.com/in/sorawit/'}
               type={1}
-            />
+            >
+              <Text
+                mt="10px"
+                fontSize="14px"
+                textAlign="center"
+                lineHeight={1.57}
+              >
+                M.Eng./S.B. in EECS
+                <br />
+                Massachusetts Institute of Technology
+                <br />
+                Hudson River Trading, Quora, Dropbox
+              </Text>
+            </TeamComponent>
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Paul}
@@ -315,7 +340,20 @@ export default () => {
               title="CPO and Co-Founder"
               link={'https://github.com/smiled0g'}
               type={0}
-            />
+            >
+              <Text
+                mt="10px"
+                fontSize="14px"
+                textAlign="center"
+                lineHeight={1.57}
+              >
+                Creator of Crypto Gaming Apps
+                <br />
+                with 800,000+ users
+                <br />
+                Tripadvisor, Turfmappx
+              </Text>
+            </TeamComponent>
           </Flex>
           <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
             <TeamComponent

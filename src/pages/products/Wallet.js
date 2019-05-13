@@ -23,10 +23,10 @@ import StartBuilding from 'components/StartBuilding'
 
 import WalletSrc from 'images/walletExample.png'
 import WalletIntegrate from 'images/band-wallet-integrate.png'
-import W3Img from 'images/web-3-js.svg'
-import TrustlessCredentialStore from 'images/trustlessCredentialStore.svg'
-import NoExtensionsRequired from 'images/noExtensionsRequired.svg'
-import DomainWhitelist from 'images/internet-1.svg'
+import W3Img from 'images/web-3-js.png'
+import TrustlessCredentialStore from 'images/trustlessCredentialStore.png'
+import NoExtensionsRequired from 'images/noExtensionsRequired.png'
+import DomainWhitelist from 'images/internet-1.png'
 
 export default () => {
   const _isMobile = isMobile()
@@ -109,8 +109,8 @@ export default () => {
             flexDirection={['column', 'row']}
           >
             <Flex flex={1} flexDirection="column">
-              <Flex style={{ height: '100px' }}>
-                <Image src={W3Img} width="100px" />
+              <Flex style={{ height: '100px' }} alignItems="center">
+                <Image src={W3Img} width="97px" height="91px" />
               </Flex>
               <Text my="20px" fontSize="24px">
                 Web3.js Compatible
@@ -126,8 +126,12 @@ export default () => {
               ml={['0px', '100px']}
               flexDirection="column"
             >
-              <Flex style={{ height: '100px' }}>
-                <Image src={TrustlessCredentialStore} width="100px" />
+              <Flex style={{ height: '100px' }} alignItems="center">
+                <Image
+                  src={TrustlessCredentialStore}
+                  width="84px"
+                  height="83px"
+                />
               </Flex>
               <Text my="20px" fontSize="24px">
                 Trustless Credential Store
@@ -144,8 +148,8 @@ export default () => {
             mt={['30px', '50px']}
           >
             <Flex flex={1} flexDirection="column">
-              <Flex style={{ height: '100px' }}>
-                <Image src={NoExtensionsRequired} width="100px" />
+              <Flex style={{ height: '100px' }} alignItems="center">
+                <Image src={NoExtensionsRequired} width="103px" height="78px" />
               </Flex>
               <Text my="20px" fontSize="24px">
                 No Extensions Required
@@ -161,8 +165,8 @@ export default () => {
               ml={['0px', '100px']}
               flexDirection="column"
             >
-              <Flex style={{ height: '100px' }}>
-                <Image src={DomainWhitelist} width="100px" />
+              <Flex style={{ height: '100px' }} alignItems="center">
+                <Image src={DomainWhitelist} width="92px" height="85px" />
               </Flex>
               <Text my="20px" fontSize="24px">
                 Domain Whitelist
