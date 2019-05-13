@@ -88,7 +88,7 @@ const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
       />
     )}
     <Flex my="10px" flexDirection="row">
-      <Text fontSize="20px" color="#2a304e">
+      <Text fontWeight={600} fontSize="20px" color="#2a304e">
         {name}
       </Text>
       <Flex mx="5px" />
@@ -104,7 +104,7 @@ const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
         />
       </AbsoluteLink>
     </Flex>
-    <Text color="#4a4a4a" fontWeight={300} fontSize="16px">
+    <Text color="#4a4a4a" fontWeight={500} fontSize="16px">
       {title}
     </Text>
     {children}
@@ -306,6 +306,7 @@ export default () => {
                 fontSize="14px"
                 textAlign="center"
                 lineHeight={1.57}
+                fontWeight={300}
               >
                 M.S. in MS&E, B.S. in CS <br />
                 Stanford University
@@ -325,6 +326,7 @@ export default () => {
                 fontSize="14px"
                 textAlign="center"
                 lineHeight={1.57}
+                fontWeight={300}
               >
                 M.Eng./S.B. in EECS
                 <br />
@@ -346,6 +348,7 @@ export default () => {
                 fontSize="14px"
                 textAlign="center"
                 lineHeight={1.57}
+                fontWeight={300}
               >
                 Creator of Crypto Gaming Apps
                 <br />

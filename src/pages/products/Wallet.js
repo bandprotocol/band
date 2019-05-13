@@ -23,6 +23,7 @@ import StartBuilding from 'components/StartBuilding'
 
 import WalletSrc from 'images/walletExample.png'
 import WalletIntegrate from 'images/band-wallet-integrate.png'
+import WalletIntegrateM from 'images/band-wallet-integrate_M.png'
 import W3Img from 'images/web-3-js.png'
 import TrustlessCredentialStore from 'images/trustlessCredentialStore.png'
 import NoExtensionsRequired from 'images/noExtensionsRequired.png'
@@ -87,8 +88,8 @@ export default () => {
             </H1>
           </Box>
           <Image
-            src={WalletIntegrate}
-            width={['calc(100vw - 20px)', '700px']}
+            src={_isMobile ? WalletIntegrateM : WalletIntegrate}
+            width={['50vw', '700px']}
             my={4}
           />
         </Flex>
@@ -106,16 +107,25 @@ export default () => {
           </Box>
           <Flex
             width={['calc(100vw - 40px)', '660px']}
+            justifyContent="center"
             flexDirection={['column', 'row']}
           >
             <Flex flex={1} flexDirection="column">
-              <Flex style={{ height: '100px' }} alignItems="center">
+              <Flex
+                style={{ height: '100px' }}
+                justifyContent={['center', 'flex-start']}
+                alignItems="center"
+              >
                 <Image src={W3Img} width="97px" height="91px" />
               </Flex>
-              <Text my="20px" fontSize="24px">
+              <Text my="20px" fontSize="24px" textAlign={['center', 'left']}>
                 Web3.js Compatible
               </Text>
-              <Text lineHeight={1.5}>
+              <Text
+                lineHeight={1.5}
+                px={['20px', '0px']}
+                textAlign={['center', 'left']}
+              >
                 Developers can integrate Band Wallet into any existing DApp. The
                 API exposes Web3Provider instance just like Metamask
               </Text>
@@ -126,17 +136,25 @@ export default () => {
               ml={['0px', '100px']}
               flexDirection="column"
             >
-              <Flex style={{ height: '100px' }} alignItems="center">
+              <Flex
+                style={{ height: '100px' }}
+                justifyContent={['center', 'flex-start']}
+                alignItems="center"
+              >
                 <Image
                   src={TrustlessCredentialStore}
                   width="84px"
                   height="83px"
                 />
               </Flex>
-              <Text my="20px" fontSize="24px">
+              <Text my="20px" fontSize="24px" textAlign={['center', 'left']}>
                 Trustless Credential Store
               </Text>
-              <Text lineHeight={1.5}>
+              <Text
+                lineHeight={1.5}
+                px={['20px', '0px']}
+                textAlign={['center', 'left']}
+              >
                 Band Wallet enables registration and sign-in functionalities for
                 DApps, without compromising security and private key ownership
               </Text>
@@ -148,13 +166,21 @@ export default () => {
             mt={['30px', '50px']}
           >
             <Flex flex={1} flexDirection="column">
-              <Flex style={{ height: '100px' }} alignItems="center">
+              <Flex
+                style={{ height: '100px' }}
+                justifyContent={['center', 'flex-start']}
+                alignItems="center"
+              >
                 <Image src={NoExtensionsRequired} width="103px" height="78px" />
               </Flex>
-              <Text my="20px" fontSize="24px">
+              <Text my="20px" fontSize="24px" textAlign={['center', 'left']}>
                 No Extensions Required
               </Text>
-              <Text lineHeight={1.5}>
+              <Text
+                lineHeight={1.5}
+                px={['20px', '0px']}
+                textAlign={['center', 'left']}
+              >
                 Developers can integrate Band Wallet into any existing DApp. The
                 API exposes Web3Provider instance just like Metamask
               </Text>
@@ -165,13 +191,21 @@ export default () => {
               ml={['0px', '100px']}
               flexDirection="column"
             >
-              <Flex style={{ height: '100px' }} alignItems="center">
+              <Flex
+                style={{ height: '100px' }}
+                justifyContent={['center', 'flex-start']}
+                alignItems="center"
+              >
                 <Image src={DomainWhitelist} width="92px" height="85px" />
               </Flex>
-              <Text my="20px" fontSize="24px">
+              <Text my="20px" fontSize="24px" textAlign={['center', 'left']}>
                 Domain Whitelist
               </Text>
-              <Text lineHeight={1.5}>
+              <Text
+                lineHeight={1.5}
+                px={['20px', '0px']}
+                textAlign={['center', 'left']}
+              >
                 Nobody likes pesky confirmation popups. Band Wallet allows users
                 to whitelist domain and bypass confirmations in low-value
                 transactions

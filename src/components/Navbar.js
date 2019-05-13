@@ -29,8 +29,7 @@ import MenuDTDark from 'images/menu_dt_dark.svg'
 import MenuPDSDark from 'images/menu_pds_dark.svg'
 
 import GovernancePortalImg from 'images/governancePortal.svg'
-import DatasetExplorerImg from 'images/datasetExplorer.svg'
-import DatasetExplorerDarkImg from 'images/datasetExplorerDark.svg'
+import DatasetExplorerImg from 'images/datasetExplorer.png'
 
 import { colors } from 'ui'
 
@@ -92,7 +91,6 @@ const getImg = id =>
     DatasetExplorerImg,
     MenuDTDark,
     MenuPDSDark,
-    DatasetExplorerDarkImg,
   ][id]
 
 const NavMenu = ({ isSelected, title, tabs }) => {
@@ -503,7 +501,7 @@ const Navbar = props => {
                   closeMenu={closeMenu}
                   link="https://data.bandprotocol.com"
                   isAbsolute={true}
-                  imgIndex={9}
+                  imgIndex={6}
                   imgHeight="46px"
                   title="Dataset Explorer"
                   description={`Explore dataset availables by Band Protocol and learn how to integrate with the DApps`}
@@ -611,7 +609,7 @@ const Navbar = props => {
               {
                 title: 'Dataset Explorer',
                 href: 'https://data.bandprotocol.com',
-                imgIndex: [9, 6],
+                imgIndex: 6,
                 imgHeight: '46px',
                 content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
               },
