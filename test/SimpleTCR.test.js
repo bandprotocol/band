@@ -193,21 +193,36 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       );
     });
     it('verify parameters of TCR', async () => {
-      (await this.tcr.get(web3.utils.fromAscii('dispensation_percentage')))
+      (await this.params.get(
+        web3.utils.fromAscii('tcr:'),
+        web3.utils.fromAscii('dispensation_percentage'),
+      ))
         .toString()
         .should.eq('300000000000000000');
-      (await this.tcr.get(web3.utils.fromAscii('min_deposit')))
+      (await this.params.get(
+        web3.utils.fromAscii('tcr:'),
+        web3.utils.fromAscii('min_deposit'),
+      ))
         .toNumber()
         .should.eq(100);
 
-      (await this.tcr.get(web3.utils.fromAscii('apply_stage_length')))
+      (await this.params.get(
+        web3.utils.fromAscii('tcr:'),
+        web3.utils.fromAscii('apply_stage_length'),
+      ))
         .toNumber()
         .should.eq(300);
 
-      (await this.tcr.get(web3.utils.fromAscii('support_required_pct')))
+      (await this.params.get(
+        web3.utils.fromAscii('tcr:'),
+        web3.utils.fromAscii('support_required_pct'),
+      ))
         .toString()
         .should.eq('500000000000000000');
-      (await this.tcr.get(web3.utils.fromAscii('min_participation_pct')))
+      (await this.params.get(
+        web3.utils.fromAscii('tcr:'),
+        web3.utils.fromAscii('min_participation_pct'),
+      ))
         .toString()
         .should.eq('700000000000000000');
     });
@@ -894,7 +909,10 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       await time.increase(time.duration.seconds(60));
     });
     it('New min_deposit should have new value', async () => {
-      (await this.tcr.get(web3.utils.fromAscii('min_deposit')))
+      (await this.params.get(
+        web3.utils.fromAscii('tcr:'),
+        web3.utils.fromAscii('min_deposit'),
+      ))
         .toNumber()
         .should.eq(newMinDeposit);
     });

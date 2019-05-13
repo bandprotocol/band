@@ -22,16 +22,16 @@ contract ParameterizedBondingCurve is BondingCurve {
   }
 
   function getRevenueBeneficiary() public view returns (address) {
-    address beneficiary = address(params.get("bonding:revenue_beneficiary"));
+    address beneficiary = address(params.getRaw("bonding:revenue_beneficiary"));
     require(beneficiary != address(0));
     return beneficiary;
   }
 
   function getInflationRateNumerator() public view returns (uint256) {
-    return params.get("bonding:inflation_rate");
+    return params.getRaw("bonding:inflation_rate");
   }
 
   function getLiquiditySpreadNumerator() public view returns (uint256) {
-    return params.get("bonding:liquidity_spread");
+    return params.getRaw("bonding:liquidity_spread");
   }
 }

@@ -7,13 +7,10 @@ import "./Parameters.sol";
 import "./bonding/BondingCurve.sol";
 import "./data/TCD.sol";
 import "./data/TCR.sol";
-import "./utils/KeyUtils.sol";
 import "./utils/Expression.sol";
 
 
 contract CommunityCore {
-  using KeyUtils for bytes8;
-
   event TCDCreated(TCD tcd);
   event TCRCreated(TCR tcr);
 
@@ -22,8 +19,6 @@ contract CommunityCore {
   CommunityToken public token;
   Parameters public params;
   BondingCurve public bondingCurve;
-
-  mapping (bytes8 => TCR) public tcr;
 
   constructor(
     BandRegistryBase _registry,
@@ -40,22 +35,17 @@ contract CommunityCore {
     band = _registry.band();
     token = CommunityTokenFactory.create(name, symbol);
     params = ParametersFactory.create(token);
-    bondingCurve = BondingCurveFactory.create(
-      band,
-      token,
-      collateralExpression,
-      params
-    );
+    bondingCurve = BondingCurveFactory.create(band, token, collateralExpression, params);
     token.setExecDelegator(address(_registry));
-    params.setExecDelegator(address(_registry));
     token.addMinter(address(bondingCurve));
     token.renounceMinter();
-    params.set("bonding:liquidity_spread", bondingLiquiditySpread);
-    params.set("bonding:revenue_beneficiary", uint256(creator));
-    params.set("bonding:inflation_rate", 0);
-    params.set("params:expiration_time", paramsExpirationTime);
-    params.set("params:min_participation_pct", paramsMinParticipationPct);
-    params.set("params:support_required_pct", paramsSupportRequiredPct);
+    params.setExecDelegator(address(_registry));
+    params.setRaw("bonding:liquidity_spread", bondingLiquiditySpread);
+    params.setRaw("bonding:revenue_beneficiary", uint256(creator));
+    params.setRaw("bonding:inflation_rate", 0);
+    params.setRaw("params:expiration_time", paramsExpirationTime);
+    params.setRaw("params:min_participation_pct", paramsMinParticipationPct);
+    params.setRaw("params:support_required_pct", paramsSupportRequiredPct);
   }
 
   function createTCD(
@@ -66,14 +56,12 @@ contract CommunityCore {
     uint256 queryPrice,
     uint256 withdrawDelay
   ) external {
-    params.set(prefix.append("min_provider_stake"), minProviderStake);
-    params.set(prefix.append("max_provider_count"), maxProviderCount);
-    params.set(prefix.append("owner_revenue_pct"), ownerRevenuePct);
-    params.set(prefix.append("query_price"), queryPrice);
-    params.set(prefix.append("withdraw_delay"), withdrawDelay);
-    TCD tcd = TCDFactory.create(
-      prefix, band, token, params, bondingCurve, registry.exchange()
-    );
+    params.set(prefix, "min_provider_stake", minProviderStake);
+    params.set(prefix, "max_provider_count", maxProviderCount);
+    params.set(prefix, "owner_revenue_pct", ownerRevenuePct);
+    params.set(prefix, "query_price", queryPrice);
+    params.set(prefix, "withdraw_delay", withdrawDelay);
+    TCD tcd = TCDFactory.create(prefix, band, token, params, bondingCurve, registry.exchange());
     token.addCapper(address(tcd));
     emit TCDCreated(tcd);
   }
@@ -89,18 +77,14 @@ contract CommunityCore {
     uint256 minParticipationPct,
     uint256 supportRequiredPct
   ) external {
-    require(prefix != bytes8("bonding:") && prefix != bytes8("params:") && prefix != bytes8("data:"));
-    require(address(tcr[prefix]) == address(0));
-    tcr[prefix] = TCRFactory.create(
-      prefix, token, params, decayFunction
-    );
-    params.set(prefix.append("min_deposit"), minDeposit);
-    params.set(prefix.append("apply_stage_length"), applyStageLength);
-    params.set(prefix.append("dispensation_percentage"), dispensationPercentage);
-    params.set(prefix.append("commit_time"), commitTime);
-    params.set(prefix.append("reveal_time"), revealTime);
-    params.set(prefix.append("min_participation_pct"), minParticipationPct);
-    params.set(prefix.append("support_required_pct"), supportRequiredPct);
-    emit TCRCreated(tcr[prefix]);
+    params.set(prefix, "min_deposit", minDeposit);
+    params.set(prefix, "apply_stage_length", applyStageLength);
+    params.set(prefix, "dispensation_percentage", dispensationPercentage);
+    params.set(prefix, "commit_time", commitTime);
+    params.set(prefix, "reveal_time", revealTime);
+    params.set(prefix, "min_participation_pct", minParticipationPct);
+    params.set(prefix, "support_required_pct", supportRequiredPct);
+    TCR tcr = TCRFactory.create(prefix, token, params, decayFunction);
+    emit TCRCreated(tcr);
   }
 }

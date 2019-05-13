@@ -10,7 +10,6 @@ import "../token/ERC20Acceptor.sol";
 import "../feeless/Feeless.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
-import "../utils/KeyUtils.sol";
 
 
 /**
@@ -22,7 +21,6 @@ import "../utils/KeyUtils.sol";
 contract TCR is Feeless, ERC20Acceptor {
   using Fractional for uint256;
   using SafeMath for uint256;
-  using KeyUtils for bytes8;
 
   event ApplicationSubmitted(  // A new entry is submitted to the TCR.
     bytes32 data,
@@ -191,14 +189,6 @@ contract TCR is Feeless, ERC20Acceptor {
   }
 
   /**
-   * @dev Get parameter config on the given key. Note that it prepend the key
-   * with this contract's prefix to get the absolute key.
-   */
-  function get(bytes24 key) public view returns (uint256) {
-    return params.get(prefix.append(key));
-  }
-
-  /**
    * @dev Get current min_deposit of the entry
    */
   function currentMinDeposit(bytes32 entryData)
@@ -208,7 +198,7 @@ contract TCR is Feeless, ERC20Acceptor {
     returns (uint256)
   {
     Entry storage entry = entries[entryData];
-    uint256 minDeposit = get("min_deposit");
+    uint256 minDeposit = params.get(prefix, "min_deposit");
     if (now < entry.listedAt) {
       return minDeposit;
     } else {
@@ -226,11 +216,11 @@ contract TCR is Feeless, ERC20Acceptor {
     requireToken(ERC20Interface(address(token)), proposer, stake)
     entryMustNotExist(data)
   {
-    require(stake >= get("min_deposit"));
+    require(stake >= params.get(prefix, "min_deposit"));
     Entry storage entry = entries[data];
     entry.proposer = proposer;
     entry.deposit = stake;
-    entry.listedAt = now.add(get("apply_stage_length"));
+    entry.listedAt = now.add(params.get(prefix, "apply_stage_length"));
     emit ApplicationSubmitted(data, proposer, entry.listedAt, stake);
   }
 
@@ -318,11 +308,11 @@ contract TCR is Feeless, ERC20Acceptor {
       challenger: challenger,
       rewardPool: stake,
       remainingRewardVotes: 0,
-      commitEndTime: now.add(get("commit_time")),
-      revealEndTime: now.add(get("commit_time")).add(get("reveal_time")),
+      commitEndTime: now.add(params.get(prefix, "commit_time")),
+      revealEndTime: now.add(params.get(prefix, "commit_time")).add(params.get(prefix, "reveal_time")),
       snapshotNonce: token.votingPowerChangeNonce(),
-      voteRemoveRequiredPct: get("support_required_pct"),
-      voteMinParticipation: get("min_participation_pct").mulFrac(token.totalSupply()),
+      voteRemoveRequiredPct: params.get(prefix, "support_required_pct"),
+      voteMinParticipation: params.get(prefix, "min_participation_pct").mulFrac(token.totalSupply()),
       keepCount: proposerVote,
       removeCount: challengerVote,
       totalCommitCount: proposerVote.add(challengerVote),
@@ -382,7 +372,7 @@ contract TCR is Feeless, ERC20Acceptor {
     assert(entry.challengeId == challengeId);
     entry.challengeId = 0;
     uint256 challengerStake = challenge.rewardPool;
-    uint256 winnerExtraReward = get("dispensation_percentage").mulFrac(challengerStake);
+    uint256 winnerExtraReward = params.get(prefix, "dispensation_percentage").mulFrac(challengerStake);
     uint256 winnerTotalReward = challengerStake.add(winnerExtraReward);
     uint256 rewardPool = challengerStake.sub(winnerExtraReward);
     if (result == ChallengeState.Kept) {

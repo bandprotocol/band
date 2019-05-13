@@ -186,7 +186,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await shouldFail.reverting(this.tcd.kick(alice, { from: alice }));
     });
     it('should be able to kick if owner stake < min_provider_stake', async () => {
-      (await this.params.get(web3.utils.fromAscii('data:min_provider_stake')))
+      (await this.params.getRaw(
+        web3.utils.fromAscii('data:min_provider_stake'),
+      ))
         .toNumber()
         .should.eq(10);
       // not enough to kick carol
@@ -204,7 +206,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.params.voteOnProposal(alice, 0, true, {
         from: alice,
       });
-      (await this.params.get(web3.utils.fromAscii('data:min_provider_stake')))
+      (await this.params.getRaw(
+        web3.utils.fromAscii('data:min_provider_stake'),
+      ))
         .toNumber()
         .should.eq(20);
       // enough to kick carol
@@ -749,36 +753,40 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     });
 
     it('Should not set new parameter to data: prefix', async () => {
-      (await this.params.get(web3.utils.fromAscii('data:min_provider_stake')))
+      (await this.params.getRaw(
+        web3.utils.fromAscii('data:min_provider_stake'),
+      ))
         .toNumber()
         .should.eq(10);
-      (await this.params.get(web3.utils.fromAscii('data:max_provider_count')))
+      (await this.params.getRaw(
+        web3.utils.fromAscii('data:max_provider_count'),
+      ))
         .toNumber()
         .should.eq(3);
-      (await this.params.get(web3.utils.fromAscii('data:owner_revenue_pct')))
+      (await this.params.getRaw(web3.utils.fromAscii('data:owner_revenue_pct')))
         .toString()
         .should.eq('500000000000000000');
-      (await this.params.get(web3.utils.fromAscii('data:query_price')))
+      (await this.params.getRaw(web3.utils.fromAscii('data:query_price')))
         .toNumber()
         .should.eq(100);
-      (await this.params.get(web3.utils.fromAscii('data:withdraw_delay')))
+      (await this.params.getRaw(web3.utils.fromAscii('data:withdraw_delay')))
         .toNumber()
         .should.eq(0);
     });
     it('Should set new parameter to qd: prefix', async () => {
-      (await this.params.get(web3.utils.fromAscii('qd:min_provider_stake')))
+      (await this.params.getRaw(web3.utils.fromAscii('qd:min_provider_stake')))
         .toNumber()
         .should.eq(1000);
-      (await this.params.get(web3.utils.fromAscii('qd:max_provider_count')))
+      (await this.params.getRaw(web3.utils.fromAscii('qd:max_provider_count')))
         .toNumber()
         .should.eq(5);
-      (await this.params.get(web3.utils.fromAscii('qd:owner_revenue_pct')))
+      (await this.params.getRaw(web3.utils.fromAscii('qd:owner_revenue_pct')))
         .toString()
         .should.eq('120000000000000000');
-      (await this.params.get(web3.utils.fromAscii('qd:query_price')))
+      (await this.params.getRaw(web3.utils.fromAscii('qd:query_price')))
         .toNumber()
         .should.eq(1000);
-      (await this.params.get(web3.utils.fromAscii('qd:withdraw_delay')))
+      (await this.params.getRaw(web3.utils.fromAscii('qd:withdraw_delay')))
         .toNumber()
         .should.eq(20);
     });

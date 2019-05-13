@@ -47,7 +47,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
 
     context('Checking basic functionalities', () => {
       it('should allow getting existing parameters', async () => {
-        (await this.params.get(
+        (await this.params.getRaw(
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
@@ -55,7 +55,9 @@ contract('Parameters', ([_, owner, alice, bob]) => {
       });
       it('should revert if key does not exited', async () => {
         await shouldFail.reverting(
-          this.params.get(web3.utils.fromAscii('params:support_require_pct')),
+          this.params.getRaw(
+            web3.utils.fromAscii('params:support_require_pct'),
+          ),
         );
       });
     });
@@ -65,41 +67,73 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         this.params = await Parameters.new(this.comm.address, { from: owner });
       });
       it('Should set new parameter by owner', async () => {
-        await this.params.set(web3.utils.fromAscii('test:param1'), 30000, {
-          from: owner,
-        });
+        await this.params.set(
+          web3.utils.fromAscii('test:'),
+          web3.utils.fromAscii('param1'),
+          30000,
+          {
+            from: owner,
+          },
+        );
 
-        (await this.params.get(web3.utils.fromAscii('test:param1')))
+        (await this.params.get(
+          web3.utils.fromAscii('test:'),
+          web3.utils.fromAscii('param1'),
+        ))
           .toNumber()
           .should.eq(30000);
       });
 
       it('Should revert if set by other', async () => {
         await shouldFail.reverting(
-          this.params.set(web3.utils.fromAscii('test:param1'), 30000, {
-            from: bob,
-          }),
+          this.params.set(
+            web3.utils.fromAscii('test:'),
+            web3.utils.fromAscii('param1'),
+            30000,
+            {
+              from: bob,
+            },
+          ),
         );
 
         await shouldFail.reverting(
-          this.params.get(web3.utils.fromAscii('test:param1')),
+          this.params.get(
+            web3.utils.fromAscii('test:'),
+            web3.utils.fromAscii('param1'),
+          ),
         );
       });
 
       it('Should cannot set data if key already existed', async () => {
-        await this.params.set(web3.utils.fromAscii('test:param1'), 30000, {
-          from: owner,
-        });
+        await this.params.set(
+          web3.utils.fromAscii('test:'),
+          web3.utils.fromAscii('param1'),
+          30000,
+          {
+            from: owner,
+          },
+        );
 
-        (await this.params.get(web3.utils.fromAscii('test:param1')))
+        (await this.params.get(
+          web3.utils.fromAscii('test:'),
+          web3.utils.fromAscii('param1'),
+        ))
           .toNumber()
           .should.eq(30000);
 
-        await this.params.set(web3.utils.fromAscii('test:param1'), 200, {
-          from: owner,
-        });
+        await this.params.set(
+          web3.utils.fromAscii('test:'),
+          web3.utils.fromAscii('param1'),
+          200,
+          {
+            from: owner,
+          },
+        );
 
-        (await this.params.get(web3.utils.fromAscii('test:param1')))
+        (await this.params.get(
+          web3.utils.fromAscii('test:'),
+          web3.utils.fromAscii('param1'),
+        ))
           .toNumber()
           .should.eq(30000);
       });
@@ -509,7 +543,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         await shouldFail.reverting(
-          this.params.get(web3.utils.fromAscii('example_proposal')),
+          this.params.getRaw(web3.utils.fromAscii('example_proposal')),
         );
 
         // vote
@@ -520,7 +554,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         await time.increase(time.duration.seconds(60));
         await this.params.resolve(0, { from: alice });
 
-        (await this.params.get(web3.utils.fromAscii('example_proposal')))
+        (await this.params.getRaw(web3.utils.fromAscii('example_proposal')))
           .toNumber()
           .should.be.eq(1000000);
       });
@@ -692,7 +726,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .toString()
           .should.be.eq('2');
 
-        (await this.params.get(
+        (await this.params.getRaw(
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
@@ -795,7 +829,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .toString()
           .should.be.eq('2');
 
-        (await this.params.get(
+        (await this.params.getRaw(
           web3.utils.fromAscii('params:support_required_pct'),
         ))
           .toString()
