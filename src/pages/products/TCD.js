@@ -232,6 +232,7 @@ export default () => {
                   variant="outline"
                   color="#545454"
                   style={{
+                    fontSize: '16px',
                     height: '45px',
                     width: _isMobile ? '196px' : null,
                     padding: _isMobile ? '5px' : null,
@@ -259,6 +260,7 @@ export default () => {
                   variant="primary"
                   ml={[0, 5]}
                   style={{
+                    fontSize: '16px',
                     height: '45px',
                     width: _isMobile ? '196px' : null,
                     padding: _isMobile ? '5px' : null,
@@ -345,7 +347,7 @@ export default () => {
                 }}
                 mr={['0px', '36px']}
               >
-                <Box mt={['15px', '0px']}>
+                <Box height="50px" mt="auto">
                   <Image mt="auto" src={TCDPriceFeed} width="100%" />
                 </Box>
               </FeatureCard>
@@ -362,8 +364,8 @@ export default () => {
                 }}
                 mt={['30px', '0px']}
               >
-                <Box ml={4} mt={['5px', '-15px']}>
-                  <Image src={TCDCrossChain} height={['105px', '105px']} />
+                <Box ml={4} heigh="100px" mb="auto">
+                  <Image src={TCDCrossChain} height={['100px', '100px']} />
                 </Box>
               </FeatureCard>
             </Flex>

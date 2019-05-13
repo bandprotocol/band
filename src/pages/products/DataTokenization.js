@@ -85,11 +85,11 @@ export default () => {
               <AbsoluteLink href="https://developer.bandprotocol.com/">
                 <Button
                   variant="primary"
-                  fontSize="16px"
                   style={{
+                    fontSize: '16px',
                     height: '45px',
-                    width: _isMobile ? '250px' : '280px',
-                    padding: _isMobile ? '0px' : null,
+                    width: _isMobile ? '280px' : '280px',
+                    padding: _isMobile ? '10px' : '10px',
                   }}
                   css={{
                     '&:focus': {
@@ -100,7 +100,7 @@ export default () => {
                     },
                   }}
                 >
-                  Create data-curation community
+                  Create Data-Curation Community
                 </Button>
               </AbsoluteLink>
             </Flex>
