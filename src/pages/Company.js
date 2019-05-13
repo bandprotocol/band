@@ -199,8 +199,8 @@ export default () => {
           <Card
             mt={['30px', '50px']}
             bg="#f6f8ff"
-            px="45px"
-            py="45px"
+            px={['15px', '45px']}
+            py={['30px', '45px']}
             width={['calc(100vw - 40px)', '940px']}
           >
             <Text
