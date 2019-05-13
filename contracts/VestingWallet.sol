@@ -52,7 +52,7 @@ contract VestingWallet is Ownable {
     selfdestruct(msg.sender);
   }
 
-  function _getMonthIndex() internal returns (uint256) {
+  function _getMonthIndex() internal view returns (uint256) {
     for (uint256 i = 0; i < eomTimestampsAfterCliff.length; ++i) {
       if (now < eomTimestampsAfterCliff[i]) {
         return i;
