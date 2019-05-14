@@ -111,7 +111,7 @@ export default ({
                   alignSelf="center"
                   onClick={toggleEdit}
                   style={{
-                    borderRight: 'solid 2px #4e3ca9',
+                    borderRight: 'solid 1px #f2f4f9',
                     lineHeight: 1.45,
                     fontWeight: 500,
                     cursor: 'pointer',

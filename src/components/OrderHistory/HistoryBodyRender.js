@@ -50,7 +50,7 @@ export default ({ items }) => (
         <HistoryRow
           index={i}
           time={time.formal()}
-          price={price.pretty()}
+          price={price}
           amount={amount.pretty()}
           type={type}
           key={i}

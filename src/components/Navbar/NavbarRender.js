@@ -129,7 +129,7 @@ const BlockTransactions = styled(Card).attrs({
   padding: 3,
 })`
   position: absolute;
-  top: 68px;
+  top: 55px;
   right: 25px;
   background: #ffffff;
   width: 366px;
@@ -156,12 +156,12 @@ const SignOutDropDown = styled(Card).attrs({
   text-align: center;
   line-height: 30px;
   position: absolute;
-  top: 68px;
+  top: 45px;
   right: 25px;
   background: #ffffff;
   width: 100px;
   transition: all 250ms;
-  overflow: auto;
+  border: 1px solid #d9dce1;
   ${p =>
     p.show
       ? `
@@ -171,6 +171,30 @@ const SignOutDropDown = styled(Card).attrs({
   opacity: 0;
   pointer-events: none;
 `}
+
+  &:before {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #d9dce1;
+    top: -8px;
+    right: 4px;
+  }
+
+  &:after {
+    position: absolute;
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
+    top: -7px;
+    right: 4px;
+  }
 `
 
 export default ({
@@ -214,7 +238,10 @@ export default ({
               </Flex>
             </Link> */}
             {balance !== undefined ? (
-              <ClickOutSide onClickOutside={onClickOutside}>
+              <ClickOutSide
+                onClickOutside={onClickOutside}
+                style={{ position: 'relative' }}
+              >
                 <Flex flexDirection="row" mr={4} alignItems="center">
                   <Flex
                     flexDirection="row"
@@ -256,7 +283,7 @@ export default ({
                     <Flex ml="15px" mr="10px">
                       {!!user && (
                         <Jazzicon
-                          diameter={36}
+                          diameter={32}
                           seed={jsNumberForAddress(user)}
                         />
                       )}

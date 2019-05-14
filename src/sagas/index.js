@@ -59,6 +59,7 @@ function* baseInitialize() {
       approvalPosition: {
         bottom: 0,
         right: 10,
+        zIndex: 30,
       },
     },
   )
@@ -199,7 +200,7 @@ function* checkTransaction() {
 
                   if (receipt) {
                     if (receipt.status) {
-                      if (currentBlock - receipt.blockNumber + 1 >= 8)
+                      if (currentBlock - receipt.blockNumber + 1 >= 4)
                         return tx.set('status', 'COMPLETED')
                       else
                         return tx

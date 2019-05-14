@@ -93,7 +93,7 @@ export default ({
         </Text>
       </Flex>
       {!logedin ? null : balance === undefined ? (
-        <CircleLoadingSpinner radius="25px" />
+        <CircleLoadingSpinner radius="25px" color="white" />
       ) : (
         <Flex
           width="90%"

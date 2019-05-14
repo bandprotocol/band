@@ -30,6 +30,13 @@ class ProviderList extends React.Component {
     this.setState({
       fetching: false,
     })
+    this.checker = setInterval(() => {
+      this.props.loadTcds()
+    }, 3000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.checker)
   }
 
   onChangePage(selectedPage) {
@@ -48,7 +55,6 @@ class ProviderList extends React.Component {
       numDataProviders,
       showBeProvider,
     } = this.props
-    // console.warn(this.props)
     return (
       <Flex
         style={{ borderRadius: '10px' }}

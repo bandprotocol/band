@@ -7,7 +7,7 @@ const StyledSpinner = styled.svg`
   height: ${p => p.size};
 
   & .path {
-    stroke: #5973e7;
+    stroke: ${props => props.color};
     stroke-linecap: round;
     animation: dash 1.5s ease-in-out infinite;
   }
@@ -33,8 +33,8 @@ const StyledSpinner = styled.svg`
   }
 `
 
-export default ({ radius }) => (
-  <StyledSpinner viewBox="0 0 50 50" size={radius}>
+export default ({ radius, color = '#5973e7' }) => (
+  <StyledSpinner viewBox="0 0 50 50" size={radius} color={color}>
     <circle
       className="path"
       cx="25"

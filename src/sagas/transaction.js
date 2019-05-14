@@ -2,6 +2,7 @@ import { takeEvery, put, select } from 'redux-saga/effects'
 import { Utils } from 'band.js'
 import { channel } from 'redux-saga'
 import transit from 'transit-immutable-js'
+import BN from 'utils/bignumber'
 
 import {
   BUY_TOKEN,
@@ -45,7 +46,9 @@ function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
   const txHash = yield transaction.sendFeeless()
   txChannel.put({
     txHash,
-    title: `Deposit ${Utils.fromBlockchainUnit(stake)} tokens`,
+    title: stake.eq(BN.parse(1))
+      ? `Deposit ${Utils.fromBlockchainUnit(stake)} token`
+      : `Deposit ${Utils.fromBlockchainUnit(stake)} tokens`,
     type: 'DEPOSIT',
   })
 }
@@ -64,7 +67,9 @@ function* handleTcdWithdraw({
   const txHash = yield transaction.sendFeeless()
   txChannel.put({
     txHash,
-    title: `Withdraw ${Utils.fromBlockchainUnit(ownership)} tokens`,
+    title: ownership.eq(BN.parse(1))
+      ? `Withdraw ${Utils.fromBlockchainUnit(ownership)} token`
+      : `Withdraw ${Utils.fromBlockchainUnit(ownership)} tokens`,
     type: 'WITHDRAW',
   })
 }

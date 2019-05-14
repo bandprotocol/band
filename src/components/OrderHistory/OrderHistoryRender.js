@@ -14,7 +14,7 @@ const HistoryHeader = () => (
     </Flex>
     <Flex flex={1}>
       <Text fontSize="14px" fontWeight={600}>
-        Price (BAND)
+        Price (BAND) / Token
       </Text>
     </Flex>
     <Flex flex={1} justifyContent="flex-end">

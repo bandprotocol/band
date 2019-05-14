@@ -13,7 +13,7 @@ const handleAddOrders = (state, { address, orders }) => {
         acc.push(
           Map({
             time: moment.unix(order.timestamp),
-            price: new BN(order.price),
+            price: new BN(order.price).divideToFixed(order.amount, 6),
             amount: new BN(order.amount),
             type: order.orderType,
             user: order.user,

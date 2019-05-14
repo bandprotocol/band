@@ -66,6 +66,18 @@ const TxType = ({ type }) => {
           Claim
         </Badge>
       )
+    case 'DEPOSIT':
+      return (
+        <Badge bg="#edffe7" color="#42c47f">
+          Deposit
+        </Badge>
+      )
+    case 'WITHDRAW':
+      return (
+        <Badge bg="#ffe7e7" color="#ec6363">
+          Withdraw
+        </Badge>
+      )
     default:
       return (
         <Badge bg="#ffe7e7" color="#ec6363">
@@ -87,7 +99,7 @@ const renderStatus = (status, confirm) => {
             mr={3}
           >
             <Box
-              width={`${(confirm * 100) / 8}%`}
+              width={`${(confirm * 100) / 4}%`}
               bg="#4853ff"
               style={{
                 height: '8px',
@@ -100,7 +112,7 @@ const renderStatus = (status, confirm) => {
             <Text fontSize={14} color="#4e3ca9">
               {confirm}
             </Text>
-            <Text fontSize={14}>/8 Confirmation</Text>
+            <Text fontSize={14}>/4 Confirmation</Text>
           </Flex>
         </Flex>
       )

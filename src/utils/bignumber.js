@@ -82,5 +82,14 @@ BN.prototype.clamp = function(max, min) {
   }
 }
 
+BN.prototype.divideToFixed = function(divider, digits = 2) {
+  let dividerBig = BN.isBN(divider)
+    ? BigNumber(divider.toString())
+    : BigNumber(divider)
+  return BigNumber(this.toString())
+    .dividedBy(dividerBig)
+    .toFixed(digits)
+}
+
 window.BN = BN
 export default BN

@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { hideModal } from 'actions'
 import { Flex, Text } from 'ui/common'
+import colors from 'ui/colors'
 
 const BgCard = styled(Flex).attrs({
   bg: 'white',
@@ -26,7 +27,11 @@ const BecomeProviderModal = ({ hideBeProvider }) => {
         alignItems="center"
       >
         <Flex width={[1 / 2]}>
-          <Text color="#4e3ca9" fontFamily="Avenir-Heavy" fontSize="14px">
+          <Text
+            color={colors.blue.dark}
+            fontFamily="Avenir-Heavy"
+            fontSize="14px"
+          >
             Become a provider
           </Text>
         </Flex>

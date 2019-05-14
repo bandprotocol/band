@@ -40,7 +40,6 @@ function* handleLoadTcds({ user, commAddress }) {
           }
         }
       }
-
       `,
   )
 

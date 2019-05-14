@@ -65,6 +65,11 @@ class TransactionPopup extends React.Component {
     this.setState({ expand: !this.state.expand })
   }
 
+  hideTxns(e) {
+    e.stopPropagation()
+    console.warn('CLOSE')
+  }
+
   render() {
     const { txns } = this.props
     return txns ? (
@@ -83,11 +88,11 @@ class TransactionPopup extends React.Component {
               />
             </Text>
           </Box>
-          {/* <Box ml={3}>
+          <Box ml={3} onClick={this.hideTxns.bind(this)}>
             <Text color="#ffffff" size={24}>
               <i className="ion ion-md-close" />
             </Text>
-          </Box> */}
+          </Box>
         </MainBar>
         <TxnContainer
           maxHeight={this.state.expand ? `${txns.length * 95}px` : 0}
