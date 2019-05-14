@@ -3,6 +3,7 @@ pragma solidity 0.5.0;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "./QueryInterface.sol";
 import "../CommunityToken.sol";
 import "../Parameters.sol";
 import "../token/ERC20Acceptor.sol";
@@ -10,7 +11,7 @@ import "../feeless/Feeless.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 
-contract TCR is Feeless, ERC20Acceptor {
+contract TCR is Feeless, ERC20Acceptor, QueryInterface {
   using Fractional for uint256;
   using SafeMath for uint256;
 
@@ -33,21 +34,21 @@ contract TCR is Feeless, ERC20Acceptor {
 
   /// A TCR entry is considered to exist in 'entries' map iff its 'listedAt' is nonzero.
   struct Entry {
-    address proposer;        // The entry proposer
-    uint256 deposit;         // Amount token that is not on challenge stake
-    uint256 listedAt;        // Expiration time of entry's 'pending' status
-    uint256 challengeId;     // Id of challenge, applicable if not zero
+    address proposer;        /// The entry proposer
+    uint256 deposit;         /// Amount token that is not on challenge stake
+    uint256 listedAt;        /// Expiration time of entry's 'pending' status
+    uint256 challengeId;     /// Id of challenge, applicable if not zero
   }
   enum ChallengeState { Invalid, Open, Kept, Removed, Inconclusive }
   enum VoteStatus { Nothing, Committed, VoteKeep, VoteRemove, Claimed }
 
   /// A challenge represent a challenge for a TCR entry.
   struct Challenge {
-    bytes32 entryData;            // The hash of data that is in question
-    bytes32 reasonData;           // The hash of reason for this challenge
-    address challenger;           // The challenger
-    uint256 rewardPool;           // Remaining reward pool. Relevant after resolved.
-    uint256 remainingRewardVotes; // Remaining voting power to claim rewards.
+    bytes32 entryData;            /// The hash of data that is in question
+    bytes32 reasonData;           /// The hash of reason for this challenge
+    address challenger;           /// The challenger
+    uint256 rewardPool;           /// Remaining reward pool. Relevant after resolved.
+    uint256 remainingRewardVotes; /// Remaining voting power to claim rewards.
     uint256 commitEndTime;
     uint256 revealEndTime;
     uint256 snapshotNonce;
@@ -88,33 +89,25 @@ contract TCR is Feeless, ERC20Acceptor {
     _;
   }
 
-  modifier challengeMustExist(uint256 challengeId) {
-    require(challengeId > 0 && challengeId < nextChallengeNonce);
-    _;
-  }
-
-  /**
-   * @dev Return true iff the given entry is considered active in TCR at the
-   * moment.
-   */
   function isEntryActive(bytes32 data) public view returns (bool) {
     uint256 listedAt = entries[data].listedAt;
     return listedAt > 0 && now >= listedAt;
+  }
+
+  function getQueryPrice() public view returns (uint256) {
+    return 0;
+  }
+
+  function getAsBool(bytes32 key) public payable returns (bool) {
+    require(msg.value == 0);
+    return entries[key].listedAt > now;
   }
 
   function getVoteStatus(uint256 challengeId, address voter) public view returns (VoteStatus) {
     return challenges[challengeId].voteStatuses[voter];
   }
 
-  /**
-   * @dev Get current min_deposit of the entry
-   */
-  function currentMinDeposit(bytes32 entryData)
-    public
-    view
-    entryMustExist(entryData)
-    returns (uint256)
-  {
+  function currentMinDeposit(bytes32 entryData) public view entryMustExist(entryData) returns (uint256) {
     Entry storage entry = entries[entryData];
     uint256 minDeposit = params.get(prefix, "min_deposit");
     if (now < entry.listedAt) {
@@ -124,13 +117,10 @@ contract TCR is Feeless, ERC20Acceptor {
     }
   }
 
-  /**
-   * @dev Apply a new entry to the TCR. The applicant must stake token at least
-   * 'min_deposit'. Application will get auto-approved if no challenge happens
-   * during the first 'apply_stage_length' seconds.
-   */
+  /// Apply a new entry to the TCR. The applicant must stake token at least `min_deposit`.
+  /// Application will get auto-approved if no challenge happens in `apply_stage_length` seconds.
   function applyEntry(address proposer, uint256 stake, bytes32 data)
-    external
+    public
     requireToken(ERC20Interface(address(token)), proposer, stake)
     entryMustNotExist(data)
   {
@@ -142,12 +132,8 @@ contract TCR is Feeless, ERC20Acceptor {
     emit ApplicationSubmitted(data, proposer, entry.listedAt, stake);
   }
 
-  /**
-   * @dev Deposit more token to the given existing entry. The depositor must
-   * be the entry applicant.
-   */
   function deposit(address depositor, uint256 amount, bytes32 data)
-    external
+    public
     requireToken(ERC20Interface(address(token)), depositor, amount)
     entryMustExist(data)
   {
@@ -157,10 +143,8 @@ contract TCR is Feeless, ERC20Acceptor {
     emit EntryDeposited(data, amount);
   }
 
-  /**
-   * @dev Withdraw token from the given existing entry to the applicant.
-   */
-  function withdraw(address sender, bytes32 data, uint256 amount) public
+  function withdraw(address sender, bytes32 data, uint256 amount)
+    public
     feeless(sender)
     entryMustExist(data)
   {
@@ -176,14 +160,7 @@ contract TCR is Feeless, ERC20Acceptor {
     emit EntryWithdrawn(data, amount);
   }
 
-  /**
-   * @dev Delete the entry and refund everything to entry applicant. The entry
-   * must not have an ongoing challenge.
-   */
-  function exit(address sender, bytes32 data) public
-    feeless(sender)
-    entryMustExist(data)
-  {
+  function exit(address sender, bytes32 data) public feeless(sender) entryMustExist(data) {
     Entry storage entry = entries[data];
     require(entry.proposer == sender);
     require(entry.challengeId == 0);
@@ -191,17 +168,7 @@ contract TCR is Feeless, ERC20Acceptor {
     emit EntryExited(data);
   }
 
-  /**
-   * @dev Initiate a new challenge to the given existing entry. The entry must
-   * not already have ongoing challenge. If entry's deposit is less than
-   * 'min_deposit', it is automatically deleted.
-   */
-  function initiateChallenge(
-    address challenger,
-    uint256 challengeDeposit,
-    bytes32 data,
-    bytes32 reasonData
-  )
+  function initiateChallenge(address challenger, uint256 challengeDeposit, bytes32 data, bytes32 reasonData)
     public
     requireToken(ERC20Interface(address(token)), challenger, challengeDeposit)
     entryMustExist(data)
@@ -210,11 +177,9 @@ contract TCR is Feeless, ERC20Acceptor {
     require(entry.challengeId == 0 && entry.proposer != challenger);
     uint256 stake = Math.min(entry.deposit, currentMinDeposit(data));
     require(challengeDeposit >= stake);
-
     if (challengeDeposit != stake) {
       require(token.transfer(challenger, challengeDeposit.sub(stake)));
     }
-
     entry.deposit = entry.deposit.sub(stake);
     uint256 challengeId = nextChallengeNonce;
     uint256 proposerVote = token.historicalVotingPowerAtNonce(entry.proposer, token.votingPowerChangeNonce());
@@ -256,9 +221,7 @@ contract TCR is Feeless, ERC20Acceptor {
     emit ChallengeVoteCommitted(challengeId, voter, commitValue);
   }
 
-  function revealVote(address voter, uint256 challengeId, bool voteKeep, uint256 salt)
-    public
-  {
+  function revealVote(address voter, uint256 challengeId, bool voteKeep, uint256 salt) public {
     Challenge storage challenge = challenges[challengeId];
     require(challenge.state == ChallengeState.Open);
     require(now >= challenge.commitEndTime && now < challenge.revealEndTime);
@@ -275,11 +238,8 @@ contract TCR is Feeless, ERC20Acceptor {
     emit ChallengeVoteRevealed(challengeId, voter, voteKeep, weight);
   }
 
-  /**
-   * @dev Resolve TCR challenge. If the challenge succeeds, the entry will be
-   * removed and the challenger gets the reward. Otherwise, the entry's
-   * 'withdrawableDeposit' gets bumped by the reward.
-   */
+  /// Resolve TCR challenge. If the challenge succeeds, the entry will be removed and the challenger
+  /// gets the reward. Otherwise, the entry's `deposit` gets bumped by the reward.
   function resolveChallenge(uint256 challengeId) public {
     Challenge storage challenge = challenges[challengeId];
     require(challenge.state == ChallengeState.Open);
@@ -294,7 +254,6 @@ contract TCR is Feeless, ERC20Acceptor {
     uint256 winnerTotalReward = challengerStake.add(winnerExtraReward);
     uint256 rewardPool = challengerStake.sub(winnerExtraReward);
     if (result == ChallengeState.Kept) {
-      // Get reward from voting
       uint256 proposerVote = token.historicalVotingPowerAtNonce(entry.proposer, challenge.snapshotNonce);
       uint256 proposerVoteReward = rewardPool.mul(proposerVote).div(challenge.keepCount);
       winnerTotalReward = winnerTotalReward.add(proposerVoteReward);
@@ -323,10 +282,6 @@ contract TCR is Feeless, ERC20Acceptor {
     }
   }
 
-  /**
-   * @dev Claim reward for the given challenge. The claimer must already reveal
-   * the vote that is consistent with vote result.
-   */
   function claimReward(address voter, uint256 challengeId) public {
     Challenge storage challenge = challenges[challengeId];
     require(challenge.remainingRewardVotes > 0);
@@ -350,10 +305,7 @@ contract TCR is Feeless, ERC20Acceptor {
     }
   }
 
-  function _getChallengeResult(Challenge storage challenge)
-    internal
-    view
-    returns (ChallengeState)
+  function _getChallengeResult(Challenge storage challenge) internal view returns (ChallengeState)
   {
     assert(challenge.state == ChallengeState.Open);
     require(now >= challenge.commitEndTime);

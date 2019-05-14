@@ -2,9 +2,10 @@ pragma solidity 0.5.0;
 
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./QueryInterface.sol";
 import "../utils/ArrayUtils.sol";
 
-contract TCDBase {
+contract TCDBase is QueryInterface {
   using SafeMath for uint256;
 
   address[] public dataSources;
@@ -19,8 +20,6 @@ contract TCDBase {
     }
     _;
   }
-
-  function getQueryPrice() public view returns (uint256);
 
   function getActiveDataSourceCount() public view returns (uint256) {
     return dataSources.length;
