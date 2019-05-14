@@ -263,6 +263,7 @@ export default () => {
           <Flex
             mx={['-15px', 'calc(490px - 50vw)']}
             bg="#252a48"
+            justifyContent="center"
             alignItems="center"
             flexDirection="column"
             py={['30px', '50px']}
@@ -272,12 +273,14 @@ export default () => {
               Backed by
             </Text>
             <Flex
-              mt={['30px', '20px']}
+              mt={['30px', '30px']}
               alignItems="center"
               flexDirection={['column', 'row']}
+              style={{ width: '75vw' }}
             >
               <Flex
-                mr={['0px', '28px']}
+                flex={1}
+                justifyContent="center"
                 css={{
                   '&:hover': {
                     filter:
@@ -290,7 +293,8 @@ export default () => {
                 </AbsoluteLink>
               </Flex>
               <Flex
-                mr={['0px', '28px']}
+                flex={1}
+                justifyContent="center"
                 my={['20px', '0px']}
                 css={{
                   '&:hover': {
@@ -304,6 +308,8 @@ export default () => {
                 </AbsoluteLink>
               </Flex>
               <Flex
+                flex={1}
+                justifyContent="center"
                 css={{
                   '&:hover': {
                     filter:
@@ -411,7 +417,7 @@ export default () => {
             >
               <Flex
                 style={{ maxHeight: '100px' }}
-                mb="auto"
+                my="auto"
                 pl={['20px', '20px']}
               >
                 <Image src={LandingBandDB} height="80px" />
@@ -428,7 +434,7 @@ export default () => {
             >
               <Flex
                 style={{ maxHeight: '100px' }}
-                mb="auto"
+                my="auto"
                 pl={['20px', '20px']}
               >
                 <Image src={LandingDataGov} height="80px" />

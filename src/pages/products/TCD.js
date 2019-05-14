@@ -347,7 +347,7 @@ export default () => {
                 }}
                 mr={['0px', '36px']}
               >
-                <Box height="50px" mt="auto">
+                <Box height="50px" my="auto">
                   <Image mt="auto" src={TCDPriceFeed} width="100%" />
                 </Box>
               </FeatureCard>
@@ -364,7 +364,7 @@ export default () => {
                 }}
                 mt={['30px', '0px']}
               >
-                <Box ml={4} heigh="100px" mb="auto">
+                <Box ml={4} heigh="100px" my="auto">
                   <Image src={TCDCrossChain} height={['100px', '100px']} />
                 </Box>
               </FeatureCard>

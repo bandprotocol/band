@@ -83,8 +83,8 @@ export default ({ style = {}, ...props }) => {
       <Flex
         pt={['45px', '65px']}
         pb={['0px', '35px']}
-        px={['0px', '80px']}
-        mx={['0px', '-40px']}
+        px={['0px', '30px', '80px']}
+        mx={['0px', '0px', '-40px']}
         color="white"
         style={{
           borderRadius: '10px',
@@ -103,7 +103,7 @@ export default ({ style = {}, ...props }) => {
         >
           <Text
             fontWeight="600"
-            fontSize={['24px', '32px']}
+            fontSize={['24px', '24px', '32px']}
             textAlign={['center', 'left']}
             lineHeight={[1.5, 1]}
           >
@@ -111,8 +111,8 @@ export default ({ style = {}, ...props }) => {
           </Text>
           <Flex my="10px" />
           <Text
-            fontSize={['16px', '20px']}
-            lineHeight={[1.63, 1]}
+            fontSize={['16px', '16px', '20px']}
+            lineHeight={[1.63, 1.63, 1]}
             textAlign={['center', 'left']}
           >
             Integrating your product right {_isMobile && <br />} away with Band
@@ -127,10 +127,10 @@ export default ({ style = {}, ...props }) => {
               <OutlineButton
                 borderColor="white"
                 style={{
-                  width: '220px',
+                  width: ['220px', '200px', '220px'],
                 }}
               >
-                Technical Doc
+                Documentation
               </OutlineButton>
             </a>
             <Flex mx={['0px', '10px']} my={['10px', '0px']} />
@@ -139,7 +139,13 @@ export default ({ style = {}, ...props }) => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <FilledButton>Developer Portal</FilledButton>
+              <FilledButton
+                style={{
+                  width: ['220px', '200px', '220px'],
+                }}
+              >
+                Developer Portal
+              </FilledButton>
             </a>
           </Flex>
         </Flex>

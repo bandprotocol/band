@@ -31,7 +31,7 @@ export default () => {
     <Box>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
-          <Box mt={[4, 5]} mb={[3, 4]}>
+          <Box mt={[4, 5]} mb="24px">
             <Text
               textAlign="center"
               fontSize={['24px', '38px']}
@@ -43,7 +43,8 @@ export default () => {
           </Box>
           <Text
             textAlign={['left', 'center']}
-            width={['calc(100vw - 40px)', '860px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
@@ -55,14 +56,16 @@ export default () => {
           <Image
             src={DataTokenization}
             my={['30px', '70px']}
-            width={['calc(100vw - 40px)', '620px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           />
           <Card
             bg="#f6f8ff"
             pt={4}
             pb={['30px', 5]}
             px={['20px', '40px']}
-            width={['calc(100vw - 40px)', '840px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
               textAlign={['left', 'center']}

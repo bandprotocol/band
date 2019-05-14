@@ -24,9 +24,13 @@ import LayersImg from 'images/layers.png'
 import SDAImg from 'images/solve-data-availability.svg'
 import SDRImg from 'images/solve-data-reliability.svg'
 
-const WithDotLeft = ({ text }) => (
-  <Flex flexDirection="row" style={{ lineHeight: 1.94 }}>
-    <Text color="#ffca55" mr="10px" lineHeight={1.94}>
+const WithDotLeft = ({ text, isMobile }) => (
+  <Flex
+    flexDirection="row"
+    style={{ lineHeight: isMobile ? 2.0 : 3.5 }}
+    alignItems="center"
+  >
+    <Text color="#ffca55" mr="10px">
       •
     </Text>
     <Text lineHeight={2.25}>{text}</Text>
@@ -39,7 +43,7 @@ export default () => {
     <Box>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
-          <Box mt={[4, 5]} mb={[3, 4]}>
+          <Box mt={[4, 5]} mb="24px">
             <Text
               textAlign="center"
               fontSize={['24px', '38px']}
@@ -51,7 +55,8 @@ export default () => {
           </Box>
           <Text
             textAlign={['left', 'center']}
-            width={['calc(100vw - 40px)', '780px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
@@ -62,16 +67,18 @@ export default () => {
             blockchains to distribute data in a fair and transparent manner.
           </Text>
           <Image
+            my="24px"
             src={WhyBand}
-            my={['30px', '70px']}
-            width={['calc(100vw - 40px)', '780px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           />
           <Card
             bg="#f6f8ff"
             pt={4}
             pb={['30px', '50px']}
             px={['20px', '65px']}
-            width={['calc(100vw - 40px)', '780px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
               textAlign={['left', 'center']}
@@ -88,18 +95,24 @@ export default () => {
               <br />
               <Flex flexDirection={['column', 'row']}>
                 <Flex flexDirection="column" flex={1}>
-                  <WithDotLeft text=" Off-chain oracles" />
-                  <WithDotLeft text="Identity management" />
-                  <WithDotLeft text="KYC / AML" />
-                  <WithDotLeft text="Ranking" />
-                  <WithDotLeft text="Data source for smart contracts" />
+                  <WithDotLeft isMobile={_isMobile} text="Off-chain oracles" />
+                  <WithDotLeft
+                    isMobile={_isMobile}
+                    text="Identity management"
+                  />
+                  <WithDotLeft isMobile={_isMobile} text="KYC / AML" />
+                  <WithDotLeft isMobile={_isMobile} text="Ranking" />
+                  <WithDotLeft
+                    isMobile={_isMobile}
+                    text="Data source for smart contracts"
+                  />
                 </Flex>
                 <Flex
                   mt={['30px', '0px']}
                   flex={1}
                   justifyContent={['center', 'flex-end']}
                 >
-                  <Image src={LayersImg} height={['200px', '200px']} />
+                  <Image src={LayersImg} height={['250px', '300px']} />
                 </Flex>
               </Flex>
             </Text>
