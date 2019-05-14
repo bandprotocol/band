@@ -32,6 +32,7 @@ import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
+import Github from 'images/githubWhite.svg'
 import AppCHT from 'images/appCoinhatcher.png'
 import AppDS from 'images/appDataSource.png'
 import LandingBandDB from 'images/landing-band-database.png'
@@ -111,7 +112,7 @@ export default () => {
       >
         <PageContainer>
           <Flex
-            pt={['50px', '150px']}
+            pt={['50px', '100px']}
             pb={['50px', '60px']}
             flexDirection={['column', 'row']}
           >
@@ -119,7 +120,6 @@ export default () => {
               <Flex
                 flex={1}
                 style={{ minWidth: 'calc(100vw - 40px)' }}
-                bg="reds"
                 justifyContent="flex-end"
                 alignItems="center"
               >
@@ -176,7 +176,7 @@ export default () => {
                 flexDirection={['column', 'row']}
               >
                 <Text
-                  fontSize={['20px', '20px']}
+                  fontSize="18px"
                   fontWeight={500}
                   color="#8d94bf"
                   mr={['0px', '30px']}
@@ -193,7 +193,7 @@ export default () => {
                 >
                   <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
                     <Flex
-                      mr="24px"
+                      mr="20px"
                       alignItems="center"
                       color="white"
                       css={{
@@ -208,7 +208,7 @@ export default () => {
                   </AbsoluteLink>
                   <AbsoluteLink href="https://medium.com/bandprotocol">
                     <Flex
-                      mr="24px"
+                      mr="20px"
                       alignItems="center"
                       color="white"
                       css={{
@@ -223,7 +223,7 @@ export default () => {
                   </AbsoluteLink>
                   <AbsoluteLink href="https://twitter.com/bandprotocol">
                     <Flex
-                      mr="24px"
+                      mr="20px"
                       alignItems="center"
                       color="white"
                       css={{
@@ -238,7 +238,7 @@ export default () => {
                   </AbsoluteLink>
                   <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
                     <Flex
-                      mr="24px"
+                      mr="20px"
                       alignItems="center"
                       color="white"
                       css={{
@@ -251,17 +251,32 @@ export default () => {
                       <Image src={Reddit} width="20px" />
                     </Flex>
                   </AbsoluteLink>
+                  <AbsoluteLink href="https://github.com/bandprotocol">
+                    <Flex
+                      mr="20px"
+                      alignItems="center"
+                      color="white"
+                      css={{
+                        '&:hover': {
+                          filter:
+                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                        },
+                      }}
+                    >
+                      <Image src={Github} width="20px" />
+                    </Flex>
+                  </AbsoluteLink>
                 </Flex>
               </Flex>
             </Box>
             {!_isMobile && (
               <Flex flex={1} justifyContent="flex-end" alignItems="center">
-                <Image src={HeroSrc} height="340px" />
+                <Image src={HeroSrc} width="50vw" />
               </Flex>
             )}
           </Flex>
           <Flex
-            mx={['-15px', 'calc(490px - 50vw)']}
+            mx={['-20px', 'calc(50vw - 400px)', 'calc(480px - 50vw)']}
             bg="#252a48"
             justifyContent="center"
             alignItems="center"

@@ -83,7 +83,7 @@ export default ({ style = {}, ...props }) => {
       <Flex
         pt={['45px', '65px']}
         pb={['0px', '35px']}
-        px={['0px', '30px', '80px']}
+        px={['0px', '20px', '80px']}
         mx={['0px', '0px', '-40px']}
         color="white"
         style={{
@@ -127,7 +127,7 @@ export default ({ style = {}, ...props }) => {
               <OutlineButton
                 borderColor="white"
                 style={{
-                  width: ['220px', '200px', '220px'],
+                  width: '220px',
                 }}
               >
                 Documentation
@@ -141,7 +141,7 @@ export default ({ style = {}, ...props }) => {
             >
               <FilledButton
                 style={{
-                  width: ['220px', '200px', '220px'],
+                  width: '220px',
                 }}
               >
                 Developer Portal

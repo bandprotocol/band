@@ -171,7 +171,7 @@ export default () => {
     <Box>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
-          <Box mt={[4, 5]} mb={2}>
+          <Box mt={[4, 5]} mb="24px">
             <Text
               textAlign="center"
               fontSize={['24px', '38px']}
@@ -183,7 +183,8 @@ export default () => {
           </Box>
           <Text
             textAlign={['left', 'center']}
-            width={['calc(100vw - 40px)', '860px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
@@ -193,7 +194,8 @@ export default () => {
           </Text>
           <Image
             src={TCDSrc}
-            width={['calc(100vw - 20px)', '825px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
             my="30px"
           />
           <Card
@@ -201,10 +203,11 @@ export default () => {
             pt={4}
             pb={['30px', 5]}
             px="42px"
-            width={['calc(100vw - 40px)', '940px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
-              textAlign={['left', 'center']}
+              textAlign="left"
               color="#4c4c4c"
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
@@ -231,6 +234,7 @@ export default () => {
                 <Button
                   variant="outline"
                   color="#545454"
+                  bg="rgba(0,0,0,0)"
                   style={{
                     fontSize: '16px',
                     height: '45px',
@@ -240,7 +244,7 @@ export default () => {
                   css={{
                     transition: 'all 0.2s',
                     '&:hover': {
-                      backgroundColor: '#6b7df5',
+                      background: 'rgba(107,125,245, 1)',
                       color: 'white',
                     },
                     '&:focus': {

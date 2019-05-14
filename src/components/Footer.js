@@ -1,17 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import {
-  Link,
-  Flex,
-  Box,
-  Image,
-  Bold,
-  Text,
-  H4,
-  SemiBold,
-  AbsoluteLink,
-} from 'ui/common'
+import { Link, Flex, Box, Image, Bold, Text, H4, AbsoluteLink } from 'ui/common'
 import { isMobile } from 'ui/media'
 import Subscribe from 'components/Subscribe'
 

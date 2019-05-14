@@ -212,22 +212,22 @@ export default () => {
         <Flex flexDirection="column" alignItems="center" mb={4}>
           <Box
             mt={['30px', '60px']}
-            mb={2}
-            width={['calc(100vw - 40px)', 'auto']}
+            mb="24px"
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
               fontSize={['24px', '38px']}
-              textAlign={['left', 'center']}
+              textAlign="center"
               color="#2a304e"
               fontWeight={900}
             >
               Token-Curated Registry
             </Text>
           </Box>
-          <Flex mt={['15px', '15px']} width={['calc(100vw - 40px)', 'auto']}>
+          <Flex width="800px" style={{ maxWidth: 'calc(100vw - 40px)' }}>
             <Text
               textAlign={['left', 'center']}
-              width={['auto', '860px']}
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
             >
@@ -240,17 +240,19 @@ export default () => {
           <Image
             src={TCRSrc}
             my={[4, 5]}
-            width={['calc(100vw - 40px)', '800px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           />
           <Card
             bg="#f6f8ff"
             pt={4}
             pb={['30px', 5]}
             px="42px"
-            width={['calc(100vw - 40px)', '780px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
-              textAlign={['left', 'center']}
+              textAlign="left"
               fontSize={['16px', '18px']}
               lineHeight={1.94}
               mb={4}

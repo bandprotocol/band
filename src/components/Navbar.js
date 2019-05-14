@@ -58,7 +58,7 @@ const Nav = styled.nav`
 
 const SubMenu = styled(Flex).attrs({
   px: '20px',
-  pt: 4,
+  pt: [3, 3, 4],
   flexDirection: 'column',
 })`
   height: 100%;
@@ -99,6 +99,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
     <Flex
       style={{
         width: '1000px',
+        maxWidth: '100vw',
         height: isSelected ? '405px' : '0px',
         position: 'absolute',
         left: '0',
@@ -114,6 +115,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
         style={{ height: '70px', borderBottom: '1px solid #7c84a6' }}
         px="30px"
         alignItems="center"
+        py="10px"
       >
         <Text color="#7c84a6" fontSize="20px">
           {title}
@@ -138,7 +140,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                 <Flex style={{ minHeight: '70px' }} alignItems="center">
                   <Image src={getImg(imgIndex)} height={tab.imgHeight} />
                 </Flex>
-                <Flex mt="70px" style={{ height: '60px' }}>
+                <Flex mt={['30px', '30px', '70px']} style={{ height: '60px' }}>
                   <Text
                     color="white"
                     fontWeight={500}
@@ -519,7 +521,9 @@ const Navbar = props => {
       <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
         <Box ml="40px">
           <Link to="/why-band">
-            <MainMenuText>Why Band?</MainMenuText>
+            <MainMenuText style={{ whiteSpace: 'nowrap' }}>
+              Why Band?
+            </MainMenuText>
           </Link>
         </Box>
         <Flex

@@ -32,7 +32,7 @@ export default () => {
           alignItems="center"
           mb={['430px', '180px']}
         >
-          <Box mt={[4, 5]} mb={2}>
+          <Box mt={[4, 5]} mb="24px">
             <Text
               textAlign="center"
               fontSize={['24px', '38px']}
@@ -43,9 +43,9 @@ export default () => {
             </Text>
           </Box>
           <Text
-            mt={['10px', '20px']}
             textAlign={['left', 'center']}
-            width={['calc(100vw - 40px)', '860px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
             fontSize={['16px', '18px']}
             lineHeight={[1.63, 1.94]}
           >
@@ -57,7 +57,8 @@ export default () => {
             <Image
               src={PrivateDataSrc}
               my={['30px', '70px']}
-              width={['calc(100vw - 40px)', '620px']}
+              width="800px"
+              style={{ maxWidth: 'calc(100vw - 40px)' }}
             />
           }
           <Card
@@ -65,10 +66,11 @@ export default () => {
             pt={4}
             pb={['30px', 4]}
             px="42px"
-            width={['calc(100vw - 40px)', '940px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
-              textAlign={['left', 'center']}
+              textAlign="left"
               color="#4c4c4c"
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}

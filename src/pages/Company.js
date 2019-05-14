@@ -192,7 +192,7 @@ export default () => {
     <Box>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
-          <Box mt={[4, 5]} mb={2}>
+          <Box mt={[4, 5]} mb="24px">
             <Text
               textAlign="center"
               fontSize={['24px', '38px']}
@@ -203,14 +203,14 @@ export default () => {
             </Text>
           </Box>
           <Card
-            mt={['30px', '50px']}
             bg="#f6f8ff"
             px={['15px', '45px']}
             py={['30px', '45px']}
-            width={['calc(100vw - 40px)', '940px']}
+            width="800px"
+            style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
-              textAlign={['left', 'center']}
+              textAlign="left"
               color="#4c4c4c"
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}

@@ -68,7 +68,7 @@ export default () => {
             style={{ maxWidth: 'calc(100vw - 40px)' }}
           >
             <Text
-              textAlign={['left', 'center']}
+              textAlign="left"
               color="#4c4c4c"
               fontSize={['16px', '18px']}
               lineHeight={[1.63, 1.94]}
