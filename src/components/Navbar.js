@@ -400,7 +400,7 @@ const Navbar = props => {
                 <SubMenuMobile
                   closeMenu={closeMenu}
                   link="/products/data-tokenization"
-                  imgIndex={7}
+                  imgIndex={0}
                   imgHeight="46px"
                   title="Data Tokenization"
                   description={`Standard tokenization frameworks and incentive stuctures for data in Web 3.0`}
@@ -440,7 +440,7 @@ const Navbar = props => {
                 <SubMenuMobile
                   closeMenu={closeMenu}
                   link="/products/private-sharing"
-                  imgIndex={8}
+                  imgIndex={4}
                   imgHeight="47px"
                   title="Private Data Sharing"
                   description={`Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`}

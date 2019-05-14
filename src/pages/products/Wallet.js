@@ -32,7 +32,7 @@ import DomainWhitelist from 'images/internet-1.png'
 export default () => {
   const _isMobile = isMobile()
   return (
-    <Box>
+    <Box style={{ overflow: 'hidden' }}>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
           <Box mt={[4, 5]} mb="24px">
@@ -57,8 +57,8 @@ export default () => {
           </Text>
           <Image
             src={WalletSrc}
-            my={['30px', '70px']}
-            width="800px"
+            my={['30px', '30px', '70px']}
+            width={['75vw', '50vw', '800px']}
             style={{ maxWidth: 'calc(100vw - 40px)' }}
           />
           <Card

@@ -40,7 +40,7 @@ const WithDotLeft = ({ text, isMobile }) => (
 export default () => {
   const _isMobile = isMobile()
   return (
-    <Box>
+    <Box style={{ overflow: 'hidden' }}>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
           <Box mt={[4, 5]} mb="24px">

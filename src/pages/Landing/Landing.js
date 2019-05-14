@@ -102,7 +102,11 @@ export default () => {
   const _isMobile = isMobile()
   return (
     <Box
-      style={{ background: colors.gradient.dark, color: colors.gradient.dark }}
+      style={{
+        background: colors.gradient.dark,
+        color: colors.gradient.dark,
+        overflow: 'hidden',
+      }}
       mt="-80px"
     >
       <Box

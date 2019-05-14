@@ -78,7 +78,7 @@ const ApplyButton = styled(Button)`
 `
 
 const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
-  <Flex flex={1} flexDirection="column" alignItems="center">
+  <Flex width="300px" my="15px" flexDirection="column" alignItems="center">
     {faceImg ? (
       <Image src={faceImg} width="120px" height="120px" />
     ) : (
@@ -189,7 +189,7 @@ const JobTabs = () => {
 export default () => {
   const _isMobile = isMobile()
   return (
-    <Box>
+    <Box style={{ overflow: 'hidden' }}>
       <PageContainer>
         <Flex flexDirection="column" alignItems="center" mb={4}>
           <Box mt={[4, 5]} mb="24px">
@@ -238,7 +238,7 @@ export default () => {
           alignItems="center"
           pt={['30px', '60px']}
           mt={['30px', '60px']}
-          mx={['0px', '20px', '-40px']}
+          mx={['0px', '20px', '-20px']}
           style={{
             borderTop: 'solid 1px #e2e2e2',
             borderBottom: 'solid 1px #e2e2e2',
@@ -292,7 +292,13 @@ export default () => {
               Team
             </Text>
           </H1>
-          <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
+          <Flex
+            flexWrap="wrap"
+            flexDirection={['column', 'row']}
+            mt={['20px', '40px']}
+            justifyContent="center"
+            px={['calc(50vw - 170px)', '0px']}
+          >
             <TeamComponent
               faceImg={Man}
               name="Soravis Srinawakoon"
@@ -312,10 +318,9 @@ export default () => {
                 <br /> Boston Consulting Group
               </Text>
             </TeamComponent>
-            {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Swit}
-              name="Soravis Srinawakoon"
+              name="Sorawit Suriyakarn"
               title="CTO and Co-Founder"
               link={'https://www.linkedin.com/in/sorawit/'}
               type={1}
@@ -334,7 +339,6 @@ export default () => {
                 Hudson River Trading, Quora, Dropbox
               </Text>
             </TeamComponent>
-            {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Paul}
               name="Paul Chonpimai"
@@ -356,8 +360,6 @@ export default () => {
                 Tripadvisor, Turfmappx
               </Text>
             </TeamComponent>
-          </Flex>
-          <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
             <TeamComponent
               faceImg={Bun}
               name="Bun Uthaitirat"
@@ -365,7 +367,6 @@ export default () => {
               link={'https://github.com/taobun'}
               type={0}
             />
-            {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Peach}
               name="Kanisorn Thongprapaisaeng"
@@ -373,7 +374,6 @@ export default () => {
               link={'https://github.com/evilpeach'}
               type={0}
             />
-            {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Ming}
               name="Subongkoch Maneerat"

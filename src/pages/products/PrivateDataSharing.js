@@ -25,7 +25,7 @@ import PrivateDataSrc from 'images/privateData.png'
 export default () => {
   const _isMobile = isMobile()
   return (
-    <Box>
+    <Box style={{ overflow: 'hidden' }}>
       <PageContainer>
         <Flex
           flexDirection="column"

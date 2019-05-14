@@ -84,20 +84,20 @@ export default ({ style = {}, ...props }) => {
         pt={['45px', '65px']}
         pb={['0px', '35px']}
         px={['0px', '20px', '80px']}
-        mx={['0px', '0px', '-40px']}
         color="white"
         style={{
+          maxWidth: 'calc(100vw - 40px)',
+          width: 'auto',
           borderRadius: '10px',
           boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
           background: 'linear-gradient(to left, #6083ff, #8266ff)',
-          width: _isMobile ? 'calc(100vw - 40px)' : 'auto',
           ...style,
         }}
         {...props}
         flexDirection={['column', 'row']}
       >
         <Flex
-          style={{ width: _isMobile ? 'calc(100vw - 40px)' : '620px' }}
+          style={{ width: '620px', maxWidth: 'calc(100vw - 40px)' }}
           flexDirection="column"
           alignItems={['center', 'flex-start']}
         >
@@ -112,7 +112,7 @@ export default ({ style = {}, ...props }) => {
           <Flex my="10px" />
           <Text
             fontSize={['16px', '16px', '20px']}
-            lineHeight={[1.63, 1.63, 1]}
+            lineHeight={1.63}
             textAlign={['center', 'left']}
           >
             Integrating your product right {_isMobile && <br />} away with Band
