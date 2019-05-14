@@ -261,7 +261,7 @@ export default () => {
             )}
           </Flex>
           <Flex
-            mx={['-15px', 'calc(780px - 100vw)']}
+            mx={['-15px', 'calc(490px - 50vw)']}
             bg="#252a48"
             alignItems="center"
             flexDirection="column"
@@ -357,6 +357,7 @@ export default () => {
                 lineHeight={1.45}
                 mr={[2, 3]}
                 css={{
+                  whiteSpace: 'nowrap',
                   '&:hover': {
                     color: '#bfcdff',
                   },
