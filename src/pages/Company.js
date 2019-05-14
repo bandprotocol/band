@@ -143,7 +143,7 @@ const JobTab = ({ title, link, description, setSelectedTab, isSelected }) => (
         {description}
       </Text>
     </Flex>
-    <AbsoluteLink href={link} style={{ cursor: 'pointer' }}>
+    <AbsoluteLink href={link} style={{ width: '135px', cursor: 'pointer' }}>
       <ApplyButton isSelected={isSelected}>Apply</ApplyButton>
     </AbsoluteLink>
   </Flex>
@@ -153,7 +153,7 @@ const JobTabs = () => {
   const [selectedTab, setSelectedTab] = useState(-1)
   return (
     <Flex
-      flexDirection={['column', 'row']}
+      flexDirection={['column', 'column', 'row']}
       onMouseLeave={() => setSelectedTab(-1)}
     >
       <JobTab
@@ -164,7 +164,7 @@ const JobTabs = () => {
         isSelected={selectedTab === 0}
         setSelectedTab={() => setSelectedTab(0)}
       />
-      <Flex mx={['0px', '15px']} my={['15px', '0px']} />
+      <Flex mx={['0px', '15px']} my={['15px', '15px', '0px']} />
       <JobTab
         title="Frontend
         Engineer"
@@ -173,7 +173,7 @@ const JobTabs = () => {
         isSelected={selectedTab === 1}
         setSelectedTab={() => setSelectedTab(1)}
       />
-      <Flex mx={['0px', '15px']} my={['15px', '0px']} />
+      <Flex mx={['0px', '15px']} my={['15px', '15px', '0px']} />
       <JobTab
         title="Backend
         Engineer"
@@ -238,7 +238,7 @@ export default () => {
           alignItems="center"
           pt={['30px', '60px']}
           mt={['30px', '60px']}
-          mx={['0px', '-40px']}
+          mx={['0px', '20px', '-40px']}
           style={{
             borderTop: 'solid 1px #e2e2e2',
             borderBottom: 'solid 1px #e2e2e2',
@@ -422,7 +422,7 @@ export default () => {
           {!_isMobile && (
             <Image
               src={WeRHiring}
-              width="900px"
+              width={['300px', '600px', '900px']}
               style={{ position: 'absolute', zIndex: 0 }}
             />
           )}

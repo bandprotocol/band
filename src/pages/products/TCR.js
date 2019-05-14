@@ -350,7 +350,7 @@ export default () => {
               </H1>
             </Box>
             <Image
-              src={_isMobile ? TCRWorkVertSrc : TCRWorkSrc}
+              src={_isMobile ? TCRWorkVertSrc : TCRWorkVertSrc}
               width={['50vw', 'auto']}
               my={4}
             />

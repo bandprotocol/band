@@ -401,7 +401,7 @@ export default () => {
             </Text>
             <Flex
               justifyContent="center"
-              flexDirection={['column', 'row']}
+              flexDirection={['column', 'column', 'row']}
               mt={['30px', 5]}
             >
               <FeatureCard
@@ -415,7 +415,7 @@ export default () => {
                   boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
                   background: '#ffffff',
                 }}
-                mr={['0px', '36px']}
+                mr={['0px', '0px', '36px']}
               >
                 <Box height="50px" my="auto">
                   <Image mt="auto" src={TCDPriceFeed} width="100%" />
@@ -432,7 +432,7 @@ export default () => {
                   boxShadow: '0 10px 20px 0 rgba(0, 0, 0, 0.09)',
                   background: '#ffffff',
                 }}
-                mt={['30px', '0px']}
+                mt={['30px', '30px', '0px']}
               >
                 <Box ml={4} heigh="100px" my="auto">
                   <Image src={TCDCrossChain} height={['100px', '100px']} />

@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import PageContainer from 'components/PageContainer'
+import React from 'react'
 import { Flex, Text, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
 
@@ -60,7 +59,8 @@ export default class Animator extends React.Component {
           <Flex
             style={{
               height: '160px',
-              width: 960,
+              width: '960px',
+              maxWidth: 'calc(100vw - 20px)',
               zIndex: 3,
               background:
                 'linear-gradient(to bottom, white 80%, rgba(255,255,255,0.1) 100%)',
@@ -79,7 +79,14 @@ export default class Animator extends React.Component {
             ))}
           </Flex>
         </Flex>
-        <div ref={this.container} style={{ width: 960, marginBottom: -500 }}>
+        <div
+          ref={this.container}
+          style={{
+            width: '960px',
+            maxWidth: 'calc(100vw - 20px)',
+            marginBottom: -500,
+          }}
+        >
           <Flex>
             <AnimationScene
               currentStep={this.state.currentStep}

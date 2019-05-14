@@ -25,9 +25,6 @@ import MenuTCD from 'images/menu_tcd.svg'
 import MenuTCR from 'images/menu-tcr.svg'
 import MenuWallet from 'images/menu_wallet.svg'
 
-import MenuDTDark from 'images/menu_dt_dark.svg'
-import MenuPDSDark from 'images/menu_pds_dark.svg'
-
 import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.png'
 
@@ -89,8 +86,6 @@ const getImg = id =>
     MenuPDS,
     GovernancePortalImg,
     DatasetExplorerImg,
-    MenuDTDark,
-    MenuPDSDark,
   ][id]
 
 const NavMenu = ({ isSelected, title, tabs }) => {
@@ -519,7 +514,7 @@ const Navbar = props => {
     // const { pathname } = props.location
     return (
       <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
-        <Box ml="40px">
+        <Box ml={['20px', '20px', '40px']}>
           <Link to="/why-band">
             <MainMenuText style={{ whiteSpace: 'nowrap' }}>
               Why Band?
@@ -529,7 +524,7 @@ const Navbar = props => {
         <Flex
           alignItems="center"
           style={{ height: '100%' }}
-          ml="40px"
+          ml={['20px', '20px', '40px']}
           onMouseOver={e => {
             e.stopPropagation()
             selectTab(0)
@@ -548,7 +543,7 @@ const Navbar = props => {
               {
                 title: 'Data Tokenization',
                 link: '/products/data-tokenization',
-                imgIndex: [7, 0],
+                imgIndex: 0,
                 imgHeight: '46px',
                 content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
@@ -576,7 +571,7 @@ const Navbar = props => {
               {
                 title: 'Private Data Sharing',
                 link: '/products/private-sharing',
-                imgIndex: [8, 4],
+                imgIndex: 4,
                 imgHeight: '47px',
                 content: `Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`,
               },
@@ -586,7 +581,7 @@ const Navbar = props => {
         <Flex
           alignItems="center"
           style={{ height: '100%' }}
-          ml="40px"
+          ml={['20px', '20px', '40px']}
           onMouseOver={e => {
             e.stopPropagation()
             selectTab(1)
@@ -619,12 +614,12 @@ const Navbar = props => {
             ]}
           />
         </Flex>
-        <Box ml="40px">
+        <Box ml={['20px', '20px', '40px']}>
           <Link to="/company">
             <MainMenuText>Company</MainMenuText>
           </Link>
         </Box>
-        <Box ml="40px">
+        <Box ml={['20px', '20px', '40px']}>
           <AbsoluteLink
             style={{ textDecoration: 'none' }}
             target="_blank"

@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { Flex, Text, Image, Box, Link, AbsoluteLink } from 'ui/common'
-import { isMobile } from 'ui/media'
+
+const offsets = ['60', '80', '100', '250', '280', '300', '350']
+
+const getOffset = () => {
+  let index = Math.floor(window.innerWidth / 200)
+  index = index > offsets.length - 1 ? offsets.length - 1 : index
+  return offsets[index]
+}
 
 export default ({
   background,
@@ -17,9 +24,8 @@ export default ({
   Img3,
   children,
 }) => {
-  const _isMobile = isMobile()
   const [selectedTab, setSelectedTab] = useState(1)
-  const offset = _isMobile ? '100' : '280'
+  const offset = getOffset()
   const getWHByTab = tab => {
     if (tab === selectedTab) {
       return {
@@ -84,7 +90,7 @@ export default ({
             <Image src={Logo} height={logoHeight} />
           </Flex>
           <Flex
-            ml={['0px', '110px']}
+            ml={['0px', '20px', '110px']}
             mt={['20px', '0px']}
             flexDirection="column"
             style={{ width: ['calc(100vw - 40px)', '620px'] }}
@@ -95,7 +101,7 @@ export default ({
                 {description}
               </Text>
             </Flex>
-            <Flex flexDirection={['column', 'row']} mt="20px">
+            <Flex flexDirection={['column', 'column', 'row']} mt="20px">
               <Flex fontSize="16px" mr="85px">
                 <AbsoluteLink
                   target="_blank"

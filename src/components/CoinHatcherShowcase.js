@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
 import { Flex, Image, Box } from 'ui/common'
-import { isMobile } from 'ui/media'
+
+const offsets = ['60', '80', '100', '250', '280', '300', '350']
+
+const getOffset = () => {
+  let index = Math.floor(window.innerWidth / 200)
+  index = index > offsets.length - 1 ? offsets.length - 1 : index
+  return offsets[index]
+}
 
 export default ({ background, Img1, Img2, Img3, children }) => {
-  const _isMobile = isMobile()
   const [selectedTab, setSelectedTab] = useState(1)
-  const offset = _isMobile ? '100' : '280'
+  const offset = getOffset()
 
   const getWHByTab = tab => {
     if (tab === selectedTab) {
