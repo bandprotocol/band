@@ -217,25 +217,19 @@ export default () => {
             >
               Band Protocol is a protocol for decentralized data governance. We
               provide an open-source standard and framework for the
-              decentralized management of data.
+              decentralized management of data in the Web3 technology stack.
               <br />
               <br />
               Band Protocol solves the issues plaguing current data
               infrastructures and decentralized technologies as a whole. It is
-              estimated that over 1.2 million terabytes of data is stored on the
-              web and currently much of this is unstructured data or unreliable
-              data.
+              estimated that over 1.2 million terabytes of data are stored on
+              the web and currently much of this is unstructured or unreliable.
               <br />
               <br />
-              Band is a protocol for managing data in the Web3 technology stack.
-              With the use of an innovative token framework and standardized
-              data protocol, Band is able to create a community-driven data
-              curation ecosystem that is secure, reliable and accessible.
-              <br />
-              <br />
-              Through a standard framework, Band is able to provide a socially
-              scalable method for widespread adoption and integration of trusted
-              data that all dApps can utilize.
+              Through a standard framework, Band creates a community-driven data
+              curation ecosystem that is secure, reliable and accessible. Band
+              provides a socially scalable method for widespread adoption and
+              integration of trusted data that all applications can utilize.
             </Text>
           </Card>
         </Flex>
@@ -471,7 +465,7 @@ export default () => {
                   },
                 }}
               >
-                <Image src={Sequoia} width={['105px', 'auto']} />
+                <Image src={Sequoia} height="20px" />
               </AbsoluteLink>
             </Flex>
             <Flex
@@ -489,7 +483,7 @@ export default () => {
                   },
                 }}
               >
-                <Image src={Dunamu} width={['105px', 'auto']} />
+                <Image src={Dunamu} height="20px" />
               </AbsoluteLink>
             </Flex>
             <Flex
@@ -507,7 +501,7 @@ export default () => {
                   },
                 }}
               >
-                <Image src={Seax} width="105px" />
+                <Image src={Seax} height="40px" />
               </AbsoluteLink>
             </Flex>
           </Flex>

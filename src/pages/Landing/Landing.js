@@ -291,7 +291,7 @@ export default () => {
               mt={['30px', '30px']}
               alignItems="center"
               flexDirection={['column', 'row']}
-              style={{ width: '75vw' }}
+              style={{ width: 'calc(100vw - 40px)', maxWidth: '800px' }}
             >
               <Flex
                 flex={1}
