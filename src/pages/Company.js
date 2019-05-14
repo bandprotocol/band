@@ -104,7 +104,12 @@ const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
         />
       </AbsoluteLink>
     </Flex>
-    <Text color="#4a4a4a" fontWeight={500} fontSize="16px">
+    <Text
+      color="#4a4a4a"
+      fontWeight={500}
+      style={{ whiteSpace: 'nowrap' }}
+      fontSize="16px"
+    >
       {title}
     </Text>
     {children}
@@ -369,7 +374,7 @@ export default () => {
             {_isMobile && <Flex my="15px" />}
             <TeamComponent
               faceImg={Peach}
-              name="Kanisorn Thongprapaisaenh"
+              name="Kanisorn Thongprapaisaeng"
               title="Developer"
               link={'https://github.com/evilpeach'}
               type={0}
