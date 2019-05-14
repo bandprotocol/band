@@ -11,6 +11,8 @@ export const tcdSelector = state => state.get('tcd')
 export const blockNumberSelector = state =>
   state.getIn(['transaction', 'currentBlock'])
 export const transactionSelector = state => state.getIn(['transaction', 'txs'])
+export const transactionHiddenSelector = state =>
+  state.getIn(['transaction', 'hide'])
 export const parameterSelector = state => state.get('parameter')
 export const proposalSelector = state => state.get('proposal')
 export const fetchSelector = state => state.get('fetch')

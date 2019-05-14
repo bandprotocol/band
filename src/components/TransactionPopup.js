@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import { Flex, Box, Text } from 'ui/common'
 import styled from 'styled-components'
 import PendingTransaction from 'components/PendingTransaction'
-
 import { allTxsSelector } from 'selectors/transaction'
+import { transactionHiddenSelector } from 'selectors/basic'
+import { hideTxs } from 'actions'
 
 const Container = styled(Box)`
   position: absolute;
@@ -67,7 +67,7 @@ class TransactionPopup extends React.Component {
 
   hideTxns(e) {
     e.stopPropagation()
-    console.warn('CLOSE')
+    this.props.hideTxns()
   }
 
   render() {
@@ -79,7 +79,7 @@ class TransactionPopup extends React.Component {
             Transactions ({txns.length})
           </Text>
           <Box flex={1} />
-          <Box ml={2}>
+          <Box ml={2} style={{ cursor: 'pointer' }}>
             <Text color="#ffffff" size={24}>
               <i
                 className={
@@ -88,7 +88,11 @@ class TransactionPopup extends React.Component {
               />
             </Text>
           </Box>
-          <Box ml={3} onClick={this.hideTxns.bind(this)}>
+          <Box
+            ml={3}
+            onClick={this.hideTxns.bind(this)}
+            style={{ cursor: 'pointer' }}
+          >
             <Text color="#ffffff" size={24}>
               <i className="ion ion-md-close" />
             </Text>
@@ -108,8 +112,31 @@ class TransactionPopup extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  txns: allTxsSelector(state),
+const mapStateToProps = state => {
+  const txs = allTxsSelector(state)
+  const hiddenTxs = transactionHiddenSelector(state)
+  if (txs && hiddenTxs) {
+    return {
+      txns: txs.filter(tx => !hiddenTxs.has(tx.txHash)),
+    }
+  }
+
+  if (txs) {
+    return {
+      txns: txs,
+    }
+  } else {
+    return {
+      txns: [],
+    }
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  hideTxns: () => dispatch(hideTxs()),
 })
 
-export default connect(mapStateToProps)(TransactionPopup)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(TransactionPopup)

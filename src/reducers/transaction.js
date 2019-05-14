@@ -1,7 +1,7 @@
 import createReducer from 'reducers/creator'
 
-import { ADD_TX, SAVE_TXS } from 'actions'
-import { Map, List } from 'immutable'
+import { ADD_TX, SAVE_TXS, SAVE_HIDDEN_TXS, HIDE_TXS } from 'actions'
+import { Map, List, Set } from 'immutable'
 
 const handleAddTx = (state, { txHash, title, txType }) =>
   state.set(
@@ -27,7 +27,23 @@ const handleSaveTxs = (state, { currentBlock, txs, force }) => {
   else return state
 }
 
+const handleSaveHiddenTxs = (state, { txs }) => {
+  return state.set('hide', (state.get('hide') || new Set()).union(txs))
+}
+
+const handleHideTxs = (state, {}) => {
+  const txs = Set(
+    state
+      .get('txs', List())
+      .map(tx => tx.get('txHash'))
+      .toJS(),
+  )
+  return state.set('hide', txs)
+}
+
 export default createReducer({
   [ADD_TX]: handleAddTx,
   [SAVE_TXS]: handleSaveTxs,
+  [SAVE_HIDDEN_TXS]: handleSaveHiddenTxs,
+  [HIDE_TXS]: handleHideTxs,
 })

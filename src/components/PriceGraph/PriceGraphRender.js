@@ -130,7 +130,7 @@ class HighChartGraph extends React.Component {
   }
 }
 
-class Graph extends React.PureComponent {
+class Graph extends React.Component {
   state = { hovering: null }
 
   shouldComponentUpdate(prevProps) {

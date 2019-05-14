@@ -77,7 +77,7 @@ export default ({
         m={3}
         borderRadius="50%"
         style={{
-          border: 'solid 6px #ffffff',
+          // border: 'solid 6px #ffffff',
           boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
         }}
       />

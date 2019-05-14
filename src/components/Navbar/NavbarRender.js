@@ -110,7 +110,7 @@ const DropdownButton = styled(Flex)`
 
 const Badge = styled(Box)`
   box-sizing: border-box;
-  height: 12px;
+  height: 10px;
   width: 12px;
   line-height: 12px;
   text-align: center;

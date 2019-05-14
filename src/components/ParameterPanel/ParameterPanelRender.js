@@ -34,7 +34,7 @@ const ProposeButton = styled(Button).attrs({
 `
 
 const SubmitButton = styled(Button).attrs({
-  variant: 'grey',
+  variant: 'blue',
 })`
   padding: 0;
   width: 100px;
@@ -111,7 +111,7 @@ export default ({
                   alignSelf="center"
                   onClick={toggleEdit}
                   style={{
-                    borderRight: 'solid 1px #f2f4f9',
+                    borderRight: 'solid 1px #999eab',
                     lineHeight: 1.45,
                     fontWeight: 500,
                     cursor: 'pointer',

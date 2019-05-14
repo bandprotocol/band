@@ -272,7 +272,7 @@ export default props => {
               numberOfHolders > 0 &&
               `${BN.parse(totalSupply)
                 .div(BN.parse(numberOfHolders.toString()))
-                .pretty()} CHT on average`
+                .pretty()} ${symbol} on average`
             }
           />
         </Flex>

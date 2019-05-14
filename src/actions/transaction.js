@@ -1,6 +1,8 @@
 export const ADD_TX = 'ADD_TX'
 export const SAVE_TXS = 'SAVE_TXS'
+export const SAVE_HIDDEN_TXS = 'SAVE_HIDDEN_TXS'
 export const DUMP_TXS = 'DUMP_TXS'
+export const HIDE_TXS = 'HIDE_TXS'
 export const BUY_TOKEN = 'BUY_TOKEN'
 export const SELL_TOKEN = 'SELL_TOKEN'
 export const TCD_DEPOSIT = 'TCD_DEPOSIT'
@@ -20,8 +22,17 @@ export const saveTxs = (currentBlock, txs, force) => ({
   force,
 })
 
+export const saveHiddenTxs = txs => ({
+  type: SAVE_HIDDEN_TXS,
+  txs,
+})
+
 export const dumpTxs = () => ({
   type: DUMP_TXS,
+})
+
+export const hideTxs = () => ({
+  type: HIDE_TXS,
 })
 
 export const buyToken = (address, amount, priceLimit) => ({

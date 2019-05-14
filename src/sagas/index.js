@@ -11,10 +11,15 @@ import {
   setWallet,
   setWeb3,
   saveTxs,
+  saveHiddenTxs,
   dumpTxs,
 } from 'actions'
 
-import { blockNumberSelector, transactionSelector } from 'selectors/basic'
+import {
+  blockNumberSelector,
+  transactionSelector,
+  transactionHiddenSelector,
+} from 'selectors/basic'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -33,7 +38,7 @@ import { Utils } from 'band.js'
 import BN from 'utils/bignumber'
 
 import transit from 'transit-immutable-js'
-import { List, fromJS } from 'immutable'
+import { List, fromJS, Set } from 'immutable'
 import { toggleFetch } from 'actions'
 
 // import web3
@@ -191,14 +196,21 @@ function* checkTransaction() {
                   if (
                     tx.get('status') === 'COMPLETED' ||
                     tx.get('status') === 'FAILED'
-                  )
+                  ) {
+                    if (currentBlock - tx.get('blocknumber') >= 12) {
+                      yield put(saveHiddenTxs(Set([tx.get('txHash')])))
+                    }
                     return tx
+                  }
 
                   const receipt = yield web3.eth.getTransactionReceipt(
                     tx.get('txHash'),
                   )
 
                   if (receipt) {
+                    if (!tx.get('blocknumber')) {
+                      return tx.set('blocknumber', receipt.blockNumber)
+                    }
                     if (receipt.status) {
                       if (currentBlock - receipt.blockNumber + 1 >= 4)
                         return tx.set('status', 'COMPLETED')
@@ -249,14 +261,23 @@ function* checkProvider() {
     if (userAddress) {
       // Load transaction history here!
       const rawTxState = localStorage.getItem(`txs-${userAddress}`)
-      if (rawTxState) {
+      const rawHiddenTxState = localStorage.getItem(`hiddenTxs-${userAddress}`)
+      if (rawTxState && rawHiddenTxState) {
+        const txState = transit.fromJSON(rawTxState)
+        const hiddenTxState = transit.fromJSON(rawHiddenTxState)
+        yield put(saveTxs(0, txState, true))
+        yield put(saveHiddenTxs(hiddenTxState))
+      } else if (rawTxState) {
         const txState = transit.fromJSON(rawTxState)
         yield put(saveTxs(0, txState, true))
+        yield put(saveHiddenTxs(Set()))
       } else {
         yield put(saveTxs(0, List(), true))
+        yield put(saveHiddenTxs(Set()))
       }
     } else {
       yield put(saveTxs(0, List(), true))
+      yield put(saveHiddenTxs(Set()))
     }
     yield delay(3000)
   }
