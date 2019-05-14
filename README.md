@@ -1,3 +1,18 @@
+<div align="center">
+  <h1>
+    Band Smart Contracts
+  </h1>
+
+  <p>
+    <strong>Decentralized Data Governance Protocol</strong>
+
+![Solidity](https://img.shields.io/badge/language-solidity-orange.svg?longCache=true&style=popout-square)
+![Ethereum](https://img.shields.io/badge/platform-Ethereum-blue.svg?longCache=true&style=popout-square)
+![Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-green.svg?longCache=true&style=popout-square)
+
+  </p>
+</div>
+
 # Contract
 
 > Band protocol smart contracts.
