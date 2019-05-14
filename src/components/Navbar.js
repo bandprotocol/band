@@ -487,7 +487,7 @@ const Navbar = props => {
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="https://data.bandprotocol.com"
+                  link="https://app.bandprotocol.com"
                   isAbsolute={true}
                   imgIndex={5}
                   imgHeight="50px"
@@ -600,7 +600,7 @@ const Navbar = props => {
             tabs={[
               {
                 title: 'Governance Portal',
-                href: 'https://data.bandprotocol.com',
+                href: 'https://app.bandprotocol.com',
                 imgIndex: 5,
                 imgHeight: '50px',
                 content: `Join data governance community, stake tokens on data providers and vote on governance parameters`,
