@@ -85,7 +85,7 @@ const animatorSteps = [
 const animatorSpites = [
   {
     src: Animate1Src,
-    height: 110,
+    height: [80, 80, 110],
     steps: [
       [1, 198, 195, 0, 1.4], //
       [1, 287, 195], //
@@ -96,7 +96,7 @@ const animatorSpites = [
   },
   {
     src: Animate2Src,
-    height: 167,
+    height: [120, 120, 167],
     steps: [
       [0, 110, 161], //
       [1, 122, 161, 300], //
@@ -106,7 +106,7 @@ const animatorSpites = [
   },
   {
     src: Animate3Src,
-    height: 151,
+    height: [110, 110, 151],
     steps: [
       [0, 150, 167], //
       [1, 160, 167, 600], //
@@ -116,7 +116,7 @@ const animatorSpites = [
   },
   {
     src: Animate4Src,
-    height: 167,
+    height: [120, 120, 167],
     steps: [
       [0, 181, 150], //
       [1, 181, 161, 800], //
@@ -126,7 +126,7 @@ const animatorSpites = [
   },
   {
     src: Animate5Src,
-    height: 150,
+    height: [110, 110, 150],
     steps: [
       [0, 180, 130], //
       [1, 180, 141, 800], //
@@ -136,7 +136,7 @@ const animatorSpites = [
   },
   {
     src: Animate6Src,
-    height: 237,
+    height: [170, 170, 237],
     steps: [
       [0, 179, 114], //
       [0, 179, 114], //
@@ -146,7 +146,7 @@ const animatorSpites = [
   },
   {
     src: Animate7Src,
-    height: 29,
+    height: [21, 21, 29],
     steps: [
       [0, 244, 165], //
       [0, 244, 165], //
@@ -156,7 +156,7 @@ const animatorSpites = [
   },
   {
     src: Animate8Src,
-    height: 29,
+    height: [21, 21, 29],
     steps: [
       [0, 244, 232], //
       [0, 244, 232], //
@@ -166,7 +166,7 @@ const animatorSpites = [
   },
   {
     src: Animate7Src,
-    height: 29,
+    height: [21, 21, 29],
     steps: [
       [0, 244, 299], //
       [0, 244, 299], //
@@ -176,7 +176,7 @@ const animatorSpites = [
   },
   {
     src: Animate9Src,
-    height: 137,
+    height: [100, 100, 137],
     steps: [
       [0, 275, 184], //
       [0, 275, 184], //
@@ -186,7 +186,7 @@ const animatorSpites = [
   },
   {
     src: Animate10Src,
-    height: 40,
+    height: [29, 29, 40],
     steps: [
       [0, 220, 160], //
       [0, 220, 160], //
@@ -196,7 +196,7 @@ const animatorSpites = [
   },
   {
     src: Animate10Src,
-    height: 40,
+    height: [29, 29, 40],
     steps: [
       [0, 220, 225], //
       [0, 220, 225], //
@@ -206,7 +206,7 @@ const animatorSpites = [
   },
   {
     src: Animate10Src,
-    height: 40,
+    height: [29, 29, 40],
     steps: [
       [0, 220, 290], //
       [0, 220, 290], //
@@ -216,7 +216,7 @@ const animatorSpites = [
   },
   {
     src: Animate11ASrc,
-    height: 52,
+    height: [39, 39, 52],
     steps: [
       [0, 363, 140], //
       [0, 363, 140], //
@@ -226,7 +226,7 @@ const animatorSpites = [
   },
   {
     src: Animate11BSrc,
-    height: 52,
+    height: [39, 39, 52],
     steps: [
       [0, 363, 220], //
       [0, 363, 220], //
@@ -236,7 +236,7 @@ const animatorSpites = [
   },
   {
     src: Animate11CSrc,
-    height: 52,
+    height: [39, 39, 52],
     steps: [
       [0, 363, 290], //
       [0, 363, 290], //

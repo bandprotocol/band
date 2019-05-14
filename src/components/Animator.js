@@ -73,7 +73,7 @@ export default class Animator extends React.Component {
               <Box key={i} flex="1">
                 <Image
                   src={this.state.currentStep === i ? srcActive : src}
-                  height="70px"
+                  height={['50px', '50px', '70px']}
                 />
               </Box>
             ))}
@@ -92,18 +92,25 @@ export default class Animator extends React.Component {
               currentStep={this.state.currentStep}
               spites={spites}
             />
-            <Box style={{ width: 500 }}>
+            <Box style={{ width: 500 }} alignItems="flex-end">
               {steps.map(({ renderText }, i) => (
                 <Flex
                   key={i}
                   alignItems="center"
                   justifyContent="flex-end"
+                  width={['100%', '80%', '100%']}
                   style={{
                     height: '500px',
-                    width: '100%',
+                    maxWidth: '100%',
                   }}
+                  ml="auto"
                 >
-                  <Text fontSize="20px" lineHeight="2" mr="24px">
+                  <Text
+                    fontSize="20px"
+                    lineHeight="2"
+                    mr="24px"
+                    // textAlign={['left', 'right', 'left']}
+                  >
                     {renderText()}
                   </Text>
                 </Flex>
