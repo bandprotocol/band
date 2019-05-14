@@ -43,7 +43,13 @@ import Animate3Src from 'images/animate-tcd/animate-3.png'
 import Animate4Src from 'images/animate-tcd/animate-4.png'
 import Animate5Src from 'images/animate-tcd/animate-5.png'
 import Animate6Src from 'images/animate-tcd/animate-6.png'
-import Animate7Src from 'images/animate-tcd/animate-7.png'
+import Animate8Src from 'images/animate-tcd/animate-8.png'
+import Animate9Src from 'images/animate-tcd/animate-9.png'
+import Animate10ASrc from 'images/animate-tcd/animate-10a.png'
+import Animate10BSrc from 'images/animate-tcd/animate-10b.png'
+import Animate11Src from 'images/animate-tcd/animate-11.png'
+import Animate12ASrc from 'images/animate-tcd/animate-12a.png'
+import Animate12BSrc from 'images/animate-tcd/animate-12b.png'
 
 const animatorSteps = [
   {
@@ -154,13 +160,73 @@ const animatorSpites = [
     ],
   },
   {
-    src: Animate7Src,
-    height: 125,
+    src: Animate8Src,
+    height: 60,
     steps: [
-      [0, 202, 194], //
-      [0, 202, 194], //
-      [0, 202, 194], //
-      [1, 220, 194, 600], //
+      [0, 202, 225], //
+      [0, 202, 225], //
+      [0, 202, 225], //
+      [1, 220, 225, 600], //
+    ],
+  },
+  {
+    src: Animate9Src,
+    width: 34,
+    steps: [
+      [0, 260, 197], //
+      [0, 260, 197], //
+      [0, 260, 197], //
+      [1, 275, 197, 800], //
+    ],
+  },
+  {
+    src: Animate10ASrc,
+    width: 55,
+    steps: [
+      [0, 310, 230], //
+      [0, 310, 230], //
+      [0, 310, 230], //
+      [1, 320, 230, 950], //
+    ],
+  },
+  {
+    src: Animate10BSrc,
+    width: 25,
+    steps: [
+      [0, 330, 190], //
+      [0, 330, 190], //
+      [0, 330, 190], //
+      [1, 330, 200, 1100], //
+    ],
+  },
+  {
+    src: Animate11Src,
+    height: 79,
+    steps: [
+      [0, 380, 220], //
+      [0, 380, 220], //
+      [0, 380, 220], //
+      [1, 380, 210, 1200], //
+    ],
+  },
+  {
+    src: Animate12ASrc,
+    width: 55,
+    steps: [
+      [0, 330, 260], //
+      [0, 330, 260], //
+      [0, 330, 260], //
+      [1, 320, 260, 1400], //
+    ],
+  },
+  {
+    src: Animate12BSrc,
+    width: 25,
+    steps: [
+      [0, 340, 270], //
+      [0, 340, 270], //
+      [0, 340, 270], //
+      [1, 340, 280, 1550], //
     ],
   },
 ]

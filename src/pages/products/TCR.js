@@ -51,7 +51,9 @@ import Animate7Src from 'images/animate-tcr/animate-7.png'
 import Animate8Src from 'images/animate-tcr/animate-8.png'
 import Animate9Src from 'images/animate-tcr/animate-9.png'
 import Animate10Src from 'images/animate-tcr/animate-10.png'
-import Animate11Src from 'images/animate-tcr/animate-11.png'
+import Animate11ASrc from 'images/animate-tcr/animate-11a.png'
+import Animate11BSrc from 'images/animate-tcr/animate-11b.png'
+import Animate11CSrc from 'images/animate-tcr/animate-11c.png'
 
 const animatorSteps = [
   {
@@ -184,22 +186,62 @@ const animatorSpites = [
   },
   {
     src: Animate10Src,
-    height: 148,
+    height: 40,
     steps: [
-      [0, 220, 170], //
-      [0, 220, 170], //
-      [0, 220, 170], //
-      [1, 230, 170, 300], //
+      [0, 220, 160], //
+      [0, 220, 160], //
+      [0, 220, 160], //
+      [1, 230, 160, 300], //
     ],
   },
   {
-    src: Animate11Src,
-    height: 137,
+    src: Animate10Src,
+    height: 40,
     steps: [
-      [0, 355, 185], //
-      [0, 355, 185], //
-      [0, 355, 185], //
-      [1, 363, 185, 600], //
+      [0, 220, 225], //
+      [0, 220, 225], //
+      [0, 220, 225], //
+      [1, 230, 225, 600], //
+    ],
+  },
+  {
+    src: Animate10Src,
+    height: 40,
+    steps: [
+      [0, 220, 290], //
+      [0, 220, 290], //
+      [0, 220, 290], //
+      [1, 230, 290, 900], //
+    ],
+  },
+  {
+    src: Animate11ASrc,
+    height: 52,
+    steps: [
+      [0, 363, 140], //
+      [0, 363, 140], //
+      [0, 363, 140], //
+      [1, 363, 150, 450], //
+    ],
+  },
+  {
+    src: Animate11BSrc,
+    height: 52,
+    steps: [
+      [0, 363, 220], //
+      [0, 363, 220], //
+      [0, 363, 220], //
+      [1, 363, 230, 750], //
+    ],
+  },
+  {
+    src: Animate11CSrc,
+    height: 52,
+    steps: [
+      [0, 363, 290], //
+      [0, 363, 290], //
+      [0, 363, 290], //
+      [1, 363, 300, 1050], //
     ],
   },
 ]
