@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import LandingShowcase from 'components/LandingShowcase'
+import Whitepaper from 'whitepaper/whitepaper-3.0.0.pdf'
 import { colors } from 'ui'
 import {
   Flex,
@@ -167,11 +168,11 @@ export default () => {
                   </FilledButton>
                 </AbsoluteLink>
                 <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-                <Link to="why-band">
+                <AbsoluteLink href={Whitepaper}>
                   <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
-                    Learn More
+                    Whitepaper
                   </OutlineButton>
-                </Link>
+                </AbsoluteLink>
               </Flex>
               <Flex
                 mr="60px"
