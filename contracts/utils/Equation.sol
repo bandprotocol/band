@@ -155,7 +155,6 @@ library Equation {
   }
 
 
-  /// Calculate the arithmetic value of this sub-expression at the given X position.
   function solveMath(Node[] storage self, uint8 nodeIdx, uint256 xValue)
     private view returns (uint256)
   {
@@ -216,7 +215,6 @@ library Equation {
     assert(false);
   }
 
-  /// Calculate the arithmetic value of this sub-expression.
   function solveBool(Node[] storage self, uint8 nodeIdx, uint256 xValue)
     private view returns (bool)
   {
