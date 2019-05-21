@@ -7,11 +7,10 @@ import "./QueryInterface.sol";
 import "../CommunityToken.sol";
 import "../Parameters.sol";
 import "../token/ERC20Acceptor.sol";
-import "../feeless/Feeless.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 
-contract TCR is Feeless, ERC20Acceptor, QueryInterface {
+contract TCR is ERC20Acceptor, QueryInterface {
   using Fractional for uint256;
   using SafeMath for uint256;
 
@@ -75,7 +74,6 @@ contract TCR is Feeless, ERC20Acceptor, QueryInterface {
     prefix = _prefix;
     token = _token;
     params = _params;
-    setExecDelegator(token.execDelegator());
     depositDecayFunction = decayFunction;
   }
 
@@ -143,26 +141,25 @@ contract TCR is Feeless, ERC20Acceptor, QueryInterface {
     emit EntryDeposited(data, amount);
   }
 
-  function withdraw(address sender, bytes32 data, uint256 amount)
+  function withdraw(bytes32 data, uint256 amount)
     public
-    feeless(sender)
     entryMustExist(data)
   {
     Entry storage entry = entries[data];
-    require(entry.proposer == sender);
+    require(entry.proposer == msg.sender);
     if (entry.challengeId == 0) {
       require(entry.deposit >= amount.add(currentMinDeposit(data)));
     } else {
       require(entry.deposit >= amount);
     }
     entry.deposit = entry.deposit.sub(amount);
-    require(token.transfer(sender, amount));
+    require(token.transfer(msg.sender, amount));
     emit EntryWithdrawn(data, amount);
   }
 
-  function exit(address sender, bytes32 data) public feeless(sender) entryMustExist(data) {
+  function exit(bytes32 data) public entryMustExist(data) {
     Entry storage entry = entries[data];
-    require(entry.proposer == sender);
+    require(entry.proposer == msg.sender);
     require(entry.challengeId == 0);
     _deleteEntry(data);
     emit EntryExited(data);
@@ -207,18 +204,17 @@ contract TCR is Feeless, ERC20Acceptor, QueryInterface {
     emit ChallengeInitiated(data, challengeId, challenger, stake, reasonData, proposerVote, challengerVote);
   }
 
-  function commitVote(address voter, uint256 challengeId, bytes32 commitValue)
+  function commitVote(uint256 challengeId, bytes32 commitValue)
     public
-    feeless(voter)
   {
     Challenge storage challenge = challenges[challengeId];
     require(challenge.state == ChallengeState.Open && now < challenge.commitEndTime);
-    require(challenge.voteStatuses[voter] == VoteStatus.Nothing);
-    challenge.voteCommits[voter] = commitValue;
-    challenge.voteStatuses[voter] = VoteStatus.Committed;
-    uint256 weight = token.historicalVotingPowerAtNonce(voter, challenge.snapshotNonce);
+    require(challenge.voteStatuses[msg.sender] == VoteStatus.Nothing);
+    challenge.voteCommits[msg.sender] = commitValue;
+    challenge.voteStatuses[msg.sender] = VoteStatus.Committed;
+    uint256 weight = token.historicalVotingPowerAtNonce(msg.sender, challenge.snapshotNonce);
     challenge.totalCommitCount = challenge.totalCommitCount.add(weight);
-    emit ChallengeVoteCommitted(challengeId, voter, commitValue);
+    emit ChallengeVoteCommitted(challengeId, msg.sender, commitValue);
   }
 
   function revealVote(address voter, uint256 challengeId, bool voteKeep, uint256 salt) public {

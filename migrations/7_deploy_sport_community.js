@@ -27,10 +27,10 @@ module.exports = function(deployer, network, accounts) {
       );
       console.log(
         'Created SportFeedCommunity at',
-        sportTx.receipt.logs[0].args.community,
+        sportTx.receipt.logs[1].args.community,
       );
       const sportFeedCommunity = await CommunityCore.at(
-        sportTx.receipt.logs[0].args.community,
+        sportTx.receipt.logs[1].args.community,
       );
 
       const sportTCDTx = await sportFeedCommunity.createTCD(
@@ -61,7 +61,7 @@ module.exports = function(deployer, network, accounts) {
 
       await Promise.all(
         dataProviders.map(async dataSource =>
-          sportTCD.register(accounts[0], '500000000000000000000', dataSource),
+          sportTCD.register('500000000000000000000', dataSource),
         ),
       );
     })

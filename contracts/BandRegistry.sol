@@ -2,11 +2,11 @@ pragma solidity 0.5.8;
 
 import "./BandRegistryBase.sol";
 import "./CommunityCore.sol";
-import "./feeless/ExecutionDelegator.sol";
 
 
-contract BandRegistry is BandRegistryBase, ExecutionDelegator {
+contract BandRegistry is BandRegistryBase {
   event CommunityCreated(CommunityCore community);
+  event ExchangeSet(BandExchangeInterface exchange);
 
   constructor(
     BandToken _band,
@@ -14,6 +14,12 @@ contract BandRegistry is BandRegistryBase, ExecutionDelegator {
   ) public {
     band = _band;
     exchange = _exchange;
+    emit ExchangeSet(exchange);
+  }
+
+  function setExchange(BandExchangeInterface _exchange) public onlyOwner {
+    exchange = _exchange;
+    emit ExchangeSet(exchange);
   }
 
   function createCommunity(

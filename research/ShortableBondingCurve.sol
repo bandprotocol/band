@@ -1,10 +1,9 @@
 pragma solidity 0.5.8;
 
 import "./BondingCurve.sol";
-import "../feeless/Feeless.sol";
 
 
-contract ShortableBondingCurve is BondingCurve, Feeless {
+contract ShortableBondingCurve is BondingCurve {
   struct ShortSale {
     address owner;
     uint256 shortAmount;
@@ -42,24 +41,22 @@ contract ShortableBondingCurve is BondingCurve, Feeless {
     require(!_shouldMarginCall(shortSale));
   }
 
-  function closePosition(address caller, uint256 shortSaleIndex)
+  function closePosition(uint256 shortSaleIndex)
     public
-    feeless(caller)
   {
     ShortSale storage shortSale = shortSales[shortSaleIndex];
     require(shortSale.isOpen);
-    require(caller == shortSale.owner);
-    _closePosition(shortSale, caller);
+    require(msg.sender == shortSale.owner);
+    _closePosition(shortSale, msg.sender);
   }
 
-  function forceLiquidation(address caller, uint256 shortSaleIndex)
+  function forceLiquidation(uint256 shortSaleIndex)
     public
-    feeless(caller)
   {
     ShortSale storage shortSale = shortSales[shortSaleIndex];
     require(shortSale.isOpen);
     require(_shouldMarginCall(shortSale));
-    _closePosition(shortSale, caller);
+    _closePosition(shortSale, msg.sender);
   }
 
   function _shouldMarginCall(ShortSale storage shortSale) internal view returns (bool) {

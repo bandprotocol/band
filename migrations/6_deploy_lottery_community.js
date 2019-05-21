@@ -29,10 +29,10 @@ module.exports = function(deployer, network, accounts) {
 
       console.log(
         'Created LotteryFeedCommunity at',
-        lotteryTx.receipt.logs[0].args.community,
+        lotteryTx.receipt.logs[1].args.community,
       );
       const lotteryFeedCommunity = await CommunityCore.at(
-        lotteryTx.receipt.logs[0].args.community,
+        lotteryTx.receipt.logs[1].args.community,
       );
 
       const lotteryTCDTx = await lotteryFeedCommunity.createTCD(
@@ -64,7 +64,7 @@ module.exports = function(deployer, network, accounts) {
 
       await Promise.all(
         dataProviders.map(async dataSource =>
-          lotteryTCD.register(accounts[0], '500000000000000000000', dataSource),
+          lotteryTCD.register('500000000000000000000', dataSource),
         ),
       );
     })

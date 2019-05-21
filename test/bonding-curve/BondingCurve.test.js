@@ -34,7 +34,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     it('should allow alice to buy 100 tokens with proper change', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.collateralToken.transferAndCall(
-        alice,
         this.curve.address,
         50000,
         '0x' + calldata.slice(2, 10),
@@ -59,7 +58,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await shouldFail.reverting(
         this.bondedToken.transferAndCall(
-          alice,
           this.curve.address,
           9000,
           '0x' + calldata.slice(2, 10),
@@ -87,7 +85,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     it('should allow Alice to sell 20 tokens with price limit 10', async () => {
       const calldata = this.curve.contract.methods.sell(_, 0, 10).encodeABI();
       await this.bondedToken.transferAndCall(
-        alice,
         this.curve.address,
         20,
         '0x' + calldata.slice(2, 10),
@@ -107,7 +104,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       const calldata = this.curve.contract.methods.sell(_, 0, 4000).encodeABI();
       await shouldFail.reverting(
         this.bondedToken.transferAndCall(
-          alice,
           this.curve.address,
           20,
           '0x' + calldata.slice(2, 10),
@@ -120,7 +116,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     it('should allow Bob to buy 10 tokens after Alice', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.collateralToken.transferAndCall(
-        bob,
         this.curve.address,
         50000,
         '0x' + calldata.slice(2, 10),
@@ -138,7 +133,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     beforeEach(async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.collateralToken.transferAndCall(
-        alice,
         this.curve.address,
         10000,
         '0x' + calldata.slice(2, 10),
@@ -152,7 +146,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       await time.increase(time.duration.days(30));
       const calldata = this.curve.contract.methods.buy(_, 0, 50).encodeABI();
       await this.collateralToken.transferAndCall(
-        bob,
         this.curve.address,
         100000,
         '0x' + calldata.slice(2, 10),
@@ -172,7 +165,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       await time.increase(time.duration.days(60));
       const calldata = this.curve.contract.methods.buy(_, 0, 50).encodeABI();
       await this.collateralToken.transferAndCall(
-        bob,
         this.curve.address,
         100000,
         '0x' + calldata.slice(2, 10),
@@ -188,7 +180,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     beforeEach(async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.collateralToken.transferAndCall(
-        alice,
         this.curve.address,
         10000,
         '0x' + calldata.slice(2, 10),
@@ -203,7 +194,6 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     it('should collect revenue of 1 token if Alice buys 10 more tokens', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.collateralToken.transferAndCall(
-        alice,
         this.curve.address,
         90000,
         '0x' + calldata.slice(2, 10),

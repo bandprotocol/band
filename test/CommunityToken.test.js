@@ -2,6 +2,8 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const CommunityToken = artifacts.require('CommunityToken');
 const BandRegistry = artifacts.require('BandRegistry');
+const BandToken = artifacts.require('BandToken');
+const BandSimpleExchange = artifacts.require('BandSimpleExchange');
 
 require('chai').should();
 
@@ -10,7 +12,38 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     this.contract = await CommunityToken.new('CoinHatcher', 'XCH', {
       from: owner,
     });
-    this.factory = await BandRegistry.deployed();
+    this.band = await BandToken.new({ from: owner });
+    this.exchange = await BandSimpleExchange.new(this.band.address, {
+      from: owner,
+    });
+    this.factory = await BandRegistry.new(
+      this.band.address,
+      this.exchange.address,
+      { from: alice },
+    );
+  });
+
+  it('Owner of BandRegistry should be alice', async () => {
+    (await this.factory.isOwner({ from: alice })).toString().should.eq('true');
+  });
+
+  it('Owner of BandRegistry should be able to setExchange', async () => {
+    (await this.factory.exchange()).toString().should.eq(this.exchange.address);
+    const newExchange = await BandSimpleExchange.new(this.band.address, {
+      from: bob,
+    });
+    await this.factory.setExchange(newExchange.address, { from: alice });
+    (await this.factory.exchange()).toString().should.eq(newExchange.address);
+  });
+
+  it('None owner of BandRegistry should not be able to setExchange', async () => {
+    (await this.factory.exchange()).toString().should.eq(this.exchange.address);
+    const newExchange = await BandSimpleExchange.new(this.band.address, {
+      from: bob,
+    });
+    await shouldFail.reverting(
+      this.factory.setExchange(newExchange.address, { from: bob }),
+    );
   });
 
   it('should contain correct token detail', async () => {
@@ -79,74 +112,6 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       const owner2ndBalance = await this.contract.balanceOf(owner);
       owner2ndBalance.toString().should.eq('999990');
     });
-  });
-
-  it('should be able to transfer feelessly', async () => {
-    await this.contract.setExecDelegator(this.factory.address);
-
-    await this.contract.mint(alice, 100, { from: owner });
-    await this.contract.mint(bob, 100, { from: owner });
-    await this.contract.mint(carol, 100, { from: owner });
-
-    const cap = {
-      alice: (await this.contract.balanceOf(alice)).toNumber(),
-      bob: (await this.contract.balanceOf(bob)).toNumber(),
-      carol: (await this.contract.balanceOf(carol)).toNumber(),
-    };
-    const nonce = {
-      alice: (await time.latest()).toNumber() * 1000,
-      bob: (await time.latest()).toNumber() * 1000,
-      carol: (await time.latest()).toNumber() * 1000,
-    };
-
-    let data = this.contract.contract.methods
-      .transferFeeless(alice, carol, 20)
-      .encodeABI();
-    let dataNoFuncSig = '0x' + data.slice(10 + 64);
-    let sig = await web3.eth.sign(
-      web3.utils.soliditySha3(++nonce.alice, dataNoFuncSig),
-      alice,
-    );
-
-    await this.factory.sendDelegatedExecution(
-      alice,
-      this.contract.address,
-      '0x' + data.slice(2, 10),
-      nonce.alice,
-      dataNoFuncSig,
-      sig,
-      { from: bob },
-    );
-    (await this.contract.balanceOf(alice))
-      .toNumber()
-      .should.eq((cap.alice -= 20));
-    (await this.contract.balanceOf(carol))
-      .toNumber()
-      .should.eq((cap.carol += 20));
-    (await this.factory.lastMsTimes(alice)).toNumber().should.eq(nonce.alice);
-
-    data = this.contract.contract.methods
-      .transferFeeless(bob, carol, 30)
-      .encodeABI();
-    dataNoFuncSig = '0x' + data.slice(10 + 64);
-    sig = await web3.eth.sign(
-      web3.utils.soliditySha3(++nonce.bob, dataNoFuncSig),
-      bob,
-    );
-    await this.factory.sendDelegatedExecution(
-      bob,
-      this.contract.address,
-      '0x' + data.slice(2, 10),
-      nonce.bob,
-      dataNoFuncSig,
-      sig,
-      { from: owner },
-    );
-    (await this.contract.balanceOf(bob)).toNumber().should.eq((cap.bob -= 30));
-    (await this.contract.balanceOf(carol))
-      .toNumber()
-      .should.eq((cap.carol += 30));
-    (await this.factory.lastMsTimes(bob)).toNumber().should.eq(nonce.bob);
   });
 
   // context('Vote delegation feature', async () => {

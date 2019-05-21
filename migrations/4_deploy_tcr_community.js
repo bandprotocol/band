@@ -16,8 +16,9 @@ module.exports = function(deployer) {
         '50000000000000000',
         '800000000000000000',
       );
+      // console.log(data.receipt.logs);
       const coinHatcher = await CommunityCore.at(
-        data.receipt.logs[0].args.community,
+        data.receipt.logs[1].args.community,
       );
       await coinHatcher.createTCR(
         web3.utils.fromAscii('tcr:'),

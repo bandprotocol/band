@@ -30,10 +30,10 @@ module.exports = function(deployer, network, accounts) {
       );
       console.log(
         'Created PriceFeedCommunity at',
-        priceTx.receipt.logs[0].args.community,
+        priceTx.receipt.logs[1].args.community,
       );
       const priceFeedCommunity = await CommunityCore.at(
-        priceTx.receipt.logs[0].args.community,
+        priceTx.receipt.logs[1].args.community,
       );
 
       const priceTCDTx = await priceFeedCommunity.createTCD(
@@ -65,7 +65,7 @@ module.exports = function(deployer, network, accounts) {
 
       await Promise.all(
         dataProviders.map(async dataSource =>
-          priceTCD.register(accounts[0], '500000000000000000000', dataSource),
+          priceTCD.register('500000000000000000000', dataSource),
         ),
       );
     })

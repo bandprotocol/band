@@ -4,9 +4,8 @@ import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
 import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
 
 import "./ERC20Interface.sol";
-import "../feeless/Feeless.sol";
 
-contract ERC20Base is ERC20Interface, ERC20, Feeless, MinterRole {
+contract ERC20Base is ERC20Interface, ERC20, MinterRole {
   string public name;
   string public symbol;
   uint8 public decimals = 18;
@@ -16,23 +15,13 @@ contract ERC20Base is ERC20Interface, ERC20, Feeless, MinterRole {
     symbol = _symbol;
   }
 
-  function transferAndCall(address sender, address to, uint256 value, bytes4 sig, bytes memory data)
+  function transferAndCall(address to, uint256 value, bytes4 sig, bytes memory data)
     public
-    feeless(sender)
     returns (bool)
   {
-    _transfer(sender, to, value);
-    (bool success,) = to.call(abi.encodePacked(sig, uint256(sender), value, data));
+    _transfer(msg.sender, to, value);
+    (bool success,) = to.call(abi.encodePacked(sig, uint256(msg.sender), value, data));
     require(success);
-    return true;
-  }
-
-  function transferFeeless(address sender, address to, uint256 value)
-    public
-    feeless(sender)
-    returns (bool)
-  {
-    _transfer(sender, to, value);
     return true;
   }
 

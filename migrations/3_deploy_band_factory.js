@@ -18,12 +18,7 @@ module.exports = function(deployer, network, accounts) {
       const band = await deployer.deploy(BandToken);
       const exchange = await deployer.deploy(BandSimpleExchange, band.address);
       await band.mint(accounts[0], '100000000000000000000000000');
-      const bandRegistry = await deployer.deploy(
-        BandRegistry,
-        band.address,
-        exchange.address,
-      );
-      await band.setExecDelegator(bandRegistry.address);
+      await deployer.deploy(BandRegistry, band.address, exchange.address);
     })
     .catch(console.log);
 };

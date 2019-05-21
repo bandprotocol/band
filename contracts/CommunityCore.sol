@@ -36,10 +36,8 @@ contract CommunityCore {
     token = CommunityTokenFactory.create(name, symbol);
     params = ParametersFactory.create(token);
     bondingCurve = BondingCurveFactory.create(band, token, collateralExpression, params);
-    token.setExecDelegator(address(_registry));
     token.addMinter(address(bondingCurve));
     token.renounceMinter();
-    params.setExecDelegator(address(_registry));
     params.setRaw("bonding:liquidity_spread", bondingLiquiditySpread);
     params.setRaw("bonding:revenue_beneficiary", uint256(creator));
     params.setRaw("bonding:inflation_rate", 0);

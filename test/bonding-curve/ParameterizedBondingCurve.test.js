@@ -39,7 +39,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       '800000000000000000',
       { from: _ },
     );
-    this.core = await CommunityCore.at(data.receipt.logs[0].args.community);
+    this.core = await CommunityCore.at(data.receipt.logs[1].args.community);
     this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.params = await Parameters.at(await this.core.params());
@@ -56,7 +56,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await shouldFail.reverting(
         this.band.transferAndCall(
-          alice,
           this.curve.address,
           110000,
           '0x' + calldata.slice(2, 10),
@@ -70,7 +69,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await shouldFail.reverting(
         this.band.transferAndCall(
-          alice,
           this.curve.address,
           9000,
           '0x' + calldata.slice(2, 10),
@@ -83,7 +81,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should allow buying tokens if calling via band tokens', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         11000,
         '0x' + calldata.slice(2, 10),
@@ -100,7 +97,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should time.increase price for subsequent purchases', async () => {
       const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         11000,
         '0x' + calldata1.slice(2, 10),
@@ -109,7 +105,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       );
       const calldata2 = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
-        bob,
         this.curve.address,
         11000,
         '0x' + calldata2.slice(2, 10),
@@ -126,7 +121,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should allow selling with correct price drop', async () => {
       const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         11000,
         '0x' + calldata1.slice(2, 10),
@@ -138,7 +132,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          alice,
           this.curve.address,
           10,
           '0x' + calldata2.slice(2, 10),
@@ -150,7 +143,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         .sell(_, 0, 1000)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.curve.address,
         10,
         '0x' + calldata3.slice(2, 10),
@@ -163,74 +155,12 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         .toString()
         .should.eq('1000000000000000000');
     });
-
-    it('should be able to sell/transferAndCall feelessly', async () => {
-      const calldata1 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await this.band.transferAndCall(
-        alice,
-        this.curve.address,
-        11000,
-        '0x' + calldata1.slice(2, 10),
-        '0x' + calldata1.slice(138),
-        { from: alice },
-      );
-      const calldata2 = this.curve.contract.methods
-        .sell(_, 0, 10000)
-        .encodeABI();
-      await shouldFail.reverting(
-        this.comm.transferAndCall(
-          alice,
-          this.curve.address,
-          10,
-          '0x' + calldata2.slice(2, 10),
-          '0x' + calldata2.slice(138),
-          { from: alice },
-        ),
-      );
-
-      const calldata3 = this.curve.contract.methods
-        .sell(_, 0, 1000)
-        .encodeABI();
-      const calldata4 = await this.comm.contract.methods
-        .transferAndCall(
-          alice,
-          this.curve.address,
-          10,
-          '0x' + calldata3.slice(2, 10),
-          '0x' + calldata3.slice(138),
-        )
-        .encodeABI();
-
-      const nonce = (await time.latest()).toNumber() * 1000;
-      const dataNoFuncSig = '0x' + calldata4.slice(10 + 64);
-      const sig = await web3.eth.sign(
-        web3.utils.soliditySha3(nonce, dataNoFuncSig),
-        alice,
-      );
-
-      await this.factory.sendDelegatedExecution(
-        alice,
-        this.comm.address,
-        '0x' + calldata4.slice(2, 10),
-        nonce,
-        dataNoFuncSig,
-        sig,
-        { from: bob },
-      );
-
-      (await this.band.balanceOf(alice)).toString().should.eq('91900');
-      (await this.comm.balanceOf(alice)).toString().should.eq('90');
-      (await this.curve.curveMultiplier())
-        .toString()
-        .should.eq('1000000000000000000');
-    });
   });
 
   context('Checking auto-inflation feature', () => {
     beforeEach(async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
@@ -242,7 +172,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should inflate 10% per month properly after a purchase', async () => {
       // 10% per month inflation
       await this.params.propose(
-        owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('bonding:inflation_rate')],
         [38580246914],
@@ -250,13 +179,12 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
           from: owner,
         },
       );
-      await this.params.voteOnProposal(alice, 0, true, {
+      await this.params.voteOnProposal(0, true, {
         from: alice,
       });
       await time.increase(time.duration.days(30));
       const calldata = this.curve.contract.methods.buy(_, 0, 10).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
@@ -275,7 +203,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should inflate 10% per hour properly after a sale', async () => {
       // 10% per hour inflation
       await this.params.propose(
-        owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('bonding:inflation_rate')],
         [27777777777778],
@@ -284,7 +211,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         },
       );
 
-      await this.params.voteOnProposal(alice, 0, true, {
+      await this.params.voteOnProposal(0, true, {
         from: alice,
       });
       await time.increase(time.duration.hours(1));
@@ -292,7 +219,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       await time.increase(time.duration.hours(9));
       const calldata = this.curve.contract.methods.sell(_, 0, 0).encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.curve.address,
         10,
         '0x' + calldata.slice(2, 10),
@@ -309,7 +235,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       // Second sale
       await time.increase(time.duration.hours(10));
       await this.comm.transferAndCall(
-        alice,
         this.curve.address,
         10,
         '0x' + calldata.slice(2, 10),
@@ -330,7 +255,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     beforeEach(async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         20000,
         '0x' + calldata.slice(2, 10),
@@ -339,7 +263,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       );
       // 20% liquidity fee
       await this.params.propose(
-        alice,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('bonding:liquidity_spread')],
         [200000000000],
@@ -348,7 +271,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         },
       );
 
-      await this.params.voteOnProposal(alice, 0, true, {
+      await this.params.voteOnProposal(0, true, {
         from: alice,
       });
       await time.increase(time.duration.seconds(120));
@@ -357,7 +280,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should impose commission on purchases', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 15).encodeABI();
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         10000,
         '0x' + calldata.slice(2, 10),
@@ -375,7 +297,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     it('should not impose commission on sales', async () => {
       const calldata = this.curve.contract.methods.sell(_, 0, 1000).encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.curve.address,
         15,
         '0x' + calldata.slice(2, 10),
@@ -395,7 +316,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     beforeEach(async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await this.band.transferAndCall(
-        owner,
         this.curve.address,
         100000,
         '0x' + calldata.slice(2, 10),
@@ -403,7 +323,6 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         { from: owner },
       );
       await this.band.transferAndCall(
-        alice,
         this.curve.address,
         100000,
         '0x' + calldata.slice(2, 10),

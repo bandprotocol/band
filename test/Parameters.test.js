@@ -35,7 +35,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         '200000000000000000',
         '500000000000000000',
       );
-      this.core = await CommunityCore.at(data.receipt.logs[0].args.community);
+      this.core = await CommunityCore.at(data.receipt.logs[1].args.community);
       this.comm = await CommunityToken.at(await this.core.token());
       this.curve = await BondingCurve.at(await this.core.bondingCurve());
       this.params = await Parameters.at(await this.core.params());
@@ -146,7 +146,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -159,7 +158,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 500)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           400000,
           '0x' + calldata2.slice(2, 10),
@@ -167,7 +165,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -177,7 +174,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: alice,
         });
         await time.increase(time.duration.seconds(60));
@@ -196,7 +193,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -205,7 +201,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -219,7 +214,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 500)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           400000,
           '0x' + calldata2.slice(2, 10),
@@ -227,7 +221,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await shouldFail.reverting(
-          this.params.voteOnProposal(bob, 0, true, {
+          this.params.voteOnProposal(0, true, {
             from: bob,
           }),
         );
@@ -239,7 +233,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -252,7 +245,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -260,7 +252,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -270,7 +261,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: alice,
         });
 
@@ -291,7 +282,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -304,7 +294,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -312,7 +301,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -322,13 +310,13 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: alice,
         });
 
         await time.increase(time.duration.seconds(30));
         await shouldFail.reverting(
-          this.params.voteOnProposal(alice, 0, false, {
+          this.params.voteOnProposal(0, false, {
             from: alice,
           }),
         );
@@ -336,7 +324,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         await time.increase(time.duration.seconds(30));
         // Time end
         await shouldFail.reverting(
-          this.params.voteOnProposal(bob, 0, false, {
+          this.params.voteOnProposal(0, false, {
             from: bob,
           }),
         );
@@ -356,7 +344,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -369,7 +356,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -377,7 +363,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -387,7 +372,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(bob, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: bob,
         });
 
@@ -405,7 +390,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -418,7 +402,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -426,7 +409,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -436,7 +418,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, false, {
+        await this.params.voteOnProposal(0, false, {
           from: alice,
         });
 
@@ -457,7 +439,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -470,7 +451,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -478,7 +458,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -488,12 +467,12 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: alice,
         });
 
         // vote
-        await this.params.voteOnProposal(bob, 0, false, {
+        await this.params.voteOnProposal(0, false, {
           from: bob,
         });
 
@@ -511,7 +490,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -524,7 +502,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -533,7 +510,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -547,7 +523,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: alice,
         });
 
@@ -565,7 +541,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -578,7 +553,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -586,7 +560,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -596,7 +569,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(bob, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: bob,
         });
 
@@ -614,7 +587,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -627,7 +599,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -635,7 +606,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -645,7 +615,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 0, false, {
+        await this.params.voteOnProposal(0, false, {
           from: alice,
         });
 
@@ -668,7 +638,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 100)
           .encodeABI();
         await this.band.transferAndCall(
-          alice,
           this.curve.address,
           11000,
           '0x' + calldata1.slice(2, 10),
@@ -681,7 +650,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .buy(_, 0, 200)
           .encodeABI();
         await this.band.transferAndCall(
-          bob,
           this.curve.address,
           100000,
           '0x' + calldata2.slice(2, 10),
@@ -689,7 +657,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('example_proposal')],
           [1000000],
@@ -699,12 +666,11 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(bob, 0, true, {
+        await this.params.voteOnProposal(0, true, {
           from: bob,
         });
 
         await this.params.propose(
-          owner,
           '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
           [web3.utils.fromAscii('params:support_required_pct')],
           ['600000000000000000'],
@@ -714,10 +680,10 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(alice, 1, true, {
+        await this.params.voteOnProposal(1, true, {
           from: alice,
         });
-        await this.params.voteOnProposal(bob, 1, true, {
+        await this.params.voteOnProposal(1, true, {
           from: bob,
         });
 
@@ -731,117 +697,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         ))
           .toString()
           .should.eq('600000000000000000');
-      });
-
-      it('should support feeless execution', async () => {
-        // alice buy 100 XCH
-        const calldata1 = this.curve.contract.methods
-          .buy(_, 0, 100)
-          .encodeABI();
-        await this.band.transferAndCall(
-          alice,
-          this.curve.address,
-          11000,
-          '0x' + calldata1.slice(2, 10),
-          '0x' + calldata1.slice(138),
-          { from: alice },
-        );
-
-        // bob buy 200 XCH
-        const calldata2 = this.curve.contract.methods
-          .buy(_, 0, 200)
-          .encodeABI();
-        await this.band.transferAndCall(
-          bob,
-          this.curve.address,
-          100000,
-          '0x' + calldata2.slice(2, 10),
-          '0x' + calldata2.slice(138),
-          { from: bob },
-        );
-
-        const nonce = {
-          alice: (await time.latest()).toNumber() * 1000,
-          bob: (await time.latest()).toNumber() * 1000,
-          owner: (await time.latest()).toNumber() * 1000,
-        };
-        let data = await this.params.contract.methods
-          .propose(
-            owner,
-            '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
-            [web3.utils.fromAscii('params:support_required_pct')],
-            [60],
-          )
-          .encodeABI();
-        let dataNoFuncSig = '0x' + data.slice(10 + 64);
-        let sig = await web3.eth.sign(
-          web3.utils.soliditySha3(++nonce.owner, dataNoFuncSig),
-          owner,
-        );
-        await this.factory.sendDelegatedExecution(
-          owner,
-          this.params.address,
-          '0x' + data.slice(2, 10),
-          nonce.owner,
-          dataNoFuncSig,
-          sig,
-          { from: alice },
-        );
-        // alice commit vote
-        data = await this.params.contract.methods
-          .voteOnProposal(alice, 0, false)
-          .encodeABI();
-        dataNoFuncSig = '0x' + data.slice(10 + 64);
-        sig = await web3.eth.sign(
-          web3.utils.soliditySha3(++nonce.alice, dataNoFuncSig),
-          alice,
-        );
-        await this.factory.sendDelegatedExecution(
-          alice,
-          this.params.address,
-          '0x' + data.slice(2, 10),
-          nonce.alice,
-          dataNoFuncSig,
-          sig,
-          { from: owner },
-        );
-        // bob commit vote
-        data = await this.params.contract.methods
-          .voteOnProposal(bob, 0, true)
-          .encodeABI();
-        dataNoFuncSig = '0x' + data.slice(10 + 64);
-        sig = await web3.eth.sign(
-          web3.utils.soliditySha3(++nonce.bob, dataNoFuncSig),
-          bob,
-        );
-        await this.factory.sendDelegatedExecution(
-          bob,
-          this.params.address,
-          '0x' + data.slice(2, 10),
-          nonce.bob,
-          dataNoFuncSig,
-          sig,
-          { from: owner },
-        );
-
-        // assertion
-        (await this.params.proposals(0)).proposalState
-          .toString()
-          .should.be.eq('2');
-
-        (await this.params.getRaw(
-          web3.utils.fromAscii('params:support_required_pct'),
-        ))
-          .toString()
-          .should.eq('60');
-        // check nonce of each user
-        (await this.factory.lastMsTimes(alice))
-          .toNumber()
-          .should.eq(nonce.alice);
-        (await this.factory.lastMsTimes(bob)).toNumber().should.eq(nonce.bob);
-        (await this.factory.lastMsTimes(owner))
-          .toNumber()
-          .should.eq(nonce.owner);
       });
     });
   });

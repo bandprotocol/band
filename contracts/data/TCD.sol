@@ -8,10 +8,9 @@ import "../CommunityToken.sol";
 import "../Parameters.sol";
 import "../exchange/BondingCurve.sol";
 import "../exchange/BandExchangeInterface.sol";
-import "../feeless/Feeless.sol";
 import "../utils/Fractional.sol";
 
-contract TCD is TCDBase, Feeless {
+contract TCD is TCDBase {
   using Fractional for uint256;
   using SafeMath for uint256;
 
@@ -71,7 +70,6 @@ contract TCD is TCDBase, Feeless {
     bondingCurve = _bondingCurve;
     exchange = _exchange;
     band.approve(address(_bondingCurve), 2 ** 256 - 1);
-    setExecDelegator(token.execDelegator());
   }
 
   function getProviderPublicOwnership(address dataSource, address voter)  public view returns (uint256) {
@@ -97,59 +95,59 @@ contract TCD is TCDBase, Feeless {
     return params.get(prefix, "withdraw_delay");
   }
 
-  function register(address owner, uint256 stake, address dataSource) public feeless(owner) {
-    require(token.lock(owner, stake));
+  function register(uint256 stake, address dataSource) public {
+    require(token.lock(msg.sender, stake));
     require(providers[dataSource].currentStatus == DataProviderStatus.Nothing);
     require(stake > 0 && stake >= params.get(prefix, "min_provider_stake"));
     providers[dataSource] = DataProvider({
       currentStatus: DataProviderStatus.Active,
-      owner: owner,
+      owner: msg.sender,
       stake: stake,
       totalPublicOwnership: stake
     });
-    providers[dataSource].publicOwnerships[owner] = stake;
-    providers[dataSource].tokenLocks[owner] = stake;
+    providers[dataSource].publicOwnerships[msg.sender] = stake;
+    providers[dataSource].tokenLocks[msg.sender] = stake;
     dataSources.push(dataSource);
-    emit DataSourceRegistered(dataSource, owner);
-    emit DataSourceOwnershipChanged(dataSource, owner, stake, stake);
+    emit DataSourceRegistered(dataSource, msg.sender);
+    emit DataSourceOwnershipChanged(dataSource, msg.sender, stake, stake);
     emit DataSourceStakeChanged(dataSource, stake);
-    emit DataSourceVoterTokenLockChanged(dataSource, owner, stake);
+    emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, stake);
     _repositionUp(dataSources.length.sub(1));
   }
 
-  function vote(address voter, uint256 stake, address dataSource) public feeless(voter) {
-    require(token.lock(voter, stake));
+  function vote(uint256 stake, address dataSource) public {
+    require(token.lock(msg.sender, stake));
     DataProvider storage provider = providers[dataSource];
-    uint256 newVoterTokenLock = provider.tokenLocks[voter].add(stake);
-    provider.tokenLocks[voter] = newVoterTokenLock;
-    _vote(voter, stake, dataSource);
+    uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(stake);
+    provider.tokenLocks[msg.sender] = newVoterTokenLock;
+    _vote(msg.sender, stake, dataSource);
     emit DataSourceStakeChanged(dataSource, provider.stake);
-    emit DataSourceVoterTokenLockChanged(dataSource, voter, newVoterTokenLock);
+    emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, newVoterTokenLock);
     _repositionUp(_findDataSourceIndex(dataSource));
   }
 
-  function withdraw(address voter, uint256 withdrawOwnership, address dataSource) public feeless(voter) {
+  function withdraw(uint256 withdrawOwnership, address dataSource) public {
     DataProvider storage provider = providers[dataSource];
-    require(withdrawOwnership > 0 && withdrawOwnership <= provider.publicOwnerships[voter]);
+    require(withdrawOwnership > 0 && withdrawOwnership <= provider.publicOwnerships[msg.sender]);
     uint256 newOwnership = provider.totalPublicOwnership.sub(withdrawOwnership);
-    uint256 currentVoterStake = getStakeInProvider(dataSource, voter);
-    if (currentVoterStake > provider.tokenLocks[voter]){
-      uint256 unrealizedStake = currentVoterStake.sub(provider.tokenLocks[voter]);
-      require(token.transfer(voter, unrealizedStake));
-      require(token.lock(voter, unrealizedStake));
+    uint256 currentVoterStake = getStakeInProvider(dataSource, msg.sender);
+    if (currentVoterStake > provider.tokenLocks[msg.sender]){
+      uint256 unrealizedStake = currentVoterStake.sub(provider.tokenLocks[msg.sender]);
+      require(token.transfer(msg.sender, unrealizedStake));
+      require(token.lock(msg.sender, unrealizedStake));
     }
     uint256 withdrawAmount = provider.stake.mul(withdrawOwnership).div(provider.totalPublicOwnership);
     uint256 newStake = provider.stake.sub(withdrawAmount);
     uint256 newVoterTokenLock = currentVoterStake.sub(withdrawAmount);
-    uint256 newVoterOwnership = provider.publicOwnerships[voter].sub(withdrawOwnership);
+    uint256 newVoterOwnership = provider.publicOwnerships[msg.sender].sub(withdrawOwnership);
     provider.stake = newStake;
     provider.totalPublicOwnership = newOwnership;
-    provider.publicOwnerships[voter] = newVoterOwnership;
-    provider.tokenLocks[voter] = newVoterTokenLock;
-    if (voter == provider.owner) {
+    provider.publicOwnerships[msg.sender] = newVoterOwnership;
+    provider.tokenLocks[msg.sender] = newVoterTokenLock;
+    if (msg.sender == provider.owner) {
       uint256 delay = getOwnerDelayWithdrawTime();
       if (delay == 0){
-        require(token.unlock(voter, withdrawAmount));
+        require(token.unlock(msg.sender, withdrawAmount));
       } else {
         withdrawReceipts.push(ProviderWithdrawReceipt({
           owner: provider.owner,
@@ -160,15 +158,15 @@ contract TCD is TCDBase, Feeless {
         emit OwnerWithdrawReceiptCreated(withdrawReceipts.length - 1, provider.owner, withdrawAmount, uint64(now.add(delay)));
       }
     } else {
-      require(token.unlock(voter, withdrawAmount));
+      require(token.unlock(msg.sender, withdrawAmount));
     }
-    emit DataSourceOwnershipChanged(dataSource, voter, newVoterOwnership, newOwnership);
+    emit DataSourceOwnershipChanged(dataSource, msg.sender, newVoterOwnership, newOwnership);
     emit DataSourceStakeChanged(dataSource, newStake);
-    emit DataSourceVoterTokenLockChanged(dataSource, voter, newVoterTokenLock);
+    emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, newVoterTokenLock);
     if (provider.currentStatus == DataProviderStatus.Active) {
       _repositionDown(_findDataSourceIndex(dataSource));
     }
-    if (provider.owner == voter &&
+    if (provider.owner == msg.sender &&
         getStakeInProvider(dataSource, provider.owner) < params.get(prefix, "min_provider_stake") &&
         provider.currentStatus == DataProviderStatus.Active) {
       kick(dataSource);

@@ -2,12 +2,11 @@ pragma solidity 0.5.8;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./feeless/Feeless.sol";
 import "./token/SnapshotToken.sol";
 import "./utils/Fractional.sol";
 
 
-contract Parameters is Ownable, Feeless {
+contract Parameters is Ownable {
   using SafeMath for uint256;
   using Fractional for uint256;
 
@@ -78,9 +77,8 @@ contract Parameters is Ownable, Feeless {
     return (keyValue.key, keyValue.value);
   }
 
-  function propose(address sender, bytes32 reasonHash, bytes32[] calldata keys, uint256[] calldata values)
+  function propose(bytes32 reasonHash, bytes32[] calldata keys, uint256[] calldata values)
     external
-    feeless(sender)
   {
     require(keys.length == values.length);
     uint256 proposalId = proposals.length;
@@ -95,7 +93,7 @@ contract Parameters is Ownable, Feeless {
       noCount: 0,
       proposalState: ProposalState.Active
     }));
-    emit ProposalProposed(proposalId, sender, reasonHash);
+    emit ProposalProposed(proposalId, msg.sender, reasonHash);
     for (uint256 index = 0; index < keys.length; ++index) {
       bytes32 key = keys[index];
       uint256 value = values[index];
@@ -104,20 +102,20 @@ contract Parameters is Ownable, Feeless {
     }
   }
 
-  function voteOnProposal(address sender, uint256 proposalId, bool accepted) public feeless(sender) {
+  function voteOnProposal( uint256 proposalId, bool accepted) public {
     Proposal storage proposal = proposals[proposalId];
     require(proposal.proposalState == ProposalState.Active);
     require(now < proposal.expirationTime);
-    require(!proposal.isVoted[sender]);
-    uint256 votingPower = token.historicalVotingPowerAtNonce(sender, proposal.snapshotNonce);
+    require(!proposal.isVoted[msg.sender]);
+    uint256 votingPower = token.historicalVotingPowerAtNonce(msg.sender, proposal.snapshotNonce);
     require(votingPower > 0);
     if (accepted) {
       proposal.yesCount = proposal.yesCount.add(votingPower);
     } else {
       proposal.noCount = proposal.noCount.add(votingPower);
     }
-    proposal.isVoted[sender] = true;
-    emit ProposalVoted(proposalId, sender, accepted, votingPower);
+    proposal.isVoted[msg.sender] = true;
+    emit ProposalVoted(proposalId, msg.sender, accepted, votingPower);
     /// Auto-resolve if the proposal is unanimous
     uint256 minVoteToAccepted = proposal.voteSupportRequiredPct.mulFrac(proposal.totalVotingPower);
     uint256 minVoteToRejected = proposal.totalVotingPower.sub(minVoteToAccepted);

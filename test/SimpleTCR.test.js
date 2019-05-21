@@ -35,7 +35,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       '500000000000000000',
       '500000000000000000',
     );
-    this.core = await CommunityCore.at(data1.receipt.logs[0].args.community);
+    this.core = await CommunityCore.at(data1.receipt.logs[1].args.community);
     this.comm = await CommunityToken.at(await this.core.token());
     this.curve = await BondingCurve.at(await this.core.bondingCurve());
     this.params = await Parameters.at(await this.core.params());
@@ -96,7 +96,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     // alice buy 1000 XCH
     const calldata = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
-      alice,
       this.curve.address,
       1000000,
       '0x' + calldata.slice(2, 10),
@@ -105,7 +104,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     );
     // bob buy 1000 XCH
     await this.band.transferAndCall(
-      bob,
       this.curve.address,
       3000000,
       '0x' + calldata.slice(2, 10),
@@ -114,7 +112,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     );
     // carol buy 1000 XCH
     await this.band.transferAndCall(
-      carol,
       this.curve.address,
       5000000,
       '0x' + calldata.slice(2, 10),
@@ -124,7 +121,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     const calldata100 = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
     // minProposer buy 1000 XCH
     await this.band.transferAndCall(
-      minProposer,
       this.curve.address,
       10000000,
       '0x' + calldata100.slice(2, 10),
@@ -133,7 +129,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     );
     // minChallenger buy 1000 XCH
     await this.band.transferAndCall(
-      minChallenger,
       this.curve.address,
       10000000,
       '0x' + calldata100.slice(2, 10),
@@ -149,7 +144,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, entryHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.tcr.address,
         200, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -157,17 +151,12 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         { from: alice },
       );
     });
-    it('Should have the same execDelegator as community token', async () => {
-      const execDelegatorToken = (await this.comm.execDelegator()).toString();
-      (await this.tcr.execDelegator()).toString().should.eq(execDelegatorToken);
-    });
     it('Should be unable to overwrite existing entry', async () => {
       const calldata = await this.tcr.contract.methods
         .applyEntry(_, 0, entryHash)
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          alice,
           this.tcr.address,
           300, // minDeposit is 100
           '0x' + calldata.slice(2, 10),
@@ -183,7 +172,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          alice,
           this.tcr.address,
           99, // minDeposit is 100
           '0x' + calldata.slice(2, 10),
@@ -258,7 +246,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     it('Should withdrawable if nothing goes wrong', async () => {
       const balanceOfAlice = (await this.comm.balanceOf(alice)).toNumber();
       const withdrawAmount = 100;
-      await this.tcr.withdraw(alice, entryHash, withdrawAmount, {
+      await this.tcr.withdraw(entryHash, withdrawAmount, {
         from: alice,
       });
       (await this.comm.balanceOf(alice))
@@ -267,21 +255,21 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     });
     it('Should not withdrawable if not proposer', async () => {
       await shouldFail.reverting(
-        this.tcr.withdraw(bob, entryHash, 100, {
+        this.tcr.withdraw(entryHash, 100, {
           from: bob,
         }),
       );
     });
     it('Should not withdrawable if not deposit < min_deposit', async () => {
       await shouldFail.reverting(
-        this.tcr.withdraw(alice, entryHash, 101, {
+        this.tcr.withdraw(entryHash, 101, {
           from: alice,
         }),
       );
     });
     it('Should exitable if nothing goes wrong', async () => {
       const balanceOfAlice = (await this.comm.balanceOf(alice)).toNumber();
-      await this.tcr.exit(alice, entryHash, {
+      await this.tcr.exit(entryHash, {
         from: alice,
       });
       (await this.comm.balanceOf(alice))
@@ -298,7 +286,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, entryHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.tcr.address,
         200, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -312,7 +299,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          bob,
           this.tcr.address,
           99, // minDeposit is 100
           '0x' + calldata.slice(2, 10),
@@ -327,7 +313,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .initiateChallenge(bob, 10, entryHash, reasonHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        bob,
         this.tcr.address,
         100, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -343,7 +328,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .initiateChallenge(_, 0, entryHash, reasonHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        bob,
         this.tcr.address,
         100, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -361,7 +345,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          carol,
           this.tcr.address,
           100,
           '0x' + calldata.slice(2, 10),
@@ -376,7 +359,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .initiateChallenge(_, 0, entryHash, reasonHash) // time.increase challengeDeposit to 200
         .encodeABI();
       await this.comm.transferAndCall(
-        bob,
         this.tcr.address,
         200, // minDeposit is 100, should return 100 back to bob
         '0x' + calldata.slice(2, 10),
@@ -399,7 +381,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, entryHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.tcr.address,
         200, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -410,7 +391,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .initiateChallenge(_, 0, entryHash, reasonHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        bob,
         this.tcr.address,
         100, // minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -421,7 +401,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, entryHash2)
         .encodeABI();
       await this.comm.transferAndCall(
-        minProposer,
         this.tcr.address,
         100, // minDeposit is 100
         '0x' + applyCalldata.slice(2, 10),
@@ -434,7 +413,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
 
       await this.comm.transferAndCall(
-        minChallenger,
         this.tcr.address,
         100, // minDeposit is 100
         '0x' + challengeCalldata.slice(2, 10),
@@ -446,24 +424,17 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       const challengeId = 1;
       // Commit
       await shouldFail.reverting(
-        this.tcr.commitVote(
-          alice,
-          challengeId,
-          web3.utils.soliditySha3(true, salt),
-          { from: alice },
-        ),
+        this.tcr.commitVote(challengeId, web3.utils.soliditySha3(true, salt), {
+          from: alice,
+        }),
       );
       await shouldFail.reverting(
-        this.tcr.commitVote(
-          bob,
-          challengeId,
-          web3.utils.soliditySha3(false, salt),
-          { from: bob },
-        ),
+        this.tcr.commitVote(challengeId, web3.utils.soliditySha3(false, salt), {
+          from: bob,
+        }),
       );
       // Carol can commit vote
       await this.tcr.commitVote(
-        carol,
         challengeId,
         web3.utils.soliditySha3(true, salt),
         { from: carol },
@@ -493,7 +464,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       }
       // Carol vote
       await this.tcr.commitVote(
-        carol,
         challengeId,
         web3.utils.soliditySha3(true, salt),
         { from: carol },
@@ -524,7 +494,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       const challengeId = 1;
       // Carol commit
       await this.tcr.commitVote(
-        carol,
         challengeId,
         web3.utils.soliditySha3(false, salt),
         { from: carol },
@@ -585,7 +554,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .should.eq(1700);
       // everyone commit
       await this.tcr.commitVote(
-        carol,
         challengeId,
         web3.utils.soliditySha3(true, salt),
         { from: carol },
@@ -663,7 +631,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       // everyone commit
       for (const [person, voteKeep] of commits) {
         await this.tcr.commitVote(
-          person,
           challengeId,
           web3.utils.soliditySha3(voteKeep, salt),
           { from: person },
@@ -720,7 +687,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, entryHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.tcr.address,
         200, // minDeposit is 100
         '0x' + applyCalldata.slice(2, 10),
@@ -732,7 +698,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .initiateChallenge(_, 0, entryHash, reasonHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        minChallenger,
         this.tcr.address,
         100, // minDeposit is 100
         '0x' + challengeCalldata.slice(2, 10),
@@ -762,7 +727,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       const salt = 12;
       for (const [voter, voteKeep] of voters) {
         await this.tcr.commitVote(
-          voter,
           challengeId,
           web3.utils.soliditySha3(voteKeep, salt),
           { from: voter },
@@ -816,7 +780,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       const salt = 12;
       for (const [voter, voteKeep] of voters) {
         await this.tcr.commitVote(
-          voter,
           challengeId,
           web3.utils.soliditySha3(voteKeep, salt),
           { from: voter },
@@ -880,7 +843,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, entryHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.tcr.address,
         200, // stake is 200 and minDeposit is 100
         '0x' + calldata.slice(2, 10),
@@ -889,7 +851,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       );
       // propose new min_deposit
       await this.params.propose(
-        owner,
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('tcr:min_deposit')],
         [newMinDeposit],
@@ -902,7 +863,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       const proposeId = 0;
       // everyone commit
       for (const [person, accepted] of votes) {
-        await this.params.voteOnProposal(person, proposeId, accepted, {
+        await this.params.voteOnProposal(proposeId, accepted, {
           from: person,
         });
       }
@@ -922,7 +883,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          bob,
           this.tcr.address,
           100, // old min_deposit is 100
           '0x' + calldata.slice(2, 10),
@@ -937,7 +897,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          bob,
           this.tcr.address,
           199, // stake is 200
           '0x' + calldata.slice(2, 10),
@@ -951,7 +910,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .initiateChallenge(_, 0, entryHash, reasonHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        bob,
         this.tcr.address,
         200, // stake is 100, min_deposit is 500
         '0x' + calldata.slice(2, 10),
@@ -967,7 +925,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .encodeABI();
       await shouldFail.reverting(
         this.comm.transferAndCall(
-          alice,
           this.tcr.address,
           200, // stake is 200 and minDeposit is 500
           '0x' + calldata.slice(2, 10),
@@ -983,7 +940,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         .applyEntry(_, 0, newEntryHash)
         .encodeABI();
       await this.comm.transferAndCall(
-        alice,
         this.tcr.address,
         500, // stake is 500 and minDeposit is 500
         '0x' + calldata.slice(2, 10),
