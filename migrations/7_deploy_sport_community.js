@@ -44,6 +44,7 @@ module.exports = function(deployer, network, accounts) {
 
       const sportTCD = await TCD.at(sportTCDTx.receipt.logs[0].args.tcd);
       console.log('Created Sport TCD at', sportTCD.address);
+      console.error('DataSourceBookkeepingSportAddress:', sportTCD.address);
       // Buy tokens
       const curve = await BondingCurve.at(
         await sportFeedCommunity.bondingCurve(),

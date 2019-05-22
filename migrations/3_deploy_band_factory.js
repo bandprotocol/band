@@ -15,10 +15,20 @@ module.exports = function(deployer, network, accounts) {
   deployer.link(TCRFactory, BandRegistry);
   deployer
     .then(async () => {
+      const block = await web3.eth.getBlock('latest');
+      console.error('blockId:', block.number);
+      console.error('blockHash:', block.hash);
+      console.error('blockParentHash:', block.parentHash);
+      console.error('blockTime:', block.timestamp);
       const band = await deployer.deploy(BandToken);
       const exchange = await deployer.deploy(BandSimpleExchange, band.address);
       await band.mint(accounts[0], '100000000000000000000000000');
-      await deployer.deploy(BandRegistry, band.address, exchange.address);
+      const bandRegistry = await deployer.deploy(
+        BandRegistry,
+        band.address,
+        exchange.address,
+      );
+      console.error('bandRegistry:', bandRegistry.address);
     })
     .catch(console.log);
 };

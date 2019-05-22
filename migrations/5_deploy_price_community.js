@@ -47,6 +47,7 @@ module.exports = function(deployer, network, accounts) {
 
       const priceTCD = await TCD.at(priceTCDTx.receipt.logs[0].args.tcd);
       console.log('Created Price TCD at', priceTCD.address);
+      console.error('DataSourceBookkeepingPriceAddress:', priceTCD.address);
       // Buy tokens
       const curve = await BondingCurve.at(
         await priceFeedCommunity.bondingCurve(),

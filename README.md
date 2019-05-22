@@ -17,7 +17,6 @@
 
 > Band protocol smart contracts.
 
-
 ## Installation
 
 Make sure you have Node.js and Yarn installed, then:
@@ -35,10 +34,27 @@ yarn run truffle test
 ## Deploying contract to Rinkeby testnet
 
 > Deploy all contract
+
 ```
 yarn run truffle deploy --reset --network rinkeby
 ```
+
 > Deploy only new community (use same band)
+
 ```
 yarn run truffle deploy --network rinkeby - f 3
+```
+
+## Deplying contract to Localhost
+
+> Deploy all contract
+
+```
+yarn truffle deploy --network development --reset 2> config.txt
+```
+
+> Script to mock tcr data
+
+```
+yarn truffle exec exec/challenge.js --network development
 ```

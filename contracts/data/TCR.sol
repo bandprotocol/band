@@ -19,8 +19,8 @@ contract TCR is ERC20Acceptor, QueryInterface {
   event EntryWithdrawn(bytes32 indexed data,uint256 value);
   event EntryExited(bytes32 indexed data);
   event ChallengeInitiated(bytes32 indexed data, uint256 indexed challengeId, address indexed challenger, uint256 stake, bytes32 reasonData, uint256 proposerVote, uint256 challengerVote);
-  event ChallengeVoteCommitted(uint256 indexed challengeId,address indexed voter, bytes32 commitValue);
-  event ChallengeVoteRevealed(uint256 indexed challengeId,address indexed voter, bool voteKeep, uint256 weight);
+  event ChallengeVoteCommitted(uint256 indexed challengeId,address indexed voter, bytes32 commitValue, uint256 weight);
+  event ChallengeVoteRevealed(uint256 indexed challengeId,address indexed voter, bool voteKeep);
   event ChallengeSuccess(bytes32 indexed data,uint256 indexed challengeId, uint256 voterRewardPool, uint256 challengerReward);
   event ChallengeFailed(bytes32 indexed data,uint256 indexed challengeId, uint256 voterRewardPool, uint256 proposerReward);
   event ChallengeInconclusive(bytes32 indexed data,uint256 indexed challengeId);
@@ -214,7 +214,7 @@ contract TCR is ERC20Acceptor, QueryInterface {
     challenge.voteStatuses[msg.sender] = VoteStatus.Committed;
     uint256 weight = token.historicalVotingPowerAtNonce(msg.sender, challenge.snapshotNonce);
     challenge.totalCommitCount = challenge.totalCommitCount.add(weight);
-    emit ChallengeVoteCommitted(challengeId, msg.sender, commitValue);
+    emit ChallengeVoteCommitted(challengeId, msg.sender, commitValue, weight);
   }
 
   function revealVote(address voter, uint256 challengeId, bool voteKeep, uint256 salt) public {
@@ -231,7 +231,7 @@ contract TCR is ERC20Acceptor, QueryInterface {
       challenge.removeCount = challenge.removeCount.add(weight);
       challenge.voteStatuses[voter] = VoteStatus.VoteRemove;
     }
-    emit ChallengeVoteRevealed(challengeId, voter, voteKeep, weight);
+    emit ChallengeVoteRevealed(challengeId, voter, voteKeep);
   }
 
   /// Resolve TCR challenge. If the challenge succeeds, the entry will be removed and the challenger

@@ -46,6 +46,7 @@ module.exports = function(deployer, network, accounts) {
 
       const lotteryTCD = await TCD.at(lotteryTCDTx.receipt.logs[0].args.tcd);
       console.log('Created Lottery TCD at', lotteryTCD.address);
+      console.error('DataSourceBookkeepingLotteryAddress:', lotteryTCD.address);
       // Buy tokens
       const curve = await BondingCurve.at(
         await lotteryFeedCommunity.bondingCurve(),
