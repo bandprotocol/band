@@ -15,14 +15,14 @@ export const convertFromChain = (value, type) => {
     return [
       BigNumber(value.toString())
         .div(BigNumber(1e16))
-        .toFixed(2),
+        .toFixed(4),
       '%',
     ]
   } else if (type === 'TOKEN') {
     return [
       BigNumber(value.toString())
         .div(BigNumber(1e18))
-        .toFixed(2),
+        .toFixed(4),
       'token',
     ]
   } else if (type === 'TIME') {
@@ -72,7 +72,9 @@ export const convertToChain = (value, type, unit) => {
     return new BN(BigNumber(hexString, 16).toFixed(0))
   }
   return new BN(
-    BigNumber(value.startsWith('0x') ? value.slice(2) : value, 16).toFixed(0),
+    value.startsWith('0x')
+      ? BigNumber(value.slice(2), 16).toFixed(0)
+      : BigNumber(value).toFixed(0),
   )
 }
 
