@@ -22,7 +22,8 @@ module.exports = function() {
         '10000000000000000',
         '800000000000000000',
       );
-      const TC = await CommunityCore.at(data.receipt.logs[0].args.community);
+      console.log(data.receipt.logs[1]);
+      const TC = await CommunityCore.at(data.receipt.logs[1].args.community);
       console.log(TC.address);
 
       // const TC = await CommunityCore.at(
@@ -39,24 +40,15 @@ module.exports = function() {
       );
       console.log('Buy Complete!');
       const TCToken = await CommunityToken.at(await TC.token());
-      await TCToken.transferFeeless(
-        accounts[0],
-        accounts[1],
-        '10000000000000000000000',
-        // { from: accounts[0] },
-      );
-      await TCToken.transferFeeless(
-        accounts[0],
-        accounts[2],
-        '10000000000000000000000',
-        // { from: accounts[0] },
-      );
-      await TCToken.transferFeeless(
-        accounts[0],
-        accounts[3],
-        '10000000000000000000000',
-        // { from: accounts[0] },
-      );
+      await TCToken.transfer(accounts[1], '10000000000000000000000', {
+        from: accounts[0],
+      });
+      await TCToken.transfer(accounts[2], '10000000000000000000000', {
+        from: accounts[0],
+      });
+      await TCToken.transfer(accounts[3], '10000000000000000000000', {
+        from: accounts[0],
+      });
 
       // Create TCR
       const dataTCR = await TC.createTCR(
@@ -70,7 +62,8 @@ module.exports = function() {
         '100000000000000000',
         '500000000000000000',
       );
-      const tcr = await TCR.at(dataTCR.receipt.logs[0].args.tcr);
+      const lastEvent = dataTCR.receipt.logs.length;
+      const tcr = await TCR.at(dataTCR.receipt.logs[lastEvent - 1].args.tcr);
       // const tcr = await TCR.at('0x8B6dA7EF0cDCABC49EFD6DFb5A64C0B1E8717E8C');
       const dataHash = web3.utils.soliditySha3('some entry');
       await TCToken.approve(tcr.address, '1100000000000000000000', {
@@ -92,7 +85,9 @@ module.exports = function() {
           from: accounts[2],
         },
       );
-      await tcr.commitVote(accounts[0], 1, web3.utils.soliditySha3(true, 21));
+      await tcr.commitVote(1, web3.utils.soliditySha3(true, 21), {
+        from: accounts[0],
+      });
     })
     .catch(console.log);
 };
