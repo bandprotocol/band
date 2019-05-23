@@ -34,7 +34,7 @@ import holderSaga from 'sagas/holder'
 import tcdSaga from 'sagas/tcd'
 
 import BandWallet from 'band-wallet'
-import { Utils } from 'band.js'
+import { BandProtocolClient, Utils } from 'band.js'
 import BN from 'utils/bignumber'
 
 import transit from 'transit-immutable-js'
@@ -44,13 +44,22 @@ import { toggleFetch } from 'actions'
 // import web3
 import Web3 from 'web3'
 
-const INFURA_KEY =
-  'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
+// const INFURA_KEY =
+//   'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
 
-const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_KEY))
+const RPC_ENDPOINT =
+  process.env.NODE_ENV === 'production'
+    ? 'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
+    : 'http://localhost:8545'
+
+const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 
 function* baseInitialize() {
   // start fetching state
+  if (process.env.NODE_ENV !== 'production') {
+    BandProtocolClient.setAPI('http://localhost:5000')
+    BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
+  }
   yield put(toggleFetch(true))
   window.BandWallet = new BandWallet(
     process.env.NODE_ENV === 'production'

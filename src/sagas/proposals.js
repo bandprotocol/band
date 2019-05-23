@@ -37,8 +37,7 @@ function* handleLoadProposals({ address }) {
             proposalVotesByParameterAddressAndProposalId(condition: {voter: "${currentUser}"}) {
               nodes {
                 voter
-                yesWeight
-                noWeight
+                accepted
               }
             }
           }
@@ -106,7 +105,7 @@ function* handleLoadProposals({ address }) {
         totalVotingPower: new BN(proposal.totalVotingPower),
         vote:
           vote.length !== 0 && currentUser
-            ? new BN(vote[0].yesWeight).gt(new BN(vote[0].noWeight))
+            ? vote[0].accepted
               ? 'SUPPORT'
               : 'REJECT'
             : 'NOT VOTED',

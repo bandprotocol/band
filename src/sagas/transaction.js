@@ -131,11 +131,9 @@ function* handleVoteProposal({ address, proposalId, vote }) {
   } else {
     const client = yield select(currentCommunityClientSelector, { address })
 
-    const votingPower = yield client.parameter().getVotingPower(proposalId)
     const transaction = yield client.createProposalVoteTransaction({
       proposalId,
-      yesVote: vote ? votingPower : '0',
-      noVote: vote ? '0' : votingPower,
+      isAccepted: vote,
     })
 
     const txHash = yield transaction.sendFeeless()
