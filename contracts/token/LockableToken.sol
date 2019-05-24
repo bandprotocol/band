@@ -8,6 +8,9 @@ import "./ERC20Base.sol";
 contract LockableToken is ERC20Base, CapperRole {
   using SafeMath for uint256;
 
+  event TokenLocked(address indexed locker, address indexed owner, uint256 value);
+  event TokenUnlocked(address indexed locker, address indexed owner, uint256 value);
+
   uint256 constant NOT_FOUND = uint256(- 1);
 
   struct TokenLock {
@@ -46,6 +49,7 @@ contract LockableToken is ERC20Base, CapperRole {
       require(balanceOf(owner) >= value);
       _locks[owner].push(TokenLock(msg.sender, value));
     }
+    emit TokenLocked(msg.sender, owner, value);
     return true;
   }
 
@@ -61,6 +65,7 @@ contract LockableToken is ERC20Base, CapperRole {
       }
       locks.pop();
     }
+    emit TokenUnlocked(msg.sender, owner, value);
     return true;
   }
 
