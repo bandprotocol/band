@@ -5,7 +5,7 @@ const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
 const TCDFactory = artifacts.require('TCDFactory');
 const TCRFactory = artifacts.require('TCRFactory');
-const BandSimpleExchange = artifacts.require('BandSimpleExchange');
+const BandMockExchange = artifacts.require('BandMockExchange');
 
 module.exports = function(deployer, network, accounts) {
   deployer.link(BondingCurveFactory, BandRegistry);
@@ -21,7 +21,8 @@ module.exports = function(deployer, network, accounts) {
       console.error('blockParentHash:', block.parentHash);
       console.error('blockTime:', block.timestamp);
       const band = await deployer.deploy(BandToken);
-      const exchange = await deployer.deploy(BandSimpleExchange, band.address);
+      /// Use Uniswap in production
+      const exchange = await deployer.deploy(BandMockExchange, band.address);
       await band.mint(accounts[0], '100000000000000000000000000');
       const bandRegistry = await deployer.deploy(
         BandRegistry,

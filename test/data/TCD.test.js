@@ -1,6 +1,6 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
-const BandSimpleExchange = artifacts.require('BandSimpleExchange');
+const BandMockExchange = artifacts.require('BandMockExchange');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -17,7 +17,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.band = await BandToken.new({ from: owner });
     await this.band.mint(owner, 100000000, { from: owner });
-    this.exchange = await BandSimpleExchange.new(this.band.address, {
+    this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
     this.factory = await BandRegistry.new(

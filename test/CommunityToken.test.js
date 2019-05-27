@@ -3,7 +3,7 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 const CommunityToken = artifacts.require('CommunityToken');
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
-const BandSimpleExchange = artifacts.require('BandSimpleExchange');
+const BandMockExchange = artifacts.require('BandMockExchange');
 
 require('chai').should();
 
@@ -13,7 +13,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       from: owner,
     });
     this.band = await BandToken.new({ from: owner });
-    this.exchange = await BandSimpleExchange.new(this.band.address, {
+    this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
     this.factory = await BandRegistry.new(
@@ -29,7 +29,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
   it('Owner of BandRegistry should be able to setExchange', async () => {
     (await this.factory.exchange()).toString().should.eq(this.exchange.address);
-    const newExchange = await BandSimpleExchange.new(this.band.address, {
+    const newExchange = await BandMockExchange.new(this.band.address, {
       from: bob,
     });
     await this.factory.setExchange(newExchange.address, { from: alice });
@@ -38,7 +38,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
   it('None owner of BandRegistry should not be able to setExchange', async () => {
     (await this.factory.exchange()).toString().should.eq(this.exchange.address);
-    const newExchange = await BandSimpleExchange.new(this.band.address, {
+    const newExchange = await BandMockExchange.new(this.band.address, {
       from: bob,
     });
     await shouldFail.reverting(

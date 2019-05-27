@@ -2,9 +2,11 @@ pragma solidity 0.5.8;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "../utils/Fractional.sol";
-import "./BandExchangeInterface.sol";
+import "../exchange/BandExchangeInterface.sol";
 
-contract BandSimpleExchange is Ownable, BandExchangeInterface {
+
+/// @dev Mock exchange for testnet. Mainnet will be Uniswap.
+contract BandMockExchange is Ownable, BandExchangeInterface {
   using Fractional for uint256;
 
   BandToken public bandToken;
@@ -16,6 +18,10 @@ contract BandSimpleExchange is Ownable, BandExchangeInterface {
 
   function setExchangeRate(uint256 newExchangeRate) public onlyOwner {
     exchangeRate = newExchangeRate;
+  }
+
+  function withdrawEth() public onlyOwner {
+    msg.sender.transfer(address(this).balance);
   }
 
   function convertFromEthToBand() public payable returns (uint256) {

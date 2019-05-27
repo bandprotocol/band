@@ -39,7 +39,7 @@ contract(
         (await this.token.unlockedBalanceOf(alice)).toNumber().should.eq(100);
       });
     });
-    context('Lock by muntiple locker', () => {
+    context('Lock by multiple locker', () => {
       it('Should can lock if locker is a capper of token', async () => {
         await this.token.lock(alice, 100, { from: locker1 });
         (await this.token.getLockedToken(alice)).toNumber().should.eq(100);

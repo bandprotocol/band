@@ -1,14 +1,14 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
-const BandSimpleExchange = artifacts.require('BandSimpleExchange');
+const BandMockExchange = artifacts.require('BandMockExchange');
 
 require('chai').should();
 
-contract('BandSimpleExchange', ([owner, alice]) => {
+contract('BandMockExchange', ([owner, alice]) => {
   beforeEach(async () => {
     this.band = await BandToken.new({ from: owner });
-    this.bse = await BandSimpleExchange.new(this.band.address, { from: owner });
+    this.bse = await BandMockExchange.new(this.band.address, { from: owner });
     await this.bse.setExchangeRate('10000000000000000000', { from: owner });
     await this.band.mint(owner, 100000000, { from: owner });
     await this.band.transfer(alice, 10000000, { from: owner });
