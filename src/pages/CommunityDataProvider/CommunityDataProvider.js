@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
+import { currentUserSelector } from 'selectors/current'
 import Breadcrumb from 'components/Breadcrumb'
 import colors from 'ui/colors'
 import PageContainer from 'components/PageContainer'
 import ProviderList from './ProviderList'
 import ToolTip from 'components/ToolTip'
-import { currentUserSelector } from 'selectors/current'
 import { Flex, Text } from 'ui/common'
 
 class CommunityDataProvider extends React.Component {

@@ -1,8 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17">
-    <g fill="none" fill-rule="evenodd">
-        <path fill-rule="nonzero" stroke="#FFF" d="M18.558 1H1.042C.914 1 .8 1.119.8 1.277v14.446c0 .158.114.277.242.277h17.516c.128 0 .242-.119.242-.277V13.39 8.496v-4.83-2.39c0-.157-.114-.276-.242-.276z"/>
-        <path stroke="#FFF" stroke-linecap="square" d="M1.5 5.5h17.148M6.5 1.5v3.579M13.5 1.5v3.579"/>
-        <path fill-rule="nonzero" d="M16.75 13.725H3.25V7.65h13.5z"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#5973E7" stroke-width=".15" d="M10.709 10.886h-.107l-1.24-1.25a.547.547 0 0 0-.778 0l-2.392 2.41a.558.558 0 0 0 0 .784.547.547 0 0 0 .777 0l1.95-1.964h.107l1.24 1.25a.547.547 0 0 0 .778 0l2.764-2.784a.558.558 0 0 0 0-.785.547.547 0 0 0-.777 0l-2.322 2.34z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <g fill="none" fill-rule="evenodd" transform="translate(0 2)">
+        <path fill="#FFF" fill-rule="nonzero" d="M19.219 0H.78A.779.779 0 0 0 0 .777v15.446c0 .43.35.777.781.777H19.22a.779.779 0 0 0 .781-.777V.777A.779.779 0 0 0 19.219 0z"/>
+        <path fill="#B8C2FF" fill-rule="nonzero" d="M19.219 0H.78A.779.779 0 0 0 0 .777V2.54h20V.777A.779.779 0 0 0 19.219 0z"/>
+        <path fill="#5973E7" fill-rule="nonzero" d="M10.947 9.024l2.445-2.34a.68.68 0 0 1 .93 0 .61.61 0 0 1 0 .89l-2.91 2.785a.68.68 0 0 1-.93 0l-1.306-1.25-2.053 1.964a.68.68 0 0 1-.93 0 .61.61 0 0 1 0-.89l2.518-2.41a.68.68 0 0 1 .93 0l1.306 1.25z"/>
+        <ellipse cx="1.767" cy="1.243" fill="#5973E7" rx="1" ry="1"/>
+        <ellipse cx="3.368" cy="1.243" fill="#5973E7" rx="1" ry="1"/>
+        <ellipse cx="4.854" cy="1.225" fill="#5973E7" rx="1" ry="1"/>
     </g>
 </svg>

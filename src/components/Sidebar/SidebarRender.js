@@ -11,12 +11,14 @@ import DetailSrc from 'images/detailInactive.svg'
 import GovernanceSrc from 'images/govInactive.svg'
 import ProposalSrc from 'images/voteInactive.svg'
 import DataProviderInactive from 'images/dataProviderInactive.svg'
+import DataSetInactive from 'images/datasetInactive.svg'
 
 // Image active
 import DetailActiveSrc from 'images/detailActive.svg'
 import GovernanceActiveSrc from 'images/govActive.svg'
 import ProposalActiveSrc from 'images/voteActive.svg'
 import DataProviderActive from 'images/dataProviderActive.svg'
+import DataSetActive from 'images/datasetActive.svg'
 
 const Left = styled.div`
   width: 220px;
@@ -24,7 +26,7 @@ const Left = styled.div`
   height: calc(100vh - 60px);
   display: flex;
   flex-direction: column;
-  background: #5973e7;
+  background-image: linear-gradient(to right, #5269ff, #4890ff);
   position: sticky;
   top: 60px;
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
@@ -158,13 +160,22 @@ export default ({
             Proposals
           </Tab>
           {hasTcd && (
-            <Tab
-              link={`/community/${address}/provider`}
-              imgSrcActive={DataProviderActive}
-              imgSrcInactive={DataProviderInactive}
-            >
-              Data providers
-            </Tab>
+            <React.Fragment>
+              <Tab
+                link={`/community/${address}/provider`}
+                imgSrcActive={DataProviderActive}
+                imgSrcInactive={DataProviderInactive}
+              >
+                Data providers
+              </Tab>
+              <Tab
+                link={`/community/${address}/dataset`}
+                imgSrcActive={DataSetActive}
+                imgSrcInactive={DataSetInactive}
+              >
+                Data set
+              </Tab>
+            </React.Fragment>
           )}
         </Flex>
       </Flex>

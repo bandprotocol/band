@@ -8,6 +8,7 @@ import BuySellModal from 'components/BuySellModal'
 import ProposeModal from 'components/ProposeModal'
 import DepositWithdrawModal from 'components/DepositWithdrawModal'
 import BecomeProviderModal from 'components/BecomeProviderModal'
+import ApplyIdentityModal from 'components/ApplyIdentityModal'
 
 export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
@@ -26,6 +27,8 @@ export default ({ modalName, data, hideModal }) => (
       <DepositWithdrawModal {...data} />
     ) : modalName === 'BEPROVIDER' ? (
       <BecomeProviderModal />
+    ) : modalName === 'APPLYIDENTITY' ? (
+      <ApplyIdentityModal />
     ) : null}
   </ModalContainer>
 )

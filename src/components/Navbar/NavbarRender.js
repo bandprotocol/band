@@ -21,7 +21,7 @@ const Nav = styled.nav`
   position: sticky;
   top: 0;
   background: #ffffff;
-  z-index: 1;
+  z-index: 3;
 
   ${media.mobile} {
     height: 60px;

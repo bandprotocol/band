@@ -76,9 +76,9 @@ export default {
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: 'white',
-      backgroundColor: '#718bff',
+      boxShadow: '0 3px 5px 0 rgba(0, 0, 0, 0.2)',
+      backgroundImage: 'linear-gradient(to right, #5269ff, #4890ff)',
       border: `solid 0px ${colors.text.grey}`,
-      boxShadow: '0 1px 7px 0 rgba(0, 0, 0, 0.05)',
       transition: 'all 250ms',
       borderRadius: '20px',
       '&:hover': {
@@ -150,12 +150,16 @@ export default {
       borderRadius: 4,
       background: '#fff',
     },
-
     dashboard: {
       background: '#ffffff',
       borderRadius: '10px',
       border: 'solid 1px #dee2f0',
       padding: '10px 24px',
+    },
+    list: {
+      background: colors.white,
+      border: colors.border.light,
+      boxShadow: colors.shadow.light,
     },
   },
 }

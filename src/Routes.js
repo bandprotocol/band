@@ -10,6 +10,7 @@ import CommunityRewardPage from 'pages/CommunityReward'
 import CommunityGovernancePage from 'pages/CommunityGovernance'
 import CommunityProposalPage from 'pages/CommunityProposal'
 import CommunityDataProviderPage from 'pages/CommunityDataProvider'
+import CommunityDataSetPage from 'pages/CommunityDataSet'
 import CreateCommunityPage from 'pages/CreateCommunity'
 
 export default ({ match, location }) => (
@@ -59,6 +60,14 @@ export default ({ match, location }) => (
                   path="/community/:community/provider"
                   render={({ match }) => (
                     <CommunityDataProviderPage
+                      communityAddress={match.params.community}
+                    />
+                  )}
+                />
+                <Route
+                  path="/community/:community/dataset"
+                  render={({ match }) => (
+                    <CommunityDataSetPage
                       communityAddress={match.params.community}
                     />
                   )}

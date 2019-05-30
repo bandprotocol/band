@@ -1,6 +1,14 @@
 import styled from 'styled-components'
 import colors from './colors'
-import { Text, Image as BaseImage, Flex, Box, Button, Card } from 'rebass'
+import {
+  Text,
+  Image as BaseImage,
+  Flex,
+  Box,
+  Button,
+  Card,
+  Heading,
+} from 'rebass'
 import { Link as RouterLink, NavLink } from 'react-router-dom'
 
 export const Bold = styled(Text)`
@@ -143,4 +151,4 @@ export const HighlightNavLink = styled(NavLink)`
   }
 `
 
-export { Text, Flex, Box, Button, Card }
+export { Text, Flex, Box, Button, Card, Heading }
