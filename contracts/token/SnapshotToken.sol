@@ -25,26 +25,19 @@ contract SnapshotToken is ERC20Base {
   /// Returns user voting power at the given time. Under the hood, this performs binary search
   /// to look for the largest index at which the nonce is not greater than 'nonce'.
   /// The voting power at that index is the returning value.
-  function historicalVotingPowerAtNonce(address owner, uint256 nonce) public view returns (uint256)
-  {
-    require(nonce <= votingPowerChangeNonce);
-    require(nonce < (1 << 64));
+  function historicalVotingPowerAtNonce(address owner, uint256 nonce) public view returns (uint256) {
+    require(nonce <= votingPowerChangeNonce && nonce < (1 << 64));
     uint256 start = 0;
     uint256 end = votingPowerChangeCount[owner];
     while (start < end) {
-      //// Doing ((start + end + 1) / 2) here to prevent infinite loop.
-      uint256 mid = start.add(end).add(1).div(2);
-      if ((_votingPower[owner][mid] >> 192) > nonce) {  /// Upper 64 bits nonce
-        /// If midTime > nonce, this mid can't possibly be the answer
+      uint256 mid = start.add(end).add(1).div(2); /// Use (start+end+1)/2 to prevent infinite loop.
+      if ((_votingPower[owner][mid] >> 192) > nonce) {  /// Upper 64-bit nonce
+        /// If midTime > nonce, this mid can't possibly be the answer.
         end = mid.sub(1);
       } else {
         /// Otherwise, search on the greater side, but still keep mid as a possible option.
         start = mid;
       }
-    }
-    assert((_votingPower[owner][start] >> 192) <= nonce);
-    if (start < votingPowerChangeCount[owner]) {
-      assert((_votingPower[owner][start + 1] >> 192) > nonce);
     }
     return historicalVotingPowerAtIndex(owner, start);
   }

@@ -194,7 +194,7 @@ contract TCD is TCDBase {
     uint256 ownerPercentage = params.get(prefix, "owner_revenue_pct");
     uint256 ownerReward = ownerPercentage.mulFrac(providerReward);
     uint256 stakeIncreased = providerReward.sub(ownerReward);
-    for(uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {
+    for (uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {
       DataProvider storage provider = providers[dataSources[dataSourceIndex]];
       provider.stake = provider.stake.add(stakeIncreased);
       if (ownerReward > 0) {
@@ -225,34 +225,23 @@ contract TCD is TCDBase {
     DataProvider storage rightProvider = providers[dataSources[right]];
     if (leftProvider.currentStatus != DataProviderStatus.Active) return false;
     if (rightProvider.currentStatus != DataProviderStatus.Active) return true;
-    return leftProvider.stake >= rightProvider.stake;
+    if (leftProvider.stake != rightProvider.stake) return leftProvider.stake >= rightProvider.stake;
+    return uint256(dataSources[left]) >= uint256(dataSources[right]);  /// Arbitrary tie-breaker
   }
 
   function _repositionUp(uint256 dataSourceIndex) internal {
-    bool changed = false;
     for (; dataSourceIndex > 0; --dataSourceIndex) {
-      if (_isLhsBetterThanRhs(dataSourceIndex, dataSourceIndex - 1)) {
-        _swapDataSource(dataSourceIndex, dataSourceIndex - 1);
-        changed = true;
-      } else {
-        break;
-      }
+      if (_isLhsBetterThanRhs(dataSourceIndex - 1, dataSourceIndex)) return;
+      _swapDataSource(dataSourceIndex, dataSourceIndex - 1);
     }
-    if (changed) emit DelegatedDataSourcesChanged();
   }
 
   function _repositionDown(uint256 dataSourceIndex) internal {
-    bool changed = false;
     uint256 lastDataSourceIndex = dataSources.length.sub(1);
     for (; dataSourceIndex < lastDataSourceIndex; ++dataSourceIndex) {
-      if (_isLhsBetterThanRhs(dataSourceIndex + 1, dataSourceIndex)) {
-        _swapDataSource(dataSourceIndex + 1, dataSourceIndex);
-        changed = true;
-      } else {
-        break;
-      }
+      if (_isLhsBetterThanRhs(dataSourceIndex, dataSourceIndex + 1)) return;
+      _swapDataSource(dataSourceIndex + 1, dataSourceIndex);
     }
-    if (changed) emit DelegatedDataSourcesChanged();
   }
 
   function _swapDataSource(uint256 left, uint256 right) internal {

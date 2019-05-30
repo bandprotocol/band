@@ -11,7 +11,7 @@ contract LockableToken is ERC20Base, CapperRole {
   event TokenLocked(address indexed locker, address indexed owner, uint256 value);
   event TokenUnlocked(address indexed locker, address indexed owner, uint256 value);
 
-  uint256 constant NOT_FOUND = uint256(- 1);
+  uint256 constant NOT_FOUND = uint256(-1);
 
   struct TokenLock {
     address locker;
@@ -72,9 +72,7 @@ contract LockableToken is ERC20Base, CapperRole {
   function _getTokenLockIndex(address owner, address locker) internal view returns (uint256) {
     TokenLock[] storage locks = _locks[owner];
     for (uint256 i = 0; i < locks.length; ++i) {
-      if (locks[i].locker == locker) {
-        return i;
-      }
+      if (locks[i].locker == locker) return i;
     }
     return NOT_FOUND;
   }

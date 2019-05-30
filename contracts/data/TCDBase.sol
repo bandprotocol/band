@@ -9,7 +9,6 @@ contract TCDBase is QueryInterface {
   using SafeMath for uint256;
 
   address[] public dataSources;
-  event DelegatedDataSourcesChanged();
   event DataRead(address indexed reader, bytes32 indexed key);
 
   modifier requirePayment() {
