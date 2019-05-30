@@ -2485,7 +2485,7 @@ band-wallet@^0.2.8:
     uuid "^3.3.2"
     web3-provider-engine "^14.2.0"
 
-band.js@^1.2.2:
+band.js@^1.1.7:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.2.2.tgz#ae9c24006ce2267a2e5c60cc23983fb49c2af574"
   integrity sha512-JMQzm3m3alLIJuAFTqfvKawCh4rpSt95KCsGOFE39JSvI/Dd9T4e7NF61wBD6qep36+f0jxGAloHre1o5NJ/Uw==
