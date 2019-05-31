@@ -22,17 +22,17 @@ contract Parameters is Ownable {
   enum ProposalState { Invalid, Active, Yes, No, Inconclusive }
 
   struct Proposal {
-    uint256 changesCount;               /// The number of parameter changes
+    uint256 changesCount;                   /// The number of parameter changes
     mapping (uint256 => KeyValue) changes;  /// The list of parameter changes in proposal
-    uint256 snapshotNonce;              /// The votingPowerNonce to count voting power
-    uint256 expirationTime;             /// Expiration timestamp of commit period
-    uint256 voteSupportRequiredPct;     /// Threshold % for detemining poll result
-    uint256 voteMinParticipation;       /// The minimum # of votes required
-    uint256 totalVotingPower;           /// The total voting power at this snapshotNonce
-    uint256 yesCount;                   /// The current total number of YES votes
-    uint256 noCount;                    /// The current total number of NO votes
-    mapping (address => bool) isVoted;  /// Mapping for check who already voted
-    ProposalState proposalState;        /// The state of this proposal.
+    uint256 snapshotNonce;                  /// The votingPowerNonce to count voting power
+    uint256 expirationTime;                 /// Expiration timestamp of commit period
+    uint256 voteSupportRequiredPct;         /// Threshold % for detemining poll result
+    uint256 voteMinParticipation;           /// The minimum # of votes required
+    uint256 totalVotingPower;               /// The total voting power at this snapshotNonce
+    uint256 yesCount;                       /// The current total number of YES votes
+    uint256 noCount;                        /// The current total number of NO votes
+    mapping (address => bool) isVoted;      /// Mapping for check who already voted
+    ProposalState proposalState;            /// The state of this proposal.
   }
 
   SnapshotToken public token;
@@ -55,18 +55,26 @@ contract Parameters is Ownable {
     return param.value;
   }
 
-  function set(bytes8 namespace, bytes24 key, uint256 value) public onlyOwner returns (bool) {
+  function set(bytes8 namespace, bytes24[] memory keys, uint256[] memory values) public onlyOwner {
+    require(keys.length == values.length);
+    bytes32[] memory rawKeys = new bytes32[](keys.length);
     uint8 namespaceSize = 0;
-    while (namespaceSize < 8 && namespace[namespaceSize] != byte(0)) ++namespaceSize;
-    return setRaw(bytes32(namespace) | (bytes32(key) >> (8 * namespaceSize)), value);
+    while (namespaceSize < 8 && namespace[namespaceSize] != byte(0)) {
+      ++namespaceSize;
+    }
+    for (uint256 i = 0; i < keys.length; i++) {
+      rawKeys[i] = bytes32(namespace) | bytes32(keys[i]) >> (8 * namespaceSize);
+    }
+    setRaw(rawKeys, values);
   }
 
-  function setRaw(bytes32 rawKey, uint256 value) public onlyOwner returns (bool) {
-    if (params[rawKey].existed) return value == params[rawKey].value;
-    params[rawKey].existed = true;
-    params[rawKey].value = value;
-    emit ParameterChanged(rawKey, value);
-    return true;
+  function setRaw(bytes32[] memory rawKeys, uint256[] memory values) public onlyOwner {
+    require(rawKeys.length == values.length);
+    for (uint256 i = 0; i < rawKeys.length; i++) {
+      params[rawKeys[i]].existed = true;
+      params[rawKeys[i]].value = values[i];
+      emit ParameterChanged(rawKeys[i], values[i]);
+    }
   }
 
   function getProposalChange(uint256 proposalId, uint256 changeIndex)

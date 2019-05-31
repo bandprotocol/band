@@ -1,15 +1,19 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
-const CommunityCore = artifacts.require('CommunityCore');
 const TCD = artifacts.require('TCD');
+const TCDFactory = artifacts.require('TCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
+const Parameters = artifacts.require('Parameters');
 
 module.exports = function(deployer, network, accounts) {
+  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 5');
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
+      const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
       const dataProviders = [
         '0x98A99CBc7060584c8fd4b9B9b28A3815B617387A',
@@ -19,7 +23,7 @@ module.exports = function(deployer, network, accounts) {
         '0xCDc294B99c6439875db639E2db46e34acdA70517',
       ];
       // Create Price community
-      const priceTx = await registry.createCommunity(
+      const priceTx = await commFactory.create(
         'PriceFeedCommunity',
         'PFC',
         BondingCurveExpression.address,
@@ -28,29 +32,46 @@ module.exports = function(deployer, network, accounts) {
         '50000000000000000',
         '800000000000000000',
       );
-      console.log(
-        'Created PriceFeedCommunity at',
-        priceTx.receipt.logs[1].args.community,
+      console.log('Created PriceFeedCommunity [bondingCurve,params,token] at', [
+        priceTx.receipt.logs[2].args.bondingCurve,
+        priceTx.receipt.logs[2].args.params,
+        priceTx.receipt.logs[2].args.token,
+      ]);
+      const tcdFactory = await TCDFactory.deployed();
+      const commToken = await CommunityToken.at(
+        priceTx.receipt.logs[2].args.token,
       );
-      const priceFeedCommunity = await CommunityCore.at(
-        priceTx.receipt.logs[1].args.community,
+      const params = await Parameters.at(priceTx.receipt.logs[2].args.params);
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('data:min_provider_stake'),
+          web3.utils.fromAscii('data:max_provider_count'),
+          web3.utils.fromAscii('data:owner_revenue_pct'),
+          web3.utils.fromAscii('data:query_price'),
+          web3.utils.fromAscii('data:withdraw_delay'),
+        ],
+        [
+          '500000000000000000000',
+          '5',
+          '500000000000000000',
+          '1000000000000000',
+          '259200',
+        ],
       );
+      await commToken.addCapper(tcdFactory.address);
 
-      const priceTCDTx = await priceFeedCommunity.createTCD(
+      const priceTCDTx = await tcdFactory.createTCD(
         web3.utils.fromAscii('data:'),
-        '500000000000000000000',
-        '5',
-        '500000000000000000',
-        '1000000000000000',
-        '259200',
+        priceTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        priceTx.receipt.logs[2].args.params,
       );
-
       const priceTCD = await TCD.at(priceTCDTx.receipt.logs[0].args.tcd);
       console.log('Created Price TCD at', priceTCD.address);
       console.error('DataSourceBookkeepingPriceAddress:', priceTCD.address);
       // Buy tokens
       const curve = await BondingCurve.at(
-        await priceFeedCommunity.bondingCurve(),
+        priceTx.receipt.logs[2].args.bondingCurve,
       );
 
       await band.approve(curve.address, '620000000000000148973918');
@@ -61,13 +82,12 @@ module.exports = function(deployer, network, accounts) {
       );
 
       // Add register
-      const token = await CommunityToken.at(await priceFeedCommunity.token());
-      await token.approve(priceTCD.address, '1000000000000000000000000');
+      await commToken.approve(priceTCD.address, '1000000000000000000000000');
 
       await Promise.all(
-        dataProviders.map(async dataSource =>
-          priceTCD.register('500000000000000000000', dataSource),
-        ),
+        dataProviders.map(async dataSource => {
+          priceTCD.register('500000000000000000000', dataSource);
+        }),
       );
     })
     .catch(console.log);

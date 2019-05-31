@@ -8,6 +8,7 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
 
 module.exports = function(deployer) {
+  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 2');
   deployer.deploy(Equation);
   deployer.link(Equation, BondingCurveExpression);
   deployer.link(Equation, TCRMinDepositExpression);

@@ -8,4 +8,3 @@ library ParametersFactory {
     return new Parameters(token);
   }
 }
-

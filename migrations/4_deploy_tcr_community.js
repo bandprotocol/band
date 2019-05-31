@@ -1,13 +1,18 @@
-const BandRegistry = artifacts.require('BandRegistry');
-const CommunityCore = artifacts.require('CommunityCore');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
+const Parameters = artifacts.require('Parameters');
+const TCRFactory = artifacts.require('TCRFactory');
 
 module.exports = function(deployer) {
+  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 4');
   deployer
     .then(async () => {
-      const registry = await BandRegistry.deployed();
-      const data = await registry.createCommunity(
+      // const registry = await BandRegistry.deployed();
+      const commFactory = await CommunityFactory.deployed();
+      const tcrFactory = await TCRFactory.deployed();
+      console.log(BondingCurveExpression.address);
+      const data = await commFactory.create(
         'CoinHatcher',
         'CHT',
         BondingCurveExpression.address,
@@ -17,19 +22,13 @@ module.exports = function(deployer) {
         '800000000000000000',
       );
       // console.log(data.receipt.logs);
-      const coinHatcher = await CommunityCore.at(
-        data.receipt.logs[1].args.community,
+      const coinHatcherParams = await Parameters.at(
+        data.receipt.logs[2].args.params,
       );
-      await coinHatcher.createTCR(
+      await tcrFactory.createTCR(
         web3.utils.fromAscii('tcr:'),
         TCRMinDepositExpression.address,
-        '100000000000000000000',
-        '21600',
-        '500000000000000000',
-        '43200',
-        '3600',
-        '100000000000000000',
-        '500000000000000000',
+        coinHatcherParams.address,
       );
     })
     .catch(console.log);

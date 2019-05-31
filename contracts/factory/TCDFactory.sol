@@ -2,15 +2,18 @@ pragma solidity 0.5.8;
 
 import "../data/TCD.sol";
 
-library TCDFactory {
-  function create(
+contract TCDFactory {
+  event TCDCreated(TCD tcd, address creator);
+
+  function createTCD(
     bytes8 prefix,
-    BandToken band,
-    CommunityToken token,
-    Parameters params,
     BondingCurve bondingCurve,
-    BandExchangeInterface exchange
-  ) external returns (TCD) {
-    return new TCD(prefix, band, token, params, bondingCurve, exchange);
+    BandRegistry registry,
+    Parameters params
+  ) external returns(TCD) {
+    TCD tcd = new TCD(prefix, bondingCurve, params, registry);
+    LockableToken(address(params.token())).addCapper(address(tcd));
+    emit TCDCreated(tcd, msg.sender);
+    return tcd;
   }
 }

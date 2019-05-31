@@ -5,6 +5,7 @@ const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
 const TCR = artifacts.require('TCR');
 
 module.exports = function() {
@@ -13,7 +14,8 @@ module.exports = function() {
       const accounts = await web3.eth.getAccounts();
       console.log(band.address);
       const registry = await BandRegistry.deployed();
-      const data = await registry.createCommunity(
+      const comFactory = await CommunityFactory.at(registry.address);
+      const data = await comFactory.create(
         'TestCommunity',
         'TC',
         BondingCurveExpression.address,

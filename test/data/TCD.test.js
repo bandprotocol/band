@@ -4,12 +4,13 @@ const BandMockExchange = artifacts.require('BandMockExchange');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
-const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const TCD = artifacts.require('TCD');
+const TCDFactory = artifacts.require('TCDFactory');
 const SimpleDataSource = artifacts.require('SimpleDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
@@ -20,13 +21,17 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
-    this.factory = await BandRegistry.new(
+    this.tcdFactory = await TCDFactory.new();
+    this.registry = await BandRegistry.new(
       this.band.address,
       this.exchange.address,
       { from: owner },
     );
+    this.commFactory = await CommunityFactory.new(this.registry.address, {
+      from: owner,
+    });
     const testCurve = await BondingCurveExpression.new([1]);
-    const data1 = await this.factory.createCommunity(
+    const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',
       testCurve.address,
@@ -34,19 +39,34 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       '60',
       '5',
       '5',
+      {
+        from: owner,
+      },
     );
-    this.core = await CommunityCore.at(data1.receipt.logs[1].args.community);
-    this.comm = await CommunityToken.at(await this.core.token());
-    this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.params = await Parameters.at(await this.core.params());
-    const data2 = await this.core.createTCD(
+    // console.log(data1.receipt.logs);
+    this.comm = await CommunityToken.at(data1.receipt.logs[2].args.token);
+    this.curve = await BondingCurve.at(data1.receipt.logs[2].args.bondingCurve);
+    this.params = await Parameters.at(data1.receipt.logs[2].args.params);
+    await this.comm.addCapper(this.tcdFactory.address, { from: owner });
+    const data2 = await this.tcdFactory.createTCD(
       web3.utils.fromAscii('data:'),
-      10,
-      3,
-      '500000000000000000',
-      100,
-      0,
+      data1.receipt.logs[2].args.bondingCurve,
+      this.registry.address,
+      data1.receipt.logs[2].args.params,
     );
+
+    await this.params.setRaw(
+      [
+        web3.utils.fromAscii('data:min_provider_stake'),
+        web3.utils.fromAscii('data:max_provider_count'),
+        web3.utils.fromAscii('data:owner_revenue_pct'),
+        web3.utils.fromAscii('data:query_price'),
+        web3.utils.fromAscii('data:withdraw_delay'),
+      ],
+      [10, 3, '500000000000000000', 100, 0],
+      { from: owner },
+    );
+
     this.tcd = await TCD.at(data2.receipt.logs[0].args.tcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
@@ -551,7 +571,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
   context('Withdraw delay', () => {
     beforeEach(async () => {
       const testCurve = await BondingCurveExpression.new([1]);
-      const data1 = await this.factory.createCommunity(
+      const data1 = await this.commFactory.create(
         'CoinHatcher',
         'CHT',
         testCurve.address,
@@ -559,19 +579,34 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '60',
         '5',
         '5',
+        { from: owner },
       );
-      this.core = await CommunityCore.at(data1.receipt.logs[1].args.community);
-      this.comm = await CommunityToken.at(await this.core.token());
-      this.curve = await BondingCurve.at(await this.core.bondingCurve());
 
-      const data2 = await this.core.createTCD(
-        web3.utils.fromAscii('data:'),
-        10,
-        3,
-        '500000000000000000',
-        100,
-        3600,
+      this.comm = await CommunityToken.at(data1.receipt.logs[2].args.token);
+      this.curve = await BondingCurve.at(
+        data1.receipt.logs[2].args.bondingCurve,
       );
+      this.params = await Parameters.at(data1.receipt.logs[2].args.params);
+      await this.comm.addCapper(this.tcdFactory.address, { from: owner });
+      const data2 = await this.tcdFactory.createTCD(
+        web3.utils.fromAscii('data:'),
+        this.curve.address,
+        this.registry.address,
+        this.params.address,
+      );
+
+      await this.params.setRaw(
+        [
+          web3.utils.fromAscii('data:min_provider_stake'),
+          web3.utils.fromAscii('data:max_provider_count'),
+          web3.utils.fromAscii('data:owner_revenue_pct'),
+          web3.utils.fromAscii('data:query_price'),
+          web3.utils.fromAscii('data:withdraw_delay'),
+        ],
+        [10, 3, '500000000000000000', 100, 3600],
+        { from: owner },
+      );
+      // console.log(data2.receipt.logs[0].args);
       this.tcd = await TCD.at(data2.receipt.logs[0].args.tcd);
       // alice buy 1000 SDD
       const calldata = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
@@ -649,12 +684,10 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       ))
         .toNumber()
         .should.eq(30);
-
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
       await this.tcd.withdraw(15, this.aliceSource.address, {
         from: alice,
       });
-
       (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(15);
@@ -712,28 +745,47 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
 
   context('Mutiple TCD', () => {
     beforeEach(async () => {
-      const data2 = await this.core.createTCD(
+      const data2 = await this.tcdFactory.createTCD(
         web3.utils.fromAscii('data:'),
-        1000,
-        5,
-        '120000000000000000',
-        1000,
-        20,
+        this.curve.address,
+        this.registry.address,
+        this.params.address,
       );
+      await this.params.setRaw(
+        [
+          web3.utils.fromAscii('data:min_provider_stake'),
+          web3.utils.fromAscii('data:max_provider_count'),
+          web3.utils.fromAscii('data:owner_revenue_pct'),
+          web3.utils.fromAscii('data:query_price'),
+          web3.utils.fromAscii('data:withdraw_delay'),
+        ],
+        [10, 3, '500000000000000000', 100, 20],
+        { from: owner },
+      );
+
       this.tcd2 = await TCD.at(data2.receipt.logs[0].args.tcd);
 
-      const data3 = await this.core.createTCD(
+      const data3 = await this.tcdFactory.createTCD(
         web3.utils.fromAscii('qd:'),
-        1000,
-        5,
-        '120000000000000000',
-        1000,
-        20,
+        this.curve.address,
+        this.registry.address,
+        this.params.address,
+      );
+      await this.params.setRaw(
+        [
+          web3.utils.fromAscii('qd:min_provider_stake'),
+          web3.utils.fromAscii('qd:max_provider_count'),
+          web3.utils.fromAscii('qd:owner_revenue_pct'),
+          web3.utils.fromAscii('qd:query_price'),
+          web3.utils.fromAscii('qd:withdraw_delay'),
+        ],
+        [1000, 5, '120000000000000000', 1000, 20],
+        { from: owner },
       );
       this.tcd3 = await TCD.at(data3.receipt.logs[0].args.tcd);
     });
 
-    it('Should not set new parameter to data: prefix', async () => {
+    it('Should set new parameter to data: prefix', async () => {
       (await this.params.getRaw(
         web3.utils.fromAscii('data:min_provider_stake'),
       ))
@@ -752,7 +804,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .should.eq(100);
       (await this.params.getRaw(web3.utils.fromAscii('data:withdraw_delay')))
         .toNumber()
-        .should.eq(0);
+        .should.eq(20);
     });
     it('Should set new parameter to qd: prefix', async () => {
       (await this.params.getRaw(web3.utils.fromAscii('qd:min_provider_stake')))

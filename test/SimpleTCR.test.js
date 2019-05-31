@@ -1,20 +1,24 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const TCR = artifacts.require('TCR');
+const TCRFactory = artifacts.require('TCRFactory');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
-const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
 contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
   beforeEach(async () => {
-    this.factory = await BandRegistry.deployed();
-    this.band = await BandToken.at(await this.factory.band());
+    this.registry = await BandRegistry.deployed();
+    this.commFactory = await CommunityFactory.new(this.registry.address, {
+      from: owner,
+    });
+    this.band = await BandToken.at(await this.registry.band());
     await this.band.transfer(_, await this.band.balanceOf(owner), {
       from: owner,
     });
@@ -25,21 +29,22 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       from: bob,
     });
     await this.band.transfer(owner, 100000000, { from: _ });
-    const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
-    const data1 = await this.factory.createCommunity(
+    const expression = await BondingCurveExpression.new([8, 1, 0, 2]);
+    const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',
-      testCurve.address,
+      expression.address,
       '0',
       '60',
       '500000000000000000',
       '500000000000000000',
+      { from: owner },
     );
-    this.core = await CommunityCore.at(data1.receipt.logs[1].args.community);
-    this.comm = await CommunityToken.at(await this.core.token());
-    this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.params = await Parameters.at(await this.core.params());
+    this.comm = await CommunityToken.at(data1.receipt.logs[2].args.token);
+    this.curve = await BondingCurve.at(data1.receipt.logs[2].args.bondingCurve);
+    this.params = await Parameters.at(data1.receipt.logs[2].args.params);
 
+    this.tcrFactory = await TCRFactory.new();
     //  if x <= 60
     //    return 1e18
     //  else if x <= 120
@@ -75,18 +80,34 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       0,
       '500000000000000000',
     ]);
-    const data2 = await this.core.createTCR(
+    const data2 = await this.tcrFactory.createTCR(
       web3.utils.fromAscii('tcr:'),
       testDecay.address,
-      100, // min deposit
-      300, // apply stage length
-      '300000000000000000', // dispensationp percentage
-      30, // commit time
-      30, // reveal time
-      '700000000000000000', // min participation
-      '500000000000000000', // support required
+      this.params.address,
     );
     this.tcr = await TCR.at(data2.receipt.logs[0].args.tcr);
+
+    this.params.setRaw(
+      [
+        web3.utils.fromAscii('tcr:min_deposit'),
+        web3.utils.fromAscii('tcr:apply_stage_length'),
+        web3.utils.fromAscii('tcr:dispensation_percentage'),
+        web3.utils.fromAscii('tcr:commit_time'),
+        web3.utils.fromAscii('tcr:reveal_time'),
+        web3.utils.fromAscii('tcr:min_participation_pct'),
+        web3.utils.fromAscii('tcr:support_required_pct'),
+      ],
+      [
+        100,
+        300,
+        '300000000000000000',
+        30,
+        30,
+        '700000000000000000',
+        '500000000000000000',
+      ],
+      { from: owner },
+    );
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
@@ -193,14 +214,12 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       ))
         .toNumber()
         .should.eq(100);
-
       (await this.params.get(
         web3.utils.fromAscii('tcr:'),
         web3.utils.fromAscii('apply_stage_length'),
       ))
         .toNumber()
         .should.eq(300);
-
       (await this.params.get(
         web3.utils.fromAscii('tcr:'),
         web3.utils.fromAscii('support_required_pct'),

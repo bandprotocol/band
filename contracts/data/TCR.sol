@@ -4,11 +4,10 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./QueryInterface.sol";
-import "../CommunityToken.sol";
-import "../Parameters.sol";
 import "../token/ERC20Acceptor.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
+import "../Parameters.sol";
 
 contract TCR is ERC20Acceptor, QueryInterface {
   using Fractional for uint256;
@@ -27,8 +26,8 @@ contract TCR is ERC20Acceptor, QueryInterface {
   event ChallengeRewardClaimed(uint256 indexed challengeId,address indexed voter, uint256 reward);
 
   Expression public depositDecayFunction;
-  CommunityToken public token;
   Parameters public params;
+  SnapshotToken public token;
   bytes8 public prefix;
 
   /// A TCR entry is considered to exist in 'entries' map iff its 'listedAt' is nonzero.
@@ -67,14 +66,13 @@ contract TCR is ERC20Acceptor, QueryInterface {
 
   constructor(
     bytes8 _prefix,
-    CommunityToken _token,
-    Parameters _params,
-    Expression decayFunction
+    Expression decayFunction,
+    Parameters _params
   ) public {
-    prefix = _prefix;
-    token = _token;
-    params = _params;
     depositDecayFunction = decayFunction;
+    params = _params;
+    prefix = _prefix;
+    token = _params.token();
   }
 
   modifier entryMustExist(bytes32 data) {
@@ -119,7 +117,7 @@ contract TCR is ERC20Acceptor, QueryInterface {
   /// Application will get auto-approved if no challenge happens in `apply_stage_length` seconds.
   function applyEntry(address proposer, uint256 stake, bytes32 data)
     public
-    requireToken(ERC20Interface(address(token)), proposer, stake)
+    requireToken(token, proposer, stake)
     entryMustNotExist(data)
   {
     require(stake >= params.get(prefix, "min_deposit"));
@@ -132,7 +130,7 @@ contract TCR is ERC20Acceptor, QueryInterface {
 
   function deposit(address depositor, uint256 amount, bytes32 data)
     public
-    requireToken(ERC20Interface(address(token)), depositor, amount)
+    requireToken(token, depositor, amount)
     entryMustExist(data)
   {
     Entry storage entry = entries[data];
@@ -167,7 +165,7 @@ contract TCR is ERC20Acceptor, QueryInterface {
 
   function initiateChallenge(address challenger, uint256 challengeDeposit, bytes32 data, bytes32 reasonData)
     public
-    requireToken(ERC20Interface(address(token)), challenger, challengeDeposit)
+    requireToken(token, challenger, challengeDeposit)
     entryMustExist(data)
   {
     Entry storage entry = entries[data];

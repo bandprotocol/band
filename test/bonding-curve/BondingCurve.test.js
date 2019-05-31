@@ -1,26 +1,63 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BondingCurveMock = artifacts.require('BondingCurveMock');
+const ParameterizedBondingCurve = artifacts.require(
+  'ParameterizedBondingCurve',
+);
+const BandMockExchange = artifacts.require('BandMockExchange');
+const BandToken = artifacts.require('BandToken');
+const BandRegistry = artifacts.require('BandRegistry');
+const CommunityToken = artifacts.require('CommunityToken');
 const Equation = artifacts.require('Equation');
 const ERC20Base = artifacts.require('ERC20Base');
+const Parameters = artifacts.require('Parameters');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
 contract('BondingCurveMock', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
     await BondingCurveMock.link(Equation, await Equation.deployed());
+    this.band = await BandToken.new({ from: owner });
+    await this.band.mint(owner, 100000000, { from: owner });
+    this.exchange = await BandMockExchange.new(this.band.address, {
+      from: owner,
+    });
+    this.factory = await BandRegistry.new(
+      this.band.address,
+      this.exchange.address,
+      { from: owner },
+    );
+    this.tcdFactory = await CommunityFactory.new(this.factory.address, {
+      from: owner,
+    });
     this.collateralToken = await ERC20Base.new('CollateralToken', 'CLT', {
       from: owner,
     });
     this.bondedToken = await ERC20Base.new('BondedToken', 'BDT', {
       from: owner,
     });
-    const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
+    this.expression = await BondingCurveExpression.new([8, 1, 0, 2]);
+    const data = await this.tcdFactory.create(
+      'CoinHatcher',
+      'CHT',
+      this.expression.address,
+      '0',
+      '60',
+      '200000000000000000',
+      '500000000000000000',
+      { from: owner },
+    );
+    this.params = await Parameters.at(data.receipt.logs[2].args.params);
+    this.token = await CommunityToken.at(data.receipt.logs[2].args.token);
+    this.commCurve = await ParameterizedBondingCurve.at(
+      data.receipt.logs[2].args.bondingCurve,
+    );
     this.curve = await BondingCurveMock.new(
       this.collateralToken.address,
       this.bondedToken.address,
-      testCurve.address,
+      this.expression.address,
       { from: owner },
     );
     await this.collateralToken.mint(alice, '100000', { from: owner });
@@ -158,7 +195,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       (await this.curve.currentCollateral()).toString().should.eq('21157');
       (await this.curve.curveMultiplier())
         .toString()
-        .should.eq('826446280991735537');
+        .should.eq('826445312500000000');
     });
 
     it('should inflate 20 tokens after 2 month', async () => {
@@ -206,6 +243,85 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       (await this.bondedToken.balanceOf(alice)).toString().should.eq('110');
       (await this.curve.currentMintedTokens()).toString().should.eq('111');
       (await this.curve.currentCollateral()).toString().should.eq('12321');
+    });
+  });
+  context('Curve changing', () => {
+    it('Expression should be changeable', async () => {
+      (await this.expression.evaluate(10)).toString().should.eq('100');
+      this.expression = await BondingCurveExpression.new([8, 1, 0, 3]);
+      (await this.expression.evaluate(10)).toString().should.eq('1000');
+    });
+    it('Should adjust curveMultiplier correctly when curve expression is changed', async () => {
+      await this.band.transfer(alice, 1000000, { from: owner });
+      await this.band.transfer(bob, 1000000, { from: owner });
+
+      (await this.token.balanceOf(alice)).toString().should.eq('0');
+      let calldata = this.commCurve.contract.methods.buy(_, 0, 100).encodeABI();
+      await this.band.transferAndCall(
+        this.commCurve.address,
+        10000,
+        '0x' + calldata.slice(2, 10),
+        '0x' + calldata.slice(138),
+        { from: alice },
+      );
+      (await this.token.balanceOf(alice)).toString().should.eq('100');
+      (await this.band.balanceOf(alice)).toString().should.eq('990000');
+
+      (await this.commCurve.currentMintedTokens()).toString().should.eq('100');
+      (await this.commCurve.currentCollateral()).toString().should.eq('10000');
+      (await this.commCurve.curveMultiplier())
+        .toString()
+        .should.eq('1000000000000000000');
+
+      this.expression = await BondingCurveExpression.new([8, 1, 0, 1]);
+      await this.params.setRaw(
+        [web3.utils.fromAscii('bonding:curve_expression')],
+        [web3.utils.toBN(this.expression.address)],
+        { from: owner },
+      );
+      (await this.commCurve.curveMultiplier())
+        .toString()
+        .should.eq('100000000000000000000');
+
+      calldata = this.commCurve.contract.methods.buy(_, 0, 100).encodeABI();
+      await this.band.transferAndCall(
+        this.commCurve.address,
+        10000,
+        '0x' + calldata.slice(2, 10),
+        '0x' + calldata.slice(138),
+        { from: alice },
+      );
+
+      (await this.token.balanceOf(alice)).toString().should.eq('200');
+      (await this.band.balanceOf(alice)).toString().should.eq('980000');
+
+      (await this.commCurve.currentMintedTokens()).toString().should.eq('200');
+      (await this.commCurve.currentCollateral()).toString().should.eq('20000');
+
+      this.expression = await BondingCurveExpression.new([8, 1, 0, 3]);
+      await this.params.setRaw(
+        [web3.utils.fromAscii('bonding:curve_expression')],
+        [web3.utils.toBN(this.expression.address)],
+        { from: owner },
+      );
+      (await this.commCurve.curveMultiplier())
+        .toString()
+        .should.eq('2500000000000000');
+
+      calldata = this.commCurve.contract.methods.buy(_, 0, 20).encodeABI();
+      await this.band.transferAndCall(
+        this.commCurve.address,
+        6620,
+        '0x' + calldata.slice(2, 10),
+        '0x' + calldata.slice(138),
+        { from: alice },
+      );
+
+      (await this.token.balanceOf(alice)).toString().should.eq('220');
+      (await this.band.balanceOf(alice)).toString().should.eq('973380');
+
+      (await this.commCurve.currentMintedTokens()).toString().should.eq('220');
+      (await this.commCurve.currentCollateral()).toString().should.eq('26620');
     });
   });
 });

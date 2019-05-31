@@ -3,16 +3,14 @@ const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurveFactory = artifacts.require('BondingCurveFactory');
 const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
-const TCDFactory = artifacts.require('TCDFactory');
-const TCRFactory = artifacts.require('TCRFactory');
 const BandMockExchange = artifacts.require('BandMockExchange');
+const CommunityFactory = artifacts.require('CommunityFactory');
 
 module.exports = function(deployer, network, accounts) {
-  deployer.link(BondingCurveFactory, BandRegistry);
-  deployer.link(CommunityTokenFactory, BandRegistry);
-  deployer.link(ParametersFactory, BandRegistry);
-  deployer.link(TCDFactory, BandRegistry);
-  deployer.link(TCRFactory, BandRegistry);
+  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 3');
+  deployer.link(BondingCurveFactory, CommunityFactory);
+  deployer.link(CommunityTokenFactory, CommunityFactory);
+  deployer.link(ParametersFactory, CommunityFactory);
   deployer
     .then(async () => {
       const block = await web3.eth.getBlock('latest');
@@ -29,6 +27,7 @@ module.exports = function(deployer, network, accounts) {
         band.address,
         exchange.address,
       );
+      await deployer.deploy(CommunityFactory, bandRegistry.address);
       console.error('bandRegistry:', bandRegistry.address);
     })
     .catch(console.log);

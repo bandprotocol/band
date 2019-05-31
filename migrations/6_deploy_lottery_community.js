@@ -1,15 +1,19 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
-const CommunityCore = artifacts.require('CommunityCore');
 const TCD = artifacts.require('TCD');
+const TCDFactory = artifacts.require('TCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
+const Parameters = artifacts.require('Parameters');
 
 module.exports = function(deployer, network, accounts) {
+  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 6');
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
+      const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
       const dataProviders = [
         '0x1e84754D96E5caAB92c9b2Ac3b6EC2BB6a109FF6',
@@ -17,7 +21,7 @@ module.exports = function(deployer, network, accounts) {
         '0xb21bA08F615BAE1C5d39fE5426c7eB191235188C',
       ];
       // Create Lottery community
-      const lotteryTx = await registry.createCommunity(
+      const lotteryTx = await commFactory.create(
         'LotteryFeedCommunity',
         'LFC',
         BondingCurveExpression.address,
@@ -28,20 +32,41 @@ module.exports = function(deployer, network, accounts) {
       );
 
       console.log(
-        'Created LotteryFeedCommunity at',
-        lotteryTx.receipt.logs[1].args.community,
+        'Created LotteryFeedCommunity [bondingCurve,params,token] at',
+        [
+          lotteryTx.receipt.logs[2].args.bondingCurve,
+          lotteryTx.receipt.logs[2].args.params,
+          lotteryTx.receipt.logs[2].args.token,
+        ],
       );
-      const lotteryFeedCommunity = await CommunityCore.at(
-        lotteryTx.receipt.logs[1].args.community,
+      const tcdFactory = await TCDFactory.deployed();
+      const commToken = await CommunityToken.at(
+        lotteryTx.receipt.logs[2].args.token,
       );
+      const params = await Parameters.at(lotteryTx.receipt.logs[2].args.params);
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('data:min_provider_stake'),
+          web3.utils.fromAscii('data:max_provider_count'),
+          web3.utils.fromAscii('data:owner_revenue_pct'),
+          web3.utils.fromAscii('data:query_price'),
+          web3.utils.fromAscii('data:withdraw_delay'),
+        ],
+        [
+          '500000000000000000000',
+          '3',
+          '500000000000000000',
+          '1000000000000000',
+          '259200',
+        ],
+      );
+      await commToken.addCapper(tcdFactory.address);
 
-      const lotteryTCDTx = await lotteryFeedCommunity.createTCD(
+      const lotteryTCDTx = await tcdFactory.createTCD(
         web3.utils.fromAscii('data:'),
-        '500000000000000000000',
-        '3',
-        '500000000000000000',
-        '1000000000000000',
-        '259200',
+        lotteryTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        lotteryTx.receipt.logs[2].args.params,
       );
 
       const lotteryTCD = await TCD.at(lotteryTCDTx.receipt.logs[0].args.tcd);
@@ -49,7 +74,7 @@ module.exports = function(deployer, network, accounts) {
       console.error('DataSourceBookkeepingLotteryAddress:', lotteryTCD.address);
       // Buy tokens
       const curve = await BondingCurve.at(
-        await lotteryFeedCommunity.bondingCurve(),
+        lotteryTx.receipt.logs[2].args.bondingCurve,
       );
 
       await band.approve(curve.address, '620000000000000148973918');
@@ -60,8 +85,7 @@ module.exports = function(deployer, network, accounts) {
       );
 
       // Add register
-      const token = await CommunityToken.at(await lotteryFeedCommunity.token());
-      await token.approve(lotteryTCD.address, '1000000000000000000000000');
+      await commToken.approve(lotteryTCD.address, '1000000000000000000000000');
 
       await Promise.all(
         dataProviders.map(async dataSource =>

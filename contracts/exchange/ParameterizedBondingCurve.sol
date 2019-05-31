@@ -2,6 +2,8 @@ pragma solidity 0.5.8;
 
 import "./BondingCurve.sol";
 import "../Parameters.sol";
+import "../utils/Expression.sol";
+import "../Parameters.sol";
 
 contract ParameterizedBondingCurve is BondingCurve {
 
@@ -10,10 +12,9 @@ contract ParameterizedBondingCurve is BondingCurve {
   constructor(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
-    Expression collateralExpression,
     Parameters _params
   )
-    BondingCurve(collateralToken, bondedToken, collateralExpression)
+    BondingCurve(collateralToken, bondedToken)
     public
   {
     params = _params;
@@ -31,5 +32,9 @@ contract ParameterizedBondingCurve is BondingCurve {
 
   function getLiquiditySpreadNumerator() public view returns (uint256) {
     return params.getRaw("bonding:liquidity_spread");
+  }
+
+  function getCollateralExpression() public view returns (Expression) {
+    return Expression(address(params.getRaw("bonding:curve_expression")));
   }
 }

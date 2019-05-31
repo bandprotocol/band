@@ -3,18 +3,21 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
-const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
 contract('Parameters', ([_, owner, alice, bob]) => {
   context('After successful initialization', () => {
     beforeEach(async () => {
-      this.factory = await BandRegistry.deployed();
-      this.band = await BandToken.at(await this.factory.band());
+      this.registry = await BandRegistry.deployed();
+      this.commFactory = await CommunityFactory.new(this.registry.address, {
+        from: owner,
+      });
+      this.band = await BandToken.at(await this.registry.band());
       await this.band.transfer(_, await this.band.balanceOf(owner), {
         from: owner,
       });
@@ -26,7 +29,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
       });
 
       const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
-      const data = await this.factory.createCommunity(
+      const data = await this.commFactory.create(
         'CoinHatcher',
         'CHT',
         testCurve.address,
@@ -34,11 +37,14 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         '60',
         '200000000000000000',
         '500000000000000000',
+        { from: owner },
       );
-      this.core = await CommunityCore.at(data.receipt.logs[1].args.community);
-      this.comm = await CommunityToken.at(await this.core.token());
-      this.curve = await BondingCurve.at(await this.core.bondingCurve());
-      this.params = await Parameters.at(await this.core.params());
+
+      this.comm = await CommunityToken.at(data.receipt.logs[2].args.token);
+      this.curve = await BondingCurve.at(
+        data.receipt.logs[2].args.bondingCurve,
+      );
+      this.params = await Parameters.at(data.receipt.logs[2].args.params);
 
       await this.band.transfer(owner, 5000000, { from: _ });
       await this.band.transfer(alice, 500000, { from: owner });
@@ -61,7 +67,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
       });
     });
-
     context('Set function for owner', () => {
       beforeEach(async () => {
         this.params = await Parameters.new(this.comm.address, { from: owner });
@@ -69,8 +74,8 @@ contract('Parameters', ([_, owner, alice, bob]) => {
       it('Should set new parameter by owner', async () => {
         await this.params.set(
           web3.utils.fromAscii('test:'),
-          web3.utils.fromAscii('param1'),
-          30000,
+          [web3.utils.fromAscii('param1')],
+          [30000],
           {
             from: owner,
           },
@@ -88,8 +93,8 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         await shouldFail.reverting(
           this.params.set(
             web3.utils.fromAscii('test:'),
-            web3.utils.fromAscii('param1'),
-            30000,
+            [web3.utils.fromAscii('param1')],
+            [30000],
             {
               from: bob,
             },
@@ -102,40 +107,6 @@ contract('Parameters', ([_, owner, alice, bob]) => {
             web3.utils.fromAscii('param1'),
           ),
         );
-      });
-
-      it('Should cannot set data if key already existed', async () => {
-        await this.params.set(
-          web3.utils.fromAscii('test:'),
-          web3.utils.fromAscii('param1'),
-          30000,
-          {
-            from: owner,
-          },
-        );
-
-        (await this.params.get(
-          web3.utils.fromAscii('test:'),
-          web3.utils.fromAscii('param1'),
-        ))
-          .toNumber()
-          .should.eq(30000);
-
-        await this.params.set(
-          web3.utils.fromAscii('test:'),
-          web3.utils.fromAscii('param1'),
-          200,
-          {
-            from: owner,
-          },
-        );
-
-        (await this.params.get(
-          web3.utils.fromAscii('test:'),
-          web3.utils.fromAscii('param1'),
-        ))
-          .toNumber()
-          .should.eq(30000);
       });
     });
 

@@ -2,17 +2,23 @@ pragma solidity 0.5.8;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "../exchange/BondingCurve.sol";
+import "../Parameters.sol";
+import "../utils/Expression.sol";
 
 
 contract BondingCurveMock is Ownable, BondingCurve {
   uint256 internal _inflationRateNumerator;
   uint256 internal _liquiditySpreadNumerator;
 
+  Expression public expression;
+
   constructor(
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
     Expression collateralExpression
-  ) public BondingCurve(collateralToken,  bondedToken, collateralExpression) {}
+  ) public BondingCurve(collateralToken,  bondedToken) {
+    expression = collateralExpression;
+  }
 
   function getRevenueBeneficiary() public view returns (address) {
     return owner();
@@ -24,6 +30,14 @@ contract BondingCurveMock is Ownable, BondingCurve {
 
   function getLiquiditySpreadNumerator() public view returns (uint256) {
     return _liquiditySpreadNumerator;
+  }
+
+  function getCollateralExpression() public view returns (Expression) {
+    return expression;
+  }
+
+  function setExpression(Expression collateralExpression) public onlyOwner {
+    expression = collateralExpression;
   }
 
   function setInflationRate(uint256 inflationRateNumerator) public onlyOwner {

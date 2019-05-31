@@ -2,18 +2,19 @@ const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const BondingCurve = artifacts.require('BondingCurve');
-const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
 contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
-    this.factory = await BandRegistry.deployed();
-    this.band = await BandToken.at(await this.factory.band());
+    this.registry = await BandRegistry.deployed();
+    this.tcdFactory = await CommunityFactory.deployed();
+    this.band = await BandToken.at(await this.registry.band());
     await this.band.transfer(_, await this.band.balanceOf(owner), {
       from: owner,
     });
@@ -29,7 +30,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
     await this.band.transfer(bob, 100000, { from: owner });
 
     const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
-    const data = await this.factory.createCommunity(
+    const data = await this.tcdFactory.create(
       'CoinHatcher',
       'CHT',
       testCurve.address,
@@ -39,10 +40,9 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       '800000000000000000',
       { from: _ },
     );
-    this.core = await CommunityCore.at(data.receipt.logs[1].args.community);
-    this.comm = await CommunityToken.at(await this.core.token());
-    this.curve = await BondingCurve.at(await this.core.bondingCurve());
-    this.params = await Parameters.at(await this.core.params());
+    this.comm = await CommunityToken.at(data.receipt.logs[2].args.token);
+    this.curve = await BondingCurve.at(data.receipt.logs[2].args.bondingCurve);
+    this.params = await Parameters.at(data.receipt.logs[2].args.params);
   });
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
@@ -51,8 +51,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         this.curve.buy(alice, 100, 11000, { from: alice }),
       );
     });
-
-    it("should not allow buying if buy doesn't have enough band", async () => {
+    it('should not allow buying if buy does not have enough band', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
       await shouldFail.reverting(
         this.band.transferAndCall(
@@ -197,7 +196,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       (await this.comm.totalSupply()).toString().should.eq('120');
       (await this.curve.curveMultiplier())
         .toString()
-        .should.eq('826446280991735537');
+        .should.eq('826388888888888888');
     });
 
     it('should inflate 10% per hour properly after a sale', async () => {
@@ -247,7 +246,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
       (await this.comm.totalSupply()).toString().should.eq('370');
       (await this.curve.curveMultiplier())
         .toString()
-        .should.eq('62500000000000000');
+        .should.eq('62498173849525200');
     });
   });
 

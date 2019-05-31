@@ -3,12 +3,11 @@ pragma solidity 0.5.8;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./TCDBase.sol";
-import "../BandToken.sol";
-import "../CommunityToken.sol";
-import "../Parameters.sol";
-import "../exchange/BondingCurve.sol";
-import "../exchange/BandExchangeInterface.sol";
 import "../utils/Fractional.sol";
+import "../BandRegistry.sol";
+import "../exchange/BondingCurve.sol";
+import "../token/LockableToken.sol";
+import "../Parameters.sol";
 
 contract TCD is TCDBase {
   using Fractional for uint256;
@@ -47,29 +46,25 @@ contract TCD is TCDBase {
   ProviderWithdrawReceipt[] public withdrawReceipts;
 
   mapping (address => DataProvider) public providers;
-  BandToken public band;
-  CommunityToken public token;
-  Parameters public params;
-  BandExchangeInterface public exchange;
   BondingCurve public bondingCurve;
+  BandRegistry public registry;
+  Parameters public params;
+  LockableToken public token;
   uint256 public undistributedReward;
   bytes8 public prefix;
 
   constructor(
     bytes8 _prefix,
-    BandToken _band,
-    CommunityToken _token,
-    Parameters _params,
     BondingCurve _bondingCurve,
-    BandExchangeInterface _exchange
+    Parameters _params,
+    BandRegistry _registry
   ) public {
-    prefix = _prefix;
-    band = _band;
-    token = _token;
-    params = _params;
     bondingCurve = _bondingCurve;
-    exchange = _exchange;
-    band.approve(address(_bondingCurve), 2 ** 256 - 1);
+    params = _params;
+    prefix = _prefix;
+    registry = _registry;
+    token = LockableToken(address(_bondingCurve.bondedToken()));
+    _registry.band().approve(address(_bondingCurve), 2 ** 256 - 1);
   }
 
   function getProviderPublicOwnership(address dataSource, address voter)  public view returns (uint256) {
@@ -186,8 +181,8 @@ contract TCD is TCDBase {
 
   function distributeFee(uint256 tokenAmount) public {
     require(address(this).balance > 0);
-    exchange.convertFromEthToBand.value(address(this).balance)();
-    bondingCurve.buy(address(this), band.balanceOf(address(this)), tokenAmount);
+    registry.exchange().convertFromEthToBand.value(address(this).balance)();
+    bondingCurve.buy(address(this), registry.band().balanceOf(address(this)), tokenAmount);
     undistributedReward = undistributedReward.add(tokenAmount);
     uint256 totalProviderCount = getActiveDataSourceCount();
     uint256 providerReward = undistributedReward.div(totalProviderCount);

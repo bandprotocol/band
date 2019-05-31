@@ -12,37 +12,44 @@ contract BondingCurve is ERC20Acceptor {
   event Sell(address indexed seller, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
   event Deflate(address indexed burner, uint256 burnedAmount);
   event RevenueCollect(address indexed beneficiary, uint256 bondedTokenAmount);
-  event CurveMultiplierChange(uint256 previousValue, uint256 nextValue);
 
   ERC20Interface public collateralToken;
   ERC20Interface public bondedToken;
-  Expression public collateralExpression;
 
   uint256 public currentMintedTokens;
   uint256 public currentCollateral;
-  uint256 public curveMultiplier = 1e18;
   uint256 public lastInflationTime = now;
 
   uint256 public constant RATIONAL_DENOMINATOR = 1e18;
 
   constructor(
     ERC20Interface _collateralToken,
-    ERC20Interface _bondedToken,
-    Expression _collateralExpression
+    ERC20Interface _bondedToken
   ) public {
     collateralToken = _collateralToken;
     bondedToken = _bondedToken;
-    collateralExpression = _collateralExpression;
-    emit CurveMultiplierChange(0, curveMultiplier);
   }
 
   function getRevenueBeneficiary() public view returns (address);
   function getInflationRateNumerator() public view returns (uint256);
   function getLiquiditySpreadNumerator() public view returns (uint256);
+  function getCollateralExpression() public view returns (Expression);
 
   function getCollateralAtSupply(uint256 tokenSupply) public view returns (uint256) {
-    uint256 collateralFromEquation = collateralExpression.evaluate(tokenSupply);
-    return collateralFromEquation.mul(curveMultiplier).div(RATIONAL_DENOMINATOR);
+    Expression collateralExpression = getCollateralExpression();
+    uint256 collateralFromEquationAtCurrent = collateralExpression.evaluate(currentMintedTokens);
+    uint256 collateralFromEquationAtSupply = collateralExpression.evaluate(tokenSupply);
+    if (collateralFromEquationAtCurrent == 0) {
+      return collateralFromEquationAtSupply;
+    } else {
+      return collateralFromEquationAtSupply.mul(currentCollateral).div(collateralFromEquationAtCurrent);
+    }
+  }
+
+  function curveMultiplier() public view returns (uint256) {
+    return currentCollateral.mul(RATIONAL_DENOMINATOR).div(
+      getCollateralExpression().evaluate(getBondingCurveSupplyPoint())
+    );
   }
 
   function getBondingCurveSupplyPoint() public view returns (uint256) {
@@ -70,7 +77,6 @@ contract BondingCurve is ERC20Acceptor {
       if (inflatingSupply != 0) {
         currentMintedTokens = currentMintedTokens.add(inflatingSupply);
         _rewardBondingCurveOwner(inflatingSupply);
-        _adjustcurveMultiplier();
       }
     }
     lastInflationTime = now;
@@ -118,7 +124,6 @@ contract BondingCurve is ERC20Acceptor {
   {
     require(bondedToken.burn(address(this), burnAmount));
     currentMintedTokens = currentMintedTokens.sub(burnAmount);
-    _adjustcurveMultiplier();
     emit Deflate(burner, burnAmount);
   }
 
@@ -126,16 +131,5 @@ contract BondingCurve is ERC20Acceptor {
     address beneficiary = getRevenueBeneficiary();
     require(bondedToken.mint(beneficiary, rewardAmount));
     emit RevenueCollect(beneficiary, rewardAmount);
-  }
-
-  function _adjustcurveMultiplier() internal {
-    uint256 collateralRaw = collateralExpression.evaluate(getBondingCurveSupplyPoint());
-    require(currentCollateral >= 0);
-    require(collateralRaw >= 0);
-    uint256 nextCurveMultiplier = RATIONAL_DENOMINATOR.mul(currentCollateral).div(collateralRaw);
-    if (curveMultiplier != nextCurveMultiplier) {
-      emit CurveMultiplierChange(curveMultiplier, nextCurveMultiplier);
-      curveMultiplier = nextCurveMultiplier;
-    }
   }
 }

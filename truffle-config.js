@@ -31,12 +31,12 @@ module.exports = {
       gas: 6800000,
       skipDryRun: true,
     },
-    development: {
-      host: '127.0.0.1',
-      port: 8545,
-      network_id: '*',
-      gasPrice: 1000000000,
-    },
+    // development: {
+    //   host: '127.0.0.1',
+    //   port: 8545,
+    //   network_id: '*',
+    //   gasPrice: 1000000000,
+    // },
   },
   compilers: {
     solc: {

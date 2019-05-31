@@ -2,13 +2,16 @@ pragma solidity 0.5.8;
 
 import "../data/TCR.sol";
 
-library TCRFactory {
-  function create(
+contract TCRFactory {
+  event TCRCreated(TCR tcr, address creator);
+
+  function createTCR(
     bytes8 prefix,
-    CommunityToken token,
-    Parameters params,
-    Expression decayFunction
-  ) external returns (TCR) {
-    return new TCR(prefix, token, params, decayFunction);
+    Expression decayFunction,
+    Parameters params
+  ) external returns(TCR) {
+    TCR tcr = new TCR(prefix, decayFunction, params);
+    emit TCRCreated(tcr, msg.sender);
+    return tcr;
   }
 }
