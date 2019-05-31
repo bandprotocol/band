@@ -476,7 +476,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       });
     });
     it('should revert if value less than query', async () => {
-      shouldFail.reverting(this.tcd.getAsNumber(web3.utils.fromAscii('P')));
+      await shouldFail.reverting(
+        this.tcd.getAsNumber(web3.utils.fromAscii('P')),
+      );
     });
 
     it('should return value and get eth when date retrieved', async () => {

@@ -28,15 +28,15 @@ contract TCDBase is QueryInterface {
     return dataSources.length;
   }
 
-  function getAsNumber(bytes32 key) public payable requirePayment returns (uint256) {
+  function getAsNumber(bytes32 key) public payable onlyWhiteList requirePayment returns (uint256) {
     return ArrayUtils.getMedian(_loadDataAt(key));
   }
 
-  function getAsBytes32(bytes32 key) public payable requirePayment returns (bytes32) {
+  function getAsBytes32(bytes32 key) public payable onlyWhiteList requirePayment returns (bytes32) {
     return bytes32(ArrayUtils.getMajority(_loadDataAt(key)));
   }
 
-  function getAsBool(bytes32 key) public payable requirePayment returns (bool) {
+  function getAsBool(bytes32 key) public payable onlyWhiteList requirePayment returns (bool) {
     return ArrayUtils.getMajority(_loadDataAt(key)) != 0;
   }
 

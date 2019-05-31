@@ -84,6 +84,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       web3.utils.fromAscii('tcr:'),
       testDecay.address,
       this.params.address,
+      this.registry.address,
     );
     this.tcr = await TCR.at(data2.receipt.logs[0].args.tcr);
 

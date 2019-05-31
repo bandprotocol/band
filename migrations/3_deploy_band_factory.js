@@ -27,6 +27,7 @@ module.exports = function(deployer, network, accounts) {
         band.address,
         exchange.address,
       );
+
       await deployer.deploy(CommunityFactory, bandRegistry.address);
       console.error('bandRegistry:', bandRegistry.address);
     })

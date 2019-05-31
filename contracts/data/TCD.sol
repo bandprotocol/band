@@ -4,7 +4,6 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
 import "./TCDBase.sol";
 import "../utils/Fractional.sol";
-import "../BandRegistry.sol";
 import "../exchange/BondingCurve.sol";
 import "../token/LockableToken.sol";
 import "../Parameters.sol";
@@ -47,7 +46,6 @@ contract TCD is TCDBase {
 
   mapping (address => DataProvider) public providers;
   BondingCurve public bondingCurve;
-  BandRegistry public registry;
   Parameters public params;
   LockableToken public token;
   uint256 public undistributedReward;
@@ -58,11 +56,10 @@ contract TCD is TCDBase {
     BondingCurve _bondingCurve,
     Parameters _params,
     BandRegistry _registry
-  ) public {
+  ) public QueryInterface(_registry) {
     bondingCurve = _bondingCurve;
     params = _params;
     prefix = _prefix;
-    registry = _registry;
     token = LockableToken(address(_bondingCurve.bondedToken()));
     _registry.band().approve(address(_bondingCurve), 2 ** 256 - 1);
   }

@@ -3,12 +3,13 @@ const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
 const TCRFactory = artifacts.require('TCRFactory');
+const BandRegistry = artifacts.require('BandRegistry');
 
 module.exports = function(deployer) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 4');
   deployer
     .then(async () => {
-      // const registry = await BandRegistry.deployed();
+      const registry = await BandRegistry.deployed();
       const commFactory = await CommunityFactory.deployed();
       const tcrFactory = await TCRFactory.deployed();
       console.log(BondingCurveExpression.address);
@@ -29,6 +30,7 @@ module.exports = function(deployer) {
         web3.utils.fromAscii('tcr:'),
         TCRMinDepositExpression.address,
         coinHatcherParams.address,
+        registry.address,
       );
     })
     .catch(console.log);
