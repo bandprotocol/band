@@ -4,7 +4,6 @@ import "./TCRBase.sol";
 import "./WhiteListInterface.sol";
 
 contract WhiteListTCR is TCRBase, WhiteListInterface {
-
   constructor(
     bytes8 _prefix,
     Expression decayFunction,

@@ -6,7 +6,7 @@ const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const TCD = artifacts.require('TCD');
+const TCDBase = artifacts.require('TCDBase');
 const TCDFactory = artifacts.require('TCDFactory');
 const SimpleDataSource = artifacts.require('SimpleDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
@@ -92,6 +92,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
+      true,
     );
 
     await this.params.setRaw(
@@ -106,7 +107,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       { from: owner },
     );
 
-    this.tcd = await TCD.at(data2.receipt.logs[0].args.tcd);
+    this.tcd = await TCDBase.at(data2.receipt.logs[0].args.tcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
@@ -239,7 +240,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       });
     });
     it('should revert if value less than query', async () => {
-      shouldFail.reverting(this.tcd.getAsNumber(web3.utils.fromAscii('P')));
+      shouldFail.reverting(this.tcd.query(web3.utils.fromAscii('P')));
     });
     it('should be able to apply to whiteList', async () => {
       (await this.whiteList.verify(alice)).toString().should.eq('false');
@@ -257,7 +258,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       (await this.registry.verify(alice)).toString().should.eq('true');
     });
     it('should return value and get eth when date retrieved', async () => {
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
       });
@@ -268,13 +269,13 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       await this.whiteList.applyEntry(alice, 1, op(alice.slice(2)), {
         from: alice,
       });
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: alice,
         value: 100,
       });
 
       await shouldFail.reverting(
-        this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+        this.tcd.query(web3.utils.fromAscii('P'), {
           from: bob,
           value: 100,
         }),
@@ -283,7 +284,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       await this.whiteList.applyEntry(bob, 1, op(bob.slice(2)), {
         from: bob,
       });
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: alice,
         value: 100,
       });
@@ -293,7 +294,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       await this.whiteList.applyEntry(alice, 1, op(alice.slice(2)), {
         from: alice,
       });
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: alice,
         value: 100,
       });
@@ -312,7 +313,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       });
 
       await shouldFail.reverting(
-        this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+        this.tcd.query(web3.utils.fromAscii('P'), {
           from: alice,
           value: 100,
         }),

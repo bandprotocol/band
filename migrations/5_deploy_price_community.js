@@ -1,6 +1,6 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
-const TCD = artifacts.require('TCD');
+const TCDBase = artifacts.require('TCDBase');
 const TCDFactory = artifacts.require('TCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
@@ -65,8 +65,9 @@ module.exports = function(deployer, network, accounts) {
         priceTx.receipt.logs[2].args.bondingCurve,
         registry.address,
         priceTx.receipt.logs[2].args.params,
+        true,
       );
-      const priceTCD = await TCD.at(priceTCDTx.receipt.logs[0].args.tcd);
+      const priceTCD = await TCDBase.at(priceTCDTx.receipt.logs[0].args.tcd);
       console.log('Created Price TCD at', priceTCD.address);
       console.error('DataSourceBookkeepingPriceAddress:', priceTCD.address);
       // Buy tokens

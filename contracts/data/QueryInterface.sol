@@ -2,21 +2,28 @@ pragma solidity 0.5.8;
 
 import "../BandRegistry.sol";
 
-contract QueryInterface {
 
+contract QueryInterface {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
   BandRegistry public registry;
 
   constructor(BandRegistry _registry) public {
     registry = _registry;
   }
 
-  modifier onlyWhiteList() {
+  function query(bytes calldata input)
+    external payable returns (bytes memory output, QueryStatus status)
+  {
     require(registry.verify(msg.sender));
-    _;
+    uint256 price = queryPrice(input);
+    require(msg.value >= price);
+    if (msg.value > price) msg.sender.transfer(msg.value - price);
+    return queryImpl(input);
   }
 
-  function getQueryPrice() public view returns (uint256);
-  function getAsNumber(bytes32) public payable returns (uint256) { revert(); }
-  function getAsBytes32(bytes32) public payable returns (bytes32) { revert(); }
-  function getAsBool(bytes32) public payable returns (bool) { revert(); }
+  function queryPrice(bytes memory input)
+    public view returns (uint256);
+
+  function queryImpl(bytes memory input)
+    internal returns (bytes memory output, QueryStatus status);
 }

@@ -1,19 +1,15 @@
 pragma solidity 0.5.8;
 
-import "../data/TCD.sol";
+import "../data/SimpleDataSourceTCD.sol";
 
 contract TCDFactory {
-  event TCDCreated(TCD tcd, address creator);
+  event TCDCreated(TCDBase tcd, address creator);
 
-  function createTCD(
-    bytes8 prefix,
-    BondingCurve bondingCurve,
-    BandRegistry registry,
-    Parameters params
-  ) external returns(TCD) {
-    TCD tcd = new TCD(prefix, bondingCurve, params, registry);
+  function createTCD(bytes8 prefix, BondingCurve bondingCurve, BandRegistry registry, Parameters params, bool isMedian) external {
+    TCDBase tcd;
+    if (isMedian) tcd = new MedianSimpleDataSourceTCDBase(prefix, bondingCurve, params, registry);
+    else tcd = new MajoritySimpleDataSourceTCDBase(prefix, bondingCurve, params, registry);
     LockableToken(address(params.token())).addCapper(address(tcd));
     emit TCDCreated(tcd, msg.sender);
-    return tcd;
   }
 }

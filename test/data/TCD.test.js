@@ -6,7 +6,7 @@ const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const TCD = artifacts.require('TCD');
+const TCDBase = artifacts.require('TCDBase');
 const TCDFactory = artifacts.require('TCDFactory');
 const SimpleDataSource = artifacts.require('SimpleDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
@@ -53,6 +53,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
+      true,
     );
 
     await this.params.setRaw(
@@ -67,7 +68,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       { from: owner },
     );
 
-    this.tcd = await TCD.at(data2.receipt.logs[0].args.tcd);
+    this.tcd = await TCDBase.at(data2.receipt.logs[0].args.tcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
@@ -476,13 +477,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       });
     });
     it('should revert if value less than query', async () => {
-      await shouldFail.reverting(
-        this.tcd.getAsNumber(web3.utils.fromAscii('P')),
-      );
+      await shouldFail.reverting(this.tcd.query(web3.utils.fromAscii('P')));
     });
 
     it('should return value and get eth when date retrieved', async () => {
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
       });
@@ -492,7 +491,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     it('should distribute value when someone call', async () => {
       // Carol join owner
       await this.tcd.vote(10, this.ownerSource.address, { from: carol });
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
       });
@@ -520,7 +519,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1003);
       (await this.comm.unlockedBalanceOf(carol)).toNumber().should.eq(993);
 
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 101,
       });
@@ -540,11 +539,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(977);
       (await this.comm.balanceOf(owner)).toNumber().should.eq(1063);
 
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
       });
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
       });
@@ -595,6 +594,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         this.curve.address,
         this.registry.address,
         this.params.address,
+        true,
       );
 
       await this.params.setRaw(
@@ -609,7 +609,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
       // console.log(data2.receipt.logs[0].args);
-      this.tcd = await TCD.at(data2.receipt.logs[0].args.tcd);
+      this.tcd = await TCDBase.at(data2.receipt.logs[0].args.tcd);
       // alice buy 1000 SDD
       const calldata = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
       await this.band.transferAndCall(
@@ -731,7 +731,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         from: carol,
       });
 
-      await this.tcd.getAsNumber(web3.utils.fromAscii('P'), {
+      await this.tcd.query(web3.utils.fromAscii('P'), {
         from: owner,
         value: 100,
       });
@@ -752,6 +752,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         this.curve.address,
         this.registry.address,
         this.params.address,
+        true,
       );
       await this.params.setRaw(
         [
@@ -765,13 +766,14 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
 
-      this.tcd2 = await TCD.at(data2.receipt.logs[0].args.tcd);
+      this.tcd2 = await TCDBase.at(data2.receipt.logs[0].args.tcd);
 
       const data3 = await this.tcdFactory.createTCD(
         web3.utils.fromAscii('qd:'),
         this.curve.address,
         this.registry.address,
         this.params.address,
+        true,
       );
       await this.params.setRaw(
         [
@@ -784,7 +786,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         [1000, 5, '120000000000000000', 1000, 20],
         { from: owner },
       );
-      this.tcd3 = await TCD.at(data3.receipt.logs[0].args.tcd);
+      this.tcd3 = await TCDBase.at(data3.receipt.logs[0].args.tcd);
     });
 
     it('Should set new parameter to data: prefix', async () => {

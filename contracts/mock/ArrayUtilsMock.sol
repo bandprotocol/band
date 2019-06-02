@@ -1,13 +1,38 @@
 pragma solidity 0.5.8;
 
-import "../utils/ArrayUtils.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract ArrayUtilsMock {
+  using SafeMath for uint256;
+
   function getMedian(uint256[] memory data) public pure  returns (uint256) {
-    return ArrayUtils.getMedian(data);
+    require(data.length > 0);
+    /// Sort the given inputs with Insertion Sort.
+    for (uint256 i = 0; i < data.length; ++i) {
+      for (uint256 j = i; j > 0; --j) {
+        if (data[j - 1] > data[j]) (data[j - 1], data[j]) = (data[j], data[j - 1]);
+        else break;
+      }
+    }
+    /// Return the middle element, or the average of the middle two elements.
+    uint256 middle = data.length.div(2);
+    if (data.length % 2 == 0) {
+      return data[middle].add(data[middle.sub(1)]).div(2);
+    } else {
+      return data[middle];
+    }
   }
 
   function getMajority(uint256[] memory data) public pure returns (uint256) {
-    return ArrayUtils.getMajority(data);
+    for (uint256 i = 0; i < data.length; ++i) {
+      uint256 count = 1;
+      for (uint256 j = i + 1; j < data.length; ++j) {
+        if (data[i] == data[j]) ++count;
+      }
+      if (count > data.length.div(2)) {
+        return data[i];
+      }
+    }
+    revert();
   }
 }

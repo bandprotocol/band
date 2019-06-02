@@ -1,6 +1,6 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
-const TCD = artifacts.require('TCD');
+const TCDBase = artifacts.require('TCDBase');
 const TCDFactory = artifacts.require('TCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
@@ -67,9 +67,12 @@ module.exports = function(deployer, network, accounts) {
         lotteryTx.receipt.logs[2].args.bondingCurve,
         registry.address,
         lotteryTx.receipt.logs[2].args.params,
+        false,
       );
 
-      const lotteryTCD = await TCD.at(lotteryTCDTx.receipt.logs[0].args.tcd);
+      const lotteryTCD = await TCDBase.at(
+        lotteryTCDTx.receipt.logs[0].args.tcd,
+      );
       console.log('Created Lottery TCD at', lotteryTCD.address);
       console.error('DataSourceBookkeepingLotteryAddress:', lotteryTCD.address);
       // Buy tokens

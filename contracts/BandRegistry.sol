@@ -1,31 +1,22 @@
 pragma solidity 0.5.8;
 
-import "./BandToken.sol";
-import "./exchange/BandExchangeInterface.sol";
-import "./data/TCR.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./BandToken.sol";
 import "./data/WhiteListInterface.sol";
+import "./exchange/BandExchangeInterface.sol";
 
 contract BandRegistry is Ownable {
-  event ExchangeSet(BandExchangeInterface exchange);
-
   BandToken public band;
   BandExchangeInterface public exchange;
   WhiteListInterface public whiteList;
 
-  constructor(
-    BandToken _band,
-    BandExchangeInterface _exchange
-  ) public {
+  constructor(BandToken _band, BandExchangeInterface _exchange) public {
     band = _band;
     exchange = _exchange;
-    emit ExchangeSet(exchange);
   }
 
   function verify(address reader) public view returns (bool) {
-    if (address(whiteList) == address(0)) {
-      return true;
-    }
+    if (address(whiteList) == address(0)) return true;
     return whiteList.verify(reader);
   }
 
@@ -35,6 +26,5 @@ contract BandRegistry is Ownable {
 
   function setExchange(BandExchangeInterface _exchange) public onlyOwner {
     exchange = _exchange;
-    emit ExchangeSet(exchange);
   }
 }

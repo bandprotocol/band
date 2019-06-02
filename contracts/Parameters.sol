@@ -59,9 +59,7 @@ contract Parameters is Ownable {
     require(keys.length == values.length);
     bytes32[] memory rawKeys = new bytes32[](keys.length);
     uint8 namespaceSize = 0;
-    while (namespaceSize < 8 && namespace[namespaceSize] != byte(0)) {
-      ++namespaceSize;
-    }
+    while (namespaceSize < 8 && namespace[namespaceSize] != byte(0)) ++namespaceSize;
     for (uint256 i = 0; i < keys.length; i++) {
       rawKeys[i] = bytes32(namespace) | bytes32(keys[i]) >> (8 * namespaceSize);
     }
@@ -78,16 +76,13 @@ contract Parameters is Ownable {
   }
 
   function getProposalChange(uint256 proposalId, uint256 changeIndex)
-    public view
-    returns (bytes32, uint256)
+    public view returns (bytes32, uint256)
   {
     KeyValue memory keyValue = proposals[proposalId].changes[changeIndex];
     return (keyValue.key, keyValue.value);
   }
 
-  function propose(bytes32 reasonHash, bytes32[] calldata keys, uint256[] calldata values)
-    external
-  {
+  function propose(bytes32 reasonHash, bytes32[] calldata keys, uint256[] calldata values) external {
     require(keys.length == values.length);
     uint256 proposalId = proposals.length;
     proposals.push(Proposal({
@@ -124,7 +119,7 @@ contract Parameters is Ownable {
     }
     proposal.isVoted[msg.sender] = true;
     emit ProposalVoted(proposalId, msg.sender, accepted, votingPower);
-    /// Auto-resolve if the proposal is unanimous
+    /// Auto-resolve if the result is unanimous
     uint256 minVoteToAccepted = proposal.voteSupportRequiredPct.mulFrac(proposal.totalVotingPower);
     uint256 minVoteToRejected = proposal.totalVotingPower.sub(minVoteToAccepted);
     if (proposal.yesCount >= minVoteToAccepted) {
