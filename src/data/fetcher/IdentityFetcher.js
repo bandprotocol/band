@@ -3,27 +3,30 @@ import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Utils } from 'band.js'
 
-const allIdentityFeedQL = nList => `
+const allIdentityFeedQL = (nList, address) => `
 {
-  allDataIdentityFeedRaws(orderBy: TIMESTAMP_DESC, first: ${nList}) {
+  allDataIdentityFeedRaws(${
+    address === ''
+      ? ''
+      : `filter: {userAddress: {likeInsensitive: "%${address}%"}},`
+  }orderBy: TIMESTAMP_DESC, first: ${nList}) {
     nodes {
       userAddress
       timestamp
     }
   }
 }
-
 `
 
 const allIdentityByAddressQL = address => `
 {
-    allDataIdentityFeedRaws(condition: {userAddress: "${address}"}) {
-      nodes {
-        userAddress
-        timestamp
-      }
+  allDataIdentityFeedRaws(filter: {userAddress: {likeInsensitive: "%${address}%"}}) {
+    nodes {
+      userAddress
+      timestamp
     }
   }
+}
 `
 
 const allIdentityCountQL = () => `
@@ -56,9 +59,10 @@ export const IdentityFetcher = withRouter(
     }
 
     async fetch() {
+      const { nList, searchAddress } = this.props
       const {
         allDataIdentityFeedRaws: { nodes },
-      } = await Utils.graphqlRequest(allIdentityFeedQL(this.props.nList))
+      } = await Utils.graphqlRequest(allIdentityFeedQL(nList, searchAddress))
 
       return nodes.map(({ userAddress, timestamp }) => ({
         userAddress: userAddress.slice(0, 42),

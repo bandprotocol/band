@@ -15,6 +15,8 @@ import SportTable from 'components/table/SportTable'
 import DatasetTab from 'components/DatasetTab'
 import Loading from 'components/Loading'
 import { createLoadingButton } from 'components/BaseButton'
+import SearchSelect from 'components/SearchSelect'
+import { getOptionsByType } from 'utils/sportTeam'
 
 import SoccerSrc from 'images/dataset-soccer.png'
 import BasketballSrc from 'images/dataset-basketball.png'
@@ -32,15 +34,28 @@ const LoadMoreButton = createLoadingButton(styled(Button)`
   background-image: linear-gradient(to right, #5269ff, #4890ff);
 `)
 
-const renderDataPoints = (type, matches, currentSportLength, loadMoreList) => (
+const renderDataPoints = (
+  { type, home: searchHome, away: searchAway },
+  matches,
+  currentSportLength,
+  loadMoreList,
+  onSearchTeam,
+) => (
   <React.Fragment>
-    <Flex>
+    <Flex alignItems="center" justifyContent="space-between">
       <Heading>{matches.length} Ðata Points</Heading>
-      <Box ml="auto" mr={3}>
-        <Text fontSize={26}>
-          <ion-icon name="md-search" />
-        </Text>
-      </Box>
+      <Flex width="30%">
+        <SearchSelect
+          options={getOptionsByType(type)}
+          placeholder="Home"
+          onSearch={value => onSearchTeam('home', value)}
+        />
+        <SearchSelect
+          options={getOptionsByType(type)}
+          placeholder="Away"
+          onSearch={value => onSearchTeam('away', value)}
+        />
+      </Flex>
     </Flex>
     <Box mt={3}>
       <FlipMove>
@@ -51,6 +66,8 @@ const renderDataPoints = (type, matches, currentSportLength, loadMoreList) => (
             hasStartTime,
             home,
             away,
+            homeFullName,
+            awayFullName,
             scoreHome,
             scoreAway,
             keyOnChain,
@@ -60,7 +77,7 @@ const renderDataPoints = (type, matches, currentSportLength, loadMoreList) => (
               keyOnChain={keyOnChain}
               label={`${time.format(
                 hasStartTime ? 'YYYY/MM/DD hh:mm a' : 'YYYY/MM/DD',
-              )}: ${home} - ${away}`}
+              )}: ${homeFullName} - ${awayFullName}`}
               k={time}
               v={() => (
                 <Flex mr="-20px">
@@ -143,9 +160,14 @@ const renderDataPoints = (type, matches, currentSportLength, loadMoreList) => (
         )}
       </FlipMove>
     </Box>
-    <SportCountByTypeFetcher type={type}>
+    <SportCountByTypeFetcher type={type} home={searchHome} away={searchAway}>
       {({ fetching, data }) =>
-        fetching || currentSportLength >= data ? null : (
+        !data ||
+        fetching ||
+        currentSportLength == 0 ||
+        currentSportLength >= data ||
+        !searchHome ||
+        !searchAway ? null : (
           <Flex width="100%" justifyContent="center" alignItems="center">
             <LoadMoreButton onClick={loadMoreList}>
               Load More Data
@@ -158,14 +180,20 @@ const renderDataPoints = (type, matches, currentSportLength, loadMoreList) => (
 )
 
 export default class SportPage extends React.Component {
-  state = { type: 'EPL', nSportList: 10 }
+  state = {
+    type: 'EPL',
+    nSportList: 10,
+    home: null,
+    away: null,
+  }
 
-  changeType(type, forceFetch) {
+  changeType(type) {
     this.setState({
       type,
       nSportList: 10,
+      home: null,
+      away: null,
     })
-    forceFetch()
   }
 
   async loadMoreList(forceFetch) {
@@ -185,6 +213,15 @@ export default class SportPage extends React.Component {
         }
       }, 500)
     })
+  }
+
+  onSearchTeam(forceFetch, teamType, team) {
+    this.setState(
+      {
+        [teamType]: team,
+      },
+      () => forceFetch(true, true),
+    )
   }
 
   render() {
@@ -210,50 +247,50 @@ export default class SportPage extends React.Component {
         <PageContainer>
           <Flex mt="-100px" mx="-8px" justifyContent="center">
             <SportCountByTypeFetcher type="EPL">
-              {({ fetching, data, forceFetch }) => (
+              {({ fetching, data }) => (
                 <DatasetTab
                   mx="8px"
                   title="Soccer"
                   subtitle={fetching ? 'Loading ...' : `${data} Matches`}
                   src={SoccerSrc}
                   active={this.state.type === 'EPL'}
-                  onClick={() => this.changeType('EPL', forceFetch)}
+                  onClick={() => this.changeType('EPL')}
                 />
               )}
             </SportCountByTypeFetcher>
             <SportCountByTypeFetcher type="NBA">
-              {({ fetching, data, forceFetch }) => (
+              {({ fetching, data }) => (
                 <DatasetTab
                   mx="8px"
                   title="Basketball"
                   subtitle={fetching ? 'Loading ...' : `${data} Matches`}
                   src={BasketballSrc}
                   active={this.state.type === 'NBA'}
-                  onClick={() => this.changeType('NBA', forceFetch)}
+                  onClick={() => this.changeType('NBA')}
                 />
               )}
             </SportCountByTypeFetcher>
             <SportCountByTypeFetcher type="NFL">
-              {({ fetching, data, forceFetch }) => (
+              {({ fetching, data }) => (
                 <DatasetTab
                   mx="8px"
                   title="American Football"
                   subtitle={fetching ? 'Loading ...' : `${data} Matches`}
                   src={AmericanFootballSrc}
                   active={this.state.type === 'NFL'}
-                  onClick={() => this.changeType('NFL', forceFetch)}
+                  onClick={() => this.changeType('NFL')}
                 />
               )}
             </SportCountByTypeFetcher>
             <SportCountByTypeFetcher type="MLB">
-              {({ fetching, data, forceFetch }) => (
+              {({ fetching, data }) => (
                 <DatasetTab
                   mx="8px"
                   title="Baseball"
                   subtitle={fetching ? 'Loading ...' : `${data} Matches`}
                   src={BaseballSrc}
                   active={this.state.type === 'MLB'}
-                  onClick={() => this.changeType('MLB', forceFetch)}
+                  onClick={() => this.changeType('MLB')}
                 />
               )}
             </SportCountByTypeFetcher>
@@ -265,6 +302,8 @@ export default class SportPage extends React.Component {
             <SportByTypeFetcher
               type={this.state.type}
               nList={this.state.nSportList}
+              home={this.state.home}
+              away={this.state.away}
             >
               {({ fetching, data, forceFetch }) => {
                 if (fetching) {
@@ -284,10 +323,11 @@ export default class SportPage extends React.Component {
                 } else {
                   this.currentSportLength = data.length
                   return renderDataPoints(
-                    this.state.type,
+                    this.state,
                     data,
                     this.currentSportLength,
                     this.loadMoreList.bind(this, forceFetch),
+                    this.onSearchTeam.bind(this, forceFetch),
                   )
                 }
               }}

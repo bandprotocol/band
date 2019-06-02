@@ -11,6 +11,7 @@ import {
   IdentityCountFetcher,
 } from 'data/fetcher/IdentityFetcher'
 import Loading from 'components/Loading'
+import Search from 'components/Search'
 import { createLoadingButton } from 'components/BaseButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import IdentityIconSrc from 'images/icon-identity.svg'
@@ -26,19 +27,23 @@ const LoadMoreButton = createLoadingButton(styled(Button)`
   background-image: linear-gradient(to right, #5269ff, #4890ff);
 `)
 
-const renderDataPoints = (persons, currentIdentityLength, loadMoreList) => (
+const renderDataPoints = (
+  persons,
+  currentIdentityLength,
+  loadMoreList,
+  onSearch,
+  isSearching,
+) => (
   <React.Fragment>
     <Flex>
       <Heading>{persons.length} Identities</Heading>
-      <Box ml="auto" mr={3}>
-        <Text fontSize={26}>
-          <ion-icon name="md-search" />
-        </Text>
+      <Box ml="auto">
+        <Search width="330px" onSearch={onSearch} />
       </Box>
     </Flex>
     <Box mt={3}>
       <FlipMove>
-        {persons.map(({ timestamp, userAddress, keyOnChain }) => (
+        {persons.map(({ timestamp, userAddress }) => (
           <DataPoint
             key={userAddress}
             keyOnChain={userAddress}
@@ -60,7 +65,10 @@ const renderDataPoints = (persons, currentIdentityLength, loadMoreList) => (
     </Box>
     <IdentityCountFetcher>
       {({ fetching, data }) =>
-        fetching || currentIdentityLength >= data ? null : (
+        !currentIdentityLength ||
+        fetching ||
+        currentIdentityLength >= data ||
+        isSearching ? null : (
           <Flex width="100%" justifyContent="center" alignItems="center">
             <LoadMoreButton onClick={loadMoreList}>
               Load More Data
@@ -75,6 +83,16 @@ const renderDataPoints = (persons, currentIdentityLength, loadMoreList) => (
 export default class IdentityPage extends React.Component {
   state = {
     nIdentityList: 10,
+    searchAddress: '',
+  }
+
+  onSearch(forceFetch, value) {
+    this.setState(
+      {
+        searchAddress: value,
+      },
+      () => forceFetch(true, true),
+    )
   }
 
   async loadMoreList(forceFetch) {
@@ -143,7 +161,10 @@ export default class IdentityPage extends React.Component {
             <Snippet dataset="identity" />
           </Box>
           <Box mt={5}>
-            <IdentityFetcher nList={this.state.nIdentityList}>
+            <IdentityFetcher
+              nList={this.state.nIdentityList}
+              searchAddress={this.state.searchAddress}
+            >
               {({ fetching, data, forceFetch }) => {
                 if (fetching) {
                   return (
@@ -165,6 +186,8 @@ export default class IdentityPage extends React.Component {
                     data,
                     this.currentIdentityLength,
                     this.loadMoreList.bind(this, forceFetch),
+                    this.onSearch.bind(this, forceFetch),
+                    this.state.searchAddress !== '',
                   )
                 }
               }}

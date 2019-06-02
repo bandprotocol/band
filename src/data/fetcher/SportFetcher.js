@@ -2,6 +2,7 @@ import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Utils } from 'band.js'
+import { getSportTeamByCode } from 'utils/sportTeam'
 
 const countSportAllQL = type => `
 {
@@ -13,35 +14,47 @@ const countSportAllQL = type => `
   }
 }
 `
-const countSportQL = type => `
+const countSportQL = (type, home, away) => `
 {
   allDataSportFeeds(
     orderBy: LAST_UPDATE_DESC
     condition: { sportType: "${type}" }
-    filter: { scoreAway: { isNull: false } }
+    filter: { 
+      scoreAway: { isNull: false } 
+      ${home ? `home: { equalTo: "${home}" }` : ``}
+      ${away ? `away: { equalTo: "${away}" }` : ``}
+    }
   ) {
     totalCount
   }
 }
 `
 
-const allSportByTypeQL = (type, nList) => `
+const allSportByTypeQL = (type, nList, home, away) => `
 {
-    allDataSportFeeds(orderBy: SPORT_TIME_DESC, condition: {sportType: "${type}"}, filter: {scoreAway: {isNull: false}}, first: ${nList}) {
-      nodes {
-        away
-        scoreAway
-        scoreHome
-        sportTime
-        sportType
-        sportStartTime
-        home
-        year
-        lastUpdate
-      }
+  allDataSportFeeds(
+    orderBy: SPORT_TIME_DESC
+    condition: { sportType: "${type}" }
+    filter: {
+      scoreAway: { isNull: false }
+      ${home ? `home: { equalTo: "${home}" }` : ``}
+      ${away ? `away: { equalTo: "${away}" }` : ``}
+    }
+    first: ${nList}
+  ) {
+    nodes {
+      away
+      scoreAway
+      scoreHome
+      sportTime
+      sportType
+      sportStartTime
+      home
+      year
+      lastUpdate
     }
   }
-  
+} 
 `
 
 const allProvidersByTypeTimeTeamQL = (type, time, startTime, home, away) => `
@@ -94,11 +107,11 @@ export const SportCountByTypeFetcher = withRouter(
     }
 
     async fetch() {
-      const { type } = this.props
+      const { type, home, away } = this.props
 
       const {
         allDataSportFeeds: { totalCount },
-      } = await Utils.graphqlRequest(countSportQL(type))
+      } = await Utils.graphqlRequest(countSportQL(type, home, away))
 
       return totalCount
     }
@@ -112,10 +125,10 @@ export const SportByTypeFetcher = withRouter(
     }
 
     async fetch() {
-      const { type, nList } = this.props
+      const { type, nList, home, away } = this.props
       const {
         allDataSportFeeds: { nodes },
-      } = await Utils.graphqlRequest(allSportByTypeQL(type, nList))
+      } = await Utils.graphqlRequest(allSportByTypeQL(type, nList, home, away))
 
       return nodes.map(
         ({
@@ -124,6 +137,8 @@ export const SportByTypeFetcher = withRouter(
           lastUpdate,
           sportType,
           year,
+          home,
+          away,
           ...result
         }) => ({
           time: moment(
@@ -132,9 +147,13 @@ export const SportByTypeFetcher = withRouter(
           ),
           hasStartTime: sportStartTime !== '9999',
           lastUpdate: moment(lastUpdate * 1000),
-          keyOnChain: `${sportType}${year}/${sportTime}/${result.home}-${
-            result.away
-          }${sportStartTime === '9999' ? '' : '/' + sportStartTime}`,
+          keyOnChain: `${sportType}${year}/${sportTime}/${home}-${away}${
+            sportStartTime === '9999' ? '' : '/' + sportStartTime
+          }`,
+          home,
+          away,
+          homeFullName: getSportTeamByCode(type, home).label,
+          awayFullName: getSportTeamByCode(type, away).label,
           ...result,
         }),
       )

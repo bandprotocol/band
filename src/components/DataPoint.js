@@ -62,7 +62,7 @@ const MagicBox = styled(Box)`
     }
 
     .label {
-      opacity: 0.9;
+      opacity: 0;
     }
   }
 `
