@@ -12,6 +12,7 @@ contract SimpleDataSourceTCDBase is TCDBase {
   }
 
   function queryImpl(bytes memory input) internal returns (bytes memory output, QueryStatus status) {
+    if (input.length != 32) return ("", QueryStatus.BAD_REQUEST);
     bytes32 key = abi.decode(input, (bytes32));
     uint256[] memory data = new uint256[](dataSources.length);
     uint256 size = 0;

@@ -13,6 +13,7 @@ contract TCR is TCRBase, QueryInterface {
   }
 
   function queryImpl(bytes memory input) internal returns (bytes memory output, QueryStatus status) {
+    if (input.length != 32) return ("", QueryStatus.BAD_REQUEST);
     bytes32 key = abi.decode(input, (bytes32));
     return (abi.encode(isEntryActive(bytes32(key))), QueryStatus.OK);
   }

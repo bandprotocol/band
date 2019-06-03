@@ -4,7 +4,7 @@ import "../BandRegistry.sol";
 
 
 contract QueryInterface {
-  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+  enum QueryStatus { BAD_REQUEST, OK, NOT_AVAILABLE, DISAGREEMENT }
   BandRegistry public registry;
 
   constructor(BandRegistry _registry) public {
