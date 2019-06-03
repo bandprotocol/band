@@ -33,7 +33,7 @@ contract SimpleDataSourceTCDBase is TCDBase {
     internal pure returns (uint256 result, bool ok);
 }
 
-contract MedianSimpleDataSourceTCDBase is SimpleDataSourceTCDBase {
+contract MedianSimpleDataSourceTCD is SimpleDataSourceTCDBase {
   constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
 
@@ -54,7 +54,7 @@ contract MedianSimpleDataSourceTCDBase is SimpleDataSourceTCDBase {
   }
 }
 
-contract MajoritySimpleDataSourceTCDBase is SimpleDataSourceTCDBase {
+contract MajoritySimpleDataSourceTCD is SimpleDataSourceTCDBase {
   constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
 

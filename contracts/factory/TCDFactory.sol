@@ -9,8 +9,8 @@ contract TCDFactory {
     external returns (TCDBase)
   {
     TCDBase tcd;
-    if (isMedian) tcd = new MedianSimpleDataSourceTCDBase(prefix, bondingCurve, params, registry);
-    else tcd = new MajoritySimpleDataSourceTCDBase(prefix, bondingCurve, params, registry);
+    if (isMedian) tcd = new MedianSimpleDataSourceTCD(prefix, bondingCurve, params, registry);
+    else tcd = new MajoritySimpleDataSourceTCD(prefix, bondingCurve, params, registry);
     LockableToken(address(params.token())).addCapper(address(tcd));
     emit TCDCreated(tcd, msg.sender);
     return tcd;
