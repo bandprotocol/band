@@ -8,7 +8,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const TCDBase = artifacts.require('TCDBase');
 const TCDFactory = artifacts.require('TCDFactory');
-const SimpleDataSource = artifacts.require('SimpleDataSource');
+const MockDataSource = artifacts.require('MockDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 
@@ -443,7 +443,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
   });
   context('Get', () => {
     beforeEach(async () => {
-      this.ownerSource = await SimpleDataSource.new('From owner', {
+      this.ownerSource = await MockDataSource.new('From owner', {
         from: owner,
       });
       await this.ownerSource.setNumber(
@@ -456,7 +456,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(40, this.ownerSource.address, {
         from: owner,
       });
-      this.aliceSource = await SimpleDataSource.new('From alice', {
+      this.aliceSource = await MockDataSource.new('From alice', {
         from: alice,
       });
       await this.aliceSource.setNumber(
@@ -469,7 +469,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(30, this.aliceSource.address, {
         from: alice,
       });
-      this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
+      this.bobSource = await MockDataSource.new('From bob', { from: bob });
       await this.bobSource.setNumber(
         '0x5000000000000000000000000000000000000000000000000000000000000000',
         10,
@@ -478,7 +478,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       await this.tcd.register(20, this.bobSource.address, { from: bob });
-      this.carolSource = await SimpleDataSource.new('From carol', {
+      this.carolSource = await MockDataSource.new('From carol', {
         from: carol,
       });
       await this.carolSource.setNumber(
@@ -678,7 +678,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x' + calldata.slice(138),
         { from: owner },
       );
-      this.ownerSource = await SimpleDataSource.new('From owner', {
+      this.ownerSource = await MockDataSource.new('From owner', {
         from: owner,
       });
       await this.ownerSource.setNumber(
@@ -691,7 +691,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(40, this.ownerSource.address, {
         from: owner,
       });
-      this.aliceSource = await SimpleDataSource.new('From alice', {
+      this.aliceSource = await MockDataSource.new('From alice', {
         from: alice,
       });
       await this.aliceSource.setNumber(
@@ -704,7 +704,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.tcd.register(30, this.aliceSource.address, {
         from: alice,
       });
-      this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
+      this.bobSource = await MockDataSource.new('From bob', { from: bob });
       await this.bobSource.setNumber(
         '0x5000000000000000000000000000000000000000000000000000000000000000',
         10,
@@ -713,7 +713,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       await this.tcd.register(20, this.bobSource.address, { from: bob });
-      this.carolSource = await SimpleDataSource.new('From carol', {
+      this.carolSource = await MockDataSource.new('From carol', {
         from: carol,
       });
       await this.carolSource.setNumber(

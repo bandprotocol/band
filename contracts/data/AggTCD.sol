@@ -4,7 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./TCDBase.sol";
 
 
-contract SimpleDataSourceTCDBase is TCDBase {
+contract AggTCD is TCDBase {
   using SafeMath for uint256;
 
   function queryPrice(bytes memory) public view returns (uint256) {
@@ -14,9 +14,9 @@ contract SimpleDataSourceTCDBase is TCDBase {
   function queryImpl(bytes memory input) internal returns (bytes memory output, QueryStatus status) {
     if (input.length != 32) return ("", QueryStatus.BAD_REQUEST);
     bytes32 key = abi.decode(input, (bytes32));
-    uint256[] memory data = new uint256[](dataSources.length);
-    uint256 size = 0;
     uint256 dsCount = getActiveDataSourceCount();
+    uint256[] memory data = new uint256[](dsCount);
+    uint256 size = 0;
     for (uint256 index = 0; index < dsCount; ++index) {
       (bool ok, bytes memory ret) = dataSources[index].call(abi.encodeWithSignature("get(bytes32)", key));
       if (!ok || ret.length != 32) continue;
@@ -33,7 +33,7 @@ contract SimpleDataSourceTCDBase is TCDBase {
     internal pure returns (uint256 result, bool ok);
 }
 
-contract MedianSimpleDataSourceTCD is SimpleDataSourceTCDBase {
+contract MedianAggTCD is AggTCD {
   constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
 
@@ -54,7 +54,7 @@ contract MedianSimpleDataSourceTCD is SimpleDataSourceTCDBase {
   }
 }
 
-contract MajoritySimpleDataSourceTCD is SimpleDataSourceTCDBase {
+contract MajorityAggTCD is AggTCD {
   constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
 

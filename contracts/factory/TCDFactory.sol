@@ -1,6 +1,6 @@
 pragma solidity 0.5.8;
 
-import "../data/SimpleDataSourceTCD.sol";
+import "../data/AggTCD.sol";
 
 contract TCDFactory {
   event TCDCreated(TCDBase tcd, address creator);
@@ -9,8 +9,8 @@ contract TCDFactory {
     external returns (TCDBase)
   {
     TCDBase tcd;
-    if (isMedian) tcd = new MedianSimpleDataSourceTCD(prefix, bondingCurve, params, registry);
-    else tcd = new MajoritySimpleDataSourceTCD(prefix, bondingCurve, params, registry);
+    if (isMedian) tcd = new MedianAggTCD(prefix, bondingCurve, params, registry);
+    else tcd = new MajorityAggTCD(prefix, bondingCurve, params, registry);
     LockableToken(address(params.token())).addCapper(address(tcd));
     emit TCDCreated(tcd, msg.sender);
     return tcd;
