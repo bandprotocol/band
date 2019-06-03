@@ -3,7 +3,7 @@ pragma solidity 0.5.8;
 import "./TCRBase.sol";
 import "./QueryInterface.sol";
 
-contract TCR is TCRBase, QueryInterface {
+contract QueryTCR is TCRBase, QueryInterface {
 
   constructor(bytes8 _prefix, Parameters _params, BandRegistry _registry)
     public TCRBase(_prefix, _params) QueryInterface(_registry) {}

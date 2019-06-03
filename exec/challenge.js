@@ -6,7 +6,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
-const TCR = artifacts.require('TCR');
+const QueryTCR = artifacts.require('QueryTCR');
 
 module.exports = function() {
   BandToken.deployed()
@@ -52,7 +52,7 @@ module.exports = function() {
         from: accounts[0],
       });
 
-      // Create TCR
+      // Create QueryTCR
       const dataTCR = await TC.createTCR(
         web3.utils.fromAscii('test:'),
         TCRMinDepositExpression.address,
@@ -65,8 +65,8 @@ module.exports = function() {
         '500000000000000000',
       );
       const lastEvent = dataTCR.receipt.logs.length;
-      const tcr = await TCR.at(dataTCR.receipt.logs[lastEvent - 1].args.tcr);
-      // const tcr = await TCR.at('0x8B6dA7EF0cDCABC49EFD6DFb5A64C0B1E8717E8C');
+      const tcr = await QueryTCR.at(dataTCR.receipt.logs[lastEvent - 1].args.tcr);
+      // const tcr = await QueryTCR.at('0x8B6dA7EF0cDCABC49EFD6DFb5A64C0B1E8717E8C');
       const dataHash = web3.utils.soliditySha3('some entry');
       await TCToken.approve(tcr.address, '1100000000000000000000', {
         from: accounts[1],

@@ -1,6 +1,6 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
-const TCR = artifacts.require('TCR');
+const QueryTCR = artifacts.require('QueryTCR');
 const TCRFactory = artifacts.require('TCRFactory');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
@@ -12,7 +12,7 @@ const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
-contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
+contract('QueryTCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
   beforeEach(async () => {
     this.registry = await BandRegistry.deployed();
     this.commFactory = await CommunityFactory.new(this.registry.address, {
@@ -85,7 +85,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
       this.params.address,
       this.registry.address,
     );
-    this.tcr = await TCR.at(data2.receipt.logs[0].args.tcr);
+    this.tcr = await QueryTCR.at(data2.receipt.logs[0].args.tcr);
 
     this.params.setRaw(
       [
@@ -203,7 +203,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         ),
       );
     });
-    it('verify parameters of TCR', async () => {
+    it('verify parameters of QueryTCR', async () => {
       (await this.params.get(
         web3.utils.fromAscii('tcr:'),
         web3.utils.fromAscii('dispensation_percentage'),

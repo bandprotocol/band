@@ -1,16 +1,16 @@
 pragma solidity 0.5.8;
 
-import "../data/TCR.sol";
+import "../data/QueryTCR.sol";
 
 contract TCRFactory {
-  event TCRCreated(TCR tcr, address creator);
+  event TCRCreated(QueryTCR tcr, address creator);
 
   function createTCR(
     bytes8 prefix,
     Parameters params,
     BandRegistry registry
-  ) external returns(TCR) {
-    TCR tcr = new TCR(prefix, params, registry);
+  ) external returns(QueryTCR) {
+    QueryTCR tcr = new QueryTCR(prefix, params, registry);
     emit TCRCreated(tcr, msg.sender);
     return tcr;
   }
