@@ -12,24 +12,20 @@ contract SimpleDataSourceTCDBase is TCDBase {
   }
 
   function queryImpl(bytes memory input) internal returns (bytes memory output, QueryStatus status) {
-    bytes32 key;
-    if (input.length != 32) return ("", QueryStatus.INVALID);
-    assembly { key := mload(add(input, 0x20)) }
+    bytes32 key = abi.decode(input, (bytes32));
     uint256[] memory data = new uint256[](dataSources.length);
     uint256 size = 0;
     uint256 dsCount = getActiveDataSourceCount();
     for (uint256 index = 0; index < dsCount; ++index) {
       (bool ok, bytes memory ret) = dataSources[index].call(abi.encodeWithSignature("get(bytes32)", key));
       if (!ok || ret.length != 32) continue;
-      uint256 value;
-      assembly { value := mload(add(ret, 0x20)) }
+      uint256 value = abi.decode(ret, (uint256));
       data[size++] = value;
     }
     if (size == 0 || size.mul(3) < dsCount.mul(2)) return ("", QueryStatus.NOT_AVAILABLE);
     (uint256 result, bool ok) = _aggregate(data, size);
     if (!ok) return ("", QueryStatus.DISAGREEMENT);
-    output = new bytes(32);
-    assembly { mstore(add(output, 0x20), result) }
+    else return (abi.encode(result), QueryStatus.OK);
   }
 
   function _aggregate(uint256[] memory data, uint256 size)

@@ -184,32 +184,48 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       this.ownerSource = await SimpleDataSource.new('From owner', {
         from: owner,
       });
-      await this.ownerSource.setNumber(web3.utils.fromAscii('P'), 20, {
-        from: owner,
-      });
+      await this.ownerSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        20,
+        {
+          from: owner,
+        },
+      );
       await this.tcd.register(40, this.ownerSource.address, {
         from: owner,
       });
       this.aliceSource = await SimpleDataSource.new('From alice', {
         from: alice,
       });
-      await this.aliceSource.setNumber(web3.utils.fromAscii('P'), 20, {
-        from: alice,
-      });
+      await this.aliceSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        20,
+        {
+          from: alice,
+        },
+      );
       await this.tcd.register(30, this.aliceSource.address, {
         from: alice,
       });
       this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
-      await this.bobSource.setNumber(web3.utils.fromAscii('P'), 10, {
-        from: bob,
-      });
+      await this.bobSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        10,
+        {
+          from: bob,
+        },
+      );
       await this.tcd.register(20, this.bobSource.address, { from: bob });
       this.carolSource = await SimpleDataSource.new('From carol', {
         from: carol,
       });
-      await this.carolSource.setNumber(web3.utils.fromAscii('P'), 11, {
-        from: carol,
-      });
+      await this.carolSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        11,
+        {
+          from: carol,
+        },
+      );
       await this.tcd.register(10, this.carolSource.address, {
         from: carol,
       });
@@ -240,7 +256,11 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       });
     });
     it('should revert if value less than query', async () => {
-      shouldFail.reverting(this.tcd.query(web3.utils.fromAscii('P')));
+      shouldFail.reverting(
+        this.tcd.query(
+          '0x5000000000000000000000000000000000000000000000000000000000000000',
+        ),
+      );
     });
     it('should be able to apply to whiteList', async () => {
       (await this.whiteList.verify(alice)).toString().should.eq('false');
@@ -257,11 +277,14 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       });
       (await this.registry.verify(alice)).toString().should.eq('true');
     });
-    it('should return value and get eth when date retrieved', async () => {
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 100,
-      });
+    it('should return value and get eth when data retrieved', async () => {
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 100,
+        },
+      );
       (await web3.eth.getBalance(this.tcd.address)).should.eq('100');
     });
     it('Can only read if after has been applied to whiteList', async () => {
@@ -269,35 +292,47 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       await this.whiteList.applyEntry(alice, 1, op(alice.slice(2)), {
         from: alice,
       });
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: alice,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: alice,
+          value: 100,
+        },
+      );
 
       await shouldFail.reverting(
-        this.tcd.query(web3.utils.fromAscii('P'), {
-          from: bob,
-          value: 100,
-        }),
+        this.tcd.query(
+          '0x5000000000000000000000000000000000000000000000000000000000000000',
+          {
+            from: bob,
+            value: 100,
+          },
+        ),
       );
 
       await this.whiteList.applyEntry(bob, 1, op(bob.slice(2)), {
         from: bob,
       });
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: alice,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: alice,
+          value: 100,
+        },
+      );
     });
     it('Can not read after has been challenged out of whiteList', async () => {
       await this.registry.setWhiteList(this.whiteList.address, { from: owner });
       await this.whiteList.applyEntry(alice, 1, op(alice.slice(2)), {
         from: alice,
       });
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: alice,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: alice,
+          value: 100,
+        },
+      );
 
       await this.whiteList.initiateChallenge(
         carol,
@@ -313,10 +348,13 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       });
 
       await shouldFail.reverting(
-        this.tcd.query(web3.utils.fromAscii('P'), {
-          from: alice,
-          value: 100,
-        }),
+        this.tcd.query(
+          '0x5000000000000000000000000000000000000000000000000000000000000000',
+          {
+            from: alice,
+            value: 100,
+          },
+        ),
       );
     });
   });

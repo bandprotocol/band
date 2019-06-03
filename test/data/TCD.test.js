@@ -446,55 +446,81 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       this.ownerSource = await SimpleDataSource.new('From owner', {
         from: owner,
       });
-      await this.ownerSource.setNumber(web3.utils.fromAscii('P'), 20, {
-        from: owner,
-      });
+      await this.ownerSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        20,
+        {
+          from: owner,
+        },
+      );
       await this.tcd.register(40, this.ownerSource.address, {
         from: owner,
       });
       this.aliceSource = await SimpleDataSource.new('From alice', {
         from: alice,
       });
-      await this.aliceSource.setNumber(web3.utils.fromAscii('P'), 20, {
-        from: alice,
-      });
+      await this.aliceSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        20,
+        {
+          from: alice,
+        },
+      );
       await this.tcd.register(30, this.aliceSource.address, {
         from: alice,
       });
       this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
-      await this.bobSource.setNumber(web3.utils.fromAscii('P'), 10, {
-        from: bob,
-      });
+      await this.bobSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        10,
+        {
+          from: bob,
+        },
+      );
       await this.tcd.register(20, this.bobSource.address, { from: bob });
       this.carolSource = await SimpleDataSource.new('From carol', {
         from: carol,
       });
-      await this.carolSource.setNumber(web3.utils.fromAscii('P'), 11, {
-        from: carol,
-      });
+      await this.carolSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        11,
+        {
+          from: carol,
+        },
+      );
       await this.tcd.register(10, this.carolSource.address, {
         from: carol,
       });
     });
     it('should revert if value less than query', async () => {
-      await shouldFail.reverting(this.tcd.query(web3.utils.fromAscii('P')));
+      await shouldFail.reverting(
+        this.tcd.query(
+          '0x5000000000000000000000000000000000000000000000000000000000000000',
+        ),
+      );
     });
 
     it('should return value and get eth when date retrieved', async () => {
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 100,
+        },
+      );
       (await web3.eth.getBalance(this.tcd.address)).should.eq('100');
     });
 
     it('should distribute value when someone call', async () => {
       // Carol join owner
       await this.tcd.vote(10, this.ownerSource.address, { from: carol });
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 100,
+        },
+      );
 
       await this.tcd.distributeFee(100, { from: owner });
 
@@ -519,10 +545,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1003);
       (await this.comm.unlockedBalanceOf(carol)).toNumber().should.eq(993);
 
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 101,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 101,
+        },
+      );
 
       await this.tcd.distributeFee(100, { from: owner });
 
@@ -539,14 +568,20 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(977);
       (await this.comm.balanceOf(owner)).toNumber().should.eq(1063);
 
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 100,
-      });
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 100,
+        },
+      );
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 100,
+        },
+      );
       await this.tcd.distributeFee(200, { from: owner });
       (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
         .toNumber()
@@ -646,32 +681,48 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       this.ownerSource = await SimpleDataSource.new('From owner', {
         from: owner,
       });
-      await this.ownerSource.setNumber(web3.utils.fromAscii('P'), 20, {
-        from: owner,
-      });
+      await this.ownerSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        20,
+        {
+          from: owner,
+        },
+      );
       await this.tcd.register(40, this.ownerSource.address, {
         from: owner,
       });
       this.aliceSource = await SimpleDataSource.new('From alice', {
         from: alice,
       });
-      await this.aliceSource.setNumber(web3.utils.fromAscii('P'), 20, {
-        from: alice,
-      });
+      await this.aliceSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        20,
+        {
+          from: alice,
+        },
+      );
       await this.tcd.register(30, this.aliceSource.address, {
         from: alice,
       });
       this.bobSource = await SimpleDataSource.new('From bob', { from: bob });
-      await this.bobSource.setNumber(web3.utils.fromAscii('P'), 10, {
-        from: bob,
-      });
+      await this.bobSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        10,
+        {
+          from: bob,
+        },
+      );
       await this.tcd.register(20, this.bobSource.address, { from: bob });
       this.carolSource = await SimpleDataSource.new('From carol', {
         from: carol,
       });
-      await this.carolSource.setNumber(web3.utils.fromAscii('P'), 11, {
-        from: carol,
-      });
+      await this.carolSource.setNumber(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        11,
+        {
+          from: carol,
+        },
+      );
       await this.tcd.register(10, this.carolSource.address, {
         from: carol,
       });
@@ -731,10 +782,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         from: carol,
       });
 
-      await this.tcd.query(web3.utils.fromAscii('P'), {
-        from: owner,
-        value: 100,
-      });
+      await this.tcd.query(
+        '0x5000000000000000000000000000000000000000000000000000000000000000',
+        {
+          from: owner,
+          value: 100,
+        },
+      );
 
       await this.tcd.distributeFee(100, { from: owner });
       await this.tcd.withdraw(40, this.ownerSource.address, {
