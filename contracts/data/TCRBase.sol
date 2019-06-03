@@ -24,7 +24,6 @@ contract TCRBase is ERC20Acceptor {
   event ChallengeInconclusive(bytes32 indexed data,uint256 indexed challengeId);
   event ChallengeRewardClaimed(uint256 indexed challengeId,address indexed voter, uint256 reward);
 
-  Expression public depositDecayFunction;
   Parameters public params;
   SnapshotToken public token;
   bytes8 public prefix;
@@ -63,12 +62,7 @@ contract TCRBase is ERC20Acceptor {
   mapping (uint256 => Challenge) public challenges;
   uint256 nextChallengeNonce = 1;
 
-  constructor(
-    bytes8 _prefix,
-    Expression decayFunction,
-    Parameters _params
-  ) public {
-    depositDecayFunction = decayFunction;
+  constructor(bytes8 _prefix, Parameters _params) public {
     params = _params;
     prefix = _prefix;
     token = _params.token();
@@ -99,7 +93,9 @@ contract TCRBase is ERC20Acceptor {
     if (now < entry.listedAt) {
       return minDeposit;
     } else {
-      return depositDecayFunction.evaluate(now.sub(entry.listedAt)).mulFrac(minDeposit);
+      address depositDecayFunction = address(params.get(prefix, "deposit_decay_function"));
+      if (depositDecayFunction == address(0)) return minDeposit;
+      else return Expression(depositDecayFunction).evaluate(now.sub(entry.listedAt)).mulFrac(minDeposit);
     }
   }
 

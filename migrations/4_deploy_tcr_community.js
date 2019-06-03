@@ -28,7 +28,6 @@ module.exports = function(deployer) {
       );
       await tcrFactory.createTCR(
         web3.utils.fromAscii('tcr:'),
-        TCRMinDepositExpression.address,
         coinHatcherParams.address,
         registry.address,
       );

@@ -64,7 +64,6 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
     });
     this.whiteList = await WhiteListTCR.new(
       web3.utils.fromAscii('tcr:'),
-      this.whiteListTCRDecay.address,
       this.registryParams.address,
       { from: owner },
     );
@@ -156,9 +155,6 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
   });
   context('Check setting', () => {
     it('check setting of whiteList', async () => {
-      (await this.whiteList.depositDecayFunction())
-        .toString()
-        .should.eq(this.whiteListTCRDecay.address);
       (await this.whiteList.params())
         .toString()
         .should.eq(this.registryParams.address);
@@ -238,8 +234,18 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('tcr:reveal_time'),
           web3.utils.fromAscii('tcr:min_participation_pct'),
           web3.utils.fromAscii('tcr:support_required_pct'),
+          web3.utils.fromAscii('tcr:deposit_decay_function'),
         ],
-        [1, 0, '0', 30, 30, '0', '1'],
+        [
+          1,
+          0,
+          '0',
+          30,
+          30,
+          '0',
+          '1',
+          '0x' + this.whiteListTCRDecay.address.slice(2).padStart(64, '0'),
+        ],
         { from: owner },
       );
       await this.band.approve(this.whiteList.address, 10000000, {

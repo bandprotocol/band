@@ -82,7 +82,6 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
     ]);
     const data2 = await this.tcrFactory.createTCR(
       web3.utils.fromAscii('tcr:'),
-      testDecay.address,
       this.params.address,
       this.registry.address,
     );
@@ -97,6 +96,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         web3.utils.fromAscii('tcr:reveal_time'),
         web3.utils.fromAscii('tcr:min_participation_pct'),
         web3.utils.fromAscii('tcr:support_required_pct'),
+        web3.utils.fromAscii('tcr:deposit_decay_function'),
       ],
       [
         100,
@@ -106,6 +106,7 @@ contract('TCR', ([_, owner, alice, bob, carol, minProposer, minChallenger]) => {
         30,
         '700000000000000000',
         '500000000000000000',
+        '0x' + testDecay.address.slice(2).padStart(64, '0'),
       ],
       { from: owner },
     );

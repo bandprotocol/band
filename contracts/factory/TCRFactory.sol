@@ -7,11 +7,10 @@ contract TCRFactory {
 
   function createTCR(
     bytes8 prefix,
-    Expression decayFunction,
     Parameters params,
     BandRegistry registry
   ) external returns(TCR) {
-    TCR tcr = new TCR(prefix, decayFunction, params, registry);
+    TCR tcr = new TCR(prefix, params, registry);
     emit TCRCreated(tcr, msg.sender);
     return tcr;
   }
