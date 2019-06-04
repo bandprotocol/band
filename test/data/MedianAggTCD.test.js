@@ -1,7 +1,8 @@
 const { shouldFail } = require('openzeppelin-test-helpers');
 
 const MockDataSource = artifacts.require('MockDataSource');
-const MedianAggTCD = artifacts.require('MedianAggTCD');
+const MedianAggregator = artifacts.require('MedianAggregator');
+const AggTCD = artifacts.require('AggTCD');
 const QueryTCDMock = artifacts.require('QueryTCDMock');
 const BandRegistry = artifacts.require('BandRegistry');
 const BandMockExchange = artifacts.require('BandMockExchange');
@@ -44,6 +45,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
         from: owner,
       },
     );
+    this.median = await MedianAggregator.new({ from: owner });
     this.comm = await CommunityToken.at(data1.receipt.logs[2].args.token);
     this.curve = await BondingCurve.at(data1.receipt.logs[2].args.bondingCurve);
     this.params = await Parameters.at(data1.receipt.logs[2].args.params);
@@ -54,7 +56,6 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
-      true,
     );
 
     await this.params.setRaw(
@@ -64,12 +65,13 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('data:owner_revenue_pct'),
         web3.utils.fromAscii('data:query_price'),
         web3.utils.fromAscii('data:withdraw_delay'),
+        web3.utils.fromAscii('data:data_aggregator'),
       ],
-      [10, 3, '500000000000000000', 100, 0],
+      [10, 3, '500000000000000000', 100, 0, this.median.address],
       { from: owner },
     );
 
-    this.tcd = await MedianAggTCD.at(data2.receipt.logs[0].args.tcd);
+    this.tcd = await AggTCD.at(data2.receipt.logs[0].args.atcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });

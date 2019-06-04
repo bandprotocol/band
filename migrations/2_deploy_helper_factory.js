@@ -3,6 +3,7 @@ const BondingCurveFactory = artifacts.require('BondingCurveFactory');
 const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
 const TCDFactory = artifacts.require('TCDFactory');
+const MTCDFactory = artifacts.require('MTCDFactory');
 const TCRFactory = artifacts.require('TCRFactory');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
@@ -34,7 +35,6 @@ module.exports = function(deployer) {
     '0',
     '5000000',
   ]);
-
   //  if x <= 604800
   //    return 100e16 - (90e16 * x) / 604800
   //  else
@@ -58,9 +58,11 @@ module.exports = function(deployer) {
     0,
     '100000000000000000',
   ]);
+
   deployer.deploy(BondingCurveFactory);
   deployer.deploy(CommunityTokenFactory);
   deployer.deploy(ParametersFactory);
   deployer.deploy(TCDFactory);
+  deployer.deploy(MTCDFactory);
   deployer.deploy(TCRFactory);
 };

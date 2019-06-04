@@ -12,6 +12,7 @@ const MockDataSource = artifacts.require('MockDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const WhiteListTCR = artifacts.require('WhiteListTCR');
+const MedianAggregator = artifacts.require('MedianAggregator');
 
 require('chai').should();
 
@@ -81,6 +82,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       '5',
       { from: owner },
     );
+    this.median = await MedianAggregator.new({ from: owner });
     // console.log(data1.receipt.logs);
     this.comm = await CommunityToken.at(data1.receipt.logs[2].args.token);
     this.curve = await BondingCurve.at(data1.receipt.logs[2].args.bondingCurve);
@@ -91,7 +93,6 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
-      true,
     );
 
     await this.params.setRaw(
@@ -101,12 +102,13 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('data:owner_revenue_pct'),
         web3.utils.fromAscii('data:query_price'),
         web3.utils.fromAscii('data:withdraw_delay'),
+        web3.utils.fromAscii('data:data_aggregator'),
       ],
-      [10, 3, '500000000000000000', 100, 0],
+      [10, 3, '500000000000000000', 100, 0, this.median.address],
       { from: owner },
     );
 
-    this.tcd = await TCDBase.at(data2.receipt.logs[0].args.tcd);
+    this.tcd = await TCDBase.at(data2.receipt.logs[0].args.atcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });

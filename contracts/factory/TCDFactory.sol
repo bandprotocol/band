@@ -3,16 +3,15 @@ pragma solidity 0.5.8;
 import "../data/AggTCD.sol";
 
 contract TCDFactory {
-  event TCDCreated(TCDBase tcd, address creator);
+  event TCDCreated(AggTCD atcd, address creator);
 
-  function createTCD(bytes8 prefix, BondingCurve bondingCurve, BandRegistry registry, Parameters params, bool isMedian)
-    external returns (TCDBase)
+  function createTCD(bytes8 prefix, BondingCurve bondingCurve, BandRegistry registry, Parameters params)
+    external returns (AggTCD)
   {
-    TCDBase tcd;
-    if (isMedian) tcd = new MedianAggTCD(prefix, bondingCurve, params, registry);
-    else tcd = new MajorityAggTCD(prefix, bondingCurve, params, registry);
-    LockableToken(address(params.token())).addCapper(address(tcd));
-    emit TCDCreated(tcd, msg.sender);
-    return tcd;
+    AggTCD atcd;
+    atcd = new AggTCD(prefix, bondingCurve, params, registry);
+    LockableToken(address(params.token())).addCapper(address(atcd));
+    emit TCDCreated(atcd, msg.sender);
+    return atcd;
   }
 }

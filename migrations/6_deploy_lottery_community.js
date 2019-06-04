@@ -67,11 +67,10 @@ module.exports = function(deployer, network, accounts) {
         lotteryTx.receipt.logs[2].args.bondingCurve,
         registry.address,
         lotteryTx.receipt.logs[2].args.params,
-        false,
       );
 
       const lotteryTCD = await TCDBase.at(
-        lotteryTCDTx.receipt.logs[0].args.tcd,
+        lotteryTCDTx.receipt.logs[0].args.atcd,
       );
       console.log('Created Lottery TCD at', lotteryTCD.address);
       console.error('DataSourceBookkeepingLotteryAddress:', lotteryTCD.address);

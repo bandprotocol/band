@@ -11,6 +11,7 @@ const TCDFactory = artifacts.require('TCDFactory');
 const MockDataSource = artifacts.require('MockDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
+const MedianAggregator = artifacts.require('MedianAggregator');
 
 require('chai').should();
 
@@ -53,9 +54,8 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
-      true,
     );
-
+    this.median = await MedianAggregator.new({ from: owner });
     await this.params.setRaw(
       [
         web3.utils.fromAscii('data:min_provider_stake'),
@@ -63,12 +63,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('data:owner_revenue_pct'),
         web3.utils.fromAscii('data:query_price'),
         web3.utils.fromAscii('data:withdraw_delay'),
+        web3.utils.fromAscii('data:data_aggregator'),
       ],
-      [10, 3, '500000000000000000', 100, 0],
+      [10, 3, '500000000000000000', 100, 0, this.median.address],
       { from: owner },
     );
 
-    this.tcd = await TCDBase.at(data2.receipt.logs[0].args.tcd);
+    this.tcd = await TCDBase.at(data2.receipt.logs[0].args.atcd);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
@@ -629,7 +630,6 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         this.curve.address,
         this.registry.address,
         this.params.address,
-        true,
       );
 
       await this.params.setRaw(
@@ -639,12 +639,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('data:owner_revenue_pct'),
           web3.utils.fromAscii('data:query_price'),
           web3.utils.fromAscii('data:withdraw_delay'),
+          web3.utils.fromAscii('data:data_aggregator'),
         ],
-        [10, 3, '500000000000000000', 100, 3600],
+        [10, 3, '500000000000000000', 100, 3600, this.median.address],
         { from: owner },
       );
       // console.log(data2.receipt.logs[0].args);
-      this.tcd = await TCDBase.at(data2.receipt.logs[0].args.tcd);
+      this.tcd = await TCDBase.at(data2.receipt.logs[0].args.atcd);
       // alice buy 1000 SDD
       const calldata = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
       await this.band.transferAndCall(
@@ -806,7 +807,6 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         this.curve.address,
         this.registry.address,
         this.params.address,
-        true,
       );
       await this.params.setRaw(
         [
@@ -815,19 +815,19 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           web3.utils.fromAscii('data:owner_revenue_pct'),
           web3.utils.fromAscii('data:query_price'),
           web3.utils.fromAscii('data:withdraw_delay'),
+          web3.utils.fromAscii('data:data_aggregator'),
         ],
-        [10, 3, '500000000000000000', 100, 20],
+        [10, 3, '500000000000000000', 100, 20, this.median.address],
         { from: owner },
       );
 
-      this.tcd2 = await TCDBase.at(data2.receipt.logs[0].args.tcd);
+      this.tcd2 = await TCDBase.at(data2.receipt.logs[0].args.atcd);
 
       const data3 = await this.tcdFactory.createTCD(
         web3.utils.fromAscii('qd:'),
         this.curve.address,
         this.registry.address,
         this.params.address,
-        true,
       );
       await this.params.setRaw(
         [
@@ -840,7 +840,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         [1000, 5, '120000000000000000', 1000, 20],
         { from: owner },
       );
-      this.tcd3 = await TCDBase.at(data3.receipt.logs[0].args.tcd);
+      this.tcd3 = await TCDBase.at(data3.receipt.logs[0].args.atcd);
     });
 
     it('Should set new parameter to data: prefix', async () => {
