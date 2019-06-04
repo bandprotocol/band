@@ -14,7 +14,7 @@ contract MultiSigTCD is TCDBase {
     QueryStatus status;
   }
 
-  mapping (bytes32 => ReportedData) private aggData;
+  mapping (bytes => ReportedData) private aggData;
 
   constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
@@ -24,15 +24,15 @@ contract MultiSigTCD is TCDBase {
   }
 
   function report(
-    bytes32 key,
+    bytes calldata key,
     uint256[] calldata values,
     uint256[] calldata timeStamps,
     uint8[] calldata v,
     bytes32[] calldata r,
     bytes32[] calldata s
   ) external {
-    uint256 dsCount = getActiveDataSourceCount();
-    require(values.length <= dsCount);
+    // uint256 dsCount = getActiveDataSourceCount();
+    require(values.length <= getActiveDataSourceCount());
     require(values.length == timeStamps.length);
     address lastSigner = address(0);
     for (uint256 i = 0; i < values.length; ++i) {
@@ -48,16 +48,16 @@ contract MultiSigTCD is TCDBase {
       );
       require(recovered > lastSigner);
       lastSigner = recovered;
-      uint j = 0;
-      for (; j < dsCount; ++j) {
+      uint256 j = 0;
+      for (; j < getActiveDataSourceCount(); ++j) {
         if (recovered == dataSources[j]) break;
       }
-      require (j != dsCount);
+      require (j != getActiveDataSourceCount());
     }
     _save(key, values);
   }
 
-  function _save(bytes32 key, uint256[] memory values) private {
+  function _save(bytes memory key, uint256[] memory values) private {
     Aggregator agg = Aggregator(address(params.get(prefix, "data_aggregator")));
     (uint256 result, bool ok) = agg.aggregate(values, values.length);
     aggData[key] = ReportedData({
@@ -67,13 +67,11 @@ contract MultiSigTCD is TCDBase {
     });
   }
 
-  function queryImpl(bytes memory input) internal returns (bytes memory output, QueryStatus status) {
-    if (input.length != 32) return ("", QueryStatus.BAD_REQUEST);
-    bytes32 key = abi.decode(input, (bytes32));
-    ReportedData storage rd = aggData[key];
+  function queryImpl(bytes memory input) internal returns (bytes32 output, QueryStatus status) {
+    ReportedData storage rd = aggData[input];
     if (rd.timeStamp == 0) return ("", QueryStatus.NOT_AVAILABLE);
     if (rd.status != QueryStatus.OK) return ("", rd.status);
-    return (abi.encode(rd.value), QueryStatus.OK);
+    return (bytes32(rd.value), QueryStatus.OK);
   }
 
 }

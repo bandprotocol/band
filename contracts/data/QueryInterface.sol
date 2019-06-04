@@ -4,7 +4,7 @@ import "../BandRegistry.sol";
 
 
 contract QueryInterface {
-  enum QueryStatus { BAD_REQUEST, OK, NOT_AVAILABLE, DISAGREEMENT }
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
   BandRegistry public registry;
 
   constructor(BandRegistry _registry) public {
@@ -12,7 +12,7 @@ contract QueryInterface {
   }
 
   function query(bytes calldata input)
-    external payable returns (bytes memory output, QueryStatus status)
+    external payable returns (bytes32 output, QueryStatus status)
   {
     require(registry.verify(msg.sender));
     uint256 price = queryPrice(input);
@@ -25,5 +25,5 @@ contract QueryInterface {
     public view returns (uint256);
 
   function queryImpl(bytes memory input)
-    internal returns (bytes memory output, QueryStatus status);
+    internal returns (bytes32 output, QueryStatus status);
 }

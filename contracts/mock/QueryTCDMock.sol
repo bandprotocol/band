@@ -6,7 +6,7 @@ contract QueryTCDMock {
 
   AggTCD public tcd;
 
-  bytes public result;
+  bytes32 public result;
   QueryInterface.QueryStatus public status;
 
   constructor(AggTCD _tcd) public {

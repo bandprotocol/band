@@ -15,14 +15,12 @@ contract AggTCD is TCDBase {
     return params.get(prefix, "query_price");
   }
 
-  function queryImpl(bytes memory input) internal returns (bytes memory output, QueryStatus status) {
-    if (input.length != 32) return ("", QueryStatus.BAD_REQUEST);
-    bytes32 key = abi.decode(input, (bytes32));
+  function queryImpl(bytes memory input) internal returns (bytes32 output, QueryStatus status) {
     uint256 dsCount = getActiveDataSourceCount();
     uint256[] memory data = new uint256[](dsCount);
     uint256 size = 0;
     for (uint256 index = 0; index < dsCount; ++index) {
-      (bool ok, bytes memory ret) = dataSources[index].call(abi.encodeWithSignature("get(bytes32)", key));
+      (bool ok, bytes memory ret) = dataSources[index].call(abi.encodeWithSignature("get(bytes)", input));
       if (!ok || ret.length != 32) continue;
       uint256 value = abi.decode(ret, (uint256));
       data[size++] = value;
@@ -31,6 +29,6 @@ contract AggTCD is TCDBase {
     Aggregator agg = Aggregator(address(params.get(prefix, "data_aggregator")));
     (uint256 result, bool ok) = agg.aggregate(data, size);
     if (!ok) return ("", QueryStatus.DISAGREEMENT);
-    else return (abi.encode(result), QueryStatus.OK);
+    else return (bytes32(result), QueryStatus.OK);
   }
 }
