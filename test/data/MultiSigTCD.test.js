@@ -12,8 +12,24 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const MedianAggregator = artifacts.require('MedianAggregator');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
+const QueryTCDMock = artifacts.require('QueryTCDMock');
 
 require('chai').should();
+
+const sign = async (k, v, t, addr, signer) => {
+  const hash = web3.utils.soliditySha3(
+    web3.eth.abi.encodeParameters(
+      ['bytes32', 'uint256', 'uint256'],
+      [k, v, t],
+    ) + addr.slice(2),
+  );
+  const sig = await web3.eth.sign(hash, signer);
+  return {
+    v: '0x' + sig.slice(66 + 64, 66 + 64 + 2) === '0x00' ? '0x1b' : '0x1c',
+    r: '0x' + sig.slice(2, 66),
+    s: '0x' + sig.slice(66, 66 + 64),
+  };
+};
 
 contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
@@ -71,6 +87,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     );
 
     this.mtcd = await MultiSigTCD.at(data2.receipt.logs[0].args.mtcd);
+    this.queryMock = await QueryTCDMock.new(this.mtcd.address);
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
@@ -189,6 +206,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     });
   });
   context('Get', () => {
+    const key1 = web3.utils.soliditySha3('some key');
     beforeEach(async () => {
       await this.mtcd.register(10, owner, { from: owner });
       await this.mtcd.register(20, alice, { from: alice });
@@ -308,11 +326,220 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         (await this.mtcd.dataSources(i)).toString().should.eq(topProviders[i]);
       }
     });
-    // it('should be able to report', async () => {
-    //   let sig = await web3.eth.sign(
-    //     web3.utils.soliditySha3(nonce.alice++, dataNoFuncSig),
-    //     alice,
-    //   );
-    // });
+    it('should be able to report and get median', async () => {
+      const topProviders = [carol, bob, alice].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
+      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          9999 + i,
+          timeStamp + i,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(9999 + i);
+      }
+      await this.mtcd.report(key1, vals, ts, vs, rs, ss);
+      await this.queryMock.query(key1, { from: owner, value: 100 });
+      parseInt(await this.queryMock.result()).should.eq(10000);
+    });
+    it('should be able to report and get majority', async () => {
+      await this.params.setRaw(
+        [web3.utils.fromAscii('data:data_aggregator')],
+        [this.majority.address],
+        { from: owner },
+      );
+      const topProviders = [carol, bob, alice].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
+      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          1111 + Math.floor(i / 2),
+          timeStamp + i,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(1111 + Math.floor(i / 2));
+      }
+      await this.mtcd.report(key1, vals, ts, vs, rs, ss);
+      await this.queryMock.query(key1, { from: owner, value: 100 });
+      parseInt(await this.queryMock.result()).should.eq(1111);
+    });
+    it('should fail if signers are not in ascending order', async () => {
+      await this.params.setRaw(
+        [web3.utils.fromAscii('data:data_aggregator')],
+        [this.majority.address],
+        { from: owner },
+      );
+      const topProviders = [carol, bob, alice].sort((a, b) => {
+        if (a < b) return 1;
+        if (a > b) return -1;
+        return 0;
+      });
+      const timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
+      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          1111 + Math.floor(i / 2),
+          timeStamp + i,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(1111 + Math.floor(i / 2));
+      }
+      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+    });
+    it('should fail if timeStamp is oleder than now', async () => {
+      const topProviders = [carol, bob, alice].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = Math.floor(100 + Date.now() / 1000) - 1000;
+      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          9999,
+          timeStamp,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(9999 + i);
+      }
+      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+    });
+    it('should fail if there is a signature which is not from top provider', async () => {
+      const topProviders = [carol, bob, owner].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = Math.floor(100 + Date.now() / 1000) + 1000;
+      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          9999,
+          timeStamp,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(9999 + i);
+      }
+      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+    });
+    it('should fail if number of signatures is <= 2/3', async () => {
+      const topProviders = [carol].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = Math.floor(100 + Date.now() / 1000) + 1000;
+      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          9999,
+          timeStamp,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(9999 + i);
+      }
+      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+    });
+    it('should be able to report if more than 2/3 have signed', async () => {
+      await this.params.setRaw(
+        [
+          web3.utils.fromAscii('data:data_aggregator'),
+          web3.utils.fromAscii('data:max_provider_count'),
+        ],
+        [this.majority.address, 4],
+        { from: owner },
+      );
+      let topProviders = [carol, bob].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      let timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
+      let [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          1111 + Math.floor(i / 2),
+          timeStamp + i,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(1111 + Math.floor(i / 2));
+      }
+      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+
+      topProviders = [carol, bob, owner].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
+      [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          1111 + Math.floor(i / 2),
+          timeStamp + i,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+        ts.push(timeStamp + i);
+        vals.push(1111 + Math.floor(i / 2));
+      }
+      await this.mtcd.report(key1, vals, ts, vs, rs, ss);
+      await this.queryMock.query(key1, { from: owner, value: 100 });
+      parseInt(await this.queryMock.result()).should.eq(1111);
+    });
   });
 });

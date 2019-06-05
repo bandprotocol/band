@@ -2,8 +2,6 @@ pragma solidity 0.5.8;
 
 import "./BondingCurve.sol";
 import "../Parameters.sol";
-import "../utils/Expression.sol";
-import "../Parameters.sol";
 
 contract ParameterizedBondingCurve is BondingCurve {
 

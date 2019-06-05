@@ -31,8 +31,8 @@ contract MultiSigTCD is TCDBase {
     bytes32[] calldata r,
     bytes32[] calldata s
   ) external {
-    // uint256 dsCount = getActiveDataSourceCount();
     require(values.length <= getActiveDataSourceCount());
+    require(values.length > getActiveDataSourceCount().mul(2).div(3));
     require(values.length == timeStamps.length);
     address lastSigner = address(0);
     for (uint256 i = 0; i < values.length; ++i) {
