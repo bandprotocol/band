@@ -138,24 +138,46 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     it('check setting of multisig tcd', async () => {
       (await this.mtcd.token()).toString().should.eq(this.comm.address);
       (await this.mtcd.params()).toString().should.eq(this.params.address);
-      (await this.mtcd.getActiveDataSourceCount()).toNumber().should.eq(0);
-      (await this.mtcd.getAllDataSourceCount()).toNumber().should.eq(0);
+      (await this.mtcd.activeProviderLength()).toNumber().should.eq(0);
+      (await this.mtcd.reserveProviderLength()).toNumber().should.eq(0);
     });
     it('should revert if stake less than min_provider_stake', async () => {
-      (await this.mtcd.providers(owner)).currentStatus.toNumber().should.eq(0);
-      (await this.mtcd.providers(alice)).currentStatus.toNumber().should.eq(0);
-      (await this.mtcd.providers(bob)).currentStatus.toNumber().should.eq(0);
-      (await this.mtcd.providers(carol)).currentStatus.toNumber().should.eq(0);
+      await this.mtcd.register(
+        owner,
+        '0x0000000000000000000000000000000000000001',
+        40,
+        { from: owner },
+      );
+      await this.mtcd.register(
+        alice,
+        '0x0000000000000000000000000000000000000001',
+        30,
+        { from: alice },
+      );
+      await this.mtcd.register(
+        bob,
+        '0x0000000000000000000000000000000000000001',
+        20,
+        { from: bob },
+      );
+      await shouldFail.reverting(
+        this.mtcd.register(
+          carol,
+          '0x0000000000000000000000000000000000000001',
+          9,
+          { from: carol },
+        ),
+      );
+      await this.mtcd.register(
+        carol,
+        '0x0000000000000000000000000000000000000001',
+        10,
+        { from: carol },
+      );
 
-      await this.mtcd.register(40, owner, { from: owner });
-      await this.mtcd.register(30, alice, { from: alice });
-      await this.mtcd.register(20, bob, { from: bob });
-      await shouldFail.reverting(this.mtcd.register(9, carol, { from: carol }));
-      await this.mtcd.register(10, carol, { from: carol });
+      (await this.mtcd.activeProviderLength()).toNumber().should.eq(3);
 
-      (await this.mtcd.getActiveDataSourceCount()).toNumber().should.eq(3);
-
-      (await this.mtcd.getAllDataSourceCount()).toNumber().should.eq(4);
+      (await this.mtcd.reserveProviderLength()).toNumber().should.eq(1);
 
       (await this.comm.unlockedBalanceOf(owner))
         .toNumber()
@@ -173,11 +195,6 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       const bobDataSource = await this.mtcd.providers(bob);
       const carolDataSource = await this.mtcd.providers(carol);
 
-      ownerDataSource.currentStatus.toNumber().should.eq(1);
-      aliceDataSource.currentStatus.toNumber().should.eq(1);
-      bobDataSource.currentStatus.toNumber().should.eq(1);
-      carolDataSource.currentStatus.toNumber().should.eq(1);
-
       ownerDataSource.stake.toNumber().should.eq(40);
       aliceDataSource.stake.toNumber().should.eq(30);
       bobDataSource.stake.toNumber().should.eq(20);
@@ -194,24 +211,59 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       carolDataSource.owner.toString().should.eq(carol);
     });
     it('should revert if try to register again', async () => {
-      await this.mtcd.register(10, carol, { from: carol });
+      await this.mtcd.register(
+        carol,
+        '0x0000000000000000000000000000000000000001',
+        10,
+        { from: carol },
+      );
       await shouldFail.reverting(
-        this.mtcd.register(10, carol, { from: carol }),
+        this.mtcd.register(
+          carol,
+          '0x0000000000000000000000000000000000000001',
+          10,
+          { from: carol },
+        ),
       );
     });
     it('should revert if not enough tokens', async () => {
       await shouldFail.reverting(
-        this.mtcd.register(1001, carol, { from: carol }),
+        this.mtcd.register(
+          carol,
+          '0x0000000000000000000000000000000000000000',
+          1001,
+          { from: carol },
+        ),
       );
     });
   });
   context('Get', () => {
     const key1 = web3.utils.soliditySha3('some key');
     beforeEach(async () => {
-      await this.mtcd.register(10, owner, { from: owner });
-      await this.mtcd.register(20, alice, { from: alice });
-      await this.mtcd.register(30, bob, { from: bob });
-      await this.mtcd.register(40, carol, { from: carol });
+      await this.mtcd.register(
+        owner,
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: owner },
+      );
+      await this.mtcd.register(
+        alice,
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: alice },
+      );
+      await this.mtcd.register(
+        bob,
+        '0x0000000000000000000000000000000000000000',
+        30,
+        { from: bob },
+      );
+      await this.mtcd.register(
+        carol,
+        '0x0000000000000000000000000000000000000000',
+        40,
+        { from: carol },
+      );
     });
     it('should revert if value less than query', async () => {
       await shouldFail.reverting(
@@ -232,7 +284,13 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     });
     it('should distribute value when someone call', async () => {
       // Carol join owner
-      await this.mtcd.vote(10, owner, { from: carol });
+      await this.mtcd.vote(
+        owner,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: carol },
+      );
       await this.mtcd.query(
         '0x5000000000000000000000000000000000000000000000000000000000000000',
         {
@@ -256,9 +314,15 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(18);
 
-      await this.mtcd.withdraw(10, owner, {
-        from: carol,
-      });
+      await this.mtcd.withdraw(
+        owner,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        10,
+        {
+          from: carol,
+        },
+      );
 
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1008);
       (await this.comm.unlockedBalanceOf(carol)).toNumber().should.eq(968);
@@ -279,9 +343,15 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       (await this.mtcd.getStakeInProvider(owner, owner))
         .toNumber()
         .should.eq(68);
-      await this.mtcd.withdraw(10, owner, {
-        from: owner,
-      });
+      await this.mtcd.withdraw(
+        owner,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        10,
+        {
+          from: owner,
+        },
+      );
 
       (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(1019);
       (await this.comm.balanceOf(owner)).toNumber().should.eq(1058);
@@ -311,19 +381,33 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       (await this.mtcd.getProviderPublicOwnership(alice, alice))
         .toNumber()
         .should.eq(20);
-      await this.mtcd.withdraw(20, alice, {
-        from: alice,
-      });
+      await this.mtcd.withdraw(
+        alice,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        20,
+        {
+          from: alice,
+        },
+      );
 
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(1000);
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000);
     });
     it('check active providers', async () => {
-      const dsCount = await this.mtcd.getActiveDataSourceCount();
-      const topProviders = [carol, bob, alice];
-      dsCount.toNumber().should.eq(topProviders.length);
-      for (let i = 0; i < topProviders.length; i++) {
-        (await this.mtcd.dataSources(i)).toString().should.eq(topProviders[i]);
+      const dsCount = await this.mtcd.activeProviderLength();
+      const topProviders = [
+        '0x0000000000000000000000000000000000000001',
+        alice,
+        bob,
+        carol,
+        '0x0000000000000000000000000000000000000001',
+      ];
+      dsCount.toNumber().should.eq(3);
+      for (let i = 0; i < topProviders.length - 1; i++) {
+        (await this.mtcd.activeProviders(topProviders[i]))
+          .toString()
+          .should.eq(topProviders[i + 1]);
       }
     });
     it('should be able to report and get median', async () => {
@@ -492,6 +576,15 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         ],
         [this.majority.address, 4],
         { from: owner },
+      );
+
+      // Activate carol first
+      await this.mtcd.vote(
+        carol,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        0,
+        { from: carol },
       );
       let topProviders = [carol, bob].sort((a, b) => {
         if (a < b) return -1;

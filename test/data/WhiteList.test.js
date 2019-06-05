@@ -189,9 +189,12 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
           from: owner,
         },
       );
-      await this.tcd.register(40, this.ownerSource.address, {
-        from: owner,
-      });
+      await this.tcd.register(
+        this.ownerSource.address,
+        '0x0000000000000000000000000000000000000000',
+        40,
+        { from: owner },
+      );
       this.aliceSource = await MockDataSource.new('From alice', {
         from: alice,
       });
@@ -202,9 +205,12 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      await this.tcd.register(30, this.aliceSource.address, {
-        from: alice,
-      });
+      await this.tcd.register(
+        this.aliceSource.address,
+        '0x0000000000000000000000000000000000000000',
+        30,
+        { from: alice },
+      );
       this.bobSource = await MockDataSource.new('From bob', { from: bob });
       await this.bobSource.setNumber(
         '0x5000000000000000000000000000000000000000000000000000000000000000',
@@ -213,7 +219,12 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
           from: bob,
         },
       );
-      await this.tcd.register(20, this.bobSource.address, { from: bob });
+      await this.tcd.register(
+        this.bobSource.address,
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: bob },
+      );
       this.carolSource = await MockDataSource.new('From carol', {
         from: carol,
       });
@@ -224,9 +235,12 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
           from: carol,
         },
       );
-      await this.tcd.register(10, this.carolSource.address, {
-        from: carol,
-      });
+      await this.tcd.register(
+        this.carolSource.address,
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: carol },
+      );
       await this.registryParams.setRaw(
         [
           web3.utils.fromAscii('tcr:min_deposit'),

@@ -84,9 +84,10 @@ module.exports = function(deployer, network, accounts) {
       // Add register
       await commToken.approve(priceTCD.address, '1000000000000000000000000');
 
+      const address0 = '0x0000000000000000000000000000000000000000';
       await Promise.all(
         dataProviders.map(async dataSource => {
-          priceTCD.register('500000000000000000000', dataSource);
+          priceTCD.register(dataSource, address0, '500000000000000000000');
         }),
       );
     })

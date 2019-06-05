@@ -115,7 +115,12 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
         from: owner,
       });
-      await this.tcd.register(10, this.dataProvider1.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider1.address,
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: owner },
+      );
     });
 
     it('should return status NOT_AVAILABLE if not set value', async () => {
@@ -137,11 +142,21 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
         from: owner,
       });
-      await this.tcd.register(10, this.dataProvider1.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider1.address,
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: owner },
+      );
       this.dataProvider2 = await MockDataSource.new('Source 2', {
         from: owner,
       });
-      await this.tcd.register(20, this.dataProvider2.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider2.address,
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: owner },
+      );
     });
 
     it('should return status NOT_AVAILABLE if no one set value', async () => {
@@ -169,15 +184,30 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
         from: owner,
       });
-      await this.tcd.register(10, this.dataProvider1.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider1.address,
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: owner },
+      );
       this.dataProvider2 = await MockDataSource.new('Source 2', {
         from: owner,
       });
-      await this.tcd.register(20, this.dataProvider2.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider2.address,
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: owner },
+      );
       this.dataProvider3 = await MockDataSource.new('Source 3', {
         from: owner,
       });
-      await this.tcd.register(30, this.dataProvider3.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider3.address,
+        '0x0000000000000000000000000000000000000000',
+        30,
+        { from: owner },
+      );
     });
 
     it('should return status NOT_AVAILABLE if no one set value', async () => {
@@ -213,19 +243,39 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
         from: owner,
       });
-      await this.tcd.register(10, this.dataProvider1.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider1.address,
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: owner },
+      );
       this.dataProvider2 = await MockDataSource.new('Source 2', {
         from: owner,
       });
-      await this.tcd.register(20, this.dataProvider2.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider2.address,
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: owner },
+      );
       this.dataProvider3 = await MockDataSource.new('Source 3', {
         from: owner,
       });
-      await this.tcd.register(30, this.dataProvider3.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider3.address,
+        '0x0000000000000000000000000000000000000000',
+        30,
+        { from: owner },
+      );
       this.dataProvider4 = await MockDataSource.new('Source 4', {
         from: owner,
       });
-      await this.tcd.register(40, this.dataProvider4.address, { from: owner });
+      await this.tcd.register(
+        this.dataProvider4.address,
+        '0x0000000000000000000000000000000000000000',
+        40,
+        { from: owner },
+      );
     });
 
     it('should return status NOT_AVAILABLE if no one set value', async () => {
@@ -247,7 +297,13 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
     it('should return median value if source provider list changed', async () => {
       await this.dataProvider1.setNumber(key, 20, { from: owner });
       await this.dataProvider3.setNumber(key, 15, { from: owner });
-      await this.tcd.vote(20, this.dataProvider1.address, { from: owner });
+      await this.tcd.vote(
+        this.dataProvider1.address,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: owner },
+      );
       await this.queryMock.query(key, { from: owner, value: 100 });
       (await this.queryMock.status()).toNumber().should.eq(1);
       web3.utils.hexToNumber(await this.queryMock.result()).should.eq(17);
@@ -260,7 +316,13 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       await this.queryMock.query(key, { from: owner, value: 100 });
       (await this.queryMock.status()).toNumber().should.eq(1);
       web3.utils.hexToNumber(await this.queryMock.result()).should.eq(18);
-      await this.tcd.vote(20, this.dataProvider1.address, { from: owner });
+      await this.tcd.vote(
+        this.dataProvider1.address,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        20,
+        { from: owner },
+      );
       await this.queryMock.query(key, { from: owner, value: 100 });
       (await this.queryMock.status()).toNumber().should.eq(1);
       web3.utils.hexToNumber(await this.queryMock.result()).should.eq(20);

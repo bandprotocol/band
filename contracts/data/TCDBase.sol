@@ -9,6 +9,7 @@ import "../exchange/BondingCurve.sol";
 import "../token/LockableToken.sol";
 import "../Parameters.sol";
 
+
 contract TCDBase is QueryInterface {
   using Fractional for uint256;
   using SafeMath for uint256;
@@ -18,13 +19,13 @@ contract TCDBase is QueryInterface {
   event DataSourceStakeChanged(address indexed dataSource, uint256 newStake);
   event DataSourceVoterTokenLockChanged(address indexed dataSource, address indexed voter, uint256 newtokenLock);
   event DataSourceOwnershipChanged(address indexed dataSource, address indexed voter, uint256 newVoterOwnership, uint256 newTotalOwnership);
+
   event OwnerWithdrawReceiptCreated(uint256 receiptIndex, address indexed owner, uint256 amount, uint64 withdrawTime);
   event OwnerWithdrawReceiptUnlocked(uint256 receiptIndex, address indexed owner, uint256 amount);
 
-  enum DataProviderStatus { Nothing, Active, Removed }
+  enum Comparator {EQ, LT, GT}
 
   struct DataProvider {
-    DataProviderStatus currentStatus;
     address owner;
     uint256 stake;
     uint256 totalPublicOwnership;
@@ -39,8 +40,16 @@ contract TCDBase is QueryInterface {
     bool isWithdrawn;
   }
 
-  address[] public dataSources;
   mapping (address => DataProvider) public providers;
+  mapping (address => address) public activeProviders;
+  mapping (address => address) public reserveProviders;
+
+  uint256 public activeProviderLength;
+  uint256 public reserveProviderLength;
+
+  address constant internal NOT_FOUND = address(0x00);
+  address constant internal ACTIVE_HEADER = address(0x01);
+  address constant internal RESERVE_HEADER = address(0x02);
   ProviderWithdrawReceipt[] public withdrawReceipts;
 
   BondingCurve public bondingCurve;
@@ -57,6 +66,8 @@ contract TCDBase is QueryInterface {
     prefix = _prefix;
     token = LockableToken(address(_bondingCurve.bondedToken()));
     _registry.band().approve(address(_bondingCurve), 2 ** 256 - 1);
+    activeProviders[ACTIVE_HEADER] = ACTIVE_HEADER;
+    reserveProviders[RESERVE_HEADER] = RESERVE_HEADER;
   }
 
   function getProviderPublicOwnership(address dataSource, address voter)  public view returns (uint256) {
@@ -69,48 +80,47 @@ contract TCDBase is QueryInterface {
     return provider.publicOwnerships[voter].mul(provider.stake).div(provider.totalPublicOwnership);
   }
 
-  function getAllDataSourceCount() public view returns (uint256) {
-    return dataSources.length;
-  }
-
-  function getActiveDataSourceCount() public view returns (uint256) {
-    return Math.min(dataSources.length, params.get(prefix, "max_provider_count"));
-  }
-
-  function register(uint256 stake, address dataSource) public {
+  function register(address dataSource, address prevDataSource, uint256 stake) public {
     require(token.lock(msg.sender, stake));
-    require(providers[dataSource].currentStatus == DataProviderStatus.Nothing);
+    require(providers[dataSource].totalPublicOwnership == 0);
     require(stake > 0 && stake >= params.get(prefix, "min_provider_stake"));
+
     providers[dataSource] = DataProvider({
-      currentStatus: DataProviderStatus.Active,
       owner: msg.sender,
       stake: stake,
       totalPublicOwnership: stake
     });
     providers[dataSource].publicOwnerships[msg.sender] = stake;
     providers[dataSource].tokenLocks[msg.sender] = stake;
-    dataSources.push(dataSource);
     emit DataSourceRegistered(dataSource, msg.sender);
     emit DataSourceOwnershipChanged(dataSource, msg.sender, stake, stake);
     emit DataSourceStakeChanged(dataSource, stake);
     emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, stake);
-    _repositionUp(dataSources.length.sub(1));
+    _addDataSourceToList(dataSource, prevDataSource);
+    _updateActiveList();
   }
 
-  function vote(uint256 stake, address dataSource) public {
+  function vote(address dataSource, address prevDataSource, address newPrevDataSource, uint256 stake) public {
     require(token.lock(msg.sender, stake));
+    _removeDataSourceFromList(dataSource, prevDataSource);
     DataProvider storage provider = providers[dataSource];
     uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(stake);
     provider.tokenLocks[msg.sender] = newVoterTokenLock;
     _vote(msg.sender, stake, dataSource);
     emit DataSourceStakeChanged(dataSource, provider.stake);
     emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, newVoterTokenLock);
-    _repositionUp(_findDataSourceIndex(dataSource));
+    if (getStakeInProvider(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
+      _addDataSourceToList(dataSource, newPrevDataSource);
+    }
+    _updateActiveList();
   }
 
-  function withdraw(uint256 withdrawOwnership, address dataSource) public {
+  function withdraw(address dataSource, address prevDataSource, address newPrevDataSource, uint256 withdrawOwnership)
+    public
+  {
     DataProvider storage provider = providers[dataSource];
-    require(withdrawOwnership > 0 && withdrawOwnership <= provider.publicOwnerships[msg.sender]);
+    require(withdrawOwnership <= provider.publicOwnerships[msg.sender]);
+    _removeDataSourceFromList(dataSource, prevDataSource);
     uint256 newOwnership = provider.totalPublicOwnership.sub(withdrawOwnership);
     uint256 currentVoterStake = getStakeInProvider(dataSource, msg.sender);
     if (currentVoterStake > provider.tokenLocks[msg.sender]){
@@ -145,25 +155,12 @@ contract TCDBase is QueryInterface {
     emit DataSourceOwnershipChanged(dataSource, msg.sender, newVoterOwnership, newOwnership);
     emit DataSourceStakeChanged(dataSource, newStake);
     emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, newVoterTokenLock);
-    if (provider.currentStatus == DataProviderStatus.Active) {
-      _repositionDown(_findDataSourceIndex(dataSource));
-    }
-    if (provider.owner == msg.sender &&
-        getStakeInProvider(dataSource, provider.owner) < params.get(prefix, "min_provider_stake") &&
-        provider.currentStatus == DataProviderStatus.Active) {
-      kick(dataSource);
-    }
-  }
 
-  function kick(address dataSource) public {
-    DataProvider storage provider = providers[dataSource];
-    require(provider.currentStatus == DataProviderStatus.Active);
-    address owner = provider.owner;
-    require(getStakeInProvider(dataSource, owner) < params.get(prefix, "min_provider_stake"));
-    provider.currentStatus = DataProviderStatus.Removed;
-    emit DataSourceRemoved(dataSource);
-    _repositionDown(_findDataSourceIndex(dataSource));
-    dataSources.pop();
+    // Update List
+    if (getStakeInProvider(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
+      _addDataSourceToList(dataSource, newPrevDataSource);
+    }
+    _updateActiveList();
   }
 
   function distributeFee(uint256 tokenAmount) public {
@@ -171,17 +168,18 @@ contract TCDBase is QueryInterface {
     registry.exchange().convertFromEthToBand.value(address(this).balance)();
     bondingCurve.buy(address(this), registry.band().balanceOf(address(this)), tokenAmount);
     undistributedReward = undistributedReward.add(tokenAmount);
-    uint256 totalProviderCount = getActiveDataSourceCount();
-    uint256 providerReward = undistributedReward.div(totalProviderCount);
+    uint256 providerReward = undistributedReward.div(activeProviderLength);
     uint256 ownerPercentage = params.get(prefix, "owner_revenue_pct");
     uint256 ownerReward = ownerPercentage.mulFrac(providerReward);
     uint256 stakeIncreased = providerReward.sub(ownerReward);
-    for (uint256 dataSourceIndex = 0; dataSourceIndex < totalProviderCount; ++dataSourceIndex) {
-      DataProvider storage provider = providers[dataSources[dataSourceIndex]];
+    address dataSourceAddress = activeProviders[ACTIVE_HEADER];
+    while (dataSourceAddress != ACTIVE_HEADER) {
+      DataProvider storage provider = providers[dataSourceAddress];
       provider.stake = provider.stake.add(stakeIncreased);
-      if (ownerReward > 0) _vote(provider.owner, ownerReward, dataSources[dataSourceIndex]);
+      if (ownerReward > 0) _vote(provider.owner, ownerReward, dataSourceAddress);
       undistributedReward = undistributedReward.sub(providerReward);
-      emit DataSourceStakeChanged(dataSources[dataSourceIndex], provider.stake);
+      emit DataSourceStakeChanged(dataSourceAddress, provider.stake);
+      dataSourceAddress = activeProviders[dataSourceAddress];
     }
   }
 
@@ -193,46 +191,9 @@ contract TCDBase is QueryInterface {
     emit OwnerWithdrawReceiptUnlocked(receiptId, receipt.owner, receipt.amount);
   }
 
-  function _findDataSourceIndex(address dataSource) internal view returns (uint256) {
-    for (uint256 index = 0; index < dataSources.length; ++index) {
-      if (dataSources[index] == dataSource) return index;
-    }
-    assert(false);
-  }
-
-  function _isLhsBetterThanRhs(uint256 left, uint256 right) internal view returns (bool) {
-    DataProvider storage leftProvider = providers[dataSources[left]];
-    DataProvider storage rightProvider = providers[dataSources[right]];
-    if (leftProvider.currentStatus != DataProviderStatus.Active) return false;
-    if (rightProvider.currentStatus != DataProviderStatus.Active) return true;
-    if (leftProvider.stake != rightProvider.stake) return leftProvider.stake >= rightProvider.stake;
-    return uint256(dataSources[left]) >= uint256(dataSources[right]);  /// Arbitrary tie-breaker
-  }
-
-  function _repositionUp(uint256 dataSourceIndex) internal {
-    for (; dataSourceIndex > 0; --dataSourceIndex) {
-      if (_isLhsBetterThanRhs(dataSourceIndex - 1, dataSourceIndex)) return;
-      _swapDataSource(dataSourceIndex, dataSourceIndex - 1);
-    }
-  }
-
-  function _repositionDown(uint256 dataSourceIndex) internal {
-    uint256 lastDataSourceIndex = dataSources.length.sub(1);
-    for (; dataSourceIndex < lastDataSourceIndex; ++dataSourceIndex) {
-      if (_isLhsBetterThanRhs(dataSourceIndex, dataSourceIndex + 1)) return;
-      _swapDataSource(dataSourceIndex + 1, dataSourceIndex);
-    }
-  }
-
-  function _swapDataSource(uint256 left, uint256 right) internal {
-    address temp = dataSources[left];
-    dataSources[left] = dataSources[right];
-    dataSources[right] = temp;
-  }
-
   function _vote(address voter, uint256 stake, address dataSource) internal {
     DataProvider storage provider = providers[dataSource];
-    require(stake > 0 && provider.currentStatus == DataProviderStatus.Active && provider.totalPublicOwnership != 0);
+    require(provider.totalPublicOwnership > 0);
     uint256 newStake = provider.stake.add(stake);
     uint256 newTotalPublicOwnership = newStake.mul(provider.totalPublicOwnership).div(provider.stake);
     uint256 newVoterPublicOwnership = provider.publicOwnerships[voter].add(newTotalPublicOwnership.sub(provider.totalPublicOwnership));
@@ -240,5 +201,120 @@ contract TCDBase is QueryInterface {
     provider.stake = newStake;
     provider.totalPublicOwnership = newTotalPublicOwnership;
     emit DataSourceOwnershipChanged(dataSource, voter, newVoterPublicOwnership, newTotalPublicOwnership);
+  }
+
+  function _compare(address dataSourceLeft, address dataSourceRight) internal view returns (Comparator) {
+    if (dataSourceLeft == dataSourceRight)
+      return Comparator.EQ;
+    DataProvider storage leftProvider = providers[dataSourceLeft];
+    DataProvider storage rightProvider = providers[dataSourceRight];
+    if (leftProvider.stake != rightProvider.stake)
+      return leftProvider.stake < rightProvider.stake ? Comparator.LT : Comparator.GT;
+    return uint256(dataSourceLeft) < uint256(dataSourceRight) ? Comparator.LT : Comparator.GT; /// Arbitrary tie-breaker
+  }
+
+  function _findPrevDataSourceAddress(address dataSource) internal view returns (address) {
+    if (activeProviderLength != 0 && _compare(dataSource, activeProviders[ACTIVE_HEADER]) != Comparator.LT) {
+      // This data source should be active list
+      address currentIndex = ACTIVE_HEADER;
+      while (activeProviders[currentIndex] != ACTIVE_HEADER) {
+        address nextIndex = activeProviders[currentIndex];
+        if (_compare(dataSource, nextIndex) == Comparator.GT)
+          currentIndex = nextIndex;
+        else
+          break;
+      }
+      return currentIndex;
+    }
+    else {
+      if (reserveProviderLength == 0) return RESERVE_HEADER;
+      address currentIndex = RESERVE_HEADER;
+      while (reserveProviders[currentIndex] != RESERVE_HEADER) {
+        address nextIndex = reserveProviders[currentIndex];
+        if (_compare(dataSource, nextIndex) == Comparator.LT)
+          currentIndex = nextIndex;
+        else
+          break;
+      }
+      return currentIndex;
+    }
+  }
+
+  function _addDataSourceToList(address dataSource, address newPrevDataSource) internal {
+    address prevDataSource = newPrevDataSource;
+    if (newPrevDataSource == NOT_FOUND) {
+      prevDataSource = _findPrevDataSourceAddress(dataSource);
+    }
+    if (activeProviders[prevDataSource] != NOT_FOUND) {
+      // Add to active provider list
+      if (prevDataSource == ACTIVE_HEADER) {
+        require(reserveProviderLength == 0 || _compare(dataSource, reserveProviders[RESERVE_HEADER]) == Comparator.GT);
+      }
+      else {
+        require(_compare(dataSource, prevDataSource) == Comparator.GT);
+      }
+      require(activeProviders[prevDataSource] == ACTIVE_HEADER ||
+        _compare(activeProviders[prevDataSource], dataSource) == Comparator.GT);
+      activeProviders[dataSource] = activeProviders[prevDataSource];
+      activeProviders[prevDataSource] = dataSource;
+      activeProviderLength++;
+    }
+    else if (reserveProviders[prevDataSource] != address(0x00)) {
+      // Add to reserve provider list
+      if (prevDataSource == RESERVE_HEADER) {
+        require(activeProviderLength == 0 || _compare(activeProviders[ACTIVE_HEADER], dataSource) == Comparator.GT);
+      }
+      else {
+        require(_compare(prevDataSource, dataSource) == Comparator.GT);
+      }
+      require(reserveProviders[prevDataSource] == RESERVE_HEADER ||
+        _compare(dataSource, reserveProviders[prevDataSource]) == Comparator.GT);
+      reserveProviders[dataSource] = reserveProviders[prevDataSource];
+      reserveProviders[prevDataSource] = dataSource;
+      reserveProviderLength++;
+    }
+    else {
+      revert();
+    }
+  }
+
+  function _removeDataSourceFromList(address dataSource, address _prevDataSource) internal {
+    if (activeProviders[dataSource] == NOT_FOUND && reserveProviders[dataSource] == NOT_FOUND)
+      return;
+    address prevDataSource = _prevDataSource;
+    if (_prevDataSource == NOT_FOUND) {
+      prevDataSource = _findPrevDataSourceAddress(dataSource);
+    }
+    if (activeProviders[prevDataSource] != NOT_FOUND) {
+      require(dataSource != ACTIVE_HEADER);
+      require(activeProviders[prevDataSource] == dataSource);
+      activeProviders[prevDataSource] = activeProviders[dataSource];
+      activeProviders[dataSource] = NOT_FOUND;
+      activeProviderLength--;
+    }
+    else if (reserveProviders[prevDataSource] != NOT_FOUND) {
+      require(dataSource != RESERVE_HEADER);
+      require(reserveProviders[prevDataSource] == dataSource);
+      reserveProviders[prevDataSource] = reserveProviders[dataSource];
+      reserveProviders[dataSource] = NOT_FOUND;
+      reserveProviderLength--;
+    }
+  }
+
+  function _updateActiveList() internal {
+    // Add item to active list
+    uint256 maxProviderCount = params.get(prefix, "max_provider_count");
+    while(activeProviderLength < maxProviderCount && reserveProviderLength > 0) {
+      address dataSource = reserveProviders[RESERVE_HEADER];
+      _removeDataSourceFromList(dataSource, RESERVE_HEADER);
+      _addDataSourceToList(dataSource, ACTIVE_HEADER);
+    }
+
+    // Remove exceed dataSource from active list
+    while(activeProviderLength > maxProviderCount) {
+      address dataSource = activeProviders[ACTIVE_HEADER];
+      _removeDataSourceFromList(dataSource, ACTIVE_HEADER);
+      _addDataSourceToList(dataSource, RESERVE_HEADER);
+    }
   }
 }
