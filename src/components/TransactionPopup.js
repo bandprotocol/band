@@ -8,7 +8,7 @@ import { transactionHiddenSelector } from 'selectors/basic'
 import { hideTxs } from 'actions'
 
 const Container = styled(Box)`
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 20px;
   width: 360px;

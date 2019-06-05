@@ -57,11 +57,11 @@ const renderDataPoints = (
   <React.Fragment>
     <Flex>
       <Heading>{lotteries.length} Ðata Points</Heading>
-      <Box ml="auto" mr={3}>
+      {/* <Box ml="auto" mr={3}>
         <Text fontSize={26}>
           <ion-icon name="md-search" />
         </Text>
-      </Box>
+      </Box> */}
     </Flex>
     <Box mt={3}>
       <FlipMove>

@@ -166,8 +166,8 @@ const renderDataPoints = (
         fetching ||
         currentSportLength == 0 ||
         currentSportLength >= data ||
-        !searchHome ||
-        !searchAway ? null : (
+        searchHome ||
+        searchAway ? null : (
           <Flex width="100%" justifyContent="center" alignItems="center">
             <LoadMoreButton onClick={loadMoreList}>
               Load More Data

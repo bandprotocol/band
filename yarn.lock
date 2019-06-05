@@ -2485,10 +2485,10 @@ band-wallet@^0.2.8:
     uuid "^3.3.2"
     web3-provider-engine "^14.2.0"
 
-band.js@^1.1.7:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.2.2.tgz#ae9c24006ce2267a2e5c60cc23983fb49c2af574"
-  integrity sha512-JMQzm3m3alLIJuAFTqfvKawCh4rpSt95KCsGOFE39JSvI/Dd9T4e7NF61wBD6qep36+f0jxGAloHre1o5NJ/Uw==
+band.js@1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/band.js/-/band.js-1.1.7.tgz#94a064292742d6391d9ab40f61aaee3832a37cd4"
+  integrity sha512-URrsAUF6FeTc9FToq5EODg4Da2X/HoJJK7J+ozvUXgIdl+VCC6bpgT/KQfkuKKfuqemvjj04wQLI2NHplVnWmg==
   dependencies:
     "@types/qs" "^6.5.1"
     axios "^0.18.0"
