@@ -1,4 +1,4 @@
-pragma solidity 0.5.8;
+pragma solidity 0.5.9;
 
 interface ERC20Interface {
   // Standard ERC-20 interface.

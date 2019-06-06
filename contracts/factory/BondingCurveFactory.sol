@@ -1,4 +1,4 @@
-pragma solidity 0.5.8;
+pragma solidity 0.5.9;
 
 import "../exchange/BondingCurve.sol";
 import "../token/ERC20Interface.sol";
