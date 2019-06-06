@@ -16,18 +16,18 @@ contract AggTCD is TCDBase {
   }
 
   function queryImpl(bytes memory input) internal returns (bytes32 output, QueryStatus status) {
-    uint256[] memory data = new uint256[](activeProviderLength);
+    uint256[] memory data = new uint256[](activeCount);
     uint256 size = 0;
-    address dataSourceAddress = activeProviders[ACTIVE_HEADER];
-    while (dataSourceAddress != ACTIVE_HEADER) {
+    address dataSourceAddress = activeList[ACTIVE_GUARD];
+    while (dataSourceAddress != ACTIVE_GUARD) {
       (bool ok, bytes memory ret) = dataSourceAddress.call(abi.encodeWithSignature("get(bytes)", input));
       if (ok && ret.length == 32) {
         uint256 value = abi.decode(ret, (uint256));
         data[size++] = value;
       }
-      dataSourceAddress = activeProviders[dataSourceAddress];
+      dataSourceAddress = activeList[dataSourceAddress];
     }
-    if (size == 0 || size.mul(3) < activeProviderLength.mul(2)) return ("", QueryStatus.NOT_AVAILABLE);
+    if (size == 0 || size.mul(3) < activeCount.mul(2)) return ("", QueryStatus.NOT_AVAILABLE);
     Aggregator agg = Aggregator(address(params.get(prefix, "data_aggregator")));
     (uint256 result, bool ok) = agg.aggregate(data, size);
     if (!ok) return ("", QueryStatus.DISAGREEMENT);

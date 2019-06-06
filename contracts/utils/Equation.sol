@@ -127,10 +127,10 @@ library Equation {
     assert(false);
   }
 
-  /// Helper function to recursively populate node information following the given pre-order
+  /// Helper function to recursively populate node infoMaprmation following the given pre-order
   /// node list. It inspects the opcode and recursively call populateTree(s) accordingly.
   /// @param self storage pointer to equation data to build tree.
-  /// @param currentNodeIndex the index of the current node to populate info.
+  /// @param currentNodeIndex the index of the current node to populate infoMap.
   /// @return An (uint8, bool). The first value represents the last  (highest/rightmost) node
   /// index of the current subtree. The second value indicates the type of this subtree.
   function populateTree(Node[] storage self, uint8 currentNodeIndex)

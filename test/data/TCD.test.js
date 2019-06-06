@@ -119,8 +119,8 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     it('check setting of tcd', async () => {
       (await this.tcd.token()).toString().should.eq(this.comm.address);
       (await this.tcd.params()).toString().should.eq(this.params.address);
-      (await this.tcd.activeProviderLength()).toNumber().should.eq(0);
-      (await this.tcd.reserveProviderLength()).toNumber().should.eq(0);
+      (await this.tcd.activeCount()).toNumber().should.eq(0);
+      (await this.tcd.reserveCount()).toNumber().should.eq(0);
     });
     it('should revert if stake less than min_provider_stake', async () => {
       await this.tcd.register(
@@ -156,9 +156,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: carol },
       );
 
-      (await this.tcd.activeProviderLength()).toNumber().should.eq(3);
+      (await this.tcd.activeCount()).toNumber().should.eq(3);
 
-      (await this.tcd.reserveProviderLength()).toNumber().should.eq(1);
+      (await this.tcd.reserveCount()).toNumber().should.eq(1);
 
       (await this.comm.unlockedBalanceOf(owner))
         .toNumber()
@@ -171,20 +171,20 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(1000 - 10);
 
-      const ownerDataSource = await this.tcd.providers(owner);
-      const aliceDataSource = await this.tcd.providers(alice);
-      const bobDataSource = await this.tcd.providers(bob);
-      const carolDataSource = await this.tcd.providers(carol);
+      const ownerDataSource = await this.tcd.infoMap(owner);
+      const aliceDataSource = await this.tcd.infoMap(alice);
+      const bobDataSource = await this.tcd.infoMap(bob);
+      const carolDataSource = await this.tcd.infoMap(carol);
 
       ownerDataSource.stake.toNumber().should.eq(40);
       aliceDataSource.stake.toNumber().should.eq(30);
       bobDataSource.stake.toNumber().should.eq(20);
       carolDataSource.stake.toNumber().should.eq(10);
 
-      ownerDataSource.totalPublicOwnership.toNumber().should.eq(40);
-      aliceDataSource.totalPublicOwnership.toNumber().should.eq(30);
-      bobDataSource.totalPublicOwnership.toNumber().should.eq(20);
-      carolDataSource.totalPublicOwnership.toNumber().should.eq(10);
+      ownerDataSource.totalOwnerships.toNumber().should.eq(40);
+      aliceDataSource.totalOwnerships.toNumber().should.eq(30);
+      bobDataSource.totalOwnerships.toNumber().should.eq(20);
+      carolDataSource.totalOwnerships.toNumber().should.eq(10);
 
       ownerDataSource.owner.toString().should.eq(owner);
       aliceDataSource.owner.toString().should.eq(alice);
@@ -215,8 +215,8 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: carol },
       );
 
-      (await this.tcd.providers(carol)).owner.toString().should.eq(carol);
-      await this.tcd.withdraw(
+      (await this.tcd.infoMap(carol)).owner.toString().should.eq(carol);
+      await this.tcd.unstake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -231,7 +231,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
 
-      (await this.tcd.providers(carol)).owner.toString().should.eq(alice);
+      (await this.tcd.infoMap(carol)).owner.toString().should.eq(alice);
     });
     it('should revert if not enough tokens', async () => {
       await shouldFail.reverting(
@@ -266,14 +266,14 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('dataSource should be automatically unlisted if owner has already withdrawn', async () => {
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         alice,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         30,
         { from: alice },
       );
-      (await this.tcd.activeProviders(alice))
+      (await this.tcd.activeList(alice))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000000');
     });
@@ -284,7 +284,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(10);
       // not enough to unlist carol
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -293,7 +293,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      (await this.tcd.activeProviders(carol)).toString().should.eq(bob);
+      (await this.tcd.activeList(carol)).toString().should.eq(bob);
       await this.params.propose(
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('data:min_provider_stake')],
@@ -303,7 +303,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       // castVote
-      await this.params.voteOnProposal(0, true, {
+      await this.params.vote(0, true, {
         from: alice,
       });
       (await this.params.getRaw(
@@ -312,7 +312,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(20);
       // enough to unlist carol
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -323,14 +323,14 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
 
       // Remove from both lists
-      (await this.tcd.activeProviders(carol))
+      (await this.tcd.activeList(carol))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000000');
-      (await this.tcd.reserveProviders(carol))
+      (await this.tcd.reserveList(carol))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000000');
       // not enough to unlist bob
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         bob,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -339,7 +339,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      (await this.tcd.activeProviders(bob)).toString().should.eq(alice);
+      (await this.tcd.activeList(bob)).toString().should.eq(alice);
     });
   });
   context('Vote', () => {
@@ -370,33 +370,33 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should be able to vote', async () => {
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         10,
         { from: alice },
       );
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 10);
     });
     it('should be able to vote many times', async () => {
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         10,
         { from: alice },
       );
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         10,
         { from: alice },
       );
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 10 + 10);
     });
@@ -405,7 +405,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(1000 - 30);
       await shouldFail.reverting(
-        this.tcd.vote(
+        this.tcd.stake(
           owner,
           '0x0000000000000000000000000000000000000000',
           '0x0000000000000000000000000000000000000000',
@@ -417,34 +417,30 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('check dataSources', async () => {
-      const numActiveSources = (await this.tcd.activeProviderLength()).toNumber();
+      const numActiveSources = (await this.tcd.activeCount()).toNumber();
       const numAllSources =
-        (await this.tcd.reserveProviderLength()).toNumber() + numActiveSources;
+        (await this.tcd.reserveCount()).toNumber() + numActiveSources;
       numActiveSources.should.eq(3);
       numAllSources.should.eq(4);
       // const expectedSources = [owner, alice, bob, carol];
-      (await this.tcd.activeProviders(
-        '0x0000000000000000000000000000000000000001',
-      ))
+      (await this.tcd.activeList('0x0000000000000000000000000000000000000001'))
         .toString()
         .should.eq(bob);
-      (await this.tcd.activeProviders(bob)).toString().should.eq(alice);
-      (await this.tcd.activeProviders(alice)).toString().should.eq(owner);
-      (await this.tcd.activeProviders(owner))
+      (await this.tcd.activeList(bob)).toString().should.eq(alice);
+      (await this.tcd.activeList(alice)).toString().should.eq(owner);
+      (await this.tcd.activeList(owner))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000001');
 
-      (await this.tcd.reserveProviders(
-        '0x0000000000000000000000000000000000000002',
-      ))
+      (await this.tcd.reserveList('0x0000000000000000000000000000000000000002'))
         .toString()
         .should.eq(carol);
-      (await this.tcd.reserveProviders(carol))
+      (await this.tcd.reserveList(carol))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000002');
     });
     it('check dataSources after voting', async () => {
-      await this.tcd.vote(
+      await this.tcd.stake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -454,7 +450,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       // let expectedSources = [owner, alice, carol, bob];
-      const activeListCount = (await this.tcd.activeProviderLength()).toNumber();
+      const activeListCount = (await this.tcd.activeCount()).toNumber();
       let expectedSources = [
         '0x0000000000000000000000000000000000000001',
         carol,
@@ -463,11 +459,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
-      await this.tcd.vote(
+      await this.tcd.stake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -484,11 +480,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
-      await this.tcd.vote(
+      await this.tcd.stake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -505,7 +501,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
@@ -547,7 +543,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(1000 - 10);
 
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -556,7 +552,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -565,7 +561,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: bob,
         },
       );
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -585,21 +581,21 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(1000 - 10 - 68);
 
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         37,
         { from: bob },
       );
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         68,
         { from: carol },
       );
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -616,28 +612,28 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .should.eq(1000 - 10);
     });
     it('dataSource should be ordered correctly after stake decrement', async () => {
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         50,
         { from: alice },
       );
-      await this.tcd.vote(
+      await this.tcd.stake(
         alice,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         50,
         { from: alice },
       );
-      await this.tcd.vote(
+      await this.tcd.stake(
         bob,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         50,
         { from: alice },
       );
-      await this.tcd.vote(
+      await this.tcd.stake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -645,10 +641,10 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       let numAllSources =
-        (await this.tcd.reserveProviderLength()).toNumber() +
-        (await this.tcd.activeProviderLength()).toNumber();
+        (await this.tcd.reserveCount()).toNumber() +
+        (await this.tcd.activeCount()).toNumber();
       numAllSources.should.eq(4);
-      const activeListCount = (await this.tcd.activeProviderLength()).toNumber();
+      const activeListCount = (await this.tcd.activeCount()).toNumber();
       let expectedSources = [
         '0x0000000000000000000000000000000000000001',
         bob,
@@ -657,12 +653,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
       expectedSources = [alice, bob, carol, owner];
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -677,12 +673,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
 
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         alice,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -690,8 +686,8 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: alice },
       );
       numAllSources =
-        (await this.tcd.reserveProviderLength()).toNumber() +
-        (await this.tcd.activeProviderLength()).toNumber();
+        (await this.tcd.reserveCount()).toNumber() +
+        (await this.tcd.activeCount()).toNumber();
       numAllSources.should.eq(3);
       expectedSources = [
         '0x0000000000000000000000000000000000000001',
@@ -701,13 +697,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
       // numAllSources.should.eq(5);
       expectedSources = [carol, owner, bob];
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         bob,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -722,11 +718,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         carol,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -741,7 +737,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeProviders(expectedSources[i]))
+        (await this.tcd.activeList(expectedSources[i]))
           .toString()
           .should.eq(expectedSources[i + 1]);
       }
@@ -755,34 +751,34 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .toNumber()
         .should.eq(1000 - 10);
 
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         17,
         { from: alice },
       );
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 17);
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         71,
         { from: bob },
       );
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 17 + 71);
-      await this.tcd.vote(
+      await this.tcd.stake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
         666,
         { from: carol },
       );
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 17 + 71 + 666);
 
@@ -797,7 +793,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         .should.eq(1000 - 10 - 666);
 
       // owner withdraw his/her stake, dataSource will automatically unlisted
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -805,18 +801,16 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
 
-      const dataSource = await this.tcd.providers(owner);
-      (await this.tcd.activeProviders(owner))
+      const dataSource = await this.tcd.infoMap(owner);
+      (await this.tcd.activeList(owner))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000000');
-      (await this.tcd.reserveProviders(owner))
+      (await this.tcd.reserveList(owner))
         .toString()
         .should.eq('0x0000000000000000000000000000000000000000');
-      dataSource.totalPublicOwnership
-        .toNumber()
-        .should.eq(40 + 17 + 71 + 666 - 40);
+      dataSource.totalOwnerships.toNumber().should.eq(40 + 17 + 71 + 666 - 40);
 
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -824,11 +818,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: bob },
       );
       (await this.comm.unlockedBalanceOf(bob)).toNumber().should.eq(1000 - 20);
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 17 + 71 + 666 - 40 - 71);
 
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -838,11 +832,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(carol))
         .toNumber()
         .should.eq(1000 - 10);
-      (await this.tcd.providers(owner)).totalPublicOwnership
+      (await this.tcd.infoMap(owner)).totalOwnerships
         .toNumber()
         .should.eq(40 + 17 + 71 + 666 - 40 - 71 - 666);
 
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         owner,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -852,9 +846,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(alice))
         .toNumber()
         .should.eq(1000 - 30);
-      (await this.tcd.providers(owner)).totalPublicOwnership
-        .toNumber()
-        .should.eq(0); // 40 + 17 + 71 + 666 - 40 - 71 - 666 - 17
+      (await this.tcd.infoMap(owner)).totalOwnerships.toNumber().should.eq(0); // 40 + 17 + 71 + 666 - 40 - 71 - 666 - 17
     });
   });
   context('Get', () => {
@@ -949,7 +941,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
 
     it('should distribute value when someone call', async () => {
       // Carol join owner
-      await this.tcd.vote(
+      await this.tcd.stake(
         this.ownerSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -970,17 +962,17 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
       (await this.comm.unlockedBalanceOf(bob)).toNumber().should.eq(980);
       (await this.comm.unlockedBalanceOf(carol)).toNumber().should.eq(980);
-      (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
+      (await this.tcd.getStake(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(63);
 
       (await this.comm.balanceOf(carol)).toNumber().should.eq(1000);
 
-      (await this.tcd.getStakeInProvider(this.ownerSource.address, carol))
+      (await this.tcd.getStake(this.ownerSource.address, carol))
         .toNumber()
         .should.eq(13);
 
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.ownerSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1003,13 +995,13 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
 
       await this.tcd.distributeFee(100, { from: owner });
 
-      (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
+      (await this.tcd.getStake(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(96);
-      (await this.tcd.getStakeInProvider(this.ownerSource.address, owner))
+      (await this.tcd.getStake(this.ownerSource.address, owner))
         .toNumber()
         .should.eq(103);
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.ownerSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1037,20 +1029,17 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       await this.tcd.distributeFee(200, { from: owner });
-      (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
+      (await this.tcd.getStake(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(163);
 
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000);
 
-      (await this.tcd.getProviderPublicOwnership(
-        this.aliceSource.address,
-        alice,
-      ))
+      (await this.tcd.getOwnership(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(60);
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.aliceSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1209,17 +1198,14 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should decrease stake and ownership when owner withdraw', async () => {
-      (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
+      (await this.tcd.getStake(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(30);
-      (await this.tcd.getProviderPublicOwnership(
-        this.aliceSource.address,
-        alice,
-      ))
+      (await this.tcd.getOwnership(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(30);
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.aliceSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1228,20 +1214,17 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      (await this.tcd.getStakeInProvider(this.aliceSource.address, alice))
+      (await this.tcd.getStake(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(15);
-      (await this.tcd.getProviderPublicOwnership(
-        this.aliceSource.address,
-        alice,
-      ))
+      (await this.tcd.getOwnership(this.aliceSource.address, alice))
         .toNumber()
         .should.eq(15);
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
     });
     it('should revert if withdraw before time', async () => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.aliceSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1254,7 +1237,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     });
     it('should unlock withdraw if time passed', async () => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.aliceSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1269,7 +1252,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     });
     it('should revert if withdraw out of range withdrawReceipts', async () => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.aliceSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1283,7 +1266,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
     });
     it('should withdraw normally if he is not owner', async () => {
-      await this.tcd.vote(
+      await this.tcd.stake(
         this.ownerSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1300,7 +1283,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
 
       await this.tcd.distributeFee(100, { from: owner });
-      await this.tcd.withdraw(
+      await this.tcd.unstake(
         this.ownerSource.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -1424,7 +1407,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
 
       await shouldFail.reverting(this.comm.transfer(bob, 10, { from: owner }));
-      await this.tcd3.withdraw(
+      await this.tcd3.unstake(
         alice,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',

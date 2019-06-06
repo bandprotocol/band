@@ -1,8 +1,6 @@
 pragma solidity 0.5.8;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/math/Math.sol";
-
 import "./QueryInterface.sol";
 import "../utils/Fractional.sol";
 import "../exchange/BondingCurve.sol";
@@ -17,39 +15,37 @@ contract TCDBase is QueryInterface {
   event DataSourceRegistered(address indexed dataSource, address indexed owner, uint256 stake);
   event DataSourceStaked(address indexed dataSource, address indexed participant, uint256 stake);
   event DataSourceUnstaked(address indexed dataSource, address indexed participant, uint256 unstake);
-  event RewardDistributed(address indexed dataSource);
+  event FeeDistributed(address indexed dataSource, uint256 totalReward, uint256 ownerReward);
+  event WithdrawReceiptCreated(uint256 receiptIndex, address indexed owner, uint256 amount, uint64 withdrawTime);
+  event WithdrawReceiptUnlocked(uint256 receiptIndex, address indexed owner, uint256 amount);
 
-  event OwnerWithdrawReceiptCreated(uint256 receiptIndex, address indexed owner, uint256 amount, uint64 withdrawTime);
-  event OwnerWithdrawReceiptUnlocked(uint256 receiptIndex, address indexed owner, uint256 amount);
+  enum Order {EQ, LT, GT}
 
-  enum Comparator {EQ, LT, GT}
-
-  struct DataProvider {
+  struct DataSourceInfo {
     address owner;
     uint256 stake;
-    uint256 totalPublicOwnership;
+    uint256 totalOwnerships;
     mapping (address => uint256) tokenLocks;
-    mapping (address => uint256) publicOwnerships;
+    mapping (address => uint256) ownerships;
   }
 
-  struct ProviderWithdrawReceipt {
+  struct WithdrawReceipt {
     address owner;
     uint256 amount;
     uint64 withdrawTime;
     bool isWithdrawn;
   }
 
-  mapping (address => DataProvider) public providers;
-  mapping (address => address) public activeProviders;
-  mapping (address => address) public reserveProviders;
-
-  uint256 public activeProviderLength;
-  uint256 public reserveProviderLength;
+  mapping (address => DataSourceInfo) public infoMap;
+  mapping (address => address) public activeList;
+  mapping (address => address) public reserveList;
+  uint256 public activeCount;
+  uint256 public reserveCount;
 
   address constant internal NOT_FOUND = address(0x00);
-  address constant internal ACTIVE_HEADER = address(0x01);
-  address constant internal RESERVE_HEADER = address(0x02);
-  ProviderWithdrawReceipt[] public withdrawReceipts;
+  address constant internal ACTIVE_GUARD = address(0x01);
+  address constant internal RESERVE_GUARD = address(0x02);
+  WithdrawReceipt[] public withdrawReceipts;
 
   BondingCurve public bondingCurve;
   Parameters public params;
@@ -57,102 +53,92 @@ contract TCDBase is QueryInterface {
   uint256 public undistributedReward;
   bytes8 public prefix;
 
-  constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
-    public QueryInterface(_registry)
-  {
+  constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry) public QueryInterface(_registry) {
     bondingCurve = _bondingCurve;
     params = _params;
     prefix = _prefix;
     token = LockableToken(address(_bondingCurve.bondedToken()));
     _registry.band().approve(address(_bondingCurve), 2 ** 256 - 1);
-    activeProviders[ACTIVE_HEADER] = ACTIVE_HEADER;
-    reserveProviders[RESERVE_HEADER] = RESERVE_HEADER;
+    activeList[ACTIVE_GUARD] = ACTIVE_GUARD;
+    reserveList[RESERVE_GUARD] = RESERVE_GUARD;
   }
 
-  function getProviderPublicOwnership(address dataSource, address voter)  public view returns (uint256) {
-    return providers[dataSource].publicOwnerships[voter];
+  function getOwnership(address dataSource, address staker) public view returns (uint256) {
+    return infoMap[dataSource].ownerships[staker];
   }
 
-  function getStakeInProvider(address dataSource, address voter) public view returns (uint256) {
-    DataProvider storage provider = providers[dataSource];
-    if (provider.totalPublicOwnership == 0) return 0;
-    return provider.publicOwnerships[voter].mul(provider.stake).div(provider.totalPublicOwnership);
+  function getStake(address dataSource, address staker) public view returns (uint256) {
+    DataSourceInfo storage provider = infoMap[dataSource];
+    if (provider.totalOwnerships == 0) return 0;
+    return provider.ownerships[staker].mul(provider.stake).div(provider.totalOwnerships);
   }
 
   function register(address dataSource, address prevDataSource, uint256 stake) public {
     require(token.lock(msg.sender, stake));
-    require(providers[dataSource].totalPublicOwnership == 0);
+    require(infoMap[dataSource].totalOwnerships == 0);
     require(stake > 0 && stake >= params.get(prefix, "min_provider_stake"));
-
-    providers[dataSource] = DataProvider({
+    infoMap[dataSource] = DataSourceInfo({
       owner: msg.sender,
       stake: stake,
-      totalPublicOwnership: stake
+      totalOwnerships: stake
     });
-    providers[dataSource].publicOwnerships[msg.sender] = stake;
-    providers[dataSource].tokenLocks[msg.sender] = stake;
+    infoMap[dataSource].ownerships[msg.sender] = stake;
+    infoMap[dataSource].tokenLocks[msg.sender] = stake;
     emit DataSourceRegistered(dataSource, msg.sender, stake);
-    _addDataSourceToList(dataSource, prevDataSource);
-    _updateActiveList();
+    _addDataSource(dataSource, prevDataSource);
+    _rebalanceLists();
   }
 
-  function vote(address dataSource, address prevDataSource, address newPrevDataSource, uint256 stake) public {
+  function stake(address dataSource, address prevDataSource, address newPrevDataSource, uint256 stake) public {
     require(token.lock(msg.sender, stake));
-    _removeDataSourceFromList(dataSource, prevDataSource);
-    DataProvider storage provider = providers[dataSource];
+    _removeDataSource(dataSource, prevDataSource);
+    DataSourceInfo storage provider = infoMap[dataSource];
     uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(stake);
     provider.tokenLocks[msg.sender] = newVoterTokenLock;
-    _vote(msg.sender, stake, dataSource);
-    if (getStakeInProvider(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
-      _addDataSourceToList(dataSource, newPrevDataSource);
+    _stake(msg.sender, stake, dataSource);
+    if (getStake(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
+      _addDataSource(dataSource, newPrevDataSource);
     }
-    _updateActiveList();
+    _rebalanceLists();
   }
 
-  function withdraw(address dataSource, address prevDataSource, address newPrevDataSource, uint256 withdrawOwnership)
-    public
-  {
-    DataProvider storage provider = providers[dataSource];
-    require(withdrawOwnership <= provider.publicOwnerships[msg.sender]);
-    _removeDataSourceFromList(dataSource, prevDataSource);
-    uint256 newOwnership = provider.totalPublicOwnership.sub(withdrawOwnership);
-    uint256 currentVoterStake = getStakeInProvider(dataSource, msg.sender);
+  function unstake(address dataSource, address prevDataSource, address newPrevDataSource, uint256 withdrawOwnership) public {
+    DataSourceInfo storage provider = infoMap[dataSource];
+    require(withdrawOwnership <= provider.ownerships[msg.sender]);
+    _removeDataSource(dataSource, prevDataSource);
+    uint256 newOwnership = provider.totalOwnerships.sub(withdrawOwnership);
+    uint256 currentVoterStake = getStake(dataSource, msg.sender);
     if (currentVoterStake > provider.tokenLocks[msg.sender]){
       uint256 unrealizedStake = currentVoterStake.sub(provider.tokenLocks[msg.sender]);
       require(token.transfer(msg.sender, unrealizedStake));
       require(token.lock(msg.sender, unrealizedStake));
     }
-    uint256 withdrawAmount = provider.stake.mul(withdrawOwnership).div(provider.totalPublicOwnership);
+    uint256 withdrawAmount = provider.stake.mul(withdrawOwnership).div(provider.totalOwnerships);
     uint256 newStake = provider.stake.sub(withdrawAmount);
     uint256 newVoterTokenLock = currentVoterStake.sub(withdrawAmount);
-    uint256 newVoterOwnership = provider.publicOwnerships[msg.sender].sub(withdrawOwnership);
+    uint256 newVoterOwnership = provider.ownerships[msg.sender].sub(withdrawOwnership);
     provider.stake = newStake;
-    provider.totalPublicOwnership = newOwnership;
-    provider.publicOwnerships[msg.sender] = newVoterOwnership;
+    provider.totalOwnerships = newOwnership;
+    provider.ownerships[msg.sender] = newVoterOwnership;
     provider.tokenLocks[msg.sender] = newVoterTokenLock;
-    if (msg.sender == provider.owner) {
-      uint256 delay = params.get(prefix, "withdraw_delay");
-      if (delay == 0) {
-        require(token.unlock(msg.sender, withdrawAmount));
-      } else {
-        withdrawReceipts.push(ProviderWithdrawReceipt({
-          owner: provider.owner,
-          amount: withdrawAmount,
-          withdrawTime: uint64(now.add(delay)),
-          isWithdrawn: false
-        }));
-        emit OwnerWithdrawReceiptCreated(withdrawReceipts.length - 1, provider.owner, withdrawAmount, uint64(now.add(delay)));
-      }
+    uint256 delay;
+    if (msg.sender == provider.owner && (delay = params.get(prefix, "withdraw_delay")) > 0) {
+      withdrawReceipts.push(WithdrawReceipt({
+        owner: provider.owner,
+        amount: withdrawAmount,
+        withdrawTime: uint64(now.add(delay)),
+        isWithdrawn: false
+      }));
+      emit WithdrawReceiptCreated(withdrawReceipts.length - 1, provider.owner, withdrawAmount, uint64(now.add(delay)));
     } else {
       require(token.unlock(msg.sender, withdrawAmount));
     }
     emit DataSourceUnstaked(dataSource, msg.sender, withdrawAmount);
-
     // Update List
-    if (getStakeInProvider(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
-      _addDataSourceToList(dataSource, newPrevDataSource);
+    if (getStake(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
+      _addDataSource(dataSource, newPrevDataSource);
     }
-    _updateActiveList();
+    _rebalanceLists();
   }
 
   function distributeFee(uint256 tokenAmount) public {
@@ -160,153 +146,121 @@ contract TCDBase is QueryInterface {
     registry.exchange().convertFromEthToBand.value(address(this).balance)();
     bondingCurve.buy(address(this), registry.band().balanceOf(address(this)), tokenAmount);
     undistributedReward = undistributedReward.add(tokenAmount);
-    uint256 providerReward = undistributedReward.div(activeProviderLength);
+    uint256 providerReward = undistributedReward.div(activeCount);
     uint256 ownerPercentage = params.get(prefix, "owner_revenue_pct");
     uint256 ownerReward = ownerPercentage.mulFrac(providerReward);
     uint256 stakeIncreased = providerReward.sub(ownerReward);
-    address dataSourceAddress = activeProviders[ACTIVE_HEADER];
-    while (dataSourceAddress != ACTIVE_HEADER) {
-      DataProvider storage provider = providers[dataSourceAddress];
+    address dataSourceAddress = activeList[ACTIVE_GUARD];
+    while (dataSourceAddress != ACTIVE_GUARD) {
+      DataSourceInfo storage provider = infoMap[dataSourceAddress];
       provider.stake = provider.stake.add(stakeIncreased);
-      if (ownerReward > 0) _vote(provider.owner, ownerReward, dataSourceAddress);
+      if (ownerReward > 0) _stake(provider.owner, ownerReward, dataSourceAddress);
       undistributedReward = undistributedReward.sub(providerReward);
-      emit RewardDistributed(dataSourceAddress);
-      dataSourceAddress = activeProviders[dataSourceAddress];
+      emit FeeDistributed(dataSourceAddress, providerReward, ownerReward);
+      dataSourceAddress = activeList[dataSourceAddress];
     }
   }
 
   function unlockTokenFromReceipt(uint256 receiptId) public {
-    ProviderWithdrawReceipt storage receipt = withdrawReceipts[receiptId];
+    WithdrawReceipt storage receipt = withdrawReceipts[receiptId];
     require(!receipt.isWithdrawn && now >= receipt.withdrawTime);
     receipt.isWithdrawn = true;
     require(token.unlock(receipt.owner, receipt.amount));
-    emit OwnerWithdrawReceiptUnlocked(receiptId, receipt.owner, receipt.amount);
+    emit WithdrawReceiptUnlocked(receiptId, receipt.owner, receipt.amount);
   }
 
-  function _vote(address voter, uint256 stake, address dataSource) internal {
-    DataProvider storage provider = providers[dataSource];
-    require(provider.totalPublicOwnership > 0);
+  function _stake(address voter, uint256 stake, address dataSource) internal {
+    DataSourceInfo storage provider = infoMap[dataSource];
+    require(provider.totalOwnerships > 0);
     uint256 newStake = provider.stake.add(stake);
-    uint256 newTotalPublicOwnership = newStake.mul(provider.totalPublicOwnership).div(provider.stake);
-    uint256 newVoterPublicOwnership = provider.publicOwnerships[voter].add(newTotalPublicOwnership.sub(provider.totalPublicOwnership));
-    provider.publicOwnerships[voter] = newVoterPublicOwnership;
+    uint256 newtotalOwnerships = newStake.mul(provider.totalOwnerships).div(provider.stake);
+    uint256 newVoterPublicOwnership = provider.ownerships[voter].add(newtotalOwnerships.sub(provider.totalOwnerships));
+    provider.ownerships[voter] = newVoterPublicOwnership;
     provider.stake = newStake;
-    provider.totalPublicOwnership = newTotalPublicOwnership;
+    provider.totalOwnerships = newtotalOwnerships;
     emit DataSourceStaked(dataSource, voter, stake);
   }
 
-  function _compare(address dataSourceLeft, address dataSourceRight) internal view returns (Comparator) {
-    if (dataSourceLeft == dataSourceRight)
-      return Comparator.EQ;
-    DataProvider storage leftProvider = providers[dataSourceLeft];
-    DataProvider storage rightProvider = providers[dataSourceRight];
-    if (leftProvider.stake != rightProvider.stake)
-      return leftProvider.stake < rightProvider.stake ? Comparator.LT : Comparator.GT;
-    return uint256(dataSourceLeft) < uint256(dataSourceRight) ? Comparator.LT : Comparator.GT; /// Arbitrary tie-breaker
+  function _compare(address dataSourceLeft, address dataSourceRight) internal view returns (Order) {
+    if (dataSourceLeft == dataSourceRight) return Order.EQ;
+    DataSourceInfo storage leftProvider = infoMap[dataSourceLeft];
+    DataSourceInfo storage rightProvider = infoMap[dataSourceRight];
+    if (leftProvider.stake != rightProvider.stake) return leftProvider.stake < rightProvider.stake ? Order.LT : Order.GT;
+    return uint256(dataSourceLeft) < uint256(dataSourceRight) ? Order.LT : Order.GT; /// Arbitrary tie-breaker
   }
 
-  function _findPrevDataSourceAddress(address dataSource) internal view returns (address) {
-    if (activeProviderLength != 0 && _compare(dataSource, activeProviders[ACTIVE_HEADER]) != Comparator.LT) {
-      // This data source should be active list
-      address currentIndex = ACTIVE_HEADER;
-      while (activeProviders[currentIndex] != ACTIVE_HEADER) {
-        address nextIndex = activeProviders[currentIndex];
-        if (_compare(dataSource, nextIndex) == Comparator.GT)
-          currentIndex = nextIndex;
-        else
-          break;
+  function _findPrevDataSource(address dataSource) internal view returns (address) {
+    if (activeCount != 0 && _compare(dataSource, activeList[ACTIVE_GUARD]) != Order.LT) {
+      address currentIndex = ACTIVE_GUARD;
+      while (activeList[currentIndex] != ACTIVE_GUARD) {
+        address nextIndex = activeList[currentIndex];
+        if (_compare(dataSource, nextIndex) == Order.GT) currentIndex = nextIndex;
+        else break;
       }
       return currentIndex;
-    }
-    else {
-      if (reserveProviderLength == 0) return RESERVE_HEADER;
-      address currentIndex = RESERVE_HEADER;
-      while (reserveProviders[currentIndex] != RESERVE_HEADER) {
-        address nextIndex = reserveProviders[currentIndex];
-        if (_compare(dataSource, nextIndex) == Comparator.LT)
-          currentIndex = nextIndex;
-        else
-          break;
+    } else if (reserveCount != 0) {
+      address currentIndex = RESERVE_GUARD;
+      while (reserveList[currentIndex] != RESERVE_GUARD) {
+        address nextIndex = reserveList[currentIndex];
+        if (_compare(dataSource, nextIndex) == Order.LT) currentIndex = nextIndex;
+        else break;
       }
       return currentIndex;
+    } else {
+      return RESERVE_GUARD;
     }
   }
 
-  function _addDataSourceToList(address dataSource, address newPrevDataSource) internal {
-    address prevDataSource = newPrevDataSource;
-    if (newPrevDataSource == NOT_FOUND) {
-      prevDataSource = _findPrevDataSourceAddress(dataSource);
-    }
-    if (activeProviders[prevDataSource] != NOT_FOUND) {
-      // Add to active provider list
-      if (prevDataSource == ACTIVE_HEADER) {
-        require(reserveProviderLength == 0 || _compare(dataSource, reserveProviders[RESERVE_HEADER]) == Comparator.GT);
-      }
-      else {
-        require(_compare(dataSource, prevDataSource) == Comparator.GT);
-      }
-      require(activeProviders[prevDataSource] == ACTIVE_HEADER ||
-        _compare(activeProviders[prevDataSource], dataSource) == Comparator.GT);
-      activeProviders[dataSource] = activeProviders[prevDataSource];
-      activeProviders[prevDataSource] = dataSource;
-      activeProviderLength++;
-    }
-    else if (reserveProviders[prevDataSource] != address(0x00)) {
-      // Add to reserve provider list
-      if (prevDataSource == RESERVE_HEADER) {
-        require(activeProviderLength == 0 || _compare(activeProviders[ACTIVE_HEADER], dataSource) == Comparator.GT);
-      }
-      else {
-        require(_compare(prevDataSource, dataSource) == Comparator.GT);
-      }
-      require(reserveProviders[prevDataSource] == RESERVE_HEADER ||
-        _compare(dataSource, reserveProviders[prevDataSource]) == Comparator.GT);
-      reserveProviders[dataSource] = reserveProviders[prevDataSource];
-      reserveProviders[prevDataSource] = dataSource;
-      reserveProviderLength++;
-    }
-    else {
+  function _addDataSource(address dataSource, address _prevDataSource) internal {
+    address prevDataSource = _prevDataSource == NOT_FOUND ? _findPrevDataSource(dataSource) : _prevDataSource;
+    if (activeList[prevDataSource] != NOT_FOUND) {
+      if (prevDataSource == ACTIVE_GUARD) require(reserveCount == 0 || _compare(dataSource, reserveList[RESERVE_GUARD]) == Order.GT);
+      else require(_compare(dataSource, prevDataSource) == Order.GT);
+      require(activeList[prevDataSource] == ACTIVE_GUARD || _compare(activeList[prevDataSource], dataSource) == Order.GT);
+      activeList[dataSource] = activeList[prevDataSource];
+      activeList[prevDataSource] = dataSource;
+      activeCount++;
+    } else if (reserveList[prevDataSource] != NOT_FOUND) {
+      if (prevDataSource == RESERVE_GUARD) require(activeCount == 0 || _compare(activeList[ACTIVE_GUARD], dataSource) == Order.GT);
+      else require(_compare(prevDataSource, dataSource) == Order.GT);
+      require(reserveList[prevDataSource] == RESERVE_GUARD || _compare(dataSource, reserveList[prevDataSource]) == Order.GT);
+      reserveList[dataSource] = reserveList[prevDataSource];
+      reserveList[prevDataSource] = dataSource;
+      reserveCount++;
+    } else {
       revert();
     }
   }
 
-  function _removeDataSourceFromList(address dataSource, address _prevDataSource) internal {
-    if (activeProviders[dataSource] == NOT_FOUND && reserveProviders[dataSource] == NOT_FOUND)
-      return;
-    address prevDataSource = _prevDataSource;
-    if (_prevDataSource == NOT_FOUND) {
-      prevDataSource = _findPrevDataSourceAddress(dataSource);
-    }
-    if (activeProviders[prevDataSource] != NOT_FOUND) {
-      require(dataSource != ACTIVE_HEADER);
-      require(activeProviders[prevDataSource] == dataSource);
-      activeProviders[prevDataSource] = activeProviders[dataSource];
-      activeProviders[dataSource] = NOT_FOUND;
-      activeProviderLength--;
-    }
-    else if (reserveProviders[prevDataSource] != NOT_FOUND) {
-      require(dataSource != RESERVE_HEADER);
-      require(reserveProviders[prevDataSource] == dataSource);
-      reserveProviders[prevDataSource] = reserveProviders[dataSource];
-      reserveProviders[dataSource] = NOT_FOUND;
-      reserveProviderLength--;
+  function _removeDataSource(address dataSource, address _prevDataSource) internal {
+    if (activeList[dataSource] == NOT_FOUND && reserveList[dataSource] == NOT_FOUND) return;
+    address prevDataSource = _prevDataSource == NOT_FOUND ? _findPrevDataSource(dataSource) : _prevDataSource;
+    if (activeList[prevDataSource] != NOT_FOUND) {
+      require(dataSource != ACTIVE_GUARD);
+      require(activeList[prevDataSource] == dataSource);
+      activeList[prevDataSource] = activeList[dataSource];
+      activeList[dataSource] = NOT_FOUND;
+      activeCount--;
+    } else if (reserveList[prevDataSource] != NOT_FOUND) {
+      require(dataSource != RESERVE_GUARD);
+      require(reserveList[prevDataSource] == dataSource);
+      reserveList[prevDataSource] = reserveList[dataSource];
+      reserveList[dataSource] = NOT_FOUND;
+      reserveCount--;
     }
   }
 
-  function _updateActiveList() internal {
-    // Add item to active list
+  function _rebalanceLists() internal {
     uint256 maxProviderCount = params.get(prefix, "max_provider_count");
-    while(activeProviderLength < maxProviderCount && reserveProviderLength > 0) {
-      address dataSource = reserveProviders[RESERVE_HEADER];
-      _removeDataSourceFromList(dataSource, RESERVE_HEADER);
-      _addDataSourceToList(dataSource, ACTIVE_HEADER);
+    while (activeCount < maxProviderCount && reserveCount > 0) {
+      address dataSource = reserveList[RESERVE_GUARD];
+      _removeDataSource(dataSource, RESERVE_GUARD);
+      _addDataSource(dataSource, ACTIVE_GUARD);
     }
-
-    // Remove exceed dataSource from active list
-    while(activeProviderLength > maxProviderCount) {
-      address dataSource = activeProviders[ACTIVE_HEADER];
-      _removeDataSourceFromList(dataSource, ACTIVE_HEADER);
-      _addDataSourceToList(dataSource, RESERVE_HEADER);
+    while (activeCount > maxProviderCount) {
+      address dataSource = activeList[ACTIVE_GUARD];
+      _removeDataSource(dataSource, ACTIVE_GUARD);
+      _addDataSource(dataSource, RESERVE_GUARD);
     }
   }
 }

@@ -145,7 +145,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: alice,
         });
         await time.increase(time.duration.seconds(60));
@@ -192,7 +192,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           { from: bob },
         );
         await shouldFail.reverting(
-          this.params.voteOnProposal(0, true, {
+          this.params.vote(0, true, {
             from: bob,
           }),
         );
@@ -232,7 +232,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: alice,
         });
 
@@ -281,13 +281,13 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: alice,
         });
 
         await time.increase(time.duration.seconds(30));
         await shouldFail.reverting(
-          this.params.voteOnProposal(0, false, {
+          this.params.vote(0, false, {
             from: alice,
           }),
         );
@@ -295,7 +295,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         await time.increase(time.duration.seconds(30));
         // Time end
         await shouldFail.reverting(
-          this.params.voteOnProposal(0, false, {
+          this.params.vote(0, false, {
             from: bob,
           }),
         );
@@ -343,7 +343,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: bob,
         });
 
@@ -389,7 +389,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, false, {
+        await this.params.vote(0, false, {
           from: alice,
         });
 
@@ -438,12 +438,12 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: alice,
         });
 
         // vote
-        await this.params.voteOnProposal(0, false, {
+        await this.params.vote(0, false, {
           from: bob,
         });
 
@@ -494,7 +494,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: alice,
         });
 
@@ -540,7 +540,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: bob,
         });
 
@@ -586,7 +586,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, false, {
+        await this.params.vote(0, false, {
           from: alice,
         });
 
@@ -637,7 +637,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(0, true, {
+        await this.params.vote(0, true, {
           from: bob,
         });
 
@@ -651,10 +651,10 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         );
 
         // vote
-        await this.params.voteOnProposal(1, true, {
+        await this.params.vote(1, true, {
           from: alice,
         });
-        await this.params.voteOnProposal(1, true, {
+        await this.params.vote(1, true, {
           from: bob,
         });
 

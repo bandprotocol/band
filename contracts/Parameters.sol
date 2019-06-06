@@ -26,7 +26,7 @@ contract Parameters is Ownable {
     mapping (uint256 => KeyValue) changes;  /// The list of parameter changes in proposal
     uint256 snapshotNonce;                  /// The votingPowerNonce to count voting power
     uint256 expirationTime;                 /// Expiration timestamp of commit period
-    uint256 voteSupportRequiredPct;         /// Threshold % for detemining poll result
+    uint256 voteSupportRequiredPct;         /// Threshold % for determining poll result
     uint256 voteMinParticipation;           /// The minimum # of votes required
     uint256 totalVotingPower;               /// The total voting power at this snapshotNonce
     uint256 yesCount;                       /// The current total number of YES votes
@@ -105,7 +105,7 @@ contract Parameters is Ownable {
     }
   }
 
-  function voteOnProposal( uint256 proposalId, bool accepted) public {
+  function vote(uint256 proposalId, bool accepted) public {
     Proposal storage proposal = proposals[proposalId];
     require(proposal.proposalState == ProposalState.Active);
     require(now < proposal.expirationTime);

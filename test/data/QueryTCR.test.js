@@ -884,7 +884,7 @@ contract('QueryTCR', ([_, owner, alice, bob, carol, minProposer, minChallenger])
       const proposeId = 0;
       // everyone commit
       for (const [person, accepted] of votes) {
-        await this.params.voteOnProposal(proposeId, accepted, {
+        await this.params.vote(proposeId, accepted, {
           from: person,
         });
       }

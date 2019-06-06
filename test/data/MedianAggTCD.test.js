@@ -136,7 +136,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
     });
   });
 
-  context('Have 2 data providers', () => {
+  context('Have 2 data infoMap', () => {
     const key = web3.utils.padRight(web3.utils.asciiToHex('key1'), 64);
     beforeEach(async () => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
@@ -178,7 +178,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
     });
   });
 
-  context('Have 3 data providers', () => {
+  context('Have 3 data infoMap', () => {
     const key = web3.utils.padRight(web3.utils.asciiToHex('key1'), 64);
     beforeEach(async () => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
@@ -237,7 +237,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
     });
   });
 
-  context('Have 4 data providers', () => {
+  context('Have 4 data infoMap', () => {
     const key = web3.utils.padRight(web3.utils.asciiToHex('key1'), 64);
     beforeEach(async () => {
       this.dataProvider1 = await MockDataSource.new('Source 1', {
@@ -297,7 +297,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
     it('should return median value if source provider list changed', async () => {
       await this.dataProvider1.setNumber(key, 20, { from: owner });
       await this.dataProvider3.setNumber(key, 15, { from: owner });
-      await this.tcd.vote(
+      await this.tcd.stake(
         this.dataProvider1.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',
@@ -316,7 +316,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
       await this.queryMock.query(key, { from: owner, value: 100 });
       (await this.queryMock.status()).toNumber().should.eq(1);
       web3.utils.hexToNumber(await this.queryMock.result()).should.eq(18);
-      await this.tcd.vote(
+      await this.tcd.stake(
         this.dataProvider1.address,
         '0x0000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000',

@@ -11,7 +11,7 @@ contract('BandToken', ([_, owner, alice, bob]) => {
     await this.contract.transfer(alice, 1000, { from: owner });
   });
 
-  it('should have correct information', async () => {
+  it('should have correct infoMaprmation', async () => {
     (await this.contract.name()).should.eq('BandToken');
     (await this.contract.symbol()).should.eq('BAND');
     (await this.contract.decimals()).toString().should.eq('18');

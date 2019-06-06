@@ -178,7 +178,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
           from: owner,
         },
       );
-      await this.params.voteOnProposal(0, true, {
+      await this.params.vote(0, true, {
         from: alice,
       });
       await time.increase(time.duration.days(30));
@@ -210,7 +210,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         },
       );
 
-      await this.params.voteOnProposal(0, true, {
+      await this.params.vote(0, true, {
         from: alice,
       });
       await time.increase(time.duration.hours(1));
@@ -270,7 +270,7 @@ contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
         },
       );
 
-      await this.params.voteOnProposal(0, true, {
+      await this.params.vote(0, true, {
         from: alice,
       });
       await time.increase(time.duration.seconds(120));

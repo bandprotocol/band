@@ -7,18 +7,18 @@ contract TCDListMock is TCDBase {
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
 
   function setValue(address dataSource, uint256 value) public {
-    providers[dataSource].stake = value;
+    infoMap[dataSource].stake = value;
   }
 
   function addToList(address dataSource, address _prevDataSource) public {
-    _addDataSourceToList(dataSource, _prevDataSource);
+    _addDataSource(dataSource, _prevDataSource);
   }
 
   function removeFromList(address dataSource, address _prevDataSource) public {
-    _removeDataSourceFromList(dataSource, _prevDataSource);
+    _removeDataSource(dataSource, _prevDataSource);
   }
 
   function findPrevDataSource(address dataSource) public view returns (address) {
-    return _findPrevDataSourceAddress(dataSource);
+    return _findPrevDataSource(dataSource);
   }
 }
