@@ -89,13 +89,13 @@ contract TCDBase is QueryInterface {
     _rebalanceLists();
   }
 
-  function stake(address dataSource, address prevDataSource, address newPrevDataSource, uint256 stake) public {
-    require(token.lock(msg.sender, stake));
+  function stake(address dataSource, address prevDataSource, address newPrevDataSource, uint256 value) public {
+    require(token.lock(msg.sender, value));
     _removeDataSource(dataSource, prevDataSource);
     DataSourceInfo storage provider = infoMap[dataSource];
-    uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(stake);
+    uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(value);
     provider.tokenLocks[msg.sender] = newVoterTokenLock;
-    _stake(msg.sender, stake, dataSource);
+    _stake(msg.sender, value, dataSource);
     if (getStake(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
       _addDataSource(dataSource, newPrevDataSource);
     }
