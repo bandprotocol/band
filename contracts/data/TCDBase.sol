@@ -14,11 +14,10 @@ contract TCDBase is QueryInterface {
   using Fractional for uint256;
   using SafeMath for uint256;
 
-  event DataSourceRegistered(address indexed dataSource, address owner);
-  event DataSourceRemoved(address indexed dataSource);
-  event DataSourceStakeChanged(address indexed dataSource, uint256 newStake);
-  event DataSourceVoterTokenLockChanged(address indexed dataSource, address indexed voter, uint256 newtokenLock);
-  event DataSourceOwnershipChanged(address indexed dataSource, address indexed voter, uint256 newVoterOwnership, uint256 newTotalOwnership);
+  event DataSourceRegistered(address indexed dataSource, address indexed owner, uint256 stake);
+  event DataSourceStaked(address indexed dataSource, address indexed participant, uint256 stake);
+  event DataSourceUnstaked(address indexed dataSource, address indexed participant, uint256 unstake);
+  event RewardDistributed(address indexed dataSource);
 
   event OwnerWithdrawReceiptCreated(uint256 receiptIndex, address indexed owner, uint256 amount, uint64 withdrawTime);
   event OwnerWithdrawReceiptUnlocked(uint256 receiptIndex, address indexed owner, uint256 amount);
@@ -92,10 +91,7 @@ contract TCDBase is QueryInterface {
     });
     providers[dataSource].publicOwnerships[msg.sender] = stake;
     providers[dataSource].tokenLocks[msg.sender] = stake;
-    emit DataSourceRegistered(dataSource, msg.sender);
-    emit DataSourceOwnershipChanged(dataSource, msg.sender, stake, stake);
-    emit DataSourceStakeChanged(dataSource, stake);
-    emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, stake);
+    emit DataSourceRegistered(dataSource, msg.sender, stake);
     _addDataSourceToList(dataSource, prevDataSource);
     _updateActiveList();
   }
@@ -107,8 +103,6 @@ contract TCDBase is QueryInterface {
     uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(stake);
     provider.tokenLocks[msg.sender] = newVoterTokenLock;
     _vote(msg.sender, stake, dataSource);
-    emit DataSourceStakeChanged(dataSource, provider.stake);
-    emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, newVoterTokenLock);
     if (getStakeInProvider(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
       _addDataSourceToList(dataSource, newPrevDataSource);
     }
@@ -152,9 +146,7 @@ contract TCDBase is QueryInterface {
     } else {
       require(token.unlock(msg.sender, withdrawAmount));
     }
-    emit DataSourceOwnershipChanged(dataSource, msg.sender, newVoterOwnership, newOwnership);
-    emit DataSourceStakeChanged(dataSource, newStake);
-    emit DataSourceVoterTokenLockChanged(dataSource, msg.sender, newVoterTokenLock);
+    emit DataSourceUnstaked(dataSource, msg.sender, withdrawAmount);
 
     // Update List
     if (getStakeInProvider(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
@@ -178,7 +170,7 @@ contract TCDBase is QueryInterface {
       provider.stake = provider.stake.add(stakeIncreased);
       if (ownerReward > 0) _vote(provider.owner, ownerReward, dataSourceAddress);
       undistributedReward = undistributedReward.sub(providerReward);
-      emit DataSourceStakeChanged(dataSourceAddress, provider.stake);
+      emit RewardDistributed(dataSourceAddress);
       dataSourceAddress = activeProviders[dataSourceAddress];
     }
   }
@@ -200,7 +192,7 @@ contract TCDBase is QueryInterface {
     provider.publicOwnerships[voter] = newVoterPublicOwnership;
     provider.stake = newStake;
     provider.totalPublicOwnership = newTotalPublicOwnership;
-    emit DataSourceOwnershipChanged(dataSource, voter, newVoterPublicOwnership, newTotalPublicOwnership);
+    emit DataSourceStaked(dataSource, voter, stake);
   }
 
   function _compare(address dataSourceLeft, address dataSourceRight) internal view returns (Comparator) {
