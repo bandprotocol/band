@@ -4,6 +4,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 import "../utils/Expression.sol";
+import "../Parameters.sol";
 
 contract BondingCurve is ERC20Acceptor {
   using SafeMath for uint256;
@@ -15,6 +16,7 @@ contract BondingCurve is ERC20Acceptor {
 
   ERC20Interface public collateralToken;
   ERC20Interface public bondedToken;
+  Parameters public params;
 
   uint256 public currentMintedTokens;
   uint256 public currentCollateral;
@@ -24,16 +26,31 @@ contract BondingCurve is ERC20Acceptor {
 
   constructor(
     ERC20Interface _collateralToken,
-    ERC20Interface _bondedToken
+    ERC20Interface _bondedToken,
+    Parameters _params
   ) public {
     collateralToken = _collateralToken;
     bondedToken = _bondedToken;
+    params = _params;
   }
 
-  function getRevenueBeneficiary() public view returns (address);
-  function getInflationRateNumerator() public view returns (uint256);
-  function getLiquiditySpreadNumerator() public view returns (uint256);
-  function getCollateralExpression() public view returns (Expression);
+  function getRevenueBeneficiary() public view returns (address) {
+    address beneficiary = address(params.getRaw("bonding:revenue_beneficiary"));
+    require(beneficiary != address(0));
+    return beneficiary;
+  }
+
+  function getInflationRateNumerator() public view returns (uint256) {
+    return params.getRaw("bonding:inflation_rate");
+  }
+
+  function getLiquiditySpreadNumerator() public view returns (uint256) {
+    return params.getRaw("bonding:liquidity_spread");
+  }
+
+  function getCollateralExpression() public view returns (Expression) {
+    return Expression(address(params.getRaw("bonding:curve_expression")));
+  }
 
   function getCollateralAtSupply(uint256 tokenSupply) public view returns (uint256) {
     Expression collateralExpression = getCollateralExpression();

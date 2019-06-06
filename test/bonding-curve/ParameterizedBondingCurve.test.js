@@ -10,7 +10,7 @@ const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
 
-contract('ParameterizedBondingCurve', ([_, owner, alice, bob]) => {
+contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
   beforeEach(async () => {
     this.registry = await BandRegistry.deployed();
     this.tcdFactory = await CommunityFactory.deployed();

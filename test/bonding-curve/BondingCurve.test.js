@@ -1,9 +1,7 @@
 const { shouldFail, time } = require('openzeppelin-test-helpers');
 
 const BondingCurveMock = artifacts.require('BondingCurveMock');
-const ParameterizedBondingCurve = artifacts.require(
-  'ParameterizedBondingCurve',
-);
+const BondingCurve = artifacts.require('BondingCurve');
 const BandMockExchange = artifacts.require('BandMockExchange');
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
@@ -51,7 +49,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     );
     this.params = await Parameters.at(data.receipt.logs[2].args.params);
     this.token = await CommunityToken.at(data.receipt.logs[2].args.token);
-    this.commCurve = await ParameterizedBondingCurve.at(
+    this.commCurve = await BondingCurve.at(
       data.receipt.logs[2].args.bondingCurve,
     );
     this.curve = await BondingCurveMock.new(

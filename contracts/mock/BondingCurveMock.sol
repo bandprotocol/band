@@ -16,7 +16,7 @@ contract BondingCurveMock is Ownable, BondingCurve {
     ERC20Interface collateralToken,
     ERC20Interface bondedToken,
     Expression collateralExpression
-  ) public BondingCurve(collateralToken,  bondedToken) {
+  ) public BondingCurve(collateralToken,  bondedToken, Parameters(address(0))) {
     expression = collateralExpression;
   }
 
