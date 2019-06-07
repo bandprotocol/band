@@ -2,11 +2,10 @@ const Equation = artifacts.require('Equation');
 const BondingCurveFactory = artifacts.require('BondingCurveFactory');
 const CommunityTokenFactory = artifacts.require('CommunityTokenFactory');
 const ParametersFactory = artifacts.require('ParametersFactory');
-const TCDFactory = artifacts.require('TCDFactory');
-const MTCDFactory = artifacts.require('MTCDFactory');
-const TCRFactory = artifacts.require('TCRFactory');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
+const MedianAggregator = artifacts.require('MedianAggregator');
+const MajorityAggregator = artifacts.require('MajorityAggregator');
 
 module.exports = function(deployer) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 2');
@@ -62,7 +61,6 @@ module.exports = function(deployer) {
   deployer.deploy(BondingCurveFactory);
   deployer.deploy(CommunityTokenFactory);
   deployer.deploy(ParametersFactory);
-  deployer.deploy(TCDFactory);
-  deployer.deploy(MTCDFactory);
-  deployer.deploy(TCRFactory);
+  deployer.deploy(MedianAggregator);
+  deployer.deploy(MajorityAggregator);
 };

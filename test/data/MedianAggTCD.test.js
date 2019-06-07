@@ -1,12 +1,10 @@
-const { shouldFail } = require('openzeppelin-test-helpers');
-
 const MockDataSource = artifacts.require('MockDataSource');
 const MedianAggregator = artifacts.require('MedianAggregator');
 const AggTCD = artifacts.require('AggTCD');
 const QueryTCDMock = artifacts.require('QueryTCDMock');
 const BandRegistry = artifacts.require('BandRegistry');
 const BandMockExchange = artifacts.require('BandMockExchange');
-const TCDFactory = artifacts.require('TCDFactory');
+const AggTCDFactory = artifacts.require('AggTCDFactory');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const BandToken = artifacts.require('BandToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
@@ -23,7 +21,7 @@ contract('MedianAggTCD', ([_, owner, alice, bob, carol]) => {
     this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
-    this.tcdFactory = await TCDFactory.new();
+    this.tcdFactory = await AggTCDFactory.new();
     this.registry = await BandRegistry.new(
       this.band.address,
       this.exchange.address,

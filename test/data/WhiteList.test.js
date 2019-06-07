@@ -7,7 +7,7 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const TCDBase = artifacts.require('TCDBase');
-const TCDFactory = artifacts.require('TCDFactory');
+const AggTCDFactory = artifacts.require('AggTCDFactory');
 const MockDataSource = artifacts.require('MockDataSource');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
@@ -25,7 +25,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
     this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
-    this.tcdFactory = await TCDFactory.new();
+    this.tcdFactory = await AggTCDFactory.new();
     this.registry = await BandRegistry.new(
       this.band.address,
       this.exchange.address,

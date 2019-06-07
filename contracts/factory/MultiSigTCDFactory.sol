@@ -2,8 +2,8 @@ pragma solidity 0.5.9;
 
 import "../data/MultiSigTCD.sol";
 
-contract MTCDFactory {
-  event TCDCreated(MultiSigTCD mtcd, address creator);
+contract MultiSigTCDFactory {
+  event MultiSigTCDCreated(MultiSigTCD mtcd, address creator);
 
   function createMultiSigTCD(bytes8 prefix, BondingCurve bondingCurve, BandRegistry registry, Parameters params)
     external returns (MultiSigTCD)
@@ -11,7 +11,7 @@ contract MTCDFactory {
     MultiSigTCD mtcd;
     mtcd = new MultiSigTCD(prefix, bondingCurve, params, registry);
     LockableToken(address(params.token())).addCapper(address(mtcd));
-    emit TCDCreated(mtcd, msg.sender);
+    emit MultiSigTCDCreated(mtcd, msg.sender);
     return mtcd;
   }
 }

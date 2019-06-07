@@ -1,12 +1,13 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
 const TCDBase = artifacts.require('TCDBase');
-const TCDFactory = artifacts.require('TCDFactory');
+const AggTCDFactory = artifacts.require('AggTCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
+const MajorityAggregator = artifacts.require('MajorityAggregator');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 6');
@@ -39,7 +40,7 @@ module.exports = function(deployer, network, accounts) {
           lotteryTx.receipt.logs[2].args.token,
         ],
       );
-      const tcdFactory = await TCDFactory.deployed();
+      const tcdFactory = await AggTCDFactory.deployed();
       const commToken = await CommunityToken.at(
         lotteryTx.receipt.logs[2].args.token,
       );
@@ -51,6 +52,7 @@ module.exports = function(deployer, network, accounts) {
           web3.utils.fromAscii('data:owner_revenue_pct'),
           web3.utils.fromAscii('data:query_price'),
           web3.utils.fromAscii('data:withdraw_delay'),
+          web3.utils.fromAscii('data:data_aggregator'),
         ],
         [
           '500000000000000000000',
@@ -58,6 +60,7 @@ module.exports = function(deployer, network, accounts) {
           '500000000000000000',
           '1000000000000000',
           '259200',
+          MajorityAggregator.address,
         ],
       );
       await commToken.addCapper(tcdFactory.address);

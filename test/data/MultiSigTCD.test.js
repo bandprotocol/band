@@ -7,7 +7,7 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const MultiSigTCD = artifacts.require('MultiSigTCD');
-const MTCDFactory = artifacts.require('MTCDFactory');
+const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const MedianAggregator = artifacts.require('MedianAggregator');
@@ -38,7 +38,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
-    this.mtcdFactory = await MTCDFactory.new();
+    this.mtcdFactory = await MultiSigTCDFactory.new();
     this.registry = await BandRegistry.new(
       this.band.address,
       this.exchange.address,
