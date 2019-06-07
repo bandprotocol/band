@@ -73,18 +73,18 @@ contract TCDBase is QueryInterface {
     return provider.ownerships[staker].mul(provider.stake).div(provider.totalOwnerships);
   }
 
-  function register(address dataSource, address prevDataSource, uint256 stake) public {
-    require(token.lock(msg.sender, stake));
+  function register(address dataSource, address prevDataSource, uint256 initialStake) public {
+    require(token.lock(msg.sender, initialStake));
     require(infoMap[dataSource].totalOwnerships == 0);
-    require(stake > 0 && stake >= params.get(prefix, "min_provider_stake"));
+    require(initialStake > 0 && initialStake >= params.get(prefix, "min_provider_stake"));
     infoMap[dataSource] = DataSourceInfo({
       owner: msg.sender,
-      stake: stake,
-      totalOwnerships: stake
+      stake: initialStake,
+      totalOwnerships: initialStake
     });
-    infoMap[dataSource].ownerships[msg.sender] = stake;
-    infoMap[dataSource].tokenLocks[msg.sender] = stake;
-    emit DataSourceRegistered(dataSource, msg.sender, stake);
+    infoMap[dataSource].ownerships[msg.sender] = initialStake;
+    infoMap[dataSource].tokenLocks[msg.sender] = initialStake;
+    emit DataSourceRegistered(dataSource, msg.sender, initialStake);
     _addDataSource(dataSource, prevDataSource);
     _rebalanceLists();
   }
@@ -93,8 +93,8 @@ contract TCDBase is QueryInterface {
     require(token.lock(msg.sender, value));
     _removeDataSource(dataSource, prevDataSource);
     DataSourceInfo storage provider = infoMap[dataSource];
-    uint256 newVoterTokenLock = provider.tokenLocks[msg.sender].add(value);
-    provider.tokenLocks[msg.sender] = newVoterTokenLock;
+    uint256 newStakerTokenLock = provider.tokenLocks[msg.sender].add(value);
+    provider.tokenLocks[msg.sender] = newStakerTokenLock;
     _stake(msg.sender, value, dataSource);
     if (getStake(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
       _addDataSource(dataSource, newPrevDataSource);
@@ -107,20 +107,20 @@ contract TCDBase is QueryInterface {
     require(withdrawOwnership <= provider.ownerships[msg.sender]);
     _removeDataSource(dataSource, prevDataSource);
     uint256 newOwnership = provider.totalOwnerships.sub(withdrawOwnership);
-    uint256 currentVoterStake = getStake(dataSource, msg.sender);
-    if (currentVoterStake > provider.tokenLocks[msg.sender]){
-      uint256 unrealizedStake = currentVoterStake.sub(provider.tokenLocks[msg.sender]);
+    uint256 currentStakerStake = getStake(dataSource, msg.sender);
+    if (currentStakerStake > provider.tokenLocks[msg.sender]){
+      uint256 unrealizedStake = currentStakerStake.sub(provider.tokenLocks[msg.sender]);
       require(token.transfer(msg.sender, unrealizedStake));
       require(token.lock(msg.sender, unrealizedStake));
     }
     uint256 withdrawAmount = provider.stake.mul(withdrawOwnership).div(provider.totalOwnerships);
     uint256 newStake = provider.stake.sub(withdrawAmount);
-    uint256 newVoterTokenLock = currentVoterStake.sub(withdrawAmount);
-    uint256 newVoterOwnership = provider.ownerships[msg.sender].sub(withdrawOwnership);
+    uint256 newStakerTokenLock = currentStakerStake.sub(withdrawAmount);
+    uint256 newStakerOwnership = provider.ownerships[msg.sender].sub(withdrawOwnership);
     provider.stake = newStake;
     provider.totalOwnerships = newOwnership;
-    provider.ownerships[msg.sender] = newVoterOwnership;
-    provider.tokenLocks[msg.sender] = newVoterTokenLock;
+    provider.ownerships[msg.sender] = newStakerOwnership;
+    provider.tokenLocks[msg.sender] = newStakerTokenLock;
     uint256 delay;
     if (msg.sender == provider.owner && (delay = params.get(prefix, "withdraw_delay")) > 0) {
       withdrawReceipts.push(WithdrawReceipt({
@@ -169,16 +169,16 @@ contract TCDBase is QueryInterface {
     emit WithdrawReceiptUnlocked(receiptId, receipt.owner, receipt.amount);
   }
 
-  function _stake(address voter, uint256 stake, address dataSource) internal {
+  function _stake(address staker, uint256 value, address dataSource) internal {
     DataSourceInfo storage provider = infoMap[dataSource];
     require(provider.totalOwnerships > 0);
-    uint256 newStake = provider.stake.add(stake);
+    uint256 newStake = provider.stake.add(value);
     uint256 newtotalOwnerships = newStake.mul(provider.totalOwnerships).div(provider.stake);
-    uint256 newVoterPublicOwnership = provider.ownerships[voter].add(newtotalOwnerships.sub(provider.totalOwnerships));
-    provider.ownerships[voter] = newVoterPublicOwnership;
+    uint256 newStakerOwnership = provider.ownerships[staker].add(newtotalOwnerships.sub(provider.totalOwnerships));
+    provider.ownerships[staker] = newStakerOwnership;
     provider.stake = newStake;
     provider.totalOwnerships = newtotalOwnerships;
-    emit DataSourceStaked(dataSource, voter, stake);
+    emit DataSourceStaked(dataSource, staker, value);
   }
 
   function _compare(address dataSourceLeft, address dataSourceRight) internal view returns (Order) {
