@@ -1,10 +1,15 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "./BandToken.sol";
-import "./data/WhiteListInterface.sol";
-import "./exchange/BandExchangeInterface.sol";
+import { Ownable } from "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import { BandToken } from "./BandToken.sol";
+import { WhiteListInterface } from "./data/WhiteListInterface.sol";
+import { BandExchangeInterface } from "./exchange/BandExchangeInterface.sol";
 
+
+/// "BandRegistry" keeps the addresses of three main smart contracts inside of Band Protocol ecosystem:
+///   1. "band" - Band Protocol's native ERC-20 token.
+///   2. "exchange" - Decentralized exchange for converting ETH to Band and vice versa.
+///   3. "whiteList" - Smart contract for validating non-malicious data consumers.
 contract BandRegistry is Ownable {
   BandToken public band;
   BandExchangeInterface public exchange;

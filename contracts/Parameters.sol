@@ -1,11 +1,28 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./token/SnapshotToken.sol";
-import "./utils/Fractional.sol";
+import { Ownable } from "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import { SnapshotToken } from "./token/SnapshotToken.sol";
+import { Fractional } from "./utils/Fractional.sol";
 
 
+/// "Parameters" contract controls how other smart contracts behave through a key-value mapping, which other contracts
+/// will query using `get` or `getRaw` functions. Every dataset community has one governance parameters contract.
+/// Additionally, there is one parameter contract that is controlled by BandToken for protocol-wide parameters.
+/// Conducting parameter changes can be done through the following process.
+///   1. Anyone can propose for a change by sending a `propose` transaction, which will assign an ID to the proposal.
+///   2. While the proposal is open, token holders can vote for approval or rejection through `vote` function.
+///   3. After the voting period ends, if the proposal receives enough participation and support, it will get accepted.
+///      `resolve` function must to be called to trigger the decision process.
+///   4. Additionally, to facilitate unanimous parameter changes, a proposal is automatically resolved prior to its
+///      expiration if more than the required percentage of ALL tokens approve the proposal.
+/// Parameters contract uses the following parameters for its internal logic. These parameters can be change via the
+/// same proposal process.
+///   `params:expiration_time`: Number of seconds that a proposal stays open after getting proposed.
+///   `params:min_participation_pct`: % of tokens required to participate in order for a proposal to be considered.
+///   `params:support_required_pct`: % of participating tokens required to approve a proposal.
+/// Parameters contract is "Ownable" initially to allow its owner to overrule the parameters during the initial
+/// deployment as a measure against possible smart contract vulnerabilities. Owner can be set to 0x0 address afterwards.
 contract Parameters is Ownable {
   using SafeMath for uint256;
   using Fractional for uint256;
@@ -19,20 +36,20 @@ contract Parameters is Ownable {
 
   struct ParameterValue { bool existed; uint256 value; }
   struct KeyValue { bytes32 key; uint256 value; }
-  enum ProposalState { Invalid, Active, Yes, No, Inconclusive }
+  enum ProposalState { INVALID, OPEN, ACCEPTED, REJECTED }
 
   struct Proposal {
     uint256 changesCount;                   /// The number of parameter changes
     mapping (uint256 => KeyValue) changes;  /// The list of parameter changes in proposal
     uint256 snapshotNonce;                  /// The votingPowerNonce to count voting power
-    uint256 expirationTime;                 /// Expiration timestamp of commit period
-    uint256 voteSupportRequiredPct;         /// Threshold % for determining poll result
+    uint256 expirationTime;                 /// The time at which this proposal resolves
+    uint256 voteSupportRequiredPct;         /// Threshold % for determining proposal acceptance
     uint256 voteMinParticipation;           /// The minimum # of votes required
     uint256 totalVotingPower;               /// The total voting power at this snapshotNonce
     uint256 yesCount;                       /// The current total number of YES votes
     uint256 noCount;                        /// The current total number of NO votes
     mapping (address => bool) isVoted;      /// Mapping for check who already voted
-    ProposalState proposalState;            /// The state of this proposal.
+    ProposalState proposalState;            /// Current state of this proposal.
   }
 
   SnapshotToken public token;
@@ -75,9 +92,7 @@ contract Parameters is Ownable {
     }
   }
 
-  function getProposalChange(uint256 proposalId, uint256 changeIndex)
-    public view returns (bytes32, uint256)
-  {
+  function getProposalChange(uint256 proposalId, uint256 changeIndex) public view returns (bytes32, uint256) {
     KeyValue memory keyValue = proposals[proposalId].changes[changeIndex];
     return (keyValue.key, keyValue.value);
   }
@@ -94,7 +109,7 @@ contract Parameters is Ownable {
       totalVotingPower: token.totalSupply(),
       yesCount: 0,
       noCount: 0,
-      proposalState: ProposalState.Active
+      proposalState: ProposalState.OPEN
     }));
     emit ProposalProposed(proposalId, msg.sender, reasonHash);
     for (uint256 index = 0; index < keys.length; ++index) {
@@ -107,7 +122,7 @@ contract Parameters is Ownable {
 
   function vote(uint256 proposalId, bool accepted) public {
     Proposal storage proposal = proposals[proposalId];
-    require(proposal.proposalState == ProposalState.Active);
+    require(proposal.proposalState == ProposalState.OPEN);
     require(now < proposal.expirationTime);
     require(!proposal.isVoted[msg.sender]);
     uint256 votingPower = token.historicalVotingPowerAtNonce(msg.sender, proposal.snapshotNonce);
@@ -119,19 +134,18 @@ contract Parameters is Ownable {
     }
     proposal.isVoted[msg.sender] = true;
     emit ProposalVoted(proposalId, msg.sender, accepted, votingPower);
-    /// Auto-resolve if the result is unanimous
-    uint256 minVoteToAccepted = proposal.voteSupportRequiredPct.mulFrac(proposal.totalVotingPower);
-    uint256 minVoteToRejected = proposal.totalVotingPower.sub(minVoteToAccepted);
-    if (proposal.yesCount >= minVoteToAccepted) {
+    uint256 minVoteToAccept = proposal.voteSupportRequiredPct.mulFrac(proposal.totalVotingPower);
+    uint256 minVoteToReject = proposal.totalVotingPower.sub(minVoteToAccept);
+    if (proposal.yesCount >= minVoteToAccept) {
       _acceptProposal(proposalId);
-    } else if (proposal.noCount > minVoteToRejected) {
+    } else if (proposal.noCount > minVoteToReject) {
       _rejectProposal(proposalId);
     }
   }
 
   function resolve(uint256 proposalId) public {
     Proposal storage proposal = proposals[proposalId];
-    require(proposal.proposalState == ProposalState.Active);
+    require(proposal.proposalState == ProposalState.OPEN);
     require(now >= proposal.expirationTime);
     uint256 yesCount = proposal.yesCount;
     uint256 noCount = proposal.noCount;
@@ -146,7 +160,7 @@ contract Parameters is Ownable {
 
   function _acceptProposal(uint256 proposalId) internal {
     Proposal storage proposal = proposals[proposalId];
-    proposal.proposalState = ProposalState.Yes;
+    proposal.proposalState = ProposalState.ACCEPTED;
     for (uint256 index = 0; index < proposal.changesCount; ++index) {
       bytes32 key = proposal.changes[index].key;
       uint256 value = proposal.changes[index].value;
@@ -159,7 +173,7 @@ contract Parameters is Ownable {
 
   function _rejectProposal(uint256 proposalId) internal {
     Proposal storage proposal = proposals[proposalId];
-    proposal.proposalState = ProposalState.No;
+    proposal.proposalState = ProposalState.REJECTED;
     emit ProposalRejected(proposalId);
   }
 }
