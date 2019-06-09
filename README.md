@@ -13,11 +13,19 @@
   </p>
 </div>
 
-# Contract
+[Band Protocol](https://bandprotocol.com) is a protocol for decentralized data governance. This repository contains the implementation of Band Protocol with [Solidity](https://en.wikipedia.org/wiki/Solidity). We use [Truffle](https://www.trufflesuite.com/) as the development environment for compiling and testing the smart contracts. See [whitepaper](https://bandprotocol.com/static/media/whitepaper-3.0.0.0c24d163.pdf) for more information regarding the high-level ideas of Band Protocol.
 
-> Band protocol smart contracts.
+## Overview
 
-## Installation
+Band Protocol consists of multiple smart contracts and libraries working together. The figure below summarizes interaction between different smart contracts. Note that clear arrows represent inheritance relationship, while filled arrows represent association (has-a) relationship. See comments at the top of the smart contracts' source codes for more details.
+
+![band-overview](assets/band-overview.png)
+
+## Contributing
+
+We highly encourage participation from the community to help with Band Protocol development. If you are interested in developing with Band Protocol or have suggestion for protocol improvement, please [drop as a line](mailto:connect@bandprotocol.com) or send as a pull request.
+
+## Installation 
 
 Make sure you have Node.js and Yarn installed, then:
 
@@ -25,36 +33,14 @@ Make sure you have Node.js and Yarn installed, then:
 yarn install
 ```
 
-## Run test case
+To run unit tests, simply run the truffle test command:
 
 ```
-yarn run truffle test
+yarn run truffle test --network test
 ```
 
-## Deploying contract to Rinkeby testnet
-
-> Deploy all contract
+The smart contracts can be deployed using truffle command:
 
 ```
-yarn run truffle deploy --reset --network rinkeby
-```
-
-> Deploy only new community (use same band)
-
-```
-yarn run truffle deploy --network rinkeby - f 3
-```
-
-## Deplying contract to Localhost
-
-> Deploy all contract
-
-```
-yarn truffle deploy --network development --reset 2> config.txt
-```
-
-> Script to mock tcr data
-
-```
-yarn truffle exec exec/challenge.js --network development
+yarn truffle deploy
 ```
