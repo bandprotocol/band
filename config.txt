@@ -1,0 +1,45 @@
+- Blocks: 0            Seconds: 0
+- Saving migration to chain.
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Saving migration to chain.
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+blockId: 17
+blockHash: 0xed934b5b42f6e9fa41c21aa028ee04ef06f3689ee83c22ad8c08fef1e94d90ae
+blockParentHash: 0x22674ec193e5dbc836980e973490e30b5da792c5043c4859363b885fc62ad0a9
+blockTime: 1559922219
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+CommunityFactory: 0x26b9E31B857182e1EDB47653C18901902f640600
+bandRegistry: 0x91a08c086de4BE1F73E87ed076EF64a0c5b9497a
+AggTCDFactory: 0xfe20E69e31DB0DdC0055d50d13Ab302F107847bd
+MultiSigTCDFactory: 0x731C4e45595cF8dF9CD234228e83Ec4A1fE37941
+TCRFactory: 0x9b31b63F7761B4EDD1f870A52972AEd544c5d929
+- Saving migration to chain.
+- Saving migration to chain.
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+DataSourceBookkeepingPriceAddress: 0x6a98E457Bee7b399B9Bb10678dd624931a05c48c
+- Saving migration to chain.
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+DataSourceBookkeepingLotteryAddress: 0xFa9dBB00B21B3dF1a278F38b2CE122c523cEbde5
+- Saving migration to chain.
+- Blocks: 0            Seconds: 0
+- Blocks: 0            Seconds: 0
+DataSourceBookkeepingSportAddress: 0x46816aB115Ad60b6A7939af8Da4121C1C7277EeA
+- Saving migration to chain.

@@ -8,6 +8,7 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
+const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 6');
@@ -16,11 +17,26 @@ module.exports = function(deployer, network, accounts) {
       const registry = await BandRegistry.deployed();
       const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
-      const dataProviders = [
-        '0x1e84754D96E5caAB92c9b2Ac3b6EC2BB6a109FF6',
-        '0xB91BA347625F6dE60Be8A6729a5AB05f30AC3dca',
-        '0xb21bA08F615BAE1C5d39fE5426c7eB191235188C',
-      ];
+      let dataProviders;
+
+      if (network === 'development') {
+        dataProviders = [];
+        for (let i = 0; i < 3; i++) {
+          const source = await deployer.deploy(
+            MockDataSource,
+            'lottery_data_source' + (i + 1),
+          );
+          dataProviders.push(await source.address);
+          console.log(await source.address);
+          console.log(await source.owner());
+        }
+      } else {
+        dataProviders = [
+          '0x1e84754D96E5caAB92c9b2Ac3b6EC2BB6a109FF6',
+          '0xB91BA347625F6dE60Be8A6729a5AB05f30AC3dca',
+          '0xb21bA08F615BAE1C5d39fE5426c7eB191235188C',
+        ];
+      }
       // Create Lottery community
       const lotteryTx = await commFactory.create(
         'LotteryFeedCommunity',

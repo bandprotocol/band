@@ -8,6 +8,7 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
+const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 7');
@@ -16,10 +17,26 @@ module.exports = function(deployer, network, accounts) {
       const registry = await BandRegistry.deployed();
       const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
-      const dataProviders = [
-        '0x2F17B485FA21779F3aAEb1C32E2EC4Dc1A3c366F',
-        '0xF2c23e8A18715a06b792c1191c3b6DdBE26fE6c3',
-      ];
+      let dataProviders;
+
+      if (network === 'development') {
+        dataProviders = [];
+        for (let i = 0; i < 2; i++) {
+          const source = await deployer.deploy(
+            MockDataSource,
+            'sport_data_source' + (i + 1),
+          );
+          dataProviders.push(await source.address);
+          console.log(await source.address);
+          console.log(await source.owner());
+        }
+      } else {
+        dataProviders = [
+          '0x2F17B485FA21779F3aAEb1C32E2EC4Dc1A3c366F',
+          '0xF2c23e8A18715a06b792c1191c3b6DdBE26fE6c3',
+        ];
+      }
+
       // Create Sport community
       const sportTx = await commFactory.create(
         'SportFeedCommunity',

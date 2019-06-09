@@ -8,6 +8,7 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
 const MedianAggregator = artifacts.require('MedianAggregator');
+const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 5');
@@ -16,13 +17,28 @@ module.exports = function(deployer, network, accounts) {
       const registry = await BandRegistry.deployed();
       const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
-      const dataProviders = [
-        '0x98A99CBc7060584c8fd4b9B9b28A3815B617387A',
-        '0x374e51e6B23b47A407F0F03A404840BE42273555',
-        '0x8571121fe7D347fD6CD41b02849177C927292d45',
-        '0x81D21f40595B81792025e028F397bd44ff33bcF0',
-        '0xCDc294B99c6439875db639E2db46e34acdA70517',
-      ];
+      let dataProviders;
+
+      if (network === 'development') {
+        dataProviders = [];
+        for (let i = 0; i < 5; i++) {
+          const source = await deployer.deploy(
+            MockDataSource,
+            'price_data_source' + (i + 1),
+          );
+          dataProviders.push(await source.address);
+          console.log(await source.address);
+          console.log(await source.owner());
+        }
+      } else {
+        dataProviders = [
+          '0x98A99CBc7060584c8fd4b9B9b28A3815B617387A',
+          '0x374e51e6B23b47A407F0F03A404840BE42273555',
+          '0x8571121fe7D347fD6CD41b02849177C927292d45',
+          '0x81D21f40595B81792025e028F397bd44ff33bcF0',
+          '0xCDc294B99c6439875db639E2db46e34acdA70517',
+        ];
+      }
       // Create Price community
       const priceTx = await commFactory.create(
         'PriceFeedCommunity',

@@ -3,7 +3,7 @@ pragma solidity 0.5.9;
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 contract MockDataSource is Ownable {
-  event DataPointSet(bytes indexed key, uint256 value);
+  event DataPointSet(bytes key, uint256 value);
 
   mapping (bytes => bool) public exists;
   mapping (bytes => uint256) public values;
