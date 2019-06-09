@@ -4,10 +4,13 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 import "../utils/Expression.sol";
+import "../utils/Fractional.sol";
 import "../Parameters.sol";
+
 
 contract BondingCurve is ERC20Acceptor {
   using SafeMath for uint256;
+  using Fractional for uint256;
 
   event Buy(address indexed buyer, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
   event Sell(address indexed seller, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
@@ -22,13 +25,7 @@ contract BondingCurve is ERC20Acceptor {
   uint256 public currentCollateral;
   uint256 public lastInflationTime = now;
 
-  uint256 public constant RATIONAL_DENOMINATOR = 1e18;
-
-  constructor(
-    ERC20Interface _collateralToken,
-    ERC20Interface _bondedToken,
-    Parameters _params
-  ) public {
+  constructor(ERC20Interface _collateralToken, ERC20Interface _bondedToken, Parameters _params) public {
     collateralToken = _collateralToken;
     bondedToken = _bondedToken;
     params = _params;
@@ -64,33 +61,26 @@ contract BondingCurve is ERC20Acceptor {
   }
 
   function curveMultiplier() public view returns (uint256) {
-    return currentCollateral.mul(RATIONAL_DENOMINATOR).div(
-      getCollateralExpression().evaluate(getBondingCurveSupplyPoint())
-    );
-  }
-
-  function getBondingCurveSupplyPoint() public view returns (uint256) {
-    return currentMintedTokens;
+    return currentCollateral.mul(Fractional.getDenominator()).div(getCollateralExpression().evaluate(currentMintedTokens));
   }
 
   function getBuyPrice(uint256 tokenValue) public view returns (uint256) {
-    uint256 nextSupply = getBondingCurveSupplyPoint().add(tokenValue);
+    uint256 nextSupply = currentMintedTokens.add(tokenValue);
     return getCollateralAtSupply(nextSupply).sub(currentCollateral);
   }
 
   function getSellPrice(uint256 tokenValue) public view returns (uint256) {
-    uint256 currentSupply = getBondingCurveSupplyPoint();
+    uint256 currentSupply = currentMintedTokens;
     require(currentSupply >= tokenValue);
-    uint256 nextSupply = getBondingCurveSupplyPoint().sub(tokenValue);
+    uint256 nextSupply = currentMintedTokens.sub(tokenValue);
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
   }
 
   modifier _adjustAutoInflation() {
-    uint256 currentSupply = getBondingCurveSupplyPoint();
-    if (currentSupply != 0 && lastInflationTime < now) {
+    uint256 currentSupply = currentMintedTokens;
+    if (lastInflationTime < now) {
       uint256 pastSeconds = now.sub(lastInflationTime);
-      uint256 inflatingSupply = currentSupply
-        .mul(pastSeconds).mul(getInflationRateNumerator()).div(RATIONAL_DENOMINATOR);
+      uint256 inflatingSupply = getInflationRateNumerator().mul(pastSeconds).mulFrac(currentSupply);
       if (inflatingSupply != 0) {
         currentMintedTokens = currentMintedTokens.add(inflatingSupply);
         _rewardBondingCurveOwner(inflatingSupply);
@@ -105,7 +95,7 @@ contract BondingCurve is ERC20Acceptor {
     requireToken(collateralToken, buyer, priceLimit)
     _adjustAutoInflation
   {
-    uint256 liquiditySpread = buyAmount.mul(getLiquiditySpreadNumerator()).div(RATIONAL_DENOMINATOR);
+    uint256 liquiditySpread = getLiquiditySpreadNumerator().mulFrac(buyAmount);
     uint256 totalMintAmount = buyAmount.add(liquiditySpread);
     uint256 buyPrice = getBuyPrice(totalMintAmount);
     require(buyPrice > 0 && buyPrice <= priceLimit);
@@ -135,10 +125,7 @@ contract BondingCurve is ERC20Acceptor {
     emit Sell(seller, sellAmount, sellPrice);
   }
 
-  function deflate(address burner, uint256 burnAmount)
-    public
-    requireToken(bondedToken, burner, burnAmount)
-  {
+  function deflate(address burner, uint256 burnAmount) public requireToken(bondedToken, burner, burnAmount) {
     require(bondedToken.burn(address(this), burnAmount));
     currentMintedTokens = currentMintedTokens.sub(burnAmount);
     emit Deflate(burner, burnAmount);

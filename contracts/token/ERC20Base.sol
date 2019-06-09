@@ -1,8 +1,8 @@
 pragma solidity 0.5.9;
 
-import { ERC20 } from "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import { MinterRole } from "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
-import { ERC20Interface } from "./ERC20Interface.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
+import "openzeppelin-solidity/contracts/access/roles/MinterRole.sol";
+import "./ERC20Interface.sol";
 
 
 /// "ERC20Base" is the standard ERC-20 implementation that allows its minter to mint tokens. Both BandToken and

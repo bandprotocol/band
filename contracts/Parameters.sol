@@ -1,9 +1,9 @@
 pragma solidity 0.5.9;
 
-import { Ownable } from "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import { SnapshotToken } from "./token/SnapshotToken.sol";
-import { Fractional } from "./utils/Fractional.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./token/SnapshotToken.sol";
+import "./utils/Fractional.sol";
 
 
 /// "Parameters" contract controls how other smart contracts behave through a key-value mapping, which other contracts

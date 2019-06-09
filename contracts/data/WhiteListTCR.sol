@@ -3,6 +3,7 @@ pragma solidity 0.5.9;
 import "./TCRBase.sol";
 import "./WhiteListInterface.sol";
 
+
 contract WhiteListTCR is TCRBase, WhiteListInterface {
   constructor(bytes8 _prefix, Parameters _params) public TCRBase(_prefix, _params) {}
 

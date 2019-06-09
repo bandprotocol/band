@@ -1,6 +1,6 @@
 pragma solidity 0.5.9;
 
-import { ERC20Interface } from "./ERC20Interface.sol";
+import "./ERC20Interface.sol";
 
 
 /// "ERC20Acceptor" is a utility smart contract that provides `requireToken` modifier for any contract that intends

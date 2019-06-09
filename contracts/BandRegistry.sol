@@ -1,9 +1,9 @@
 pragma solidity 0.5.9;
 
-import { Ownable } from "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import { BandToken } from "./BandToken.sol";
-import { WhiteListInterface } from "./data/WhiteListInterface.sol";
-import { BandExchangeInterface } from "./exchange/BandExchangeInterface.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./BandToken.sol";
+import "./data/WhiteListInterface.sol";
+import "./exchange/BandExchangeInterface.sol";
 
 
 /// "BandRegistry" keeps the addresses of three main smart contracts inside of Band Protocol ecosystem:

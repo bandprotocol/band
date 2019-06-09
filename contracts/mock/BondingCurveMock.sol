@@ -41,12 +41,12 @@ contract BondingCurveMock is Ownable, BondingCurve {
   }
 
   function setInflationRate(uint256 inflationRateNumerator) public onlyOwner {
-    require(inflationRateNumerator < RATIONAL_DENOMINATOR);
+    require(inflationRateNumerator < 1e18);
     _inflationRateNumerator = inflationRateNumerator;
   }
 
   function setLiquiditySpread(uint256 liquiditySpreadNumerator) public onlyOwner {
-    require(liquiditySpreadNumerator < RATIONAL_DENOMINATOR);
+    require(liquiditySpreadNumerator < 1e18);
     _liquiditySpreadNumerator = liquiditySpreadNumerator;
   }
 }

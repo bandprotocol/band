@@ -1,6 +1,6 @@
 pragma solidity 0.5.9;
 
-import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 
 /// "Fractional" library facilitate fixed point decimal computation. In Band Protocol, fixed point decimal can be

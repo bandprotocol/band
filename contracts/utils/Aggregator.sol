@@ -1,6 +1,6 @@
 pragma solidity 0.5.9;
 
-import { Math } from "openzeppelin-solidity/contracts/math/Math.sol";
+import "openzeppelin-solidity/contracts/math/Math.sol";
 
 
 /// "Aggregator" interface contains one function, which describe how an array of unsigned integers should be processed

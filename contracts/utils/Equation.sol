@@ -1,7 +1,7 @@
 pragma solidity 0.5.9;
 
-import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import { BancorPower } from "../../bancor/BancorPower.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "../../bancor/BancorPower.sol";
 
 
 library Equation {

@@ -1,9 +1,9 @@
 pragma solidity 0.5.9;
 
-import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import { Math } from "openzeppelin-solidity/contracts/math/Math.sol";
-import { CapperRole } from "openzeppelin-solidity/contracts/access/roles/CapperRole.sol";
-import { ERC20Base } from "./ERC20Base.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/Math.sol";
+import "openzeppelin-solidity/contracts/access/roles/CapperRole.sol";
+import "./ERC20Base.sol";
 
 
 /// "LockableToken" adds token locking functionality to ERC-20 smart contract. The authorized addresses (Cappers) are

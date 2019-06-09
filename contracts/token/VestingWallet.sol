@@ -1,8 +1,8 @@
 pragma solidity 0.5.9;
 
-import { Ownable } from "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import { ERC20Interface } from "./ERC20Interface.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./ERC20Interface.sol";
 
 
 contract VestingWallet is Ownable {

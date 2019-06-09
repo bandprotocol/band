@@ -1,6 +1,7 @@
 pragma solidity 0.5.9;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "../BandToken.sol";
 import "../utils/Fractional.sol";
 import "../exchange/BandExchangeInterface.sol";
 
