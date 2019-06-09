@@ -2,11 +2,11 @@ pragma solidity 0.5.9;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/math/Math.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "../token/ERC20Acceptor.sol";
 import "../utils/Expression.sol";
 import "../utils/Fractional.sol";
 import "../Parameters.sol";
+
 
 contract TCRBase is ERC20Acceptor {
   using Fractional for uint256;
@@ -19,10 +19,10 @@ contract TCRBase is ERC20Acceptor {
   event ChallengeInitiated(bytes32 indexed data, uint256 indexed challengeId, address indexed challenger, uint256 stake, bytes32 reasonData, uint256 proposerVote, uint256 challengerVote);
   event ChallengeVoteCommitted(uint256 indexed challengeId,address indexed voter, bytes32 commitValue, uint256 weight);
   event ChallengeVoteRevealed(uint256 indexed challengeId,address indexed voter, bool voteKeep);
-  event ChallengeSuccess(bytes32 indexed data,uint256 indexed challengeId, uint256 voterRewardPool, uint256 challengerReward);
-  event ChallengeFailed(bytes32 indexed data,uint256 indexed challengeId, uint256 voterRewardPool, uint256 proposerReward);
-  event ChallengeInconclusive(bytes32 indexed data,uint256 indexed challengeId);
-  event ChallengeRewardClaimed(uint256 indexed challengeId,address indexed voter, uint256 reward);
+  event ChallengeSuccess(bytes32 indexed data, uint256 indexed challengeId, uint256 voterRewardPool, uint256 challengerReward);
+  event ChallengeFailed(bytes32 indexed data, uint256 indexed challengeId, uint256 voterRewardPool, uint256 proposerReward);
+  event ChallengeInconclusive(bytes32 indexed data, uint256 indexed challengeId);
+  event ChallengeRewardClaimed(uint256 indexed challengeId, address indexed voter, uint256 reward);
 
   Parameters public params;
   SnapshotToken public token;
@@ -283,8 +283,7 @@ contract TCRBase is ERC20Acceptor {
     }
   }
 
-  function _getChallengeResult(Challenge storage challenge) internal view returns (ChallengeState)
-  {
+  function _getChallengeResult(Challenge storage challenge) internal view returns (ChallengeState) {
     assert(challenge.state == ChallengeState.Open);
     require(now >= challenge.commitEndTime);
     if (challenge.totalCommitCount < challenge.voteMinParticipation) {

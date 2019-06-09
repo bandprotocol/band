@@ -7,7 +7,46 @@ import "../../bancor/BancorPower.sol";
 library Equation {
   using SafeMath for uint256;
 
-  struct Node {  /// See equation.txt on toplevel directory for explannation
+  /// An expression tree is encoded as a set of nodes, with root node having index zero. Each node has 3 values:
+  ///  1. opcode: the expression that the node represents. See table below.
+  /// +--------+----------------------------------------+------+------------+
+  /// | Opcode |              Description               | i.e. | # children |
+  /// +--------+----------------------------------------+------+------------+
+  /// |   00   | Integer Constant                       |   c  |      0     |
+  /// |   01   | Variable                               |   X  |      0     |
+  /// |   02   | Arithmetic Square Root                 |   √  |      1     |
+  /// |   03   | Boolean Not Condition                  |   !  |      1     |
+  /// |   04   | Arithmetic Addition                    |   +  |      2     |
+  /// |   05   | Arithmetic Subtraction                 |   -  |      2     |
+  /// |   06   | Arithmetic Multiplication              |   *  |      2     |
+  /// |   07   | Arithmetic Division                    |   /  |      2     |
+  /// |   08   | Arithmetic Exponentiation              |  **  |      2     |
+  /// |   09   | Arithmetic Percentage* (see below)     |   %  |      2     |
+  /// |   10   | Arithmetic Equal Comparison            |  ==  |      2     |
+  /// |   11   | Arithmetic Non-Equal Comparison        |  !=  |      2     |
+  /// |   12   | Arithmetic Less-Than Comparison        |  <   |      2     |
+  /// |   13   | Arithmetic Greater-Than Comparison     |  >   |      2     |
+  /// |   14   | Arithmetic Non-Greater-Than Comparison |  <=  |      2     |
+  /// |   15   | Arithmetic Non-Less-Than Comparison    |  >=  |      2     |
+  /// |   16   | Boolean And Condition                  |  &&  |      2     |
+  /// |   17   | Boolean Or Condition                   |  ||  |      2     |
+  /// |   18   | Ternary Operation                      |  ?:  |      3     |
+  /// |   19   | Bancor's log** (see below)             |      |      3     |
+  /// |   20   | Bancor's power*** (see below)          |      |      4     |
+  /// +--------+----------------------------------------+------+------------+
+  ///  2. children: the list of node indices of this node's sub-expressions. Different opcode nodes will have different
+  ///     number of children.
+  ///  3. value: the value inside the node. Currently this is only relevant for Integer Constant (Opcode 00).
+  /// (*) Arithmetic percentage is computed by multiplying the left-hand side value with the right-hand side,
+  ///     and divide the result by 10^18, rounded down to uint256 integer.
+  /// (**) Using BancorFormula, the opcode computes log of fractional numbers. However, this fraction's value must
+  ///     be more than 1. (baseN / baseD >= 1). The opcode takes 3 childrens(c, baseN, baseD), and computes
+  ///     (c * log(baseN / baseD)) limitation is in range of 1 <= baseN / baseD <= 58774717541114375398436826861112283890
+  ///     (= 1e76/FIXED_1), where FIXED_1 defined in BancorPower.sol
+  /// (***) Using BancorFomula, the opcode computes exponential of fractional numbers. The opcode takes 4 children
+  ///     (c,baseN,baseD,expV), and computes (c * ((baseN / baseD) ^ (expV / 1e6))). See implementation for the
+  ///     limitation of the each value's domain. The end result must be in uint256 range.
+  struct Node {
     uint8 opcode;
     uint8 child0;
     uint8 child1;

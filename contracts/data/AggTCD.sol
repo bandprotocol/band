@@ -5,6 +5,9 @@ import "../utils/Aggregator.sol";
 import "./TCDBase.sol";
 
 
+/// "AggTCD" is a TCD that curates a list of smart contract addresses. Each smart contract must implement `get(bytes)`
+/// function that returns a value given a key. Data points are aggregated using the aggregator smart contract as
+/// specified using key `{prefix}:data_aggregator`.
 contract AggTCD is TCDBase {
   using SafeMath for uint256;
 

@@ -5,6 +5,9 @@ import "../utils/Aggregator.sol";
 import "./TCDBase.sol";
 
 
+/// "MultiSigTCD" is a TCD that curates a list of trusted addresses. Data points from all reporters are aggregated
+/// off-chain and reported using `report` function with ECDSA signatures. The contract verifies that all signatures
+/// are valid and stores the aggregated value on its storage.
 contract MultiSigTCD is TCDBase {
   using SafeMath for uint256;
 
@@ -31,19 +34,15 @@ contract MultiSigTCD is TCDBase {
     bytes32[] calldata r,
     bytes32[] calldata s
   ) external {
-    require(values.length > activeCount.mul(2).div(3));
+    require(values.length.mul(3) > activeCount.mul(2));
     require(values.length == timestamps.length);
     address lastSigner = address(0);
     for (uint256 i = 0; i < values.length; ++i) {
       require(timestamps[i] > aggData[key].timestamp);
-      address recovered = ecrecover(
-          keccak256(
-            abi.encodePacked(
-              "\x19Ethereum Signed Message:\n32",
-              keccak256(abi.encodePacked(key, values[i], timestamps[i], address(this)))
-            )
-          ),
-          v[i], r[i], s[i]
+      address recovered = ecrecover(keccak256(abi.encodePacked(
+        "\x19Ethereum Signed Message:\n32",
+        keccak256(abi.encodePacked(key, values[i], timestamps[i], address(this))))),
+        v[i], r[i], s[i]
       );
       require(activeList[recovered] != NOT_FOUND);
       require(recovered > lastSigner);

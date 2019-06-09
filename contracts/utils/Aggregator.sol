@@ -9,6 +9,7 @@ interface Aggregator {
   function aggregate(uint256[] calldata data, uint256 size) external pure returns (uint256 result, bool ok);
 }
 
+
 /// "MedianAggregator" uses unweighted median as the aggregation method.
 contract MedianAggregator is Aggregator {
   function aggregate(uint256[] calldata data, uint256 size) external pure returns (uint256 result, bool ok) {
