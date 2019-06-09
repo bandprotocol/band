@@ -1,12 +1,15 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/math/Math.sol";
+import { Math } from "openzeppelin-solidity/contracts/math/Math.sol";
 
+
+/// "Aggregator" interface contains one function, which describe how an array of unsigned integers should be processed
+/// into a single unsigned integer result. The function will return ok = false if the aggregation fails.
 interface Aggregator {
-  function aggregate(uint256[] calldata data, uint256 size)
-    external pure returns (uint256 result, bool ok);
+  function aggregate(uint256[] calldata data, uint256 size) external pure returns (uint256 result, bool ok);
 }
 
+/// "MedianAggregator" uses unweighted median as the aggregation method.
 contract MedianAggregator is Aggregator {
   function aggregate(uint256[] calldata data, uint256 size) external pure returns (uint256 result, bool ok) {
     if (size == 0) return (0, false);
@@ -28,6 +31,8 @@ contract MedianAggregator is Aggregator {
   }
 }
 
+
+/// "MajorityAggregator" uses majority (more than half of the same numbre) as the aggregation method.
 contract MajorityAggregator is Aggregator {
   function aggregate(uint256[] calldata data, uint256 size) external pure returns (uint256 result, bool ok) {
     for (uint256 i = 0; i < size; ++i) {

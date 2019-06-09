@@ -1,5 +1,6 @@
 pragma solidity 0.5.9;
 
+
 interface ERC20Interface {
   // Standard ERC-20 interface.
   function transfer(address to, uint256 value) external returns (bool);

@@ -1,10 +1,14 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "openzeppelin-solidity/contracts/math/Math.sol";
-import "openzeppelin-solidity/contracts/access/roles/CapperRole.sol";
-import "./ERC20Base.sol";
+import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import { Math } from "openzeppelin-solidity/contracts/math/Math.sol";
+import { CapperRole } from "openzeppelin-solidity/contracts/access/roles/CapperRole.sol";
+import { ERC20Base } from "./ERC20Base.sol";
 
+
+/// "LockableToken" adds token locking functionality to ERC-20 smart contract. The authorized addresses (Cappers) are
+/// allowed to lock tokens from any token holder to prevent token transfers up to that amount. If a token holder is
+/// locked by multiple cappers, the maximum number is used as the amount of locked tokens.
 contract LockableToken is ERC20Base, CapperRole {
   using SafeMath for uint256;
 
@@ -53,7 +57,7 @@ contract LockableToken is ERC20Base, CapperRole {
     return true;
   }
 
-  function unlock(address owner, uint256 value) public onlyCapper returns (bool) {
+  function unlock(address owner, uint256 value) public returns (bool) {
     uint256 index = _getTokenLockIndex(owner, msg.sender);
     require(index != NOT_FOUND);
     TokenLock[] storage locks = _locks[owner];

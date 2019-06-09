@@ -1,7 +1,8 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../../bancor/BancorPower.sol";
+import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import { BancorPower } from "../../bancor/BancorPower.sol";
+
 
 library Equation {
   using SafeMath for uint256;
@@ -44,7 +45,7 @@ library Equation {
   /// is read as if it is the *pre-order* traversal of the expression tree.
   function init(Node[] storage self, uint256[] calldata _expressions) external {
     /// Init should only be called when the equation is not yet initialized.
-    assert(self.length == 0);
+    require(self.length == 0);
     /// Limit expression length to < 256 to make sure gas cost is managable.
     require(_expressions.length < 256);
     for (uint8 idx = 0; idx < _expressions.length; ++idx) {
@@ -80,7 +81,7 @@ library Equation {
     } else if (opcode <= OPCODE_BANCOR_POWER) {
       return 4;
     }
-    assert(false);
+    revert();
   }
 
   /// Check whether the given opcode and list of expression types match. Revert on failure.
@@ -124,7 +125,7 @@ library Equation {
       require(types[3] == ExprType.Math);
       return ExprType.Math;
     }
-    assert(false);
+    revert();
   }
 
   /// Helper function to recursively populate node infoMaprmation following the given pre-order
@@ -147,7 +148,7 @@ library Equation {
       else if (idx == 1) node.child1 = lastNodeIdx + 1;
       else if (idx == 2) node.child2 = lastNodeIdx + 1;
       else if (idx == 3) node.child3 = lastNodeIdx + 1;
-      else assert(false);
+      else revert();
       (lastNodeIdx, childrenTypes[idx]) = populateTree(self, lastNodeIdx + 1);
     }
     ExprType exprType = checkExprType(opcode, childrenTypes);
@@ -212,7 +213,7 @@ library Equation {
       (uint256 expResult, uint8 precision) = BancorPower.power(baseN, baseD, uint32(expV), 1e6);
       return expResult.mul(multiplier) >> precision;
     }
-    assert(false);
+    revert();
   }
 
   function solveBool(Node[] storage self, uint8 nodeIdx, uint256 xValue)
@@ -252,6 +253,6 @@ library Equation {
       if (condValue) return solveBool(self, node.child1, xValue);
       else return solveBool(self, node.child2, xValue);
     }
-    assert(false);
+    revert();
   }
 }

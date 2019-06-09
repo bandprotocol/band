@@ -1,7 +1,7 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./ERC20Base.sol";
+import { SafeMath } from  "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import { ERC20Base } from "./ERC20Base.sol";
 
 
 contract SnapshotToken is ERC20Base {

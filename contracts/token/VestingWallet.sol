@@ -1,17 +1,18 @@
 pragma solidity 0.5.9;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./ERC20Interface.sol";
+import { Ownable } from "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import { SafeMath } from "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import { ERC20Interface } from "./ERC20Interface.sol";
+
 
 contract VestingWallet is Ownable {
   using SafeMath for uint256;
 
   ERC20Interface public token;
   address public beneficiary;
-  uint64 public cliffDuration;        /// Duration of the cliff, in months
-  uint64 public endOfCliffTimestamp;  /// Timestamp when cliff ends that token starts vesting
-  uint256 public totalValue;          /// Total vesting token
+  uint64 public cliffDuration;                /// Duration of the cliff, in months
+  uint64 public endOfCliffTimestamp;          /// Timestamp when cliff ends that token starts vesting
+  uint256 public totalValue;                  /// Total vesting token
   uint256[] public eomTimestampsAfterCliff;   /// Timestamps of all vesting months
 
   constructor(
@@ -21,9 +22,7 @@ contract VestingWallet is Ownable {
     uint64 _endOfCliffTimestamp,
     uint256 _totalValue,
     uint256[] memory _eomTimestamps
-  )
-    public
-  {
+  ) public {
     token = _token;
     beneficiary = _beneficiary;
     cliffDuration = _cliffDuration;
