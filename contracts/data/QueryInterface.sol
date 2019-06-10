@@ -3,6 +3,9 @@ pragma solidity 0.5.9;
 import "../BandRegistry.sol";
 
 
+/// "QueryInterface" provides the standard `query` method for querying Band Protocol's curated data. The function
+/// makes sure that query callers are not blacklisted and pay appropriate fee, as specified by `queryPrice` prior
+/// to calling the meat `queryImpl` function.
 contract QueryInterface {
   enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
   event Query(address indexed caller, bytes input, QueryStatus status);
@@ -12,9 +15,7 @@ contract QueryInterface {
     registry = _registry;
   }
 
-  function query(bytes calldata input)
-    external payable returns (bytes32 output, QueryStatus status)
-  {
+  function query(bytes calldata input) external payable returns (bytes32 output, QueryStatus status) {
     require(registry.verify(msg.sender));
     uint256 price = queryPrice(input);
     require(msg.value >= price);

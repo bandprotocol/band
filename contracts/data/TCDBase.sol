@@ -8,6 +8,12 @@ import "../token/LockableToken.sol";
 import "../Parameters.sol";
 
 
+/// "TCDBase" is the base class for Band Protocol's Token-Curated DataSources implementation. The contract essentially
+/// keeps track of a sorted list of trusted data sources, based on the total amount of token stake the data sources
+/// have. Any one can apply for a new data source using `register` function. Token holders can `stake` or `unstake`
+/// for any existing data sources. This class is abstract, so it needs to be extended by a subclass that utilizes
+/// the list of active data sources (See AggTCD and MultiSigTCD). Fees are collected in ETH and are converted to
+/// dataset tokens during `distributeFee` function call.
 contract TCDBase is QueryInterface {
   using Fractional for uint256;
   using SafeMath for uint256;

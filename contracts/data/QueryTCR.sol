@@ -3,6 +3,9 @@ pragma solidity 0.5.9;
 import "./TCRBase.sol";
 import "./QueryInterface.sol";
 
+
+/// "QueryTCR" extends `TCRBase` by making it compliant with `QueryInterface`. Users can ask if an entry exists
+/// in the TCR. Note that due to TCR's unique economics, the costing of querying data here is zero.
 contract QueryTCR is TCRBase, QueryInterface {
 
   constructor(bytes8 _prefix, Parameters _params, BandRegistry _registry)
