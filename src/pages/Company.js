@@ -80,7 +80,13 @@ const ApplyButton = styled(Button)`
 `
 
 const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
-  <Flex width="300px" my="15px" flexDirection="column" alignItems="center">
+  <Flex
+    width="300px"
+    mt="15px"
+    mb="35px"
+    flexDirection="column"
+    alignItems="center"
+  >
     {faceImg ? (
       <Image src={faceImg} width="120px" height="120px" />
     ) : (
@@ -380,8 +386,6 @@ export default () => {
               link={'https://www.behance.net/minggnim'}
               type={2}
             />
-          </Flex>
-          <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
             <TeamComponent
               faceImg={Q}
               name="Prin Rangsiruji"
@@ -397,7 +401,7 @@ export default () => {
               link={'https://www.linkedin.com/in/atchanata-klunrit-05b3a9131/'}
               type={1}
             />
-            <Flex flex={1} />
+            <Flex flex="0 0 300px" />
           </Flex>
         </Box>
       </PageContainer>
