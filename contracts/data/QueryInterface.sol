@@ -5,6 +5,7 @@ import "../BandRegistry.sol";
 
 contract QueryInterface {
   enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+  event Query(address indexed caller, bytes input, QueryStatus status);
   BandRegistry public registry;
 
   constructor(BandRegistry _registry) public {
@@ -18,7 +19,8 @@ contract QueryInterface {
     uint256 price = queryPrice(input);
     require(msg.value >= price);
     if (msg.value > price) msg.sender.transfer(msg.value - price);
-    return queryImpl(input);
+    (output, status) = queryImpl(input);
+    emit Query(msg.sender, input, status);
   }
 
   function queryPrice(bytes memory input)
