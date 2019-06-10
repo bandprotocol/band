@@ -26,12 +26,12 @@ Band Protocol consists of multiple smart contracts and libraries working togethe
 To facilitate those who wonder, we have written a simple line-counting [script](scripts/linecount.sh), which can be executed from the root folder.
 
 ```
-$ ./scripts/linecount.sh  # as of commit af5428e2
+$ ./scripts/linecount.sh  # as of commit 43a9167b
 Band's smart contract LOC (excluding /mock folder) ...
-Blanks (^\s*$): 245
+Blanks (^\s*$): 246
 Pragmas (^pragma.*$): 32
 Imports (^import.*$): 75
-Comments (^\s*///.*$): 119
+Comments (^\s*///.*$): 130
 Code: 1525
 ```
 
