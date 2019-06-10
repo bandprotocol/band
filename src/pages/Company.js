@@ -43,6 +43,8 @@ import Paul from 'images/team/paul.png'
 import Bun from 'images/team/bun.png'
 import Peach from 'images/team/peach.png'
 import Ming from 'images/team/ming.png'
+import Q from 'images/team/q.png'
+import Meen from 'images/team/meen.png'
 
 const Featured = styled.a.attrs({
   target: '_blank',
@@ -134,7 +136,7 @@ const JobTab = ({ title, link, description, setSelectedTab, isSelected }) => (
     onMouseOver={setSelectedTab}
   >
     <Flex>
-      <Text color="#2a304e" fontSize="30px" lineHeight={1.17} fontWeight={900}>
+      <Text color="#2a304e" fontSize="24px" lineHeight={1.4} fontWeight={900}>
         {title}
       </Text>
     </Flex>
@@ -157,27 +159,24 @@ const JobTabs = () => {
       onMouseLeave={() => setSelectedTab(-1)}
     >
       <JobTab
-        title="Mobile
-    App Engineer"
-        link="https://angel.co/company/bandprotocol/jobs/435214-mobile-app-engineer"
+        title="Tech Lead - Web Development ⛳️"
+        link="https://angel.co/company/bandprotocol/jobs/559811-tech-lead-web-development"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 0}
         setSelectedTab={() => setSelectedTab(0)}
       />
       <Flex mx={['0px', '15px']} my={['15px', '15px', '0px']} />
       <JobTab
-        title="Frontend
-        Engineer"
-        link="https://angel.co/company/bandprotocol/jobs/435215-frontend-engineer"
+        title="Software Engineer - Front End 💻"
+        link="https://angel.co/company/bandprotocol/jobs/559815-software-engineer-front-end"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 1}
         setSelectedTab={() => setSelectedTab(1)}
       />
       <Flex mx={['0px', '15px']} my={['15px', '15px', '0px']} />
       <JobTab
-        title="Backend
-        Engineer"
-        link="https://angel.co/company/bandprotocol/jobs/435216-backend-engineer"
+        title="Senior UI/UX Designer 🎨"
+        link="https://angel.co/company/bandprotocol/jobs/559812-senior-ui-ux-designer"
         description="Bangkok — Full Time"
         isSelected={selectedTab === 2}
         setSelectedTab={() => setSelectedTab(2)}
@@ -382,26 +381,24 @@ export default () => {
               type={2}
             />
           </Flex>
-          {false && (
-            <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
-              <TeamComponent
-                name="Prin Rangsiruji"
-                link={'https://github.com/prin-r'}
-                title="Developer"
-                type={0}
-              />
-              {_isMobile && <Flex my="15px" />}
-              <TeamComponent
-                name="Atchanata Klunrit"
-                title="Operation and legal office"
-                link={
-                  'https://www.linkedin.com/in/atchanata-klunrit-05b3a9131/'
-                }
-                type={1}
-              />
-              <Flex flex={1} />
-            </Flex>
-          )}
+          <Flex flexDirection={['column', 'row']} mt={['30px', '50px']}>
+            <TeamComponent
+              faceImg={Q}
+              name="Prin Rangsiruji"
+              link={'https://github.com/prin-r'}
+              title="Developer"
+              type={0}
+            />
+            {_isMobile && <Flex my="15px" />}
+            <TeamComponent
+              faceImg={Meen}
+              name="Atchanata Klunrit"
+              title="Operation and legal office"
+              link={'https://www.linkedin.com/in/atchanata-klunrit-05b3a9131/'}
+              type={1}
+            />
+            <Flex flex={1} />
+          </Flex>
         </Box>
       </PageContainer>
       <Box bg="#f6f8ff" mt="60px" pb="60px">
