@@ -129,13 +129,15 @@ contract TCDBase is QueryInterface {
     provider.tokenLocks[msg.sender] = newStakerTokenLock;
     uint256 delay;
     if (msg.sender == provider.owner && (delay = params.get(prefix, "withdraw_delay")) > 0) {
+      uint256 withdrawTime = now.add(delay);
+      require(withdrawTime < (1 << 64));
       withdrawReceipts.push(WithdrawReceipt({
         owner: provider.owner,
         amount: withdrawAmount,
-        withdrawTime: uint64(now.add(delay)),
+        withdrawTime: uint64(withdrawTime),
         isWithdrawn: false
       }));
-      emit WithdrawReceiptCreated(withdrawReceipts.length - 1, provider.owner, withdrawAmount, uint64(now.add(delay)));
+      emit WithdrawReceiptCreated(withdrawReceipts.length - 1, provider.owner, withdrawAmount, uint64(withdrawTime));
     } else {
       require(token.unlock(msg.sender, withdrawAmount));
     }
