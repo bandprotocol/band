@@ -21,26 +21,40 @@ Band Protocol consists of multiple smart contracts and libraries working togethe
 
 ![band-overview](assets/band-overview.png)
 
+## Line Count
+
+To facilitate those who wonder, we have written a simple line-counting [script](scripts/linecount.sh), which can be executed from the root folder.
+
+```
+$ ./scripts/linecount.sh  # as of commit af5428e2
+Band's smart contract LOC (excluding /mock folder) ...
+Blanks (^\s*$): 245
+Pragmas (^pragma.*$): 32
+Imports (^import.*$): 75
+Comments (^\s*///.*$): 119
+Code: 1525
+```
+
 ## Contributing
 
 We highly encourage participation from the community to help with Band Protocol development. If you are interested in developing with Band Protocol or have suggestion for protocol improvement, please [drop as a line](mailto:connect@bandprotocol.com) or send as a pull request.
 
-## Installation 
+## Installation
 
 Make sure you have Node.js and Yarn installed, then:
 
 ```
-yarn install
+$ yarn install
 ```
 
 To run unit tests, simply run the truffle test command:
 
 ```
-yarn run truffle test --network test
+$ yarn run truffle test --network test
 ```
 
 The smart contracts can be deployed using truffle command:
 
-```
-yarn truffle deploy
+```shell
+$ yarn truffle deploy
 ```

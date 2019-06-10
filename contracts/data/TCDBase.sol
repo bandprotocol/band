@@ -134,7 +134,6 @@ contract TCDBase is QueryInterface {
       require(token.unlock(msg.sender, withdrawAmount));
     }
     emit DataSourceUnstaked(dataSource, msg.sender, withdrawAmount);
-    // Update List
     if (getStake(dataSource, provider.owner) >= params.get(prefix, "min_provider_stake")) {
       _addDataSource(dataSource, newPrevDataSource);
     }
