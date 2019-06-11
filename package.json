@@ -8,7 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@material-ui/core": "^3.9.2",
     "@material-ui/lab": "^3.0.0-alpha.30",
-    "band-wallet": "^0.2.8",
+    "band-wallet": "^0.2.11",
     "band.js": "^1.2.3",
     "bignumber.js": "^8.0.2",
     "bs58": "^4.0.1",

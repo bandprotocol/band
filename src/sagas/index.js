@@ -34,7 +34,7 @@ import holderSaga from 'sagas/holder'
 import tcdSaga from 'sagas/tcd'
 
 import BandWallet from 'band-wallet'
-import { BandProtocolClient, Utils } from 'band.js'
+import { Utils } from 'band.js'
 import BN from 'utils/bignumber'
 
 import transit from 'transit-immutable-js'
@@ -53,10 +53,6 @@ const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 
 function* baseInitialize() {
   // start fetching state
-  if (process.env.NODE_ENV === 'development') {
-    BandProtocolClient.setAPI('http://localhost:5000')
-    BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
-  }
   yield put(toggleFetch(true))
   window.BandWallet = new BandWallet(
     process.env.NODE_ENV === 'production'
@@ -75,14 +71,21 @@ function* baseInitialize() {
     },
   )
 
+  window.BandWallet.on('network', ({ name }) => {
+    if (name !== localStorage.getItem('network')) {
+      localStorage.setItem('network', name)
+      window.location.reload()
+    }
+  })
+
   const query = yield Utils.graphqlRequest(`
     {
       allContracts(condition: {contractType: "BAND_TOKEN"}) {
-      nodes {
-        address
+        nodes {
+          address
+        }
       }
     }
-  }
   `)
   const bandAddress = query.allContracts.nodes[0].address
   yield put(

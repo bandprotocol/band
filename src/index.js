@@ -10,6 +10,18 @@ import * as serviceWorker from './serviceWorker'
 
 import rootSaga from 'sagas'
 import rootReducer from 'reducers'
+import { BandProtocolClient } from 'band.js'
+
+const network = localStorage.getItem('network') || 'rinkeby'
+switch (network) {
+  case 'mainnet':
+  case 'kovan':
+    break // set to default
+  case 'rinkeby':
+  case 'local':
+    BandProtocolClient.setAPI('http://localhost:5000')
+    BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
+}
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(

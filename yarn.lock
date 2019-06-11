@@ -2474,10 +2474,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-band-wallet@^0.2.8:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/band-wallet/-/band-wallet-0.2.8.tgz#a66ab389a576d4e3ae3b89a488043b784a2faf52"
-  integrity sha512-uBuA6PK60RMofs84nAdWq6ZbM0ZClrAC49gEaj/dAJxhc65pRz95nDI75em9WPLv4hv15qpZvuKL/oXXk1CLRw==
+band-wallet@^0.2.11:
+  version "0.2.11"
+  resolved "https://registry.yarnpkg.com/band-wallet/-/band-wallet-0.2.11.tgz#4b611d8d31e832cb0532ead63671d2a7aa49e6df"
+  integrity sha512-vqdbBL5UDLY9G8j8WEjOJ87+XYg2t5xJ8Pza8JN5bZhSK/bYb0SLMcvkpZ4RErJkkCdS1g1zSXnPh0Go6lwNaw==
   dependencies:
     class-autobind "^0.1.4"
     react-click-outside tj/react-click-outside
