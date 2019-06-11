@@ -35,6 +35,7 @@ module.exports = function(deployer) {
           web3.utils.fromAscii('tcr:reveal_time'),
           web3.utils.fromAscii('tcr:min_participation_pct'),
           web3.utils.fromAscii('tcr:support_required_pct'),
+          web3.utils.fromAscii('tcr:deposit_decay_function'),
         ],
         [
           '100000000000000000000',
@@ -44,6 +45,7 @@ module.exports = function(deployer) {
           '60',
           '100000000000000000',
           '500000000000000000',
+          TCRMinDepositExpression.address,
         ],
       );
 
