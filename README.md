@@ -58,3 +58,7 @@ The smart contracts can be deployed using truffle command:
 ```shell
 $ yarn truffle deploy
 ```
+
+```crate test entry
+$ yarn truffle exec scripts/exec/challenge.js --network development
+```

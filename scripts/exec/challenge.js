@@ -1,11 +1,6 @@
 const BandToken = artifacts.require('BandToken');
-const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
-const CommunityCore = artifacts.require('CommunityCore');
 const CommunityToken = artifacts.require('CommunityToken');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
-const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
-const CommunityFactory = artifacts.require('CommunityFactory');
 const QueryTCR = artifacts.require('QueryTCR');
 
 module.exports = function() {
@@ -13,25 +8,13 @@ module.exports = function() {
     .then(async band => {
       const accounts = await web3.eth.getAccounts();
       console.log(band.address);
-      const registry = await BandRegistry.deployed();
-      const comFactory = await CommunityFactory.at(registry.address);
-      const data = await comFactory.create(
-        'TestCommunity',
-        'TC',
-        BondingCurveExpression.address,
-        '0',
-        '300',
-        '10000000000000000',
-        '800000000000000000',
-      );
-      console.log(data.receipt.logs[1]);
-      const TC = await CommunityCore.at(data.receipt.logs[1].args.community);
-      console.log(TC.address);
 
       // const TC = await CommunityCore.at(
       //   '0x662511FeAD5e5949C78110f77b8B5AC376717d59',
       // );
-      const bondingCurve = await BondingCurve.at(await TC.bondingCurve());
+      const bondingCurve = await BondingCurve.at(
+        '0xfFaC7CA3856e1F03beB4f8106aE201DfAE959242',
+      );
       console.log(bondingCurve.address);
       await band.approve(bondingCurve.address, '50000000000000000000000000');
       console.log(await band.allowance(accounts[0], bondingCurve.address));
@@ -41,7 +24,9 @@ module.exports = function() {
         '40000000000000000000000',
       );
       console.log('Buy Complete!');
-      const TCToken = await CommunityToken.at(await TC.token());
+      const TCToken = await CommunityToken.at(
+        '0x46B50025B9ddB374FD55dD77F8FAd837e10DED4f',
+      );
       await TCToken.transfer(accounts[1], '10000000000000000000000', {
         from: accounts[0],
       });
@@ -53,19 +38,9 @@ module.exports = function() {
       });
 
       // Create QueryTCR
-      const dataTCR = await TC.createTCR(
-        web3.utils.fromAscii('test:'),
-        TCRMinDepositExpression.address,
-        '1000000000000000000000',
-        '300',
-        '500000000000000000',
-        '300',
-        '300',
-        '100000000000000000',
-        '500000000000000000',
+      const tcr = await QueryTCR.at(
+        '0xc0CB2a1eA0d434baBd8438A48Bc5C403763c909F',
       );
-      const lastEvent = dataTCR.receipt.logs.length;
-      const tcr = await QueryTCR.at(dataTCR.receipt.logs[lastEvent - 1].args.tcr);
       // const tcr = await QueryTCR.at('0x8B6dA7EF0cDCABC49EFD6DFb5A64C0B1E8717E8C');
       const dataHash = web3.utils.soliditySha3('some entry');
       await TCToken.approve(tcr.address, '1100000000000000000000', {

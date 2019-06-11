@@ -26,6 +26,27 @@ module.exports = function(deployer) {
       const coinHatcherParams = await Parameters.at(
         data.receipt.logs[2].args.params,
       );
+      await coinHatcherParams.setRaw(
+        [
+          web3.utils.fromAscii('tcr:min_deposit'),
+          web3.utils.fromAscii('tcr:apply_stage_length'),
+          web3.utils.fromAscii('tcr:dispensation_percentage'),
+          web3.utils.fromAscii('tcr:commit_time'),
+          web3.utils.fromAscii('tcr:reveal_time'),
+          web3.utils.fromAscii('tcr:min_participation_pct'),
+          web3.utils.fromAscii('tcr:support_required_pct'),
+        ],
+        [
+          '100000000000000000000',
+          '60',
+          '500000000000000000',
+          '60',
+          '60',
+          '100000000000000000',
+          '500000000000000000',
+        ],
+      );
+
       await tcrFactory.createTCR(
         web3.utils.fromAscii('tcr:'),
         coinHatcherParams.address,
