@@ -41,12 +41,12 @@ function* handleUpdateProvider({ address, provider }) {
   const dapps = yield select(nameAndAddressCommunitySelector)
 
   for (const dapp of dapps.valueSeq()) {
-    const commClient = yield bandClient.at(dapp.get('address'))
-    const commAddress = dapp.get('address')
-    yield put(saveCommunityClient(commAddress, commClient))
-    for (const { address } of dapp.get('tcds').valueSeq()) {
-      yield put(saveTCDClient(address, yield commClient.tcd(address)))
-    }
+    const tokenAddress = dapp.get('address')
+    const commClient = yield bandClient.at(tokenAddress)
+    yield put(saveCommunityClient(tokenAddress, commClient))
+    const tcdAddress = dapp.getIn(['tcd', 'tcdAddress'])
+    if (tcdAddress)
+      yield put(saveTCDClient(tcdAddress, commClient.tcd(tcdAddress)))
   }
 }
 

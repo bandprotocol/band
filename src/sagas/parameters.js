@@ -8,12 +8,12 @@ import BN from 'utils/bignumber'
 
 function* handleLoadParameters({ address }) {
   const { currentParameters } = (yield Utils.graphqlRequest(`{
-    communityByAddress(address: "${address}") {
-      parameterByCommunityAddress{
+    tokenByAddress(address: "${address}") {
+      parameterByTokenAddress{
         currentParameters
       }
     }
-  }`)).communityByAddress.parameterByCommunityAddress
+  }`)).tokenByAddress.parameterByTokenAddress
 
   const params = {}
   for (const [key, value] of Object.entries(currentParameters)) {

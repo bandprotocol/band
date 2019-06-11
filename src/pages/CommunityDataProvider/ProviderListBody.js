@@ -7,7 +7,7 @@ import ProviderListBodyRender from './ProviderListBodyRender'
 
 import { dataProvidersSelector } from 'selectors/dataProvider'
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   showDepositWithdraw: (
     actionType,
     tcdAddress,
@@ -24,17 +24,17 @@ const mapDispatchToProps = (dispatch, { communityAddress }) => ({
         userOwnership,
         stake,
         totalOwnership,
-        communityAddress,
+        tokenAddress,
       }),
     ),
 })
 
 const mapStateToProps = (
   state,
-  { communityAddress, currentPage, pageSize, user },
+  { tokenAddress, currentPage, pageSize, user },
 ) => {
   const items = dataProvidersSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
     page: currentPage,
     pageSize,
   })

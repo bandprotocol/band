@@ -33,12 +33,12 @@ class Richlist extends React.Component {
   }
 
   render() {
-    const { communityAddress, pageSize, numberOfHolders } = this.props
+    const { tokenAddress, pageSize, numberOfHolders } = this.props
     return (
       <RichlistRender
         {...this.state}
         numberOfHolders={numberOfHolders}
-        communityAddress={communityAddress}
+        tokenAddress={tokenAddress}
         onChangePage={this.onChangePage.bind(this)}
         pageSize={pageSize}
       />
@@ -46,16 +46,16 @@ class Richlist extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   return {
     numberOfHolders: numHolders(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }),
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadHolders: () => dispatchAsync(dispatch, loadHolders(communityAddress)),
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+  loadHolders: () => dispatchAsync(dispatch, loadHolders(tokenAddress)),
 })
 
 export default withRouter(

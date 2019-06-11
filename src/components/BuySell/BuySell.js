@@ -5,9 +5,9 @@ import BuySellRender from './BuySellRender'
 
 import { showModal } from 'actions'
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  showBuy: () => dispatch(showModal('BUY', { communityAddress })),
-  showSell: () => dispatch(showModal('SELL', { communityAddress })),
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+  showBuy: () => dispatch(showModal('BUY', { tokenAddress })),
+  showSell: () => dispatch(showModal('SELL', { tokenAddress })),
 })
 
 export default withRouter(

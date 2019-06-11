@@ -39,7 +39,7 @@ export default class DetailHistory extends React.Component {
 
   render() {
     const { selectedTab } = this.state
-    const { communityAddress, pageSize } = this.props
+    const { tokenAddress, pageSize } = this.props
     return (
       <Flex
         style={{ borderRadius: '10px', border: 'solid 1px #dee2f0' }}
@@ -63,17 +63,17 @@ export default class DetailHistory extends React.Component {
         </Flex>
         <Flex>
           {selectedTab === 0 && (
-            <Richlist communityAddress={communityAddress} pageSize={pageSize} />
+            <Richlist tokenAddress={tokenAddress} pageSize={pageSize} />
           )}
           {selectedTab === 1 && (
             <TransferHistory
-              communityAddress={communityAddress}
+              tokenAddress={tokenAddress}
               pageSize={pageSize}
             />
           )}
           {selectedTab === 2 && (
             <OrderHistory
-              communityAddress={communityAddress}
+              tokenAddress={tokenAddress}
               pageSize={pageSize}
             />
           )}

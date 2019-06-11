@@ -6,29 +6,24 @@ import { takeEveryAsync } from 'utils/reduxSaga'
 
 function* handleLoadHolders({ address }) {
   const {
-    communityByAddress: {
-      tokenByCommunityAddress: {
-        address: tokenAddress,
-        balancesByTokenAddress: { nodes: holders },
-      },
+    tokenByAddress: {
+      address: tokenAddress,
+      balancesByTokenAddress: { nodes: holders },
     },
   } = yield Utils.graphqlRequest(
     `
     {
-      communityByAddress(address: "${address}") {
-        tokenByCommunityAddress {
-          address
-          balancesByTokenAddress{
-            totalCount
-            nodes{
-              user
-              value
-            }
+      tokenByAddress(address: "${address}") {
+      address
+      balancesByTokenAddress {
+        totalCount
+        nodes {
+          user
+          value
           }
         }
       }
-    }
-      `,
+    }`,
   )
 
   yield put(

@@ -68,7 +68,7 @@ export default ({
   usdBalance,
   symbol,
   address,
-  hasTcd,
+  hasTCD,
 }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
@@ -159,7 +159,7 @@ export default ({
           >
             Proposals
           </Tab>
-          {hasTcd && (
+          {hasTCD && (
             <React.Fragment>
               <Tab
                 link={`/community/${address}/provider`}

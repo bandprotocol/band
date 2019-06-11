@@ -33,7 +33,7 @@ const RichlistHeader = () => (
 
 export default ({
   numberOfHolders,
-  communityAddress,
+  tokenAddress,
   currentPage,
   fetching,
   onChangePage,
@@ -59,12 +59,12 @@ export default ({
     ) : numberOfHolders > 0 ? (
       <React.Fragment>
         <RichlistBody
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           currentPage={currentPage}
           pageSize={pageSize}
         />
         <RichListPagination
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           pageSize={pageSize}
           currentPage={currentPage}
           onChangePage={onChangePage}

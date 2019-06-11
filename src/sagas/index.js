@@ -34,23 +34,29 @@ import holderSaga from 'sagas/holder'
 import tcdSaga from 'sagas/tcd'
 
 import BandWallet from 'band-wallet'
-import { Utils } from 'band.js'
+import { BandProtocolClient, Utils } from 'band.js'
 import BN from 'utils/bignumber'
 
 import transit from 'transit-immutable-js'
-import { List, fromJS, Set } from 'immutable'
+import { List, fromJS, Set, Map } from 'immutable'
 import { toggleFetch } from 'actions'
 
 // import web3
 import Web3 from 'web3'
 
-const INFURA_KEY =
-  'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
+const RPC_ENDPOINT =
+  process.env.NODE_ENV === 'production'
+    ? 'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
+    : 'http://localhost:8545'
 
-const web3 = new Web3(new Web3.providers.HttpProvider(INFURA_KEY))
+const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 
 function* baseInitialize() {
   // start fetching state
+  if (process.env.NODE_ENV === 'development') {
+    BandProtocolClient.setAPI('http://localhost:5000')
+    BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
+  }
   yield put(toggleFetch(true))
   window.BandWallet = new BandWallet(
     process.env.NODE_ENV === 'production'
@@ -86,49 +92,49 @@ function* baseInitialize() {
   const communityDetails = yield Utils.graphqlRequest(
     `
     {
-      allCommunities {
+      allBandCommunities{
         nodes {
+          tokenAddress
           name
-          address
           organization
           website
           logo
           banner
           description
-          tokenByCommunityAddress {
+          tokenByTokenAddress {
             address
             symbol
             totalSupply
-          }
-          curveByCommunityAddress {
-            price
-            collateralEquation
-          }
-          tcdsByCommunityAddress {
-            nodes {
-              address
-              activeDataSourceCount
-              minStake
-              dataProvidersByAggregateContract(filter: {status: {notEqualTo: "REMOVED"}}) {
-                nodes {
-                  totalOwnership
+            curveByTokenAddress {
+              price
+              collateralEquation
+            }
+            tcdsByTokenAddress {
+              nodes {
+                address
+                maxProviderCount
+                minStake
+                dataProvidersByAggregateContract(filter: {status: {notEqualTo: "DISABLED"}}) {
+                  nodes {
+                    stake
+                  }
                 }
               }
             }
-          }
-          tcrsByCommunityAddress {
-            nodes {
-              listedEntries: entriesByTcrAddress(filter: {status: {equalTo: "LISTED"}}) {
-                totalCount
-              }
-              appliedEntries: entriesByTcrAddress(filter: {status: {equalTo: "APPLIED"}}) {
-                totalCount
-              }
-              challengedEntries: entriesByTcrAddress(filter: {status: {equalTo: "CHALLENGED"}}) {
-                totalCount
-              }
-              rejectedEntries: entriesByTcrAddress(filter: {status: {equalTo: "REJECTED"}}) {
-                totalCount
+            tcrsByTokenAddress {
+              nodes {
+                listedEntries: entriesByTcrAddress(filter: {status: {equalTo: "LISTED"}}) {
+                  totalCount
+                }
+                appliedEntries: entriesByTcrAddress(filter: {status: {equalTo: "APPLIED"}}) {
+                  totalCount
+                }
+                challengedEntries: entriesByTcrAddress(filter: {status: {equalTo: "CHALLENGED"}}) {
+                  totalCount
+                }
+                rejectedEntries: entriesByTcrAddress(filter: {status: {equalTo: "REJECTED"}}) {
+                  totalCount
+                }
               }
             }
           }
@@ -137,36 +143,49 @@ function* baseInitialize() {
     }
   `,
   )
-  for (const dapp of communityDetails.allCommunities.nodes) {
+  for (const community of communityDetails.allBandCommunities.nodes) {
+    const token = community.tokenByTokenAddress
     yield put(
       saveCommunityInfo(
-        dapp.name,
-        dapp.tokenByCommunityAddress.symbol,
-        dapp.address,
-        dapp.tokenByCommunityAddress.address,
-        dapp.organization,
-        dapp.logo && `https://ipfs.bandprotocol.com/api/v0/cat/${dapp.logo}`,
-        dapp.banner &&
-          `https://ipfs.bandprotocol.com/api/v0/cat/${dapp.banner}`,
-        dapp.description,
-        dapp.website,
-        (parseFloat(dapp.curveByCommunityAddress.price) *
-          parseFloat(dapp.tokenByCommunityAddress.totalSupply)) /
+        community.name,
+        token.symbol,
+        token.address,
+        community.organization,
+        community.logo &&
+          `https://ipfs.bandprotocol.com/api/v0/cat/${community.logo}`,
+        community.banner &&
+          `https://ipfs.bandprotocol.com/api/v0/cat/${community.banner}`,
+        community.description,
+        community.website,
+        (parseFloat(token.curveByTokenAddress.price) *
+          parseFloat(token.totalSupply)) /
           1e18,
-        parseFloat(dapp.curveByCommunityAddress.price),
-        // dapp.last24Hrs,
+        parseFloat(token.curveByTokenAddress.price),
+        // token.last24Hrs,
         0,
-        new BN(dapp.tokenByCommunityAddress.totalSupply),
-        dapp.curveByCommunityAddress.collateralEquation,
-        dapp.tcdsByCommunityAddress.nodes,
-        dapp.tcrsByCommunityAddress.nodes[0] && {
-          listed: dapp.tcrsByCommunityAddress.nodes[0].listedEntries.totalCount,
-          applied:
-            dapp.tcrsByCommunityAddress.nodes[0].appliedEntries.totalCount,
+        new BN(token.totalSupply),
+        token.curveByTokenAddress.collateralEquation,
+        token.tcdsByTokenAddress.nodes[0] &&
+          Map({
+            tcdAddress: token.tcdsByTokenAddress.nodes[0].address,
+            minStake: token.tcdsByTokenAddress.nodes[0].minStake,
+            maxProviderCount:
+              token.tcdsByTokenAddress.nodes[0].maxProviderCount,
+            totalStake: token.tcdsByTokenAddress.nodes[0].dataProvidersByAggregateContract.nodes.reduce(
+              (c, { stake }) => c.add(new BN(stake)),
+              new BN(0),
+            ),
+            dataProviderCount:
+              token.tcdsByTokenAddress.nodes[0].dataProvidersByAggregateContract
+                .nodes.length,
+          }),
+        token.tcrsByTokenAddress.nodes[0] && {
+          listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,
+          applied: token.tcrsByTokenAddress.nodes[0].appliedEntries.totalCount,
           challenged:
-            dapp.tcrsByCommunityAddress.nodes[0].challengedEntries.totalCount,
+            token.tcrsByTokenAddress.nodes[0].challengedEntries.totalCount,
           rejected:
-            dapp.tcrsByCommunityAddress.nodes[0].rejectedEntries.totalCount,
+            token.tcrsByTokenAddress.nodes[0].rejectedEntries.totalCount,
         },
       ),
     )

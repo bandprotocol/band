@@ -10,7 +10,7 @@ import MockProposal from 'images/mock-proposal.svg'
 import { proposalByStatusSelector } from 'selectors/proposal'
 
 const ProposalList = ({
-  communityAddress,
+  tokenAddress,
   description,
   proposals,
   isActive,
@@ -58,7 +58,7 @@ const ProposalList = ({
             Go to
             <Link
               dark="true"
-              to={`/community/${communityAddress}/parameters`}
+              to={`/community/${tokenAddress}/parameters`}
               px="5px"
               underline
             >
@@ -82,12 +82,12 @@ const ProposalList = ({
   </Flex>
 )
 
-const mapStateToProps = (state, { communityAddress, isActive }) => ({
+const mapStateToProps = (state, { tokenAddress, isActive }) => ({
   proposals: proposalByStatusSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
     type: isActive,
   }),
-  communityAddress,
+  tokenAddress,
 })
 
 export default connect(mapStateToProps)(ProposalList)

@@ -17,9 +17,9 @@ class CommunityDescription extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
   if (!community) return {}
   return {

@@ -257,7 +257,7 @@ const mapStateToProps = (
   state,
   {
     actionType,
-    communityAddress,
+    tokenAddress,
     dataSourceAddress,
     tcdAddress,
     userOwnership,
@@ -266,7 +266,7 @@ const mapStateToProps = (
   },
 ) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
   if (!community) return {}
   return {
@@ -274,7 +274,7 @@ const mapStateToProps = (
     userOwnership,
     stake,
     totalOwnership,
-    communityAddress,
+    tokenAddress,
     dataSourceAddress,
     tcdAddress,
     symbol: community.get('symbol'),

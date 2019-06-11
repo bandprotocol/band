@@ -4,9 +4,9 @@ import { Map, List } from 'immutable'
 
 window.ImList = List
 
-const handleAddTcds = (state, { commAddress, tcds }) => {
+const handleAddTcds = (state, { tokenAddress, tcds }) => {
   return state.set(
-    commAddress,
+    tokenAddress,
     List(
       tcds.map(tcd =>
         Map({

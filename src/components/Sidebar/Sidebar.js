@@ -30,7 +30,7 @@ class SideBar extends React.Component {
       communityPrice,
       bandPrice,
       address,
-      hasTcd,
+      hasTCD,
     } = this.props
 
     return (
@@ -44,7 +44,7 @@ class SideBar extends React.Component {
           balance &&
           balance.communityToBand(communityPrice).bandToUSD(bandPrice)
         }
-        hasTcd={hasTcd}
+        hasTCD={hasTCD}
         symbol={symbol}
         isSymbol={this.state.isSymbol}
         toggleBalance={this.toggleBalance.bind(this)}
@@ -53,9 +53,9 @@ class SideBar extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
   if (!community) return {}
   return {
@@ -66,8 +66,8 @@ const mapStateToProps = (state, { communityAddress }) => {
     symbol: community.get('symbol'),
     communityPrice: community.get('price'),
     bandPrice: bandPriceSelector(state),
-    address: community.get('address'),
-    hasTcd: community.get('tcds').size > 0,
+    address: tokenAddress,
+    hasTCD: community.get('tcd'),
   }
 }
 

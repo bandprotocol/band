@@ -74,31 +74,31 @@ const getLogPlot = values => {
 }
 
 const renderTCD = (
-  { activeDataSourceCount, dataProvidersByAggregateContract },
+  { dataProviderCount, maxProviderCount, totalStake },
   totalSupply,
 ) => {
   // const ownerships = dataProvidersByAggregateContract.map(({ totalOwnership }) => BN.from(totalOwnership))
-  const totalStake = dataProvidersByAggregateContract.nodes.reduce(
-    (c, { totalOwnership }) => c.add(new Decimal(totalOwnership)),
-    new Decimal(0),
-  )
+  // const totalStake = dataProvidersByAggregateContract.nodes.reduce(
+  //   (c, { totalOwnership }) => c.add(new Decimal(totalOwnership)),
+  //   new Decimal(0),
+  // )
 
   return (
     <React.Fragment>
       <Box mt="24px" mb="20px">
         <Field label="Governance Method">Token Curated DataSources</Field>
-        <Field label="Total Providers">
-          {dataProvidersByAggregateContract.nodes.length}
+        <Field label="Total Providers">{dataProviderCount}</Field>
+        <Field label="Active Providers">
+          {Math.min(maxProviderCount, dataProviderCount)}
         </Field>
-        <Field label="Active Providers">{activeDataSourceCount}</Field>
         <Field label="Total Stake">
           <Power
             color="#718bff"
-            value={totalStake
+            value={new Decimal(totalStake.toString())
               .div(new Decimal(totalSupply.toString()))
               .toNumber()}
           >
-            {totalStake
+            {new Decimal(totalStake.toString())
               .mul(100)
               .div(new Decimal(totalSupply.toString()))
               .toFixed(2)}
@@ -152,7 +152,7 @@ export default props => {
     name,
     address,
     numberOfHolders,
-    communityAddress,
+    tokenAddress,
     showBuy,
     showSell,
     symbol,
@@ -164,7 +164,6 @@ export default props => {
     tcr,
     tcd,
   } = props
-
   return (
     <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
       <Breadcrumb
@@ -173,7 +172,7 @@ export default props => {
           { path: `/community/${address}/overview`, label: 'Overview' },
         ]}
       />
-      <CommunityDescription communityAddress={communityAddress} />
+      <CommunityDescription tokenAddress={tokenAddress} />
       <Flex flexDirection="row" mt="12px" mx="-6px">
         <Card flex={1} variant="dashboard" mx="6px">
           <Text
@@ -190,7 +189,7 @@ export default props => {
               {({ height, width }) => (
                 <Box style={{ height, width }}>
                   <Graph
-                    communityAddress={communityAddress}
+                    tokenAddress={tokenAddress}
                     height={height}
                     width={width}
                   />
@@ -292,7 +291,7 @@ export default props => {
       </Flex>
 
       <Flex mt="12px">
-        <DetailHistory communityAddress={communityAddress} pageSize={10} />
+        <DetailHistory tokenAddress={tokenAddress} pageSize={10} />
       </Flex>
     </PageContainer>
   )

@@ -43,17 +43,17 @@ class OrderHistory extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   return {
     numOrders: noOrderSelector(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }),
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   loadOrderHistory: () =>
-    dispatchAsync(dispatch, loadOrderHistory(communityAddress)),
+    dispatchAsync(dispatch, loadOrderHistory(tokenAddress)),
 })
 
 export default withRouter(

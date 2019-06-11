@@ -22,13 +22,13 @@ export default ({ match, location }) => (
         render={({ match, history, location }) => (
           <React.Fragment>
             <Flex flexDirection="row">
-              <Sidebar communityAddress={match.params.community} />
+              <Sidebar tokenAddress={match.params.community} />
               <Switch>
                 <Route
                   path="/community/:community/overview"
                   render={({ match }) => (
                     <CommunityDetailPage
-                      communityAddress={match.params.community}
+                      tokenAddress={match.params.community}
                     />
                   )}
                 />
@@ -36,7 +36,7 @@ export default ({ match, location }) => (
                   path="/community/:community/reward"
                   render={({ match }) => (
                     <CommunityRewardPage
-                      communityAddress={match.params.community}
+                      tokenAddress={match.params.community}
                     />
                   )}
                 />
@@ -44,7 +44,7 @@ export default ({ match, location }) => (
                   path="/community/:community/parameters"
                   render={({ match }) => (
                     <CommunityGovernancePage
-                      communityAddress={match.params.community}
+                      tokenAddress={match.params.community}
                     />
                   )}
                 />
@@ -52,7 +52,7 @@ export default ({ match, location }) => (
                   path="/community/:community/proposal"
                   render={({ match }) => (
                     <CommunityProposalPage
-                      communityAddress={match.params.community}
+                      tokenAddress={match.params.community}
                     />
                   )}
                 />
@@ -60,7 +60,7 @@ export default ({ match, location }) => (
                   path="/community/:community/provider"
                   render={({ match }) => (
                     <CommunityDataProviderPage
-                      communityAddress={match.params.community}
+                      tokenAddress={match.params.community}
                     />
                   )}
                 />

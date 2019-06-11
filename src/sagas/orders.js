@@ -6,8 +6,8 @@ import { Utils } from 'band.js'
 function* handleLoadHistory({ address }) {
   // TODO: Find a better way.
   const orders = (yield Utils.graphqlRequest(`{
-    communityByAddress(address: "${address}") {
-    curveByCommunityAddress{
+    tokenByAddress(address: "${address}") {
+      curveByTokenAddress{
       ordersByCurveAddress{
         nodes{
           amount
@@ -19,7 +19,7 @@ function* handleLoadHistory({ address }) {
         }
       }
     }
-  }}`)).communityByAddress.curveByCommunityAddress.ordersByCurveAddress.nodes
+  }}`)).tokenByAddress.curveByTokenAddress.ordersByCurveAddress.nodes
   yield put(addOrders(address, orders))
 }
 

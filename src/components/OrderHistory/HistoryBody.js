@@ -3,12 +3,9 @@ import { withRouter } from 'react-router-dom'
 import HistoryBodyRender from './HistoryBodyRender'
 import { orderHistorySelector } from 'selectors/order'
 
-const mapStateToProps = (
-  state,
-  { communityAddress, currentPage, pageSize },
-) => {
+const mapStateToProps = (state, { tokenAddress, currentPage, pageSize }) => {
   const items = orderHistorySelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
     page: currentPage,
     pageSize,
   }).toJS()

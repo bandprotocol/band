@@ -104,9 +104,9 @@ class ProposeModal extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress, changes }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress, changes }) => ({
   onSubmit: (title, reason) =>
-    dispatch(proposeProposal(communityAddress, title, reason, changes)),
+    dispatch(proposeProposal(tokenAddress, title, reason, changes)),
 })
 
 export default connect(

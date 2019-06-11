@@ -5,8 +5,8 @@ import { Utils } from 'band.js'
 
 function* handleLoadPriceHistory({ address }) {
   const query = yield Utils.graphqlRequest(`{
-    communityByAddress(address: "${address}") {
-      curveByCommunityAddress {
+    tokenByAddress(address: "${address}") {
+      curveByTokenAddress {
         pricesByCurveAddress(orderBy: TIMESTAMP_DESC)  {
           nodes {
             price
@@ -20,8 +20,7 @@ function* handleLoadPriceHistory({ address }) {
   yield put(
     addPrices(
       address,
-      query.communityByAddress.curveByCommunityAddress.pricesByCurveAddress
-        .nodes,
+      query.tokenByAddress.curveByTokenAddress.pricesByCurveAddress.nodes,
     ),
   )
 }

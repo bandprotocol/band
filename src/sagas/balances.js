@@ -14,34 +14,27 @@ function* handleReloadBalance() {
       nodes {
         value
         tokenAddress
-        tokenByTokenAddress{
-          communityAddress
-        }
       }
     }
     allTokens {
-      nodes { 
+      nodes {
         address
-        communityAddress
       }
     }
   }`)
-  for (const { address, communityAddress } of query.allTokens.nodes) {
+  for (const { address } of query.allTokens.nodes) {
     if (address === bandAddress) {
       yield put(saveBandBalance(new BN(0)))
     } else {
-      yield put(saveCTBalance(communityAddress, new BN(0)))
+      yield put(saveCTBalance(address, new BN(0)))
     }
   }
 
-  for (const { value, tokenAddress, tokenByTokenAddress } of query.allBalances
-    .nodes) {
+  for (const { value, tokenAddress } of query.allBalances.nodes) {
     if (tokenAddress === bandAddress) {
       yield put(saveBandBalance(new BN(value)))
     } else {
-      yield put(
-        saveCTBalance(tokenByTokenAddress.communityAddress, new BN(value)),
-      )
+      yield put(saveCTBalance(tokenAddress, new BN(value)))
     }
   }
 }

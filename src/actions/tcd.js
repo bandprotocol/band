@@ -2,17 +2,17 @@ export const LOAD_TCDS = 'LOAD_TCDS'
 export const ADD_TCDS = 'ADD_TCDS'
 export const SAVE_TCD_CLIENT = 'SAVE_TCD_CLIENT'
 
-export const loadTcds = (user, commAddress) => {
+export const loadTcds = (user, tokenAddress) => {
   return {
     type: LOAD_TCDS,
     user,
-    commAddress,
+    tokenAddress,
   }
 }
 
-export const addTcds = (commAddress, tcds) => ({
+export const addTcds = (tokenAddress, tcds) => ({
   type: ADD_TCDS,
-  commAddress,
+  tokenAddress,
   tcds,
 })
 

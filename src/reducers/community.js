@@ -8,7 +8,6 @@ const handleSaveCommunityInfo = (
   {
     name,
     symbol,
-    address,
     tokenAddress,
     logo,
     banner,
@@ -20,15 +19,14 @@ const handleSaveCommunityInfo = (
     last24Hrs,
     totalSupply,
     collateralEquation,
-    tcds,
+    tcd,
     tcr,
   },
 ) =>
   state.set(
-    address,
+    tokenAddress,
     Map({
       name,
-      address,
       tokenAddress,
       symbol,
       logo,
@@ -41,13 +39,13 @@ const handleSaveCommunityInfo = (
       last24Hrs,
       totalSupply,
       collateralEquation,
-      tcds: List([...tcds]),
-      tcr: tcr,
+      tcd,
+      tcr,
     }),
   )
 
-const handleSaveCTBalance = (state, { communityAddress, balance }) =>
-  state.setIn([communityAddress, 'balance'], balance)
+const handleSaveCTBalance = (state, { tokenAddress, balance }) =>
+  state.setIn([tokenAddress, 'balance'], balance)
 
 const handleRemoveBalance = state =>
   state.map(community => community.delete('balance'))

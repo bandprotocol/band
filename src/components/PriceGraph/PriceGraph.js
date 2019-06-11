@@ -23,15 +23,15 @@ const transformData = rawData => {
     .toJS()
 }
 
-const mapStateToProps = (state, { communityAddress }) => ({
+const mapStateToProps = (state, { tokenAddress }) => ({
   data: transformData(
-    priceHistorySelector(state, { address: communityAddress }),
+    priceHistorySelector(state, { address: tokenAddress }),
   ),
   // data,
 })
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadPrice: () => dispatch(loadPriceHistory(communityAddress)),
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+  loadPrice: () => dispatch(loadPriceHistory(tokenAddress)),
 })
 
 export default connect(

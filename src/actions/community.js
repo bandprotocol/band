@@ -4,7 +4,6 @@ export const SAVE_COMMUNITY_CLIENT = 'SAVE_COMMUNITY_CLIENT'
 export const saveCommunityInfo = (
   name,
   symbol,
-  address,
   tokenAddress,
   organization,
   logo,
@@ -16,13 +15,12 @@ export const saveCommunityInfo = (
   last24Hrs,
   totalSupply,
   collateralEquation,
-  tcds,
+  tcd,
   tcr,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
   symbol,
-  address,
   tokenAddress,
   organization,
   logo,
@@ -34,7 +32,7 @@ export const saveCommunityInfo = (
   last24Hrs,
   totalSupply,
   collateralEquation,
-  tcds,
+  tcd,
   tcr,
 })
 

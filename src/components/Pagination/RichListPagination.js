@@ -6,10 +6,10 @@ import { numHolders } from 'selectors/holder'
 
 import PaginationRender from './PaginationRender'
 
-const mapStateToProps = (state, { communityAddress, pageSize }) => ({
+const mapStateToProps = (state, { tokenAddress, pageSize }) => ({
   numberOfPages: Math.ceil(
     numHolders(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }) / pageSize,
   ),
 })

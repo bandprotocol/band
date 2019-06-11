@@ -72,7 +72,7 @@ export default ({
   user,
   symbol,
   numDataProviders,
-  communityAddress,
+  tokenAddress,
   currentPage,
   onChangePage,
   pageSize,
@@ -99,12 +99,12 @@ export default ({
       <React.Fragment>
         <ProviderListBody
           user={user}
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           currentPage={currentPage}
           pageSize={pageSize}
         />
         <DataProviderPagination
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           pageSize={pageSize}
           currentPage={currentPage}
           onChangePage={onChangePage}

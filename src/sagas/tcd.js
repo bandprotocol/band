@@ -4,22 +4,22 @@ import { Utils } from 'band.js'
 import BN from 'bn.js'
 import { takeEveryAsync } from 'utils/reduxSaga'
 
-function* handleLoadTcds({ user, commAddress }) {
+function* handleLoadTcds({ user, tokenAddress }) {
   const {
-    communityByAddress: {
-      tcdsByCommunityAddress: { nodes: rawTcds },
+    tokenByAddress: {
+      tcdsByTokenAddress: { nodes: rawTcds },
     },
   } = yield Utils.graphqlRequest(
     `
     {
-      communityByAddress(address: "${commAddress}") {
-        tcdsByCommunityAddress {
+      tokenByAddress(address: "${tokenAddress}") {
+        tcdsByTokenAddress {
           nodes {
               address
-              activeDataSourceCount
+              maxProviderCount
               minStake
               dataProvidersByAggregateContract(
-                filter: { status: { notEqualTo: "REMOVED" } }
+                filter: { status: { notEqualTo: "DISABLED" } }
               ) {
                 nodes {
                   dataSourceAddress
@@ -47,13 +47,13 @@ function* handleLoadTcds({ user, commAddress }) {
     ({
       address,
       minStake,
-      activeDataSourceCount,
+      maxProviderCount,
       dataProvidersByAggregateContract: { nodes: dataProviders },
     }) => {
       return {
         address,
         minStake: new BN(minStake),
-        activeDataSourceCount,
+        maxProviderCount,
         dataProviders: dataProviders
           .map(
             ({
@@ -112,7 +112,7 @@ function* handleLoadTcds({ user, commAddress }) {
     },
   )
 
-  yield put(addTcds(commAddress, tcds))
+  yield put(addTcds(tokenAddress, tcds))
 }
 
 export default function*() {

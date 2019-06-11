@@ -19,9 +19,9 @@ export const saveBandBalance = balance => ({
   balance: balance,
 })
 
-export const saveCTBalance = (communityAddress, balance) => ({
+export const saveCTBalance = (tokenAddress, balance) => ({
   type: SAVE_CT_BALANCE,
-  communityAddress,
+  tokenAddress,
   balance: balance,
 })
 

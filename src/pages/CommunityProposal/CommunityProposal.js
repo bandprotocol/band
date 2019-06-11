@@ -21,14 +21,14 @@ class CommunityProposal extends React.Component {
   }
 
   render() {
-    const { communityAddress, name } = this.props
+    const { tokenAddress, name } = this.props
     return (
       <PageContainer withSidebar>
         <Breadcrumb
           links={[
-            { path: `/community/${communityAddress}`, label: name },
+            { path: `/community/${tokenAddress}`, label: name },
             {
-              path: `/community/${communityAddress}/proposal`,
+              path: `/community/${tokenAddress}/proposal`,
               label: 'Proposal',
             },
           ]}
@@ -40,14 +40,14 @@ class CommunityProposal extends React.Component {
               'Recently proposed change in governance parameter. Please vote before each proposal expires.'
             }
             isActive={true}
-            communityAddress={communityAddress}
+            tokenAddress={tokenAddress}
           />
         </Flex>
         <Flex mt="25px">
           <ProposalList
             title={'PAST PROPOSALS'}
             isActive={false}
-            communityAddress={communityAddress}
+            tokenAddress={tokenAddress}
           />
         </Flex>
       </PageContainer>
@@ -55,16 +55,16 @@ class CommunityProposal extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   loadProposals: () => {
-    dispatch(loadParameters(communityAddress))
-    dispatch(loadProposals(communityAddress))
+    dispatch(loadParameters(tokenAddress))
+    dispatch(loadProposals(tokenAddress))
   },
 })
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
 
   return {

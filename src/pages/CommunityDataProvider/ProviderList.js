@@ -50,7 +50,7 @@ class ProviderList extends React.Component {
     const {
       user,
       symbol,
-      communityAddress,
+      tokenAddress,
       pageSize,
       numDataProviders,
       showBeProvider,
@@ -82,7 +82,7 @@ class ProviderList extends React.Component {
             symbol={symbol}
             fetching={fetching}
             numDataProviders={numDataProviders}
-            communityAddress={communityAddress}
+            tokenAddress={tokenAddress}
             currentPage={currentPage}
             onChangePage={this.onChangePage.bind(this)}
             pageSize={pageSize}
@@ -93,21 +93,21 @@ class ProviderList extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
   return {
     symbol: community && community.get('symbol'),
     numDataProviders: numDataProviders(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }),
   }
 }
 
-const mapDispatchToProps = (dispatch, { user, communityAddress }) => ({
+const mapDispatchToProps = (dispatch, { user, tokenAddress }) => ({
   user,
-  loadTcds: () => dispatchAsync(dispatch, loadTcds(user, communityAddress)),
+  loadTcds: () => dispatchAsync(dispatch, loadTcds(user, tokenAddress)),
   showBeProvider: () => dispatch(showModal('BEPROVIDER')),
 })
 

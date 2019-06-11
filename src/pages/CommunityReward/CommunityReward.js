@@ -4,8 +4,8 @@ import PageContainer from 'components/PageContainer'
 
 import RewardDashboard from 'components/RewardDashboard'
 
-export default ({ communityAddress }) => (
+export default ({ tokenAddress }) => (
   <PageContainer withSidebar>
-    <RewardDashboard communityAddress={communityAddress} />
+    <RewardDashboard tokenAddress={tokenAddress} />
   </PageContainer>
 )

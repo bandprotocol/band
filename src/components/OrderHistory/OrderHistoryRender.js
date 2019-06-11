@@ -34,7 +34,7 @@ const HistoryHeader = () => (
 export default ({
   fetching,
   numOrders,
-  communityAddress,
+  tokenAddress,
   currentPage,
   onChangePage,
   pageSize,
@@ -59,12 +59,12 @@ export default ({
     ) : numOrders > 0 ? (
       <React.Fragment>
         <HistoryBody
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           currentPage={currentPage}
           pageSize={pageSize}
         />
         <OrderPagination
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           pageSize={pageSize}
           currentPage={currentPage}
           onChangePage={onChangePage}

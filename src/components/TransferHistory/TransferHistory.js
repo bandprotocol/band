@@ -43,17 +43,17 @@ class TransferHistory extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   return {
     numTransfers: noTransferSelector(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }),
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   loadTransferHistory: () =>
-    dispatchAsync(dispatch, loadTransferHistory(communityAddress)),
+    dispatchAsync(dispatch, loadTransferHistory(tokenAddress)),
 })
 
 export default withRouter(

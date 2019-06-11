@@ -9,14 +9,14 @@ import { communityDetailSelector } from 'selectors/communities'
 
 const mapStateToProps = (
   state,
-  { communityAddress, currentPage, pageSize },
+  { tokenAddress, currentPage, pageSize },
 ) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
   const totalSupply = community && community.get('totalSupply')
   const items = holdersSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
     page: currentPage,
     pageSize,
   }).map(item => ({

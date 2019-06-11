@@ -11,14 +11,14 @@ import { Flex, Text } from 'ui/common'
 
 class CommunityDataProvider extends React.Component {
   render() {
-    const { user, communityAddress, name } = this.props
+    const { user, tokenAddress, name } = this.props
     return (
       <PageContainer withSidebar>
         <Breadcrumb
           links={[
-            { path: `/community/${communityAddress}`, label: name },
+            { path: `/community/${tokenAddress}`, label: name },
             {
-              path: `/community/${communityAddress}/provider`,
+              path: `/community/${tokenAddress}/provider`,
               label: 'Data Providers',
             },
           ]}
@@ -54,7 +54,7 @@ class CommunityDataProvider extends React.Component {
         <Flex mt="8px">
           <ProviderList
             user={user}
-            communityAddress={communityAddress}
+            tokenAddress={tokenAddress}
             pageSize={10}
           />
         </Flex>
@@ -63,9 +63,9 @@ class CommunityDataProvider extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
 
   return {

@@ -6,10 +6,10 @@ import { noTransferSelector } from 'selectors/transfer'
 
 import PaginationRender from './PaginationRender'
 
-const mapStateToProps = (state, { communityAddress, pageSize }) => ({
+const mapStateToProps = (state, { tokenAddress, pageSize }) => ({
   numberOfPages: Math.ceil(
     noTransferSelector(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }) / pageSize,
   ),
 })

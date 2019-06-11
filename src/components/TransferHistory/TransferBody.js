@@ -5,10 +5,10 @@ import { transferHistorySelector } from 'selectors/transfer'
 
 const mapStateToProps = (
   state,
-  { communityAddress, currentPage, pageSize },
+  { tokenAddress, currentPage, pageSize },
 ) => {
   const items = transferHistorySelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
     page: currentPage,
     pageSize,
   })

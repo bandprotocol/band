@@ -100,7 +100,9 @@ export default ({
                   community={community}
                   bandPrice={bandPrice}
                   onClick={() =>
-                    history.push(`/community/${community.address}/overview`)
+                    history.push(
+                      `/community/${community.tokenAddress}/overview`,
+                    )
                   }
                 />
               ))}

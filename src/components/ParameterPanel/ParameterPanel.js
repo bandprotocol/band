@@ -85,18 +85,18 @@ class ParameterPanel extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => ({
-  prefixList: prefixListSelector(state, { address: communityAddress }).map(
+const mapStateToProps = (state, { tokenAddress }) => ({
+  prefixList: prefixListSelector(state, { address: tokenAddress }).map(
     prefix => ({ value: prefix, label: prefix }),
   ),
   logedin: !!currentUserSelector(state),
   wallet: walletSelector(state),
 })
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  loadParameters: () => dispatch(loadParameters(communityAddress)),
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+  loadParameters: () => dispatch(loadParameters(tokenAddress)),
   onSubmit: changes =>
-    dispatch(showModal('PROPOSE', { changes, communityAddress })),
+    dispatch(showModal('PROPOSE', { changes, tokenAddress })),
 })
 
 export default connect(

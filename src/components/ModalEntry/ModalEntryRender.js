@@ -15,14 +15,11 @@ export default ({ modalName, data, hideModal }) => (
     {modalName === 'LOGIN' ? (
       <LoginModal />
     ) : modalName === 'BUY' ? (
-      <BuySellModal type="buy" communityAddress={data.communityAddress} />
+      <BuySellModal type="buy" tokenAddress={data.tokenAddress} />
     ) : modalName === 'SELL' ? (
-      <BuySellModal type="sell" communityAddress={data.communityAddress} />
+      <BuySellModal type="sell" tokenAddress={data.tokenAddress} />
     ) : modalName === 'PROPOSE' ? (
-      <ProposeModal
-        changes={data.changes}
-        communityAddress={data.communityAddress}
-      />
+      <ProposeModal changes={data.changes} tokenAddress={data.tokenAddress} />
     ) : modalName === 'DEPOSITWITHDRAW' ? (
       <DepositWithdrawModal {...data} />
     ) : modalName === 'BEPROVIDER' ? (

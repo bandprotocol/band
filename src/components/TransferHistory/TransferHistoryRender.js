@@ -34,7 +34,7 @@ const TransferHistoryHeader = () => (
 export default ({
   numTransfers,
   fetching,
-  communityAddress,
+  tokenAddress,
   currentPage,
   onChangePage,
   pageSize,
@@ -59,12 +59,12 @@ export default ({
     ) : numTransfers > 0 ? (
       <React.Fragment>
         <TransferBody
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           currentPage={currentPage}
           pageSize={pageSize}
         />
         <TransferPagination
-          communityAddress={communityAddress}
+          tokenAddress={tokenAddress}
           pageSize={pageSize}
           currentPage={currentPage}
           onChangePage={onChangePage}

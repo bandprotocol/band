@@ -240,9 +240,9 @@ class BuySellModal extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { type, communityAddress }) => {
+const mapStateToProps = (state, { type, tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
   if (!community) return {}
   return {
@@ -254,16 +254,16 @@ const mapStateToProps = (state, { type, communityAddress }) => {
     tokenNormalPrice: community.get('price'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {
-      address: communityAddress,
+      address: tokenAddress,
     }),
   }
 }
 
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   onBuy: (amount, priceLimit) =>
-    dispatch(buyToken(communityAddress, amount, priceLimit)),
+    dispatch(buyToken(tokenAddress, amount, priceLimit)),
   onSell: (amount, priceLimit) =>
-    dispatch(sellToken(communityAddress, amount, priceLimit)),
+    dispatch(sellToken(tokenAddress, amount, priceLimit)),
 })
 
 export default connect(

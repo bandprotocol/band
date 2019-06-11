@@ -9,28 +9,26 @@ function* handleLoadTransferHistory({ address }) {
   const transfers = (yield Utils.graphqlRequest(
     `
       {
-        communityByAddress(address: "${address}") {
-          tokenByCommunityAddress {
-            transfersByTokenAddress(
-              orderBy: TIMESTAMP_DESC
-              filter: {
-                sender: { notEqualTo: "0x0000000000000000000000000000000000000000" }
-                receiver: { notEqualTo: "0x0000000000000000000000000000000000000000" }
-              }
-            ) {
-              nodes {
-                sender
-                receiver
-                value
-                txHash
-                timestamp
-              }
+        tokenByAddress(address: "${address}") {
+          transfersByTokenAddress(
+            orderBy: TIMESTAMP_DESC
+            filter: {
+              sender: { notEqualTo: "0x0000000000000000000000000000000000000000" }
+              receiver: { notEqualTo: "0x0000000000000000000000000000000000000000" }
+            }
+          ) {
+            nodes {
+              sender
+              receiver
+              value
+              txHash
+              timestamp
             }
           }
         }
       }
       `,
-  )).communityByAddress.tokenByCommunityAddress.transfersByTokenAddress.nodes
+  )).tokenByAddress.transfersByTokenAddress.nodes
 
   yield put(
     addTransfers(

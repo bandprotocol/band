@@ -1,4 +1,3 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { showModal } from 'actions'
@@ -8,24 +7,18 @@ import { numHolders } from 'selectors/holder'
 
 import CommunityDetailRender from './CommunityDetailRender'
 
-class CommunityDetail extends React.Component {
-  render() {
-    return <CommunityDetailRender {...this.props} />
-  }
-}
-
-const mapDispatchToProps = (dispatch, { communityAddress }) => ({
-  showBuy: () => dispatch(showModal('BUY', { communityAddress })),
-  showSell: () => dispatch(showModal('SELL', { communityAddress })),
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+  showBuy: () => dispatch(showModal('BUY', { tokenAddress })),
+  showSell: () => dispatch(showModal('SELL', { tokenAddress })),
 })
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
 
   const numberOfHolders = numHolders(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
 
   if (!community) return {}
@@ -43,7 +36,7 @@ const mapStateToProps = (state, { communityAddress }) => {
     marketCap: community.get('marketCap'),
     totalSupply: community.get('totalSupply'),
     collateralEquation: community.get('collateralEquation'),
-    tcd: community.get('tcds').get(0),
+    tcd: community.get('tcd') && community.get('tcd').toJS(),
     tcr: community.get('tcr'),
   }
 }
@@ -52,5 +45,5 @@ export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(CommunityDetail),
+  )(CommunityDetailRender),
 )

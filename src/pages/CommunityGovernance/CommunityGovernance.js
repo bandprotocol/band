@@ -8,24 +8,24 @@ import PageContainer from 'components/PageContainer'
 
 import ParameterPanel from 'components/ParameterPanel'
 
-const CommunityGovernance = ({ communityAddress, name, address }) => (
+const CommunityGovernance = ({ tokenAddress, name, address }) => (
   <PageContainer withSidebar>
     <Breadcrumb
       links={[
-        { path: `/community/${communityAddress}`, label: name },
+        { path: `/community/${tokenAddress}`, label: name },
         {
-          path: `/community/${communityAddress}/parameters`,
+          path: `/community/${tokenAddress}/parameters`,
           label: 'Parameters',
         },
       ]}
     />
-    <ParameterPanel communityAddress={communityAddress} />
+    <ParameterPanel tokenAddress={tokenAddress} />
   </PageContainer>
 )
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
-    address: communityAddress,
+    address: tokenAddress,
   })
 
   return {
