@@ -18,7 +18,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
               address
               maxProviderCount
               minStake
-              dataProvidersByAggregateContract(
+              dataProvidersByTcdAddress(
                 filter: { status: { notEqualTo: "DISABLED" } }
               ) {
                 nodes {
@@ -28,7 +28,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
                   status
                   owner
                   totalOwnership
-                  dataProviderOwnershipsByDataSourceAddressAndAggregateContract {
+                  dataProviderOwnershipsByDataSourceAddressAndTcdAddress {
                     nodes {
                       ownership
                       voter
@@ -48,7 +48,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
       address,
       minStake,
       maxProviderCount,
-      dataProvidersByAggregateContract: { nodes: dataProviders },
+      dataProvidersByTcdAddress: { nodes: dataProviders },
     }) => {
       return {
         address,
@@ -63,7 +63,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
               status,
               owner,
               totalOwnership,
-              dataProviderOwnershipsByDataSourceAddressAndAggregateContract: {
+              dataProviderOwnershipsByDataSourceAddressAndTcdAddress: {
                 nodes: voters,
               },
             }) => {

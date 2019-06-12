@@ -19,8 +19,8 @@ const countSportQL = (type, home, away) => `
   allDataSportFeeds(
     orderBy: LAST_UPDATE_DESC
     condition: { sportType: "${type}" }
-    filter: { 
-      scoreAway: { isNull: false } 
+    filter: {
+      scoreAway: { isNull: false }
       ${home ? `home: { equalTo: "${home}" }` : ``}
       ${away ? `away: { equalTo: "${away}" }` : ``}
     }
@@ -54,13 +54,13 @@ const allSportByTypeQL = (type, nList, home, away) => `
       lastUpdate
     }
   }
-} 
+}
 `
 
 const allProvidersByTypeTimeTeamQL = (type, time, startTime, home, away) => `
 {
   allDataSportFeedRaws(
-    condition: { 
+    condition: {
       sportType: "${type}"
       sportTime: "${time}"
       sportStartTime: "${startTime}"
@@ -73,7 +73,7 @@ const allProvidersByTypeTimeTeamQL = (type, time, startTime, home, away) => `
       timestamp
       scoreAway
       scoreHome
-      dataProviderByDataSourceAddressAndAggregateContract {
+      dataProviderByDataSourceAddressAndTcdAddress {
         dataSourceAddress
         detail
         status
@@ -187,7 +187,7 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
       nodes.forEach(
         ({
           timestamp,
-          dataProviderByDataSourceAddressAndAggregateContract: {
+          dataProviderByDataSourceAddressAndTcdAddress: {
             dataSourceAddress,
             detail,
             status,
@@ -209,7 +209,7 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
           } else {
             if (
               providers[dataSourceAddress].scoreAway !== scoreAway ||
-              providers[dataSourceAddress].scoreAway !== scoreHome
+              providers[dataSourceAddress].scoreHome !== scoreHome
             ) {
               providers[dataSourceAddress].warning =
                 'The provider has previously reported different result for this match'

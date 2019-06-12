@@ -77,12 +77,6 @@ const renderTCD = (
   { dataProviderCount, maxProviderCount, totalStake },
   totalSupply,
 ) => {
-  // const ownerships = dataProvidersByAggregateContract.map(({ totalOwnership }) => BN.from(totalOwnership))
-  // const totalStake = dataProvidersByAggregateContract.nodes.reduce(
-  //   (c, { totalOwnership }) => c.add(new Decimal(totalOwnership)),
-  //   new Decimal(0),
-  // )
-
   return (
     <React.Fragment>
       <Box mt="24px" mb="20px">

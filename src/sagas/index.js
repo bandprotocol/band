@@ -114,7 +114,7 @@ function* baseInitialize() {
                 address
                 maxProviderCount
                 minStake
-                dataProvidersByAggregateContract(filter: {status: {notEqualTo: "DISABLED"}}) {
+                dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
                   nodes {
                     stake
                   }
@@ -171,13 +171,13 @@ function* baseInitialize() {
             minStake: token.tcdsByTokenAddress.nodes[0].minStake,
             maxProviderCount:
               token.tcdsByTokenAddress.nodes[0].maxProviderCount,
-            totalStake: token.tcdsByTokenAddress.nodes[0].dataProvidersByAggregateContract.nodes.reduce(
+            totalStake: token.tcdsByTokenAddress.nodes[0].dataProvidersByTcdAddress.nodes.reduce(
               (c, { stake }) => c.add(new BN(stake)),
               new BN(0),
             ),
             dataProviderCount:
-              token.tcdsByTokenAddress.nodes[0].dataProvidersByAggregateContract
-                .nodes.length,
+              token.tcdsByTokenAddress.nodes[0].dataProvidersByTcdAddress.nodes
+                .length,
           }),
         token.tcrsByTokenAddress.nodes[0] && {
           listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,

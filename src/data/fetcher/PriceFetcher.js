@@ -40,7 +40,7 @@ const allProvidersByPairQL = (pair, from) => `
       detail
       status
       dataSourceAddress
-      dataPriceFeedRawsByDataSourceAddressAndAggregateContract(
+      dataPriceFeedRawsByDataSourceAddressAndTcdAddress(
         filter: { timestamp: { greaterThan: ${from} } }
         condition: { pair: "${pair}" }
         orderBy: TIMESTAMP_ASC
@@ -112,18 +112,16 @@ export const PricePairFetcher = withRouter(
 
       return nodes
         .filter(
-          n =>
-            n.dataPriceFeedRawsByDataSourceAddressAndAggregateContract.nodes
-              .length,
+          n => n.dataPriceFeedRawsByDataSourceAddressAndTcdAddress.nodes.length,
         )
         .map(
           ({
             detail,
             status,
             dataSourceAddress,
-            dataPriceFeedRawsByDataSourceAddressAndAggregateContract,
+            dataPriceFeedRawsByDataSourceAddressAndTcdAddress,
           }) => {
-            const feed = dataPriceFeedRawsByDataSourceAddressAndAggregateContract.nodes.map(
+            const feed = dataPriceFeedRawsByDataSourceAddressAndTcdAddress.nodes.map(
               ({ timestamp, value }) => ({
                 value: Utils.fromBlockchainUnit(value),
                 time: moment(timestamp * 1000),

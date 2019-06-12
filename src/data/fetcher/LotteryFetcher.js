@@ -67,7 +67,7 @@ const allProvidersByTypeTimeQL = (type, time) => `
       whiteBall4
       whiteBall5
       mul
-      dataProviderByDataSourceAddressAndAggregateContract {
+      dataProviderByDataSourceAddressAndTcdAddress {
         dataSourceAddress
         detail
         status
@@ -153,7 +153,7 @@ export const LotteryProvidersByTypeTimeFetcher = withRouter(
       nodes.forEach(
         ({
           timestamp,
-          dataProviderByDataSourceAddressAndAggregateContract: {
+          dataProviderByDataSourceAddressAndTcdAddress: {
             dataSourceAddress,
             detail,
             status,
