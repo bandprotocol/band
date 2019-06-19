@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import LandingShowcase from 'components/LandingShowcase'
-import Whitepaper from 'whitepaper/whitepaper-3.0.0.pdf'
 import { colors } from 'ui'
 import {
   Flex,
@@ -168,7 +167,7 @@ export default () => {
                   </FilledButton>
                 </AbsoluteLink>
                 <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-                <AbsoluteLink href={Whitepaper}>
+                <AbsoluteLink href="/whitepaper-3.0.0.pdf">
                   <OutlineButton isMobile={_isMobile} borderColor="#6b7df5">
                     Whitepaper
                   </OutlineButton>
