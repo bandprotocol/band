@@ -5,6 +5,7 @@ import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
+import Code from 'data/Code'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { createLoadingButton } from 'components/BaseButton'
@@ -162,6 +163,11 @@ export default class CommunityIntegration extends React.Component {
           <Flex style={{ minHeight: '100px' }} />
           <Flex mt="-100px" mx="-8px" justifyContent="center" />
           <Box mt="24px">
+            <Flex my="20px" alignItems="center" style={{ minHeight: '100px' }}>
+              <Text fontSize="18px" lineHeight={1.67} fontWeight={500}>
+                {Code['price'].description[this.state.tabNum || 0]}
+              </Text>
+            </Flex>
             <Snippet dataset="price" codeIndex={this.state.tabNum} />
           </Box>
         </PageContainer>

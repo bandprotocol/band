@@ -1,5 +1,10 @@
 export default {
   price: {
+    description: [
+      `Write a simple version of the smart contract. We set the price at 10 USD. As you can see buyTicket function allows anyone to buy a ticket. The only remaining hole to fill is the exchange rate between ETH and USD.`,
+      `Copy-paste QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32.`,
+      `nstantiate a QueryInterface object with Price Feed smart contract address at 0x8B3dBb2Db70120Cf4D24c739E1c296DE98644238. ETH/USD exchange rate can be obtained by querying with key ETH/USD. Note that you need to convert bytes32 result to uint256. The returned value is the exchange rate multiplied by 10^18.`,
+    ],
     solidity: [
       `
 pragma solidity 0.5.9;
@@ -76,6 +81,7 @@ contract TicketSellerContract {
     ],
   },
   sport: {
+    description: ['', '', ''],
     solidity: [
       `
   interface DataSource {
@@ -98,6 +104,7 @@ contract TicketSellerContract {
     ],
   },
   lottery: {
+    description: ['', '', ''],
     solidity: [
       `
   interface DataSource {
@@ -125,6 +132,7 @@ contract TicketSellerContract {
     ],
   },
   identity: {
+    description: ['', '', ''],
     solidity: [
       `
   interface DataSource {
