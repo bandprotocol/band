@@ -1,41 +1,92 @@
 export default {
   price: {
-    solidity: `
-  interface DataSource {
-    function getQueryPrice() external view returns (uint256);
-    function getAsNumber(bytes32 key) external payable returns (uint256);
-  }
-  
-  contract PriceFeedContract {
-    DataSource public constant dataSource =
-      DataSource(0x8B3dBb2Db70120Cf4D24c739E1c296DE98644238);
-  
-    function checkBTCPrice() internal {
-      uint256 bitcoinPrice =
-        dataSource.getAsNumber.value(dataSource.getQueryPrice())("BTC/USD");
-      assert (bitcoinPrice == 5579.13e18);  // Price is 5,579.13 USD per Bitcoin
+    solidity: [
+      `
+pragma solidity 0.5.9;
+
+
+
+
+
+
+contract TicketSellerContract {
+    uint256 public ticketPrice = 10;             /// In USD
+    mapping (address => bool) public hasTicket;  /// Whether a user has a ticket
+
+    function buyTicket() public payable {
+        require(!hasTicket[msg.sender], "Must not already have a ticket");
+
+
+        // Mock conversion rate between ETH and USD
+        uint256 USD_PER_ETH = 1e18;
+        // Make sure that the buyer pays enough ETH
+        require(msg.value * USD_PER_ETH / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
+        // Add a ticket to the buyer's mapping slot
+        hasTicket[msg.sender] = true;
     }
-  }`,
-    graphql: `
-  query {
-    allDataPriceFeeds(condition: { pair: "BTC/USD" }) {
-      nodes {
-        value
-      }
+}`,
+      `
+pragma solidity 0.5.9;
+
+interface QueryInterface {
+  function query(bytes calldata input) external payable returns (bytes32);
+  function queryPrice() external view returns (uint256);
+}
+
+contract TicketSellerContract {
+    uint256 public ticketPrice = 10;             /// In USD
+    mapping (address => bool) public hasTicket;  /// Whether a user has a ticket
+
+    function buyTicket() public payable {
+        require(!hasTicket[msg.sender], "Must not already have a ticket");
+
+
+        // Mock conversion rate between ETH and USD
+        uint256 USD_PER_ETH = 1e18;
+        // Make sure that the buyer pays enough ETH
+        require(msg.value * USD_PER_ETH / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
+        // Add a ticket to the buyer's mapping slot
+        hasTicket[msg.sender] = true;
     }
-  }`,
+}`,
+      `
+pragma solidity 0.5.9;
+
+interface QueryInterface {
+  function query(bytes calldata input) external payable returns (bytes32);
+  function queryPrice() external view returns (uint256);
+}
+
+contract TicketSellerContract {
+    uint256 public ticketPrice = 10;             /// In USD
+    mapping (address => bool) public hasTicket;  /// Whether a user has a ticket
+
+    function buyTicket() public payable {
+        require(!hasTicket[msg.sender], "Must not already have a ticket");
+        // Create a QueryInterface pointing to Band Protocol's Crypto Price Feed
+        QueryInterface q = QueryInterface(0x8B3dBb2Db70120Cf4D24c739E1c296DE98644238);
+        // Get the current conversion rate between ETH and USD (times 1e18)
+        uint256 USD_PER_ETH = uint256(q.query.value(q.queryPrice())("ETH/USD"));
+        // Make sure that the buyer pays enough ETH
+        require(msg.value * USD_PER_ETH / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
+        // Add a ticket to the buyer's mapping slot
+        hasTicket[msg.sender] = true;
+    }
+}`,
+    ],
   },
   sport: {
-    solidity: `
+    solidity: [
+      `
   interface DataSource {
     function getQueryPrice() external view returns (uint256);
     function getAsBytes32(bytes32 key) external payable returns (bytes32);
   }
-  
+
   contract SportResultContract {
     DataSource public constant dataSource =
       DataSource(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
-  
+
     function checkNBAResult() internal {
       bytes32 sportResult = dataSource
         .getAsBytes32
@@ -44,38 +95,20 @@ export default {
       assert (uint8(sportResult[1]) == 129); // The Warriors scored 129
     }
   }`,
-    graphql: `
-  query {
-    allDataSportFeeds(
-      condition: {
-        sportType: "NBA"
-        sportTime: "20190427"
-        home: "LAC"
-        away: "GSW"
-      }
-    ) {
-      nodes {
-        sportType
-        sportTime
-        home
-        away
-        scoreHome
-        scoreAway
-      }
-    }
-  }`,
+    ],
   },
   lottery: {
-    solidity: `
+    solidity: [
+      `
   interface DataSource {
     function getQueryPrice() external view returns (uint256);
     function getAsBytes32(bytes32 key) external payable returns (bytes32);
   }
-  
+
   contract LottoResultContract {
     DataSource public constant dataSource =
       DataSource(0x6863019Ec1A5f675ce64699020A338Ee2256B981);
-  
+
     function checkLottoResult() internal {
       bytes32 powerballResult = dataSource
         .getAsBytes32
@@ -89,34 +122,20 @@ export default {
       assert (uint8(powerballResult[6]) == 3);   // Power Play Multiplier
     }
   }`,
-    graphql: `
-  query {
-    allDataLotteryFeeds(
-      condition: { lotteryType: "PWB", lotteryTime: "20190420" }
-    ) {
-      nodes {
-        whiteBall1
-        whiteBall2
-        whiteBall3
-        whiteBall4
-        whiteBall5
-        redBall
-        mul
-      }
-    }
-  }`,
+    ],
   },
   identity: {
-    solidity: `
+    solidity: [
+      `
   interface DataSource {
     function getQueryPrice() external view returns (uint256);
     function getAsBool(bytes32 key) external payable returns (bool);
   }
-  
+
   contract IdentityResultContract {
     DataSource public constant dataSource =
       DataSource(0x616aa37B3e630fce6d96Abc2Afa767aa98280743);
-  
+
     function checkIdentityResult() internal {
       bool identityResult = dataSource
         .getAsBool
@@ -124,18 +143,6 @@ export default {
       assert (identityResult);   // identityResult is True
     }
   }`,
-    graphql: `
-  query {
-    allDataIdentityFeedRaws(condition: { 
-      userAddress: "0x8208940da3bdefe1d3e4b5ee5d4eebf19aae0468000000000000000000000000"
-      }) {
-      nodes {
-        userAddress
-        twitterId
-        timestamp
-      }
-    }
-  }
-  `,
+    ],
   },
 }

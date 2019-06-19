@@ -175,6 +175,13 @@ export default ({
               >
                 Data set
               </Tab>
+              <Tab
+                link={`/community/${address}/integration`}
+                imgSrcActive={DataSetActive}
+                imgSrcInactive={DataSetInactive}
+              >
+                Integration
+              </Tab>
             </React.Fragment>
           )}
         </Flex>

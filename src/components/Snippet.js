@@ -252,7 +252,7 @@ export default class Snippet extends React.Component {
   }
 
   render() {
-    const { dataset } = this.props
+    const { dataset, codeIndex } = this.props
 
     return (
       <React.Fragment>
@@ -269,12 +269,6 @@ export default class Snippet extends React.Component {
               onClick={() => this.setState({ tab: 'solidity' })}
             >
               Solidity
-            </TabOption>
-            <TabOption
-              active={this.state.tab === 'graphql'}
-              onClick={() => this.setState({ tab: 'graphql' })}
-            >
-              GraphQL
             </TabOption>
             <Text
               ml="auto"
@@ -296,9 +290,7 @@ export default class Snippet extends React.Component {
               {this.state.tab === 'solidity' ? '0.001 ETH/query' : 'free'}
             </Text>
           </Flex>
-          {this.state.tab === 'solidity' &&
-            renderSolidity(Code[dataset].solidity)}
-          {this.state.tab === 'graphql' && renderGraphQL(Code[dataset].graphql)}
+          {renderSolidity(Code[dataset].solidity[codeIndex || 0])}
         </Card>
       </React.Fragment>
     )
