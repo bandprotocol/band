@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="26" viewBox="0 0 14 26">
+    <defs>
+        <path id="a" d="M0 .017h6.34v11.536H0z"/>
+        <linearGradient id="b" x1="0%" x2="99.393%" y1="32.569%" y2="32.569%">
+            <stop offset="0%" stop-color="#5269FF"/>
+            <stop offset="100%" stop-color="#4890FF"/>
+        </linearGradient>
+        <linearGradient id="d" x1="0%" x2="99.393%" y1="32.569%" y2="32.569%">
+            <stop offset="0%" stop-color="#6B8BF5"/>
+            <stop offset="100%" stop-color="#6BF5CD"/>
+        </linearGradient>
+        <linearGradient id="e" x1="0%" x2="99.393%" y1="32.569%" y2="32.569%">
+            <stop offset="0%" stop-color="#5269FF"/>
+            <stop offset="100%" stop-color="#4890FF"/>
+        </linearGradient>
+        <path id="f" d="M.014.036h6.34v15.38H.014z"/>
+        <linearGradient id="g" x1="0%" x2="99.393%" y1="32.569%" y2="32.569%">
+            <stop offset="0%" stop-color="#5269FF"/>
+            <stop offset="100%" stop-color="#4890FF"/>
+        </linearGradient>
+        <path id="i" d="M0 .036h6.34v15.38H0z"/>
+        <linearGradient id="j" x1="0%" x2="99.393%" y1="32.569%" y2="32.569%">
+            <stop offset="0%" stop-color="#5269FF"/>
+            <stop offset="100%" stop-color="#4890FF"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="matrix(-1 0 0 1 13.35 14.008)">
+            <mask id="c" fill="#fff">
+                <use xlink:href="#a"/>
+            </mask>
+            <path fill="url(#b)" d="M6.34 3.862L0 .017l6.34 11.536z" mask="url(#c)"/>
+        </g>
+        <path fill="url(#d)" d="M.583 13.824l6.356 3.85 6.352-3.85-6.357-3.85z" transform="translate(.028 .317)"/>
+        <path fill="url(#e)" d="M6.988 13.708L.654 25.243l-.001-7.691z" transform="matrix(-1 0 0 1 7.669 .317)"/>
+        <g transform="matrix(-1 0 0 1 7.028 .317)">
+            <mask id="h" fill="#fff">
+                <use xlink:href="#f"/>
+            </mask>
+            <path fill="url(#g)" d="M-.002 15.423l6.335-3.844L-.007.043z" mask="url(#h)"/>
+        </g>
+        <g transform="matrix(-1 0 0 1 13.35 .317)">
+            <mask id="k" fill="#fff">
+                <use xlink:href="#i"/>
+            </mask>
+            <path fill="url(#j)" d="M0 11.571L6.335.036l.005 15.38z" mask="url(#k)"/>
+        </g>
+    </g>
+</svg>

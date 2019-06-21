@@ -2,8 +2,16 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { colors } from 'ui'
 import BN from 'utils/bignumber'
-import { Flex, Text, Image, Box, AbsoluteLink, Card } from 'ui/common'
-import OutImg from 'images/out.svg'
+import {
+  Flex,
+  Text,
+  Image,
+  Box,
+  AbsoluteLink,
+  Card,
+  Button,
+  Link,
+} from 'ui/common'
 
 const WrapText = styled(Text)`
   overflow: hidden;
@@ -19,8 +27,23 @@ const Description = styled(Text)`
   -webkit-box-orient: vertical;
   word-break: break-all;
   -webkit-line-clamp: 2;
-  height: 38px;
+  height: 45px;
+  line-height: 25px;
+  width: 320px;
 `
+
+const DisplayIcon = ({ src }) => (
+  <Flex
+    width="95px"
+    bg="#3c55f9"
+    justifyContent="center"
+    alignItems="center"
+    mt="5px"
+    style={{ height: '95px', border: '2px solid #fff', borderRadius: '9px' }}
+  >
+    <Image src={src} />
+  </Flex>
+)
 
 const PriceDetail = ({ marketCap, price, last24Hrs }) => (
   <Flex
@@ -29,12 +52,15 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
     pb={1}
     justifyContent="space-around"
     alignItems="center"
+    bg="#3c55f9"
+    my={3}
+    style={{ borderRadius: '10px' }}
   >
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Text color={colors.purple.dark} fontSize={12} fontWeight="500">
+      <Text color="#c4d7ff" fontSize={12} fontWeight="500">
         Market Cap.
       </Text>
-      <Text color={colors.text.normal} fontSize={1} py="12px" fontWeight="500">
+      <Text color="#fff" fontSize={1} py="10px" fontWeight="500">
         $ {marketCap.shortPretty()}
       </Text>
     </Flex>
@@ -43,23 +69,27 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
       justifyContent="center"
       alignItems="center"
       px={3}
+      style={{
+        borderLeft: '1px solid rgba(255, 255,255 ,0.22)',
+        borderRight: '1px solid rgba(255, 255,255 ,0.22)',
+      }}
     >
-      <Text color={colors.purple.dark} fontSize={12} fontWeight="500">
-        Price
+      <Text color="#c4d7ff" fontSize={12} fontWeight="500">
+        Price/Token
       </Text>
-      <Text color={colors.text.normal} fontSize={1} py="12px" fontWeight="500">
+      <Text color="#fff" fontSize={1} py="10px" fontWeight="500">
         $ {price.shortPretty()}
       </Text>
     </Flex>
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Text color={colors.purple.dark} fontSize={12} fontWeight="500">
+      <Text color="#c4d7ff" fontSize={12} fontWeight="500">
         Last 24 hrs.
       </Text>
       <Text
-        color={last24Hrs >= 0.0 ? colors.green.normal : colors.red.normal}
+        color={last24Hrs >= 0.0 ? '#4dfea0' : colors.red.normal}
         fontSize={1}
         fontWeight="500"
-        py="12px"
+        py="10px"
       >
         {last24Hrs >= 0.0 ? '+' : null}
         {last24Hrs} %
@@ -70,6 +100,7 @@ const PriceDetail = ({ marketCap, price, last24Hrs }) => (
 
 export default ({
   community: {
+    tokenAddress,
     name,
     banner,
     website,
@@ -78,20 +109,23 @@ export default ({
     marketCap,
     price,
     last24Hrs,
+    logo,
   },
   bandPrice,
   onClick,
+  bgColor,
+  isTcd,
 }) => (
   <Card
     variant="primary"
-    flex={['', '0 0 350px']}
+    flex={['', '0 0 500px']}
     p="14px"
-    bg="#fff"
     my={3}
     mx="16px"
-    border="solid 1px #dee2f0"
     css={{
       alignSelf: 'flex-start',
+      backgroundImage: bgColor || 'linear-gradient(to right, #5c62ff, #5a9bff)',
+      boxShadow: '0 5px 10px 0 rgba(0, 0, 0, 0.25)',
       ...(onClick
         ? {
             cursor: 'pointer',
@@ -104,6 +138,7 @@ export default ({
         : {}),
     }}
     style={{
+      height: '290px',
       borderRadius: '10px',
       padding: '0px',
       overflow: 'hidden',
@@ -111,57 +146,55 @@ export default ({
     onClick={onClick}
   >
     {/* Image Banner */}
-    <div
-      style={{
-        backgroundImage: `url(${banner})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        width: '100%',
-        height: '150px',
-      }}
-    />
-    <Flex
-      flexDirection={['column-reverse', 'row']}
-      alignItems="flex-start"
-      pl={[2, 0]}
-    >
-      <Box flex={1} mx="20px">
-        <Flex flexDirection="row" alignItems="center">
-          <WrapText
-            color={colors.text.normal}
-            size={16}
-            fontWeight="500"
-            lineHeight={2}
-            mt={1}
-          >
-            {name}
-          </WrapText>
-          <Text pt="4px">
-            {website && (
-              <AbsoluteLink
-                href={website}
-                style={{ marginLeft: 10, fontSize: '0.9em' }}
-                dark
-                onClick={e => e.stopPropagation()}
-              >
-                <Image src={OutImg} />
-              </AbsoluteLink>
-            )}
-          </Text>
-        </Flex>
-        <WrapText fontSize={11} color="#4a3e86" fontWeight="200">
-          By {organization}
+    <Flex flexDirection="column" alignItems="flex-start" pl="30px" color="#fff">
+      <Flex alignItems="center">
+        <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
+          {name}
         </WrapText>
-        <Description lineHeight="19px" fontSize={12} mt={2} mb={2}>
-          {description}
-        </Description>
-      </Box>
+      </Flex>
+      <Box
+        bg="rgba(255,255,255, 0.3)"
+        mx="-30px"
+        width="115%"
+        mb={3}
+        style={{ height: '2px' }}
+      />
+      <Flex>
+        <DisplayIcon src={logo} />
+        <Flex flexDirection="column" mx="18px">
+          <Description fontSize="15px" mb={2}>
+            {description}
+          </Description>
+          <PriceDetail
+            marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
+            price={BN.parse(price).bandToUSD(bandPrice)}
+            last24Hrs={last24Hrs.toFixed(2)}
+          />
+          <Flex flexDirection="row" alignItems="center" mt={2}>
+            <Link to={`/community/${tokenAddress}/overview`}>
+              <Button
+                variant="white"
+                style={{ padding: '12px 25px' }}
+                onClick={e => e.stopPropagation(e)}
+              >
+                Overview
+              </Button>
+            </Link>
+            {isTcd ? (
+              <Link to={`/community/${tokenAddress}/dataset`}>
+                <Button
+                  variant="white"
+                  ml={3}
+                  style={{ padding: '12px 25px' }}
+                  onClick={e => e.stopPropagation(e)}
+                >
+                  Dataset
+                </Button>
+              </Link>
+            ) : null}
+          </Flex>
+        </Flex>
+      </Flex>
     </Flex>
-    {/* PriceDetail */}
-    <PriceDetail
-      marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
-      price={BN.parse(price).bandToUSD(bandPrice)}
-      last24Hrs={last24Hrs.toFixed(2)}
-    />
   </Card>
 )

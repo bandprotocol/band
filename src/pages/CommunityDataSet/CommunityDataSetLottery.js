@@ -57,11 +57,9 @@ const renderDataPoints = (
   <React.Fragment>
     <Flex>
       <Heading>{lotteries.length} Ðata Points</Heading>
-      {/* <Box ml="auto" mr={3}>
-        <Text fontSize={26}>
-          <ion-icon name="md-search" />
-        </Text>
-      </Box> */}
+      <Box ml="auto" mr={3}>
+        <Text fontSize={26}>{/* <ion-icon name="md-search" /> */}</Text>
+      </Box>
     </Flex>
     <Box mt={3}>
       <FlipMove>
@@ -218,7 +216,7 @@ export default class LotteryPage extends React.Component {
                 />
               )}
             </LotteryCountByTypeFetcher>
-            <LotteryCountByTypeFetcher type="PWB">
+            <LotteryCountByTypeFetcher type="MMN">
               {({ fetching, data, forceFetch }) => (
                 <DatasetTab
                   mx="8px"

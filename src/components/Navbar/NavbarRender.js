@@ -1,17 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
 import PageContainer from 'components/PageContainer'
-import Eth from 'images/eth.png'
-import Wallet from 'images/blueWallet.svg'
-// import AddCommunity from 'images/add-community.svg'
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Link, Image, Flex, Box, Text, Card } from 'ui/common'
-import media from 'ui/media'
-import PendingTransaction from 'components/PendingTransaction'
 import ClickOutSide from 'react-click-outside'
-
-import LogoSrc from 'images/logo-dark.png'
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import PendingTransaction from 'components/PendingTransaction'
+import media from 'ui/media'
 import { colors } from 'ui'
+
+// import AddCommunity from 'images/add-community.svg'
+import Eth from 'images/eth.svg'
+import Wallet from 'images/blueWallet.svg'
+// Dashboard Page
+import WhiteLogoSrc from 'images/band-white.png'
+
+// Other Page
+import LogoSrc from 'images/logo-dark.png'
 
 const Nav = styled.nav`
   display: flex;
@@ -20,8 +24,12 @@ const Nav = styled.nav`
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
   position: sticky;
   top: 0;
-  background: #ffffff;
   z-index: 3;
+
+  ${p =>
+    p.isDashboard
+      ? 'background: unset; background-image: linear-gradient(to right, #5269ff, #4890ff); box-shadow: 0 0 0 0 #000000;'
+      : 'background: #fff; box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);'}
 
   ${media.mobile} {
     height: 60px;
@@ -36,7 +44,7 @@ const TextClickable = styled(Text)`
 const SignIn = styled(Text).attrs({
   fontSize: '16px',
   fontWeight: '900',
-  color: colors.purple.dark,
+  color: p => (p.isDashboard ? '#fff' : colors.blue.dark),
   mr: '40px',
 })`
   cursor: pointer;
@@ -215,8 +223,10 @@ export default ({
     (txs &&
       txs.filter(tx => tx.status === 'SENDING' || tx.status === 'PENDING')) ||
     []
+
+  const isDashboard = document.location.pathname === '/'
   return (
-    <Nav>
+    <Nav isDashboard={isDashboard}>
       <PageContainer fullWidth>
         <Flex alignItems="center">
           <Link dark="true" to="/">
@@ -225,7 +235,11 @@ export default ({
               alignItems="center"
               style={{ height: 60, width: 220 }}
             >
-              <Image src={LogoSrc} height={34} />
+              {isDashboard ? (
+                <Image src={WhiteLogoSrc} width="163px" height="30px" />
+              ) : (
+                <Image src={LogoSrc} height="34px" />
+              )}
             </Flex>
           </Link>
           <Flex ml="auto">
@@ -272,7 +286,18 @@ export default ({
                     />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
-                    <Image src={Eth} width={36} height={36} />
+                    <Flex
+                      justifyContent="center"
+                      alignItems="center"
+                      bg="#f8fafd"
+                      style={{
+                        borderRadius: '50%',
+                        width: '36px',
+                        height: '36px',
+                      }}
+                    >
+                      <Image src={Eth} width={27} height={27} />
+                    </Flex>
                     {pending.length !== 0 && <Badge bg={colors.red} />}
                   </DropdownButton>
                   <Flex
@@ -288,7 +313,10 @@ export default ({
                         />
                       )}
                     </Flex>
-                    <Text color="#7688f4" fontSize={3}>
+                    <Text
+                      color={isDashboard ? '#fff' : colors.blue.normal}
+                      fontSize={3}
+                    >
                       <i className="fas fa-sort-down" />
                     </Text>
                   </Flex>
@@ -329,7 +357,9 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : (
-              <SignIn onClick={showWallet}>Sign in</SignIn>
+              <SignIn onClick={showWallet} isDashboard={isDashboard}>
+                Sign in
+              </SignIn>
             )}
           </Flex>
         </Flex>

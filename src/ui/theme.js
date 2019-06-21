@@ -69,6 +69,26 @@ export default {
         backgroundColor: colors.background.darkGrey,
       },
     },
+    white: {
+      fontFamily: 'Avenir',
+      fontWeight: 400,
+      fontSize: '0.85em',
+      padding: '0.9em 3em',
+      cursor: 'pointer',
+      color: '#5269ff',
+      background: 'white',
+      border: `solid 0px ${colors.text.grey}`,
+      transition: 'all 250ms',
+      borderRadius: '20px',
+      fontSize: '15px',
+      fontWeight: '900',
+
+      '&:hover': {
+        backgroundColor: '#ffca55',
+        color: 'white',
+        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
+      },
+    },
     blue: {
       fontFamily: 'Avenir',
       fontWeight: 400,

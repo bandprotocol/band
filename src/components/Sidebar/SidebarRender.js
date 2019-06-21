@@ -134,9 +134,6 @@ export default ({
         </Flex>
       )}
       <Flex flexDirection="column" py={4} width={[1]}>
-        <Bold px={4} pb={3} fontSize="12px" color="#a6c1ff">
-          MENU
-        </Bold>
         <Flex flexDirection="column" width="100%" justifyContent="center">
           <Tab
             link={`/community/${address}/overview`}
@@ -145,6 +142,37 @@ export default ({
           >
             Overview
           </Tab>
+          {hasTCD && (
+            <React.Fragment>
+              <Bold px={4} pt={4} pb={3} fontSize="12px" color="#a6c1ff">
+                FOR DEVELOPER
+              </Bold>
+              <Tab
+                link={`/community/${address}/dataset`}
+                imgSrcActive={DataSetActive}
+                imgSrcInactive={DataSetInactive}
+              >
+                Dataset
+              </Tab>
+              <Tab
+                link={`/community/${address}/integration`}
+                imgSrcActive={DataSetActive}
+                imgSrcInactive={DataSetInactive}
+              >
+                Integration
+              </Tab>
+              <Tab
+                link={`/community/${address}/provider`}
+                imgSrcActive={DataProviderActive}
+                imgSrcInactive={DataProviderInactive}
+              >
+                Data providers
+              </Tab>
+            </React.Fragment>
+          )}
+          <Bold px={4} py={3} fontSize="12px" color="#a6c1ff">
+            FOR TOKEN HOLDER
+          </Bold>
           <Tab
             link={`/community/${address}/parameters`}
             imgSrcActive={GovernanceActiveSrc}
@@ -159,31 +187,6 @@ export default ({
           >
             Proposals
           </Tab>
-          {hasTCD && (
-            <React.Fragment>
-              <Tab
-                link={`/community/${address}/provider`}
-                imgSrcActive={DataProviderActive}
-                imgSrcInactive={DataProviderInactive}
-              >
-                Data providers
-              </Tab>
-              <Tab
-                link={`/community/${address}/dataset`}
-                imgSrcActive={DataSetActive}
-                imgSrcInactive={DataSetInactive}
-              >
-                Data set
-              </Tab>
-              <Tab
-                link={`/community/${address}/integration`}
-                imgSrcActive={DataSetActive}
-                imgSrcInactive={DataSetInactive}
-              >
-                Integration
-              </Tab>
-            </React.Fragment>
-          )}
         </Flex>
       </Flex>
     </Flex>

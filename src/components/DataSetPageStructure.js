@@ -28,6 +28,7 @@ export default ({
   name,
   children,
   bgIndex,
+  currentPage = { path: 'dataset', label: 'Dataset' },
   renderHeader = () => null,
 }) => (
   <Box width="100%">
@@ -36,8 +37,8 @@ export default ({
         links={[
           { path: `/community/${communityAddress}`, label: name },
           {
-            path: `/community/${communityAddress}/dataset`,
-            label: 'Data Set',
+            path: `/community/${communityAddress}/${currentPage.path}`,
+            label: currentPage.label,
           },
         ]}
       />

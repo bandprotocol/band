@@ -1,104 +1,164 @@
 import React from 'react'
 import PageContainer from 'components/PageContainer'
-import { colors } from 'ui'
-import { Flex, Text, Box } from 'ui/common'
+import styled from 'styled-components'
+import { Flex, Text, Box, Card, Button } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
+import HeaderBackgroundSrc from 'images/background-header.svg'
 
-const YourCommunities = ({ yourCommunities, bandPrice, history }) => {
-  if (yourCommunities.length === 0) return <div />
-  return (
-    <Box style={{ width: '100%' }}>
-      <PageContainer dashboard>
+const Header = styled(Card)`
+  height: 438px;
+  width: 100%;
+  background: url('${HeaderBackgroundSrc}');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: center;
+`
+
+const AbsoluteLink = styled.a.attrs(props => ({
+  href: props.to || props.href,
+  target: '_blank',
+  rel: 'noopener',
+}))`
+  text-decoration: none;
+  color: inherit;
+`
+
+const WhiteButton = styled(Button).attrs({
+  fontSize: '18px',
+  color: '#5269ff',
+  fontWeight: '500',
+  bg: '#fff',
+  width: '226px',
+  mx: '15px',
+})`
+  line-height: 35px;
+  border-radius: 4px;
+  cursor: pointer;
+`
+
+const WhiteOutlineButton = styled(Button).attrs({
+  fontSize: '18px',
+  color: '#fff',
+  fontWeight: '500',
+  mx: '15px',
+})`
+  background-color: transparent;
+  border: 1px solid #fff;
+  line-height: 35px;
+  border-radius: 4px;
+  cursor: pointer;
+`
+
+const CountBadge = styled(Flex).attrs({
+  color: '#fff',
+  bg: '#5269ff',
+  width: '43px',
+  justifyContent: 'center',
+  alignItems: 'center',
+  fontSize: '20px',
+  fontWeight: '900',
+  ml: '10px',
+})`
+  height: 30px;
+  border-radius: 15px;
+`
+
+export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
+  <PageContainer fullWidth style={{ background: '#f6f7fc' }}>
+    <Header>
+      <Flex
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        width="100%"
+        style={{ height: '100%' }}
+      >
         <Text
-          fontSize="16px"
-          color={colors.text.normal}
-          fontWeight="600"
-          pt={3}
+          fontSize="40px"
+          color="#fff"
+          fontWeight="bold"
+          mt={2}
+          style={{ letterSpacing: '0.95px' }}
         >
-          YOUR COMMUNITIES
+          DATA GOVERNANCE PORTAL
         </Text>
-        <Flex flexWrap="wrap" mt={2} mx="-20px" justifyContent="flex-start">
-          {yourCommunities.map(yourCommunity => (
-            <MegaCommunityCard
-              key={yourCommunity.name}
-              community={yourCommunity}
-              bandPrice={bandPrice}
-              onClick={() =>
-                history.push(`/community/${yourCommunity.address}/overview`)
-              }
-            />
-          ))}
-        </Flex>
-      </PageContainer>
-    </Box>
-  )
-}
-
-const FeatureCommunity = ({ featureCommunities, bandPrice, history }) => {
-  if (featureCommunities.length === 0) return <div />
-  return (
-    <Box bg="#fafbfd" style={{ width: '100%' }}>
-      <PageContainer dashboard>
         <Text
-          fontSize="16px"
-          color={colors.text.normal}
-          fontWeight="600"
-          pt={3}
+          fontSize="20px"
+          color="#fff"
+          my={3}
+          width="850px"
+          textAlign="center"
+          style={{ lineHeight: '1.7' }}
         >
-          FEATURED COMMUNITIES
+          Band Protocol connects ÐApps with trusted off-chain information,
+          curated through a decentralized network of data providers. We use
+          dataset tokens to incentivize providers.
         </Text>
-        <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
-          {featureCommunities.map(featureCommunity => (
-            <MegaCommunityCard
-              key={featureCommunity.name}
-              community={featureCommunity}
-              bandPrice={bandPrice}
-              style={{}}
-              onClick={() =>
-                history.push(`/community/${featureCommunity.address}/overview`)
-              }
-            />
-          ))}
-        </Flex>
-      </PageContainer>
-    </Box>
-  )
-}
-
-export default ({
-  communities,
-  yourCommunities,
-  featureCommunities,
-  bandPrice,
-  history,
-}) => (
-  <PageContainer
-    fullWidth
-    style={{ minHeight: 'calc(100vh - 80px)', background: '#f6f7fc' }}
-  >
+        <Box mt={4}>
+          <AbsoluteLink href="https://developer.bandprotocol.com/">
+            <WhiteButton>Developer Reference</WhiteButton>
+          </AbsoluteLink>
+          <AbsoluteLink href="https://bandprotocol.com">
+            <WhiteOutlineButton>
+              Learn more about Band Protocol
+            </WhiteOutlineButton>
+          </AbsoluteLink>
+        </Box>
+      </Flex>
+    </Header>
     {/* TODO: Fix this condition(loading forever when length === 0) and
     check yourcommunity, feature community as well */}
-    {communities ? (
+    {tcdCommunities && tcrCommunities ? (
       <Flex flexDirection="column">
-        {/* All Communities */}
         <Box style={{ width: '100%', height: '100%' }}>
           <PageContainer dashboard>
-            <Text
-              fontSize="16px"
-              mt="12px"
-              mb={3}
-              fontWeight="900"
-              color="#393939"
-            >
-              ALL DATASETS
-            </Text>
+            {/* TCD Communities */}
+            <Flex flexDirection="row" alignItems="center" mt="12px" mb={3}>
+              <Text
+                fontSize="25px"
+                fontWeight="900"
+                color="#4a4a4a"
+                style={{ letterSpacing: '1px' }}
+              >
+                Available Datasets for DApps
+              </Text>
+              <CountBadge>{tcdCommunities.length}</CountBadge>
+            </Flex>
             <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
-              {communities.map((community, i) => (
+              {tcdCommunities.map((community, i) => (
                 <MegaCommunityCard
                   key={i}
                   community={community}
                   bandPrice={bandPrice}
+                  isTcd
+                  onClick={() =>
+                    history.push(
+                      `/community/${community.tokenAddress}/overview`,
+                    )
+                  }
+                />
+              ))}
+            </Flex>
+            {/* TCR Communities */}
+            <Flex flexDirection="row" alignItems="center" mt="12px" mb={3}>
+              <Text
+                fontSize="25px"
+                fontWeight="900"
+                color="#4a4a4a"
+                style={{ letterSpacing: '1px' }}
+              >
+                DApps built with Token Curated Registry
+              </Text>
+              <CountBadge>{tcrCommunities.length}</CountBadge>
+            </Flex>
+            <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
+              {tcrCommunities.map((community, i) => (
+                <MegaCommunityCard
+                  key={i}
+                  community={community}
+                  bandPrice={bandPrice}
+                  bgColor="linear-gradient(118deg, #6b8bf5, #6bf5cd)"
                   onClick={() =>
                     history.push(
                       `/community/${community.tokenAddress}/overview`,
