@@ -1,7 +1,7 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
 const TCDBase = artifacts.require('TCDBase');
-const AggTCDFactory = artifacts.require('AggTCDFactory');
+const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
@@ -17,56 +17,59 @@ module.exports = function(deployer, network, accounts) {
       const registry = await BandRegistry.deployed();
       const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
-      let dataProviders;
 
-      if (network === 'development') {
-        dataProviders = [];
-        for (let i = 0; i < 5; i++) {
-          const source = await deployer.deploy(
-            MockDataSource,
-            'price_data_source' + (i + 1),
-          );
-          dataProviders.push(await source.address);
-          console.log(await source.address);
-          console.log(await source.owner());
-        }
-      } else {
-        dataProviders = [
-          '0x98A99CBc7060584c8fd4b9B9b28A3815B617387A',
-          '0x374e51e6B23b47A407F0F03A404840BE42273555',
-          '0x8571121fe7D347fD6CD41b02849177C927292d45',
-          '0x81D21f40595B81792025e028F397bd44ff33bcF0',
-          '0xCDc294B99c6439875db639E2db46e34acdA70517',
-        ];
-      }
+      const dataProviders = [
+        '0xc169830Cd17Fd32C3885B1D8Bc9f1D41E3dB302c',
+        '0x53193a6A161F23be0AD9bB549D4d2725164fdF88',
+        '0xb146bD7B958B8928651cf4c28953F425B33F31c5',
+        '0xf1e5c7513B6563f555A3410C13E1f3D28640A38E',
+        '0x99a1D406baE20D2BFb2Cf0177E41E6Ed0B54AFee',
+      ];
+
+      const tcdList = [];
+
       // Create Price community
       const priceTx = await commFactory.create(
-        'PriceFeedCommunity',
-        'PFC',
+        'Price Dataset',
+        'PRC',
         BondingCurveExpression.address,
         '0',
         '86400',
         '50000000000000000',
         '800000000000000000',
       );
-      console.log('Created PriceFeedCommunity [bondingCurve,params,token] at', [
+      console.log('Created PriceDataset [bondingCurve,params,token] at', [
         priceTx.receipt.logs[2].args.bondingCurve,
         priceTx.receipt.logs[2].args.params,
         priceTx.receipt.logs[2].args.token,
       ]);
-      const tcdFactory = await AggTCDFactory.deployed();
+      const tcdFactory = await MultiSigTCDFactory.deployed();
       const commToken = await CommunityToken.at(
         priceTx.receipt.logs[2].args.token,
       );
       const params = await Parameters.at(priceTx.receipt.logs[2].args.params);
+
+      await commToken.addCapper(tcdFactory.address);
+      // Buy tokens
+      const curve = await BondingCurve.at(
+        priceTx.receipt.logs[2].args.bondingCurve,
+      );
+      await band.approve(curve.address, '620000000000000148973918');
+      await curve.buy(
+        accounts[0],
+        '620000000000000148973918',
+        '1000000000000000000000000',
+      );
+
+      // Crypto price
       await params.setRaw(
         [
-          web3.utils.fromAscii('data:min_provider_stake'),
-          web3.utils.fromAscii('data:max_provider_count'),
-          web3.utils.fromAscii('data:owner_revenue_pct'),
-          web3.utils.fromAscii('data:query_price'),
-          web3.utils.fromAscii('data:withdraw_delay'),
-          web3.utils.fromAscii('data:data_aggregator'),
+          web3.utils.fromAscii('crypto:min_provider_stake'),
+          web3.utils.fromAscii('crypto:max_provider_count'),
+          web3.utils.fromAscii('crypto:owner_revenue_pct'),
+          web3.utils.fromAscii('crypto:query_price'),
+          web3.utils.fromAscii('crypto:withdraw_delay'),
+          web3.utils.fromAscii('crypto:data_aggregator'),
         ],
         [
           '500000000000000000000',
@@ -77,37 +80,131 @@ module.exports = function(deployer, network, accounts) {
           MedianAggregator.address,
         ],
       );
-      await commToken.addCapper(tcdFactory.address);
-
-      const priceTCDTx = await tcdFactory.createTCD(
-        web3.utils.fromAscii('data:'),
+      const cyptoTCDTx = await tcdFactory.createMultiSigTCD(
+        web3.utils.fromAscii('crypto:'),
         priceTx.receipt.logs[2].args.bondingCurve,
         registry.address,
         priceTx.receipt.logs[2].args.params,
       );
-      const priceTCD = await TCDBase.at(priceTCDTx.receipt.logs[0].args.atcd);
-      console.log('Created Price TCD at', priceTCD.address);
-      console.error('DataSourceBookkeepingPriceAddress:', priceTCD.address);
-      // Buy tokens
-      const curve = await BondingCurve.at(
-        priceTx.receipt.logs[2].args.bondingCurve,
-      );
-
-      await band.approve(curve.address, '620000000000000148973918');
-      await curve.buy(
-        accounts[0],
-        '620000000000000148973918',
-        '1000000000000000000000000',
-      );
-
-      // Add register
-      await commToken.approve(priceTCD.address, '1000000000000000000000000');
+      const cryptoTCD = await TCDBase.at(cyptoTCDTx.receipt.logs[0].args.mtcd);
+      console.log('Created CryptoPrice TCD at', cryptoTCD.address);
+      tcdList.push(cryptoTCD.address);
 
       const address0 = '0x0000000000000000000000000000000000000000';
       await Promise.all(
         dataProviders.map(async dataSource => {
-          priceTCD.register(dataSource, address0, '500000000000000000000');
+          cryptoTCD.register(dataSource, address0, '500000000000000000000');
         }),
+      );
+
+      // Fiat price
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('fiat:min_provider_stake'),
+          web3.utils.fromAscii('fiat:max_provider_count'),
+          web3.utils.fromAscii('fiat:owner_revenue_pct'),
+          web3.utils.fromAscii('fiat:query_price'),
+          web3.utils.fromAscii('fiat:withdraw_delay'),
+          web3.utils.fromAscii('fiat:data_aggregator'),
+        ],
+        [
+          '500000000000000000000',
+          '4',
+          '500000000000000000',
+          '1000000000000000',
+          '259200',
+          MedianAggregator.address,
+        ],
+      );
+      const fiatTCDTx = await tcdFactory.createMultiSigTCD(
+        web3.utils.fromAscii('fiat:'),
+        priceTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        priceTx.receipt.logs[2].args.params,
+      );
+      const fiatTCD = await TCDBase.at(fiatTCDTx.receipt.logs[0].args.mtcd);
+      console.log('Created FiatPrice TCD at', fiatTCD.address);
+      tcdList.push(fiatTCD.address);
+
+      await Promise.all(
+        dataProviders.map(async dataSource => {
+          fiatTCD.register(dataSource, address0, '500000000000000000000');
+        }),
+      );
+
+      // Commodity price
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('commod:min_provider_stake'),
+          web3.utils.fromAscii('commod:max_provider_count'),
+          web3.utils.fromAscii('commod:owner_revenue_pct'),
+          web3.utils.fromAscii('commod:query_price'),
+          web3.utils.fromAscii('commod:withdraw_delay'),
+          web3.utils.fromAscii('commod:data_aggregator'),
+        ],
+        [
+          '500000000000000000000',
+          '3',
+          '500000000000000000',
+          '1000000000000000',
+          '259200',
+          MedianAggregator.address,
+        ],
+      );
+      const commodTCDTx = await tcdFactory.createMultiSigTCD(
+        web3.utils.fromAscii('commod:'),
+        priceTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        priceTx.receipt.logs[2].args.params,
+      );
+      const commodTCD = await TCDBase.at(commodTCDTx.receipt.logs[0].args.mtcd);
+      console.log('Created CommodPrice TCD at', commodTCD.address);
+      tcdList.push(commodTCD.address);
+
+      await Promise.all(
+        dataProviders.map(async dataSource => {
+          commodTCD.register(dataSource, address0, '500000000000000000000');
+        }),
+      );
+
+      // Stock price
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('stock:min_provider_stake'),
+          web3.utils.fromAscii('stock:max_provider_count'),
+          web3.utils.fromAscii('stock:owner_revenue_pct'),
+          web3.utils.fromAscii('stock:query_price'),
+          web3.utils.fromAscii('stock:withdraw_delay'),
+          web3.utils.fromAscii('stock:data_aggregator'),
+        ],
+        [
+          '500000000000000000000',
+          '3',
+          '500000000000000000',
+          '1000000000000000',
+          '259200',
+          MedianAggregator.address,
+        ],
+      );
+      const stockTCDTx = await tcdFactory.createMultiSigTCD(
+        web3.utils.fromAscii('stock:'),
+        priceTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        priceTx.receipt.logs[2].args.params,
+      );
+      const stockTCD = await TCDBase.at(stockTCDTx.receipt.logs[0].args.mtcd);
+      console.log('Created StockPrice TCD at', stockTCD.address);
+      tcdList.push(stockTCD.address);
+
+      await Promise.all(
+        dataProviders.map(async dataSource => {
+          stockTCD.register(dataSource, address0, '500000000000000000000');
+        }),
+      );
+
+      console.error(
+        'DataSourceBookkeepingPriceAddress:',
+        JSON.stringify(tcdList),
       );
     })
     .catch(console.log);
