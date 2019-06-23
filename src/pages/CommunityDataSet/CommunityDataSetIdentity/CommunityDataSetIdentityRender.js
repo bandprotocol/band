@@ -116,6 +116,7 @@ export default class IdentityPage extends React.Component {
   }
 
   render() {
+    const { name: communityName } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -158,7 +159,7 @@ export default class IdentityPage extends React.Component {
       >
         <PageContainer>
           <Box mt="-100px">
-            <Snippet dataset="identity" />
+            <Snippet dataset={communityName} />
           </Box>
           <Box mt={5}>
             <IdentityFetcher

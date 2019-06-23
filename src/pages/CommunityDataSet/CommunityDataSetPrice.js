@@ -102,6 +102,7 @@ export default class CommunityPricePage extends React.Component {
   state = { type: 'CRYPTO' }
 
   render() {
+    const { name: communityName } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -177,7 +178,7 @@ export default class CommunityPricePage extends React.Component {
             </PriceCountByTypeFetcher>
           </Flex>
           <Box mt="24px">
-            <Snippet dataset="price" />
+            <Snippet dataset={communityName} />
           </Box>
           <Box mt={5}>
             <CurrentPriceFetcher type={this.state.type}>

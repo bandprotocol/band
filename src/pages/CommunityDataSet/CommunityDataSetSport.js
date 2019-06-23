@@ -225,6 +225,7 @@ export default class SportPage extends React.Component {
   }
 
   render() {
+    const { name: communityName } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -296,7 +297,7 @@ export default class SportPage extends React.Component {
             </SportCountByTypeFetcher>
           </Flex>
           <Box mt="24px">
-            <Snippet dataset="sport" />
+            <Snippet dataset={communityName} />
           </Box>
           <Box mt={5}>
             <SportByTypeFetcher

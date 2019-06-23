@@ -184,6 +184,7 @@ export default class LotteryPage extends React.Component {
   }
 
   render() {
+    const { name: communityName } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -230,7 +231,7 @@ export default class LotteryPage extends React.Component {
             </LotteryCountByTypeFetcher>
           </Flex>
           <Box mt="24px">
-            <Snippet dataset="lottery" />
+            <Snippet dataset={communityName} />
           </Box>
           <Box mt={5}>
             <LotteryByTypeFetcher

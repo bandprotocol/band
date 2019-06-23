@@ -1,45 +1,48 @@
 import React from 'react'
-import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Flex, Box, Text } from 'ui/common'
+import { Flex, Box, Text, AbsoluteLink } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
-import Code from 'data/Code'
+import Integration from 'data/Integration'
 
 const Pointer = styled(Flex)`
   position: relative;
-  padding-left: 20px;
-  font-size: 18px;
+  padding-left: 10px;
+  font-size: 16px;
   font-weight: ${props => (props.isSelected ? '900' : '500')};
   color: ${props => (props.isSelected ? 'white' : '#4a4a4a')}
-  transition: all 200ms;
   background: ${props =>
     props.isSelected
       ? `linear-gradient(to right, #5269ff, #4890ff)`
       : `#f4f8ff`};
+  transition: all 200ms;
+  cursor: pointer;
   :before {
     content: '';
     position: absolute;
-    right: -30px;
+    right: -15px;
     bottom: 0;
     width: 0;
     height: 0;
-    border-left: 30px solid
+    border-left: 15px solid
       ${props => (props.isSelected ? `#4890ff` : `#f4f8ff`)};
-    border-top: 50px solid transparent;
-    border-bottom: 50px solid transparent;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
   }
 `
 
-export default class CommunityIntegration extends React.Component {
+export default class CommunityIntegrationRender extends React.Component {
   state = { tabNum: 0 }
 
   render() {
+    const { name: communityName } = this.props
+    const info = Integration[communityName]
     return (
       <PageStructure
         bgIndex={1}
-        currentPage={{ path: 'integration', label: 'Integration' }}
+        title="INTEGRATION"
+        name={communityName}
         renderHeader={() => (
           <Flex flexDirection="column" style={{ width: '100%' }}>
             <Flex flexDirection="column" pl="50px">
@@ -49,8 +52,7 @@ export default class CommunityIntegration extends React.Component {
                 style={{ width: '50%' }}
                 fontWeight="900"
               >
-                Integrate Off-Chain Price Data to Your Smart Contracts in
-                Minutes!
+                {info.h1}
               </Text>
               <Text
                 fontSize="20px"
@@ -58,41 +60,33 @@ export default class CommunityIntegration extends React.Component {
                 style={{ width: '60%' }}
                 mt={3}
               >
-                Looking for a simple, decentralized, and secured way for your
-                Dapps to consume trusted price information? We got you covered!
+                {info.h2}
               </Text>
             </Flex>
           </Flex>
         )}
         {...this.props}
       >
-        <PageContainer
-          bg="white"
-          py="40px"
-          px="60px"
-          style={{ borderRadius: '8px' }}
-        >
-          <Text fontSize="35px" mt="30px" fontWeight={900}>
+        <PageContainer bg="white" style={{ borderRadius: '8px' }}>
+          <Text fontSize="24px" mt="50px" mx="80px" fontWeight={900}>
             Example Situation <span>🤔</span>
           </Text>
           <Text
             lineHeight={1.65}
             fontWeight={500}
+            fontSize="16px"
             mt="20px"
-            style={{ width: '90%' }}
+            mx="80px"
           >
-            Say you have a simple smart contract for selling concert tickets.
-            Users must pay in ETH, but we want the price of each ticket to be
-            exactly 10 USD. In other words, a ticket costs whatever amount ETH
-            worth 10 USD at the purchase time. The smart contract needs a
-            real-time exchange rate of ETH/USD. <span>👇👇👇</span>
+            {info.example}
           </Text>
           <Flex
             flexDirection="row-reverse"
             mt="20px"
+            mx="80px"
             pr="30px"
             style={{
-              minHeight: '100px',
+              minHeight: '50px',
               borderRadius: '4px',
               overflow: 'hidden',
             }}
@@ -144,21 +138,57 @@ export default class CommunityIntegration extends React.Component {
                 bg={this.state.tabNum === 0 ? '#3c55f9' : '#fff8de'}
                 ml="5px"
                 p="5px"
+                fontSize="12px"
                 style={{ borderRadius: '4px', fontFamily: 'Source Code Pro' }}
               >
-                TicketContract
+                {info.contractName}
               </Text>
             </Pointer>
           </Flex>
           <Flex style={{ minHeight: '100px' }} />
           <Flex mt="-100px" mx="-8px" justifyContent="center" />
-          <Box mt="24px">
-            <Flex my="20px" alignItems="center" style={{ minHeight: '100px' }}>
-              <Text fontSize="18px" lineHeight={1.67} fontWeight={500}>
-                {Code['price'].description[this.state.tabNum || 0]}
+          <Box mt="10px" mx="80px">
+            <Flex alignItems="center" style={{ minHeight: '100px' }}>
+              <Text fontSize="16px" lineHeight={1.67} fontWeight={500}>
+                {info.description[this.state.tabNum || 0]}
               </Text>
             </Flex>
-            <Snippet dataset="price" codeIndex={this.state.tabNum} />
+            <Snippet dataset={communityName} codeIndex={this.state.tabNum} />
+            <Flex
+              mt="25px"
+              bg="#6b8bf5"
+              style={{
+                overflow: 'hidden',
+                maxHeight: '80px',
+                minHeight: '80px',
+                borderRadius: '10px',
+                position: 'relative',
+              }}
+            >
+              <Flex
+                bg="#4b6fe6"
+                style={{
+                  position: 'absolute',
+                  borderRadius: '50%',
+                  minHeight: '500px',
+                  minWidth: '500px',
+                  right: '-220px',
+                  top: '-420px',
+                }}
+              />
+              <Flex style={{ margin: 'auto', zIndex: 1 }}>
+                <Text color="white" fontSize="18px">
+                  We encourage you to see it in action, so feel free to try
+                  these codes on {` `}
+                  <AbsoluteLink
+                    style={{ color: 'white' }}
+                    href="https://remix.ethereum.org"
+                  >
+                    https://remix.ethereum.org
+                  </AbsoluteLink>
+                </Text>
+              </Flex>
+            </Flex>
           </Box>
         </PageContainer>
       </PageStructure>

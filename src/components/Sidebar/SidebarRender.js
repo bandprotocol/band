@@ -12,6 +12,7 @@ import GovernanceSrc from 'images/govInactive.svg'
 import ProposalSrc from 'images/voteInactive.svg'
 import DataProviderInactive from 'images/dataProviderInactive.svg'
 import DataSetInactive from 'images/datasetInactive.svg'
+import IntegrationInactive from 'images/integrationInactive.svg'
 
 // Image active
 import DetailActiveSrc from 'images/detailActive.svg'
@@ -19,6 +20,7 @@ import GovernanceActiveSrc from 'images/govActive.svg'
 import ProposalActiveSrc from 'images/voteActive.svg'
 import DataProviderActive from 'images/dataProviderActive.svg'
 import DataSetActive from 'images/datasetActive.svg'
+import IntegrationActive from 'images/integrationActive.svg'
 
 const Left = styled.div`
   width: 220px;
@@ -156,8 +158,8 @@ export default ({
               </Tab>
               <Tab
                 link={`/community/${address}/integration`}
-                imgSrcActive={DataSetActive}
-                imgSrcInactive={DataSetInactive}
+                imgSrcActive={IntegrationActive}
+                imgSrcInactive={IntegrationInactive}
               >
                 Integration
               </Tab>
