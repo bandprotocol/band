@@ -2,16 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { colors } from 'ui'
 import BN from 'utils/bignumber'
-import {
-  Flex,
-  Text,
-  Image,
-  Box,
-  AbsoluteLink,
-  Card,
-  Button,
-  Link,
-} from 'ui/common'
+import { Flex, Text, Image, Box, Card, Button, Link } from 'ui/common'
 
 const WrapText = styled(Text)`
   overflow: hidden;

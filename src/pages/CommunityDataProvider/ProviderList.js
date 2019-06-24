@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Button } from 'ui/common'
+import { Flex, Button, Text } from 'ui/common'
 import styled from 'styled-components'
 import ProviderListRender from './ProviderListRender'
 import { communityDetailSelector } from 'selectors/communities'
@@ -62,7 +62,22 @@ class ProviderList extends React.Component {
         bg="white"
         width={1}
       >
-        <Flex width={1} flexDirection="row" py="10px" px="20px">
+        <Flex
+          width={1}
+          flexDirection="row"
+          py="10px"
+          px="20px"
+          alignItems="center"
+        >
+          <Text
+            fontSize="18px"
+            fontWeight="900"
+            color="#393939"
+            width="190px"
+            ml="10px"
+          >
+            DATA PROVIDERS
+          </Text>
           <Flex width={1} justifyContent="flex-end">
             <Flex
               style={{

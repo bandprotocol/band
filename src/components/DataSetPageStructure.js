@@ -4,10 +4,7 @@ import Breadcrumb from 'components/Breadcrumb'
 import { Box, Flex, Text } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import colors from 'ui/colors'
-import DataSetHeaderSrc from 'images/dataset-header.svg'
-import IntegrationHeader from 'images/integrationHeader.png'
-
-const Covers = [DataSetHeaderSrc, IntegrationHeader]
+import DatasetHeader from 'images/provider-header.png'
 
 const Header = styled(Flex).attrs({
   alignItems: 'center',
@@ -15,21 +12,20 @@ const Header = styled(Flex).attrs({
   mb: '50px',
 })`
   color: ${colors.white};
-  background-image: url(${props =>
-    props.bgIndex ? Covers[props.bgIndex] : Covers[0]});
+  background-image: url(${DatasetHeader});
   background-size: cover;
   background-position: center;
-  height: 240px;
-  border-radius: 8px;
+  background-repeat: no-repeat;
+  height: 179px;
+  border-radius: 10px;
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.1);
 `
 
 export default ({
   communityAddress,
   name,
   children,
-  bgIndex,
-  currentPage = { path: 'dataset', label: 'Dataset' },
-  title,
+  breadcrumb = { path: 'dataset', label: 'Dataset' },
   renderHeader = () => null,
 }) => (
   <Box width="100%">
@@ -38,24 +34,12 @@ export default ({
         links={[
           { path: `/community/${communityAddress}`, label: name },
           {
-            path: `/community/${communityAddress}/${currentPage.path}`,
-            label: currentPage.label,
+            path: `/community/${communityAddress}/${breadcrumb.path}`,
+            label: breadcrumb.label,
           },
         ]}
       />
-      {
-        <Text
-          mr={2}
-          fontSize="18px"
-          mt="16px"
-          mb={3}
-          fontWeight="900"
-          color="#393939"
-        >
-          {title}
-        </Text>
-      }
-      <Header bgIndex={bgIndex}>{renderHeader()}</Header>
+      <Header>{renderHeader()}</Header>
       {children}
     </PageContainer>
   </Box>

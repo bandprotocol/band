@@ -40,25 +40,26 @@ export default class CommunityIntegrationRender extends React.Component {
     const info = Integration[communityName]
     return (
       <PageStructure
-        bgIndex={1}
-        title="INTEGRATION"
         name={communityName}
+        breadcrumb={{ path: 'integration', label: 'Integration' }}
         renderHeader={() => (
           <Flex flexDirection="column" style={{ width: '100%' }}>
-            <Flex flexDirection="column" pl="50px">
+            <Flex flexDirection="column" pl="52px">
               <Text
-                fontSize="30px"
-                lineHeight={1.4}
-                style={{ width: '50%' }}
+                fontSize="27px"
+                color="white"
                 fontWeight="900"
+                width="50%"
+                style={{ lineHeight: '38px' }}
               >
                 {info.h1}
               </Text>
               <Text
-                fontSize="20px"
-                lineHeight={1.4}
-                style={{ width: '60%' }}
-                mt={3}
+                fontSize="18px"
+                color="white"
+                fontWeight="500"
+                width="60%"
+                style={{ lineHeight: '33px' }}
               >
                 {info.h2}
               </Text>

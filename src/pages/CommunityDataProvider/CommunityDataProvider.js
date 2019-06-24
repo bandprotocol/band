@@ -2,63 +2,50 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentUserSelector } from 'selectors/current'
-import Breadcrumb from 'components/Breadcrumb'
-import colors from 'ui/colors'
-import PageContainer from 'components/PageContainer'
+import PageStructure from 'components/DataSetPageStructure'
 import ProviderList from './ProviderList'
-import ToolTip from 'components/ToolTip'
 import { Flex, Text } from 'ui/common'
 
 class CommunityDataProvider extends React.Component {
   render() {
     const { user, tokenAddress, name } = this.props
     return (
-      <PageContainer withSidebar>
-        <Breadcrumb
-          links={[
-            { path: `/community/${tokenAddress}`, label: name },
-            {
-              path: `/community/${tokenAddress}/provider`,
-              label: 'Data Providers',
-            },
-          ]}
-        />
-        <Flex flexDirection="row">
-          <Flex justifyContent="center" alignItems="center">
-            <Text
-              mr={2}
-              fontSize="18px"
-              mt="16px"
-              mb={3}
-              fontWeight="900"
-              color="#393939"
-            >
-              DATA PROVIDERS
-            </Text>
-            <ToolTip
-              bg={colors.text.grey}
-              width="410px"
-              textBg="#b2b6be"
-              textColor={colors.text.normal}
-              bottom={20}
-              left={20}
-              tip={{ left: 21 }}
-            >
-              Token holders collectively curate trustworthy data providers. By
-              staking their tokens, they earn a portion of fee from the
-              providers. The more people stake, the more secure the data
-              endpoint becomes.
-            </ToolTip>
+      <PageStructure
+        name={name}
+        communityAddress={tokenAddress}
+        breadcrumb={{ path: 'provider', label: 'Data Providers' }}
+        renderHeader={() => (
+          <Flex flexDirection="column" style={{ width: '100%' }}>
+            <Flex flexDirection="column" m="15px 52px">
+              <Text
+                fontSize="27px"
+                color="white"
+                fontWeight="900"
+                width="350px"
+                style={{ lineHeight: '38px' }}
+              >
+                Great Data Comes From Community Collaborations
+              </Text>
+              <Text
+                fontSize="18px"
+                color="white"
+                fontWeight="500"
+                width="650px"
+                style={{ lineHeight: '33px' }}
+              >
+                Token holders collectively curate trustworthy data providers. By
+                staking their tokens, they earn a portion of fee from the
+                providers.
+              </Text>
+            </Flex>
           </Flex>
+        )}
+        {...this.props}
+      >
+        <Flex mt="30px">
+          <ProviderList user={user} tokenAddress={tokenAddress} pageSize={10} />
         </Flex>
-        <Flex mt="8px">
-          <ProviderList
-            user={user}
-            tokenAddress={tokenAddress}
-            pageSize={10}
-          />
-        </Flex>
-      </PageContainer>
+      </PageStructure>
     )
   }
 }
@@ -70,7 +57,6 @@ const mapStateToProps = (state, { tokenAddress }) => {
 
   return {
     name: community.get('name'),
-    address: community.get('address'),
     user: currentUserSelector(state),
   }
 }
