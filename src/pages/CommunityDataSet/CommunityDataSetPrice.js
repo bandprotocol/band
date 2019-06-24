@@ -4,7 +4,6 @@ import moment from 'moment'
 import { Flex, Box, Text, Card, Image, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import PageContainer from 'components/PageContainer'
-import Snippet from 'components/Snippet'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
@@ -177,9 +176,6 @@ export default class CommunityPricePage extends React.Component {
               )}
             </PriceCountByTypeFetcher>
           </Flex>
-          <Box mt="24px">
-            <Snippet dataset={communityName} />
-          </Box>
           <Box mt={5}>
             <CurrentPriceFetcher type={this.state.type}>
               {({ fetching, data }) =>

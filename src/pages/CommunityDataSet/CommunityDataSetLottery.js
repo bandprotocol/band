@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import PageContainer from 'components/PageContainer'
-import Snippet from 'components/Snippet'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { createLoadingButton } from 'components/BaseButton'
@@ -230,9 +229,6 @@ export default class LotteryPage extends React.Component {
               )}
             </LotteryCountByTypeFetcher>
           </Flex>
-          <Box mt="24px">
-            <Snippet dataset={communityName} />
-          </Box>
           <Box mt={5}>
             <LotteryByTypeFetcher
               type={this.state.type}

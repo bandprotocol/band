@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Box, Text, Flex, Image } from 'rebass'
-import TooltipIcon from 'images/icon-reason.svg'
+import TooltipIcon from 'images/remark.svg'
 
 const PopupBox = styled(Box)`
   z-index: 1000000000;

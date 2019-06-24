@@ -186,4 +186,17 @@ export const getParameterDetail = name =>
       type: 'TOKEN',
       description: 'Cost of ÐApps to query one data point in ETH',
     },
+    inflation_rate: {
+      type: 'PERCENTAGE',
+      description: 'Percentage of inflation',
+    },
+    curve_expression: {
+      type: 'ADDRESS',
+      description: 'Address of expression contract which is used in curve',
+    },
+    data_aggregator: {
+      type: 'ADDRESS',
+      description:
+        'Address of aggregator contract which is used in Token-Curated DataSources process',
+    },
   }[name] || { type: 'Unknown', description: 'UNKNOWN' })

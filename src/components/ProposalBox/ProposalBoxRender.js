@@ -14,11 +14,8 @@ import { convertFromChain, getParameterDetail } from 'utils/helper'
 
 const FlexDropDown = styled(Flex)`
   overflow: hidden;
-  transition: all 0.75s ease;
-  ${props =>
-    props.show
-      ? 'max-height:5000px; opacity: 1;'
-      : 'max-height:0px; opacity: 0;'}
+  transition: max-height 1.75s;
+  ${props => (props.show ? 'max-height:5000px;' : 'max-height:0px;')}
 `
 
 const VotedOval = ({ width }) => (
@@ -73,21 +70,20 @@ export default ({
       mb="20px"
       style={{
         borderRadius: '8px',
-        border: 'solid 1px #dee2f0',
+        border: 'solid 1px #e7ecff',
         overflow: 'hidden',
+        boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)',
       }}
     >
       <Flex
         flexDirection="column"
         justifyContent="center"
-        bg={show ? '#f8faff' : '#ffffff'}
+        bg="#ffffff"
         flex={1}
         px="40px"
         style={{
           lineHeight: '50px',
           cursor: 'pointer',
-
-          borderBottom: show ? 'solid 1px #f0f3f7' : 'none',
         }}
         onClick={() => toggleShow()}
       >
@@ -98,13 +94,8 @@ export default ({
         >
           {/* Left */}
           <Flex alignItems="center">
-            <Text
-              color={colors.blue.dark}
-              fontSize={1}
-              width="80px"
-              fontWeight="400"
-            >
-              {'#' + prefix}
+            <Text color="#5269ff" fontSize={1} width="80px" fontWeight="500">
+              {'#' + prefix[0].toUpperCase() + prefix.slice(1)}
             </Text>
             <Text
               color={colors.text.normal}
@@ -128,7 +119,7 @@ export default ({
             {isActive ? (
               <React.Fragment>
                 <Text
-                  color={colors.blue.normal}
+                  color="#5269ff"
                   fontSize={16}
                   fontWeight="regular"
                   textAlign="right"
@@ -182,21 +173,16 @@ export default ({
           </Flex>
         </Flex>
       </Flex>
-      <FlexDropDown
-        flexDirection="column"
-        px="40px"
-        show={show}
-        bg="white"
-        py={show && 4}
-      >
+      <FlexDropDown flexDirection="column" px="20px" show={show} bg="white">
         <Flex
           flexDirection="column"
-          bg="#f8faff"
+          bg="#eef3ff"
+          mt="20px"
           py="22px"
           px={4}
-          style={{ borderRadius: '6px', border: 'solid 1px #f0f3f7' }}
+          style={{ borderRadius: '6px', border: 'solid 1px #dde5ff' }}
         >
-          <Text fontWeight="500" color={colors.blue.dark} fontSize={1}>
+          <Text fontWeight="900" color="#5269ff" fontSize={1}>
             Reason for Change
           </Text>
           <Flex mt="20px">
@@ -206,7 +192,7 @@ export default ({
           </Flex>
           <Flex mt="20px">
             <Flex mr="10px">
-              <Text fontSize={0} fontWeight="500" color={colors.blue.dark}>
+              <Text fontSize={0} fontWeight="500" color="#5269ff">
                 By:
               </Text>
             </Flex>
@@ -224,10 +210,9 @@ export default ({
         </Flex>
         <Flex
           mt="20px"
-          flexDirection="column"
-          px={4}
-          bg="#f8faff"
-          style={{ borderRadius: '6px', border: 'solid 1px #f0f3f7' }}
+          pt="20px"
+          flexWrap="wrap"
+          style={{ borderTop: 'solid 1px #e7ecff' }}
         >
           {changes.map(change => {
             const { type, description } = getParameterDetail(change.name)
@@ -276,12 +261,14 @@ export default ({
             />
           )}
         </Flex>
-        <YourVote
-          isVoted={vote !== 'NOT VOTED'}
-          isSupport={vote === 'SUPPORT'}
-          isActive={isActive}
-          proposalId={proposalId}
-        />
+        <Flex mb="40px" justifyContent="center">
+          <YourVote
+            isVoted={vote !== 'NOT VOTED'}
+            isSupport={vote === 'SUPPORT'}
+            isActive={isActive}
+            proposalId={proposalId}
+          />
+        </Flex>
       </FlexDropDown>
     </Flex>
   )

@@ -4,14 +4,25 @@ import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
 const WithBottomBorder = styled(Flex)`
+  border-radius: 6px;
+  border: solid 1px #dde5ff;
+  background-color: #fafbff;
+  max-width: 350px;
   &:not(:last-child) {
     border-bottom: 1px solid #e6eaff;
   }
 `
 
 export default ({ title, description, current, changeTo }) => (
-  <WithBottomBorder py="18px" flexDirection="column" style={{}}>
-    <Text fontWeight="500" color={colors.blue.dark}>
+  <WithBottomBorder
+    py="18px"
+    flexDirection="column"
+    pl="20px"
+    pr="10px"
+    mb="15px"
+    mr="15px"
+  >
+    <Text fontWeight="900" color="#5269ff">
       {title}
     </Text>
     <Flex mt="20px">
@@ -19,10 +30,10 @@ export default ({ title, description, current, changeTo }) => (
         {description}
       </Text>
     </Flex>
-    <Flex flexDirection="row" flex={1} mt="20px">
-      <Flex width={1 / 5}>
+    <Flex flexDirection="column" mt="20px">
+      <Flex>
         <Flex mr="10px">
-          <Text fontSize={0} fontWeight="500" color={colors.blue.dark}>
+          <Text fontSize={0} fontWeight="500" color="#5269ff">
             Current:
           </Text>
         </Flex>
@@ -30,8 +41,8 @@ export default ({ title, description, current, changeTo }) => (
           <Text
             fontSize={0}
             fontWeight="500"
-            width="80px"
             style={{
+              width: '100%',
               whiteSpace: 'nowrap',
               textOverflow: 'ellipsis',
               overflow: 'hidden',
@@ -41,14 +52,24 @@ export default ({ title, description, current, changeTo }) => (
           </Text>
         </Flex>
       </Flex>
-      <Flex width={1 / 5}>
+      <Flex mt="10px">
         <Flex mr="10px">
-          <Text fontSize={0} fontWeight="500" color={colors.blue.dark}>
+          <Text
+            fontSize={0}
+            fontWeight="500"
+            color="#5269ff"
+            style={{
+              width: '100%',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+            }}
+          >
             Change to:
           </Text>
         </Flex>
         <Flex>
-          <Text fontSize={0} fontWeight="500">
+          <Text fontSize={0} fontWeight="700">
             {changeTo}
           </Text>
         </Flex>
