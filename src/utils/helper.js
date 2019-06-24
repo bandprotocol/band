@@ -199,4 +199,8 @@ export const getParameterDetail = name =>
       description:
         'Address of aggregator contract which is used in Token-Curated DataSources process',
     },
+    withdraw_delay: {
+      type: 'NUMBER',
+      description: 'Period of time for data provider to with draw their stake',
+    },
   }[name] || { type: 'Unknown', description: 'UNKNOWN' })

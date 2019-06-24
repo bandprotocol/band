@@ -5,7 +5,6 @@ import { Flex, Text, Button } from 'ui/common'
 import { connect } from 'react-redux'
 import { voteProposal } from 'actions'
 import { withRouter } from 'react-router-dom'
-import colors from 'ui/colors'
 
 function hexToRGB(h, alpha) {
   const r = parseInt(h.slice(1, 3), 16)
@@ -19,11 +18,11 @@ const VoteButton = styled(Button)`
   ${props =>
     props.selected
       ? `
-      border: solid 1px ${props.colorVote};
-      background-color: ${hexToRGB(props.colorVote, 0.1)};
+      background-color: ${props.colorVote};
       cursor: default;
-      color:${props.colorVote};
+      color: white;
       font-weight: 300;
+      font-style: oblique;
     `
       : `
       box-shadow: 0 3px 3px 0 ${props.colorShadow};
@@ -54,7 +53,8 @@ const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
         {((isActive && !isVoted) || isSupport) && (
           <VoteButton
             selected={isSupport}
-            colorVote="#42c47f"
+            isVoted={isVoted}
+            colorVote={isVoted ? '#bfe8d2' : '#42c47f'}
             colorShadow="rgba(39, 86, 61, 0.25)"
             onClick={() => vote(true)}
             disabled={isVoted}
@@ -66,7 +66,8 @@ const YourVote = ({ isSupport, isVoted, isActive, vote }) =>
         {((isActive && !isVoted) || (!isSupport && isVoted)) && (
           <VoteButton
             selected={!isSupport && isVoted}
-            colorVote="#ec7777"
+            isVoted={isVoted}
+            colorVote={isVoted ? '#fcabab' : '#ec7777'}
             colorShadow="#ffb4ac"
             onClick={() => vote(false)}
             disabled={isVoted}

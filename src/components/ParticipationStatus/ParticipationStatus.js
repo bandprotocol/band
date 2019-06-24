@@ -11,11 +11,19 @@ export default ({
   supportRequiredPct,
 }) => {
   return (
-    <Flex my={4}>
-      <Flex>
+    <Flex
+      my="20px"
+      pr="40px"
+      pl="20px"
+      py="25px"
+      width={1}
+      bg="#fafbff"
+      style={{ border: 'solid 1px #dde5ff', borderRadius: '6px' }}
+    >
+      <Flex flex={1}>
         <Flex flexDirection="column">
           <Flex alignItems="center" mb={3}>
-            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
+            <Text fontWeight="500" mr={1} color="#5269ff">
               Participation
             </Text>
             <ToolTip
@@ -29,7 +37,7 @@ export default ({
               {`If less than ${minParticipation}% of all voting power participate,
               the proposal is canceled and no parameter changes will be applied.`}
             </ToolTip>
-            <Text fontWeight="500" mx={2} color={colors.blue.dark}>
+            <Text fontWeight="500" mx={2} color="#5269ff">
               :
             </Text>
             <ProgressBar
@@ -41,7 +49,7 @@ export default ({
             />
           </Flex>
           <Flex>
-            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
+            <Text fontWeight="500" mr={1} color="#5269ff">
               Status
             </Text>{' '}
             : Minimum participation
@@ -49,11 +57,10 @@ export default ({
           </Flex>
         </Flex>
       </Flex>
-      <Flex flex={1} />
-      <Flex>
+      <Flex flex={1} justifyContent="flex-end">
         <Flex flexDirection="column">
           <Flex alignItems="center" mb={3}>
-            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
+            <Text fontWeight="500" mr={1} color="#5269ff">
               Result
             </Text>
             <ToolTip
@@ -69,7 +76,7 @@ export default ({
               Otherwise the proposal will not be
               successful.`}
             </ToolTip>
-            <Text fontWeight="500" mx={2} color={colors.blue.dark}>
+            <Text fontWeight="500" mx={2} color="#5269ff">
               :
             </Text>
             <ProgressBar
@@ -81,7 +88,7 @@ export default ({
             />
           </Flex>
           <Flex>
-            <Text fontWeight="500" mr={1} color={colors.blue.dark}>
+            <Text fontWeight="500" mr={1} color="#5269ff">
               Status
             </Text>
             {percentReject < supportRequiredPct ? ': Approved' : ': Rejected'}

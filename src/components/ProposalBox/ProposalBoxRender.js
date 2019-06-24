@@ -234,8 +234,9 @@ export default ({
               />
             )
           })}
-
-          {(!isActive || vote !== 'NOT VOTED') && (
+        </Flex>
+        {(!isActive || vote !== 'NOT VOTED') && (
+          <Flex mt="20px" style={{ borderTop: 'solid 1px #e7ecff' }}>
             <ParticipationStatus
               percentParticipant={yesVote
                 .add(noVote)
@@ -259,8 +260,8 @@ export default ({
                 supportRequiredPct.div(new BN(10).pow(new BN(16))).toNumber()
               }
             />
-          )}
-        </Flex>
+          </Flex>
+        )}
         <Flex mb="40px" justifyContent="center">
           <YourVote
             isVoted={vote !== 'NOT VOTED'}

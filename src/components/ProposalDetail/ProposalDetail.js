@@ -8,6 +8,7 @@ const WithBottomBorder = styled(Flex)`
   border: solid 1px #dde5ff;
   background-color: #fafbff;
   max-width: 350px;
+  min-width: 350px;
   &:not(:last-child) {
     border-bottom: 1px solid #e6eaff;
   }
