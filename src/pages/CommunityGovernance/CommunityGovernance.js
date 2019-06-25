@@ -8,7 +8,7 @@ import PageContainer from 'components/PageContainer'
 
 import ParameterPanel from 'components/ParameterPanel'
 
-const CommunityGovernance = ({ tokenAddress, name, address }) => (
+const CommunityGovernance = ({ tokenAddress, name }) => (
   <PageContainer withSidebar>
     <Breadcrumb
       links={[

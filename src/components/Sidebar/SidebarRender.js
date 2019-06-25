@@ -25,11 +25,11 @@ import IntegrationActive from 'images/integrationActive.svg'
 const Left = styled.div`
   width: 220px;
   flex: 0 0 220px;
-  height: calc(100vh - 60px);
+  // height: calc(100vh - 60px);
+  // position: sticky;
   display: flex;
   flex-direction: column;
   background-image: linear-gradient(to right, #5269ff, #4890ff);
-  position: sticky;
   top: 60px;
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
 `

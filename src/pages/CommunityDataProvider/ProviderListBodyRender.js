@@ -22,7 +22,7 @@ const DWButton = styled(Button).attrs({
   border-radius: 17.5px;
   cursor: ${props => (props.user ? 'pointer' : 'default')};
   background-color: ${props => (props.user ? props.bg : '#e3e6ef')};
-  color: ${props => (props.user ? props.color : 'white')};
+  color: white;
   transition: all 0.25s;
 
   ${props =>
@@ -148,7 +148,7 @@ const HistoryRow = ({
     <Flex flex={25} flexDirection="row" justifyContent="flex-end" pr="30px">
       <DWButton
         user={user}
-        bg="#dcf5f1"
+        bg="#42c47f"
         color="#24bf97"
         hoverShadowColor="#a6e7c4"
         activeColor="#d2efeb"
@@ -180,7 +180,7 @@ const HistoryRow = ({
       <Flex mx="10px" />
       <DWButton
         user={user}
-        bg="#feefef"
+        bg="#ec6363"
         hoverShadowColor="#ffb4ac"
         activeColor="#f4e1e1"
         color="#ec6363"

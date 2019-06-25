@@ -10,21 +10,29 @@ import { convertFromChain } from 'utils/helper'
 const WhiteCard = styled(Card).attrs({
   border: 'solid 1px #dee2f0',
   bg: '#ffffff',
-  width: '365px',
-  mb: 3,
-  mr: '24px',
 })`
+  width: ${p => p.width || '365px'};
+  margin: ${p => p.margin || '0px 24px 16px 0px'};
   height: 200px;
   border-radius: 10px;
 `
 
-export default ({ name, value, detail, isEdit, handleParameterChange }) => {
+export default ({
+  name,
+  value,
+  detail,
+  isEdit,
+  handleParameterChange,
+  width,
+  padding,
+  margin,
+}) => {
   const [convertedValue, unit] = convertFromChain(value, detail.type)
   return (
-    <WhiteCard>
+    <WhiteCard width={width} margin={margin}>
       <Flex
         flexDirection="column"
-        style={{ height: '100%', padding: '28px 40px 28px 21px' }}
+        style={{ height: '100%', padding: padding || '28px 40px 28px 21px' }}
       >
         <Text fontSize={1} fontWeight="bold" color={colors.blue.dark}>
           {name}

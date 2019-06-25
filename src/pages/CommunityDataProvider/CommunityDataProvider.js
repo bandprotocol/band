@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Flex, Text } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentUserSelector } from 'selectors/current'
 import PageStructure from 'components/DataSetPageStructure'
 import ProviderList from './ProviderList'
-import { Flex, Text } from 'ui/common'
+import ConfigurationList from 'components/ConfigurationList'
 
 class CommunityDataProvider extends React.Component {
   render() {
@@ -42,8 +43,10 @@ class CommunityDataProvider extends React.Component {
         )}
         {...this.props}
       >
-        <Flex mt="30px">
+        <Flex mt="30px" flexDirection="column">
           <ProviderList user={user} tokenAddress={tokenAddress} pageSize={10} />
+          {/* TODO: Change prefix to each dataset */}
+          <ConfigurationList prefix="bonding" communityAddress={tokenAddress} />
         </Flex>
       </PageStructure>
     )

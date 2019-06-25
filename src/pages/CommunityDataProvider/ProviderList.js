@@ -11,11 +11,10 @@ import { loadTcds, showModal } from 'actions'
 import { dispatchAsync } from 'utils/reduxSaga'
 
 const CustomButton = styled(Button).attrs({
-  fontSize: '16px',
-  fontWeight: 500,
   variant: 'blue',
-  px: '17px',
 })`
+  font-size: 16px;
+  font-weight: 900;
   padding: 9px 17px;
 `
 
