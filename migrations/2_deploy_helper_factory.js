@@ -6,6 +6,7 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const TCRMinDepositExpression = artifacts.require('TCRMinDepositExpression');
 const MedianAggregator = artifacts.require('MedianAggregator');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
+const MultiSigWalletFactory = artifacts.require('MultiSigWalletFactory');
 
 module.exports = function(deployer) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 2');
@@ -58,6 +59,7 @@ module.exports = function(deployer) {
     '100000000000000000',
   ]);
 
+  deployer.deploy(MultiSigWalletFactory);
   deployer.deploy(BondingCurveFactory);
   deployer.deploy(CommunityTokenFactory);
   deployer.deploy(ParametersFactory);

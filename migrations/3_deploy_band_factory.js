@@ -8,6 +8,7 @@ const CommunityFactory = artifacts.require('CommunityFactory');
 const TCRFactory = artifacts.require('TCRFactory');
 const AggTCDFactory = artifacts.require('AggTCDFactory');
 const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
+const MultiSigWalletFactory = artifacts.require('MultiSigWalletFactory');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 3');
@@ -17,6 +18,7 @@ module.exports = function(deployer, network, accounts) {
   deployer.deploy(AggTCDFactory);
   deployer.deploy(MultiSigTCDFactory);
   deployer.deploy(TCRFactory);
+
   deployer
     .then(async () => {
       const block = await web3.eth.getBlock('latest');
@@ -40,6 +42,16 @@ module.exports = function(deployer, network, accounts) {
       console.error('AggTCDFactory:', AggTCDFactory.address);
       console.error('MultiSigTCDFactory:', MultiSigTCDFactory.address);
       console.error('TCRFactory:', TCRFactory.address);
+
+      if (network === 'development') {
+        const walletFactory = await MultiSigWalletFactory.deployed();
+        await walletFactory.createNewWallet(
+          '0xe871810225fd2cfD7847319c52F4094958c2f350',
+        );
+        await walletFactory.createNewWallet(
+          '0x237935b19CE1cC4BfD8f2cB22F088e78182eeE08',
+        );
+      }
     })
     .catch(console.log);
 };

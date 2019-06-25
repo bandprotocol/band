@@ -13,7 +13,7 @@ module.exports = function() {
       //   '0x662511FeAD5e5949C78110f77b8B5AC376717d59',
       // );
       const bondingCurve = await BondingCurve.at(
-        '0xfFaC7CA3856e1F03beB4f8106aE201DfAE959242',
+        '0xc97F698be80c1Bb3A05452a1b4d71030543a0A7b',
       );
       console.log(bondingCurve.address);
       await band.approve(bondingCurve.address, '50000000000000000000000000');
@@ -25,17 +25,17 @@ module.exports = function() {
       );
       console.log('Buy Complete!');
       const TCToken = await CommunityToken.at(
-        '0x46B50025B9ddB374FD55dD77F8FAd837e10DED4f',
+        '0x8cd21AEA1666eA4C2DF780B6566ae5e40EeaB4aE',
       );
-      await TCToken.transfer(accounts[1], '10000000000000000000000', {
-        from: accounts[0],
-      });
-      await TCToken.transfer(accounts[2], '10000000000000000000000', {
-        from: accounts[0],
-      });
-      await TCToken.transfer(accounts[3], '10000000000000000000000', {
-        from: accounts[0],
-      });
+      // await TCToken.transfer(accounts[1], '10000000000000000000000', {
+      //   from: accounts[0],
+      // });
+      // await TCToken.transfer(accounts[2], '10000000000000000000000', {
+      //   from: accounts[0],
+      // });
+      // await TCToken.transfer(accounts[3], '10000000000000000000000', {
+      //   from: accounts[0],
+      // });
 
       // Create QueryTCR
       const tcr = await QueryTCR.at(
