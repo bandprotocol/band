@@ -23,6 +23,16 @@ const Description = styled(Text)`
   width: 320px;
 `
 
+const StyledCard = styled(Flex)`
+  cursor: pointer;
+  transition: all 200ms;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
+  &:hover: {
+    box-shadow: 0 5px 10px 0 red;
+    transform: scale(1.7);
+  }
+`
+
 const DisplayIcon = ({ src }) => (
   <Flex
     width="95px"
@@ -36,14 +46,14 @@ const DisplayIcon = ({ src }) => (
   </Flex>
 )
 
-const PriceDetail = ({ marketCap, price, last24Hrs }) => (
+const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
   <Flex
     flexDirection="row"
     pt={2}
     pb={1}
     justifyContent="space-around"
     alignItems="center"
-    bg="#3c55f9"
+    bg={statusBg || '#3c55f9'}
     my={3}
     style={{ borderRadius: '10px' }}
   >
@@ -105,34 +115,21 @@ export default ({
   bandPrice,
   onClick,
   bgColor,
+  statusBg,
   isTcd,
 }) => (
-  <Card
-    variant="primary"
+  <StyledCard
     flex={['', '0 0 500px']}
     p="14px"
     my={3}
     mx="16px"
-    css={{
-      alignSelf: 'flex-start',
-      backgroundImage: bgColor || 'linear-gradient(to right, #5c62ff, #5a9bff)',
-      boxShadow: '0 5px 10px 0 rgba(0, 0, 0, 0.25)',
-      ...(onClick
-        ? {
-            cursor: 'pointer',
-            transition: 'all 200ms',
-            boxShadow: '0 0 0 0 #ffffff',
-            '&:hover': {
-              boxShadow: '0 10px 17px 0 #e6e9f5',
-            },
-          }
-        : {}),
-    }}
     style={{
       height: '290px',
       borderRadius: '10px',
+      border: 'rgba(0,0,0,0)',
       padding: '0px',
       overflow: 'hidden',
+      backgroundImage: bgColor || 'linear-gradient(to right, #5c62ff, #5a9bff)',
     }}
     onClick={onClick}
   >
@@ -160,32 +157,40 @@ export default ({
             marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
             price={BN.parse(price).bandToUSD(bandPrice)}
             last24Hrs={last24Hrs.toFixed(2)}
+            statusBg={statusBg}
           />
           <Flex flexDirection="row" alignItems="center" mt={2}>
             <Link to={`/community/${tokenAddress}/overview`}>
               <Button
                 variant="white"
-                style={{ padding: '12px 25px' }}
+                style={{
+                  padding: '12px 25px',
+                  minWidth: '120px',
+                  maxWidth: '120px',
+                }}
                 onClick={e => e.stopPropagation(e)}
               >
                 Overview
               </Button>
             </Link>
-            {isTcd ? (
-              <Link to={`/community/${tokenAddress}/dataset`}>
-                <Button
-                  variant="white"
-                  ml={3}
-                  style={{ padding: '12px 25px' }}
-                  onClick={e => e.stopPropagation(e)}
-                >
-                  Dataset
-                </Button>
-              </Link>
-            ) : null}
+            <Link to={`/community/${tokenAddress}/dataset`}>
+              <Button
+                variant="white"
+                ml={3}
+                style={{
+                  padding: isTcd ? '12px 25px' : '12px 5px',
+                  minWidth: '120px',
+                  maxWidth: '120px',
+                  whiteSpace: 'noWrap',
+                }}
+                onClick={e => e.stopPropagation(e)}
+              >
+                {isTcd ? 'Dataset' : 'Visit Website'}
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </Flex>
     </Flex>
-  </Card>
+  </StyledCard>
 )

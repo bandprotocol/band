@@ -15,7 +15,7 @@ import { convertFromChain, getParameterDetail } from 'utils/helper'
 const FlexDropDown = styled(Flex)`
   overflow: hidden;
   transition: max-height 1.75s;
-  ${props => (props.show ? 'max-height:5000px;' : 'max-height:0px;')}
+  ${props => (props.show ? 'height:auto;' : 'height:0px;')}
 `
 
 const VotedOval = ({ width }) => (
