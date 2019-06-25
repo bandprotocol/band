@@ -8,7 +8,6 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
 const MedianAggregator = artifacts.require('MedianAggregator');
-const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 5');
@@ -19,11 +18,26 @@ module.exports = function(deployer, network, accounts) {
       const band = await BandToken.at(await registry.band());
 
       const dataProviders = [
-        '0xc169830Cd17Fd32C3885B1D8Bc9f1D41E3dB302c',
-        '0x53193a6A161F23be0AD9bB549D4d2725164fdF88',
-        '0xb146bD7B958B8928651cf4c28953F425B33F31c5',
-        '0xf1e5c7513B6563f555A3410C13E1f3D28640A38E',
-        '0x99a1D406baE20D2BFb2Cf0177E41E6Ed0B54AFee',
+        {
+          address: '0xc169830Cd17Fd32C3885B1D8Bc9f1D41E3dB302c',
+          stake: '500000000000000000004',
+        },
+        {
+          address: '0x53193a6A161F23be0AD9bB549D4d2725164fdF88',
+          stake: '500000000000000000003',
+        },
+        {
+          address: '0xb146bD7B958B8928651cf4c28953F425B33F31c5',
+          stake: '500000000000000000002',
+        },
+        {
+          address: '0xf1e5c7513B6563f555A3410C13E1f3D28640A38E',
+          stake: '500000000000000000001',
+        },
+        {
+          address: '0x99a1D406baE20D2BFb2Cf0177E41E6Ed0B54AFee',
+          stake: '500000000000000000000',
+        },
       ];
 
       const tcdList = [];
@@ -92,8 +106,8 @@ module.exports = function(deployer, network, accounts) {
 
       const address0 = '0x0000000000000000000000000000000000000000';
       await Promise.all(
-        dataProviders.map(async dataSource => {
-          cryptoTCD.register(dataSource, address0, '500000000000000000000');
+        dataProviders.map(async ({ address, stake }) => {
+          cryptoTCD.register(address, address0, stake);
         }),
       );
 
@@ -127,8 +141,8 @@ module.exports = function(deployer, network, accounts) {
       tcdList.push(fiatTCD.address);
 
       await Promise.all(
-        dataProviders.map(async dataSource => {
-          fiatTCD.register(dataSource, address0, '500000000000000000000');
+        dataProviders.map(async ({ address, stake }) => {
+          fiatTCD.register(address, address0, stake);
         }),
       );
 
@@ -162,8 +176,8 @@ module.exports = function(deployer, network, accounts) {
       tcdList.push(commodTCD.address);
 
       await Promise.all(
-        dataProviders.map(async dataSource => {
-          commodTCD.register(dataSource, address0, '500000000000000000000');
+        dataProviders.map(async ({ address, stake }) => {
+          commodTCD.register(address, address0, stake);
         }),
       );
 
@@ -197,8 +211,8 @@ module.exports = function(deployer, network, accounts) {
       tcdList.push(stockTCD.address);
 
       await Promise.all(
-        dataProviders.map(async dataSource => {
-          stockTCD.register(dataSource, address0, '500000000000000000000');
+        dataProviders.map(async ({ address, stake }) => {
+          stockTCD.register(address, address0, stake);
         }),
       );
 
