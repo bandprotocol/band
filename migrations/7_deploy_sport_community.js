@@ -97,6 +97,44 @@ module.exports = function(deployer, network, accounts) {
         ],
       );
 
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('nfl:min_provider_stake'),
+          web3.utils.fromAscii('nfl:max_provider_count'),
+          web3.utils.fromAscii('nfl:owner_revenue_pct'),
+          web3.utils.fromAscii('nfl:query_price'),
+          web3.utils.fromAscii('nfl:withdraw_delay'),
+          web3.utils.fromAscii('nfl:data_aggregator'),
+        ],
+        [
+          '500000000000000000000',
+          '2',
+          '500000000000000000',
+          '1000000000000000',
+          '60',
+          MajorityAggregator.address,
+        ],
+      );
+
+      await params.setRaw(
+        [
+          web3.utils.fromAscii('mlb:min_provider_stake'),
+          web3.utils.fromAscii('mlb:max_provider_count'),
+          web3.utils.fromAscii('mlb:owner_revenue_pct'),
+          web3.utils.fromAscii('mlb:query_price'),
+          web3.utils.fromAscii('mlb:withdraw_delay'),
+          web3.utils.fromAscii('mlb:data_aggregator'),
+        ],
+        [
+          '500000000000000000000',
+          '2',
+          '500000000000000000',
+          '1000000000000000',
+          '60',
+          MajorityAggregator.address,
+        ],
+      );
+
       await commToken.addCapper(tcdFactory.address);
 
       const nbaTCDTx = await tcdFactory.createMultiSigTCD(
@@ -113,12 +151,30 @@ module.exports = function(deployer, network, accounts) {
         sportTx.receipt.logs[2].args.params,
       );
 
+      const nflTCDTx = await tcdFactory.createMultiSigTCD(
+        web3.utils.fromAscii('nfl:'),
+        sportTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        sportTx.receipt.logs[2].args.params,
+      );
+
+      const mlbTCDTx = await tcdFactory.createMultiSigTCD(
+        web3.utils.fromAscii('mlb:'),
+        sportTx.receipt.logs[2].args.bondingCurve,
+        registry.address,
+        sportTx.receipt.logs[2].args.params,
+      );
+
       const nbaTCD = await TCDBase.at(nbaTCDTx.receipt.logs[0].args.mtcd);
       const eplTCD = await TCDBase.at(eplTCDTx.receipt.logs[0].args.mtcd);
+      const nflTCD = await TCDBase.at(nflTCDTx.receipt.logs[0].args.mtcd);
+      const mlbTCD = await TCDBase.at(mlbTCDTx.receipt.logs[0].args.mtcd);
+
       console.log('Created NBA TCD at', nbaTCD.address);
-      // console.error('DataSourceBookkeepingSportAddress:', nbaTCD.address);
       console.log('Created EPL TCD at', eplTCD.address);
-      // console.error('DataSourceBookkeepingSportAddress:', nbaTCD.address);
+      console.log('Created NFL TCD at', nflTCD.address);
+      console.log('Created MLB TCD at', mlbTCD.address);
+
       // Buy tokens
       const curve = await BondingCurve.at(
         sportTx.receipt.logs[2].args.bondingCurve,
@@ -134,12 +190,26 @@ module.exports = function(deployer, network, accounts) {
       // Add register
       await commToken.approve(nbaTCD.address, '1000000000000000000000000');
       await commToken.approve(eplTCD.address, '1000000000000000000000000');
+      await commToken.approve(nflTCD.address, '1000000000000000000000000');
+      await commToken.approve(mlbTCD.address, '1000000000000000000000000');
+
+      console.error(
+        'DataSourceBookkeepingSportAddress:',
+        JSON.stringify([
+          nbaTCD.address,
+          eplTCD.address,
+          nflTCD.address,
+          mlbTCD.address,
+        ]),
+      );
 
       const address0 = '0x0000000000000000000000000000000000000000';
       await Promise.all(
         dataProviders.map(async dataSource => {
           nbaTCD.register(dataSource, address0, '500000000000000000000');
           eplTCD.register(dataSource, address0, '500000000000000000000');
+          nflTCD.register(dataSource, address0, '500000000000000000000');
+          mlbTCD.register(dataSource, address0, '500000000000000000000');
         }),
       );
     })

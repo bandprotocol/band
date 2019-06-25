@@ -92,7 +92,10 @@ module.exports = function(deployer, network, accounts) {
         lotteryTCDTx.receipt.logs[0].args.atcd,
       );
       console.log('Created Lottery TCD at', lotteryTCD.address);
-      console.error('DataSourceBookkeepingLotteryAddress:', lotteryTCD.address);
+      console.error(
+        'DataSourceBookkeepingLotteryAddress:',
+        JSON.stringify([lotteryTCD.address]),
+      );
       // Buy tokens
       const curve = await BondingCurve.at(
         lotteryTx.receipt.logs[2].args.bondingCurve,
