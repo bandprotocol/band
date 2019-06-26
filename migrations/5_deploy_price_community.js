@@ -17,27 +17,45 @@ module.exports = function(deployer, network, accounts) {
       const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
 
-      const dataProviders = [
-        {
-          address: '0xc169830Cd17Fd32C3885B1D8Bc9f1D41E3dB302c',
-          stake: '500000000000000000004',
-        },
-        {
-          address: '0x53193a6A161F23be0AD9bB549D4d2725164fdF88',
-          stake: '500000000000000000003',
-        },
-        {
-          address: '0xb146bD7B958B8928651cf4c28953F425B33F31c5',
-          stake: '500000000000000000002',
-        },
-        {
-          address: '0xf1e5c7513B6563f555A3410C13E1f3D28640A38E',
-          stake: '500000000000000000001',
-        },
-        {
-          address: '0x99a1D406baE20D2BFb2Cf0177E41E6Ed0B54AFee',
-          stake: '500000000000000000000',
-        },
+      const dataProviders = {
+        COINBASE: '0xda7af0fd57c5d2e918704f034fd9e13aeb28ad13',
+        BITSTAMP: '0xda7a01d6d7568868b21a6789968b06bb3af5c191',
+        BITFINEX: '0xda7a2a9c0bb0f94f9ddf54dde3dbe2530a8269a2',
+        GEMINI: '0xda7a2e3d741f025010c44afa2a6a7353f70d6b23',
+        KRAKEN: '0xda7a6811d4dd6a6b0f0ef1f1fe2f99ecd0ce9b7a',
+        FREE_FOREX: '0xda7aa2bba8685f9c0ddbc53ab8e19a6a32dc8b7f',
+        ALPHAVANTAGE: '0xda7a79196ddd8ad788a996efafea15bf0879c31c',
+        CURRENCY_CONVERTER_API: '0xda7af1118c2c5f2edb0d452a84be91e7b47014cb',
+        API_RATESAPI_IO: '0xda7a238d208eda262505d43678b7d7f180a9ee69',
+        FINANCIAL_MODELING_PREP: '0xda7ae92ef9089f9093e9555b6cf2fd3e29e3d6d7',
+        WORLD_TRADING_DATA: '0xda7aa81514ae2108da300639d46aa399abaefa05',
+      };
+
+      const cryptoProviderList = [
+        'COINBASE',
+        'BITSTAMP',
+        'BITFINEX',
+        'GEMINI',
+        'KRAKEN',
+      ];
+
+      const fiatProviderList = [
+        'FREE_FOREX',
+        'ALPHAVANTAGE',
+        'CURRENCY_CONVERTER_API',
+        'API_RATESAPI_IO',
+      ];
+
+      const commodProviderList = [
+        'FREE_FOREX',
+        'ALPHAVANTAGE',
+        'CURRENCY_CONVERTER_API',
+      ];
+
+      const stockProviderList = [
+        'ALPHAVANTAGE',
+        'FINANCIAL_MODELING_PREP',
+        'WORLD_TRADING_DATA',
       ];
 
       const tcdList = [];
@@ -106,8 +124,12 @@ module.exports = function(deployer, network, accounts) {
 
       const address0 = '0x0000000000000000000000000000000000000000';
       await Promise.all(
-        dataProviders.map(async ({ address, stake }) => {
-          cryptoTCD.register(address, address0, stake);
+        cryptoProviderList.map(async provider => {
+          cryptoTCD.register(
+            dataProviders[provider],
+            address0,
+            '500000000000000000000',
+          );
         }),
       );
 
@@ -141,8 +163,12 @@ module.exports = function(deployer, network, accounts) {
       tcdList.push(fiatTCD.address);
 
       await Promise.all(
-        dataProviders.map(async ({ address, stake }) => {
-          fiatTCD.register(address, address0, stake);
+        fiatProviderList.map(async provider => {
+          fiatTCD.register(
+            dataProviders[provider],
+            address0,
+            '500000000000000000000',
+          );
         }),
       );
 
@@ -176,8 +202,12 @@ module.exports = function(deployer, network, accounts) {
       tcdList.push(commodTCD.address);
 
       await Promise.all(
-        dataProviders.map(async ({ address, stake }) => {
-          commodTCD.register(address, address0, stake);
+        commodProviderList.map(async provider => {
+          commodTCD.register(
+            dataProviders[provider],
+            address0,
+            '500000000000000000000',
+          );
         }),
       );
 
@@ -211,8 +241,12 @@ module.exports = function(deployer, network, accounts) {
       tcdList.push(stockTCD.address);
 
       await Promise.all(
-        dataProviders.map(async ({ address, stake }) => {
-          stockTCD.register(address, address0, stake);
+        stockProviderList.map(async provider => {
+          stockTCD.register(
+            dataProviders[provider],
+            address0,
+            '500000000000000000000',
+          );
         }),
       );
 
