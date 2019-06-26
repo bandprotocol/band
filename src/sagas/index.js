@@ -40,6 +40,7 @@ import { toggleFetch } from 'actions'
 // import web3
 import Web3 from 'web3'
 
+// TODO: fix it
 const RPC_ENDPOINT =
   process.env.NODE_ENV === 'production'
     ? 'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
@@ -47,6 +48,7 @@ const RPC_ENDPOINT =
 
 const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 
+// TODO: fix it
 function* baseInitialize() {
   // start fetching state
   yield put(toggleFetch(true))
@@ -172,6 +174,7 @@ function* baseInitialize() {
               acc.set(
                 each.address,
                 Map({
+                  prefix: each.prefix,
                   minStake: each.minStake,
                   maxProviderCount: each.maxProviderCount,
                   totalStake: each.dataProvidersByTcdAddress.nodes.reduce(

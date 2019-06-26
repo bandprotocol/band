@@ -1,21 +1,26 @@
 import { createSelector } from 'reselect'
 import { tcdSelector, addressSelector } from 'selectors/basic'
+import { communityDetailSelector } from 'selectors/communities'
 
 export const tcdsSelector = createSelector(
-  [tcdSelector, addressSelector],
-  (tcds, address) => {
-    if (!tcds.get(address)) return null
-    return tcds.get(address)
+  [communityDetailSelector, (_, { tcdAddress }) => tcdAddress],
+  (community, tcdAddress) => {
+    if (!community.getIn(['tcds', tcdAddress])) return null
+    return community.getIn(['tcds', tcdAddress])
   },
 )
 
-export const numTcds = createSelector(
-  [tcdSelector, addressSelector],
-  (tcds, address) => {
-    if (!tcds.get(address)) return 0
-    return tcds.get(address).length
-  },
-)
+// export const currentTcdSelector = createSelector(
+//   []
+// )
+
+// export const numTcds = createSelector(
+//   [tcdSelector, addressSelector],
+//   (tcds, address) => {
+//     if (!tcds.get(address)) return 0
+//     return tcds.get(address).length
+//   },
+// )
 
 export const numDataProviders = createSelector(
   [tcdSelector, addressSelector],

@@ -11,9 +11,6 @@ import CommunityGovernancePage from 'pages/CommunityGovernance'
 import CommunityProposalPage from 'pages/CommunityProposal'
 import CreateCommunityPage from 'pages/CreateCommunity'
 
-// MOCK
-import DatasetActivityLogs from 'pages/DatasetActivityLogs'
-
 export default ({ match, location }) => (
   <React.Fragment>
     <ScrollToTop />
@@ -55,17 +52,6 @@ export default ({ match, location }) => (
                   path="/community/:community/:tcd/:path"
                   render={({ match }) => (
                     <TCDRoutes
-                      communityAddress={match.params.community}
-                      tcdAddress={match.params.tcd}
-                      path={match.params.path}
-                    />
-                  )}
-                />
-                {/* Activity Logs for Paul */}
-                <Route
-                  path="/community/:community/logs"
-                  render={({ match }) => (
-                    <DatasetActivityLogs
                       communityAddress={match.params.community}
                       tcdAddress={match.params.tcd}
                       path={match.params.path}

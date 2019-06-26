@@ -17,9 +17,6 @@ import BalanceWallet from 'images/balanceWallet.svg'
 import DetailSrc from 'images/detailInactive.svg'
 import GovernanceSrc from 'images/govInactive.svg'
 import ProposalSrc from 'images/voteInactive.svg'
-import DataLogInactive from 'images/dataLogInactive.svg'
-import DataSetInactive from 'images/datasetInactive.svg'
-import IntegrationInactive from 'images/integrationInactive.svg'
 
 // Image active
 import DetailActiveSrc from 'images/detailActive.svg'
@@ -171,45 +168,7 @@ export default ({
               <Bold pl="44px" pt={3} pb={3} fontSize="12px" color="#a6c1ff">
                 AVAILABLE DATA
               </Bold>
-              <Flex
-                flexDirection="column"
-                mx="11px"
-                style={{
-                  boxShadow: 'inset 0 1px 11px 0 rgba(0, 0, 0, 0.03)',
-                  borderRadius: '28px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <TCDSelector communityAddress={address} />
-                <SubTab
-                  link={`/community/${address}/dataset`}
-                  img={DataSetInactive}
-                >
-                  Explore Data
-                </SubTab>
-                <SubTab
-                  link={`/community/${address}/integration`}
-                  img={IntegrationInactive}
-                >
-                  Integration
-                </SubTab>
-                <SubTab
-                  link={`/community/${address}/provider`}
-                  img={GovernanceSrc}
-                >
-                  Governance
-                </SubTab>
-                <SubTab
-                  link={`/community/${address}/logs`}
-                  img={DataLogInactive}
-                  tabStyle={{
-                    borderBottomLeftRadius: '28px',
-                    borderBottomRightRadius: '28px',
-                  }}
-                >
-                  Activity Logs
-                </SubTab>
-              </Flex>
+              <TCDSelector communityAddress={address} />
             </React.Fragment>
           )}
           <Bold pl="44px" pt={4} pb={3} fontSize="12px" color="#a6c1ff">

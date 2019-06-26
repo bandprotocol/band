@@ -7,7 +7,6 @@ import SidebarRender from 'components/Sidebar/SidebarRender'
 import { communityDetailSelector } from 'selectors/communities'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { currentUserSelector } from 'selectors/current'
-import { tcdsSelector } from 'selectors/tcd'
 
 class SideBar extends React.Component {
   state = {
@@ -57,6 +56,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
     address: tokenAddress,
   })
+  const tcds = community.get('tcds').toJS()
   if (!community) return {}
   return {
     logedin: !!currentUserSelector(state),
@@ -67,7 +67,12 @@ const mapStateToProps = (state, { tokenAddress }) => {
     communityPrice: community.get('price'),
     bandPrice: bandPriceSelector(state),
     address: tokenAddress,
-    tcds: community.get('tcds').toJS(),
+    tcds: Object.keys(tcds).map(key => {
+      return {
+        address: key,
+        prefix: tcds[key].prefix,
+      }
+    }),
   }
 }
 

@@ -1,13 +1,18 @@
 import React from 'react'
-import { withRouter } from 'react-router-dom'
-import { Flex } from 'ui/common'
+import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { tcdsSelector } from 'selectors/tcd'
 
 import CommunityDataProviderPage from 'pages/CommunityDataProvider'
 import CommunityDataSetPage from 'pages/CommunityDataSet'
-import CommunityIntegration from 'pages/CommunityIntegration'
+import CommunityIntegrationPage from 'pages/CommunityIntegration'
+import DatasetActivityLogsPage from 'pages/DatasetActivityLogs'
 
-const TCDRoutes = ({ path, communityAddress, tcdAddress }) => {
+const TCDRoutes = ({ path, communityAddress, tcdAddress, redirect }) => {
+  if (redirect) {
+    return <Redirect to={`/community/${communityAddress}/overview`} />
+  }
+
   switch (path) {
     case 'dataset':
       return (
@@ -18,7 +23,7 @@ const TCDRoutes = ({ path, communityAddress, tcdAddress }) => {
       )
     case 'integration':
       return (
-        <CommunityIntegration
+        <CommunityIntegrationPage
           communityAddress={communityAddress}
           tcdAddress={tcdAddress}
         />
@@ -31,7 +36,12 @@ const TCDRoutes = ({ path, communityAddress, tcdAddress }) => {
         />
       )
     case 'logs':
-      return <div />
+      return (
+        <DatasetActivityLogsPage
+          communityAddress={communityAddress}
+          tcdAddress={tcdAddress}
+        />
+      )
     default:
       return (
         <CommunityDataSetPage
@@ -43,10 +53,15 @@ const TCDRoutes = ({ path, communityAddress, tcdAddress }) => {
 }
 
 const mapStateToProps = (state, { communityAddress, tcdAddress, path }) => {
+  const tcd = tcdsSelector(state, {
+    address: communityAddress,
+    tcdAddress,
+  })
   return {
     communityAddress,
     tcdAddress,
     path,
+    redirect: !tcd,
   }
 }
 

@@ -1,9 +1,5 @@
 import { createSelector } from 'reselect'
-import {
-  communitySelector,
-  addressSelector,
-  featureCommunitiesSelector,
-} from 'selectors/basic'
+import { communitySelector, addressSelector } from 'selectors/basic'
 
 import { Map } from 'immutable'
 import BN from 'utils/bignumber'
@@ -35,13 +31,5 @@ export const communityWithBalanceSelector = createSelector(
   communities =>
     communities.filter(
       community => community.get('balance', new BN(0)).toString() !== '0',
-    ),
-)
-
-export const communityFeatureSelector = createSelector(
-  [communitySelector, featureCommunitiesSelector],
-  (communities, featureCommunities) =>
-    communities.filter(community =>
-      featureCommunities.includes(community.get('address', null)),
     ),
 )
