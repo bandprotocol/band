@@ -18,7 +18,6 @@ const Header = styled(Flex).attrs({
   background-repeat: no-repeat;
   height: 179px;
   border-radius: 10px;
-  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.1);
 `
 
 export default ({

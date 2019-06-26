@@ -1,7 +1,6 @@
 import React from 'react'
 import { Card, Flex, Text } from 'ui/common'
 import styled from 'styled-components'
-import colors from 'ui/colors'
 
 import ParameterInput from 'components/ParameterInput'
 
@@ -34,15 +33,15 @@ export default ({
         flexDirection="column"
         style={{ height: '100%', padding: padding || '28px 40px 28px 21px' }}
       >
-        <Text fontSize={1} fontWeight="bold" color={colors.blue.dark}>
+        <Text fontSize={1} fontWeight="bold" color="#5269ff">
           {name}
         </Text>
-        <Text color={colors.text.grey} fontSize={0} lineHeight={1.43} mt={3}>
+        <Text color="#4a4a4a" fontSize={0} lineHeight={1.43} mt={3}>
           {detail.description}
         </Text>
         <Flex flex={1} />
         <Flex alignItems="center" py={1} mt={3} style={{ height: '30px' }}>
-          <Text fontSize={0} color={colors.blue.dark} mr={3}>
+          <Text fontSize={0} color="#5269ff" mr={3}>
             Value:
           </Text>
           {isEdit ? (
@@ -55,6 +54,7 @@ export default ({
           ) : (
             <Text
               fontSize={0}
+              fontWeight={500}
               width="80%"
               style={{
                 whiteSpace: 'nowrap',

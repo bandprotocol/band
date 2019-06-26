@@ -56,7 +56,10 @@ class ProviderList extends React.Component {
     } = this.props
     return (
       <Flex
-        style={{ borderRadius: '10px' }}
+        style={{
+          borderRadius: '10px',
+          boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)',
+        }}
         flexDirection="column"
         bg="white"
         width={1}
@@ -75,7 +78,7 @@ class ProviderList extends React.Component {
             width="190px"
             ml="10px"
           >
-            DATA PROVIDERS
+            Data Providers
           </Text>
           <Flex width={1} justifyContent="flex-end">
             <Flex
