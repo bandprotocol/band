@@ -17,7 +17,7 @@ class ConfigurationList extends React.Component {
 
 const mapStateToProps = (state, { prefix, communityAddress }) => ({
   params: parameterByPrefixSelector(state, {
-    type: prefix,
+    type: prefix.replace(/:/g, ''),
     address: communityAddress,
   }),
 })
