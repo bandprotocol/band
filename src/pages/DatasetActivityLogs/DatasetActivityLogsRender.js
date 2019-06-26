@@ -191,6 +191,5 @@ export default props => (
         )}
       </Box>
     </Card>
-    {/* */}
   </PageStructure>
 )
