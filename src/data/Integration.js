@@ -58,11 +58,7 @@ export default {
             'Price of 1 Augur in Ethereum unit multiply by 10^18',
             '',
           ],
-          [
-            'BAND/ETH',
-            'Price of 1 Band in Ethereum unit multiply by 10^18',
-            '',
-          ],
+          ['KNC/ETH', 'Price of 1 Band in Ethereum unit multiply by 10^18', ''],
         ],
       },
     },
