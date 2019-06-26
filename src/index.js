@@ -12,11 +12,16 @@ import rootSaga from 'sagas'
 import rootReducer from 'reducers'
 import { BandProtocolClient } from 'band.js'
 
-const network = localStorage.getItem('network') || 'rinkeby'
+const network = localStorage.getItem('network') || 'kovan'
+console.warn(network)
 switch (network) {
   case 'mainnet':
   case 'kovan':
-    break // set to default
+    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-kovan.bandprotocol.com/graphql',
+    )
+    break
   case 'rinkeby':
   case 'local':
     BandProtocolClient.setAPI('http://localhost:5000')
