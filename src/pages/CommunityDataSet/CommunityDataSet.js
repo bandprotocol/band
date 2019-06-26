@@ -10,7 +10,7 @@ import CommunityDataSetIdentity from './CommunityDataSetIdentity'
 class CommunityDataSet extends React.Component {
   render() {
     switch (this.props.name) {
-      case 'PriceFeedCommunity':
+      case 'Price Dataset':
         return <CommunityDataSetPrice {...this.props} />
       case 'LotteryFeedCommunity':
         return <CommunityDataSetLottery {...this.props} />

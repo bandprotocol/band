@@ -7,21 +7,13 @@ import PageContainer from 'components/PageContainer'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
-import DatasetTab from 'components/DatasetTab'
 import {
-  PriceCountByTypeFetcher,
   CurrentPriceFetcher,
   PricePairFetcher,
   formatPricePairsForGraph,
 } from 'data/fetcher/PriceFetcher'
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
-
-// Image
-import SoccerSrc from 'images/dataset-fiat.png'
-import BasketballSrc from 'images/dataset-commodity.png'
-import AmericanFootballSrc from 'images/dataset-stock.png'
-import BaseballSrc from 'images/dataset-crypto.png'
 
 const renderDataPoints = (pairs, type) => (
   <React.Fragment>
@@ -120,61 +112,6 @@ export default class CommunityPricePage extends React.Component {
         {...this.props}
       >
         <PageContainer>
-          <Flex
-            mt="-100px"
-            mx="-8px"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <PriceCountByTypeFetcher type="CRYPTO">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Cryptocurrency"
-                  subtitle={fetching ? 'Loading ...' : `${data} Pairs`}
-                  src={BaseballSrc}
-                  active={this.state.type === 'CRYPTO'}
-                  onClick={() => this.setState({ type: 'CRYPTO' })}
-                />
-              )}
-            </PriceCountByTypeFetcher>
-            <PriceCountByTypeFetcher type="FX">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Fiat Currency"
-                  subtitle={fetching ? 'Loading ...' : `${data} Pairs`}
-                  src={SoccerSrc}
-                  active={this.state.type === 'FX'}
-                  onClick={() => this.setState({ type: 'FX' })}
-                />
-              )}
-            </PriceCountByTypeFetcher>
-            <PriceCountByTypeFetcher type="COMMODITY">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Commodity"
-                  subtitle={fetching ? 'Loading ...' : `${data} Pairs`}
-                  src={BasketballSrc}
-                  active={this.state.type === 'COMMODITY'}
-                  onClick={() => this.setState({ type: 'COMMODITY' })}
-                />
-              )}
-            </PriceCountByTypeFetcher>
-            <PriceCountByTypeFetcher type="STOCK">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Stock"
-                  subtitle={fetching ? 'Loading ...' : `${data} Pairs`}
-                  src={AmericanFootballSrc}
-                  active={this.state.type === 'STOCK'}
-                  onClick={() => this.setState({ type: 'STOCK' })}
-                />
-              )}
-            </PriceCountByTypeFetcher>
-          </Flex>
           <Box mt={5}>
             <CurrentPriceFetcher type={this.state.type}>
               {({ fetching, data }) =>

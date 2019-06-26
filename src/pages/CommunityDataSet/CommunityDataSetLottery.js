@@ -13,7 +13,6 @@ import {
   LotteryProvidersByTypeTimeFetcher,
 } from 'data/fetcher/LotteryFetcher'
 import LotteryTable from 'components/table/LotteryTable'
-import DatasetTab from 'components/DatasetTab'
 import Loading from 'components/Loading'
 
 import MmnSrc from 'images/dataset-megamillions.png'
@@ -203,32 +202,6 @@ export default class LotteryPage extends React.Component {
         {...this.props}
       >
         <PageContainer>
-          <Flex mt="-100px" mx="-8px" justifyContent="center">
-            <LotteryCountByTypeFetcher type="PWB">
-              {({ fetching, data, forceFetch }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Powerball"
-                  subtitle={fetching ? 'Loading ...' : `${data} Rounds`}
-                  src={PwbSrc}
-                  active={this.state.type === 'PWB'}
-                  onClick={() => this.changeType('PWB', forceFetch)}
-                />
-              )}
-            </LotteryCountByTypeFetcher>
-            <LotteryCountByTypeFetcher type="MMN">
-              {({ fetching, data, forceFetch }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Mega Millions"
-                  subtitle={fetching ? 'Loading ...' : `${data} Rounds`}
-                  src={MmnSrc}
-                  active={this.state.type === 'MMN'}
-                  onClick={() => this.changeType('MMN', forceFetch)}
-                />
-              )}
-            </LotteryCountByTypeFetcher>
-          </Flex>
           <Box mt={5}>
             <LotteryByTypeFetcher
               type={this.state.type}

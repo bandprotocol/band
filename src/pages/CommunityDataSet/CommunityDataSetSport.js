@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Box, Text, Card, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
-import PageContainer from 'components/PageContainer'
 import DataPoint from 'components/DataPoint'
+import DataCard from 'components/DataCard'
 import FlipMove from 'react-flip-move'
 import {
   SportCountByTypeFetcher,
@@ -11,16 +11,10 @@ import {
   SportProvidersByTypeTimeTeamFetcher,
 } from 'data/fetcher/SportFetcher'
 import SportTable from 'components/table/SportTable'
-import DatasetTab from 'components/DatasetTab'
 import Loading from 'components/Loading'
 import { createLoadingButton } from 'components/BaseButton'
 import SearchSelect from 'components/SearchSelect'
 import { getOptionsByType } from 'utils/sportTeam'
-
-import SoccerSrc from 'images/dataset-soccer.png'
-import BasketballSrc from 'images/dataset-basketball.png'
-import AmericanFootballSrc from 'images/dataset-americanfootball.png'
-import BaseballSrc from 'images/dataset-baseball.png'
 
 const LoadMoreButton = createLoadingButton(styled(Button)`
   width: 200px;
@@ -41,21 +35,6 @@ const renderDataPoints = (
   onSearchTeam,
 ) => (
   <React.Fragment>
-    <Flex alignItems="center" justifyContent="space-between">
-      <Heading>{matches.length} Ðata Points</Heading>
-      <Flex width="30%">
-        <SearchSelect
-          options={getOptionsByType(type)}
-          placeholder="Home"
-          onSearch={value => onSearchTeam('home', value)}
-        />
-        <SearchSelect
-          options={getOptionsByType(type)}
-          placeholder="Away"
-          onSearch={value => onSearchTeam('away', value)}
-        />
-      </Flex>
-    </Flex>
     <Box mt={3}>
       <FlipMove>
         {matches.map(
@@ -228,109 +207,67 @@ export default class SportPage extends React.Component {
     return (
       <PageStructure
         renderHeader={() => (
-          <Flex
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-          >
-            <Text fontSize="36px" fontWeight="900">
-              Sport Events
-            </Text>
-            <Text fontSize="20px" mt={3}>
-              Accurate live scores from soccer, basketball, American football
-              and baseball.
-            </Text>
+          <Flex flexDirection="column" style={{ width: '100%' }}>
+            <Flex flexDirection="column" pl="52px">
+              <Text
+                fontSize="27px"
+                color="white"
+                fontWeight="900"
+                width="50%"
+                style={{ lineHeight: '38px' }}
+              >
+                Integrate Off-Chain Soccer Data Short ribs sirloin chicken!
+              </Text>
+              <Text
+                fontSize="18px"
+                color="white"
+                fontWeight="500"
+                width="60%"
+                style={{ lineHeight: '33px' }}
+              >
+                Accurate live scores from soccer, basketball, American football
+                and baseball.
+              </Text>
+            </Flex>
           </Flex>
         )}
         {...this.props}
       >
-        <PageContainer>
-          <Flex mt="-100px" mx="-8px" justifyContent="center">
-            <SportCountByTypeFetcher type="EPL">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Soccer"
-                  subtitle={fetching ? 'Loading ...' : `${data} Matches`}
-                  src={SoccerSrc}
-                  active={this.state.type === 'EPL'}
-                  onClick={() => this.changeType('EPL')}
-                />
-              )}
-            </SportCountByTypeFetcher>
-            <SportCountByTypeFetcher type="NBA">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Basketball"
-                  subtitle={fetching ? 'Loading ...' : `${data} Matches`}
-                  src={BasketballSrc}
-                  active={this.state.type === 'NBA'}
-                  onClick={() => this.changeType('NBA')}
-                />
-              )}
-            </SportCountByTypeFetcher>
-            <SportCountByTypeFetcher type="NFL">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="American Football"
-                  subtitle={fetching ? 'Loading ...' : `${data} Matches`}
-                  src={AmericanFootballSrc}
-                  active={this.state.type === 'NFL'}
-                  onClick={() => this.changeType('NFL')}
-                />
-              )}
-            </SportCountByTypeFetcher>
-            <SportCountByTypeFetcher type="MLB">
-              {({ fetching, data }) => (
-                <DatasetTab
-                  mx="8px"
-                  title="Baseball"
-                  subtitle={fetching ? 'Loading ...' : `${data} Matches`}
-                  src={BaseballSrc}
-                  active={this.state.type === 'MLB'}
-                  onClick={() => this.changeType('MLB')}
-                />
-              )}
-            </SportCountByTypeFetcher>
-          </Flex>
-          <Box mt={5}>
-            <SportByTypeFetcher
-              type={this.state.type}
-              nList={this.state.nSportList}
-              home={this.state.home}
-              away={this.state.away}
-            >
-              {({ fetching, data, forceFetch }) => {
-                if (fetching) {
-                  return (
-                    <Loading
-                      height={281}
-                      width={924}
-                      rects={[
-                        [0, 0, 120, 32],
-                        [880, 0, 32, 32],
-                        [0, 52, 924, 61],
-                        [0, 135, 924, 61],
-                        [0, 218, 924, 61],
-                      ]}
-                    />
-                  )
-                } else {
-                  this.currentSportLength = data.length
-                  return renderDataPoints(
-                    this.state,
-                    data,
-                    this.currentSportLength,
-                    this.loadMoreList.bind(this, forceFetch),
-                    this.onSearchTeam.bind(this, forceFetch),
-                  )
-                }
-              }}
-            </SportByTypeFetcher>
-          </Box>
-        </PageContainer>
+        <DataCard>
+          <SportByTypeFetcher
+            type={this.state.type}
+            nList={this.state.nSportList}
+            home={this.state.home}
+            away={this.state.away}
+          >
+            {({ fetching, data, forceFetch }) => {
+              if (fetching) {
+                return (
+                  <Loading
+                    height={281}
+                    width={924}
+                    rects={[
+                      [0, 0, 120, 32],
+                      [880, 0, 32, 32],
+                      [0, 52, 924, 61],
+                      [0, 135, 924, 61],
+                      [0, 218, 924, 61],
+                    ]}
+                  />
+                )
+              } else {
+                this.currentSportLength = data.length
+                return renderDataPoints(
+                  this.state,
+                  data,
+                  this.currentSportLength,
+                  this.loadMoreList.bind(this, forceFetch),
+                  this.onSearchTeam.bind(this, forceFetch),
+                )
+              }
+            }}
+          </SportByTypeFetcher>
+        </DataCard>
       </PageStructure>
     )
   }

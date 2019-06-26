@@ -9,7 +9,7 @@ const BreadcrumbLink = styled(Link)`
     p.active
       ? `
       font-weight: 900;
-      color: #6976b7;
+      color: #5269ff;
     `
       : `
       color: #555555;

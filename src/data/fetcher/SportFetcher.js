@@ -4,6 +4,18 @@ import moment from 'moment'
 import { Utils } from 'band.js'
 import { getSportTeamByCode } from 'utils/sportTeam'
 
+const randNum = n =>
+  n > 0
+    ? `${Math.ceil(Math.random() * 9)}${randNum(n - 1)}`
+    : Math.ceil(Math.random() * 9)
+
+const randStr = n =>
+  n > 0
+    ? `${'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]}${randStr(
+        n - 1,
+      )}`
+    : 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]
+
 const countSportAllQL = type => `
 {
   allDataSportFeeds(
@@ -130,6 +142,36 @@ export const SportByTypeFetcher = withRouter(
         allDataSportFeeds: { nodes },
       } = await Utils.graphqlRequest(allSportByTypeQL(type, nList, home, away))
 
+      return [1, 2, 3, 4, 5].map(i => {
+        const sportTime = '20190321'
+        const sportStartTime = '1815'
+        const sportType = 'EPL'
+        const year = '2019'
+        const home = 'TES' + i
+        const away = 'MOC' + i
+        const scoreAway = Math.floor(Math.random() * 100)
+        const scoreHome = Math.floor(Math.random() * 100)
+        return {
+          time: moment(
+            sportTime + (sportStartTime === '9999' ? '0000' : sportStartTime),
+            'YYYYMMDDHHm',
+          ),
+          hasStartTime: sportStartTime !== '9999',
+          lastUpdate: moment(
+            Date.now() - 86400000 * Math.ceil(Math.random() * 100),
+          ),
+          keyOnChain: `${sportType}${year}/${sportTime}/${home}-${away}${
+            sportStartTime === '9999' ? '' : '/' + sportStartTime
+          }`,
+          home,
+          away,
+          homeFullName: '🍷 Indianapolis Colts',
+          awayFullName: '🍹Los Angeles Chargers',
+          scoreAway: scoreAway,
+          scoreHome: scoreHome,
+        }
+      })
+
       return nodes.map(
         ({
           sportTime,
@@ -184,39 +226,52 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
       // Aggregate results and see if the provider has reported maliciously
       const providers = {}
 
-      nodes.forEach(
-        ({
-          timestamp,
-          dataProviderByDataSourceAddressAndTcdAddress: {
-            dataSourceAddress,
-            detail,
-            status,
-          },
-          scoreAway,
-          scoreHome,
-        }) => {
-          if (!providers[dataSourceAddress]) {
-            providers[dataSourceAddress] = {
-              name: detail,
-              address: dataSourceAddress,
-              lastUpdate: moment(timestamp * 1000),
-              status,
-              scoreAway,
-              scoreHome,
-              home,
-              away,
-            }
-          } else {
-            if (
-              providers[dataSourceAddress].scoreAway !== scoreAway ||
-              providers[dataSourceAddress].scoreHome !== scoreHome
-            ) {
-              providers[dataSourceAddress].warning =
-                'The provider has previously reported different result for this match'
-            }
-          }
-        },
-      )
+      for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {
+        providers[`0x9E07c5d0ed72cE79006A4b88Ab972F8768D3${randNum(4)}`] = {
+          name: randStr(5),
+          address: `0x9E07c5d0ed72cE79006A4b88Ab972F8768D3${randNum(4)}`,
+          lastUpdate: moment(Date.now() - parseInt(randNum(0)) * 86400000),
+          status: 'status',
+          scoreAway: '130',
+          scoreHome: '85',
+          home: 'Test',
+          away: 'Mock',
+        }
+      }
+
+      // nodes.forEach(
+      //   ({
+      //     timestamp,
+      //     dataProviderByDataSourceAddressAndTcdAddress: {
+      //       dataSourceAddress,
+      //       detail,
+      //       status,
+      //     },
+      //     scoreAway,
+      //     scoreHome,
+      //   }) => {
+      //     if (!providers[dataSourceAddress]) {
+      //       providers[dataSourceAddress] = {
+      //         name: detail,
+      //         address: dataSourceAddress,
+      //         lastUpdate: moment(timestamp * 1000),
+      //         status,
+      //         scoreAway,
+      //         scoreHome,
+      //         home,
+      //         away,
+      //       }
+      //     } else {
+      //       if (
+      //         providers[dataSourceAddress].scoreAway !== scoreAway ||
+      //         providers[dataSourceAddress].scoreHome !== scoreHome
+      //       ) {
+      //         providers[dataSourceAddress].warning =
+      //           'The provider has previously reported different result for this match'
+      //       }
+      //     }
+      //   },
+      // )
 
       const allProviders = Object.values(providers).map(
         ({ balls, ...rest }) => ({ ...balls, ...rest }),
