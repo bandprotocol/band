@@ -13,6 +13,7 @@ module.exports = function(deployer) {
   deployer.deploy(Equation);
   deployer.link(Equation, BondingCurveExpression);
   deployer.link(Equation, TCRMinDepositExpression);
+  // 20% reserve ratio bonding curve
   deployer.deploy(BondingCurveExpression, [
     '18',
     '12',

@@ -11,6 +11,7 @@ const MedianAggregator = artifacts.require('MedianAggregator');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 5');
+  if (!process.env.DEPLOY_PRICE) return;
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
@@ -62,8 +63,8 @@ module.exports = function(deployer, network, accounts) {
 
       // Create Price community
       const priceTx = await commFactory.create(
-        'Price Dataset',
-        'PRC',
+        'Financial Data Feeds',
+        'XFN',
         BondingCurveExpression.address,
         '0',
         '86400',

@@ -12,6 +12,7 @@ const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 6');
+  if (!process.env.DEPLOY_LOTTERY) return;
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
@@ -39,8 +40,8 @@ module.exports = function(deployer, network, accounts) {
       }
       // Create Lottery community
       const lotteryTx = await commFactory.create(
-        'LotteryFeedCommunity',
-        'LFC',
+        'Lottery Data Feeds',
+        'XLT',
         BondingCurveExpression.address,
         '0',
         '86400',

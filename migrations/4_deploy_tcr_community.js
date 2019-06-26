@@ -7,6 +7,7 @@ const BandRegistry = artifacts.require('BandRegistry');
 
 module.exports = function(deployer) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 4');
+  if (!process.env.DEPLOY_COINHATCHER) return;
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
@@ -58,5 +59,3 @@ module.exports = function(deployer) {
     })
     .catch(console.log);
 };
-
-// module.exports = function(deployer) {};

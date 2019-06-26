@@ -12,6 +12,7 @@ const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 7');
+  if (!process.env.DEPLOY_SPORT) return;
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
@@ -39,8 +40,8 @@ module.exports = function(deployer, network, accounts) {
 
       // Create Sport community
       const sportTx = await commFactory.create(
-        'SportFeedCommunity',
-        'SFC',
+        'Sport Data Feeds',
+        'XSP',
         BondingCurveExpression.address,
         '0',
         '60',
