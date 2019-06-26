@@ -22,4 +22,4 @@ const mapStateToProps = (state, { communityAddress }) => {
   }
 }
 
-export default connect(mapStateToProps)(withRouter(TCDSelectorRender))
+export default withRouter(connect(mapStateToProps)(TCDSelectorRender))
