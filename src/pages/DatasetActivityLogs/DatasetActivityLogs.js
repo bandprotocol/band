@@ -58,6 +58,22 @@ const mockdata = [
   },
   {
     data: {
+      reported_data: {
+        0xda7a79196ddd8ad788a996efafea15bf0879c31c: '15194200000000000000',
+        0xda7af1118c2c5f2edb0d452a84be91e7b47014cb: '15184000000000000000',
+        0xda7aa2bba8685f9c0ddbc53ab8e19a6a32dc8b7f: '15265078080874383360',
+      },
+      timestamp: 1561535413,
+      tx_hash:
+        '0x47423bf7d4dd36d2f6211b57fac82e489063349e0d46483c1b3a3acd515785b1',
+    },
+    id: 4448,
+    key: 'XAG/USD',
+    tcd: '0x63DC6E5af6229F4D8Bba2476474F74f8397F6cc7',
+    type: 'BROADCAST',
+  },
+  {
+    data: {
       key: 'EUR/USD',
       provider: '0xdA7a238d208eda262505D43678b7d7f180A9Ee69',
       signature: {
