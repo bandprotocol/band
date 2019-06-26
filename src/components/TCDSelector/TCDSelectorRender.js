@@ -160,7 +160,12 @@ export default class TCDSelector extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.tcd !== prevProps.match.params.tcd) {
+    if (
+      this.props.match.params.tcd !== prevProps.match.params.tcd &&
+      this.props.tcds.find(
+        tcd => tcd.tcdAddress === this.props.match.params.tcd,
+      )
+    ) {
       this.setState({
         currentOption: this.props.tcds.find(
           tcd => tcd.tcdAddress === this.props.match.params.tcd,
@@ -179,7 +184,9 @@ export default class TCDSelector extends React.Component {
   render() {
     const { currentOption } = this.state
     const { tcds, communityAddress } = this.props
-    const path = `/community/${communityAddress}/${currentOption.tcdAddress}`
+    const path =
+      currentOption &&
+      `/community/${communityAddress}/${currentOption.tcdAddress}`
     // TODO: Fix this shit later
     const active = document.location.pathname.split('/').length === 5
 

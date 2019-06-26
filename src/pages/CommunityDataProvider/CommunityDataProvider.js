@@ -46,7 +46,6 @@ class CommunityDataProvider extends React.Component {
       >
         <Flex mt="30px" flexDirection="column">
           <ProviderList user={user} tokenAddress={tokenAddress} pageSize={10} />
-          {/* TODO: Change prefix to each dataset */}
           <ConfigurationList prefix={prefix} communityAddress={tokenAddress} />
         </Flex>
       </PageStructure>

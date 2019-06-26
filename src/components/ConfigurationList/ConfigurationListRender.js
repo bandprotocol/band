@@ -29,7 +29,7 @@ export default ({ params }) => (
         Configurations
       </Text>
       <Flex width={1} justifyContent="flex-end">
-        <CustomButton onClick={() => false}>Propose change</CustomButton>
+        <CustomButton>Propose Change</CustomButton>
       </Flex>
     </Flex>
     <Flex flexWrap="wrap" mt="28px">

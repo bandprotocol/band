@@ -147,7 +147,6 @@ function* baseInitialize() {
   )
   for (const community of communityDetails.allBandCommunities.nodes) {
     const token = community.tokenByTokenAddress
-    console.warn(token)
     yield put(
       saveCommunityInfo(
         community.name,

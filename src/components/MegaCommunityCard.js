@@ -116,6 +116,7 @@ export default ({
   onClick,
   bgColor,
   statusBg,
+  currentTcd,
   isTcd,
 }) => (
   <StyledCard
@@ -173,7 +174,7 @@ export default ({
                 Overview
               </Button>
             </Link>
-            <Link to={`/community/${tokenAddress}/dataset`}>
+            <Link to={`/community/${tokenAddress}/${currentTcd}/dataset`}>
               <Button
                 variant="white"
                 ml={3}

@@ -134,6 +134,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
                   key={i}
                   community={community}
                   bandPrice={bandPrice}
+                  currentTcd={Object.keys(community.tcds)[0]}
                   isTcd
                   onClick={() =>
                     history.push(
