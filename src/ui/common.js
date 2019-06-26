@@ -170,12 +170,10 @@ export const SubHighlightNavLink = styled(NavLink)`
     }
   }
 
-  &:hover {
-    :not(.is-active) {
-      color: #fff;
-      & .tab {
-        background-color: rgba(0, 0, 0, 0.1);
-      }
+  &:hover:not(.is-active) {
+    color: #fff;
+    & .tab {
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
 `

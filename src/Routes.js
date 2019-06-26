@@ -16,7 +16,7 @@ export default ({ match, location }) => (
     <ScrollToTop />
     <Switch location={location}>
       <Route
-        path="/community/:community"
+        path="/community/:community/:tcd?"
         render={({ match, history, location }) => (
           <React.Fragment>
             <Flex flexDirection="row">

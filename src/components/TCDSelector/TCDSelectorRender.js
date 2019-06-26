@@ -153,7 +153,20 @@ const SubTab = ({ link, img, children, tabStyle }) => (
 export default class TCDSelector extends React.Component {
   state = {
     show: false,
-    currentOption: this.props.tcds[0],
+    currentOption:
+      this.props.tcds.find(
+        tcd => tcd.tcdAddress === this.props.match.params.tcd,
+      ) || this.props.tcds[0],
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.tcd !== prevProps.match.params.tcd) {
+      this.setState({
+        currentOption: this.props.tcds.find(
+          tcd => tcd.tcdAddress === this.props.match.params.tcd,
+        ),
+      })
+    }
   }
 
   handleSelect(i) {

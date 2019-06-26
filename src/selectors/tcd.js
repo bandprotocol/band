@@ -10,10 +10,6 @@ export const tcdsSelector = createSelector(
   },
 )
 
-// export const currentTcdSelector = createSelector(
-//   []
-// )
-
 // export const numTcds = createSelector(
 //   [tcdSelector, addressSelector],
 //   (tcds, address) => {

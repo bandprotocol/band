@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import TCDSelectorRender from './TCDSelectorRender'
 import { communityDetailSelector } from 'selectors/communities'
 import { getTCDInfomation } from 'utils/tcds'
@@ -20,4 +21,5 @@ const mapStateToProps = (state, { communityAddress }) => {
     }),
   }
 }
-export default connect(mapStateToProps)(TCDSelectorRender)
+
+export default connect(mapStateToProps)(withRouter(TCDSelectorRender))
