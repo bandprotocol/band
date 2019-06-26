@@ -1,6 +1,7 @@
 import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
+import axios from 'axios'
 import { Utils } from 'band.js'
 
 const ALLTYPE = {
@@ -75,23 +76,16 @@ export const CurrentPriceFetcher = withRouter(
     }
 
     async fetch() {
-      const {
-        allDataPriceFeeds: { nodes },
-      } = await Utils.graphqlRequest(allPriceFeedQL())
+      const prices = await Utils.getDataRequest(
+        '/prices/0x0233b33A43081cfeb7B49caf623b2b5841dB7596',
+        { key: 'TC' },
+      )
 
-      const { type } = this.props
-      return nodes
-        .filter(({ pair }) => {
-          if (type && type === 'ALL') {
-            return true
-          }
-          return pair.match(/USD/g) && type && ALLTYPE[type].includes(pair)
-        })
-        .map(({ lastUpdate, pair, value }) => ({
-          pair,
-          value: value ? Utils.fromBlockchainUnit(value) : 0,
-          lastUpdate: moment(lastUpdate * 1000),
-        }))
+      return prices.map(({ key, value }) => ({
+        pair: key,
+        value: parseInt(value) / 1e18,
+        lastUpdate: moment(Date.now()),
+      }))
     }
   },
 )
@@ -110,34 +104,51 @@ export const PricePairFetcher = withRouter(
         allProvidersByPairQL(pair, moment(from).unix()),
       )
 
-      return nodes
-        .filter(
-          n => n.dataPriceFeedRawsByDataSourceAddressAndTcdAddress.nodes.length,
-        )
-        .map(
-          ({
-            detail,
-            status,
-            dataSourceAddress,
-            dataPriceFeedRawsByDataSourceAddressAndTcdAddress,
-          }) => {
-            const feed = dataPriceFeedRawsByDataSourceAddressAndTcdAddress.nodes.map(
-              ({ timestamp, value }) => ({
-                value: Utils.fromBlockchainUnit(value),
-                time: moment(timestamp * 1000),
-              }),
-            )
+      console.warn('pair ', pair)
 
-            return {
-              name: detail,
-              status,
-              address: dataSourceAddress,
-              feed,
-              lastUpdate: feed.length && feed.slice(-1)[0].time,
-              lastValue: feed.length && feed.slice(-1)[0].value,
-            }
-          },
-        )
+      const reports = await Utils.getDataRequest(
+        '/0x0233b33A43081cfeb7B49caf623b2b5841dB7596/data-points',
+        { key: pair },
+      )
+
+      const providers = {}
+      for (const report of reports) {
+        const { reportedData, timestamp } = report
+        const kvs = Object.entries(reportedData)
+        for (const kv of kvs) {
+          if (!providers[kv[0]]) {
+            providers[kv[0]] = []
+          }
+          providers[kv[0]] = providers[kv[0]].concat([
+            {
+              time: timestamp,
+              value: parseInt(kv[1]) / 1e18,
+            },
+          ])
+        }
+      }
+
+      for (const key of Object.keys(providers)) {
+        providers[key] = providers[key].sort((a, b) => {
+          if (a.time > b.time) {
+            return 1
+          } else {
+            return -1
+          }
+        })
+      }
+
+      return Object.keys(providers).map((k, i) => {
+        console.warn(providers[k].slice(-1))
+        return {
+          name: 'detail_',
+          status: 'status',
+          address: k,
+          feed: providers[k],
+          lastUpdate: moment(providers[k].slice(-1)[0].time * 1000),
+          lastValue: providers[k].slice(-1)[0].value,
+        }
+      })
     }
   },
 )

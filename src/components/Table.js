@@ -6,16 +6,14 @@ const THead = styled(Flex).attrs(p => ({
   px: 4,
   alignItems: 'center',
 }))`
-  background: #fafaff;
+  background: #eef3ff;
   height: 36px;
-  border-top: solid 1px #e5e6f5;
 `
 
 const TBody = styled(Box).attrs(p => ({
   px: 4,
   py: 2,
 }))`
-  border-top: solid 1px #e5e6f5;
   font-size: 14px;
 `
 
@@ -27,7 +25,7 @@ export const createTable = ({ columns }) =>
       // console.log('DATA', data)
 
       return (
-        <Box {...props}>
+        <Box {...props} style={{ backgroundColor: 'white', color: '#4a4a4a' }}>
           <THead>
             {columns.map(({ label, data, cell, ...p }) => (
               <Text
@@ -41,7 +39,7 @@ export const createTable = ({ columns }) =>
               </Text>
             ))}
           </THead>
-          <TBody>
+          <TBody mb="-10px">
             {data.map((r, i) => (
               <Flex style={{ lineHeight: '32px' }}>
                 {columns.map(({ label, data, cell = {}, ...p }) => (

@@ -13,8 +13,6 @@ import {
 import SportTable from 'components/table/SportTable'
 import Loading from 'components/Loading'
 import { createLoadingButton } from 'components/BaseButton'
-import SearchSelect from 'components/SearchSelect'
-import { getOptionsByType } from 'utils/sportTeam'
 
 const LoadMoreButton = createLoadingButton(styled(Button)`
   width: 200px;
@@ -28,134 +26,117 @@ const LoadMoreButton = createLoadingButton(styled(Button)`
 `)
 
 const renderDataPoints = (
-  { type, home: searchHome, away: searchAway },
+  state,
   matches,
   currentSportLength,
   loadMoreList,
   onSearchTeam,
-) => (
-  <React.Fragment>
-    <Box mt={3}>
-      <FlipMove>
-        {matches.map(
-          ({
-            lastUpdate,
-            time,
-            hasStartTime,
-            home,
-            away,
-            homeFullName,
-            awayFullName,
-            scoreHome,
-            scoreAway,
-            keyOnChain,
-          }) => (
-            <DataPoint
-              key={`${time.valueOf()}/${home}/${away}`}
-              keyOnChain={keyOnChain}
-              label={`${time.format(
-                hasStartTime ? 'YYYY/MM/DD hh:mm a' : 'YYYY/MM/DD',
-              )}: ${homeFullName} - ${awayFullName}`}
-              k={time}
-              v={() => (
-                <Flex mr="-20px">
-                  <Card flex="0 0 auto" py={2} px={3}>
-                    <Text
-                      ml="auto"
-                      fontFamily="code"
-                      fontSize={15}
-                      fontWeight="bold"
-                      textAlign="right"
-                      style={{ width: 30 }}
+) => {
+  const { type, home: searchHome, away: searchAway } = state
+  return (
+    <React.Fragment>
+      <Box mt={3}>
+        <FlipMove>
+          {matches.map(
+            ({
+              lastUpdate,
+              time,
+              hasStartTime,
+              home,
+              away,
+              homeFullName,
+              awayFullName,
+              scoreHome,
+              scoreAway,
+              keyOnChain,
+            }) => (
+              <DataPoint
+                key={`${time.valueOf()}/${home}/${away}`}
+                keyOnChain={keyOnChain}
+                label={`${time.format(
+                  hasStartTime ? 'YYYY/MM/DD hh:mm a' : 'YYYY/MM/DD',
+                )}: ${homeFullName} - ${awayFullName}`}
+                k={time}
+                v={() => (
+                  <Flex mr="-20px">
+                    <Card
+                      flex="0 0 auto"
+                      bg="white"
+                      px="auto"
+                      mx="20px"
+                      borderRadius="4px"
+                      style={{
+                        lineHeight: '36px',
+                        width: '84px',
+                        height: '35px',
+                      }}
                     >
-                      {home}
-                    </Text>
-                  </Card>
-                  <Card
-                    flex="0 0 auto"
-                    bg="#6A6B81"
-                    px={1}
-                    borderRadius="3px"
-                    style={{ lineHeight: '36px' }}
-                  >
-                    <Text
-                      fontFamily="code"
-                      fontSize={14}
-                      fontWeight="bold"
-                      textAlign="center"
-                      color="white"
-                      style={{ width: 88 }}
-                    >
-                      {scoreHome} - {scoreAway}
-                    </Text>
-                  </Card>
-                  <Card flex="0 0 auto" py={2} px={3}>
-                    <Text
-                      ml="auto"
-                      fontFamily="code"
-                      fontSize={15}
-                      fontWeight="bold"
-                      textAlign="left"
-                      style={{ width: 30 }}
-                    >
-                      {away}
-                    </Text>
-                  </Card>
-                </Flex>
-              )}
-              updatedAt={lastUpdate}
-            >
-              <SportProvidersByTypeTimeTeamFetcher
-                type={type}
-                time={time.format('YYYYMMDD')}
-                home={home}
-                away={away}
-                startTime={hasStartTime ? time.format('HHmm') : '9999'}
+                      <Text
+                        fontFamily="code"
+                        fontSize={14}
+                        fontWeight="bold"
+                        textAlign="center"
+                        color="#4a4a4a"
+                      >
+                        {scoreHome} - {scoreAway}
+                      </Text>
+                    </Card>
+                  </Flex>
+                )}
+                updatedAt={lastUpdate}
               >
-                {({ fetching, data }) =>
-                  fetching ? (
-                    <Loading
-                      height={214}
-                      width={922}
-                      rects={[
-                        [24, 6, 922 - 48, 28, 8],
-                        [24, 36 + 8 + 4, 922 - 48, 32 - 8, 8],
-                        [24, 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
-                        [24, 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
-                        [24, 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
-                        [24, 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
-                      ]}
-                    />
-                  ) : (
-                    <React.Fragment>
-                      <SportTable mb={2} data={data} />
-                    </React.Fragment>
-                  )
-                }
-              </SportProvidersByTypeTimeTeamFetcher>
-            </DataPoint>
-          ),
-        )}
-      </FlipMove>
-    </Box>
-    <SportCountByTypeFetcher type={type} home={searchHome} away={searchAway}>
-      {({ fetching, data }) =>
-        !data ||
-        fetching ||
-        currentSportLength == 0 ||
-        currentSportLength >= data ||
-        searchHome ||
-        searchAway ? null : (
-          <Flex width="100%" justifyContent="center" alignItems="center">
-            <LoadMoreButton onClick={loadMoreList}>
-              Load More Data
-            </LoadMoreButton>
-          </Flex>
-        )
-      }
-    </SportCountByTypeFetcher>
-  </React.Fragment>
-)
+                <SportProvidersByTypeTimeTeamFetcher
+                  type={type}
+                  time={time.format('YYYYMMDD')}
+                  home={home}
+                  away={away}
+                  startTime={hasStartTime ? time.format('HHmm') : '9999'}
+                >
+                  {({ fetching, data }) =>
+                    fetching ? (
+                      <Loading
+                        height={214}
+                        width={922}
+                        rects={[
+                          [24, 6, 922 - 48, 28, 8],
+                          [24, 36 + 8 + 4, 922 - 48, 32 - 8, 8],
+                          [24, 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
+                          [24, 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
+                          [24, 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
+                          [24, 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
+                        ]}
+                      />
+                    ) : (
+                      <React.Fragment>
+                        <SportTable mb={2} data={data} />
+                      </React.Fragment>
+                    )
+                  }
+                </SportProvidersByTypeTimeTeamFetcher>
+              </DataPoint>
+            ),
+          )}
+        </FlipMove>
+      </Box>
+      <SportCountByTypeFetcher type={type} home={searchHome} away={searchAway}>
+        {({ fetching, data }) =>
+          !data ||
+          fetching ||
+          currentSportLength == 0 ||
+          currentSportLength >= data ||
+          searchHome ||
+          searchAway ? null : (
+            <Flex width="100%" justifyContent="center" alignItems="center">
+              <LoadMoreButton onClick={loadMoreList}>
+                Load More Data
+              </LoadMoreButton>
+            </Flex>
+          )
+        }
+      </SportCountByTypeFetcher>
+    </React.Fragment>
+  )
+}
 
 export default class SportPage extends React.Component {
   state = {
@@ -233,7 +214,9 @@ export default class SportPage extends React.Component {
         )}
         {...this.props}
       >
-        <DataCard>
+        <DataCard
+          headerText={`${this.currentSportLength || 0} Data Soccer Matches`}
+        >
           <SportByTypeFetcher
             type={this.state.type}
             nList={this.state.nSportList}

@@ -6,6 +6,7 @@ import PageStructure from 'components/DataSetPageStructure'
 import PageContainer from 'components/PageContainer'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
+import DataCard from 'components/DataCard'
 import FlipMove from 'react-flip-move'
 import {
   CurrentPriceFetcher,
@@ -17,14 +18,6 @@ import Loading from 'components/Loading'
 
 const renderDataPoints = (pairs, type) => (
   <React.Fragment>
-    <Flex>
-      <Heading>{pairs.length} Ðata Points</Heading>
-      {/* <Box ml="auto" mr={3}>
-        <Text fontSize={26}>
-          <ion-icon name="md-search" />
-        </Text>
-      </Box> */}
-    </Flex>
     <Box mt={3}>
       <FlipMove>
         {pairs.map(({ pair, value, lastUpdate }) => (
@@ -111,29 +104,30 @@ export default class CommunityPricePage extends React.Component {
         )}
         {...this.props}
       >
-        <PageContainer>
-          <Box mt={5}>
-            <CurrentPriceFetcher type={this.state.type}>
-              {({ fetching, data }) =>
-                fetching ? (
-                  <Loading
-                    height={281}
-                    width={924}
-                    rects={[
-                      [0, 0, 120, 32],
-                      [880, 0, 32, 32],
-                      [0, 52, 924, 61],
-                      [0, 135, 924, 61],
-                      [0, 218, 924, 61],
-                    ]}
-                  />
-                ) : (
-                  renderDataPoints(data, this.state.type)
-                )
-              }
-            </CurrentPriceFetcher>
-          </Box>
-        </PageContainer>
+        <DataCard
+          headerText={`${this.currentSportLength || 0} Data Prices `}
+          withSearch={false}
+        >
+          <CurrentPriceFetcher type={this.state.type}>
+            {({ fetching, data }) =>
+              fetching ? (
+                <Loading
+                  height={281}
+                  width={924}
+                  rects={[
+                    [0, 0, 120, 32],
+                    [880, 0, 32, 32],
+                    [0, 52, 924, 61],
+                    [0, 135, 924, 61],
+                    [0, 218, 924, 61],
+                  ]}
+                />
+              ) : (
+                renderDataPoints(data, this.state.type)
+              )
+            }
+          </CurrentPriceFetcher>
+        </DataCard>
       </PageStructure>
     )
   }

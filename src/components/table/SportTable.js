@@ -23,7 +23,7 @@ export default createTable({
     },
     { data: d => d.name, label: 'Source', flex: '1', mr: 2 },
     {
-      cell: { fontFamily: 'code', color: '#868FCD', fontSize: 13 },
+      cell: { fontFamily: 'code', color: '#5269ff', fontSize: 13 },
       data: d => (
         <React.Fragment>
           {d.lastUpdate.fromNow().replace('a few', '')}

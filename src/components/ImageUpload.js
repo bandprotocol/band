@@ -107,7 +107,6 @@ export default class ImageUpload extends React.Component {
           }}
         >
           <Flex
-            bg="red"
             width="20px"
             justifyContent="center"
             alignItems="center"

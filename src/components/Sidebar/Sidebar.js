@@ -56,8 +56,8 @@ const mapStateToProps = (state, { tokenAddress }) => {
   const community = communityDetailSelector(state, {
     address: tokenAddress,
   })
-  const tcds = community.get('tcds').toJS()
   if (!community) return {}
+  const tcds = community.get('tcds').toJS()
   return {
     logedin: !!currentUserSelector(state),
     name: community.get('name'),

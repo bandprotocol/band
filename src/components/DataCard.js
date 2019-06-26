@@ -45,21 +45,23 @@ const Search = () => {
   )
 }
 
-export default ({ children }) => {
+export default ({ children, headerText, withSearch = true }) => {
   return (
     <FlexCard flexDirection="column">
-      <Flex flexDirection="row" alignItems="center">
+      <Flex flexDirection="row" alignItems="center" mb="20px">
         <Text
           fontSize="20px"
           fontWeight="900"
           color="#393939"
           style={{ whiteSpace: 'nowrap' }}
         >
-          0 Data Soccer Matches
+          {headerText}
         </Text>
-        <Flex width={1} justifyContent="flex-end">
-          <Search />
-        </Flex>
+        {withSearch && (
+          <Flex width={1} justifyContent="flex-end">
+            <Search />
+          </Flex>
+        )}
       </Flex>
       {children}
     </FlexCard>

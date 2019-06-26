@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
 import colors from 'ui/colors'
 import AutoDate from 'components/AutoDate'
-import KeySnippet from 'components/KeySnippet'
+import { copy } from 'utils/clipboard'
 
 const DataPointContainer = styled(Card).attrs(p => ({
   variant: 'list',
@@ -14,7 +14,8 @@ const DataPointContainer = styled(Card).attrs(p => ({
   transition: all 250ms;
   cursor: pointer;
   overflow: hidden;
-
+  background-color: #6b8bf5;
+  color: white;
   &:hover {
     box-shadow: ${colors.shadow.lightActive};
   }
@@ -33,42 +34,39 @@ const ExpandableCard = styled(Card)`
   `}
 `
 
-const MagicBox = styled(Box)`
-  flex: 1;
-  line-height: 30px;
-  margin-right: 10px;
-  position: relative;
-  height: 60px;
-
-  .key-snippet {
-    position: absolute;
-    top: 10px;
-    opacity: 0;
-    transition: all 150ms;
-    z-index: 1;
-    background: #ffffff;
-  }
-
-  .label {
-    position: absolute;
-    top: 0;
-    opacity: 1;
-    line-height: 60px;
-  }
-
+const KeyBox = styled(Flex)`
+  background-color: #fafbff;
+  padding: 0px 10px;
+  border-radius: 18px;
+  min-width: 450px;
+  min-height: 36px;
+  transition: all 200ms;
   &:hover {
-    .key-snippet {
-      opacity: 1;
-    }
-
-    .label {
-      opacity: 0;
-    }
+    box-shadow: 0 2px 5px 0px rgba(10, 0, 40, 0.1);
   }
 `
 
 export default class DataPoint extends React.Component {
-  state = { expand: false }
+  state = { expand: false, copied: false }
+
+  handleShowCopied(e, keyOnChain) {
+    copy(keyOnChain)
+    this.setState(
+      {
+        copied: true,
+      },
+      () => {
+        setTimeout(
+          () =>
+            this.setState({
+              copied: false,
+            }),
+          500,
+        )
+      },
+    )
+    e.stopPropagation()
+  }
 
   render() {
     const {
@@ -93,25 +91,72 @@ export default class DataPoint extends React.Component {
               <AutoDate>{updatedAt}</AutoDate>
             </Text>
           </Flex>
-          <MagicBox>
-            <Box className="key-snippet">
-              <KeySnippet keyOnChain={keyOnChain} />
-            </Box>
-            <Flex flexDirection="row" className="label">
-              <Logo />
-              <Text fontFamily="code" fontSize={15} fontWeight="700">
-                {label}
-              </Text>
-            </Flex>
-          </MagicBox>
-          {v()}
+          <Flex flexDirection="row" className="label">
+            <Logo />
+            <Text fontFamily="code" fontSize={15} fontWeight="700">
+              {label}
+            </Text>
+          </Flex>
+          <Flex flex={1} justifyContent="flex-end">
+            {v()}
+            {this.state.expand ? (
+              <Flex mx="20px" alignItems="center">
+                <i className="fas fa-chevron-up" />
+              </Flex>
+            ) : (
+              <Flex mx="20px" alignItems="center">
+                <i className="fas fa-chevron-down" />
+              </Flex>
+            )}
+          </Flex>
         </Flex>
         {children && (
-          <ExpandableCard
-            borderTop="solid 1px #EDEDED"
-            expand={this.state.expand}
-          >
+          <ExpandableCard expand={this.state.expand}>
             {this.state.expand && children}
+            <Flex justifyContent="center" alignItems="center" bg="white">
+              <Flex
+                mt="10px"
+                style={{
+                  height: '10px',
+                  width: '450px',
+                  borderTop: 'solid 1px #e7ecff',
+                }}
+              />
+            </Flex>
+            <Flex
+              bg="white"
+              py="20px"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <KeyBox
+                justifyContent="center"
+                alignItems="center"
+                onClick={e => this.handleShowCopied(e, keyOnChain)}
+              >
+                <Flex
+                  bg="#ffca55"
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{
+                    fontWeight: 500,
+                    maxWidth: '50px',
+                    minWidth: '50px',
+                    maxHeight: '20px',
+                    minHeight: '20px',
+                    borderRadius: '10px',
+                  }}
+                >
+                  key
+                </Flex>
+                <Text color="#4a4a4a" fontSize="14px" ml="10px" mr="auto">
+                  {keyOnChain}
+                </Text>
+                <Text color="#5269ff" fontWeight={500}>
+                  {this.state.copied ? 'Copied' : 'Click to copy'}
+                </Text>
+              </KeyBox>
+            </Flex>
           </ExpandableCard>
         )}
       </DataPointContainer>
