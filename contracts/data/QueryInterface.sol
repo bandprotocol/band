@@ -15,12 +15,14 @@ contract QueryInterface {
     registry = _registry;
   }
 
-  function query(bytes calldata input) external payable returns (bytes32 output, QueryStatus status) {
+  function query(bytes calldata input)
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status)
+  {
     require(registry.verify(msg.sender));
     uint256 price = queryPrice(input);
     require(msg.value >= price);
     if (msg.value > price) msg.sender.transfer(msg.value - price);
-    (output, status) = queryImpl(input);
+    (output, updatedAt, status) = queryImpl(input);
     emit Query(msg.sender, input, status);
   }
 
@@ -28,5 +30,5 @@ contract QueryInterface {
     public view returns (uint256);
 
   function queryImpl(bytes memory input)
-    internal returns (bytes32 output, QueryStatus status);
+    internal returns (bytes32 output, uint256 updatedAt, QueryStatus status);
 }

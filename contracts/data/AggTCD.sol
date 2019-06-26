@@ -18,7 +18,7 @@ contract AggTCD is TCDBase {
     return params.get(prefix, "query_price");
   }
 
-  function queryImpl(bytes memory input) internal returns (bytes32 output, QueryStatus status) {
+  function queryImpl(bytes memory input) internal returns (bytes32 output, uint256 updatedAt, QueryStatus status) {
     uint256[] memory data = new uint256[](activeCount);
     uint256 size = 0;
     address dataSourceAddress = activeList[ACTIVE_GUARD];
@@ -30,10 +30,10 @@ contract AggTCD is TCDBase {
       }
       dataSourceAddress = activeList[dataSourceAddress];
     }
-    if (size == 0 || size.mul(3) < activeCount.mul(2)) return ("", QueryStatus.NOT_AVAILABLE);
+    if (size == 0 || size.mul(3) < activeCount.mul(2)) return ("", 0, QueryStatus.NOT_AVAILABLE);
     Aggregator agg = Aggregator(address(params.get(prefix, "data_aggregator")));
     (uint256 result, bool ok) = agg.aggregate(data, size);
-    if (!ok) return ("", QueryStatus.DISAGREEMENT);
-    else return (bytes32(result), QueryStatus.OK);
+    if (!ok) return ("", now, QueryStatus.DISAGREEMENT);
+    else return (bytes32(result), now, QueryStatus.OK);
   }
 }

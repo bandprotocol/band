@@ -61,10 +61,10 @@ contract MultiSigTCD is TCDBase {
     });
   }
 
-  function queryImpl(bytes memory input) internal returns (bytes32 output, QueryStatus status) {
+  function queryImpl(bytes memory input) internal returns (bytes32 output, uint256 updatedAt, QueryStatus status) {
     DataPoint storage data = aggData[input];
-    if (data.timestamp == 0) return ("", QueryStatus.NOT_AVAILABLE);
-    if (data.status != QueryStatus.OK) return ("", data.status);
-    return (bytes32(data.value), QueryStatus.OK);
+    if (data.timestamp == 0) return ("", 0, QueryStatus.NOT_AVAILABLE);
+    if (data.status != QueryStatus.OK) return ("", data.timestamp, data.status);
+    return (bytes32(data.value), data.timestamp, QueryStatus.OK);
   }
 }

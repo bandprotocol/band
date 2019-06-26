@@ -7,6 +7,7 @@ contract QueryTCDMock {
   AggTCD public tcd;
 
   bytes32 public result;
+  uint256 public updatedAt;
   QueryInterface.QueryStatus public status;
 
   constructor(AggTCD _tcd) public {
@@ -14,6 +15,6 @@ contract QueryTCDMock {
   }
 
   function query(bytes calldata input) external payable {
-    (result, status) = tcd.query.value(tcd.queryPrice(input))(input);
+    (result, updatedAt, status) = tcd.query.value(tcd.queryPrice(input))(input);
   }
 }
