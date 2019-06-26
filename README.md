@@ -20,7 +20,7 @@
 Make sure you have Node.js and Yarn installed, then:
 
 ```
-$ yarn ins
+$ yarn install
 ```
 
 To start a development server, run:
