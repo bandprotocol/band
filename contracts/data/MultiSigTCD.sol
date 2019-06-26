@@ -11,6 +11,8 @@ import "./TCDBase.sol";
 contract MultiSigTCD is TCDBase {
   using SafeMath for uint256;
 
+  event DataPointUpdated(bytes key, uint256 value, QueryStatus status);
+
   struct DataPoint {
     uint256 value;
     uint64 timestamp;
@@ -54,11 +56,13 @@ contract MultiSigTCD is TCDBase {
   function _save(bytes memory key, uint256[] memory values) private {
     Aggregator agg = Aggregator(address(params.get(prefix, "data_aggregator")));
     (uint256 result, bool ok) = agg.aggregate(values, values.length);
+    QueryStatus status = ok ? QueryStatus.OK : QueryStatus.DISAGREEMENT;
     aggData[key] = DataPoint({
       value: result,
       timestamp: uint64(now),
-      status: ok ? QueryStatus.OK : QueryStatus.DISAGREEMENT
+      status: status
     });
+    emit DataPointUpdated(key, result, status);
   }
 
   function queryImpl(bytes memory input) internal returns (bytes32 output, uint256 updatedAt, QueryStatus status) {
