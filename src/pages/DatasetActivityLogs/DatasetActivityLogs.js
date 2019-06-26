@@ -1,4 +1,7 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { communityDetailSelector } from 'selectors/communities'
+
 import DatasetActivityLogsRender from './DatasetActivityLogsRender'
 
 const mockdata = [
@@ -108,6 +111,22 @@ const mockdata = [
     tcd: '0xA360da6302d6e2E291e763Af5f6D929a1AB3f6A9',
     type: 'REPORT',
   },
+  {
+    data: {
+      reported_data: {
+        0xda7a79196ddd8ad788a996efafea15bf0879c31c: '15194200000000000000',
+        0xda7af1118c2c5f2edb0d452a84be91e7b47014cb: '15184000000000000000',
+        0xda7aa2bba8685f9c0ddbc53ab8e19a6a32dc8b7f: '15265078080874383360',
+      },
+      timestamp: 1561535413,
+      tx_hash:
+        '0x47423bf7d4dd36d2f6211b57fac82e489063349e0d46483c1b3a3acd515785b1',
+    },
+    id: 4448,
+    key: 'XAG/USD',
+    tcd: '0x63DC6E5af6229F4D8Bba2476474F74f8397F6cc7',
+    type: 'BROADCAST',
+  },
 ]
 
 class DatasetActivityLogs extends React.Component {
@@ -116,8 +135,19 @@ class DatasetActivityLogs extends React.Component {
   }
 
   render() {
-    return <DatasetActivityLogsRender data={mockdata} />
+    return <DatasetActivityLogsRender data={mockdata} {...this.props} />
   }
 }
 
-export default DatasetActivityLogs
+const mapStateToProps = (state, { communityAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: communityAddress,
+  })
+
+  return {
+    name: community.get('name'),
+    address: community.get('address'),
+  }
+}
+
+export default connect(mapStateToProps)(DatasetActivityLogs)
