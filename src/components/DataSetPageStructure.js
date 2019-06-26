@@ -9,7 +9,7 @@ import DatasetHeader from 'images/provider-header.png'
 const Header = styled(Flex).attrs({
   alignItems: 'center',
   justifyContent: 'center',
-  mb: '50px',
+  mb: '32px',
 })`
   color: ${colors.white};
   background-image: url(${DatasetHeader});
