@@ -13,7 +13,7 @@ module.exports = function() {
       //   '0x662511FeAD5e5949C78110f77b8B5AC376717d59',
       // );
       const bondingCurve = await BondingCurve.at(
-        '0xc97F698be80c1Bb3A05452a1b4d71030543a0A7b',
+        '0xeb0F7ECA876a6da00952FbF979dC9E30AD1ED139',
       );
       console.log(bondingCurve.address);
       await band.approve(bondingCurve.address, '50000000000000000000000000');
@@ -25,7 +25,7 @@ module.exports = function() {
       );
       console.log('Buy Complete!');
       const TCToken = await CommunityToken.at(
-        '0x8cd21AEA1666eA4C2DF780B6566ae5e40EeaB4aE',
+        '0xB86a7803c137621b304ac90681256b708d0D609C',
       );
       // await TCToken.transfer(accounts[1], '10000000000000000000000', {
       //   from: accounts[0],
