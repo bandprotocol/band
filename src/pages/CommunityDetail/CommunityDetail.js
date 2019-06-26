@@ -36,7 +36,8 @@ const mapStateToProps = (state, { tokenAddress }) => {
     marketCap: community.get('marketCap'),
     totalSupply: community.get('totalSupply'),
     collateralEquation: community.get('collateralEquation'),
-    tcd: community.get('tcd') && community.get('tcd').toJS(),
+    // TODO: Summary multiple TCD
+    // tcd: community.get('tcd') && community.get('tcd').toJS(),
     tcr: community.get('tcr'),
   }
 }

@@ -15,11 +15,7 @@ import {
   dumpTxs,
 } from 'actions'
 
-import {
-  blockNumberSelector,
-  transactionSelector,
-  transactionHiddenSelector,
-} from 'selectors/basic'
+import { blockNumberSelector, transactionSelector } from 'selectors/basic'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -115,6 +111,7 @@ function* baseInitialize() {
             tcdsByTokenAddress {
               nodes {
                 address
+                prefix
                 maxProviderCount
                 minStake
                 dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
@@ -148,6 +145,7 @@ function* baseInitialize() {
   )
   for (const community of communityDetails.allBandCommunities.nodes) {
     const token = community.tokenByTokenAddress
+    console.warn(token)
     yield put(
       saveCommunityInfo(
         community.name,
@@ -169,19 +167,23 @@ function* baseInitialize() {
         new BN(token.totalSupply),
         token.curveByTokenAddress.collateralEquation,
         token.tcdsByTokenAddress.nodes[0] &&
-          Map({
-            tcdAddress: token.tcdsByTokenAddress.nodes[0].address,
-            minStake: token.tcdsByTokenAddress.nodes[0].minStake,
-            maxProviderCount:
-              token.tcdsByTokenAddress.nodes[0].maxProviderCount,
-            totalStake: token.tcdsByTokenAddress.nodes[0].dataProvidersByTcdAddress.nodes.reduce(
-              (c, { stake }) => c.add(new BN(stake)),
-              new BN(0),
-            ),
-            dataProviderCount:
-              token.tcdsByTokenAddress.nodes[0].dataProvidersByTcdAddress.nodes
-                .length,
-          }),
+          token.tcdsByTokenAddress.nodes.reduce(
+            (acc, each) =>
+              acc.set(
+                each.address,
+                Map({
+                  minStake: each.minStake,
+                  maxProviderCount: each.maxProviderCount,
+                  totalStake: each.dataProvidersByTcdAddress.nodes.reduce(
+                    (c, { stake }) => c.add(new BN(stake)),
+                    new BN(0),
+                  ),
+                  dataProviderCount:
+                    each.dataProvidersByTcdAddress.nodes.length,
+                }),
+              ),
+            Map(),
+          ),
         token.tcrsByTokenAddress.nodes[0] && {
           listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,
           applied: token.tcrsByTokenAddress.nodes[0].appliedEntries.totalCount,

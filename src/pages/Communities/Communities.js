@@ -11,7 +11,7 @@ const mapStateToProps = (state, props) => {
     .toJS()
   return {
     bandPrice: bandPriceSelector(state),
-    tcdCommunities: communities.filter(community => community.tcd),
+    tcdCommunities: communities.filter(community => community.tcds),
     tcrCommunities: communities.filter(community => community.tcr),
   }
 }

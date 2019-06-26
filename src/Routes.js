@@ -3,16 +3,16 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { Flex } from 'ui/common'
 
 import ScrollToTop from 'ScrollToTop'
+import TCDRoutes from 'TCDRoutes'
 import Sidebar from 'components/Sidebar'
 import CommunitiesPage from 'pages/Communities'
 import CommunityDetailPage from 'pages/CommunityDetail'
-import CommunityRewardPage from 'pages/CommunityReward'
 import CommunityGovernancePage from 'pages/CommunityGovernance'
 import CommunityProposalPage from 'pages/CommunityProposal'
-import CommunityDataProviderPage from 'pages/CommunityDataProvider'
-import CommunityDataSetPage from 'pages/CommunityDataSet'
-import CommunityIntegration from 'pages/CommunityIntegration'
 import CreateCommunityPage from 'pages/CreateCommunity'
+
+// MOCK
+import DatasetActivityLogs from 'pages/DatasetActivityLogs'
 
 export default ({ match, location }) => (
   <React.Fragment>
@@ -25,18 +25,11 @@ export default ({ match, location }) => (
             <Flex flexDirection="row">
               <Sidebar tokenAddress={match.params.community} />
               <Switch>
+                {/* Global Routes */}
                 <Route
                   path="/community/:community/overview"
                   render={({ match }) => (
                     <CommunityDetailPage
-                      tokenAddress={match.params.community}
-                    />
-                  )}
-                />
-                <Route
-                  path="/community/:community/reward"
-                  render={({ match }) => (
-                    <CommunityRewardPage
                       tokenAddress={match.params.community}
                     />
                   )}
@@ -57,30 +50,41 @@ export default ({ match, location }) => (
                     />
                   )}
                 />
+                {/* TCD Routes */}
                 <Route
-                  path="/community/:community/provider"
+                  path="/community/:community/:tcd/:path"
                   render={({ match }) => (
-                    <CommunityDataProviderPage
-                      tokenAddress={match.params.community}
-                    />
-                  )}
-                />
-                <Route
-                  path="/community/:community/dataset"
-                  render={({ match }) => (
-                    <CommunityDataSetPage
+                    <TCDRoutes
                       communityAddress={match.params.community}
+                      tcdAddress={match.params.tcd}
+                      path={match.params.path}
                     />
                   )}
                 />
+                {/* Activity Logs for Paul */}
                 <Route
-                  path="/community/:community/integration"
+                  path="/community/:community/logs"
                   render={({ match }) => (
-                    <CommunityIntegration
+                    <DatasetActivityLogs
                       communityAddress={match.params.community}
+                      tcdAddress={match.params.tcd}
+                      path={match.params.path}
                     />
                   )}
                 />
+
+                {/* Default TCD Route */}
+                <Route
+                  path="/community/:community/:tcd"
+                  render={({ match }) => (
+                    <Redirect
+                      to={`/community/${match.params.community}/${
+                        match.params.tcd
+                      }/dataset`}
+                    />
+                  )}
+                />
+                {/* Default Global Route */}
                 <Route
                   path="/community/:community"
                   exact

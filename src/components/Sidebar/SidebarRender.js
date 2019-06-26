@@ -1,7 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-
-import { Image, Flex, Text, Bold, Box, HighlightNavLink } from 'ui/common'
+import {
+  Image,
+  Flex,
+  Text,
+  Bold,
+  HighlightNavLink,
+  SubHighlightNavLink,
+} from 'ui/common'
+import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
 import BalanceWallet from 'images/balanceWallet.svg'
@@ -10,7 +17,7 @@ import BalanceWallet from 'images/balanceWallet.svg'
 import DetailSrc from 'images/detailInactive.svg'
 import GovernanceSrc from 'images/govInactive.svg'
 import ProposalSrc from 'images/voteInactive.svg'
-import DataProviderInactive from 'images/dataProviderInactive.svg'
+import DataLogInactive from 'images/dataLogInactive.svg'
 import DataSetInactive from 'images/datasetInactive.svg'
 import IntegrationInactive from 'images/integrationInactive.svg'
 
@@ -18,9 +25,6 @@ import IntegrationInactive from 'images/integrationInactive.svg'
 import DetailActiveSrc from 'images/detailActive.svg'
 import GovernanceActiveSrc from 'images/govActive.svg'
 import ProposalActiveSrc from 'images/voteActive.svg'
-import DataProviderActive from 'images/dataProviderActive.svg'
-import DataSetActive from 'images/datasetActive.svg'
-import IntegrationActive from 'images/integrationActive.svg'
 
 const Left = styled.div`
   width: 220px;
@@ -42,7 +46,7 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
         flexDirection="row"
         alignItems="center"
         className="tab"
-        pl={3}
+        pl={4}
       >
         <Image
           className="img-active"
@@ -62,6 +66,24 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
   </HighlightNavLink>
 )
 
+const SubTab = ({ link, img, children, tabStyle }) => (
+  <SubHighlightNavLink to={link} activeClassName="is-active">
+    <Flex style={{ height: 52 }}>
+      <Flex
+        flex={1}
+        flexDirection="row"
+        alignItems="center"
+        className="tab"
+        style={tabStyle}
+        pl={4}
+      >
+        <Image src={img} width="20px" height="20px" />
+        <Text px={3}>{children}</Text>
+      </Flex>
+    </Flex>
+  </SubHighlightNavLink>
+)
+
 export default ({
   logedin,
   name,
@@ -70,7 +92,7 @@ export default ({
   usdBalance,
   symbol,
   address,
-  hasTCD,
+  tcds,
 }) => (
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
@@ -81,7 +103,6 @@ export default ({
         m={3}
         borderRadius="50%"
         style={{
-          // border: 'solid 6px #ffffff',
           boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
         }}
       />
@@ -144,41 +165,61 @@ export default ({
           >
             Overview
           </Tab>
-          {hasTCD && (
+          {/* TCD */}
+          {tcds && (
             <React.Fragment>
-              <Bold px={4} pt={4} pb={3} fontSize="12px" color="#a6c1ff">
-                FOR DEVELOPER
+              <Bold pl="44px" pt={3} pb={3} fontSize="12px" color="#a6c1ff">
+                AVAILABLE DATA
               </Bold>
-              <Tab
-                link={`/community/${address}/dataset`}
-                imgSrcActive={DataSetActive}
-                imgSrcInactive={DataSetInactive}
+              <Flex
+                flexDirection="column"
+                mx="11px"
+                style={{
+                  boxShadow: 'inset 0 1px 11px 0 rgba(0, 0, 0, 0.03)',
+                  borderRadius: '28px',
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                }}
               >
-                Dataset
-              </Tab>
-              <Tab
-                link={`/community/${address}/integration`}
-                imgSrcActive={IntegrationActive}
-                imgSrcInactive={IntegrationInactive}
-              >
-                Integration
-              </Tab>
-              <Tab
-                link={`/community/${address}/provider`}
-                imgSrcActive={DataProviderActive}
-                imgSrcInactive={DataProviderInactive}
-              >
-                Data providers
-              </Tab>
+                <TCDSelector communityAddress={address} />
+                <SubTab
+                  link={`/community/${address}/dataset`}
+                  img={DataSetInactive}
+                >
+                  Explore Data
+                </SubTab>
+                <SubTab
+                  link={`/community/${address}/integration`}
+                  img={IntegrationInactive}
+                >
+                  Integration
+                </SubTab>
+                <SubTab
+                  link={`/community/${address}/provider`}
+                  img={GovernanceSrc}
+                >
+                  Governance
+                </SubTab>
+                <SubTab
+                  link={`/community/${address}/logs`}
+                  img={DataLogInactive}
+                  tabStyle={{
+                    borderBottomLeftRadius: '28px',
+                    borderBottomRightRadius: '28px',
+                  }}
+                >
+                  Activity Logs
+                </SubTab>
+              </Flex>
             </React.Fragment>
           )}
-          <Bold px={4} py={3} fontSize="12px" color="#a6c1ff">
-            FOR TOKEN HOLDER
+          <Bold pl="44px" pt={4} pb={3} fontSize="12px" color="#a6c1ff">
+            CONFIGURATIONS
           </Bold>
           <Tab
             link={`/community/${address}/parameters`}
             imgSrcActive={GovernanceActiveSrc}
             imgSrcInactive={GovernanceSrc}
+            disabled
           >
             Parameters
           </Tab>

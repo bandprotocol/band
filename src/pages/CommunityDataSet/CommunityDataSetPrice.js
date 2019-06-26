@@ -101,7 +101,6 @@ export default class CommunityPricePage extends React.Component {
   state = { type: 'CRYPTO' }
 
   render() {
-    const { name: communityName } = this.props
     return (
       <PageStructure
         renderHeader={() => (

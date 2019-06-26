@@ -156,10 +156,10 @@ export default props => {
     totalSupply,
     collateralEquation,
     tcr,
-    tcd,
+    // tcd,
   } = props
   return (
-    <PageContainer withSidebar bg="#f2f4f9" style={{ minWidth: 0 }}>
+    <PageContainer withSidebar style={{ minWidth: 0 }}>
       <Breadcrumb
         links={[
           { path: `/community/${address}`, label: name },
@@ -279,7 +279,7 @@ export default props => {
           >
             DATASET ACTIVITIES
           </Text>
-          {tcd && renderTCD(tcd, totalSupply)}
+          {/* {tcd && renderTCD(tcd, totalSupply)} */}
           {tcr && renderTCR(tcr)}
         </Card>
       </Flex>

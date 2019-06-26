@@ -151,4 +151,33 @@ export const HighlightNavLink = styled(NavLink)`
   }
 `
 
+export const SubHighlightNavLink = styled(NavLink)`
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  width: 100%;
+
+  & .tab {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  &.is-active {
+    font-weight: 700;
+
+    & .tab {
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &:hover {
+    :not(.is-active) {
+      color: #fff;
+      & .tab {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+`
+
 export { Text, Flex, Box, Button, Card, Heading }

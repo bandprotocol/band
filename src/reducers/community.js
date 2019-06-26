@@ -19,7 +19,7 @@ const handleSaveCommunityInfo = (
     last24Hrs,
     totalSupply,
     collateralEquation,
-    tcd,
+    tcds,
     tcr,
   },
 ) =>
@@ -39,7 +39,7 @@ const handleSaveCommunityInfo = (
       last24Hrs,
       totalSupply,
       collateralEquation,
-      tcd,
+      tcds,
       tcr,
     }),
   )
