@@ -33,6 +33,7 @@ class DatasetActivityLogs extends React.Component {
   onSetFilter = (filter, val) => {
     if (filter === 'ALL') {
       this.setState({
+        currentPage: 1,
         activeFilter: {
           reported: !val,
           broadcasted: !val,
@@ -40,6 +41,7 @@ class DatasetActivityLogs extends React.Component {
       })
     } else {
       this.setState({
+        currentPage: 1,
         activeFilter: {
           [filter]: val,
         },
@@ -63,6 +65,7 @@ class DatasetActivityLogs extends React.Component {
 
   onQuery = debounce(val => {
     this.setState({
+      currentPage: 1,
       query: val,
     })
   }, 350)
