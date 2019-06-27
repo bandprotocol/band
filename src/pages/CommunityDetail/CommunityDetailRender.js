@@ -270,18 +270,20 @@ export default props => {
             }
           />
         </Flex>
-        <Card
-          flex="0 0 290px"
-          variant="dashboard"
-          mx="6px"
-          style={{ boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)' }}
-        >
-          <Text fontSize="15px" mt="12px" fontWeight="900" color="#393939">
-            DATASET INFORMATION
-          </Text>
-          {/* {tcd && renderTCD(tcd, totalSupply)} */}
-          {tcr && renderTCR(tcr)}
-        </Card>
+        {tcr && (
+          <Card
+            flex="0 0 290px"
+            variant="dashboard"
+            mx="6px"
+            style={{ boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)' }}
+          >
+            <Text fontSize="15px" mt="12px" fontWeight="900" color="#393939">
+              DATASET INFORMATION
+            </Text>
+            {/* {tcd && renderTCD(tcd, totalSupply)} */}
+            {tcr && renderTCR(tcr)}
+          </Card>
+        )}
       </Flex>
 
       <Flex mt="12px">

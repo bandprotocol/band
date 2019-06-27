@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Card, Text } from 'ui/common'
 
 export default ({ title, value, unit, subValue }) => (
-  <Card variant="dashboard" my="4px" style={{ width: 260, minHeight: 120 }}>
+  <Card variant="dashboard" my="4px" style={{ minWidth: 260, minHeight: 120 }}>
     <Flex flexDirection="column">
       <Text py={2} fontSize="14px" fontWeight="500" color="#777777">
         {title}
