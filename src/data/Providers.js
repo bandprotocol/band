@@ -1,57 +1,57 @@
 export const getProvider = address =>
   ({
-    '0xda7af0fd57c5d2e918704f034fd9e13aeb28ad13': {
+    '0xdA7af0fD57c5D2e918704f034fd9e13aEB28Ad13': {
       name: 'COINBASE',
     },
-    '0xda7a01d6d7568868b21a6789968b06bb3af5c191': {
+    '0xda7a01d6d7568868b21a6789968B06Bb3af5c191': {
       name: 'BITSTAMP',
     },
-    '0xda7a2a9c0bb0f94f9ddf54dde3dbe2530a8269a2': {
+    '0xDa7A2A9C0bB0F94f9ddF54Dde3dBE2530A8269A2': {
       name: 'BITFINEX',
     },
-    '0xda7a2e3d741f025010c44afa2a6a7353f70d6b23': {
+    '0xDA7A2E3d741f025010C44AfA2A6a7353F70D6b23': {
       name: 'GEMINI',
     },
-    '0xda7a6811d4dd6a6b0f0ef1f1fe2f99ecd0ce9b7a': {
+    '0xda7A6811d4dd6A6b0f0EF1f1FE2f99ECd0cE9b7A': {
       name: 'KRAKEN',
     },
-    '0xda7af2d3f2321e815cf3841bd0d9a889de22e37c': {
+    '0xdA7af2D3f2321e815CF3841Bd0d9A889dE22E37C': {
       name: 'CMC',
     },
-    '0xda7a814e8b96417274466e2492298b039a854a8c': {
+    '0xDA7a814e8B96417274466E2492298B039A854a8C': {
       name: 'CRYPTOCOMPARE',
     },
-    '0xda7a6db349b7ae544234f91abd01dd825b8969cd': {
+    '0xdA7A6db349b7ae544234f91Abd01dd825b8969cD': {
       name: 'OPENMARKETCAP',
     },
-    '0xda7adb240fb99dcd55e19a17b97ac2163d4d4509': {
+    '0xda7adB240Fb99dCD55e19a17B97ac2163d4d4509': {
       name: 'ONCHAINFX',
     },
-    '0xda7a3c7309bd2de2e89a554191b2d7c71125186c': {
+    '0xdA7A3C7309Bd2De2e89a554191b2d7c71125186c': {
       name: 'BANCOR',
     },
-    '0xda7aeec22311453193c55af63ef7f2df4e6a73d2': {
+    '0xDa7AeEc22311453193C55af63EF7F2df4E6A73D2': {
       name: 'KYBER',
     },
-    '0xda7a7f095be77012679df0744d8a163823c0558e': {
+    '0xdA7A7F095BE77012679df0744D8a163823C0558E': {
       name: 'UNISWAP',
     },
-    '0xda7aa2bba8685f9c0ddbc53ab8e19a6a32dc8b7f': {
+    '0xdA7aa2bbA8685F9C0dDBC53aB8e19A6A32dc8b7F': {
       name: 'FREE_FOREX',
     },
-    '0xda7a79196ddd8ad788a996efafea15bf0879c31c': {
+    '0xDA7a79196DDD8AD788a996eFaFeA15bf0879c31c': {
       name: 'ALPHAVANTAGE',
     },
-    '0xda7af1118c2c5f2edb0d452a84be91e7b47014cb': {
+    '0xDa7Af1118c2C5F2edb0d452a84bE91E7b47014cb': {
       name: 'CURRENCY_CONVERTER_API',
     },
-    '0xda7a238d208eda262505d43678b7d7f180a9ee69': {
+    '0xdA7a238d208eda262505D43678b7d7f180A9Ee69': {
       name: 'API_RATESAPI_IO',
     },
-    '0xda7ae92ef9089f9093e9555b6cf2fd3e29e3d6d7': {
+    '0xDa7aE92EF9089f9093e9555B6cf2fd3E29e3D6d7': {
       name: 'FINANCIAL_MODELING_PREP',
     },
-    '0xda7aa81514ae2108da300639d46aa399abaefa05': {
+    '0xda7Aa81514ae2108Da300639d46aa399abAEfA05': {
       name: 'WORLD_TRADING_DATA',
     },
   }[address] || { name: 'Unknown' })
