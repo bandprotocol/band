@@ -13,7 +13,6 @@ import {
   VOTE_PROPOSAL,
   addTx,
   dumpTxs,
-  showModal,
   hideModal,
   DUMP_TXS,
 } from 'actions'

@@ -2,7 +2,7 @@ import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Utils } from 'band.js'
-import { getSportTeamByCode } from 'utils/sportTeam'
+// import { getSportTeamByCode } from 'utils/sportTeam'
 
 const randNum = n =>
   n > 0
@@ -166,39 +166,39 @@ export const SportByTypeFetcher = withRouter(
           home,
           away,
           homeFullName: '🍷 Indianapolis Colts',
-          awayFullName: '🍹Los Angeles Chargers',
+          // awayFullName: '🍹Los Angeles Chargers',
           scoreAway: scoreAway,
           scoreHome: scoreHome,
         }
       })
 
-      return nodes.map(
-        ({
-          sportTime,
-          sportStartTime,
-          lastUpdate,
-          sportType,
-          year,
-          home,
-          away,
-          ...result
-        }) => ({
-          time: moment(
-            sportTime + (sportStartTime === '9999' ? '0000' : sportStartTime),
-            'YYYYMMDDHHm',
-          ),
-          hasStartTime: sportStartTime !== '9999',
-          lastUpdate: moment(lastUpdate * 1000),
-          keyOnChain: `${sportType}${year}/${sportTime}/${home}-${away}${
-            sportStartTime === '9999' ? '' : '/' + sportStartTime
-          }`,
-          home,
-          away,
-          homeFullName: getSportTeamByCode(type, home).label,
-          awayFullName: getSportTeamByCode(type, away).label,
-          ...result,
-        }),
-      )
+      // return nodes.map(
+      //   ({
+      //     sportTime,
+      //     sportStartTime,
+      //     lastUpdate,
+      //     sportType,
+      //     year,
+      //     home,
+      //     away,
+      //     ...result
+      //   }) => ({
+      //     time: moment(
+      //       sportTime + (sportStartTime === '9999' ? '0000' : sportStartTime),
+      //       'YYYYMMDDHHm',
+      //     ),
+      //     hasStartTime: sportStartTime !== '9999',
+      //     lastUpdate: moment(lastUpdate * 1000),
+      //     keyOnChain: `${sportType}${year}/${sportTime}/${home}-${away}${
+      //       sportStartTime === '9999' ? '' : '/' + sportStartTime
+      //     }`,
+      //     home,
+      //     away,
+      //     homeFullName: getSportTeamByCode(type, home).label,
+      //     awayFullName: getSportTeamByCode(type, away).label,
+      //     ...result,
+      //   }),
+      // )
     }
   },
 )

@@ -555,7 +555,8 @@ export default ({
               priceStatus !== 'OK' ||
               priceLimitStatus !== 'OK' ||
               isNaN(priceChange) ||
-              priceChange < 0
+              priceChange < 0 ||
+              loading
             }
             onClick={onButtonClick}
           />

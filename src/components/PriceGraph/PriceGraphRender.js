@@ -1,7 +1,6 @@
 import React from 'react'
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
-import { colors } from 'ui'
 import { Box } from 'ui/common'
 import moment from 'utils/moment'
 import './style.css'

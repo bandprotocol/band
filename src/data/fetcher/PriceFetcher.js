@@ -92,7 +92,7 @@ export const formatPricePairsForGraph = pairs => {
   const timeline = [...timeset].sort()
   const takeEvery = Math.ceil(timeline.length / 100) // At most 100 data points
   const filteredTimeline = timeline.filter(
-    (e, idx) => idx % takeEvery == 0 || idx === timeline.length - 1,
+    (e, idx) => idx % takeEvery === 0 || idx === timeline.length - 1,
   )
   const timetable = [['Time', ...pairs.map(p => p.name)]]
 

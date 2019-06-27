@@ -1,4 +1,4 @@
-import { take, fork, put } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects'
 import { LOAD_ORDER_HISTORY, addOrders } from 'actions'
 import { takeEveryAsync } from 'utils/reduxSaga'
 import { Utils } from 'band.js'

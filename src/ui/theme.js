@@ -71,8 +71,6 @@ export default {
     },
     white: {
       fontFamily: 'Avenir',
-      fontWeight: 400,
-      fontSize: '0.85em',
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: '#5269ff',

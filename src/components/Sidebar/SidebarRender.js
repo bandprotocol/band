@@ -63,24 +63,6 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
   </HighlightNavLink>
 )
 
-const SubTab = ({ link, img, children, tabStyle }) => (
-  <SubHighlightNavLink to={link} activeClassName="is-active">
-    <Flex style={{ height: 52 }}>
-      <Flex
-        flex={1}
-        flexDirection="row"
-        alignItems="center"
-        className="tab"
-        style={tabStyle}
-        pl={4}
-      >
-        <Image src={img} width="20px" height="20px" />
-        <Text px={3}>{children}</Text>
-      </Flex>
-    </Flex>
-  </SubHighlightNavLink>
-)
-
 export default ({
   logedin,
   name,
