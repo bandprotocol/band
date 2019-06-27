@@ -145,55 +145,62 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
               ))}
             </Flex>
             {/* TCR Communities */}
-            <Flex
-              mb="100px"
-              style={{
-                position: 'absolute',
-                left: '0px',
-                minWidth: '100vw',
-                height: '460px',
-                padding: '18px 32px 48px',
-              }}
-            >
+            {tcrCommunities.length > 0 && (
               <Flex
-                flexDirection="column"
-                width="1110px"
-                style={{ margin: '80px auto' }}
+                mb="100px"
+                style={{
+                  position: 'absolute',
+                  left: '0px',
+                  minWidth: '100vw',
+                  height: '460px',
+                  padding: '18px 32px 48px',
+                }}
               >
-                <Flex flexDirection="row" alignItems="center" mt="12px" mb={3}>
-                  <Text
-                    fontSize="25px"
-                    fontWeight="900"
-                    color="#4a4a4a"
-                    style={{ letterSpacing: '1px' }}
-                  >
-                    DApps built with Token Curated Registry
-                  </Text>
-                  <CountBadge>{tcrCommunities.length}</CountBadge>
-                </Flex>
                 <Flex
-                  flexWrap="wrap"
-                  mt={3}
-                  mx="-20px"
-                  justifyContent="flex-start"
+                  flexDirection="column"
+                  width="1110px"
+                  style={{ margin: '80px auto' }}
                 >
-                  {tcrCommunities.map((community, i) => (
-                    <MegaCommunityCard
-                      key={i}
-                      community={community}
-                      bandPrice={bandPrice}
-                      statusBg="#2771ec"
-                      bgColor="linear-gradient(118deg, #6b8bf5, #6bf5cd)"
-                      onClick={() =>
-                        history.push(
-                          `/community/${community.tokenAddress}/overview`,
-                        )
-                      }
-                    />
-                  ))}
+                  <Flex
+                    flexDirection="row"
+                    alignItems="center"
+                    mt="12px"
+                    mb={3}
+                  >
+                    <Text
+                      fontSize="25px"
+                      fontWeight="900"
+                      color="#4a4a4a"
+                      style={{ letterSpacing: '1px' }}
+                    >
+                      DApps built with Token Curated Registry
+                    </Text>
+                    <CountBadge>{tcrCommunities.length}</CountBadge>
+                  </Flex>
+                  <Flex
+                    flexWrap="wrap"
+                    mt={3}
+                    mx="-20px"
+                    justifyContent="flex-start"
+                  >
+                    {tcrCommunities.map((community, i) => (
+                      <MegaCommunityCard
+                        key={i}
+                        community={community}
+                        bandPrice={bandPrice}
+                        statusBg="#2771ec"
+                        bgColor="linear-gradient(118deg, #6b8bf5, #6bf5cd)"
+                        onClick={() =>
+                          history.push(
+                            `/community/${community.tokenAddress}/overview`,
+                          )
+                        }
+                      />
+                    ))}
+                  </Flex>
                 </Flex>
               </Flex>
-            </Flex>
+            )}
           </PageContainer>
         </Box>
       </Flex>

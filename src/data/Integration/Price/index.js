@@ -6,6 +6,6 @@ import crypto from './crypto'
 export default {
   crypto: crypto,
   commod: fx,
-  fiat: erc20,
-  stock: useq,
+  erc20: erc20,
+  useq: useq,
 }

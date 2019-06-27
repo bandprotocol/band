@@ -22,28 +22,6 @@ const ALLTYPE = {
   CRYPTO: ['BTC/USD', 'ETH/USD', 'LTC/USD'],
 }
 
-const allProvidersByPairQL = (pair, from) => `
-{
-  allDataProviders {
-    nodes {
-      detail
-      status
-      dataSourceAddress
-      dataPriceFeedRawsByDataSourceAddressAndTcdAddress(
-        filter: { timestamp: { greaterThan: ${from} } }
-        condition: { pair: "${pair}" }
-        orderBy: TIMESTAMP_ASC
-      ) {
-        nodes {
-          timestamp
-          value
-        }
-      }
-    }
-  }
-}
-`
-
 export const PriceCountByTypeFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
@@ -64,10 +42,12 @@ export const CurrentPriceFetcher = withRouter(
     }
 
     async fetch() {
-      const prices = await Utils.getDataRequest(
-        '/prices/0x0233b33A43081cfeb7B49caf623b2b5841dB7596',
-        { key: 'TC' },
-      )
+      const { tcdAddress, setNumDataPoints } = this.props
+      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
+        key: 'TC',
+      })
+
+      setNumDataPoints(prices.length)
 
       return prices.map(({ key, value }) => ({
         pair: key,
@@ -86,11 +66,6 @@ export const PricePairFetcher = withRouter(
 
     async fetch() {
       const { pair, from } = this.props
-      const {
-        allDataProviders: { nodes },
-      } = await Utils.graphqlRequest(
-        allProvidersByPairQL(pair, moment(from).unix()),
-      )
 
       const reports = await Utils.getDataRequest(
         '/0x0233b33A43081cfeb7B49caf623b2b5841dB7596/data-points',

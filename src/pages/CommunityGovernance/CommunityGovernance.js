@@ -28,6 +28,8 @@ const mapStateToProps = (state, { tokenAddress }) => {
     address: tokenAddress,
   })
 
+  if (!community) return {}
+
   return {
     name: community.get('name'),
     address: community.get('address'),

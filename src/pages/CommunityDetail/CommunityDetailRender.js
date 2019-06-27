@@ -250,12 +250,13 @@ export default props => {
             title={'Token Supply'}
             value={BN.parse(totalSupply).shortPretty()}
             unit={symbol}
-            subValue={`${BN.parse(
-              calculateCollateralAt(
-                collateralEquation,
-                BN.parse(totalSupply).toString(),
-              ).toFixed(0),
-            ).pretty()} BAND collateral`}
+            subValue={`${collateralEquation &&
+              BN.parse(
+                calculateCollateralAt(
+                  collateralEquation,
+                  BN.parse(totalSupply).toString(),
+                ).toFixed(0),
+              ).pretty()} BAND collateral`}
           />
           <MiniGraph
             title="Total Address"
