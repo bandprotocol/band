@@ -26,7 +26,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
     numberOfHolders: numberOfHolders,
     bandPrice: bandPriceSelector(state),
     name: community.get('name'),
-    address: community.get('address'),
+    address: tokenAddress,
     symbol: community.get('symbol'),
     src: community.get('logo'),
     link: community.get('website'),

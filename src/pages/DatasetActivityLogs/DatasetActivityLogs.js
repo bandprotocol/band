@@ -2,7 +2,9 @@ import React from 'react'
 import { debounce } from 'lodash'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
+import { tcdsSelector } from 'selectors/tcd'
 import { withRouter } from 'react-router-dom'
+import { getTCDInfomation } from 'utils/tcds'
 
 import DatasetActivityLogsRender from './DatasetActivityLogsRender'
 
@@ -85,15 +87,18 @@ class DatasetActivityLogs extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { communityAddress }) => {
+const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
   const community = communityDetailSelector(state, {
     address: communityAddress,
   })
+
+  const tcd = tcdsSelector(state, { address: communityAddress, tcdAddress })
 
   return {
     name: community.get('name'),
     address: community.get('address'),
     symbol: community.get('symbol'),
+    tcdName: tcd && getTCDInfomation(tcd.toJS().prefix).label,
   }
 }
 

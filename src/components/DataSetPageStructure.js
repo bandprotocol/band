@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Breadcrumb from 'components/Breadcrumb'
-import { Box, Flex, Text } from 'ui/common'
+import { Box, Flex } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import colors from 'ui/colors'
 import DatasetHeader from 'images/provider-header.png'
@@ -22,7 +22,9 @@ const Header = styled(Flex).attrs({
 
 export default ({
   communityAddress,
+  tcdAddress,
   name,
+  tcdName,
   children,
   breadcrumb = { path: 'dataset', label: 'Dataset' },
   renderHeader = () => null,
@@ -33,7 +35,13 @@ export default ({
         links={[
           { path: `/community/${communityAddress}`, label: name },
           {
-            path: `/community/${communityAddress}/${breadcrumb.path}`,
+            path: `/community/${communityAddress}/${tcdAddress}`,
+            label: tcdName,
+          },
+          {
+            path: `/community/${communityAddress}/${tcdAddress}/${
+              breadcrumb.path
+            }`,
             label: breadcrumb.label,
           },
         ]}

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Flex, Text } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
 import { tcdsSelector } from 'selectors/tcd'
+import { getTCDInfomation } from 'utils/tcds'
 import { currentUserSelector } from 'selectors/current'
 import PageStructure from 'components/DataSetPageStructure'
 import ProviderList from './ProviderList'
@@ -16,7 +17,7 @@ class CommunityDataProvider extends React.Component {
       <PageStructure
         name={name}
         communityAddress={tokenAddress}
-        breadcrumb={{ path: 'provider', label: 'Data Providers' }}
+        breadcrumb={{ path: 'governance', label: 'Governance' }}
         renderHeader={() => (
           <DataHeader
             lines={[
@@ -56,6 +57,7 @@ const mapStateToProps = (state, { tokenAddress, tcdAddress }) => {
     name: community.get('name'),
     user: currentUserSelector(state),
     prefix: tcd && tcd.get('prefix'),
+    tcdName: tcd && getTCDInfomation(tcd.toJS().prefix).label,
   }
 }
 

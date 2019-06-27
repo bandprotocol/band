@@ -10,14 +10,20 @@ const mapStateToProps = (state, { communityAddress }) => {
   })
   const tcds = community.get('tcds').toJS()
   return {
-    tcds: Object.keys(tcds).map(key => {
-      const tcdInfo = getTCDInfomation(tcds[key].prefix)
-      return {
-        tcdAddress: key,
-        path: `/community/${communityAddress}/${key}/dataset`,
-        ...tcdInfo,
-      }
-    }),
+    tcds: Object.keys(tcds)
+      .map(key => {
+        const tcdInfo = getTCDInfomation(tcds[key].prefix)
+        return {
+          tcdAddress: key,
+          datapoints: 10, // TODO: query this thing
+          path: `/community/${communityAddress}/${key}/dataset`,
+          ...tcdInfo,
+        }
+      })
+      .sort((a, b) => {
+        if (a.order < b.order) return -1
+        return 1
+      }),
   }
 }
 

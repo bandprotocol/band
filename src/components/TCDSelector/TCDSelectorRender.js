@@ -253,20 +253,13 @@ export default class TCDSelector extends React.Component {
                 my="8px"
                 style={{ height: '2px' }}
               />
-              {tcds
-                .sort((a, b) => {
-                  if (a.order < b.order) return -1
-                  return 1
-                })
-                .map((each, i) => {
-                  return (
-                    <List
-                      index={i}
-                      handleSelect={this.handleSelect.bind(this)}
-                      {...each}
-                    />
-                  )
-                })}
+              {tcds.map((each, i) => (
+                <List
+                  index={i}
+                  handleSelect={this.handleSelect.bind(this)}
+                  {...each}
+                />
+              ))}
             </SelectionContainer>
           </Flex>
         </ClickOutSide>

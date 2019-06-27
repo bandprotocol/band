@@ -267,6 +267,7 @@ class RenderLogs extends React.Component {
 
 export default props => (
   <PageStructure
+    breadcrumb={{ path: 'logs', label: 'Activity Logs' }}
     renderHeader={() => (
       <DataHeader
         lines={[

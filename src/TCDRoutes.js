@@ -3,9 +3,9 @@ import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { tcdsSelector } from 'selectors/tcd'
 
-import CommunityDataProviderPage from 'pages/CommunityDataProvider'
 import CommunityDataSetPage from 'pages/CommunityDataSet'
 import CommunityIntegrationPage from 'pages/CommunityIntegration'
+import CommunityDataProviderPage from 'pages/CommunityDataProvider'
 import DatasetActivityLogsPage from 'pages/DatasetActivityLogs'
 
 const TCDRoutes = ({ path, communityAddress, tcdAddress, redirect }) => {
