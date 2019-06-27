@@ -4,37 +4,6 @@ import moment from 'moment'
 import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
 
-const ALLTYPE = {
-  FX: ['CNY/USD', 'EUR/USD', 'THB/USD', 'JPY/USD', 'GBP/USD'],
-  COMMODITY: ['XAU/USD', 'XAG/USD'],
-  STOCK: [
-    'AAPL/USD',
-    'AMZN/USD',
-    'FB/USD',
-    'GOOG/USD',
-    'INTC/USD',
-    'MSFT/USD',
-    'NFLX/USD',
-    'NVDA/USD',
-    'ORCL/USD',
-    'SBUX/USD',
-  ],
-  CRYPTO: ['BTC/USD', 'ETH/USD', 'LTC/USD'],
-}
-
-export const PriceCountByTypeFetcher = withRouter(
-  class extends BaseFetcher {
-    shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
-    }
-
-    async fetch() {
-      const { type } = this.props
-      return ALLTYPE[type].length
-    }
-  },
-)
-
 export const CurrentPriceFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
