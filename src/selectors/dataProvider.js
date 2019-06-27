@@ -1,24 +1,32 @@
 import { createSelector } from 'reselect'
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import { getProvider } from 'data/Providers'
 import {
   tcdSelector,
   addressSelector,
   pageSelector,
   pageSizeSelector,
+  tcdAddressSelector,
 } from 'selectors/basic'
 
 export const dataProvidersSelector = createSelector(
-  [tcdSelector, addressSelector, pageSelector, pageSizeSelector],
-  (tcds, address, page, pageSize) => {
+  [
+    tcdSelector,
+    addressSelector,
+    pageSelector,
+    pageSizeSelector,
+    tcdAddressSelector,
+  ],
+  (tcds, address, page, pageSize, tcdAddress) => {
     const tcdsByComm = tcds.get(address)
     if (
       !tcdsByComm ||
       tcdsByComm.size === 0 ||
-      !tcdsByComm.get(0).get('dataProviders')
+      !tcdsByComm.get(tcdAddress) ||
+      !tcdsByComm.get(tcdAddress).get('dataProviders')
     )
       return List()
-    const tmpTcd = tcdsByComm.get(0).toJS()
+    const tmpTcd = tcdsByComm.get(tcdAddress).toJS()
 
     return tmpTcd.dataProviders
       .map(dp => ({

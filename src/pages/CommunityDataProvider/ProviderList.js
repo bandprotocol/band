@@ -50,6 +50,7 @@ class ProviderList extends React.Component {
       user,
       symbol,
       tokenAddress,
+      tcdAddress,
       pageSize,
       numDataProviders,
       showBeProvider,
@@ -100,6 +101,7 @@ class ProviderList extends React.Component {
             fetching={fetching}
             numDataProviders={numDataProviders}
             tokenAddress={tokenAddress}
+            tcdAddress={tcdAddress}
             currentPage={currentPage}
             onChangePage={this.onChangePage.bind(this)}
             pageSize={pageSize}
@@ -110,7 +112,7 @@ class ProviderList extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { tokenAddress }) => {
+const mapStateToProps = (state, { tokenAddress, tcdAddress }) => {
   const community = communityDetailSelector(state, {
     address: tokenAddress,
   })
@@ -118,6 +120,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
     symbol: community && community.get('symbol'),
     numDataProviders: numDataProviders(state, {
       address: tokenAddress,
+      tcdAddress,
     }),
   }
 }

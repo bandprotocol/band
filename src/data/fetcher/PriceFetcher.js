@@ -4,56 +4,28 @@ import moment from 'moment'
 import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
 
-const ALLTYPE = {
-  FX: ['CNY/USD', 'EUR/USD', 'THB/USD', 'JPY/USD', 'GBP/USD'],
-  COMMODITY: ['XAU/USD', 'XAG/USD'],
-  STOCK: [
-    'AAPL/USD',
-    'AMZN/USD',
-    'FB/USD',
-    'GOOG/USD',
-    'INTC/USD',
-    'MSFT/USD',
-    'NFLX/USD',
-    'NVDA/USD',
-    'ORCL/USD',
-    'SBUX/USD',
-  ],
-  CRYPTO: ['BTC/USD', 'ETH/USD', 'LTC/USD'],
-}
-
-export const PriceCountByTypeFetcher = withRouter(
-  class extends BaseFetcher {
-    shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
-    }
-
-    async fetch() {
-      const { type } = this.props
-      return ALLTYPE[type].length
-    }
-  },
-)
-
 export const CurrentPriceFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
+      return prevProps.tcdAddress !== this.props.tcdAddress
     }
 
     async fetch() {
       const { tcdAddress, setNumDataPoints } = this.props
-      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
-        key: 'TC',
-      })
+      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`)
 
       setNumDataPoints(prices.length)
 
-      return prices.map(({ key, value }) => ({
-        pair: key,
-        value: parseInt(value) / 1e18,
-        lastUpdate: moment(Date.now()),
-      }))
+      return prices
+        .map(({ key, value, timestamp }) => ({
+          pair: key,
+          value: parseInt(value) / 1e18,
+          lastUpdate: moment(timestamp * 1000),
+        }))
+        .sort((a, b) => {
+          if (a.pair > b.pair) return 1
+          return -1
+        })
     }
   },
 )
@@ -65,19 +37,17 @@ export const PricePairFetcher = withRouter(
     }
 
     async fetch() {
-      const { pair, from } = this.props
+      const { pair, tcdAddress } = this.props
 
-      const reports = await Utils.getDataRequest(
-        '/0x0233b33A43081cfeb7B49caf623b2b5841dB7596/data-points',
-        { key: pair },
-      )
+      const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
+        key: pair,
+      })
 
       const providers = {}
       for (const report of reports) {
         const { reportedData, timestamp } = report
         const kvs = Object.entries(reportedData)
-        for (const [key, value] of kvs) {
-          const address = key.toLowerCase()
+        for (const [address, { value }] of kvs) {
           if (!providers[address]) {
             providers[address] = []
           }
@@ -122,7 +92,7 @@ export const formatPricePairsForGraph = pairs => {
   const timeline = [...timeset].sort()
   const takeEvery = Math.ceil(timeline.length / 100) // At most 100 data points
   const filteredTimeline = timeline.filter(
-    (e, idx) => idx % takeEvery == 0 || idx === timeline.length - 1,
+    (e, idx) => idx % takeEvery === 0 || idx === timeline.length - 1,
   )
   const timetable = [['Time', ...pairs.map(p => p.name)]]
 

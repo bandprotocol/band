@@ -19,13 +19,7 @@ const ProposalList = ({
   <Flex flexDirection="column" my={3} width="100%">
     <Flex flexDirection="row">
       <Flex justifyContent="center" alignItems="center">
-        <Text
-          mr={3}
-          color={colors.text.normal}
-          fontSize="18px"
-          fontWeight="900"
-          color="#393939"
-        >
+        <Text mr={3} fontSize="18px" fontWeight="900" color="#393939">
           {`${title} (${proposals ? proposals.length : 0})`}
         </Text>
         {description && (

@@ -115,7 +115,6 @@ export default class IdentityPage extends React.Component {
   }
 
   render() {
-    const { name: communityName } = this.props
     return (
       <PageStructure
         renderHeader={() => (

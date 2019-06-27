@@ -73,6 +73,7 @@ export default ({
   symbol,
   numDataProviders,
   tokenAddress,
+  tcdAddress,
   currentPage,
   onChangePage,
   pageSize,
@@ -100,11 +101,13 @@ export default ({
         <ProviderListBody
           user={user}
           tokenAddress={tokenAddress}
+          tcdAddress={tcdAddress}
           currentPage={currentPage}
           pageSize={pageSize}
         />
         <DataProviderPagination
           tokenAddress={tokenAddress}
+          tcdAddress={tcdAddress}
           pageSize={pageSize}
           currentPage={currentPage}
           onChangePage={onChangePage}

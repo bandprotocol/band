@@ -1,6 +1,5 @@
 import React from 'react'
 import { Flex, Card, Text } from 'ui/common'
-import graphYellow from 'images/graphYellow.svg'
 
 export default ({ title, value, unit, subValue }) => (
   <Card variant="dashboard" my="4px" style={{ width: 260, minHeight: 120 }}>

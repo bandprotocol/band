@@ -27,7 +27,6 @@ export default class DetailHistory extends React.Component {
       >
         <Text
           fontSize="15px"
-          fontWeight={500}
           color={selectedTab === tab ? colors.blue.normal : undefined}
           fontWeight={selectedTab === tab ? '600' : undefined}
         >
@@ -66,16 +65,10 @@ export default class DetailHistory extends React.Component {
             <Richlist tokenAddress={tokenAddress} pageSize={pageSize} />
           )}
           {selectedTab === 1 && (
-            <TransferHistory
-              tokenAddress={tokenAddress}
-              pageSize={pageSize}
-            />
+            <TransferHistory tokenAddress={tokenAddress} pageSize={pageSize} />
           )}
           {selectedTab === 2 && (
-            <OrderHistory
-              tokenAddress={tokenAddress}
-              pageSize={pageSize}
-            />
+            <OrderHistory tokenAddress={tokenAddress} pageSize={pageSize} />
           )}
         </Flex>
       </Flex>

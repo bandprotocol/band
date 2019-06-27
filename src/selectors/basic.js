@@ -19,6 +19,7 @@ export const fetchSelector = state => state.get('fetch')
 export const addressSelector = (_, { address }) => address
 export const nameSelector = (_, { name }) => name
 export const typeSelector = (_, { type }) => type
+export const tcdAddressSelector = (_, { tcdAddress }) => tcdAddress
 export const txHashSelector = (_, { txHash }) => txHash
 export const pageSelector = (_, { page }) => page
 export const pageSizeSelector = (_, { pageSize }) => pageSize

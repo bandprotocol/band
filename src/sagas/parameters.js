@@ -1,4 +1,4 @@
-import { takeEvery, put, select, delay } from 'redux-saga/effects'
+import { takeEvery, put } from 'redux-saga/effects'
 
 import { LOAD_PARAMETERS, saveParameters } from 'actions'
 
