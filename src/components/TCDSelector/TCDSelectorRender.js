@@ -268,7 +268,6 @@ export default class TCDSelector extends React.Component {
             </SelectionContainer>
           </Flex>
         </ClickOutSide>
-        {/* Sub link */}
         <SubTab link={`${path}/dataset`} img={DataSetInactive}>
           Explore Data
         </SubTab>

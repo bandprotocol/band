@@ -38,7 +38,7 @@ export const PriceCountByTypeFetcher = withRouter(
 export const CurrentPriceFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
+      return prevProps.tcdAddress !== this.props.tcdAddress
     }
 
     async fetch() {

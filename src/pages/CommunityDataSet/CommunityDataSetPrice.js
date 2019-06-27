@@ -15,7 +15,7 @@ import {
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
 
-const renderDataPoints = (pairs, type, tcdAddress) => (
+const renderDataPoints = (pairs, tcdAddress) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
@@ -36,8 +36,8 @@ const renderDataPoints = (pairs, type, tcdAddress) => (
                 >
                   {value.toLocaleString('en-US', {
                     currency: 'USD',
-                    minimumFractionDigits: type === 'FX' ? 4 : 2,
-                    maximumFractionDigits: type === 'FX' ? 4 : 2,
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4,
                   })}
                 </Text>
               </Card>
@@ -67,7 +67,7 @@ const renderDataPoints = (pairs, type, tcdAddress) => (
                 ) : (
                   <React.Fragment>
                     <DataSetPriceGraph data={formatPricePairsForGraph(data)} />
-                    <PriceTable mb={2} data={data} type={type} />
+                    <PriceTable mb={2} data={data} />
                   </React.Fragment>
                 )
               }
@@ -80,7 +80,7 @@ const renderDataPoints = (pairs, type, tcdAddress) => (
 )
 
 export default class CommunityPricePage extends React.Component {
-  state = { type: 'CRYPTO', numDataPoints: 0 }
+  state = { numDataPoints: 0 }
 
   render() {
     const { tcdAddress } = this.props
@@ -107,7 +107,6 @@ export default class CommunityPricePage extends React.Component {
           withSearch={false}
         >
           <CurrentPriceFetcher
-            type={this.state.type}
             tcdAddress={tcdAddress}
             setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
           >
@@ -125,7 +124,7 @@ export default class CommunityPricePage extends React.Component {
                   ]}
                 />
               ) : (
-                renderDataPoints(data, this.state.type, tcdAddress)
+                renderDataPoints(data, tcdAddress)
               )
             }
           </CurrentPriceFetcher>
