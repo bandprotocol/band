@@ -2,13 +2,14 @@ import React from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
-import { Flex, Box, Text, Card } from 'ui/common'
+import { Flex, Box, Text, Card, Image } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import DataCard from 'components/DataCard'
 import FlipMove from 'react-flip-move'
 import { getTCDInfomation } from 'utils/tcds'
+import { getAsset } from 'utils/assetData'
 import {
   CurrentPriceFetcher,
   PricePairFetcher,
@@ -16,6 +17,13 @@ import {
 } from 'data/fetcher/PriceFetcher'
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
+
+const pairToHeader = pair => {
+  const [left, right] = pair.split('/')
+  const { image: imgl, label: labell } = getAsset(left)
+  const { image: imgr, label: labelr } = getAsset(right)
+  return labell + '/' + labelr
+}
 
 const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   <React.Fragment>
@@ -32,7 +40,7 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
             <DataPoint
               key={pair}
               keyOnChain={pair}
-              label={pair}
+              label={pairToHeader(pair)}
               k={pair}
               v={() => (
                 <Card
