@@ -44,17 +44,24 @@ export const PricePairFetcher = withRouter(
       })
 
       const providers = {}
+      const providerLastUpdate = {}
       for (const report of reports) {
         const { reportedData, timestamp } = report
         const kvs = Object.entries(reportedData)
-        for (const [address, { value }] of kvs) {
+        for (const [address, vt] of kvs) {
           if (!providers[address]) {
             providers[address] = []
           }
+          if (!providerLastUpdate[address]) {
+            providerLastUpdate[address] = { ...vt }
+          } else if (vt.timestamp > providerLastUpdate[address].timestamp) {
+            providerLastUpdate[address] = { ...vt }
+          }
+
           providers[address] = providers[address].concat([
             {
               time: timestamp,
-              value: parseInt(value) / 1e18,
+              value: parseInt(vt.value) / 1e18,
             },
           ])
         }
@@ -76,8 +83,8 @@ export const PricePairFetcher = withRouter(
           status: 'status',
           address: k,
           feed: providers[k],
-          lastUpdate: moment(providers[k].slice(-1)[0].time * 1000),
-          lastValue: providers[k].slice(-1)[0].value,
+          lastUpdate: moment(providerLastUpdate[k].timestamp * 1000),
+          lastValue: providerLastUpdate[k].value / 1e18,
         }
       })
     }
