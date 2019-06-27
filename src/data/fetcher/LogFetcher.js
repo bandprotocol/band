@@ -9,13 +9,20 @@ const PAGESIZE = 10
 export const LogFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
+      return (
+        prevProps.tcd !== this.props.tcd || prevProps.page !== this.props.page
+      )
     }
 
     async fetch() {
-      const events = await Utils.getDataRequest('/logs', { limit: 10 })
+      const { page = 1, tcd } = this.props
+      const events = await Utils.getDataRequest('/logs', {
+        limit: PAGESIZE,
+        skip: page > 1 ? PAGESIZE * (page - 1) : undefined,
+        tcd,
+      })
 
-      console.log('events:', events)
+      return events
     }
   },
 )

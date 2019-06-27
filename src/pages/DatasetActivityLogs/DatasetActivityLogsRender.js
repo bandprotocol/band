@@ -6,8 +6,11 @@ import PageStructure from 'components/DataSetPageStructure'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import PaginationRender from 'components/Pagination/PaginationRender'
 import ClickOutSide from 'react-click-outside'
+import moment from 'utils/moment'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
+import { getProvider } from 'data/Providers'
+import { getFormat } from 'data/Format'
 
 import FilterSrc from 'images/filter.svg'
 import SearchInputIconSrc from 'images/search-input-icon.svg'
@@ -112,14 +115,6 @@ const FilterButton = styled(Button).attrs({
   line-height: 36px;
 `
 
-/*
-{value.toLocaleString('en-US', {
-  currency: 'USD',
-  minimumFractionDigits: type === 'FX' ? 4 : 2,
-  maximumFractionDigits: type === 'FX' ? 4 : 2,
-})}
-*/
-
 const Data = ({ children }) => (
   <Card
     flex="0 0 auto"
@@ -136,14 +131,16 @@ const Data = ({ children }) => (
 )
 
 const Report = ({
+  tcd,
   event: {
     data: {
-      provider,
       signature: { r, s, v },
       timestamp,
       value,
     },
     id,
+    name,
+    actor,
     key: dataKey,
   },
 }) => (
@@ -153,14 +150,14 @@ const Report = ({
     style={{ borderBottom: 'solid 1px #eef3ff' }}
     alignItems="flex-start"
   >
-    <Jazzicon diameter={28} seed={jsNumberForAddress(provider)} />
+    <Jazzicon diameter={28} seed={jsNumberForAddress(actor)} />
     <Box ml="32px" flex={1}>
       <Flex>
         <Text fontSize="14px" fontWeight="700">
-          PowerBall.com
+          {name}
         </Text>
         <Text fontSize="14px" fontWeight="700" mx={2} color="#4d7dff">
-          reported price of trading pair
+          reported {getFormat(tcd).logIdentifier}
         </Text>
         <Text fontSize="14px" fontWeight="700">
           {dataKey}
@@ -168,22 +165,25 @@ const Report = ({
       </Flex>
       <Flex mt="10px" alignItems="center">
         <Text mr={2} fontSize="14px" color="#9e9e9e">
-          Just now
+          {moment.unix(timestamp).pretty()}
         </Text>
         <Image src={SecureSrc} width="12px" />
         <Text fontSize="14px" ml={1} color="#9baeda">
-          signed by {provider}
+          signed by {actor}
         </Text>
       </Flex>
     </Box>
-    <Data>{value}</Data>
+    <Data>{getFormat(tcd).formatValue(value)}</Data>
   </Flex>
 )
 
 const Broadcast = ({
+  tcd,
   event: {
     data: { reported_data, timestamp, tx_hash },
     id,
+    name,
+    actor,
     key: dataKey,
   },
 }) => (
@@ -193,18 +193,14 @@ const Broadcast = ({
     style={{ borderBottom: 'solid 1px #eef3ff' }}
     alignItems="flex-start"
   >
-    <Jazzicon
-      diameter={28}
-      seed={jsNumberForAddress('0x0000000000000000000000000000000000000000')}
-    />
-    {/** TODO: Use Band Address */}
+    <Jazzicon diameter={28} seed={jsNumberForAddress(actor)} />
     <Box ml="32px" flex={1}>
       <Flex>
         <Text fontSize="14px" fontWeight="700">
           Band Protocol
         </Text>
         <Text fontSize="14px" fontWeight="700" mx={2} color="#42c47f">
-          reported price of trading pair
+          reported {getFormat(tcd).logIdentifier}
         </Text>
         <Text fontSize="14px" fontWeight="700">
           {dataKey}
@@ -212,7 +208,7 @@ const Broadcast = ({
       </Flex>
       <Flex mt="10px" mb="20px" alignItems="center">
         <Text mr={2} fontSize="14px" color="#9e9e9e">
-          Just now
+          {moment.unix(timestamp).pretty()}
         </Text>
 
         <Image src={SecureSrc} width="12px" />
@@ -238,7 +234,7 @@ const Broadcast = ({
             <Box flex="0 0 15px" style={{ borderTop: 'solid 1px #eef3ff' }} />
             <Flex flex="0 0 120px" alignItems="center">
               <Text mx={2} flex=" 0 0 auto" fontSize="14px" fontWeight="700">
-                {'PowerBall'}
+                {getProvider(k).name}
               </Text>
               <Box flex="1" style={{ borderTop: 'solid 1px #eef3ff' }} />
             </Flex>
@@ -246,7 +242,7 @@ const Broadcast = ({
               {k}
             </Text>
             <Box my={1}>
-              <Data>{v}</Data>
+              <Data>{getFormat(tcd).formatValue(v)}</Data>
             </Box>
           </Flex>
         ))}
@@ -362,15 +358,28 @@ export default props => (
         </Box>
       </Flex>
       <Box mt={2}>
-        <LogFetcher>
-          {() =>
-            props.data.map(event =>
-              event.type === 'REPORT' ? (
-                <Report key={event.id} event={event} />
-              ) : event.type === 'BROADCAST' ? (
-                <Broadcast key={event.id} event={event} />
-              ) : null,
-            )
+        <LogFetcher tcd={props.address} page={props.page}>
+          {({ fetching, data }) =>
+            fetching
+              ? 'Loading ...'
+              : console.log('DATA', data) ||
+                data
+                  .map(event => ({ ...event, ...getProvider(event.actor) }))
+                  .map(event =>
+                    event.type === 'REPORT' ? (
+                      <Report
+                        key={event.id}
+                        event={event}
+                        tcd={props.address}
+                      />
+                    ) : event.type === 'BROADCAST' ? (
+                      <Broadcast
+                        key={event.id}
+                        event={event}
+                        tcd={props.address}
+                      />
+                    ) : null,
+                  )
           }
         </LogFetcher>
 
