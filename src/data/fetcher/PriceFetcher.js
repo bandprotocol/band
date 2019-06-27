@@ -47,11 +47,16 @@ export const CurrentPriceFetcher = withRouter(
 
       setNumDataPoints(prices.length)
 
-      return prices.map(({ key, value, timestamp }) => ({
-        pair: key,
-        value: parseInt(value) / 1e18,
-        lastUpdate: moment(timestamp * 1000),
-      }))
+      return prices
+        .map(({ key, value, timestamp }) => ({
+          pair: key,
+          value: parseInt(value) / 1e18,
+          lastUpdate: moment(timestamp * 1000),
+        }))
+        .sort((a, b) => {
+          if (a.pair > b.pair) return 1
+          return -1
+        })
     }
   },
 )
@@ -69,14 +74,11 @@ export const PricePairFetcher = withRouter(
         key: pair,
       })
 
-      console.log(reports)
-
       const providers = {}
       for (const report of reports) {
         const { reportedData, timestamp } = report
         const kvs = Object.entries(reportedData)
-        for (const [key, value] of kvs) {
-          const address = key.toLowerCase()
+        for (const [address, { value }] of kvs) {
           if (!providers[address]) {
             providers[address] = []
           }
