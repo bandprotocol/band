@@ -1,11 +1,14 @@
 import React from 'react'
 import moment from 'moment'
+import { connect } from 'react-redux'
+import { communityDetailSelector } from 'selectors/communities'
 import { Flex, Box, Text, Card } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import DataCard from 'components/DataCard'
 import FlipMove from 'react-flip-move'
+import { getTCDInfomation } from 'utils/tcds'
 import {
   CurrentPriceFetcher,
   PricePairFetcher,
@@ -14,7 +17,7 @@ import {
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
 
-const renderDataPoints = (pairs, tcdAddress) => (
+const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
@@ -35,8 +38,8 @@ const renderDataPoints = (pairs, tcdAddress) => (
                 >
                   {value.toLocaleString('en-US', {
                     currency: 'USD',
-                    minimumFractionDigits: 4,
-                    maximumFractionDigits: 4,
+                    minimumFractionDigits: tcdPrefix.includes('erc') ? 6 : 2,
+                    maximumFractionDigits: tcdPrefix.includes('erc') ? 6 : 2,
                   })}
                 </Text>
               </Card>
@@ -78,11 +81,11 @@ const renderDataPoints = (pairs, tcdAddress) => (
   </React.Fragment>
 )
 
-export default class CommunityPricePage extends React.Component {
+class CommunityPricePage extends React.Component {
   state = { numDataPoints: 0 }
 
   render() {
-    const { tcdAddress } = this.props
+    const { tcdAddress, tcdPrefix } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -102,7 +105,9 @@ export default class CommunityPricePage extends React.Component {
         {...this.props}
       >
         <DataCard
-          headerText={`${this.state.numDataPoints} Data Prices `}
+          headerText={`${this.state.numDataPoints} Keys for ${
+            getTCDInfomation(tcdPrefix).label
+          } `}
           withSearch={false}
         >
           <CurrentPriceFetcher
@@ -123,7 +128,7 @@ export default class CommunityPricePage extends React.Component {
                   ]}
                 />
               ) : (
-                renderDataPoints(data, tcdAddress)
+                renderDataPoints(data, tcdAddress, tcdPrefix)
               )
             }
           </CurrentPriceFetcher>
@@ -132,3 +137,27 @@ export default class CommunityPricePage extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: communityAddress,
+  })
+
+  if (!community) return {}
+
+  let tcdPrefix = null
+  try {
+    tcdPrefix = community
+      .get('tcds')
+      .get(tcdAddress)
+      .get('prefix')
+  } catch (e) {}
+
+  return {
+    name: community.get('name'),
+    address: community.get('address'),
+    tcdPrefix: tcdPrefix,
+  }
+}
+
+export default connect(mapStateToProps)(CommunityPricePage)

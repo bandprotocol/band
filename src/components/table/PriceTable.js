@@ -1,6 +1,5 @@
 import React from 'react'
 import { Text, Card } from 'ui/common'
-import colors from 'ui/colors'
 import { createTable } from 'components/Table'
 import Link from 'components/Link'
 
@@ -14,13 +13,12 @@ export default createTable({
           href={`http://kovan.etherscan.io/address/${d.address}`}
         >
           <Card
-            bg={colors.chart[i]}
+            bg={`hsl(${(i * 360) / numDataProviders}, 80%, 70%)`}
             borderRadius={4}
             mr={2}
             style={{ height: 12, width: 12, display: 'inline-block' }}
           />
           <Text fontFamily="code" style={{ display: 'inline-block' }}>
-            {console.log(props, numDataProviders) && 'dsddd'}
             {d.address.slice(0, 18)}
           </Text>
         </Link>
@@ -43,8 +41,8 @@ export default createTable({
       data: d =>
         d.lastValue.toLocaleString('en-US', {
           currency: 'USD',
-          minimumFractionDigits: 4,
-          maximumFractionDigits: 4,
+          minimumFractionDigits: 6,
+          maximumFractionDigits: 6,
         }),
       label: 'Price',
       flex: '0 0 200px',
