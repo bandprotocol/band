@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Utils } from 'band.js'
 
+const PAGESIZE = 10
+
 export const LogFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
@@ -11,10 +13,7 @@ export const LogFetcher = withRouter(
     }
 
     async fetch() {
-      const events = await Utils.getDataRequest(
-        '/logs/0x0233b33A43081cfeb7B49caf623b2b5841dB7596',
-        { limit: 0 },
-      )
+      const events = await Utils.getDataRequest('/logs', { limit: 10 })
 
       console.log('events:', events)
     }

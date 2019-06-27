@@ -133,9 +133,37 @@ class DatasetActivityLogs extends React.Component {
   state = {
     currentPage: 1,
     numberOfPages: 10,
+
+    // Filter
+    showFilter: false,
+    activeFilter: {},
   }
+
   componentDidMount() {
     // Load Logs from selector
+  }
+
+  toggleShowFilter = () => {
+    this.setState({
+      showFilter: !this.state.showFilter,
+    })
+  }
+
+  onSetFilter = (filter, val) => {
+    if (filter === 'all') {
+      this.setState({
+        activeFilter: {
+          reported: !val,
+          broadcasted: !val,
+        },
+      })
+    } else {
+      this.setState({
+        activeFilter: {
+          [filter]: val,
+        },
+      })
+    }
   }
 
   onChangePage = page => {
@@ -151,6 +179,8 @@ class DatasetActivityLogs extends React.Component {
         {...this.props}
         {...this.state}
         onChangePage={this.onChangePage}
+        onSetFilter={this.onSetFilter}
+        toggleShowFilter={this.toggleShowFilter}
       />
     )
   }

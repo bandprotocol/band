@@ -5,10 +5,72 @@ import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import PaginationRender from 'components/Pagination/PaginationRender'
+import ClickOutSide from 'react-click-outside'
+
+import { LogFetcher } from 'data/fetcher/LogFetcher'
 
 import FilterSrc from 'images/filter.svg'
 import SearchInputIconSrc from 'images/search-input-icon.svg'
 import SecureSrc from 'images/activity-secure.svg'
+import CheckSrc from 'images/check.svg'
+
+const SelectionContainer = styled(Box).attrs({
+  bg: '#fff',
+})`
+  padding: 15px;
+  width: 260px;
+  z-index: 1;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50px;
+  right: 0;
+  transition: all 350ms;
+
+  ${p =>
+    p.show
+      ? `
+      opacity: 1;
+      transform: translateY(0);
+    `
+      : `
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+    `}
+`
+
+const Choice = ({ selected, children, onClick }) => (
+  <Flex
+    ml={1}
+    mt={3}
+    alignItems="center"
+    style={{ cursor: 'pointer' }}
+    onClick={onClick}
+  >
+    <Card
+      border={`solid 1px ${selected ? '#5269ff' : '#393939'}`}
+      bg={selected ? '#5269ff' : '#ffffff'}
+      borderRadius="6px"
+    >
+      <Flex
+        alignItems="center"
+        justifyContent="center"
+        style={{ height: 21, width: 21 }}
+      >
+        {selected && <Image src={CheckSrc} width="12px" />}
+      </Flex>
+    </Card>
+    <Text
+      ml={3}
+      color={selected ? '#5269ff' : 'inherit'}
+      fontSize="14px"
+      fontWeight={selected ? '700' : '400'}
+    >
+      {children}
+    </Text>
+  </Flex>
+)
 
 const SearchBoxInput = styled.input`
   border-radius: 18px;
@@ -236,18 +298,82 @@ export default props => (
         </Text>
         <Box flex={1} />
         <SearchBox placeholder="Search" />
-        <FilterButton ml={2}>
-          Filter (0) <Image ml={1} src={FilterSrc} width="14px" />
-        </FilterButton>
+        <Box ml={2} style={{ position: 'relative' }}>
+          <FilterButton onClick={props.toggleShowFilter}>
+            Filter (
+            {(props.activeFilter.reported ? 1 : 0) +
+              (props.activeFilter.broadcasted ? 1 : 0)}
+            ) <Image ml={1} src={FilterSrc} width="14px" />
+          </FilterButton>
+
+          <ClickOutSide
+            onClickOutside={() =>
+              props.showFilter && props.toggleShowFilter(false)
+            }
+          >
+            <SelectionContainer show={props.showFilter}>
+              <Text fontSize="12px" color="#393939" fontWeight="900" ml={1}>
+                FILTER
+              </Text>
+              <Flex
+                width="100%"
+                bg="#e7ecff"
+                my="8px"
+                style={{ height: '2px' }}
+              />
+              <Choice
+                selected={
+                  !props.activeFilter.reported &&
+                  !props.activeFilter.broadcasted
+                }
+                onClick={() =>
+                  props.onSetFilter(
+                    'all',
+                    !(
+                      !props.activeFilter.reported &&
+                      !props.activeFilter.broadcasted
+                    ),
+                  )
+                }
+              >
+                All
+              </Choice>
+              <Choice
+                selected={props.activeFilter.reported}
+                onClick={() =>
+                  props.onSetFilter('reported', !props.activeFilter.reported)
+                }
+              >
+                Reported
+              </Choice>
+              <Choice
+                selected={props.activeFilter.broadcasted}
+                onClick={() =>
+                  props.onSetFilter(
+                    'broadcasted',
+                    !props.activeFilter.broadcasted,
+                  )
+                }
+              >
+                Broadcasted
+              </Choice>
+            </SelectionContainer>
+          </ClickOutSide>
+        </Box>
       </Flex>
       <Box mt={2}>
-        {props.data.map(event =>
-          event.type === 'REPORT' ? (
-            <Report key={event.id} event={event} />
-          ) : event.type === 'BROADCAST' ? (
-            <Broadcast key={event.id} event={event} />
-          ) : null,
-        )}
+        <LogFetcher>
+          {() =>
+            props.data.map(event =>
+              event.type === 'REPORT' ? (
+                <Report key={event.id} event={event} />
+              ) : event.type === 'BROADCAST' ? (
+                <Broadcast key={event.id} event={event} />
+              ) : null,
+            )
+          }
+        </LogFetcher>
+
         <Box mt={2}>
           <PaginationRender
             currentPage={props.currentPage}
