@@ -21,61 +21,77 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
-        {pairs.map(({ pair, value, lastUpdate }) => (
-          <DataPoint
-            key={pair}
-            keyOnChain={pair}
-            label={pair}
-            k={pair}
-            v={() => (
-              <Card flex="0 0 auto" bg="white" py={2} px={3} borderRadius="4px">
-                <Text
-                  ml="auto"
-                  fontFamily="code"
-                  fontSize={14}
-                  fontWeight="bold"
-                  color="#4a4a4a"
+        {pairs.map(({ pair, value, lastUpdate }) => {
+          let numDigits = 2
+          if (tcdPrefix.includes('erc')) {
+            numDigits = 6
+          } else if (tcdPrefix.includes('fx')) {
+            numDigits = 4
+          }
+          return (
+            <DataPoint
+              key={pair}
+              keyOnChain={pair}
+              label={pair}
+              k={pair}
+              v={() => (
+                <Card
+                  flex="0 0 auto"
+                  bg="white"
+                  py={2}
+                  px={3}
+                  borderRadius="4px"
                 >
-                  {value.toLocaleString('en-US', {
-                    currency: 'USD',
-                    minimumFractionDigits: tcdPrefix.includes('erc') ? 6 : 2,
-                    maximumFractionDigits: tcdPrefix.includes('erc') ? 6 : 2,
-                  })}
-                </Text>
-              </Card>
-            )}
-            updatedAt={lastUpdate}
-          >
-            <PricePairFetcher
-              pair={pair}
-              tcdAddress={tcdAddress}
-              from={moment(1556150400000)}
+                  <Text
+                    ml="auto"
+                    fontFamily="code"
+                    fontSize={14}
+                    fontWeight="bold"
+                    color="#4a4a4a"
+                  >
+                    {value.toLocaleString('en-US', {
+                      currency: 'USD',
+                      minimumFractionDigits: numDigits,
+                      maximumFractionDigits: numDigits,
+                    })}
+                  </Text>
+                </Card>
+              )}
+              updatedAt={lastUpdate}
             >
-              {({ fetching, data }) =>
-                fetching ? (
-                  <Loading
-                    height={514}
-                    width={922}
-                    rects={[
-                      [24, 24, 922 - 48, 300 - 48],
-                      [24, 300, 922 - 48, 36, 8],
-                      [24, 300 + 36 + 8 + 4, 922 - 48, 32 - 8, 8],
-                      [24, 300 + 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
-                      [24, 300 + 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
-                      [24, 300 + 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
-                      [24, 300 + 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
-                    ]}
-                  />
-                ) : (
-                  <React.Fragment>
-                    <DataSetPriceGraph data={formatPricePairsForGraph(data)} />
-                    <PriceTable mb={2} data={data} />
-                  </React.Fragment>
-                )
-              }
-            </PricePairFetcher>
-          </DataPoint>
-        ))}
+              <PricePairFetcher
+                pair={pair}
+                tcdAddress={tcdAddress}
+                from={moment(1556150400000)}
+              >
+                {({ fetching, data }) =>
+                  console.log(data) || fetching ? (
+                    <Loading
+                      height={514}
+                      width={922}
+                      rects={[
+                        [24, 24, 922 - 48, 300 - 48],
+                        [24, 300, 922 - 48, 36, 8],
+                        [24, 300 + 36 + 8 + 4, 922 - 48, 32 - 8, 8],
+                        [24, 300 + 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
+                        [24, 300 + 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
+                        [24, 300 + 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
+                        [24, 300 + 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
+                      ]}
+                    />
+                  ) : (
+                    <React.Fragment>
+                      <DataSetPriceGraph
+                        data={formatPricePairsForGraph(data)}
+                      />
+                      <PriceTable mb={2} data={data} numDigits={numDigits} />
+                    </React.Fragment>
+                  )
+                }
+              </PricePairFetcher>
+            </DataPoint>
+          )
+        })}
       </FlipMove>
     </Box>
   </React.Fragment>

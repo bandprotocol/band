@@ -20,7 +20,7 @@ const TBody = styled(Box).attrs(p => ({
 export const createTable = ({ columns }) =>
   class Table extends React.Component {
     render() {
-      const { data, ...props } = this.props
+      const { data, numDigits, ...props } = this.props
       const numDataProviders = data.length
       // console.log('DATA', data)
 
@@ -44,7 +44,7 @@ export const createTable = ({ columns }) =>
               <Flex style={{ lineHeight: '32px' }}>
                 {columns.map(({ label, data, cell = {}, ...p }) => (
                   <Text {...p} {...cell}>
-                    {data(r, i, props, numDataProviders)}
+                    {data(r, i, props, numDataProviders, numDigits)}
                   </Text>
                 ))}
               </Flex>
