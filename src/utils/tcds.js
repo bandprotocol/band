@@ -20,13 +20,13 @@ export const getTCDInfomation = prefix =>
       image: CrpytoSrc,
       label: 'Crypto',
     },
-    'stock:': {
+    'useq:': {
       image: StockSrc,
-      label: 'Stock',
+      label: 'USeq',
     },
-    'commod:': {
+    'fx:': {
       image: CommoditySrc,
-      label: 'Commodity',
+      label: 'Fx',
     },
     'nba:': {
       image: BasketballSrc,
