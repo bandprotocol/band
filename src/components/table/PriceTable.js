@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Card } from 'ui/common'
+import { Text, Card, Flex, Image } from 'ui/common'
 import { createTable } from 'components/Table'
 import Link from 'components/Link'
 
@@ -27,7 +27,22 @@ export default createTable({
       flex: '0 0 200px',
       mr: 2,
     },
-    { data: d => d.name, label: 'Source', flex: '1', mr: 2 },
+    {
+      data: d => (
+        <Flex flexDirection="row" alignItems="center">
+          <Image
+            src={d.image}
+            height="16px"
+            mr={2}
+            style={{ filter: 'grayscale(1)' }}
+          />
+          {d.name}
+        </Flex>
+      ),
+      label: 'Source',
+      flex: '1',
+      mr: 2,
+    },
     {
       cell: { fontFamily: 'code', color: '#868FCD', fontSize: 13 },
       data: d => d.lastUpdate.fromNow().replace('a few', ''),

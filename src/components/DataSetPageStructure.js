@@ -26,7 +26,7 @@ export default ({
   name,
   tcdName,
   children,
-  breadcrumb = { path: 'dataset', label: 'Dataset' },
+  breadcrumb = { path: 'dataset', label: 'Explore data' },
   renderHeader = () => null,
 }) => (
   <Box width="100%">

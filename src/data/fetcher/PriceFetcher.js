@@ -84,6 +84,7 @@ export const PricePairFetcher = withRouter(
       return Object.keys(providers).map((k, i) => {
         return {
           name: getProvider(k).name,
+          image: getProvider(k).image,
           status: 'status',
           address: k,
           feed: providers[k].map(({ time, value }) => ({

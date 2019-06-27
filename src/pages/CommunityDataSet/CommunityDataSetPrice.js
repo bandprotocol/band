@@ -73,7 +73,7 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
                 from={moment(1556150400000)}
               >
                 {({ fetching, data }) =>
-                  console.log(data) || fetching ? (
+                  fetching ? (
                     <Loading
                       height={514}
                       width={922}
