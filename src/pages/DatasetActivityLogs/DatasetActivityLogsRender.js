@@ -4,22 +4,58 @@ import colors from 'ui/colors'
 import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import PaginationRender from 'components/Pagination/PaginationRender'
 
-const SearchBox = styled.input`
+import FilterSrc from 'images/filter.svg'
+import SearchInputIconSrc from 'images/search-input-icon.svg'
+import SecureSrc from 'images/activity-secure.svg'
+
+const SearchBoxInput = styled.input`
   border-radius: 18px;
   border: solid 1px #e7ecff;
   padding: 0 1em 0 1.4em;
-  width: 360px;
+  width: 200px;
   line-height: 32px;
   font-size: 14px;
+
+  transition: width 300ms;
+
+  &:focus {
+    width: 360px;
+  }
+`
+
+const SearchBox = props => (
+  <Box style={{ position: 'relative' }}>
+    <SearchBoxInput {...props} />
+    <Image
+      src={SearchInputIconSrc}
+      style={{
+        position: 'absolute',
+        right: 15,
+        top: 8,
+      }}
+      width={18}
+    />
+  </Box>
+)
+
+const FilterButton = styled(Button).attrs({
+  variant: 'blue',
+})`
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 0 20px;
+  line-height: 36px;
 `
 
 /*
 {value.toLocaleString('en-US', {
-                    currency: 'USD',
-                    minimumFractionDigits: type === 'FX' ? 4 : 2,
-                    maximumFractionDigits: type === 'FX' ? 4 : 2,
-                  })}
+  currency: 'USD',
+  minimumFractionDigits: type === 'FX' ? 4 : 2,
+  maximumFractionDigits: type === 'FX' ? 4 : 2,
+})}
 */
 
 const Data = ({ children }) => (
@@ -51,7 +87,7 @@ const Report = ({
 }) => (
   <Flex
     py="18px"
-    px="32px"
+    pl="32px"
     style={{ borderBottom: 'solid 1px #eef3ff' }}
     alignItems="flex-start"
   >
@@ -68,11 +104,12 @@ const Report = ({
           {dataKey}
         </Text>
       </Flex>
-      <Flex mt="10px">
-        <Text fontSize="14px" color="#9e9e9e">
+      <Flex mt="10px" alignItems="center">
+        <Text mr={2} fontSize="14px" color="#9e9e9e">
           Just now
         </Text>
-        <Text fontSize="14px" ml={2} color="#9baeda">
+        <Image src={SecureSrc} width="12px" />
+        <Text fontSize="14px" ml={1} color="#9baeda">
           signed by {provider}
         </Text>
       </Flex>
@@ -90,14 +127,14 @@ const Broadcast = ({
 }) => (
   <Flex
     py="18px"
-    px="32px"
+    pl="32px"
     style={{ borderBottom: 'solid 1px #eef3ff' }}
     alignItems="flex-start"
   >
     <Jazzicon
       diameter={28}
       seed={jsNumberForAddress('0x0000000000000000000000000000000000000000')}
-    />{' '}
+    />
     {/** TODO: Use Band Address */}
     <Box ml="32px" flex={1}>
       <Flex>
@@ -111,11 +148,13 @@ const Broadcast = ({
           {dataKey}
         </Text>
       </Flex>
-      <Flex mt="10px" mb="20px">
-        <Text fontSize="14px" color="#9e9e9e">
+      <Flex mt="10px" mb="20px" alignItems="center">
+        <Text mr={2} fontSize="14px" color="#9e9e9e">
           Just now
         </Text>
-        <Text fontSize="14px" ml={2} color="#9baeda">
+
+        <Image src={SecureSrc} width="12px" />
+        <Text fontSize="14px" ml={1} color="#9baeda">
           tx {tx_hash}
         </Text>
       </Flex>
@@ -156,13 +195,30 @@ const Broadcast = ({
 export default props => (
   <PageStructure
     renderHeader={() => (
-      <Flex alignItems="center" justifyContent="center" flexDirection="column">
-        <Text fontSize="36px" fontWeight="900">
-          Lottery
-        </Text>
-        <Text fontSize="20px" mt={3}>
-          Get winning numbers of lotteries all around the world
-        </Text>
+      <Flex flexDirection="column" style={{ width: '100%' }}>
+        <Flex flexDirection="column" m="15px 52px">
+          <Text
+            fontSize="27px"
+            color="white"
+            fontWeight="900"
+            width="500px"
+            style={{ lineHeight: '38px' }}
+          >
+            Monitor Smart Contract Activities
+            <br />
+            See How the Data Comes to Life
+          </Text>
+          <Text
+            fontSize="18px"
+            color="white"
+            fontWeight="500"
+            width="650px"
+            style={{ lineHeight: '33px' }}
+          >
+            Spicy jalapeno bacon ipsum dolor amet rump beef doner ribs shoulder.
+            Short ribs sirloin chicken, hamburger swine shank tail
+          </Text>
+        </Flex>
       </Flex>
     )}
     {...props}
@@ -180,6 +236,9 @@ export default props => (
         </Text>
         <Box flex={1} />
         <SearchBox placeholder="Search" />
+        <FilterButton ml={2}>
+          Filter (0) <Image ml={1} src={FilterSrc} width="14px" />
+        </FilterButton>
       </Flex>
       <Box mt={2}>
         {props.data.map(event =>
@@ -189,6 +248,13 @@ export default props => (
             <Broadcast key={event.id} event={event} />
           ) : null,
         )}
+        <Box mt={2}>
+          <PaginationRender
+            currentPage={props.currentPage}
+            numberOfPages={props.numberOfPages}
+            onChangePage={props.onChangePage}
+          />
+        </Box>
       </Box>
     </Card>
   </PageStructure>

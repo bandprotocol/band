@@ -130,12 +130,29 @@ const mockdata = [
 ]
 
 class DatasetActivityLogs extends React.Component {
+  state = {
+    currentPage: 1,
+    numberOfPages: 10,
+  }
   componentDidMount() {
     // Load Logs from selector
   }
 
+  onChangePage = page => {
+    this.setState({
+      currentPage: page,
+    })
+  }
+
   render() {
-    return <DatasetActivityLogsRender data={mockdata} {...this.props} />
+    return (
+      <DatasetActivityLogsRender
+        data={mockdata}
+        {...this.props}
+        {...this.state}
+        onChangePage={this.onChangePage}
+      />
+    )
   }
 }
 

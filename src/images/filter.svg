@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 20 14">
+    <g fill="none" fill-rule="nonzero" transform="translate(-2 -5)">
+        <path d="M0 0h24v24H0z"/>
+        <path fill="#FFF" d="M3 7a1 1 0 1 1 0-2h18a1 1 0 0 1 0 2H3z"/>
+        <rect width="12" height="2" x="6" y="11" fill="#FFF" rx="1"/>
+        <rect width="4" height="2" x="10" y="17" fill="#FFF" rx="1"/>
+    </g>
+</svg>
