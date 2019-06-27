@@ -13,12 +13,14 @@ export function* takeEveryAsync(actionType, handler) {
   yield fork(function*() {
     while (true) {
       const action = yield take(actionType)
-      try {
-        yield* handler(action)
-        if (action.__resolve) action.__resolve()
-      } catch (e) {
-        if (action.__reject) action.__reject(e)
-      }
+      yield fork(function*() {
+        try {
+          yield* handler(action)
+          if (action.__resolve) action.__resolve()
+        } catch (e) {
+          if (action.__reject) action.__reject(e)
+        }
+      })
     }
   })
 }
