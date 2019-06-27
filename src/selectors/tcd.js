@@ -5,7 +5,7 @@ import { communityDetailSelector } from 'selectors/communities'
 export const tcdsSelector = createSelector(
   [communityDetailSelector, (_, { tcdAddress }) => tcdAddress],
   (community, tcdAddress) => {
-    if (!community.getIn(['tcds', tcdAddress])) return null
+    if (!community || !community.getIn(['tcds', tcdAddress])) return null
     return community.getIn(['tcds', tcdAddress])
   },
 )
