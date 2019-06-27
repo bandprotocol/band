@@ -20,7 +20,7 @@ const Description = styled(Text)`
   -webkit-line-clamp: 2;
   height: 45px;
   line-height: 25px;
-  width: 320px;
+  width: 325px;
 `
 
 const StyledCard = styled(Flex)`
@@ -49,8 +49,9 @@ const DisplayIcon = ({ src }) => (
 const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
   <Flex
     flexDirection="row"
-    pt={2}
+    pt="14px"
     pb={1}
+    px="15px"
     justifyContent="space-around"
     alignItems="center"
     bg={statusBg || '#3c55f9'}
