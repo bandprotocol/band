@@ -12,13 +12,13 @@ import CommoditySrc from 'images/gold.svg'
 
 export const getTCDInfomation = prefix =>
   ({
-    'fiat:': {
+    'erc20:': {
       image: FiatSrc,
-      label: 'Fiat',
+      label: 'ERC-20',
     },
     'crypto:': {
       image: CrpytoSrc,
-      label: 'Crypto',
+      label: 'Crypto-USD',
     },
     'useq:': {
       image: StockSrc,
