@@ -9,6 +9,9 @@ export const getProvider = address =>
     '0xDa7A2A9C0bB0F94f9ddF54Dde3dBE2530A8269A2': {
       name: 'BITFINEX',
     },
+    '0xDa7A90B4b2078e0446974014C319157ab02c24b7': {
+      name: 'BITTREX',
+    },
     '0xDA7A2E3d741f025010C44AfA2A6a7353F70D6b23': {
       name: 'GEMINI',
     },
