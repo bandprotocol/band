@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { colors } from 'ui'
 import { Flex, Text, Button, Image, AbsoluteLink } from 'ui/common'
+import { getProvider } from 'data/Providers'
 import OutImg from 'images/out.svg'
 import ArrowUp from 'images/arrowUp.svg'
 import ArrowDown from 'images/arrowDown.svg'
@@ -224,7 +225,6 @@ export default ({ user, items, showDepositWithdraw }) => {
           rank,
           tcdAddress,
           dataSourceAddress,
-          detail,
           ownerStake,
           stake,
           userStake,
@@ -236,7 +236,7 @@ export default ({ user, items, showDepositWithdraw }) => {
           <ProvidersRow
             user={user}
             key={i}
-            detail={detail}
+            detail={getProvider(dataSourceAddress.toLowerCase())}
             rank={rank}
             dataSourceAddress={dataSourceAddress}
             tcdAddress={tcdAddress}

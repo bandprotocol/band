@@ -53,7 +53,7 @@ export default ({
         style={{ borderLeft: 'solid 1px #f2f4f9' }}
       >
         <Field label="Website">
-          {new URL(link).hostname}
+          {link && new URL(link).hostname}
           <TxHashLink href={link} pl="5px" />
         </Field>
         <Field label="Organization">{organization}</Field>

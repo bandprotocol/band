@@ -76,7 +76,7 @@ const renderDataPoints = (pairs, type) => (
 )
 
 export default class CommunityPricePage extends React.Component {
-  state = { type: 'CRYPTO' }
+  state = { type: 'CRYPTO', numDataPoints: 0 }
 
   render() {
     const { tcdAddress } = this.props
@@ -99,10 +99,14 @@ export default class CommunityPricePage extends React.Component {
         {...this.props}
       >
         <DataCard
-          headerText={`${this.currentSportLength || 0} Data Prices `}
+          headerText={`${this.state.numDataPoints} Data Prices `}
           withSearch={false}
         >
-          <CurrentPriceFetcher type={this.state.type}>
+          <CurrentPriceFetcher
+            type={this.state.type}
+            tcdAddress={tcdAddress}
+            setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
+          >
             {({ fetching, data }) =>
               fetching ? (
                 <Loading

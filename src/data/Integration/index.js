@@ -4,7 +4,7 @@ import Lottery from './Lottery/index'
 import Identity from './Identity/index'
 
 export default {
-  'Price Dataset': Price,
+  'Financial Data Feeds': Price,
   SportFeedCommunity: Sport,
   LotteryFeedCommunity: Lottery,
   BandIdentity: Identity,

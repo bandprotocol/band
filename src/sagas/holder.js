@@ -4,13 +4,11 @@ import { Utils } from 'band.js'
 import BN from 'bn.js'
 import { takeEveryAsync } from 'utils/reduxSaga'
 
-function* handleLoadHolders({ address }) {
-  const {
-    tokenByAddress: {
-      address: tokenAddress,
-      balancesByTokenAddress: { nodes: holders },
-    },
-  } = yield Utils.graphqlRequest(
+function* handleLoadHolders(props) {
+  if (!props) return
+  const { address } = props
+  if (!address) return
+  const result = yield Utils.graphqlRequest(
     `
     {
       tokenByAddress(address: "${address}") {
@@ -25,6 +23,13 @@ function* handleLoadHolders({ address }) {
       }
     }`,
   )
+
+  const {
+    tokenByAddress: {
+      address: tokenAddress,
+      balancesByTokenAddress: { nodes: holders },
+    },
+  } = result
 
   yield put(
     addHolders(

@@ -10,6 +10,8 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
     address: communityAddress,
   })
 
+  if (!community) return {}
+
   let tcdPrefix = null
   try {
     tcdPrefix = community

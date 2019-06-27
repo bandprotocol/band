@@ -10,7 +10,7 @@ import CommunityDataSetIdentity from './CommunityDataSetIdentity'
 class CommunityDataSet extends React.Component {
   render() {
     switch (this.props.name) {
-      case 'Price Dataset':
+      case 'Financial Data Feeds':
         return <CommunityDataSetPrice {...this.props} />
       case 'LotteryFeedCommunity':
         return <CommunityDataSetLottery {...this.props} />
@@ -34,6 +34,8 @@ const mapStateToProps = (state, { communityAddress }) => {
   const community = communityDetailSelector(state, {
     address: communityAddress,
   })
+
+  if (!community) return {}
 
   return {
     name: community.get('name'),
