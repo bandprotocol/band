@@ -14,7 +14,6 @@ const mapStateToProps = (state, { communityAddress }) => {
       const tcdInfo = getTCDInfomation(tcds[key].prefix)
       return {
         tcdAddress: key,
-        datapoints: 10, // TODO: query this thing
         path: `/community/${communityAddress}/${key}/dataset`,
         ...tcdInfo,
       }

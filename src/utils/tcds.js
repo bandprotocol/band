@@ -17,24 +17,28 @@ export const getTCDInfomation = prefix =>
       label: 'Crypto-Fiat Conversion',
       shortLabel: 'Crypto-Fiat',
       order: 1,
+      datapoints: 5,
     },
     'erc20:': {
       image: ERC20,
       label: 'ERC-20 Pairs',
       shortLabel: 'ERC-20',
       order: 2,
+      datapoints: 9,
     },
     'fx:': {
       image: CommoditySrc,
       label: 'Foreign Exchange',
       shortLabel: 'FX',
       order: 3,
+      datapoints: 7,
     },
     'useq:': {
       image: StockSrc,
       label: 'US Equities',
       shortLabel: 'US Equities',
       order: 4,
+      datapoints: 10,
     },
     'nba:': {
       image: BasketballSrc,
