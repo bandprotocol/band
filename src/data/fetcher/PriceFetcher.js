@@ -102,7 +102,7 @@ export const PricePairFetcher = withRouter(
 
       return Object.keys(providers).map((k, i) => {
         return {
-          name: getProvider(k),
+          name: getProvider(k).name,
           status: 'status',
           address: k,
           feed: providers[k],
