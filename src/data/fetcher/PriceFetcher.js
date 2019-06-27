@@ -1,7 +1,6 @@
 import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
-import axios from 'axios'
 import { Utils } from 'band.js'
 
 const ALLTYPE = {
@@ -21,18 +20,6 @@ const ALLTYPE = {
   ],
   CRYPTO: ['BTC/USD', 'ETH/USD', 'LTC/USD'],
 }
-
-const allPriceFeedQL = () => `
-{
-  allDataPriceFeeds(orderBy: PAIR_ASC) {
-    nodes {
-      value
-      pair
-      lastUpdate
-    }
-  }
-}
-`
 
 const allProvidersByPairQL = (pair, from) => `
 {

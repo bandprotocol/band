@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import { List } from 'immutable'
+import { getProvider } from 'data/Providers'
 import {
   tcdSelector,
   addressSelector,
@@ -18,8 +19,13 @@ export const dataProvidersSelector = createSelector(
     )
       return List()
     const tmpTcd = tcdsByComm.get(0).toJS()
+
     return tmpTcd.dataProviders
-      .map(dp => ({ ...dp, tcdAddress: tmpTcd.address }))
+      .map(dp => ({
+        ...dp,
+        tcdAddress: tmpTcd.address,
+        detail: getProvider(dp.dataSourceAddress).name,
+      }))
       .slice((page - 1) * pageSize, page * pageSize)
   },
 )

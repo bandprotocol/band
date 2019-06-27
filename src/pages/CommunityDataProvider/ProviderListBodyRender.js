@@ -39,7 +39,7 @@ const DWButton = styled(Button).attrs({
   }`}
 `
 
-const HistoryRow = ({
+const ProvidersRow = ({
   user,
   rank,
   detail,
@@ -233,7 +233,7 @@ export default ({ user, items, showDepositWithdraw }) => {
           status,
         } = item
         return (
-          <HistoryRow
+          <ProvidersRow
             user={user}
             key={i}
             detail={detail}

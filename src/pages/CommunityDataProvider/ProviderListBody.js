@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import BN from 'bn.js'
 import { withRouter } from 'react-router-dom'
 import { showModal } from 'actions'
 

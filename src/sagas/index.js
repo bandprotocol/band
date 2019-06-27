@@ -119,6 +119,7 @@ function* baseInitialize() {
                 dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
                   nodes {
                     stake
+                    dataSourceAddress
                   }
                 }
               }
@@ -182,6 +183,9 @@ function* baseInitialize() {
                   ),
                   dataProviderCount:
                     each.dataProvidersByTcdAddress.nodes.length,
+                  providers: each.dataProvidersByTcdAddress.nodes.map(
+                    x => x.dataSourceAddress,
+                  ),
                 }),
               ),
             Map(),
