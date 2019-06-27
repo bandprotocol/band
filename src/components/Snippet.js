@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Box, Card, Button, Text, Flex } from 'ui/common'
+import { Card, Text, Flex } from 'ui/common'
 import colors from 'ui/colors'
 import Prism from 'prismjs'
 import { createGlobalStyle } from 'styled-components'
-import Code from 'data/Code'
 
 const SnippetStyle = createGlobalStyle`
 code[class*="language-"],
@@ -186,7 +185,7 @@ export default class Snippet extends React.Component {
   }
 
   render() {
-    const { dataset, codeIndex } = this.props
+    const { dataset, codeIndex, code } = this.props
 
     return (
       <React.Fragment>
@@ -224,7 +223,7 @@ export default class Snippet extends React.Component {
               {this.state.tab === 'solidity' ? '0.001 ETH/query' : 'free'}
             </Text>
           </Flex>
-          {renderSolidity(Code[dataset].solidity[codeIndex || 0])}
+          {renderSolidity(code[codeIndex || 0])}
         </Card>
       </React.Fragment>
     )

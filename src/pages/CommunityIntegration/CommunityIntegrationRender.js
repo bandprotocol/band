@@ -4,7 +4,7 @@ import { Flex, Box, Text, AbsoluteLink, Button, Image } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
-import Integration from 'data/Integration'
+import Integration from 'data/Integration/index'
 
 const RoundButton = styled(Button)`
   margin: auto 20px;
@@ -96,10 +96,14 @@ export default class CommunityIntegrationRender extends React.Component {
   state = { codingStepNum: 0, tabNum: 0 }
 
   render() {
-    const { name: communityName } = this.props
-    const info = Integration[communityName]
+    const { name: communityName, tcdPrefix } = this.props
+    const info =
+      (tcdPrefix && Integration[communityName][tcdPrefix]) ||
+      Integration[communityName][Object.keys(Integration[communityName])[0]]
+
     const keyFormat = info.keyFormat[Object.keys(info.keyFormat)[0]]
     const dataFormat = info.dataFormat
+
     return (
       <PageStructure
         name={communityName}
@@ -114,7 +118,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 width="50%"
                 style={{ lineHeight: '38px' }}
               >
-                {info.h1}
+                {tcdPrefix + ' ' + info.h1}
               </Text>
               <Text
                 fontSize="18px"
@@ -269,6 +273,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   </Text>
                 </Flex>
                 <Snippet
+                  code={info.solidity}
                   dataset={communityName}
                   codeIndex={this.state.codingStepNum}
                 />
