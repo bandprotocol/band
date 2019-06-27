@@ -8,10 +8,10 @@ export default createTable({
   columns: [
     {
       cell: { fontFamily: 'code' },
-      data: (d, i) => (
+      data: (d, i, props, numDataProviders) => (
         <Link
           target="_blank"
-          href={`http://rinkeby.etherscan.io/address/${d.address}`}
+          href={`http://kovan.etherscan.io/address/${d.address}`}
         >
           <Card
             bg={colors.chart[i]}
@@ -20,6 +20,7 @@ export default createTable({
             style={{ height: 12, width: 12, display: 'inline-block' }}
           />
           <Text fontFamily="code" style={{ display: 'inline-block' }}>
+            {console.log(props, numDataProviders) && 'dsddd'}
             {d.address.slice(0, 18)}
           </Text>
         </Link>

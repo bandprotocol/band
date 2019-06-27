@@ -1,7 +1,6 @@
 import React from 'react'
-import colors from 'ui/colors'
 import moment from 'moment'
-import { Flex, Box, Text, Card, Image, Heading } from 'ui/common'
+import { Flex, Box, Text, Card } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
