@@ -235,7 +235,7 @@ export default class TCDSelector extends React.Component {
                       width="20px"
                       height="20px"
                     />
-                    <Text px={3}>{currentOption.label}</Text>
+                    <Text px={3}>{currentOption.shortLabel}</Text>
                   </Flex>
                   <Image src={Triangle} />
                 </Flex>
@@ -251,13 +251,20 @@ export default class TCDSelector extends React.Component {
                 my="8px"
                 style={{ height: '2px' }}
               />
-              {tcds.map((each, i) => (
-                <List
-                  index={i}
-                  handleSelect={this.handleSelect.bind(this)}
-                  {...each}
-                />
-              ))}
+              {tcds
+                .sort((a, b) => {
+                  if (a.order < b.order) return -1
+                  return 1
+                })
+                .map((each, i) => {
+                  return (
+                    <List
+                      index={i}
+                      handleSelect={this.handleSelect.bind(this)}
+                      {...each}
+                    />
+                  )
+                })}
             </SelectionContainer>
           </Flex>
         </ClickOutSide>

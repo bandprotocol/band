@@ -43,16 +43,14 @@ export const CurrentPriceFetcher = withRouter(
 
     async fetch() {
       const { tcdAddress, setNumDataPoints } = this.props
-      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
-        key: 'TC',
-      })
+      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`)
 
       setNumDataPoints(prices.length)
 
-      return prices.map(({ key, value }) => ({
+      return prices.map(({ key, value, timestamp }) => ({
         pair: key,
         value: parseInt(value) / 1e18,
-        lastUpdate: moment(Date.now()),
+        lastUpdate: moment(timestamp * 1000),
       }))
     }
   },
@@ -65,12 +63,13 @@ export const PricePairFetcher = withRouter(
     }
 
     async fetch() {
-      const { pair, from } = this.props
+      const { pair, tcdAddress } = this.props
 
-      const reports = await Utils.getDataRequest(
-        '/0x0233b33A43081cfeb7B49caf623b2b5841dB7596/data-points',
-        { key: pair },
-      )
+      const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
+        key: pair,
+      })
+
+      console.log(reports)
 
       const providers = {}
       for (const report of reports) {

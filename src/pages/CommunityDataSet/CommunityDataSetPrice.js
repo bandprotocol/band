@@ -15,7 +15,7 @@ import {
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
 
-const renderDataPoints = (pairs, type) => (
+const renderDataPoints = (pairs, type, tcdAddress) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
@@ -44,7 +44,11 @@ const renderDataPoints = (pairs, type) => (
             )}
             updatedAt={lastUpdate}
           >
-            <PricePairFetcher pair={pair} from={moment(1556150400000)}>
+            <PricePairFetcher
+              pair={pair}
+              tcdAddress={tcdAddress}
+              from={moment(1556150400000)}
+            >
               {({ fetching, data }) =>
                 fetching ? (
                   <Loading
@@ -121,7 +125,7 @@ export default class CommunityPricePage extends React.Component {
                   ]}
                 />
               ) : (
-                renderDataPoints(data, this.state.type)
+                renderDataPoints(data, this.state.type, tcdAddress)
               )
             }
           </CurrentPriceFetcher>

@@ -39,17 +39,25 @@ export const getTCDInfomation = prefix =>
     'nba:': {
       image: BasketballSrc,
       label: 'NBA',
+      shortLabel: 'Basketball',
+      order: 1,
     },
     'mlb:': {
       image: BaseballSrc,
       label: 'MLB',
+      shortLabel: 'Baseball',
+      order: 2,
     },
     'nfl:': {
       image: USAFootballSrc,
       label: 'NFL',
+      shortLabel: 'USA Football',
+      order: 3,
     },
     'epl:': {
       image: SoccerSrc,
       label: 'Soccer',
+      shortLabel: 'Soccer',
+      order: 4,
     },
   }[prefix] || { image: USAFootballSrc, label: 'Unknown' })
