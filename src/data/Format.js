@@ -1,15 +1,24 @@
-export const getFormat = dataset => {
-  switch (dataset) {
-    case '0x3ebD71aA0b758705339Bb58917bc9202CE153BAC':
+export const getFormat = symbol => {
+  switch (symbol.toUpperCase()) {
+    case 'XFN':
     default:
       return {
-        logIdentified: 'price of trading pair',
-        formatValue: price =>
-          parseInt(price).toLocaleString('en-US', {
+        logIdentifier: 'price of trading pair',
+        formatValue: price => {
+          const p = parseInt(price) / 1e18
+          return p.toLocaleString('en-US', {
             currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }),
+            ...(p > 1
+              ? {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }
+              : {
+                  minimumSignificantDigits: 2,
+                  maximumSignificantDigits: 3,
+                }),
+          })
+        },
       }
   }
 }

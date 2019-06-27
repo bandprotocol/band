@@ -9,7 +9,7 @@ import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
-import { getProvider } from 'data/Providers'
+import { getProvider, searchProviderAddress } from 'data/Providers'
 import { getFormat } from 'data/Format'
 
 import FilterSrc from 'images/filter.svg'
@@ -78,7 +78,7 @@ const Choice = ({ selected, children, onClick }) => (
 const SearchBoxInput = styled.input`
   border-radius: 18px;
   border: solid 1px #e7ecff;
-  padding: 0 1em 0 1.4em;
+  padding: 0 2.8em 0 1.4em;
   width: 200px;
   line-height: 32px;
   font-size: 14px;
@@ -131,7 +131,7 @@ const Data = ({ children }) => (
 )
 
 const Report = ({
-  tcd,
+  symbol,
   event: {
     data: {
       signature: { r, s, v },
@@ -147,6 +147,7 @@ const Report = ({
   <Flex
     py="18px"
     pl="32px"
+    pr="8px"
     style={{ borderBottom: 'solid 1px #eef3ff' }}
     alignItems="flex-start"
   >
@@ -157,7 +158,7 @@ const Report = ({
           {name}
         </Text>
         <Text fontSize="14px" fontWeight="700" mx={2} color="#4d7dff">
-          reported {getFormat(tcd).logIdentifier}
+          reported {getFormat(symbol).logIdentifier}
         </Text>
         <Text fontSize="14px" fontWeight="700">
           {dataKey}
@@ -173,12 +174,12 @@ const Report = ({
         </Text>
       </Flex>
     </Box>
-    <Data>{getFormat(tcd).formatValue(value)}</Data>
+    <Data>{getFormat(symbol).formatValue(value)}</Data>
   </Flex>
 )
 
 const Broadcast = ({
-  tcd,
+  symbol,
   event: {
     data: { reported_data, timestamp, tx_hash },
     id,
@@ -200,7 +201,7 @@ const Broadcast = ({
           Band Protocol
         </Text>
         <Text fontSize="14px" fontWeight="700" mx={2} color="#42c47f">
-          reported {getFormat(tcd).logIdentifier}
+          reported {getFormat(symbol).logIdentifier}
         </Text>
         <Text fontSize="14px" fontWeight="700">
           {dataKey}
@@ -218,7 +219,7 @@ const Broadcast = ({
       </Flex>
       {Object.entries(reported_data)
         .sort((a, b) => (a[0] < b[0] ? -1 : 1))
-        .map(([k, v]) => (
+        .map(([k, { value }]) => (
           <Flex ml={2} alignItems="center" style={{ position: 'relative' }}>
             <Box
               flex="0 0 auto"
@@ -232,7 +233,7 @@ const Broadcast = ({
               }}
             />
             <Box flex="0 0 15px" style={{ borderTop: 'solid 1px #eef3ff' }} />
-            <Flex flex="0 0 120px" alignItems="center">
+            <Flex flex="0 0 150px" alignItems="center">
               <Text mx={2} flex=" 0 0 auto" fontSize="14px" fontWeight="700">
                 {getProvider(k).name}
               </Text>
@@ -241,14 +242,32 @@ const Broadcast = ({
             <Text flex={1} fontSize="13px" color="#9baeda">
               {k}
             </Text>
-            <Box my={1}>
-              <Data>{getFormat(tcd).formatValue(v)}</Data>
+            <Box my={1} ml={2}>
+              <Data>{getFormat(symbol).formatValue(value)}</Data>
             </Box>
           </Flex>
         ))}
     </Box>
   </Flex>
 )
+
+class RenderLogs extends React.Component {
+  shouldComponentUpdate(prevProps) {
+    return this.props.data !== prevProps.data
+  }
+
+  render() {
+    return this.props.data
+      .map(event => ({ ...event, ...getProvider(event.actor) }))
+      .map(event =>
+        event.type === 'REPORT' ? (
+          <Report key={event.id} event={event} symbol={this.props.symbol} />
+        ) : event.type === 'BROADCAST' ? (
+          <Broadcast key={event.id} event={event} symbol={this.props.symbol} />
+        ) : null,
+      )
+  }
+}
 
 export default props => (
   <PageStructure
@@ -293,12 +312,21 @@ export default props => (
           Activity Logs
         </Text>
         <Box flex={1} />
-        <SearchBox placeholder="Search" />
+        {!searchProviderAddress(props.query) && (
+          <Text fontWeight="700" fontSize="12px" color="#ec6363" mr={2}>
+            NOT FOUND
+          </Text>
+        )}
+        <SearchBox
+          placeholder="Search"
+          value={props.search}
+          onChange={props.onSearch}
+        />
         <Box ml={2} style={{ position: 'relative' }}>
           <FilterButton onClick={props.toggleShowFilter}>
             Filter (
-            {(props.activeFilter.reported ? 1 : 0) +
-              (props.activeFilter.broadcasted ? 1 : 0)}
+            {(props.activeFilter.REPORT ? 1 : 0) +
+              (props.activeFilter.BROADCAST ? 1 : 0)}
             ) <Image ml={1} src={FilterSrc} width="14px" />
           </FilterButton>
 
@@ -319,15 +347,14 @@ export default props => (
               />
               <Choice
                 selected={
-                  !props.activeFilter.reported &&
-                  !props.activeFilter.broadcasted
+                  !props.activeFilter.REPORT && !props.activeFilter.BROADCAST
                 }
                 onClick={() =>
                   props.onSetFilter(
-                    'all',
+                    'ALL',
                     !(
-                      !props.activeFilter.reported &&
-                      !props.activeFilter.broadcasted
+                      !props.activeFilter.REPORT &&
+                      !props.activeFilter.BROADCAST
                     ),
                   )
                 }
@@ -335,20 +362,17 @@ export default props => (
                 All
               </Choice>
               <Choice
-                selected={props.activeFilter.reported}
+                selected={props.activeFilter.REPORT}
                 onClick={() =>
-                  props.onSetFilter('reported', !props.activeFilter.reported)
+                  props.onSetFilter('REPORT', !props.activeFilter.REPORT)
                 }
               >
                 Reported
               </Choice>
               <Choice
-                selected={props.activeFilter.broadcasted}
+                selected={props.activeFilter.BROADCAST}
                 onClick={() =>
-                  props.onSetFilter(
-                    'broadcasted',
-                    !props.activeFilter.broadcasted,
-                  )
+                  props.onSetFilter('BROADCAST', !props.activeFilter.BROADCAST)
                 }
               >
                 Broadcasted
@@ -358,28 +382,28 @@ export default props => (
         </Box>
       </Flex>
       <Box mt={2}>
-        <LogFetcher tcd={props.address} page={props.page}>
+        <LogFetcher
+          tcd={props.tcdAddress}
+          page={props.currentPage}
+          type={
+            props.activeFilter.REPORT
+              ? 'REPORT'
+              : props.activeFilter.BROADCAST
+              ? 'BROADCAST'
+              : undefined
+          }
+          actor={
+            props.query
+              ? searchProviderAddress(props.query) || undefined
+              : undefined
+          }
+        >
           {({ fetching, data }) =>
-            fetching
-              ? 'Loading ...'
-              : console.log('DATA', data) ||
-                data
-                  .map(event => ({ ...event, ...getProvider(event.actor) }))
-                  .map(event =>
-                    event.type === 'REPORT' ? (
-                      <Report
-                        key={event.id}
-                        event={event}
-                        tcd={props.address}
-                      />
-                    ) : event.type === 'BROADCAST' ? (
-                      <Broadcast
-                        key={event.id}
-                        event={event}
-                        tcd={props.address}
-                      />
-                    ) : null,
-                  )
+            fetching ? (
+              'Loading ...'
+            ) : (
+              <RenderLogs data={data} symbol={props.symbol} />
+            )
           }
         </LogFetcher>
 

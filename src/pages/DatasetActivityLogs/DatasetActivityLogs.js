@@ -1,17 +1,23 @@
 import React from 'react'
+import { debounce } from 'lodash'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
+import { withRouter } from 'react-router-dom'
 
 import DatasetActivityLogsRender from './DatasetActivityLogsRender'
 
 class DatasetActivityLogs extends React.Component {
   state = {
     currentPage: 1,
-    numberOfPages: 10,
+    numberOfPages: 100,
 
     // Filter
     showFilter: false,
     activeFilter: {},
+
+    // Search
+    search: '',
+    query: '',
   }
 
   componentDidMount() {
@@ -25,7 +31,7 @@ class DatasetActivityLogs extends React.Component {
   }
 
   onSetFilter = (filter, val) => {
-    if (filter === 'all') {
+    if (filter === 'ALL') {
       this.setState({
         activeFilter: {
           reported: !val,
@@ -47,12 +53,28 @@ class DatasetActivityLogs extends React.Component {
     })
   }
 
+  onSearch = e =>
+    this.setState(
+      {
+        search: e.target.value,
+      },
+      () => this.onQuery(this.state.search),
+    )
+
+  onQuery = debounce(val => {
+    this.setState({
+      query: val,
+    })
+  }, 350)
+
   render() {
     return (
       <DatasetActivityLogsRender
         {...this.props}
         {...this.state}
         onChangePage={this.onChangePage}
+        onSearch={this.onSearch}
+        onQuery={this.onQuery}
         onSetFilter={this.onSetFilter}
         toggleShowFilter={this.toggleShowFilter}
       />
@@ -68,7 +90,8 @@ const mapStateToProps = (state, { communityAddress }) => {
   return {
     name: community.get('name'),
     address: community.get('address'),
+    symbol: community.get('symbol'),
   }
 }
 
-export default connect(mapStateToProps)(DatasetActivityLogs)
+export default withRouter(connect(mapStateToProps)(DatasetActivityLogs))
