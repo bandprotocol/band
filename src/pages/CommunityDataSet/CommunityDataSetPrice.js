@@ -17,6 +17,7 @@ import {
 } from 'data/fetcher/PriceFetcher'
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
+import DataHeader from 'components/DataHeader'
 
 const pairToHeader = pair => {
   const [left, right] = pair.split('/')
@@ -113,18 +114,14 @@ class CommunityPricePage extends React.Component {
     return (
       <PageStructure
         renderHeader={() => (
-          <Flex
-            alignItems="center"
-            justifyContent="center"
-            flexDirection="column"
-          >
-            <Text fontSize="36px" fontWeight="900">
-              Price Feed
-            </Text>
-            <Text fontSize="20px" mt={3}>
-              Get current prices of any trading currency pairs
-            </Text>
-          </Flex>
+          <DataHeader
+            lines={[
+              'On-chain Data You Can Trust',
+              'Readily Available for Ethereum Smart Contract',
+              'Token holders collectively curate trustworthy data providers.',
+              'By staking their tokens, they earn a portion of fee from the providers.',
+            ]}
+          />
         )}
         {...this.props}
       >

@@ -8,12 +8,12 @@ import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.svg'
 
 const Header = styled(Card)`
-height: 438px;
+  height: 380px;
   width: 100%;
   background: url('${HeaderBackgroundSrc}');
   background-repeat: no-repeat;
   background-size: cover;
-  background-position-y: center;
+  background-position: center;
 `
 
 const AbsoluteLink = styled.a.attrs(props => ({
@@ -79,13 +79,13 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
         style={{ height: '100%' }}
       >
         <Text
-          fontSize="40px"
+          fontSize="50px"
           color="#fff"
-          fontWeight="bold"
-          mt={2}
+          fontWeight="900"
+          mb={2}
           style={{ letterSpacing: '0.95px' }}
         >
-          DATA GOVERNANCE PORTAL
+          Data Governance Portal
         </Text>
         <Text
           fontSize="20px"
