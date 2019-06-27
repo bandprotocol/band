@@ -8,62 +8,58 @@ export default {
   example: `🚀 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD. 👇👇👇`,
   contractName: 'TicketSellerContract',
   dataFormat: {
-    description: `The return value from community's contract always bytes32. For ...`,
+    description: `The return value is a bytes32 that can be converted directly to uint256. Note that to maintain arithmetic precision, the value is multiplied by 10^18 . See Example tab for, well, example.`,
   },
   keyFormat: {
     crypto: {
       header: 'List of Available Pairs',
-      description: '......',
+      description:
+        'The following pairs are available for ERC-20 to ETH trading data.',
       keys: [
         [
-          'BTC/USD',
-          'Price of 1 Bitcoin in United States dollar unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',
-        ],
-        [
-          'ETH/USD',
-          'Price of 1 Ethereum in United States dollar unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
-        ],
-        [
-          'MKR/ETH',
-          'Price of 1 Maker in Ethereum unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1518.png',
-        ],
-        [
           'BAT/ETH',
-          'Price of 1 Basic Attention Token in Ethereum unit multiply by 10^18',
+          'Basic Attention Token price in ETH (times 10^18 )',
           'https://s2.coinmarketcap.com/static/img/coins/64x64/1697.png',
         ],
         [
-          'USDC/ETH',
-          'Price of 1 USD Coin in Ethereum unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
-        ],
-        [
-          'OMG/ETH',
-          'Price of 1 OmiseGO in Ethereum unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1808.png',
-        ],
-        [
-          'ZRX/ETH',
-          'Price of 1 ZeroX in Ethereum unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1896.png',
-        ],
-        [
           'DAI/ETH',
-          'Price of 1 Dai in Ethereum unit multiply by 10^18',
+          'DAI stable coin price in ETH (times 10^18 )',
           'https://s2.coinmarketcap.com/static/img/coins/64x64/2308.png',
         ],
         [
+          'KNC/ETH',
+          'Kyber Network price in ETH (times 10^18 )',
+          'https://s2.coinmarketcap.com/static/img/coins/64x64/1982.png',
+        ],
+        [
+          'LINK/ETH',
+          'ChainLink price in ETH (times 10^18 )',
+          'https://s2.coinmarketcap.com/static/img/coins/64x64/1975.png',
+        ],
+        [
+          'MKR/ETH',
+          'MakerDAO price in ETH (times 10^18 )',
+          'https://s2.coinmarketcap.com/static/img/coins/64x64/1518.png',
+        ],
+        [
+          'OMG/ETH',
+          'OmiseGo price in ETH (times 10^18 )',
+          'https://s2.coinmarketcap.com/static/img/coins/64x64/1808.png',
+        ],
+        [
           'REP/ETH',
-          'Price of 1 Augur in Ethereum unit multiply by 10^18',
+          'Augur price in ETH (times 10^18 )',
           'https://s2.coinmarketcap.com/static/img/coins/64x64/1104.png',
         ],
         [
-          'KNC/ETH',
-          'Price of 1 Band in Ethereum unit multiply by 10^18',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1982.png',
+          'USDC/ETH',
+          'USD Coin price in ETH (times 10^18 )',
+          'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png',
+        ],
+        [
+          'ZRX/ETH',
+          '0x Protocol Token price in ETH (times 10^18 )',
+          'https://s2.coinmarketcap.com/static/img/coins/64x64/1896.png',
         ],
       ],
     },

@@ -8,7 +8,7 @@ export default {
   example: `🍻 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD. 👇👇👇`,
   contractName: 'TicketSellerContract',
   dataFormat: {
-    description: `The return value from community's contract always bytes32. For ...`,
+    description: `The return value is a bytes32 that can be converted directly to uint256. Note that to maintain arithmetic precision, the value is multiplied by 10^18 . See Example tab for, well, example.`,
   },
   keyFormat: {
     crypto: {
