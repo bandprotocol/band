@@ -23,7 +23,18 @@
   font-style: normal;
   font-weight: 500;
 }
-
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Bold.ttf');
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Black.ttf');
+  font-style: normal;
+  font-weight: 900;
+}
 @font-face {
   font-family: 'Avenir';
   src: url('/fonts/Avenir-Bold.ttf');

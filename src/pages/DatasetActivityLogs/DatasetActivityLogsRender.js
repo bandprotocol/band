@@ -211,11 +211,6 @@ const Broadcast = ({
         <Text mr={2} fontSize="14px" color="#9e9e9e">
           {moment.unix(timestamp).pretty()}
         </Text>
-
-        <Image src={SecureSrc} width="12px" />
-        <Text fontSize="14px" ml={1} color="#9baeda">
-          tx {tx_hash}
-        </Text>
       </Flex>
       {Object.entries(reported_data)
         .sort((a, b) => (a[0] < b[0] ? -1 : 1))
