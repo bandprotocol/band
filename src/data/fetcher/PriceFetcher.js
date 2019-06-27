@@ -1,6 +1,7 @@
 import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
+import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
 
 const ALLTYPE = {
@@ -100,14 +101,15 @@ export const PricePairFetcher = withRouter(
       for (const report of reports) {
         const { reportedData, timestamp } = report
         const kvs = Object.entries(reportedData)
-        for (const kv of kvs) {
-          if (!providers[kv[0]]) {
-            providers[kv[0]] = []
+        for (const [key, value] of kvs) {
+          const address = key.toLowerCase()
+          if (!providers[address]) {
+            providers[address] = []
           }
-          providers[kv[0]] = providers[kv[0]].concat([
+          providers[address] = providers[address].concat([
             {
               time: timestamp,
-              value: parseInt(kv[1]) / 1e18,
+              value: parseInt(value) / 1e18,
             },
           ])
         }
@@ -125,7 +127,7 @@ export const PricePairFetcher = withRouter(
 
       return Object.keys(providers).map((k, i) => {
         return {
-          name: 'detail_',
+          name: getProvider(k),
           status: 'status',
           address: k,
           feed: providers[k],
