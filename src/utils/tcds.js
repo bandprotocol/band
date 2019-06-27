@@ -5,28 +5,36 @@ import USAFootballSrc from 'images/football.svg'
 import BaseballSrc from 'images/baseball.svg'
 
 // Fiat Image
-import FiatSrc from 'images/fiat.svg'
-import CrpytoSrc from 'images/crypto.svg'
-import StockSrc from 'images/stock.svg'
-import CommoditySrc from 'images/gold.svg'
+import ERC20 from 'images/erc20.svg'
+import CrpytoSrc from 'images/cryptoUSD.svg'
+import StockSrc from 'images/stockUp.svg'
+import CommoditySrc from 'images/fiat.svg'
 
 export const getTCDInfomation = prefix =>
   ({
-    'fiat:': {
-      image: FiatSrc,
-      label: 'Fiat',
-    },
     'crypto:': {
       image: CrpytoSrc,
-      label: 'Crypto',
+      label: 'Crypto-Fiat Conversion',
+      shortLabel: 'Crypto-Fiat',
+      order: 1,
     },
-    'useq:': {
-      image: StockSrc,
-      label: 'USeq',
+    'erc20:': {
+      image: ERC20,
+      label: 'ERC-20 Pairs',
+      shortLabel: 'ERC-20',
+      order: 2,
     },
     'fx:': {
       image: CommoditySrc,
-      label: 'Fx',
+      label: 'Foreign Exchange',
+      shortLabel: 'FX',
+      order: 3,
+    },
+    'useq:': {
+      image: StockSrc,
+      label: 'US Equities',
+      shortLabel: 'US Equities',
+      order: 4,
     },
     'nba:': {
       image: BasketballSrc,

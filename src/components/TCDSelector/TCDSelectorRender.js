@@ -86,13 +86,13 @@ const CurrentCard = styled(Flex)`
     & .img-inactive {
       display: none;
     }
-  
+
   `
       : `
       & .img-active {
         display: none;
       }
-    
+
       & .img-inactive {
         display: block;
       }
@@ -111,15 +111,29 @@ const CurrentCard = styled(Flex)`
     }
     `
         : ``}
-      
+
     }
   }
 `
 
-const List = ({ image, label, datapoints, path, index, handleSelect }) => (
+const List = ({
+  image,
+  label,
+  shortLabel,
+  datapoints,
+  path,
+  index,
+  handleSelect,
+}) => (
   <NavLink to={path} style={{ textDecoration: 'none' }}>
     <SelectionList onClick={() => handleSelect(index)}>
-      <Image src={image} />
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        style={{ minWidth: '50px' }}
+      >
+        <Image src={image} />
+      </Flex>
       <Flex flexDirection="column" ml="14px">
         <Text fontSize="14px" fontWeight="900" color="#3b57d1">
           {label}
@@ -245,13 +259,21 @@ export default class TCDSelector extends React.Component {
                 my="8px"
                 style={{ height: '2px' }}
               />
-              {tcds.map((each, i) => (
-                <List
-                  index={i}
-                  handleSelect={this.handleSelect.bind(this)}
-                  {...each}
-                />
-              ))}
+              {tcds
+                .sort((a, b) => {
+                  if (a.order > b.order) return 1
+                  return -1
+                })
+                .map(
+                  (each, i) =>
+                    console.log(each) && (
+                      <List
+                        index={i}
+                        handleSelect={this.handleSelect.bind(this)}
+                        {...each}
+                      />
+                    ),
+                )}
             </SelectionContainer>
           </Flex>
         </ClickOutSide>

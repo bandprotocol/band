@@ -236,7 +236,7 @@ export default ({ user, items, showDepositWithdraw }) => {
           <ProvidersRow
             user={user}
             key={i}
-            detail={getProvider(dataSourceAddress.toLowerCase())}
+            detail={getProvider(dataSourceAddress).name}
             rank={rank}
             dataSourceAddress={dataSourceAddress}
             tcdAddress={tcdAddress}
