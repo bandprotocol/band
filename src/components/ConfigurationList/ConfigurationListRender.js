@@ -32,7 +32,7 @@ export default ({ params, communityAddress }) => (
       <Flex width={1} justifyContent="flex-end">
         <CustomButton>
           <NavLink
-            to={`/community/${communityAddress}/proposal`}
+            to={`/community/${communityAddress}/parameters`}
             style={{ textDecoration: 'none', color: 'white' }}
           >
             Propose Change
