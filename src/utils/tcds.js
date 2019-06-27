@@ -1,25 +1,47 @@
 // Sport Image
 import BasketballSrc from 'images/basketball.svg'
-import SoccerSrc from 'images/basketball.svg'
-import USAFootballSrc from 'images/basketball.svg'
-import BaseballSrc from 'images/basketball.svg'
+import SoccerSrc from 'images/soccer.svg'
+import USAFootballSrc from 'images/football.svg'
+import BaseballSrc from 'images/baseball.svg'
+
+// Fiat Image
+import FiatSrc from 'images/fiat.svg'
+import CrpytoSrc from 'images/crypto.svg'
+import StockSrc from 'images/stock.svg'
+import CommoditySrc from 'images/gold.svg'
 
 export const getTCDInfomation = prefix =>
   ({
     'fiat:': {
-      image: BaseballSrc,
+      image: FiatSrc,
       label: 'Fiat',
     },
     'crypto:': {
-      image: BasketballSrc,
+      image: CrpytoSrc,
       label: 'Crypto',
     },
     'stock:': {
-      image: SoccerSrc,
+      image: StockSrc,
       label: 'Stock',
     },
     'commod:': {
-      image: USAFootballSrc,
+      image: CommoditySrc,
       label: 'Commodity',
+    },
+    'nba:': {
+      image: BasketballSrc,
+      label: 'NBA',
+    },
+    'mlb:': {
+      image: BaseballSrc,
+      label: 'MLB',
+    },
+    'nfl:': {
+      image: USAFootballSrc,
+      label: 'NFL',
+    },
+    'epl:': {
+      image: SoccerSrc,
+      label: 'Soccer',
     },
   }[prefix] || { image: USAFootballSrc, label: 'Unknown' })

@@ -3,7 +3,6 @@ import { Flex, Box, Text, Image, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
-import Snippet from 'components/Snippet'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import {
@@ -158,9 +157,6 @@ export default class IdentityPage extends React.Component {
         {...this.props}
       >
         <PageContainer>
-          <Box mt="-100px">
-            <Snippet dataset={communityName} />
-          </Box>
           <Box mt={5}>
             <IdentityFetcher
               nList={this.state.nIdentityList}

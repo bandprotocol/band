@@ -3,7 +3,6 @@ import colors from 'ui/colors'
 import moment from 'moment'
 import { Flex, Box, Text, Card, Image, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
-import PageContainer from 'components/PageContainer'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import DataCard from 'components/DataCard'
@@ -27,19 +26,13 @@ const renderDataPoints = (pairs, type) => (
             label={pair}
             k={pair}
             v={() => (
-              <Card
-                flex="0 0 auto"
-                bg={colors.grey.dark}
-                py={2}
-                px={3}
-                borderRadius="4px"
-              >
+              <Card flex="0 0 auto" bg="white" py={2} px={3} borderRadius="4px">
                 <Text
                   ml="auto"
                   fontFamily="code"
                   fontSize={14}
                   fontWeight="bold"
-                  color="white"
+                  color="#4a4a4a"
                 >
                   {value.toLocaleString('en-US', {
                     currency: 'USD',

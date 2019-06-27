@@ -104,8 +104,6 @@ export const PricePairFetcher = withRouter(
         allProvidersByPairQL(pair, moment(from).unix()),
       )
 
-      console.warn('pair ', pair)
-
       const reports = await Utils.getDataRequest(
         '/0x0233b33A43081cfeb7B49caf623b2b5841dB7596/data-points',
         { key: pair },
@@ -139,7 +137,6 @@ export const PricePairFetcher = withRouter(
       }
 
       return Object.keys(providers).map((k, i) => {
-        console.warn(providers[k].slice(-1))
         return {
           name: 'detail_',
           status: 'status',

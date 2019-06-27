@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Button } from 'ui/common'
+import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
 import { getParameterDetail } from 'utils/helper'
 
@@ -13,7 +14,7 @@ const CustomButton = styled(Button).attrs({
   padding: 9px 17px;
 `
 
-export default ({ params }) => (
+export default ({ params, communityAddress }) => (
   <Flex
     flexDirection="column"
     mt="30px"
@@ -29,7 +30,14 @@ export default ({ params }) => (
         Configurations
       </Text>
       <Flex width={1} justifyContent="flex-end">
-        <CustomButton>Propose Change</CustomButton>
+        <CustomButton>
+          <NavLink
+            to={`/community/${communityAddress}/proposal`}
+            style={{ textDecoration: 'none', color: 'white' }}
+          >
+            Propose Change
+          </NavLink>
+        </CustomButton>
       </Flex>
     </Flex>
     <Flex flexWrap="wrap" mt="28px">

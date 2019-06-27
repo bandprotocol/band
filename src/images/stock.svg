@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="45" height="44" viewBox="0 0 45 44">
+    <defs>
+        <filter id="a" width="275.9%" height="275.9%" x="-87.9%" y="-87.9%" filterUnits="objectBoundingBox">
+            <feOffset dy="5" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <linearGradient id="b" x1="0%" x2="99.393%" y1="32.569%" y2="32.569%">
+            <stop offset="0%" stop-color="#5269FF"/>
+            <stop offset="100%" stop-color="#4890FF"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd" filter="url(#a)" transform="translate(8 3)">
+        <path fill="#F2F5FF" fill-rule="nonzero" d="M2.243.032h26.633v26.659H2.243z"/>
+        <path fill="url(#b)" d="M23.746 13.258l-5.48 1.233-4.032-6.543-5.506 1.124-3.354-5.994-1.29.722 3.88 6.938 5.553-1.134 4.042 6.56 5.621-1.263 5.696 6.932V19.5z"/>
+        <g fill="#6B8BF5" fill-rule="nonzero">
+            <path d="M24.94 20.227h1.776v6.437H24.94zM20.353 16.676h1.776V26.69h-1.776zM15.603 16.676h1.776v9.988h-1.776zM10.853 11.35h1.776v15.315h-1.776zM6.104 11.942H7.88v14.723H6.104z"/>
+        </g>
+        <g fill="#4B6FE6" fill-rule="nonzero">
+            <path d="M24.94 22.472h1.776v4.202H24.94zM20.353 20.153h1.776v6.538h-1.776zM15.603 20.153h1.776v6.521h-1.776zM10.853 16.676h1.776v9.998h-1.776zM6.104 17.063H7.88v9.61H6.104z"/>
+        </g>
+        <path fill="#FFCA55" fill-rule="nonzero" d="M28.876 26.1l-26.041-.025V.032H1.65v2.456H.468v1.184H1.65v3.565H.468v1.184H1.65v3.565H.468v1.184H1.65v3.565H.468v1.183H1.65v3.567H.468v1.184H1.65v3.405l-1.183-.001-.001 1.183 1.184.002v1.182h1.184V27.26l26.04.024z"/>
+    </g>
+</svg>
