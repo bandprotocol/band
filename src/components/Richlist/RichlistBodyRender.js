@@ -104,7 +104,7 @@ export default ({ items }) => {
             balance={balance.pretty()}
             key={i}
             percentage={percentage + '%'}
-            txLink={`https://rinkeby.etherscan.io/token/${tokenAddress}?a=${address}`}
+            txLink={`https://kovan.etherscan.io/token/${tokenAddress}?a=${address}`}
           />
         )
       })}

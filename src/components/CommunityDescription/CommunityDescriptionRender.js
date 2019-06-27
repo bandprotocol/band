@@ -61,7 +61,7 @@ export default ({
           <Flex flexDirection="row" alignItems="center">
             <Address>{address}</Address>
             <TxHashLink
-              href={`https://rinkeby.etherscan.io/address/${address}`}
+              href={`https://kovan.etherscan.io/address/${address}`}
               pl="5px"
             />
           </Flex>
@@ -70,7 +70,7 @@ export default ({
           <Flex flexDirection="row" alignItems="center">
             <Address>{tokenAddr}</Address>
             <TxHashLink
-              href={`https://rinkeby.etherscan.io/address/${tokenAddr}`}
+              href={`https://kovan.etherscan.io/address/${tokenAddr}`}
               pl="5px"
             />
           </Flex>

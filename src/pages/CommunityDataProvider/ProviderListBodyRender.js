@@ -247,7 +247,7 @@ export default ({ user, items, showDepositWithdraw }) => {
             status={status}
             totalOwnership={totalOwnership}
             showDepositWithdraw={showDepositWithdraw}
-            txLink={`https://rinkeby.etherscan.io/address/${dataSourceAddress}`}
+            txLink={`https://kovan.etherscan.io/address/${dataSourceAddress}`}
           />
         )
       })}

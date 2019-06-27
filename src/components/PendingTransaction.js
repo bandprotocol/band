@@ -176,7 +176,7 @@ export default ({ title, type, txHash, status, confirm }) => (
     <Flex py={3}>
       <Flex flex={1} style={{ minWidth: 0 }}>
         <EllipsisText>{title}</EllipsisText>
-        <TxHashLink href={'https://rinkeby.etherscan.io/tx/' + txHash} />
+        <TxHashLink href={'https://kovan.etherscan.io/tx/' + txHash} />
       </Flex>
       <TxType type={type} />
     </Flex>

@@ -96,7 +96,7 @@ export default ({ items }) => (
           quantity={quantity.pretty()}
           timeStamp={timeStamp.formal()}
           key={i}
-          txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
+          txLink={`https://kovan.etherscan.io/tx/${txHash}`}
         />
       )
     })}

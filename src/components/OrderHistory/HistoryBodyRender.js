@@ -54,7 +54,7 @@ export default ({ items }) => (
           amount={amount.pretty()}
           type={type}
           key={i}
-          txLink={`https://rinkeby.etherscan.io/tx/${txHash}`}
+          txLink={`https://kovan.etherscan.io/tx/${txHash}`}
         />
       )
     })}

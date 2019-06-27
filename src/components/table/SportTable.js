@@ -12,7 +12,7 @@ export default createTable({
       data: (d, i) => (
         <Link
           target="_blank"
-          href={`http://rinkeby.etherscan.io/address/${d.address}`}
+          href={`http://kovan.etherscan.io/address/${d.address}`}
         >
           <Text fontFamily="code">{d.address.slice(0, 18)}</Text>
         </Link>

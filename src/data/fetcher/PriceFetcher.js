@@ -43,6 +43,10 @@ export const PricePairFetcher = withRouter(
         key: pair,
       })
 
+      if (reports.length < 2) {
+        reports.push(reports[0])
+      }
+
       const providers = {}
       const providerLastUpdate = {}
       for (const report of reports) {
@@ -82,7 +86,10 @@ export const PricePairFetcher = withRouter(
           name: getProvider(k).name,
           status: 'status',
           address: k,
-          feed: providers[k],
+          feed: providers[k].map(({ time, value }) => ({
+            time: moment(time * 1000),
+            value: value,
+          })),
           lastUpdate: moment(providerLastUpdate[k].timestamp * 1000),
           lastValue: providerLastUpdate[k].value / 1e18,
         }

@@ -56,7 +56,7 @@ export default ({ loading, txHash, hideModal }) => (
             >
               Your identity has been verified.
             </Text>
-            <AbsoluteLink href={`https://rinkeby.etherscan.io/tx/${txHash}`}>
+            <AbsoluteLink href={`https://kovan.etherscan.io/tx/${txHash}`}>
               <Image src={OutLinkSrc} />
             </AbsoluteLink>
           </Flex>
