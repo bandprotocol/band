@@ -10,7 +10,7 @@ import ConfigurationList from 'components/ConfigurationList'
 
 class CommunityDataProvider extends React.Component {
   render() {
-    const { user, tokenAddress, name, prefix } = this.props
+    const { user, tokenAddress, name, prefix, tcdAddress } = this.props
     return (
       <PageStructure
         name={name}
@@ -45,7 +45,12 @@ class CommunityDataProvider extends React.Component {
         {...this.props}
       >
         <Flex mt="30px" flexDirection="column">
-          <ProviderList user={user} tokenAddress={tokenAddress} pageSize={10} />
+          <ProviderList
+            user={user}
+            tokenAddress={tokenAddress}
+            tcdAddress={tcdAddress}
+            pageSize={10}
+          />
           <ConfigurationList prefix={prefix} communityAddress={tokenAddress} />
         </Flex>
       </PageStructure>

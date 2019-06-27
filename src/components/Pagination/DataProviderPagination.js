@@ -3,10 +3,11 @@ import { withRouter } from 'react-router-dom'
 import { numDataProviders } from 'selectors/tcd'
 import PaginationRender from './PaginationRender'
 
-const mapStateToProps = (state, { tokenAddress, pageSize }) => ({
+const mapStateToProps = (state, { tokenAddress, pageSize, tcdAddress }) => ({
   numberOfPages: Math.ceil(
     numDataProviders(state, {
       address: tokenAddress,
+      tcdAddress,
     }) / pageSize,
   ),
 })

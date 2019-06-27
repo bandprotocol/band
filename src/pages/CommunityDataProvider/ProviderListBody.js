@@ -30,12 +30,13 @@ const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
 
 const mapStateToProps = (
   state,
-  { tokenAddress, currentPage, pageSize, user },
+  { tokenAddress, currentPage, pageSize, user, tcdAddress },
 ) => {
   const items = dataProvidersSelector(state, {
     address: tokenAddress,
     page: currentPage,
     pageSize,
+    tcdAddress,
   })
   while (items.length < pageSize) {
     items.push(null)
