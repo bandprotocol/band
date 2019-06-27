@@ -2,12 +2,13 @@ import React from 'react'
 import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
 import { Flex, Text, Box, Card, Button } from 'ui/common'
+import { getTCDInfomation } from 'utils/tcds'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.svg'
 
 const Header = styled(Card)`
-  height: 438px;
+height: 438px;
   width: 100%;
   background: url('${HeaderBackgroundSrc}');
   background-repeat: no-repeat;
@@ -134,7 +135,13 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
                   key={i}
                   community={community}
                   bandPrice={bandPrice}
-                  currentTcd={Object.keys(community.tcds)[0]}
+                  defaultTcd={
+                    Object.keys(community.tcds).find(
+                      tcdAddr =>
+                        getTCDInfomation(community.tcds[tcdAddr].prefix)
+                          .order === 1,
+                    ) || Object.keys(community.tcds)[0]
+                  }
                   isTcd
                   onClick={() =>
                     history.push(

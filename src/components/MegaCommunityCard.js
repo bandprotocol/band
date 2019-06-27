@@ -104,9 +104,6 @@ export default ({
   community: {
     tokenAddress,
     name,
-    banner,
-    website,
-    organization,
     description,
     marketCap,
     price,
@@ -117,7 +114,7 @@ export default ({
   onClick,
   bgColor,
   statusBg,
-  currentTcd,
+  defaultTcd,
   isTcd,
 }) => (
   <StyledCard
@@ -175,7 +172,7 @@ export default ({
                 Overview
               </Button>
             </Link>
-            <Link to={`/community/${tokenAddress}/${currentTcd}/dataset`}>
+            <Link to={`/community/${tokenAddress}/${defaultTcd}/dataset`}>
               <Button
                 variant="white"
                 ml={3}

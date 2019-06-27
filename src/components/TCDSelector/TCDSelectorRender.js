@@ -162,7 +162,9 @@ export default class TCDSelector extends React.Component {
     currentOption:
       this.props.tcds.find(
         tcd => tcd.tcdAddress === this.props.match.params.tcd,
-      ) || this.props.tcds[0],
+      ) ||
+      this.props.tcds.find(tcd => tcd.order === 1) ||
+      this.props.tcds[0],
   }
 
   componentDidUpdate(prevProps) {
