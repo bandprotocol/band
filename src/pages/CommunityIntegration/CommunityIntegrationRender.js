@@ -5,6 +5,7 @@ import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
 import Integration from 'data/Integration/index'
+import DataHeader from 'components/DataHeader'
 
 const RoundButton = styled(Button)`
   margin: auto 20px;
@@ -109,28 +110,15 @@ export default class CommunityIntegrationRender extends React.Component {
         name={communityName}
         breadcrumb={{ path: 'integration', label: 'Integration' }}
         renderHeader={() => (
-          <Flex flexDirection="column" style={{ width: '100%' }}>
-            <Flex flexDirection="column" pl="52px">
-              <Text
-                fontSize="27px"
-                color="white"
-                fontWeight="900"
-                width="50%"
-                style={{ lineHeight: '38px' }}
-              >
-                {tcdPrefix + ' ' + info.h1}
-              </Text>
-              <Text
-                fontSize="18px"
-                color="white"
-                fontWeight="500"
-                width="60%"
-                style={{ lineHeight: '33px' }}
-              >
-                {info.h2}
-              </Text>
-            </Flex>
-          </Flex>
+          <DataHeader
+            lines={[
+              `Integrate Off-Chain ${info.label[0].toUpperCase() +
+                info.label.slice(1).toLowerCase()} Data to`,
+              `Your Smart Contracts in Minutes`,
+              `Looking for a simple, decentralized, and secured way for your Dapps to`,
+              `consume trusted ${info.label.toLowerCase()} information? We got you covered!`,
+            ]}
+          />
         )}
         {...this.props}
       >

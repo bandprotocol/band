@@ -4,8 +4,7 @@ export default {
     `Copy-paste QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32.`,
     `Instantiate a QueryInterface object with Lottery community contract address at 0x6863019Ec1A5f675ce64699020A338Ee2256B981. Power ball result can be obtained by query with key PWB/20190420. Note Power ball result consist of 7 number, so we represent it by using bytes7.`,
   ],
-  h1: `Integrate Off-Chain lottery Data to Your Smart Contracts in Minutes!`,
-  h2: `Looking for a simple, decentralized, and secured way for your Dapps to consume trusted lottery information? We got you covered!`,
+  label: 'lottery',
   example: `Say you have a simple Power ball rewarding contract. Participant can pay 1 finney to submit his/her guess to the contract before 04/20/2019. Participant can claim reward (all ETH in the contract) if he/she has submitted the right guess. 👇👇👇`,
   contractName: 'PowerBallContract',
   dataFormat: {

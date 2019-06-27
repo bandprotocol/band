@@ -4,8 +4,7 @@ export default {
     `Copy-paste QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32.`,
     `Instantiate a QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key 20190427/LAC-GSW and the scores was encoded in first byte and second byte of the return value.`,
   ],
-  h1: `Integrate Off-Chain Sport Events Data to Your Smart Contracts in Minutes!`,
-  h2: `Looking for a simple, decentralized, and secured way for your Dapps to consume trusted sport information? We got you covered!`,
+  label: 'sport',
   example: `⚾️ Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If LAC (a basketball team) win first bettor will receive all ETH in the contract. If GSW (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
   contractName: 'SportBettingContract',
   dataFormat: {

@@ -4,8 +4,7 @@ export default {
     `Copy-paste QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32.`,
     `Instantiate a QueryInterface object with identity community contract address at 0x616aa37B3e630fce6d96Abc2Afa767aa98280743. Use sender's address to ask the identity community whether sender has identity or not. The community will return bytes32(0) if sender has no identity and return bytes32(1) if sender has identity.`,
   ],
-  h1: `Integrate Off-Chain Identity Data to Your Smart Contracts in Minutes!`,
-  h2: `Looking for a simple, decentralized, and secured way for your Dapps to consume trusted identity information? We got you covered!`,
+  label: 'identitity',
   example: `Say you have a simple poll contract for election (in this case we only have 2 candidates). Every address with know identity can paticipate in voting. To protect our voting against sybil attack we will the idenity community before any address can commit the vote. 👇👇👇`,
   solidity: [
     `

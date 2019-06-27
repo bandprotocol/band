@@ -7,6 +7,7 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import PaginationRender from 'components/Pagination/PaginationRender'
 import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
+import DataHeader from 'components/DataHeader'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
@@ -267,31 +268,14 @@ class RenderLogs extends React.Component {
 export default props => (
   <PageStructure
     renderHeader={() => (
-      <Flex flexDirection="column" style={{ width: '100%' }}>
-        <Flex flexDirection="column" m="15px 52px">
-          <Text
-            fontSize="27px"
-            color="white"
-            fontWeight="900"
-            width="500px"
-            style={{ lineHeight: '38px' }}
-          >
-            Monitor Smart Contract Activities
-            <br />
-            See How the Data Comes to Life
-          </Text>
-          <Text
-            fontSize="18px"
-            color="white"
-            fontWeight="500"
-            width="650px"
-            style={{ lineHeight: '33px' }}
-          >
-            Spicy jalapeno bacon ipsum dolor amet rump beef doner ribs shoulder.
-            Short ribs sirloin chicken, hamburger swine shank tail
-          </Text>
-        </Flex>
-      </Flex>
+      <DataHeader
+        lines={[
+          'Monitor Smart Contract Activities',
+          'See How the Data Comes to Life',
+          'Band Protocol aggregates data from multiple sources.',
+          'The data are validated on the smart contract.',
+        ]}
+      />
     )}
     {...props}
   >

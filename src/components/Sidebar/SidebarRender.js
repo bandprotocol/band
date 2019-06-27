@@ -83,6 +83,8 @@ export default ({
         borderRadius="50%"
         style={{
           boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
+          border: 'solid 4px rgba(255,255,255,0.9)',
+          padding: 5,
         }}
       />
       <Flex mb="20px">

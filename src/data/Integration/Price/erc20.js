@@ -4,8 +4,7 @@ export default {
     `Copy-paste QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32 .`,
     `Instantiate a QueryInterface object with PriceCommunity contract address at 0x8B3dBb2Db70120Cf4D24c739E1c296DE98644238 . ETH/USD exchange rate can be obtained by query with key ETH/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
-  h1: `Integrate Off-Chain Price Data to Your Smart Contracts in Minutes!`,
-  h2: `Looking for a simple, decentralized, and secured way for your Dapps to consume trusted price information? We got you covered!`,
+  label: 'price',
   example: `🚀 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD. 👇👇👇`,
   contractName: 'TicketSellerContract',
   dataFormat: {
