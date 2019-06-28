@@ -125,35 +125,35 @@ class CommunityPricePage extends React.Component {
         )}
         {...this.props}
       >
-        <DataCard
+        {/* <DataCard
           headerText={`${this.state.numDataPoints} Keys for ${
             getTCDInfomation(tcdPrefix).label
           } `}
           withSearch={false}
         >
-          <CurrentPriceFetcher
-            tcdAddress={tcdAddress}
-            setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
-          >
-            {({ fetching, data }) =>
-              fetching ? (
-                <Loading
-                  height={281}
-                  width={924}
-                  rects={[
-                    [0, 0, 120, 32],
-                    [880, 0, 32, 32],
-                    [0, 52, 924, 61],
-                    [0, 135, 924, 61],
-                    [0, 218, 924, 61],
-                  ]}
-                />
-              ) : (
-                renderDataPoints(data, tcdAddress, tcdPrefix)
-              )
-            }
-          </CurrentPriceFetcher>
-        </DataCard>
+        </DataCard> */}
+        <CurrentPriceFetcher
+          tcdAddress={tcdAddress}
+          setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
+        >
+          {({ fetching, data }) =>
+            fetching ? (
+              <Loading
+                height={281}
+                width={924}
+                rects={[
+                  [0, 0, 120, 32],
+                  [880, 0, 32, 32],
+                  [0, 52, 924, 61],
+                  [0, 135, 924, 61],
+                  [0, 218, 924, 61],
+                ]}
+              />
+            ) : (
+              renderDataPoints(data, tcdAddress, tcdPrefix)
+            )
+          }
+        </CurrentPriceFetcher>
       </PageStructure>
     )
   }

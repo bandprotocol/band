@@ -14,8 +14,8 @@ const DataPointContainer = styled(Card).attrs(p => ({
   transition: all 250ms;
   cursor: pointer;
   overflow: hidden;
-  background-color: #6b8bf5;
-  color: white;
+  background-color: #fff;
+  border: solid 1px #e7ecff;
   &:hover {
     box-shadow: ${colors.shadow.lightActive};
   }
@@ -79,15 +79,16 @@ export default class DataPoint extends React.Component {
       Logo = () => <div />,
     } = this.props
     return (
-      <DataPointContainer mb="20px">
+      <DataPointContainer mb="12px">
         <Flex
           onClick={() => this.setState({ expand: !this.state.expand })}
-          px="18px"
+          pl="60px"
+          pr="30px"
           alignItems="center"
           style={{ height: '60px', overflow: 'hidden' }}
         >
-          <Flex flex="0 0 130px" alignItems="center">
-            <Text fontFamily="code" fontSize={13} color="light">
+          <Flex flex="0 0 160px" alignItems="center">
+            <Text fontFamily="code" fontSize={14} color="blue">
               <AutoDate>{updatedAt}</AutoDate>
             </Text>
           </Flex>

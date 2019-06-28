@@ -16,7 +16,7 @@ const Header = styled(Flex).attrs({
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  height: 179px;
+  height: 180px;
   border-radius: 10px;
 `
 
@@ -28,6 +28,7 @@ export default ({
   children,
   breadcrumb = { path: 'dataset', label: 'Explore data' },
   renderHeader = () => null,
+  headerStyle = {},
 }) => (
   <Box width="100%">
     <PageContainer withSidebar>
@@ -46,7 +47,7 @@ export default ({
           },
         ]}
       />
-      <Header>{renderHeader()}</Header>
+      <Header style={headerStyle}>{renderHeader()}</Header>
       {children}
     </PageContainer>
   </Box>
