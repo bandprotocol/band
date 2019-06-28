@@ -42,6 +42,7 @@ const DWButton = styled(Button).attrs({
 const ProvidersRow = ({
   user,
   rank,
+  image,
   detail,
   dataSourceAddress,
   tcdAddress,
@@ -75,7 +76,8 @@ const ProvidersRow = ({
         {rank}
       </Text>
     </Tab>
-    <Tab flex={20}>
+    <Tab flex={20} alignItems="center">
+      <Image src={image} width="20px" mr={1} />
       <Text
         color={colors.text}
         fontSize="14px"
@@ -250,6 +252,7 @@ export default ({ user, items, showDepositWithdraw }) => {
           <ProvidersRow
             user={user}
             key={i}
+            image={getProvider(dataSourceAddress).image}
             detail={getProvider(dataSourceAddress).name}
             rank={rank}
             dataSourceAddress={dataSourceAddress}
