@@ -336,9 +336,16 @@ export default class CommunityIntegrationRender extends React.Component {
                       minHeight: '50px',
                     }}
                   >
-                    <Flex style={{ maxWidth: '40px' }} mr="5px">
-                      <Image src={key[2]} width="40px" height="40px" flex={1} />
-                    </Flex>
+                    {key[2] && (
+                      <Flex style={{ maxWidth: '40px' }} mr="5px">
+                        <Image
+                          src={key[2]}
+                          width="40px"
+                          height="40px"
+                          flex={1}
+                        />
+                      </Flex>
+                    )}
                     <Text fontSize="16px" fontWeight={500} flex={1}>
                       {key[0]}
                     </Text>
