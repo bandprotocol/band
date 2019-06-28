@@ -42,7 +42,7 @@ import Web3 from 'web3'
 
 // Select network (HARDCODE)!!!
 let RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
-const WALLET_ENDPOINT = 'http://localhost:3000'
+let WALLET_ENDPOINT = 'https://wallet.bandprotocol.com'
 const network = localStorage.getItem('network') || 'kovan'
 switch (network) {
   case 'mainnet':
@@ -52,6 +52,7 @@ switch (network) {
   case 'rinkeby':
   case 'local':
     RPC_ENDPOINT = 'http://localhost:8545'
+    WALLET_ENDPOINT = 'http://localhost:3000'
 }
 
 const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
