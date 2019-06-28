@@ -338,11 +338,15 @@ export default class CommunityIntegrationRender extends React.Component {
                   >
                     {key[2] && (
                       <Flex style={{ maxWidth: '40px' }} mr="5px">
-                        <Image
-                          src={key[2]}
-                          width="40px"
-                          height="40px"
-                          flex={1}
+                        <Box
+                          style={{
+                            width: 40,
+                            height: 40,
+                            backgroundImage: `url(${key[2]})`,
+                            backgroundSize: 'contain',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                          }}
                         />
                       </Flex>
                     )}
