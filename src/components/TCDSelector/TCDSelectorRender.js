@@ -4,8 +4,6 @@ import { Flex, Image, Text, SubHighlightNavLink } from 'ui/common'
 import { NavLink } from 'react-router-dom'
 import colors from 'ui/colors'
 import ClickOutSide from 'react-click-outside'
-import TCDActive from 'images/tcdActive.svg'
-import TCDInactive from 'images/tcdInactive.svg'
 import Triangle from 'images/triangle.svg'
 import DataLogInactive from 'images/dataLogInactive.svg'
 import DataSetInactive from 'images/datasetInactive.svg'
@@ -195,11 +193,22 @@ export default class TCDSelector extends React.Component {
     }
   }
 
+  toggleOptions() {
+    if (this.state.show) {
+      this.setState({ show: false })
+      this.props.hideBackdrop()
+    } else {
+      this.setState({ show: true })
+      this.props.showBackdrop()
+    }
+  }
+
   handleSelect(i) {
     this.setState({
       show: false,
       currentOption: this.props.tcds[i],
     })
+    this.props.hideBackdrop()
   }
 
   render() {
@@ -221,11 +230,16 @@ export default class TCDSelector extends React.Component {
           backgroundColor: 'rgba(0, 0, 0, 0.1)',
         }}
       >
-        <ClickOutSide onClickOutside={() => this.setState({ show: false })}>
+        <ClickOutSide
+          onClickOutside={() => {
+            this.setState({ show: false })
+            this.props.hideBackdrop()
+          }}
+        >
           <Flex style={{ position: 'relative' }}>
             <CurrentCard
               active={active}
-              onClick={() => this.setState({ show: !this.state.show })}
+              onClick={this.toggleOptions.bind(this)}
             >
               <Flex width="100%" style={{ height: '52px' }}>
                 <Flex

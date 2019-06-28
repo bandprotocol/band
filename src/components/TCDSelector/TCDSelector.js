@@ -1,8 +1,10 @@
+import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import TCDSelectorRender from './TCDSelectorRender'
 import { communityDetailSelector } from 'selectors/communities'
 import { getTCDInfomation } from 'utils/tcds'
+import { BackdropConsumer } from 'context/backdrop'
 
 const mapStateToProps = (state, { communityAddress }) => {
   const community = communityDetailSelector(state, {
@@ -27,4 +29,22 @@ const mapStateToProps = (state, { communityAddress }) => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(TCDSelectorRender))
+export default withRouter(
+  connect(mapStateToProps)(
+    class TCDSelector extends React.Component {
+      render() {
+        return (
+          <BackdropConsumer>
+            {({ showBackdrop, hideBackdrop }) => (
+              <TCDSelectorRender
+                {...this.props}
+                showBackdrop={showBackdrop}
+                hideBackdrop={hideBackdrop}
+              />
+            )}
+          </BackdropConsumer>
+        )
+      }
+    },
+  ),
+)

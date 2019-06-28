@@ -20,7 +20,7 @@ const Left = styled.div`
   min-height: calc(100vh - 60px);
   // position: sticky;
   // top: 60px;
-  z-index: 1;
+  z-index: 4;
   width: 220px;
   flex: 0 0 220px;
   display: flex;
