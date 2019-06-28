@@ -1,3 +1,5 @@
+import hsl from 'hsl-to-hex'
+
 export default {
   purple: {
     light: '#aa93ff',
@@ -61,4 +63,9 @@ export default {
     '#F9F871',
     '#65ff73',
   ],
+  createChartColors: n =>
+    console.log(
+      'COLLASA',
+      [...Array(n)].map((_, i) => hsl(Math.floor((i * 360) / n), 80, 70)),
+    ) || [...Array(n)].map((_, i) => hsl(Math.floor((i * 360) / n), 80, 70)),
 }

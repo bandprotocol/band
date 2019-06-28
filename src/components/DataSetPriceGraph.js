@@ -3,7 +3,7 @@ import colors from 'ui/colors'
 import { Chart } from 'react-google-charts'
 import Loading from 'components/Loading'
 
-export default ({ data }) => (
+export default ({ data, numberOfProvider }) => (
   <Chart
     width="100%"
     style={{ maxWidth: 'calc(100vw - 320px)' }}
@@ -19,7 +19,7 @@ export default ({ data }) => (
     data={data}
     options={{
       // title: 'BTC/USD price movement in the past 7 days',
-      colors: colors.chart,
+      colors: colors.createChartColors(numberOfProvider),
       legend: { position: 'none' },
       vAxis: {
         format: 'currency',

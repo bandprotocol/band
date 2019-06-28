@@ -59,7 +59,7 @@ export const getAsset = symbol =>
     USD: { image: null, label: 'USD 🇺🇸' },
     CNY: { image: null, label: 'CNY 🇨🇳' },
     EUR: { image: null, label: 'EURO 🇪🇺' },
-    GBP: { image: null, label: 'GBP 🇺🇬' },
+    GBP: { image: null, label: 'GBP 🇬🇧' },
     JPY: { image: null, label: 'JPY 🇯🇵' },
     THB: { image: null, label: 'THB 🇹🇭' },
     XAG: {
