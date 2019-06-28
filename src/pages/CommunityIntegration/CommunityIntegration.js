@@ -29,6 +29,8 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
     address: community.get('address'),
     tcdPrefix: tcdPrefix,
     tcdName: tcd && getTCDInfomation(tcd.toJS().prefix).label,
+    // hack for hiding uncompleted tab
+    hideTodo: tcdPrefix === 'useq' || tcdPrefix === 'fx',
   }
 }
 

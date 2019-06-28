@@ -94,10 +94,10 @@ const HighlightText = ({ text }) => {
 }
 
 export default class CommunityIntegrationRender extends React.Component {
-  state = { codingStepNum: 0, tabNum: 0 }
+  state = { codingStepNum: 0, tabNum: this.props.hideTodo ? 1 : 0 }
 
   render() {
-    const { name: communityName, tcdPrefix } = this.props
+    const { name: communityName, tcdPrefix, hideTodo } = this.props
     const info =
       (tcdPrefix && Integration[communityName][tcdPrefix]) ||
       Integration[communityName][Object.keys(Integration[communityName])[0]]
@@ -141,12 +141,15 @@ export default class CommunityIntegrationRender extends React.Component {
               borderBottom: 'solid 1px #e7ecff',
             }}
           >
-            <RoundButton
-              active={this.state.tabNum === 0}
-              onClick={() => this.setState({ tabNum: 0 })}
-            >
-              Example Situation <span>🤔</span>
-            </RoundButton>
+            {/* Hack for hiding */}
+            {hideTodo ? null : (
+              <RoundButton
+                active={this.state.tabNum === 0}
+                onClick={() => this.setState({ tabNum: 0 })}
+              >
+                Example Situation <span>🤔</span>
+              </RoundButton>
+            )}
             <RoundButton
               active={this.state.tabNum === 1}
               onClick={() => this.setState({ tabNum: 1 })}
