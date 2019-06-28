@@ -9,6 +9,8 @@ import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 import DataHeader from 'components/DataHeader'
 
+import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
 import { getFormat } from 'data/Format'
@@ -380,7 +382,15 @@ export default props => (
         >
           {({ fetching, data }) =>
             fetching ? (
-              'Loading ...'
+              <Flex
+                width={1}
+                justifyContent="center"
+                alignItems="center"
+                fontWeight={500}
+                style={{ height: '460px' }}
+              >
+                <CircleLoadingSpinner radius="80px" />
+              </Flex>
             ) : (
               <RenderLogs data={data} symbol={props.symbol} />
             )
