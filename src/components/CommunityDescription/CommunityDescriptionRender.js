@@ -52,12 +52,12 @@ export default ({
         alignSelf="center"
         style={{ borderLeft: 'solid 1px #f2f4f9' }}
       >
-        <Field label="Website">
+        {/* <Field label="Website">
           {link && new URL(link).hostname}
           <TxHashLink href={link} pl="5px" />
-        </Field>
+        </Field> */}
         <Field label="Organization">{organization}</Field>
-        <Field label="Core Contract">
+        {/* <Field label="Core Contract">
           <Flex flexDirection="row" alignItems="center">
             <Address>{address}</Address>
             <TxHashLink
@@ -65,7 +65,7 @@ export default ({
               pl="5px"
             />
           </Flex>
-        </Field>
+        </Field> */}
         <Field label="ERC-20">
           <Flex flexDirection="row" alignItems="center">
             <Address>{tokenAddr}</Address>
