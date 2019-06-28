@@ -24,7 +24,7 @@ const Nav = styled.nav`
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: 5;
 
   ${p =>
     p.isDashboard

@@ -40,34 +40,36 @@ import { toggleFetch } from 'actions'
 // import web3
 import Web3 from 'web3'
 
-// TODO: fix it
-const RPC_ENDPOINT =
-  process.env.NODE_ENV === 'production'
-    ? 'https://rinkeby.infura.io/v3/d3301689638b40dabad8395bf00d3945'
-    : 'http://localhost:8545'
+// Select network (HARDCODE)!!!
+let RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
+const WALLET_ENDPOINT = 'http://localhost:3000'
+const network = localStorage.getItem('network') || 'kovan'
+switch (network) {
+  case 'mainnet':
+  case 'kovan':
+    RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
+    break
+  case 'rinkeby':
+  case 'local':
+    RPC_ENDPOINT = 'http://localhost:8545'
+}
 
 const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 
-// TODO: fix it
 function* baseInitialize() {
   // start fetching state
   yield put(toggleFetch(true))
-  window.BandWallet = new BandWallet(
-    process.env.NODE_ENV === 'production'
-      ? 'https://wallet.bandprotocol.com'
-      : 'http://localhost:3000',
-    {
-      walletPosition: {
-        top: 60,
-        right: 130,
-      },
-      approvalPosition: {
-        bottom: 0,
-        right: 10,
-        zIndex: 30,
-      },
+  window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
+    walletPosition: {
+      top: 60,
+      right: 130,
     },
-  )
+    approvalPosition: {
+      bottom: 0,
+      right: 10,
+      zIndex: 30,
+    },
+  })
 
   window.BandWallet.on('network', ({ name }) => {
     if (name !== localStorage.getItem('network')) {
