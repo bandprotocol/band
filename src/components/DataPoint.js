@@ -41,8 +41,9 @@ const KeyBox = styled(Flex)`
   min-width: 450px;
   min-height: 36px;
   transition: all 200ms;
+  border: solid 1px #e7ecff;
   &:hover {
-    box-shadow: 0 2px 5px 0px rgba(10, 0, 40, 0.1);
+    border: solid 1px #d7dfff;
   }
 `
 
@@ -126,7 +127,8 @@ export default class DataPoint extends React.Component {
             </Flex>
             <Flex
               bg="white"
-              py="20px"
+              pt="10px"
+              pb="20px"
               justifyContent="center"
               alignItems="center"
             >
@@ -148,12 +150,21 @@ export default class DataPoint extends React.Component {
                     borderRadius: '10px',
                   }}
                 >
-                  key
+                  <Text color="#ffffff" fontWeight="900" fontSize="12px">
+                    KEY
+                  </Text>
                 </Flex>
-                <Text color="#4a4a4a" fontSize="14px" ml="10px" mr="auto">
+                <Text
+                  fontFamily="code"
+                  fontWeight="500"
+                  color="#4a4a4a"
+                  fontSize="14px"
+                  ml="10px"
+                  mr="auto"
+                >
                   {keyOnChain}
                 </Text>
-                <Text color="#5269ff" fontWeight={500}>
+                <Text mr={2} color="#5269ff" fontWeight={500} fontSize="13px">
                   {this.state.copied ? 'Copied' : 'Click to copy'}
                 </Text>
               </KeyBox>
