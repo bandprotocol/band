@@ -18,6 +18,12 @@ const DataPointContainer = styled(Card).attrs(p => ({
   &:hover {
     box-shadow: ${colors.shadow.lightActive};
   }
+
+  ${p =>
+    !p.expand &&
+    `
+    overflow: hidden;
+  `}
 `
 
 const ExpandableCard = styled(Card)`
@@ -79,7 +85,7 @@ export default class DataPoint extends React.Component {
       Logo = () => <div />,
     } = this.props
     return (
-      <DataPointContainer mb="12px">
+      <DataPointContainer expand={this.state.expand} mb="12px">
         <Flex
           onClick={() => this.setState({ expand: !this.state.expand })}
           pl="60px"

@@ -7,7 +7,7 @@ import Loading from 'components/Loading'
 
 const Container = styled(Box)`
   rect[stroke-opacity] {
-    stroke-width: 0.1 !important;
+    stroke-width: 0 !important;
     stroke: #3b57d1;
   }
 
@@ -53,7 +53,7 @@ export default ({ data, numberOfProvider }) => (
             },
           },
           {
-            format: '#######.########',
+            format: '#######.###########',
             textPosition: 'in',
             textStyle: {
               color: colors.text.light,
