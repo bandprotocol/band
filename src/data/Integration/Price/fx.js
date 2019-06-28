@@ -9,38 +9,44 @@ export default {
   keyFormat: {
     crypto: {
       header: 'List of Available Pairs',
-      description: '......',
+      description:
+        'The following pairs are available for Foreign Exchange trading data.',
       keys: [
         [
-          'BTC/USD',
-          'Price of 1 Bitcoin in United States dollar unit multiply by 10^18',
-          '',
+          'CNY/USD',
+          '1 Chinese Yuan in USD (times by 10^18 )',
+          'https://www.countries-ofthe-world.com/flags-normal/flag-of-China.png',
         ],
         [
-          'ETH/USD',
-          'Price of 1 Ethereum in United States dollar unit multiply by 10^18',
-          '',
-        ],
-        ['MKR/ETH', 'Price of 1 Maker in Ethereum unit multiply by 10^18', ''],
-        [
-          'BAT/ETH',
-          'Price of 1 Basic Attention Token in Ethereum unit multiply by 10^18',
-          '',
+          'EUR/USD',
+          '1 Euro in USD (times by 10^18 )',
+          'https://www.crwflags.com/fotw/images/e/eu-eun.gif',
         ],
         [
-          'USDC/ETH',
-          'Price of 1 USD Coin in Ethereum unit multiply by 10^18',
-          '',
+          'GBP/USD',
+          '1 British Pound in USD (times by 10^18 )',
+          'https://www.countries-ofthe-world.com/flags-normal/flag-of-United-Kingdom.png',
         ],
         [
-          'OMG/ETH',
-          'Price of 1 OmiseGO in Ethereum unit multiply by 10^18',
-          '',
+          'JPY/USD',
+          '1 Japanese Yen in USD (times by 10^18 )',
+          'https://www.countries-ofthe-world.com/flags-normal/flag-of-Japan.png',
         ],
-        ['ZRX/ETH', 'Price of 1 ZeroX in Ethereum unit multiply by 10^18', ''],
-        ['DAI/ETH', 'Price of 1 Dai in Ethereum unit multiply by 10^18', ''],
-        ['REP/ETH', 'Price of 1 Augur in Ethereum unit multiply by 10^18', ''],
-        ['KNC/ETH', 'Price of 1 Band in Ethereum unit multiply by 10^18', ''],
+        [
+          'THB/USD',
+          '1 Thai Baht in USD (times by 10^18 )',
+          'https://www.countries-ofthe-world.com/flags-normal/flag-of-Thailand.png',
+        ],
+        [
+          'XAG/USD',
+          '1 ounce of Silver in USD (times by 10^18 )',
+          'https://img.etimg.com/thumb/height-480,width-640,imgsize-119619,msid-63982286/golden-time-to-buy-silver-imports-to-rise.jpg',
+        ],
+        [
+          'XAU/USD',
+          '1 ounce of Gold in USD (times by 10^18 )',
+          'https://img.etimg.com/thumb/height-480,width-640,msid-68557855,imgsize-148822/gold-4-ts.jpg',
+        ],
       ],
     },
   },
