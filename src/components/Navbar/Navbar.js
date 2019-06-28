@@ -26,6 +26,7 @@ class Navbar extends React.Component {
     this.setState({
       showBlockTransactions: !this.state.showBlockTransactions,
       showSignOut: false,
+      isWalletShow: false,
     })
   }
 
@@ -39,6 +40,7 @@ class Navbar extends React.Component {
     this.setState({
       showSignOut: !this.state.showSignOut,
       showBlockTransactions: false,
+      isWalletShow: false,
     })
   }
 
@@ -54,6 +56,8 @@ class Navbar extends React.Component {
     }
     this.setState({
       isWalletShow: !this.state.isWalletShow,
+      showBlockTransactions: false,
+      showSignOut: false,
     })
   }
 
@@ -72,7 +76,11 @@ class Navbar extends React.Component {
         toggleSignOut={this.toggleSignOut.bind(this)}
         toggleBalance={this.toggleBalance.bind(this)}
         onClickOutside={() =>
-          this.setState({ showBlockTransactions: false, showSignOut: false })
+          this.setState({
+            showBlockTransactions: false,
+            showSignOut: false,
+            isWalletShow: false,
+          })
         }
         toggleShowBlockTransactions={this.toggleBlockTransactions.bind(this)}
       />
