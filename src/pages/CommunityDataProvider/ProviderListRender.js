@@ -13,58 +13,90 @@ const ProviderListHeader = ({ symbol }) => (
     style={{ minHeight: '50px' }}
     alignItems="center"
   >
-    <Flex width="60px" px="10px" />
-    <Flex flex={19} px="10px">
+    <Flex ml="17px" width="60px" px="10px">
       <Text
         color="#4a4a4a"
-        fontSize="12px"
+        fontSize="13px"
+        lineHeight="1.4em"
+        fontWeight={500}
+        fontFamily="Avenir-Heavy"
+      >
+        Rank
+      </Text>
+    </Flex>
+    <Flex flex={20} px="10px">
+      <Text
+        color="#4a4a4a"
+        fontSize="13px"
+        lineHeight="1.4em"
         fontWeight={500}
         fontFamily="Avenir-Heavy"
       >
         Source
       </Text>
     </Flex>
-    <Flex flex={19} px="10px">
+    <Flex flex={20} px="10px">
       <Text
         color="#4a4a4a"
-        fontSize="12px"
+        fontSize="13px"
+        lineHeight="1.4em"
         fontWeight={500}
         fontFamily="Avenir-Heavy"
       >
-        Contract address
+        Contract Address
       </Text>
     </Flex>
-    <Flex flex={16} justifyContent="center" px="10px">
+    <Flex flex={12} justifyContent="center" px="10px">
       <Text
         color="#4a4a4a"
-        fontSize="12px"
-        fontWeight={500}
-        fontFamily="Avenir-Heavy"
+        fontSize="13px"
+        lineHeight="1.4em"
+        fontWeight={700}
+        textAlign="center"
       >
-        {`Provider stake ${symbol && `(${symbol})`}`}
+        {`Provider Stake`}
+        {symbol && (
+          <Text color="#777" fontSize="11px" fontWeight={500}>
+            ({symbol})
+          </Text>
+        )}
       </Text>
     </Flex>
-    <Flex flex={16} justifyContent="center" px="10px">
+    <Flex flex={12} justifyContent="center" px="10px">
       <Text
         color="#4a4a4a"
-        fontSize="12px"
+        fontSize="13px"
+        lineHeight="1.4em"
         fontWeight={500}
         fontFamily="Avenir-Heavy"
+        textAlign="center"
       >
-        {`Total stake ${symbol && `(${symbol})`}`}
+        {`Total Stake`}
+        {symbol && (
+          <Text color="#777" fontSize="11px" fontWeight={500}>
+            ({symbol})
+          </Text>
+        )}
       </Text>
     </Flex>
-    <Flex flex={16} justifyContent="center" px="10px">
+    <Flex flex={12} justifyContent="center" px="10px">
       <Text
         color="#4a4a4a"
-        fontSize="12px"
+        fontSize="13px"
+        lineHeight="1.4em"
         fontWeight={500}
         fontFamily="Avenir-Heavy"
+        textAlign="center"
       >
-        {`Your stake ${symbol && `(${symbol})`}`}
+        {`Your Stake`}
+        {symbol && (
+          <Text color="#777" fontSize="11px" fontWeight={500}>
+            ({symbol})
+          </Text>
+        )}
       </Text>
     </Flex>
-    <Flex flex={25} justifyContent="flex-end" px="10px" />
+    <Flex flex="0 0 265px" justifyContent="flex-end" px="10px" />
   </Flex>
 )
 

@@ -9,8 +9,8 @@ const CustomButton = styled(Button).attrs({
   variant: 'blue',
 })`
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 900;
+  font-size: 15px;
+  font-weight: 700;
   padding: 9px 17px;
 `
 
@@ -26,14 +26,18 @@ export default ({ params, communityAddress }) => (
     }}
   >
     <Flex flexDirection="row" alignItems="center">
-      <Text fontSize="20px" color="#393939" fontWeight="900">
+      <Text fontWeight="700" fontSize="20px">
         Configurations
       </Text>
       <Flex width={1} justifyContent="flex-end">
         <CustomButton>
           <NavLink
             to={`/community/${communityAddress}/parameters`}
-            style={{ textDecoration: 'none', color: 'white' }}
+            style={{
+              textDecoration: 'none',
+              color: 'white',
+              lineHeight: '1.4em',
+            }}
           >
             Propose Change
           </NavLink>

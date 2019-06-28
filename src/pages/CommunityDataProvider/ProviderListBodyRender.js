@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { colors } from 'ui'
-import { Flex, Text, Button, Image, AbsoluteLink } from 'ui/common'
+import { Flex, Box, Text, Button, Image, AbsoluteLink } from 'ui/common'
 import { getProvider } from 'data/Providers'
 import OutImg from 'images/out.svg'
 import ArrowUp from 'images/arrowUp.svg'
@@ -16,10 +16,9 @@ const Tab = styled(Flex).attrs(props => ({
 
 const DWButton = styled(Button).attrs({
   fontSize: '14px',
+  p: '10px 15px 8px 7px',
+  flex: '0 0 auto',
 })`
-  width: 95px;
-  max-width: 95px;
-  padding: 10px 5px;
   border-radius: 17.5px;
   cursor: ${props => (props.user ? 'pointer' : 'default')};
   background-color: ${props => (props.user ? props.bg : '#e3e6ef')};
@@ -67,12 +66,16 @@ const ProvidersRow = ({
     bg={status === 'LISTED' ? '#f9fbff' : 'white'}
     alignItems="center"
   >
-    <Tab width={status === 'LISTED' ? '45px' : '60px'} justifyContent="center">
+    <Tab
+      ml="17px"
+      width={status === 'LISTED' ? '45px' : '60px'}
+      justifyContent="center"
+    >
       <Text color={colors.text} fontSize="14px">
         {rank}
       </Text>
     </Tab>
-    <Tab flex={19}>
+    <Tab flex={20}>
       <Text
         color={colors.text}
         fontSize="14px"
@@ -85,7 +88,7 @@ const ProvidersRow = ({
         {detail}
       </Text>
     </Tab>
-    <Tab flex={19} style={{ position: 'relative' }}>
+    <Tab flex={20} style={{ position: 'relative' }}>
       <Text
         color={colors.text}
         fontSize="14px"
@@ -107,7 +110,7 @@ const ProvidersRow = ({
         />
       </AbsoluteLink>
     </Tab>
-    <Tab flex={16} justifyContent="center">
+    <Tab flex={12} justifyContent="center">
       <Text
         color={colors.text}
         fontSize="14px"
@@ -120,7 +123,7 @@ const ProvidersRow = ({
         {ownerStake.pretty()}
       </Text>
     </Tab>
-    <Tab flex={16} justifyContent="center">
+    <Tab flex={12} justifyContent="center">
       <Text
         color={colors.text}
         fontSize="14px"
@@ -133,7 +136,7 @@ const ProvidersRow = ({
         {stake.pretty()}
       </Text>
     </Tab>
-    <Tab flex={16} justifyContent="center">
+    <Tab flex={12} justifyContent="center">
       <Text
         color={colors.text}
         fontSize="14px"
@@ -146,7 +149,12 @@ const ProvidersRow = ({
         {userStake.pretty()}
       </Text>
     </Tab>
-    <Flex flex={25} flexDirection="row" justifyContent="flex-end" pr="30px">
+    <Flex
+      flex="0 0 265px"
+      flexDirection="row"
+      justifyContent="flex-end"
+      pr="30px"
+    >
       <DWButton
         user={user}
         bg="#42c47f"
@@ -169,13 +177,16 @@ const ProvidersRow = ({
           flexDirection="row"
           style={{ maxHeight: '35px' }}
           justifyContent="center"
+          alignItems="center"
         >
           {user && (
-            <Flex>
-              <Image src={ArrowDown} width="14px" height="14px" />
-            </Flex>
-          )}{' '}
-          <Flex>Deposit</Flex>
+            <Box flex="0 0 auto">
+              <Image mr={2} src={ArrowDown} width="14px" height="14px" />
+            </Box>
+          )}
+          <Text fontSize="13px" fontWeight="700">
+            Deposit
+          </Text>
         </Flex>
       </DWButton>
       <Flex mx="10px" />
@@ -201,13 +212,16 @@ const ProvidersRow = ({
           flexDirection="row"
           style={{ maxHeight: '35px' }}
           justifyContent="center"
+          alignItems="center"
         >
           {user && (
-            <Flex>
-              <Image src={ArrowUp} width="14px" height="14px" />{' '}
-            </Flex>
+            <Box flex="0 0 auto">
+              <Image mr={2} src={ArrowUp} width="14px" height="14px" />
+            </Box>
           )}
-          <Flex>Withdraw</Flex>
+          <Text fontSize="13px" fontWeight="700">
+            Withdraw
+          </Text>
         </Flex>
       </DWButton>
     </Flex>

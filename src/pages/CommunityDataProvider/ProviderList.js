@@ -13,8 +13,8 @@ import { dispatchAsync } from 'utils/reduxSaga'
 const CustomButton = styled(Button).attrs({
   variant: 'blue',
 })`
-  font-size: 16px;
-  font-weight: 900;
+  font-size: 15px;
+  font-weight: 700;
   padding: 9px 17px;
 `
 
@@ -68,17 +68,12 @@ class ProviderList extends React.Component {
         <Flex
           width={1}
           flexDirection="row"
-          py="10px"
-          px="20px"
+          pt="15px"
+          pb="10px"
+          px="25px"
           alignItems="center"
         >
-          <Text
-            fontSize="18px"
-            fontWeight="900"
-            color="#393939"
-            width="190px"
-            ml="10px"
-          >
+          <Text flex="0 0 auto" fontWeight="700" fontSize="20px">
             Data Providers
           </Text>
           <Flex width={1} justifyContent="flex-end">
