@@ -13,6 +13,7 @@ class Navbar extends React.Component {
     isBND: true,
     showBlockTransactions: false,
     showSignOut: false,
+    isWalletShow: false,
   }
 
   toggleBalance() {
@@ -46,7 +47,14 @@ class Navbar extends React.Component {
     if (!wallet) {
       return
     }
-    wallet.showWallet()
+    if (this.state.isWalletShow) {
+      wallet.hide()
+    } else {
+      wallet.showWallet()
+    }
+    this.setState({
+      isWalletShow: !this.state.isWalletShow,
+    })
   }
 
   render() {
