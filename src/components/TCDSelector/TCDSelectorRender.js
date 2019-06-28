@@ -23,14 +23,18 @@ const SelectionContainer = styled(Flex).attrs({
   z-index: 1;
   border-radius: 8px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  transition: all 350ms;
 
   ${p =>
     p.show
       ? `
-      display: block;
+      opacity: 1;
+      transform: translateY(0);
     `
       : `
-      display: none;
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
     `}
 `
 
@@ -244,7 +248,7 @@ export default class TCDSelector extends React.Component {
               </Flex>
             </CurrentCard>
             <SelectionContainer show={this.state.show}>
-              <Text fontSize="12px" color="#393939" fontWeight="900" ml={1}>
+              <Text fontSize="12px" color="#393939" fontWeight="700" ml={1}>
                 SELECT FROM AVAILABLE DATA
               </Text>
               <Flex

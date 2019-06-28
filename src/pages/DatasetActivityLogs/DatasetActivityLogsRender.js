@@ -318,7 +318,7 @@ export default props => (
             }
           >
             <SelectionContainer show={props.showFilter}>
-              <Text fontSize="12px" color="#393939" fontWeight="900" ml={1}>
+              <Text fontSize="12px" color="#393939" fontWeight="700" ml={1}>
                 FILTER
               </Text>
               <Flex

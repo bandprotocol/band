@@ -5,7 +5,7 @@ import Loading from 'components/Loading'
 
 export default ({ data }) => (
   <Chart
-    width="calc(100% + 60px)"
+    width="100%"
     style={{ maxWidth: 'calc(100vw - 320px)' }}
     height={'300px'}
     chartType="SteppedAreaChart"
