@@ -13,7 +13,6 @@ const DataPointContainer = styled(Card).attrs(p => ({
   width: 100%;
   transition: all 250ms;
   cursor: pointer;
-  overflow: hidden;
   background-color: #fff;
   border: solid 1px #e7ecff;
   &:hover {
@@ -126,7 +125,6 @@ export default class DataPoint extends React.Component {
               />
             </Flex>
             <Flex
-              bg="white"
               pt="10px"
               pb="20px"
               justifyContent="center"

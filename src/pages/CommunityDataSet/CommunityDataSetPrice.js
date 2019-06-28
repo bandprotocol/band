@@ -89,10 +89,12 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
                     />
                   ) : (
                     <React.Fragment>
-                      <DataSetPriceGraph
-                        data={formatPricePairsForGraph(data)}
-                        numberOfProvider={data.length}
-                      />
+                      <Box px={4} pb={4}>
+                        <DataSetPriceGraph
+                          data={formatPricePairsForGraph(data)}
+                          numberOfProvider={data.length}
+                        />
+                      </Box>
                       <PriceTable mb={2} data={data} numDigits={numDigits} />
                     </React.Fragment>
                   )

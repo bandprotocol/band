@@ -44,7 +44,7 @@ export default createTable({
       mr: 2,
     },
     {
-      cell: { fontFamily: 'code', color: '#868FCD', fontSize: 13 },
+      cell: { fontFamily: 'code', fontSize: 13 },
       data: d => d.lastUpdate.fromNow().replace('a few', ''),
       label: 'Last Update',
       flex: '0 0 200px',
@@ -52,7 +52,7 @@ export default createTable({
       style: { textAlign: 'center' },
     },
     {
-      cell: { fontFamily: 'code' },
+      cell: { fontFamily: 'code', color: '#6976d2' },
       data: (d, i, props, numDataProviders, numDigits) =>
         d.lastValue.toLocaleString('en-US', {
           currency: 'USD',

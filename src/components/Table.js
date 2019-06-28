@@ -19,6 +19,10 @@ const TBody = styled(Box).attrs(p => ({
 
 export const createTable = ({ columns }) =>
   class Table extends React.Component {
+    shouldComponentUpdate(prevProps) {
+      return this.props.data !== prevProps.data
+    }
+
     render() {
       const { data, numDigits, ...props } = this.props
       const numDataProviders = data.length
