@@ -120,7 +120,14 @@ const CurrentCard = styled(Flex)`
   }
 `
 
-const List = ({ image, label, datapoints, path, index, handleSelect }) => (
+const List = ({
+  imageInactive,
+  label,
+  datapoints,
+  path,
+  index,
+  handleSelect,
+}) => (
   <NavLink to={path} style={{ textDecoration: 'none' }}>
     <SelectionList onClick={() => handleSelect(index)}>
       <Flex
@@ -128,7 +135,7 @@ const List = ({ image, label, datapoints, path, index, handleSelect }) => (
         alignItems="center"
         style={{ minWidth: '50px' }}
       >
-        <Image src={image} />
+        <Image src={imageInactive} />
       </Flex>
       <Flex flexDirection="column" ml="14px">
         <Text fontSize="14px" fontWeight="900" color="#3b57d1">
@@ -225,23 +232,21 @@ export default class TCDSelector extends React.Component {
                   alignItems="center"
                   className="tab"
                   justifyContent="space-between"
-                  pl="28px"
+                  pl="22px"
                   pr={3}
                 >
                   <Flex alignItems="center">
                     <Image
-                      src={TCDActive}
+                      src={currentOption && currentOption.imageActive}
                       className="img-active"
-                      width="20px"
-                      height="20px"
+                      width="25px"
                     />
                     <Image
-                      src={TCDInactive}
+                      src={currentOption && currentOption.imageInactive}
                       className="img-inactive"
-                      width="20px"
-                      height="20px"
+                      width="25px"
                     />
-                    <Text px={3}>{currentOption.shortLabel}</Text>
+                    <Text pl="16px">{currentOption.shortLabel}</Text>
                   </Flex>
                   <Image src={Triangle} />
                 </Flex>
