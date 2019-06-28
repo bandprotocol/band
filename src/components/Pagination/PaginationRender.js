@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text } from 'ui/common'
+import { Box, Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
 
 const LeftRight = styled(Text).attrs({
@@ -133,55 +133,56 @@ const NumberPage = ({ currentPage, numberOfPages, onChangePage }) => {
   )
 }
 
-export default ({ currentPage, numberOfPages, onChangePage }) => (
-  <Flex
-    flexDirection="row"
-    alignItems="center"
-    justifyContent="center"
-    style={{ height: '60px', borderRadius: '10px' }}
-  >
-    <LeftRight
-      disabled={currentPage === 1}
-      onClick={() => onChangePage(1)}
-      left
+export default ({ currentPage, numberOfPages, onChangePage }) =>
+  numberOfPages <= 1 ? null : (
+    <Flex
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="center"
+      style={{ height: '60px', borderRadius: '10px' }}
     >
-      <DoubleLeftArrow color={colors.blue.light} />
-    </LeftRight>
-    <LeftRight
-      disabled={currentPage === 1}
-      onClick={() => onChangePage(currentPage - 1)}
-      left
-    >
-      <LeftArrow color={colors.blue.light} />
-    </LeftRight>
-    {/* inside */}
-    <NumberPage
-      currentPage={currentPage}
-      numberOfPages={numberOfPages}
-      onChangePage={onChangePage}
-    />
-    <LeftRight
-      disabled={currentPage === numberOfPages}
-      onClick={() => onChangePage(currentPage + 1)}
-      right
-    >
-      <RightArrow color={colors.blue.light} />
-    </LeftRight>
-    <LeftRight
-      disabled={currentPage === numberOfPages}
-      onClick={() => onChangePage(numberOfPages)}
-      right
-    >
-      <DoubleRightArrow color={colors.blue.light} />
-    </LeftRight>
-    <Text
-      fontSize="12px"
-      lineHeight="25px"
-      color="#a7a9b2"
-      letterSpacing="-0.16px"
-      px="3px"
-    >
-      {numberOfPages} PAGE{numberOfPages === 1 ? '' : 'S'}
-    </Text>
-  </Flex>
-)
+      <LeftRight
+        disabled={currentPage === 1}
+        onClick={() => onChangePage(1)}
+        left
+      >
+        <DoubleLeftArrow color={colors.blue.light} />
+      </LeftRight>
+      <LeftRight
+        disabled={currentPage === 1}
+        onClick={() => onChangePage(currentPage - 1)}
+        left
+      >
+        <LeftArrow color={colors.blue.light} />
+      </LeftRight>
+      {/* inside */}
+      <NumberPage
+        currentPage={currentPage}
+        numberOfPages={numberOfPages}
+        onChangePage={onChangePage}
+      />
+      <LeftRight
+        disabled={currentPage === numberOfPages}
+        onClick={() => onChangePage(currentPage + 1)}
+        right
+      >
+        <RightArrow color={colors.blue.light} />
+      </LeftRight>
+      <LeftRight
+        disabled={currentPage === numberOfPages}
+        onClick={() => onChangePage(numberOfPages)}
+        right
+      >
+        <DoubleRightArrow color={colors.blue.light} />
+      </LeftRight>
+      <Text
+        fontSize="12px"
+        lineHeight="25px"
+        color="#a7a9b2"
+        letterSpacing="-0.16px"
+        px="3px"
+      >
+        {numberOfPages} PAGE{numberOfPages === 1 ? '' : 'S'}
+      </Text>
+    </Flex>
+  )

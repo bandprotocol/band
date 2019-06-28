@@ -60,6 +60,7 @@ class ProviderList extends React.Component {
         style={{
           borderRadius: '10px',
           boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)',
+          overflow: 'hidden',
         }}
         flexDirection="column"
         bg="white"

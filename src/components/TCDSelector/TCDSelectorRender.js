@@ -58,7 +58,6 @@ const CurrentCard = styled(Flex)`
   width: 100%;
   padding: 3px 5px 2px 5px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
   & .tab {
     margin-top: 2px;
@@ -106,6 +105,8 @@ const CurrentCard = styled(Flex)`
     ${p =>
       !p.active
         ? `
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
     & .tab {
       background-image: linear-gradient(
         257deg,

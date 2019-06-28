@@ -284,12 +284,12 @@ export default props => (
   >
     <Card
       bg="#ffffff"
-      px={4}
+      px="25px"
       py={3}
       borderRadius="10px"
       boxShadow="0 2px 9px 4px rgba(0, 0, 0, 0.04)"
     >
-      <Flex py={2} alignItems="center">
+      <Flex pb={2} alignItems="center">
         <Text fontWeight="700" fontSize="20px">
           Activity Logs
         </Text>

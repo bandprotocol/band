@@ -38,9 +38,11 @@ const mapStateToProps = (
     pageSize,
     tcdAddress,
   })
-  while (items.length < pageSize) {
-    items.push(null)
-  }
+  /*
+    while (items.length < pageSize) {
+      items.push(null)
+    }
+  */
   return { user, items }
 }
 

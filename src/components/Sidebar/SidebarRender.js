@@ -88,13 +88,7 @@ export default ({
         }}
       />
       <Flex mb="20px">
-        <Text
-          py={1}
-          fontSize="15px"
-          fontWeight={600}
-          color="white"
-          style={{ textTransform: 'uppercase' }}
-        >
+        <Text py={1} fontSize="18px" fontWeight={700} color="white">
           {name}
         </Text>
       </Flex>
