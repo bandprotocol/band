@@ -25,6 +25,13 @@ export const convertFromChain = (value, type) => {
         .toFixed(4),
       'token',
     ]
+  } else if (type === 'ETH') {
+    return [
+      BigNumber(value.toString())
+        .div(BigNumber(1e18))
+        .toFixed(4),
+      'ETH',
+    ]
   } else if (type === 'TIME') {
     const second = BigNumber(value.toString())
     if (second.mod(60 * 60 * 24).isEqualTo(0)) {
@@ -183,7 +190,7 @@ export const getParameterDetail = name =>
       description: 'Percentage of revenue going directly to data providers',
     },
     query_price: {
-      type: 'TOKEN',
+      type: 'ETH',
       description: 'Cost of ÐApps to query one data point in ETH',
     },
     inflation_rate: {
@@ -200,7 +207,7 @@ export const getParameterDetail = name =>
         'Address of aggregator contract which is used in Token-Curated DataSources process',
     },
     withdraw_delay: {
-      type: 'NUMBER',
+      type: 'TIME',
       description: 'Period of time for data provider to with draw their stake',
     },
   }[name] || { type: 'Unknown', description: 'UNKNOWN' })

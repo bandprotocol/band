@@ -5,7 +5,7 @@ export default {
     `Instantiate a QueryInterface object with TCD address 0x61518CA6F924348465B5126C0c20e843E5E6aA41. ETH/USD exchange rate can be obtained by query with key ETH/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
   label: 'price',
-  example: `🔮 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD. 👇👇👇`,
+  example: `🎫 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD. 👇👇👇`,
   contractName: 'TicketContract',
   dataFormat: {
     description: `The return value is a bytes32 that can be converted directly to uint256. Note that to maintain arithmetic precision, the value is multiplied by 10^18 . See Example tab for, well, example.`,
@@ -81,9 +81,9 @@ interface QueryInterface {
   enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
 
   function query(bytes calldata input)
-      external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
   function queryPrice(bytes calldata input)
-      external view returns (uint256);
+    external view returns (uint256);
 }
 
 contract TicketContract {
