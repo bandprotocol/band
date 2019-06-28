@@ -11,8 +11,20 @@ const Container = styled(Box)`
     stroke: #3b57d1;
   }
 
-  .google-visualization-tooltip-item {
+  .google-visualization-tooltip-item:not(:first-child) {
     white-space: nowrap;
+    width: 200px;
+    display: flex;
+    align-items: center;
+
+    & > * {
+      display: block;
+    }
+    & > *:last-child {
+      margin-left: auto;
+      flex: 1;
+      text-align: right;
+    }
   }
 `
 
