@@ -10,6 +10,10 @@ const Container = styled(Box)`
     stroke-width: 0.1 !important;
     stroke: #3b57d1;
   }
+
+  .google-visualization-tooltip-item {
+    white-space: nowrap;
+  }
 `
 
 export default ({ data, numberOfProvider }) => (
