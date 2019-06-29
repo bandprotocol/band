@@ -174,14 +174,14 @@ export default class CommunityIntegrationRender extends React.Component {
                 lineHeight={1.65}
                 fontWeight={500}
                 fontSize="16px"
-                mt="20px"
+                mt="30px"
                 mx="80px"
               >
                 <HighlightText text={info.example} />
               </Text>
               <Flex
                 flexDirection="row-reverse"
-                mt="20px"
+                mt="30px"
                 mx="80px"
                 pr="30px"
                 style={{
@@ -253,10 +253,10 @@ export default class CommunityIntegrationRender extends React.Component {
                   </Text>
                 </Pointer>
               </Flex>
-              <Flex style={{ minHeight: '100px' }} />
-              <Flex mt="-100px" mx="-8px" justifyContent="center" />
-              <Box mt="10px" mx="80px">
-                <Flex alignItems="center" style={{ minHeight: '100px' }}>
+              <Flex style={{ minHeight: '140px' }} />
+              <Flex mt="-140px" mx="-8px" justifyContent="center" />
+              <Box mx="80px">
+                <Flex alignItems="center" style={{ minHeight: '140px' }}>
                   <Text fontSize="16px" lineHeight={1.67} fontWeight={500}>
                     <HighlightText
                       text={info.description[this.state.codingStepNum || 0]}
@@ -313,7 +313,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   lineHeight={1.65}
                   fontWeight={500}
                   fontSize="16px"
-                  mt="20px"
+                  mt="30px"
                   pl="10px"
                   mx="80px"
                   style={{ whiteSpace: 'pre-wrap' }}
@@ -321,7 +321,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   <HighlightText text={keyFormat.description} />
                 </Text>
               </Flex>
-              <Flex mt="20px" mx="80px" flexWrap="wrap">
+              <Flex mt="30px" mx="60px" flexWrap="wrap">
                 {keyFormat.keys.map(key => (
                   <Flex
                     alignItems="center"
@@ -339,9 +339,10 @@ export default class CommunityIntegrationRender extends React.Component {
                     {key[2] && (
                       <Flex style={{ maxWidth: '40px' }} mr="5px">
                         <Box
+                          mr={2}
                           style={{
-                            width: 40,
-                            height: 40,
+                            width: 36,
+                            height: 36,
                             backgroundImage: `url(${key[2]})`,
                             backgroundSize: 'contain',
                             backgroundPosition: 'center',
@@ -350,13 +351,17 @@ export default class CommunityIntegrationRender extends React.Component {
                         />
                       </Flex>
                     )}
-                    <Text fontSize="16px" fontWeight={500} flex={1}>
+                    <Text
+                      fontFamily="code"
+                      fontWeight="600"
+                      fontSize="15px"
+                      flex={1}
+                    >
                       {key[0]}
                     </Text>
                     <Text
-                      fontSize={key[1].length >= 32 ? '12px' : '16px'}
+                      fontSize={key[1].length >= 32 ? '13px' : '16px'}
                       fontWeight={500}
-                      flex={2}
                     >
                       <HighlightText text={key[1]} />
                     </Text>
@@ -372,7 +377,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   lineHeight={1.65}
                   fontWeight={500}
                   fontSize="16px"
-                  mt="20px"
+                  mt="30px"
                   pl="10px"
                   mx="80px"
                   style={{ whiteSpace: 'pre-wrap' }}

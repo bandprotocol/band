@@ -77,7 +77,7 @@ const ProvidersRow = ({
       </Text>
     </Tab>
     <Tab flex={20} alignItems="center">
-      <Image src={image} width="20px" mr={1} />
+      <Image src={image} width="20px" mr={2} />
       <Text
         color={colors.text}
         fontSize="14px"
@@ -94,6 +94,7 @@ const ProvidersRow = ({
       <Text
         color={colors.text}
         fontSize="14px"
+        fontFamily="code"
         style={{
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -109,6 +110,7 @@ const ProvidersRow = ({
           src={OutImg}
           width="14px"
           height="14px"
+          ml={2}
         />
       </AbsoluteLink>
     </Tab>
@@ -116,6 +118,7 @@ const ProvidersRow = ({
       <Text
         color={colors.text}
         fontSize="14px"
+        fontFamily="code"
         style={{
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -129,6 +132,7 @@ const ProvidersRow = ({
       <Text
         color={colors.text}
         fontSize="14px"
+        fontFamily="code"
         style={{
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -142,6 +146,7 @@ const ProvidersRow = ({
       <Text
         color={colors.text}
         fontSize="14px"
+        fontFamily="code"
         style={{
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
