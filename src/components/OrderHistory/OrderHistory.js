@@ -3,7 +3,7 @@ import OrderHistoryRender from './OrderHistoryRender'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { loadOrderHistory } from 'actions'
-import { noOrderSelector } from 'selectors/order'
+import { numOrderSelector } from 'selectors/order'
 import { dispatchAsync } from 'utils/reduxSaga'
 
 class OrderHistory extends React.Component {
@@ -13,12 +13,9 @@ class OrderHistory extends React.Component {
   }
 
   async componentDidMount() {
-    await this.props.loadOrderHistory()
-    this.setState({
-      fetching: false,
-    })
+    this.loadOrderHistory()
     this.checker = setInterval(() => {
-      this.props.loadOrderHistory()
+      this.props.loadOrderHistoryOnPage(this.state.currentPage)
     }, 3000)
   }
 
@@ -26,10 +23,23 @@ class OrderHistory extends React.Component {
     clearInterval(this.checker)
   }
 
-  onChangePage(selectedPage) {
+  async loadOrderHistory() {
+    await this.props.loadOrderHistoryOnPage(this.state.currentPage)
     this.setState({
-      currentPage: selectedPage,
+      fetching: false,
     })
+  }
+
+  onChangePage(selectedPage) {
+    this.setState(
+      {
+        currentPage: selectedPage,
+        fetching: true,
+      },
+      async () => {
+        await this.loadOrderHistory()
+      },
+    )
   }
 
   render() {
@@ -45,15 +55,15 @@ class OrderHistory extends React.Component {
 
 const mapStateToProps = (state, { tokenAddress }) => {
   return {
-    numOrders: noOrderSelector(state, {
+    numOrders: numOrderSelector(state, {
       address: tokenAddress,
     }),
   }
 }
 
 const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
-  loadOrderHistory: () =>
-    dispatchAsync(dispatch, loadOrderHistory(tokenAddress)),
+  loadOrderHistoryOnPage: currentPage =>
+    dispatchAsync(dispatch, loadOrderHistory(tokenAddress, currentPage)),
 })
 
 export default withRouter(

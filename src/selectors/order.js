@@ -1,24 +1,19 @@
 import { createSelector } from 'reselect'
 import { List } from 'immutable'
-import {
-  orderSelector,
-  addressSelector,
-  pageSelector,
-  pageSizeSelector,
-} from 'selectors/basic'
+import { orderSelector, addressSelector, pageSelector } from 'selectors/basic'
 
 export const orderHistorySelector = createSelector(
-  [orderSelector, addressSelector, pageSelector, pageSizeSelector],
-  (orders, address, page, pageSize) => {
+  [orderSelector, addressSelector, pageSelector],
+  (orders, address, page) => {
     if (!orders.get(address)) return List()
-    return orders.get(address).slice((page - 1) * pageSize, page * pageSize)
+    return orders.getIn([address, page])
   },
 )
 
-export const noOrderSelector = createSelector(
+export const numOrderSelector = createSelector(
   [orderSelector, addressSelector],
   (orders, address) => {
     if (!orders.get(address)) return 0
-    return orders.get(address).size
+    return orders.getIn([address, 'count'])
   },
 )

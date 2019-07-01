@@ -2,13 +2,13 @@ import { connect } from 'react-redux'
 
 import { withRouter } from 'react-router-dom'
 
-import { noOrderSelector } from 'selectors/order'
+import { numOrderSelector } from 'selectors/order'
 
 import PaginationRender from './PaginationRender'
 
 const mapStateToProps = (state, { tokenAddress, pageSize }) => ({
   numberOfPages: Math.ceil(
-    noOrderSelector(state, {
+    numOrderSelector(state, {
       address: tokenAddress,
     }) / pageSize,
   ),
