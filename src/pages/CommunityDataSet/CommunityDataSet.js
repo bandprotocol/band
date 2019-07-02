@@ -16,7 +16,7 @@ class CommunityDataSet extends React.Component {
         return <CommunityDataSetPrice {...this.props} />
       case 'LotteryFeedCommunity':
         return <CommunityDataSetLottery {...this.props} />
-      case 'SportFeedCommunity':
+      case 'Sport Data Feeds':
         return <CommunityDataSetSport {...this.props} />
       case 'BandIdentity':
         return <CommunityDataSetIdentity {...this.props} />

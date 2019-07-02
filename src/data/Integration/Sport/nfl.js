@@ -9,7 +9,7 @@ export default {
   contractName: 'SportBettingContract',
   dataFormat: {
     description: `Return value from community's contract always bytes32 .　
-      SportFeedCommunity will return score of home team and score of away team which are represented with first 2 bytes of the return value.
+      Sport Community will return score of home team and score of away team which are represented with first 2 bytes of the return value.
       For example
         👉 You have called q.query.value(q.queryPrice())("20190427/LAC-GSW") 　
         👉 The return value is 0x1f3c000000000000000000000000000000000000000000000000000000000000 　

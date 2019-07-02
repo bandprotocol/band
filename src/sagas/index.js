@@ -48,6 +48,7 @@ switch (network) {
   case 'mainnet':
   case 'kovan':
     RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
+    WALLET_ENDPOINT = 'http://localhost:3000'
     break
   case 'rinkeby':
   case 'local':

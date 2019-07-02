@@ -5,7 +5,7 @@ import Identity from './Identity/index'
 
 export default {
   'Financial Data Feeds': Price,
-  SportFeedCommunity: Sport,
+  'Sport Data Feeds': Sport,
   LotteryFeedCommunity: Lottery,
   BandIdentity: Identity,
 }
