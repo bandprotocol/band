@@ -8,7 +8,6 @@ const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const Parameters = artifacts.require('Parameters');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
-const MockDataSource = artifacts.require('MockDataSource');
 
 module.exports = function(deployer, network, accounts) {
   console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 7');
@@ -18,25 +17,31 @@ module.exports = function(deployer, network, accounts) {
       const registry = await BandRegistry.deployed();
       const commFactory = await CommunityFactory.deployed();
       const band = await BandToken.at(await registry.band());
-      let dataProviders;
 
-      if (network === 'development') {
-        dataProviders = [];
-        for (let i = 0; i < 2; i++) {
-          const source = await deployer.deploy(
-            MockDataSource,
-            'sport_data_source' + (i + 1),
-          );
-          dataProviders.push(await source.address);
-          console.log(await source.address);
-          console.log(await source.owner());
-        }
-      } else {
-        dataProviders = [
-          '0x2F17B485FA21779F3aAEb1C32E2EC4Dc1A3c366F',
-          '0xF2c23e8A18715a06b792c1191c3b6DdBE26fE6c3',
-        ];
-      }
+      const dataProviders = {
+        ESPN: '0xda7a80e66a96ae364918ae7fcf2f9ca03e2a2d5d',
+        DATA_NBA: '0xda7adcb9b801952019f8d44889a9f4038443dd97',
+        SPORTS_DB: '0xda7a1ddce143c2460bd2536607ea38309d7c45ca',
+      };
+
+      const tcds = [
+        {
+          prefix: 'epl:',
+          providers: ['ESPN', 'SPORTS_DB'],
+        },
+        {
+          prefix: 'nba:',
+          providers: ['ESPN', 'DATA_NBA'],
+        },
+        {
+          prefix: 'mlb:',
+          providers: ['ESPN'],
+        },
+        {
+          prefix: 'nfl:',
+          providers: ['ESPN'],
+        },
+      ];
 
       // Create Sport community
       const sportTx = await commFactory.create(
@@ -60,121 +65,8 @@ module.exports = function(deployer, network, accounts) {
         sportTx.receipt.logs[2].args.token,
       );
       const params = await Parameters.at(sportTx.receipt.logs[2].args.params);
-      await params.setRaw(
-        [
-          web3.utils.fromAscii('nba:min_provider_stake'),
-          web3.utils.fromAscii('nba:max_provider_count'),
-          web3.utils.fromAscii('nba:owner_revenue_pct'),
-          web3.utils.fromAscii('nba:query_price'),
-          web3.utils.fromAscii('nba:withdraw_delay'),
-          web3.utils.fromAscii('nba:data_aggregator'),
-        ],
-        [
-          '500000000000000000000',
-          '2',
-          '500000000000000000',
-          '1000000000000000',
-          '60',
-          MajorityAggregator.address,
-        ],
-      );
-
-      await params.setRaw(
-        [
-          web3.utils.fromAscii('epl:min_provider_stake'),
-          web3.utils.fromAscii('epl:max_provider_count'),
-          web3.utils.fromAscii('epl:owner_revenue_pct'),
-          web3.utils.fromAscii('epl:query_price'),
-          web3.utils.fromAscii('epl:withdraw_delay'),
-          web3.utils.fromAscii('epl:data_aggregator'),
-        ],
-        [
-          '500000000000000000000',
-          '2',
-          '500000000000000000',
-          '1000000000000000',
-          '60',
-          MajorityAggregator.address,
-        ],
-      );
-
-      await params.setRaw(
-        [
-          web3.utils.fromAscii('nfl:min_provider_stake'),
-          web3.utils.fromAscii('nfl:max_provider_count'),
-          web3.utils.fromAscii('nfl:owner_revenue_pct'),
-          web3.utils.fromAscii('nfl:query_price'),
-          web3.utils.fromAscii('nfl:withdraw_delay'),
-          web3.utils.fromAscii('nfl:data_aggregator'),
-        ],
-        [
-          '500000000000000000000',
-          '2',
-          '500000000000000000',
-          '1000000000000000',
-          '60',
-          MajorityAggregator.address,
-        ],
-      );
-
-      await params.setRaw(
-        [
-          web3.utils.fromAscii('mlb:min_provider_stake'),
-          web3.utils.fromAscii('mlb:max_provider_count'),
-          web3.utils.fromAscii('mlb:owner_revenue_pct'),
-          web3.utils.fromAscii('mlb:query_price'),
-          web3.utils.fromAscii('mlb:withdraw_delay'),
-          web3.utils.fromAscii('mlb:data_aggregator'),
-        ],
-        [
-          '500000000000000000000',
-          '2',
-          '500000000000000000',
-          '1000000000000000',
-          '60',
-          MajorityAggregator.address,
-        ],
-      );
 
       await commToken.addCapper(tcdFactory.address);
-
-      const nbaTCDTx = await tcdFactory.createMultiSigTCD(
-        web3.utils.fromAscii('nba:'),
-        sportTx.receipt.logs[2].args.bondingCurve,
-        registry.address,
-        sportTx.receipt.logs[2].args.params,
-      );
-
-      const eplTCDTx = await tcdFactory.createMultiSigTCD(
-        web3.utils.fromAscii('epl:'),
-        sportTx.receipt.logs[2].args.bondingCurve,
-        registry.address,
-        sportTx.receipt.logs[2].args.params,
-      );
-
-      const nflTCDTx = await tcdFactory.createMultiSigTCD(
-        web3.utils.fromAscii('nfl:'),
-        sportTx.receipt.logs[2].args.bondingCurve,
-        registry.address,
-        sportTx.receipt.logs[2].args.params,
-      );
-
-      const mlbTCDTx = await tcdFactory.createMultiSigTCD(
-        web3.utils.fromAscii('mlb:'),
-        sportTx.receipt.logs[2].args.bondingCurve,
-        registry.address,
-        sportTx.receipt.logs[2].args.params,
-      );
-
-      const nbaTCD = await TCDBase.at(nbaTCDTx.receipt.logs[0].args.mtcd);
-      const eplTCD = await TCDBase.at(eplTCDTx.receipt.logs[0].args.mtcd);
-      const nflTCD = await TCDBase.at(nflTCDTx.receipt.logs[0].args.mtcd);
-      const mlbTCD = await TCDBase.at(mlbTCDTx.receipt.logs[0].args.mtcd);
-
-      console.log('Created NBA TCD at', nbaTCD.address);
-      console.log('Created EPL TCD at', eplTCD.address);
-      console.log('Created NFL TCD at', nflTCD.address);
-      console.log('Created MLB TCD at', mlbTCD.address);
 
       // Buy tokens
       const curve = await BondingCurve.at(
@@ -188,30 +80,51 @@ module.exports = function(deployer, network, accounts) {
         '1000000000000000000000000',
       );
 
-      // Add register
-      await commToken.approve(nbaTCD.address, '1000000000000000000000000');
-      await commToken.approve(eplTCD.address, '1000000000000000000000000');
-      await commToken.approve(nflTCD.address, '1000000000000000000000000');
-      await commToken.approve(mlbTCD.address, '1000000000000000000000000');
+      const address0 = '0x0000000000000000000000000000000000000000';
+      const tcdList = [];
+      for (const tcdDetail of tcds) {
+        await params.setRaw(
+          [
+            web3.utils.fromAscii(tcdDetail.prefix + 'min_provider_stake'),
+            web3.utils.fromAscii(tcdDetail.prefix + 'max_provider_count'),
+            web3.utils.fromAscii(tcdDetail.prefix + 'owner_revenue_pct'),
+            web3.utils.fromAscii(tcdDetail.prefix + 'query_price'),
+            web3.utils.fromAscii(tcdDetail.prefix + 'withdraw_delay'),
+            web3.utils.fromAscii(tcdDetail.prefix + 'data_aggregator'),
+          ],
+          [
+            '500000000000000000000',
+            tcdDetail.providers.length,
+            '500000000000000000',
+            '1000000000000000',
+            '259200',
+            MajorityAggregator.address,
+          ],
+        );
+        const tcdtx = await tcdFactory.createMultiSigTCD(
+          web3.utils.fromAscii(tcdDetail.prefix),
+          curve.address,
+          registry.address,
+          params.address,
+        );
+        const tcd = await TCDBase.at(tcdtx.receipt.logs[0].args.mtcd);
+        console.log('Created', tcdDetail.prefix, 'TCD at', tcd.address);
+        tcdList.push(tcd.address);
+
+        await Promise.all(
+          tcdDetail.providers.map(async provider => {
+            tcd.register(
+              dataProviders[provider],
+              address0,
+              '500000000000000000000',
+            );
+          }),
+        );
+      }
 
       console.error(
         'DataSourceBookkeepingSportAddress:',
-        JSON.stringify([
-          nbaTCD.address,
-          eplTCD.address,
-          nflTCD.address,
-          mlbTCD.address,
-        ]),
-      );
-
-      const address0 = '0x0000000000000000000000000000000000000000';
-      await Promise.all(
-        dataProviders.map(async dataSource => {
-          nbaTCD.register(dataSource, address0, '500000000000000000000');
-          eplTCD.register(dataSource, address0, '500000000000000000000');
-          nflTCD.register(dataSource, address0, '500000000000000000000');
-          mlbTCD.register(dataSource, address0, '500000000000000000000');
-        }),
+        JSON.stringify(tcdList),
       );
     })
     .catch(console.log);
