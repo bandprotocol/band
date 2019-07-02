@@ -2,11 +2,12 @@ export const LOAD_TRANSFER_HISTORY = 'LOAD_TRANSFER_HISTORY'
 export const ADD_TRANSFERS = 'ADD_TRANSFERS'
 export const ADD_NUM_TRANSFERS = 'ADD_NUM_TRANSFERS'
 
-export const loadTransferHistory = (address, currentPage) => {
+export const loadTransferHistory = (address, currentPage, pageSize) => {
   return {
     type: LOAD_TRANSFER_HISTORY,
     address,
     currentPage,
+    pageSize,
   }
 }
 

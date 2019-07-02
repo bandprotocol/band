@@ -62,9 +62,12 @@ const mapStateToProps = (state, { tokenAddress }) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress, pageSize }) => ({
   loadTransferHistoryOnPage: currentPage =>
-    dispatchAsync(dispatch, loadTransferHistory(tokenAddress, currentPage)),
+    dispatchAsync(
+      dispatch,
+      loadTransferHistory(tokenAddress, currentPage, pageSize),
+    ),
 })
 
 export default withRouter(
