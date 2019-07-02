@@ -3,7 +3,7 @@ import { LOAD_ORDER_HISTORY, addOrders, addNumOrders } from 'actions'
 import { takeEveryAsync } from 'utils/reduxSaga'
 import { Utils } from 'band.js'
 
-function* handleLoadHistory({ address, currentPage }) {
+function* handleLoadHistory({ address, currentPage, pageSize }) {
   const {
     tokenByAddress: {
       curveByTokenAddress: {
@@ -15,7 +15,7 @@ function* handleLoadHistory({ address, currentPage }) {
       curveByTokenAddress {
         ordersByCurveAddress(orderBy: TIMESTAMP_DESC, first: 10, offset: ${(currentPage -
           1) *
-          10}) {
+          pageSize}) {
           nodes {
             amount
             price

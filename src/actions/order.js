@@ -2,10 +2,11 @@ export const LOAD_ORDER_HISTORY = 'LOAD_ORDER_HISTORY'
 export const ADD_ORDERS = 'ADD_ORDERS'
 export const ADD_NUM_ORDERS = 'ADD_NUM_ORDERS'
 
-export const loadOrderHistory = (address, currentPage) => ({
+export const loadOrderHistory = (address, currentPage, pageSize) => ({
   type: LOAD_ORDER_HISTORY,
   address,
   currentPage,
+  pageSize,
 })
 
 export const addOrders = (address, page, orders) => ({

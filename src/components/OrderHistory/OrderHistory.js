@@ -61,9 +61,12 @@ const mapStateToProps = (state, { tokenAddress }) => {
   }
 }
 
-const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+const mapDispatchToProps = (dispatch, { tokenAddress, pageSize }) => ({
   loadOrderHistoryOnPage: currentPage =>
-    dispatchAsync(dispatch, loadOrderHistory(tokenAddress, currentPage)),
+    dispatchAsync(
+      dispatch,
+      loadOrderHistory(tokenAddress, currentPage, pageSize),
+    ),
 })
 
 export default withRouter(
