@@ -1,19 +1,18 @@
 import { put } from 'redux-saga/effects'
-import { LOAD_HOLDERS, addHolders } from 'actions'
+import { LOAD_HOLDERS, addHolders, addNumHolders } from 'actions'
 import { Utils } from 'band.js'
 import BN from 'bn.js'
 import { takeEveryAsync } from 'utils/reduxSaga'
 
-function* handleLoadHolders(props) {
-  if (!props) return
-  const { address } = props
-  if (!address) return
+function* handleLoadHolders({ address, currentPage, pageSize }) {
   const result = yield Utils.graphqlRequest(
     `
     {
       tokenByAddress(address: "${address}") {
       address
-      balancesByTokenAddress {
+      balancesByTokenAddress(orderBy: VALUE_DESC, first: 10, offset: ${(currentPage -
+        1) *
+        pageSize}) {
         totalCount
         nodes {
           user
@@ -27,22 +26,23 @@ function* handleLoadHolders(props) {
   const {
     tokenByAddress: {
       address: tokenAddress,
-      balancesByTokenAddress: { nodes: holders },
+      balancesByTokenAddress: { nodes: holders, totalCount },
     },
   } = result
 
   yield put(
     addHolders(
       address,
-      holders
-        .map(holder => ({
-          tokenAddress,
-          address: holder.user,
-          balance: new BN(holder.value),
-        }))
-        .filter(holder => holder.balance.gt(new BN(0))),
+      currentPage,
+      holders.map(holder => ({
+        tokenAddress,
+        address: holder.user,
+        balance: new BN(holder.value),
+      })),
     ),
   )
+
+  yield put(addNumHolders(address, totalCount))
 }
 
 export default function*() {

@@ -285,7 +285,7 @@ export default props => {
           </Card>
         )}
       </Flex>
-
+      {/* Detail History including Richlist, Transfers history, Orders history */}
       <Flex mt="12px">
         <DetailHistory tokenAddress={tokenAddress} pageSize={10} />
       </Flex>
