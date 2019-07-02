@@ -5,11 +5,11 @@ const handleAddTransfers = (state, { address, page, transfers }) => {
   return state.setIn([address, page], transfers)
 }
 
-const handleAddNumTransfer = (state, { address, totalCount }) => {
+const handleAddNumTransfers = (state, { address, totalCount }) => {
   return state.setIn([address, 'count'], totalCount)
 }
 
 export default createReducer({
   [ADD_TRANSFERS]: handleAddTransfers,
-  [ADD_NUM_TRANSFERS]: handleAddNumTransfer,
+  [ADD_NUM_TRANSFERS]: handleAddNumTransfers,
 })
