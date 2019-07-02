@@ -9,7 +9,7 @@ export default class BaseFetcher extends React.Component {
 
   async componentDidMount() {
     if (!this.props.location) {
-      throw new Error('Fetcher has to we wrapped with withRouter')
+      throw new Error('Fetcher has to be wrapped with withRouter')
     }
 
     // Wait for fetch to be done then start the auto-fetch schedule
@@ -83,7 +83,8 @@ export default class BaseFetcher extends React.Component {
     const { children } = this.props
     const { fetching, data } = this.state
 
-    const forceFetch = (autoFetching = false, forceUpdate = true) => this._fetch(autoFetching, forceUpdate)
+    const forceFetch = (autoFetching = false, forceUpdate = true) =>
+      this._fetch(autoFetching, forceUpdate)
 
     return children({ data, fetching, forceFetch })
   }
