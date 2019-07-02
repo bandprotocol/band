@@ -4,21 +4,20 @@ import {
   transferSelector,
   addressSelector,
   pageSelector,
-  pageSizeSelector,
 } from 'selectors/basic'
 
 export const transferHistorySelector = createSelector(
-  [transferSelector, addressSelector, pageSelector, pageSizeSelector],
-  (transfers, address, page, pageSize) => {
+  [transferSelector, addressSelector, pageSelector],
+  (transfers, address, page) => {
     if (!transfers.get(address)) return List()
-    return transfers.get(address).slice((page - 1) * pageSize, page * pageSize)
+    return transfers.getIn([address, page])
   },
 )
 
-export const noTransferSelector = createSelector(
+export const numTransferSelector = createSelector(
   [transferSelector, addressSelector],
   (transfers, address) => {
     if (!transfers.get(address)) return 0
-    return transfers.get(address).length
+    return transfers.getIn([address, 'count'])
   },
 )

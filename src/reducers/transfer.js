@@ -1,10 +1,15 @@
 import createReducer from 'reducers/creator'
-import { ADD_TRANSFERS } from 'actions'
+import { ADD_TRANSFERS, ADD_NUM_TRANSFERS } from 'actions'
 
-const handleAddTransfers = (state, { address, transfers }) => {
-  return state.set(address, transfers)
+const handleAddTransfers = (state, { address, page, transfers }) => {
+  return state.setIn([address, page], transfers)
+}
+
+const handleAddNumTransfer = (state, { address, totalCount }) => {
+  return state.setIn([address, 'count'], totalCount)
 }
 
 export default createReducer({
   [ADD_TRANSFERS]: handleAddTransfers,
+  [ADD_NUM_TRANSFERS]: handleAddNumTransfer,
 })

@@ -3,7 +3,7 @@ import TransferHistoryRender from './TransferHistoryRender'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { loadTransferHistory } from 'actions'
-import { noTransferSelector } from 'selectors/transfer'
+import { numTransferSelector } from 'selectors/transfer'
 import { dispatchAsync } from 'utils/reduxSaga'
 
 class TransferHistory extends React.Component {
@@ -13,12 +13,10 @@ class TransferHistory extends React.Component {
   }
 
   async componentDidMount() {
-    await this.props.loadTransferHistory()
-    this.setState({
-      fetching: false,
-    })
+    await this.loadTransferHistory()
+
     this.checker = setInterval(() => {
-      this.props.loadTransferHistory()
+      this.props.loadTransferHistoryOnPage(this.state.currentPage)
     }, 3000)
   }
 
@@ -26,10 +24,23 @@ class TransferHistory extends React.Component {
     clearInterval(this.checker)
   }
 
-  onChangePage(selectedPage) {
+  async loadTransferHistory() {
+    await this.props.loadTransferHistoryOnPage(this.state.currentPage)
     this.setState({
-      currentPage: selectedPage,
+      fetching: false,
     })
+  }
+
+  onChangePage(selectedPage) {
+    this.setState(
+      {
+        currentPage: selectedPage,
+        fetching: true,
+      },
+      async () => {
+        await this.loadTransferHistory()
+      },
+    )
   }
 
   render() {
@@ -45,15 +56,15 @@ class TransferHistory extends React.Component {
 
 const mapStateToProps = (state, { tokenAddress }) => {
   return {
-    numTransfers: noTransferSelector(state, {
+    numTransfers: numTransferSelector(state, {
       address: tokenAddress,
     }),
   }
 }
 
 const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
-  loadTransferHistory: () =>
-    dispatchAsync(dispatch, loadTransferHistory(tokenAddress)),
+  loadTransferHistoryOnPage: currentPage =>
+    dispatchAsync(dispatch, loadTransferHistory(tokenAddress, currentPage)),
 })
 
 export default withRouter(
