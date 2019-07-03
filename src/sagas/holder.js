@@ -5,6 +5,8 @@ import BN from 'bn.js'
 import { takeEveryAsync } from 'utils/reduxSaga'
 
 function* handleLoadHolders({ address, currentPage, pageSize }) {
+  if (!address) return
+
   const result = yield Utils.graphqlRequest(
     `
     {
