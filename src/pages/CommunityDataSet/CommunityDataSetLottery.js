@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
+import { Flex, Box, Text, Card, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import PageContainer from 'components/PageContainer'
 import DataPoint from 'components/DataPoint'
@@ -9,14 +9,11 @@ import FlipMove from 'react-flip-move'
 import { createLoadingButton } from 'components/BaseButton'
 import {
   LotteryCountByTypeFetcher,
-  LotteryByTypeFetcher,
-  LotteryProvidersByTypeTimeFetcher,
+  LotteyByTCDAddress,
+  LotteryProvidersByTCDAddressTimeFetcher,
 } from 'data/fetcher/LotteryFetcher'
 import LotteryTable from 'components/table/LotteryTable'
 import Loading from 'components/Loading'
-
-import MmnSrc from 'images/dataset-megamillions.png'
-import PwbSrc from 'images/dataset-powerball.png'
 
 const pad = n => `0${n}`.slice(-2)
 
@@ -47,7 +44,7 @@ const LoadMoreButton = createLoadingButton(styled(Button)`
 `)
 
 const renderDataPoints = (
-  type,
+  tcdAddress,
   lotteries,
   currentLotteryLength,
   loadMoreList,
@@ -107,9 +104,9 @@ const renderDataPoints = (
               )}
               updatedAt={lastUpdate}
             >
-              <LotteryProvidersByTypeTimeFetcher
-                type={type}
-                time={time.format('YYYYMMDD')}
+              <LotteryProvidersByTCDAddressTimeFetcher
+                tcdAddress={tcdAddress}
+                keyOnChain={keyOnChain}
               >
                 {({ fetching, data }) =>
                   fetching ? (
@@ -131,13 +128,13 @@ const renderDataPoints = (
                     </React.Fragment>
                   )
                 }
-              </LotteryProvidersByTypeTimeFetcher>
+              </LotteryProvidersByTCDAddressTimeFetcher>
             </DataPoint>
           ),
         )}
       </FlipMove>
     </Box>
-    <LotteryCountByTypeFetcher type={type}>
+    <LotteryCountByTypeFetcher>
       {({ fetching, data }) =>
         fetching || currentLotteryLength >= data ? null : (
           <Flex width="100%" justifyContent="center" alignItems="center">
@@ -152,15 +149,7 @@ const renderDataPoints = (
 )
 
 export default class LotteryPage extends React.Component {
-  state = { type: 'PWB', nLotteryList: 10 }
-
-  changeType(type, forceFetch) {
-    this.setState({
-      type,
-      nLotteryList: 10,
-    })
-    forceFetch()
-  }
+  state = { nLotteryList: 10 }
 
   async loadMoreList(forceFetch) {
     const currentLength = this.currentLotteryLength
@@ -182,7 +171,7 @@ export default class LotteryPage extends React.Component {
   }
 
   render() {
-    const { name: communityName } = this.props
+    const { tcdAddress } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -203,9 +192,9 @@ export default class LotteryPage extends React.Component {
       >
         <PageContainer>
           <Box mt={5}>
-            <LotteryByTypeFetcher
-              type={this.state.type}
-              nList={this.state.nLotteryList}
+            <LotteyByTCDAddress
+              tcdAddress={tcdAddress}
+              nList={this.state.nLotteryList} // TODO: for infinity scroll
             >
               {({ fetching, data, forceFetch }) => {
                 if (fetching) {
@@ -225,14 +214,14 @@ export default class LotteryPage extends React.Component {
                 } else {
                   this.currentLotteryLength = data.length
                   return renderDataPoints(
-                    this.state.type,
+                    tcdAddress,
                     data,
                     this.currentLotteryLength,
                     this.loadMoreList.bind(this, forceFetch),
                   )
                 }
               }}
-            </LotteryByTypeFetcher>
+            </LotteyByTCDAddress>
           </Box>
         </PageContainer>
       </PageStructure>

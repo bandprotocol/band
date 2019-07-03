@@ -1,7 +1,9 @@
 import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
+import BN from 'utils/bignumber'
 import { Utils } from 'band.js'
+import { getProvider } from 'data/Providers'
 
 const compareBalls = (a, b) =>
   a.whiteBall1 === b.whiteBall1 &&
@@ -11,16 +13,6 @@ const compareBalls = (a, b) =>
   a.whiteBall5 === b.whiteBall5 &&
   a.redBall === b.redBall &&
   a.mul === b.mul
-
-const countAllLotteryQL = type => `
-{
-  allDataLotteryFeeds(
-    filter: { redBall: { isNull: false } }
-  ) {
-    totalCount
-  }
-}
-`
 
 const countLotteryQL = type => `
 {
@@ -32,66 +24,6 @@ const countLotteryQL = type => `
   }
 }
 `
-
-const allLotteryByTypeQL = (type, nList) => `
-{
-  allDataLotteryFeeds(orderBy: LOTTERY_TIME_DESC, condition: {lotteryType: "${type}"}, filter: {redBall: {isNull: false}}, first: ${nList}) {
-    nodes {
-      lastUpdate
-      lotteryTime
-      redBall
-      whiteBall1
-      whiteBall2
-      whiteBall4
-      whiteBall3
-      whiteBall5
-      mul
-    }
-  }
-}
-
-`
-
-const allProvidersByTypeTimeQL = (type, time) => `
-{
-  allDataLotteryFeedRaws(
-    condition: { lotteryType: "${type}", lotteryTime: "${time}" }
-    orderBy: TIMESTAMP_DESC
-  ) {
-    nodes {
-      timestamp
-      redBall
-      whiteBall1
-      whiteBall2
-      whiteBall3
-      whiteBall4
-      whiteBall5
-      mul
-      dataProviderByDataSourceAddressAndTcdAddress {
-        dataSourceAddress
-        detail
-        status
-      }
-    }
-  }
-}
-`
-
-export const LotteryCountAllFetcher = withRouter(
-  class extends BaseFetcher {
-    shouldFetch(prevProps) {
-      return false
-    }
-
-    async fetch() {
-      const {
-        allDataLotteryFeeds: { totalCount },
-      } = await Utils.graphqlRequest(countAllLotteryQL())
-
-      return totalCount
-    }
-  },
-)
 
 export const LotteryCountByTypeFetcher = withRouter(
   class extends BaseFetcher {
@@ -111,80 +43,88 @@ export const LotteryCountByTypeFetcher = withRouter(
   },
 )
 
-export const LotteryByTypeFetcher = withRouter(
+const convertToBalls = value => {
+  const valueAsHex = new BN(value).toString(16).padStart(64, '0')
+  const keys = [
+    'whiteBall1',
+    'whiteBall2',
+    'whiteBall3',
+    'whiteBall4',
+    'whiteBall5',
+    'redBall',
+    'mul',
+  ]
+
+  return keys.reduce(
+    (acc, key, i) => ({
+      ...acc,
+      [key]: parseInt(valueAsHex.slice(i * 2, i * 2 + 2), 16),
+    }),
+    {},
+  )
+}
+
+export const LotteyByTCDAddress = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
+      return prevProps.tcdAddress !== this.props.tcdAddress
     }
-
     async fetch() {
-      const { type, nList } = this.props
-      const {
-        allDataLotteryFeeds: { nodes },
-      } = await Utils.graphqlRequest(allLotteryByTypeQL(type, nList))
-
-      return nodes.map(({ lotteryTime, lastUpdate, ...ballResult }) => ({
-        time: moment(lotteryTime, 'YYYYMMDD'),
-        lastUpdate: moment(lastUpdate * 1000),
-        keyOnChain: `${type}/${lotteryTime}`,
-        ...ballResult,
-      }))
+      const rawData = await Utils.getDataRequest(
+        `/lotteries/${this.props.tcdAddress}`,
+      )
+      return rawData
+        .map(({ date, key, timestamp, value }) => {
+          return {
+            time: moment(date),
+            lastUpdate: moment(timestamp * 1000),
+            keyOnChain: key,
+            ...convertToBalls(value),
+          }
+        })
+        .sort((a, b) => {
+          if (a.time.isBefore(b.time)) {
+            return 1
+          }
+          return -1
+        })
     }
   },
 )
 
-export const LotteryProvidersByTypeTimeFetcher = withRouter(
+export const LotteryProvidersByTCDAddressTimeFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
       return (
-        prevProps.type !== this.props.type || prevProps.time !== this.props.time
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.keyOnChain !== this.props.keyOnChain
       )
     }
 
     async fetch() {
-      const { type, time } = this.props
-      const {
-        allDataLotteryFeedRaws: { nodes },
-      } = await Utils.graphqlRequest(allProvidersByTypeTimeQL(type, time))
+      const { tcdAddress, keyOnChain } = this.props
+      const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
+        key: keyOnChain,
+      })
+
+      if (reports.length === 0) {
+        return []
+      }
 
       // Aggregate results and see if the provider has reported maliciously
-      const providers = {}
+      const { reportedData } = reports[0]
 
-      nodes.forEach(
-        ({
-          timestamp,
-          dataProviderByDataSourceAddressAndTcdAddress: {
-            dataSourceAddress,
-            detail,
-            status,
-          },
-          ...balls
-        }) => {
-          if (!providers[dataSourceAddress]) {
-            providers[dataSourceAddress] = {
-              name: detail,
-              address: dataSourceAddress,
-              lastUpdate: moment(timestamp * 1000),
-              status,
-              balls,
-            }
-          } else {
-            if (!compareBalls(balls, providers[dataSourceAddress].balls)) {
-              providers[dataSourceAddress].warning =
-                'The provider has previously reported different result for this lottery'
-            }
-          }
-        },
-      )
-
-      const allProviders = Object.values(providers).map(
-        ({ balls, ...rest }) => ({ ...balls, ...rest }),
-      )
-      allProviders.sort((a, b) =>
-        a.lastUpdate.isBefore(b.lastUpdate) ? 1 : -1,
-      )
-
-      return allProviders
+      return Object.keys(reportedData).map(address => {
+        const providerInfo = getProvider(address)
+        return {
+          name: providerInfo.name,
+          image: providerInfo.image,
+          status: 'status',
+          address,
+          lastUpdate: moment(reportedData[address].timestamp * 1000),
+          ...convertToBalls(reportedData[address].value),
+        }
+      })
     }
   },
 )
