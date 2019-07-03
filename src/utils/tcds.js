@@ -16,6 +16,14 @@ import CrpytoActive from 'images/cryptoUSDActive.svg'
 import StockActive from 'images/stockUpActive.svg'
 import FiatActive from 'images/fiatActive.svg'
 
+// Lottery Image(Active)
+import PWBActive from 'images/pwbActive.svg'
+import MMNActive from 'images/mmnActive.svg'
+
+// Lottery Image(Inactive)
+import PWBInactive from 'images/pwbInactive.svg'
+import MMNInactive from 'images/mmnInactive.svg'
+
 export const getTCDInfomation = prefix =>
   ({
     'crypto:': {
@@ -77,6 +85,20 @@ export const getTCDInfomation = prefix =>
       label: 'Soccer',
       shortLabel: 'Soccer',
       order: 4,
+    },
+    'pwb:': {
+      imageInactive: PWBInactive,
+      imageActive: PWBActive,
+      label: 'Powerball',
+      shortLabel: 'Powerball',
+      order: 1,
+    },
+    'mmn:': {
+      imageInactive: MMNInactive,
+      imageActive: MMNActive,
+      label: 'Megamillions',
+      shortLabel: 'Megamillions',
+      order: 2,
     },
   }[prefix] || {
     imageActive: USAFootballSrc,

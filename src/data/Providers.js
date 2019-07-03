@@ -76,6 +76,20 @@ const allProviders = {
     image:
       'https://www.worldtradingdata.com/assets/main/img/favicons/favicon-96x96.png',
   },
+  '0xDA7A08e515dAb7cEc794f804Ce2B1c850FF19b7f': {
+    name: 'Megamillions',
+    image: 'https://www.ialottery.com/images/game-logos/megamillions-large.gif',
+  },
+  '0xDa7a198618105fd301958cA76548Ce9Ea5D1De42': {
+    name: 'Data NY Governance',
+    image:
+      'https://i2.wp.com/www.nysgis.net/wp-content/uploads/2016/09/nyslogo_418x200.png',
+  },
+  '0xdA7Ad157EdA297C1412BBdBe0E3600670e4560F6': {
+    name: 'PowerballBall',
+    image:
+      'https://s3.amazonaws.com/cdn.powerball.com/drupal/files/2019-03/Powerball%20Power%20Play_7.png',
+  },
   default: { name: 'Unknown' },
 }
 

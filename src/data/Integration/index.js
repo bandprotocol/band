@@ -6,6 +6,6 @@ import Identity from './Identity/index'
 export default {
   'Financial Data Feeds': Price,
   'Sport Data Feeds': Sport,
-  LotteryFeedCommunity: Lottery,
+  'Lottery Data Feeds': Lottery,
   BandIdentity: Identity,
 }
