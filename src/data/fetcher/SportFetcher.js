@@ -130,11 +130,10 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
       return (
-        prevProps.type !== this.props.type ||
-        prevProps.time !== this.props.time ||
-        prevProps.startTime !== this.props.startTime ||
-        prevProps.away !== this.props.away ||
-        prevProps.home !== this.props.home
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.keyOnChain !== this.props.keyOnChain ||
+        prevProps.home !== this.props.home ||
+        prevProps.away !== this.props.away
       )
     }
 
