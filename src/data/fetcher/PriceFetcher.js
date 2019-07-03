@@ -43,6 +43,7 @@ export const PricePairFetcher = withRouter(
         key: pair,
       })
 
+      // add another report point for prevent graph's plotting problem
       if (reports.length < 2) {
         reports.push(reports[0])
       }
