@@ -1,6 +1,8 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Flex, Box, Text, Card, Button, Heading } from 'ui/common'
+import { communityDetailSelector } from 'selectors/communities'
 import PageStructure from 'components/DataSetPageStructure'
 import DataPoint from 'components/DataPoint'
 import DataCard from 'components/DataCard'
@@ -26,6 +28,7 @@ const LoadMoreButton = createLoadingButton(styled(Button)`
 `)
 
 const renderDataPoints = (
+  tcdAddress,
   state,
   matches,
   currentSportLength,
@@ -86,6 +89,8 @@ const renderDataPoints = (
                 updatedAt={lastUpdate}
               >
                 <SportProvidersByTypeTimeTeamFetcher
+                  tcdAddress={tcdAddress}
+                  keyOnChain={keyOnChain}
                   type={type}
                   time={time.format('YYYYMMDD')}
                   home={home}
@@ -138,8 +143,9 @@ const renderDataPoints = (
   )
 }
 
-export default class SportPage extends React.Component {
+class SportPage extends React.Component {
   state = {
+    numDataPoints: 0,
     type: 'EPL',
     nSportList: 10,
     home: null,
@@ -184,7 +190,7 @@ export default class SportPage extends React.Component {
   }
 
   render() {
-    const { name: communityName } = this.props
+    const { tcdAddress, tcdPrefix } = this.props
     return (
       <PageStructure
         renderHeader={() => (
@@ -215,13 +221,11 @@ export default class SportPage extends React.Component {
         {...this.props}
       >
         <DataCard
-          headerText={`${this.currentSportLength || 0} Data Soccer Matches`}
+          headerText={`${this.state.numDataPoints} Data Soccer Matches`}
         >
           <SportByTypeFetcher
-            type={this.state.type}
-            nList={this.state.nSportList}
-            home={this.state.home}
-            away={this.state.away}
+            tcdAddress={tcdAddress}
+            setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
           >
             {({ fetching, data, forceFetch }) => {
               if (fetching) {
@@ -241,6 +245,7 @@ export default class SportPage extends React.Component {
               } else {
                 this.currentSportLength = data.length
                 return renderDataPoints(
+                  tcdAddress,
                   this.state,
                   data,
                   this.currentSportLength,
@@ -255,3 +260,28 @@ export default class SportPage extends React.Component {
     )
   }
 }
+
+const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: communityAddress,
+  })
+
+  if (!community) return {}
+
+  let tcdPrefix = null
+  try {
+    tcdPrefix = community
+      .get('tcds')
+      .get(tcdAddress)
+      .get('prefix')
+  } catch (e) {}
+
+  return {
+    name: community.get('name'),
+    address: community.get('address'),
+    tcdAddress: tcdAddress,
+    tcdPrefix: tcdPrefix,
+  }
+}
+
+export default connect(mapStateToProps)(SportPage)

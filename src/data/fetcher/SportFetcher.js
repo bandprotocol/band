@@ -2,6 +2,8 @@ import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Utils } from 'band.js'
+import BN from 'utils/bignumber'
+import { getProvider } from 'data/Providers'
 // import { getSportTeamByCode } from 'utils/sportTeam'
 
 const randNum = n =>
@@ -130,6 +132,18 @@ export const SportCountByTypeFetcher = withRouter(
   },
 )
 
+const decodeScores = scores => {
+  const bits = new BN(scores)
+    .toString(2)
+    .padStart(256, '0')
+    .slice(0, 16)
+
+  return [
+    new BN(bits.slice(0, 8), 2).toNumber(),
+    new BN(bits.slice(8), 2).toNumber(),
+  ]
+}
+
 export const SportByTypeFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
@@ -137,68 +151,31 @@ export const SportByTypeFetcher = withRouter(
     }
 
     async fetch() {
-      const { type, nList, home, away } = this.props
-      const {
-        allDataSportFeeds: { nodes },
-      } = await Utils.graphqlRequest(allSportByTypeQL(type, nList, home, away))
+      const { tcdAddress, setNumDataPoints } = this.props
 
-      return [1, 2, 3, 4, 5].map(i => {
-        const sportTime = '20190321'
-        const sportStartTime = '1815'
-        const sportType = 'EPL'
-        const year = '2019'
-        const home = 'TES' + i
-        const away = 'MOC' + i
-        const scoreAway = Math.floor(Math.random() * 100)
-        const scoreHome = Math.floor(Math.random() * 100)
-        return {
-          time: moment(
-            sportTime + (sportStartTime === '9999' ? '0000' : sportStartTime),
-            'YYYYMMDDHHm',
-          ),
-          hasStartTime: sportStartTime !== '9999',
-          lastUpdate: moment(
-            Date.now() - 86400000 * Math.ceil(Math.random() * 100),
-          ),
-          keyOnChain: `${sportType}${year}/${sportTime}/${home}-${away}${
-            sportStartTime === '9999' ? '' : '/' + sportStartTime
-          }`,
-          home,
-          away,
-          homeFullName: '🍷 Indianapolis Colts',
-          // awayFullName: '🍹Los Angeles Chargers',
-          scoreAway: scoreAway,
-          scoreHome: scoreHome,
-        }
-      })
+      const sports = await Utils.getDataRequest(`/sports/${tcdAddress}`)
+      setNumDataPoints(sports.length)
 
-      // return nodes.map(
-      //   ({
-      //     sportTime,
-      //     sportStartTime,
-      //     lastUpdate,
-      //     sportType,
-      //     year,
-      //     home,
-      //     away,
-      //     ...result
-      //   }) => ({
-      //     time: moment(
-      //       sportTime + (sportStartTime === '9999' ? '0000' : sportStartTime),
-      //       'YYYYMMDDHHm',
-      //     ),
-      //     hasStartTime: sportStartTime !== '9999',
-      //     lastUpdate: moment(lastUpdate * 1000),
-      //     keyOnChain: `${sportType}${year}/${sportTime}/${home}-${away}${
-      //       sportStartTime === '9999' ? '' : '/' + sportStartTime
-      //     }`,
-      //     home,
-      //     away,
-      //     homeFullName: getSportTeamByCode(type, home).label,
-      //     awayFullName: getSportTeamByCode(type, away).label,
-      //     ...result,
-      //   }),
-      // )
+      return sports
+        .sort((s1, s2) => (s1.timestamp > s2.timestamp ? 1 : -1))
+        .map(sport => {
+          const home = sport.home
+          const away = sport.away
+          const [scoreAway, scoreHome] = decodeScores(sport.value)
+          return {
+            time: moment(sport.timestamp * 1000),
+            hasStartTime:
+              sport.sportStartTime && sport.sportStartTime !== '9999',
+            lastUpdate: moment(Date.now() - sport.timestamp),
+            keyOnChain: sport.key,
+            home,
+            away,
+            homeFullName: '🏠 ' + home,
+            awayFullName: '🏕 ' + away,
+            scoreAway: scoreAway,
+            scoreHome: scoreHome,
+          }
+        })
     }
   },
 )
@@ -216,62 +193,33 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
     }
 
     async fetch() {
-      const { type, time, startTime, home, away } = this.props
-      const {
-        allDataSportFeedRaws: { nodes },
-      } = await Utils.graphqlRequest(
-        allProvidersByTypeTimeTeamQL(type, time, startTime, home, away),
-      )
+      const { tcdAddress, keyOnChain, home, away } = this.props
 
-      // Aggregate results and see if the provider has reported maliciously
-      const providers = {}
+      const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
+        key: keyOnChain,
+      })
 
-      for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {
-        providers[`0x9E07c5d0ed72cE79006A4b88Ab972F8768D3${randNum(4)}`] = {
-          name: randStr(5),
-          address: `0x9E07c5d0ed72cE79006A4b88Ab972F8768D3${randNum(4)}`,
-          lastUpdate: moment(Date.now() - parseInt(randNum(0)) * 86400000),
-          status: 'status',
-          scoreAway: '130',
-          scoreHome: '85',
-          home: 'Test',
-          away: 'Mock',
-        }
+      const { reportedData, time } = reports[0] || {
+        reportedData: [],
+        time: Date.now(),
       }
 
-      // nodes.forEach(
-      //   ({
-      //     timestamp,
-      //     dataProviderByDataSourceAddressAndTcdAddress: {
-      //       dataSourceAddress,
-      //       detail,
-      //       status,
-      //     },
-      //     scoreAway,
-      //     scoreHome,
-      //   }) => {
-      //     if (!providers[dataSourceAddress]) {
-      //       providers[dataSourceAddress] = {
-      //         name: detail,
-      //         address: dataSourceAddress,
-      //         lastUpdate: moment(timestamp * 1000),
-      //         status,
-      //         scoreAway,
-      //         scoreHome,
-      //         home,
-      //         away,
-      //       }
-      //     } else {
-      //       if (
-      //         providers[dataSourceAddress].scoreAway !== scoreAway ||
-      //         providers[dataSourceAddress].scoreHome !== scoreHome
-      //       ) {
-      //         providers[dataSourceAddress].warning =
-      //           'The provider has previously reported different result for this match'
-      //       }
-      //     }
-      //   },
-      // )
+      const providers = {}
+      for (const [k, v] of Object.entries(reportedData)) {
+        const { timestamp, value } = v
+        const [scoreAway, scoreHome] = decodeScores(value)
+        providers[k] = {
+          name: getProvider(k).name,
+          image: getProvider(k).image,
+          address: k,
+          away: away,
+          home: home,
+          lastUpdate: moment(timestamp * 1000),
+          scoreAway: scoreAway,
+          scoreHome: scoreHome,
+          status: 'status',
+        }
+      }
 
       const allProviders = Object.values(providers).map(
         ({ balls, ...rest }) => ({ ...balls, ...rest }),
@@ -279,6 +227,8 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
       allProviders.sort((a, b) =>
         a.lastUpdate.isBefore(b.lastUpdate) ? 1 : -1,
       )
+
+      console.log(allProviders)
 
       return allProviders
     }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'ui/common'
+import { Flex, Image, Text } from 'ui/common'
 import Link from 'components/Link'
 import colors from 'ui/colors'
 import { createTable } from 'components/Table'
@@ -21,7 +21,26 @@ export default createTable({
       flex: '0 0 180px',
       mr: 2,
     },
-    { data: d => d.name, label: 'Source', flex: '1', mr: 2 },
+    {
+      data: d => (
+        <Flex flexDirection="row" alignItems="center">
+          <Image
+            src={d.image}
+            height="16px"
+            mr={2}
+            style={{
+              filter: 'grayscale(1)',
+              minWidth: '16px',
+              maxWidth: '16px',
+            }}
+          />
+          {d.name}
+        </Flex>
+      ),
+      label: 'Source',
+      flex: '1',
+      mr: 2,
+    },
     {
       cell: { fontFamily: 'code', color: '#5269ff', fontSize: 13 },
       data: d => (

@@ -1,4 +1,17 @@
 const allProviders = {
+  '0xDA7A1dDCE143C2460Bd2536607ea38309D7c45Ca': {
+    name: 'SPORTS_DB',
+    image: 'https://i.imgur.com/GsZ6avc.png',
+  },
+  '0xda7AdcB9b801952019f8d44889A9F4038443dD97': {
+    name: 'DATA_NBA',
+    image:
+      'https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png',
+  },
+  '0xdA7a80e66A96ae364918aE7fcf2F9cA03e2a2D5d': {
+    name: 'ESPN',
+    image: 'https://i.imgur.com/QsU7xqB.png',
+  },
   '0xdA7af0fD57c5D2e918704f034fd9e13aEB28Ad13': {
     name: 'Coinbase',
     image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/89.png',
