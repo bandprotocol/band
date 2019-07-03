@@ -44,60 +44,6 @@ const countSportQL = (type, home, away) => `
 }
 `
 
-const allSportByTypeQL = (type, nList, home, away) => `
-{
-  allDataSportFeeds(
-    orderBy: SPORT_TIME_DESC
-    condition: { sportType: "${type}" }
-    filter: {
-      scoreAway: { isNull: false }
-      ${home ? `home: { equalTo: "${home}" }` : ``}
-      ${away ? `away: { equalTo: "${away}" }` : ``}
-    }
-    first: ${nList}
-  ) {
-    nodes {
-      away
-      scoreAway
-      scoreHome
-      sportTime
-      sportType
-      sportStartTime
-      home
-      year
-      lastUpdate
-    }
-  }
-}
-`
-
-const allProvidersByTypeTimeTeamQL = (type, time, startTime, home, away) => `
-{
-  allDataSportFeedRaws(
-    condition: {
-      sportType: "${type}"
-      sportTime: "${time}"
-      sportStartTime: "${startTime}"
-      away: "${away}"
-      home: "${home}"
-    }
-    orderBy: TIMESTAMP_DESC
-  ) {
-    nodes {
-      timestamp
-      scoreAway
-      scoreHome
-      dataProviderByDataSourceAddressAndTcdAddress {
-        dataSourceAddress
-        detail
-        status
-      }
-    }
-  }
-}
-
-`
-
 export const SportCountAllFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
@@ -147,7 +93,7 @@ const decodeScores = scores => {
 export const SportByTypeFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
+      return prevProps.tcdAddress !== this.props.tcdAddress
     }
 
     async fetch() {
