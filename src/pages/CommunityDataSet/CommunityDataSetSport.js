@@ -225,6 +225,7 @@ class SportPage extends React.Component {
         >
           <SportByTypeFetcher
             tcdAddress={tcdAddress}
+            tcdPrefix={tcdPrefix}
             setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
           >
             {({ fetching, data, forceFetch }) => {
@@ -280,7 +281,7 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
     name: community.get('name'),
     address: community.get('address'),
     tcdAddress: tcdAddress,
-    tcdPrefix: tcdPrefix,
+    tcdPrefix: tcdPrefix.slice(0, -1),
   }
 }
 

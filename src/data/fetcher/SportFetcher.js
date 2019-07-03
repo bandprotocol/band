@@ -4,7 +4,7 @@ import moment from 'moment'
 import { Utils } from 'band.js'
 import BN from 'utils/bignumber'
 import { getProvider } from 'data/Providers'
-// import { getSportTeamByCode } from 'utils/sportTeam'
+import { getSportTeamByCode } from 'utils/sportTeam'
 
 const randNum = n =>
   n > 0
@@ -97,7 +97,7 @@ export const SportByTypeFetcher = withRouter(
     }
 
     async fetch() {
-      const { tcdAddress, setNumDataPoints } = this.props
+      const { tcdAddress, tcdPrefix, setNumDataPoints } = this.props
 
       const sports = await Utils.getDataRequest(`/sports/${tcdAddress}`)
       setNumDataPoints(sports.length)
@@ -105,19 +105,22 @@ export const SportByTypeFetcher = withRouter(
       return sports
         .sort((s1, s2) => (s1.timestamp > s2.timestamp ? 1 : -1))
         .map(sport => {
+          // console.log(sport)
           const home = sport.home
           const away = sport.away
           const [scoreAway, scoreHome] = decodeScores(sport.value)
           return {
-            time: moment(sport.timestamp * 1000),
+            time: moment(new Date(sport.date).getTime()),
             hasStartTime:
               sport.sportStartTime && sport.sportStartTime !== '9999',
-            lastUpdate: moment(Date.now() - sport.timestamp),
+            lastUpdate: moment(sport.timestamp * 1000),
             keyOnChain: sport.key,
             home,
             away,
-            homeFullName: '🏠 ' + home,
-            awayFullName: '🏕 ' + away,
+            homeFullName:
+              '🏠 ' + getSportTeamByCode(tcdPrefix.toUpperCase(), home).label,
+            awayFullName:
+              '🏕 ' + getSportTeamByCode(tcdPrefix.toUpperCase(), away).label,
             scoreAway: scoreAway,
             scoreHome: scoreHome,
           }
@@ -172,8 +175,6 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
       allProviders.sort((a, b) =>
         a.lastUpdate.isBefore(b.lastUpdate) ? 1 : -1,
       )
-
-      console.log(allProviders)
 
       return allProviders
     }
