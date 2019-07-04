@@ -65,6 +65,14 @@ const CountBadge = styled(Flex).attrs({
   border-radius: 15px;
 `
 
+const getProfileColor = symbol =>
+  ({
+    XSP: 'linear-gradient(52deg, #406ae7, #c63ad6)',
+    XLT: 'linear-gradient(to left, #ffca55, #ff7155)',
+    XFN:
+      'linear-gradient(69deg, rgba(190, 60, 218, 0.9), rgba(239, 62, 150, 0.9))',
+  }[symbol] || '#fff')
+
 export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
   <PageContainer
     fullWidth
@@ -135,6 +143,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
                   key={i}
                   community={community}
                   bandPrice={bandPrice}
+                  borderColor={getProfileColor(community.symbol)}
                   defaultTcd={
                     Object.keys(community.tcds).find(
                       tcdAddr =>
@@ -196,7 +205,6 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
                         community={community}
                         bandPrice={bandPrice}
                         statusBg="#2771ec"
-                        bgColor="linear-gradient(118deg, #6b8bf5, #6bf5cd)"
                         onClick={() =>
                           history.push(
                             `/community/${community.tokenAddress}/overview`,

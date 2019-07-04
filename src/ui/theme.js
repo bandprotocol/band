@@ -104,6 +104,23 @@ export default {
         boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
       },
     },
+    lightblue: {
+      fontFamily: 'Avenir',
+      fontWeight: 400,
+      fontSize: '0.85em',
+      padding: '0.9em 3em',
+      cursor: 'pointer',
+      color: '#5269ff',
+      boxShadow: '0 3px 5px 0 rgba(0, 0, 0, 0.2)',
+      backgroundColor: '#e1e5ff',
+      border: `solid 0px ${colors.text.grey}`,
+      transition: 'all 250ms',
+      borderRadius: '20px',
+      '&:hover': {
+        backgroundColor: '#ffca55',
+        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
+      },
+    },
     submit: {
       fontFamily: 'Avenir',
       fontWeight: 400,

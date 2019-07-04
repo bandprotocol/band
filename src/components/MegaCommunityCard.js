@@ -33,14 +33,18 @@ const StyledCard = styled(Flex)`
   }
 `
 
-const DisplayIcon = ({ src }) => (
+const DisplayIcon = ({ src, bgColor }) => (
   <Flex
     width="95px"
-    bg="#3c55f9"
     justifyContent="center"
     alignItems="center"
     mt="5px"
-    style={{ height: '95px', border: '2px solid #fff', borderRadius: '9px' }}
+    style={{
+      height: '95px',
+      borderRadius: '50%',
+      backgroundImage: bgColor,
+      boxShadow: '0 5px 10px 0 #d3dcea',
+    }}
   >
     <Image src={src} />
   </Flex>
@@ -54,15 +58,15 @@ const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
     px="15px"
     justifyContent="space-around"
     alignItems="center"
-    bg={statusBg || '#3c55f9'}
+    bg={statusBg || '#ebf1ff'}
     my={3}
     style={{ borderRadius: '10px' }}
   >
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Text color="#c4d7ff" fontSize={12} fontWeight="500">
+      <Text color="#4a4a4a" fontSize={12} fontWeight="500">
         Market Cap.
       </Text>
-      <Text color="#fff" fontSize={1} py="10px" fontWeight="500">
+      <Text color="#5269ff" fontSize={1} py="10px" fontWeight="900">
         $ {marketCap.shortPretty()}
       </Text>
     </Flex>
@@ -76,21 +80,21 @@ const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
         borderRight: '1px solid rgba(255, 255,255 ,0.22)',
       }}
     >
-      <Text color="#c4d7ff" fontSize={12} fontWeight="500">
+      <Text color="#4a4a4a" fontSize={12} fontWeight="500">
         Price/Token
       </Text>
-      <Text color="#fff" fontSize={1} py="10px" fontWeight="500">
+      <Text color="#5269ff" fontSize={1} py="10px" fontWeight="900">
         $ {price.shortPretty()}
       </Text>
     </Flex>
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
-      <Text color="#c4d7ff" fontSize={12} fontWeight="500">
+      <Text color="#4a4a4a" fontSize={12} fontWeight="500">
         Last 24 hrs.
       </Text>
       <Text
-        color={last24Hrs >= 0.0 ? '#4dfea0' : colors.red.normal}
+        color={last24Hrs >= 0.0 ? '#42c47f' : colors.red.normal}
         fontSize={1}
-        fontWeight="500"
+        fontWeight="900"
         py="10px"
       >
         {last24Hrs >= 0.0 ? '+' : null}
@@ -111,6 +115,7 @@ export default ({
     logo,
   },
   bandPrice,
+  borderColor,
   onClick,
   bgColor,
   statusBg,
@@ -125,30 +130,25 @@ export default ({
     style={{
       height: '290px',
       borderRadius: '10px',
-      border: 'rgba(0,0,0,0)',
+      borderColor,
       padding: '0px',
       overflow: 'hidden',
-      backgroundImage: bgColor || 'linear-gradient(to right, #5c62ff, #5a9bff)',
+      backgroundImage:
+        borderColor || 'linear-gradient(to left, #ffca55, #ff7155)',
     }}
     onClick={onClick}
   >
-    {/* Image Banner */}
-    <Flex flexDirection="column" alignItems="flex-start" pl="30px" color="#fff">
-      <Flex alignItems="center">
-        <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
-          {name}
-        </WrapText>
-      </Flex>
-      <Box
-        bg="rgba(255,255,255, 0.3)"
-        mx="-30px"
-        width="115%"
-        mb={3}
-        style={{ height: '2px' }}
-      />
-      <Flex>
-        <DisplayIcon src={logo} />
+    <Flex
+      bg="white"
+      m="1px"
+      style={{ overflow: 'hidden', borderRadius: '10px' }}
+    >
+      <Flex p="25px 30px" color="#4a4a4a">
+        <DisplayIcon src={logo} bgColor={borderColor} />
         <Flex flexDirection="column" mx="18px">
+          <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
+            {name}
+          </WrapText>
           <Description fontSize="15px" mb={2}>
             {description}
           </Description>
@@ -161,11 +161,12 @@ export default ({
           <Flex flexDirection="row" alignItems="center" mt={2}>
             <Link to={`/community/${tokenAddress}/overview`}>
               <Button
-                variant="white"
+                variant="blue"
                 style={{
                   padding: '12px 25px',
                   minWidth: '120px',
                   maxWidth: '120px',
+                  fontWeight: '900',
                 }}
                 onClick={e => e.stopPropagation(e)}
               >
@@ -174,13 +175,14 @@ export default ({
             </Link>
             <Link to={`/community/${tokenAddress}/${defaultTcd}/dataset`}>
               <Button
-                variant="white"
+                variant="lightblue"
                 ml={3}
                 style={{
                   padding: isTcd ? '12px 25px' : '12px 5px',
                   minWidth: '120px',
                   maxWidth: '120px',
                   whiteSpace: 'noWrap',
+                  fontWeight: '900',
                 }}
                 onClick={e => e.stopPropagation(e)}
               >
