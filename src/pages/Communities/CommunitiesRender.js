@@ -5,7 +5,7 @@ import { Flex, Text, Box, Card, Button } from 'ui/common'
 import { getTCDInfomation } from 'utils/tcds'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
-import HeaderBackgroundSrc from 'images/background-header.svg'
+import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
   height: 380px;
@@ -31,10 +31,9 @@ const WhiteButton = styled(Button).attrs({
   fontWeight: '500',
   bg: '#fff',
   width: '226px',
-  mx: '15px',
 })`
   line-height: 35px;
-  border-radius: 4px;
+  border-radius: 24px;
   cursor: pointer;
 `
 
@@ -47,7 +46,7 @@ const WhiteOutlineButton = styled(Button).attrs({
   background-color: transparent;
   border: 1px solid #fff;
   line-height: 35px;
-  border-radius: 4px;
+  border-radius: 24px;
   cursor: pointer;
 `
 
@@ -73,10 +72,11 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
     <Header>
       <Flex
         flexDirection="column"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="center"
-        width="100%"
-        style={{ height: '100%' }}
+        width="1170px"
+        p="0px 32px"
+        style={{ height: '100%', margin: '0 auto' }}
       >
         <Text
           fontSize="50px"
@@ -92,7 +92,6 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
           color="#fff"
           my={3}
           width="850px"
-          textAlign="center"
           style={{ lineHeight: '1.7' }}
         >
           Band Protocol connects ÐApps with trusted off-chain information,

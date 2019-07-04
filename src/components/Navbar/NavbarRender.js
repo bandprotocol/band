@@ -28,7 +28,7 @@ const Nav = styled.nav`
 
   ${p =>
     p.isDashboard
-      ? 'background: unset; background-image: linear-gradient(to right, #5269ff, #4890ff); box-shadow: 0 0 0 0 #000000;'
+      ? 'background: unset; background-image: linear-gradient(92deg, #6b8bf5, #6bf5cd); box-shadow: 0 0 0 0 #000000;'
       : 'background: #fff; box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);'}
 
   ${media.mobile} {
