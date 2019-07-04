@@ -1,7 +1,7 @@
 import createReducer from 'reducers/creator'
 
 import { SAVE_COMMUNITY_INFO, SAVE_CT_BALANCE, REMOVE_BALANCE } from 'actions'
-import { Map, List } from 'immutable'
+import { Map } from 'immutable'
 
 const handleSaveCommunityInfo = (
   state,

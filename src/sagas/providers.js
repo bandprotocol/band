@@ -15,6 +15,7 @@ import { nameAndAddressCommunitySelector } from 'selectors/communities'
 import { currentBandClientSelector } from 'selectors/current'
 
 function* handleUpdateProvider({ address, provider }) {
+  console.log('Update provider', address)
   if (address) {
     yield put(setUserAddress(address))
     yield put(
@@ -44,9 +45,12 @@ function* handleUpdateProvider({ address, provider }) {
     const tokenAddress = dapp.get('address')
     const commClient = yield bandClient.at(tokenAddress)
     yield put(saveCommunityClient(tokenAddress, commClient))
-    const tcdAddress = dapp.getIn(['tcd', 'tcdAddress'])
-    if (tcdAddress)
-      yield put(saveTCDClient(tcdAddress, commClient.tcd(tcdAddress)))
+    const tcdList = dapp.get('tcds')
+    if (tcdList) {
+      for (const address of tcdList.keySeq()) {
+        yield put(saveTCDClient(address, commClient.tcd(address)))
+      }
+    }
   }
 }
 
