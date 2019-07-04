@@ -118,21 +118,6 @@ const FilterButton = styled(Button).attrs({
   line-height: 36px;
 `
 
-const Data = ({ children }) => (
-  <Card
-    flex="0 0 auto"
-    bg="#f3f6ff"
-    border="solid 1px #a4bdfe"
-    py={1}
-    px={3}
-    borderRadius="4px"
-  >
-    <Text ml="auto" fontFamily="code" fontSize={14} fontWeight="bold">
-      {children}
-    </Text>
-  </Card>
-)
-
 const Report = ({
   symbol,
   event: {
@@ -150,7 +135,6 @@ const Report = ({
   <Flex
     py="18px"
     pl="32px"
-    pr="8px"
     style={{ borderBottom: 'solid 1px #eef3ff' }}
     alignItems="flex-start"
   >
@@ -177,7 +161,7 @@ const Report = ({
         </Text>
       </Flex>
     </Box>
-    <Data>{getFormat(symbol).formatValue(value)}</Data>
+    {getFormat(symbol).formatValue(value)}
   </Flex>
 )
 
@@ -241,7 +225,7 @@ const Broadcast = ({
               {k}
             </Text>
             <Box my={1} ml={2}>
-              <Data>{getFormat(symbol).formatValue(value)}</Data>
+              {getFormat(symbol).formatValue(value)}
             </Box>
           </Flex>
         ))}
