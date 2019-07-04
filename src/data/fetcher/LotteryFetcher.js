@@ -1,7 +1,7 @@
 import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
-import BN from 'utils/bignumber'
+import { convertToBalls } from 'utils/helper'
 import { Utils } from 'band.js'
 import { getProvider } from 'data/Providers'
 
@@ -42,27 +42,6 @@ export const LotteryCountByTypeFetcher = withRouter(
     }
   },
 )
-
-const convertToBalls = value => {
-  const valueAsHex = new BN(value).toString(16).padStart(64, '0')
-  const keys = [
-    'whiteBall1',
-    'whiteBall2',
-    'whiteBall3',
-    'whiteBall4',
-    'whiteBall5',
-    'redBall',
-    'mul',
-  ]
-
-  return keys.reduce(
-    (acc, key, i) => ({
-      ...acc,
-      [key]: parseInt(valueAsHex.slice(i * 2, i * 2 + 2), 16),
-    }),
-    {},
-  )
-}
 
 export const LotteyByTCDAddress = withRouter(
   class extends BaseFetcher {

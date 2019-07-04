@@ -2,7 +2,7 @@ import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { Utils } from 'band.js'
-import BN from 'utils/bignumber'
+import { decodeScores } from 'utils/helper'
 import { getProvider } from 'data/Providers'
 import { getSportTeamByCode } from 'utils/sportTeam'
 
@@ -78,18 +78,6 @@ export const SportCountByTypeFetcher = withRouter(
   },
 )
 
-const decodeScores = scores => {
-  const bits = new BN(scores)
-    .toString(2)
-    .padStart(256, '0')
-    .slice(0, 16)
-
-  return [
-    new BN(bits.slice(0, 8), 2).toNumber(),
-    new BN(bits.slice(8), 2).toNumber(),
-  ]
-}
-
 export const SportByTypeFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
@@ -108,7 +96,7 @@ export const SportByTypeFetcher = withRouter(
           // console.log(sport)
           const home = sport.home
           const away = sport.away
-          const [scoreAway, scoreHome] = decodeScores(sport.value)
+          const [scoreHome, scoreAway] = decodeScores(sport.value)
           return {
             time: moment(new Date(sport.date).getTime()),
             hasStartTime:
@@ -155,7 +143,7 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
       const providers = {}
       for (const [k, v] of Object.entries(reportedData)) {
         const { timestamp, value } = v
-        const [scoreAway, scoreHome] = decodeScores(value)
+        const [scoreHome, scoreAway] = decodeScores(value)
         providers[k] = {
           name: getProvider(k).name,
           image: getProvider(k).image,

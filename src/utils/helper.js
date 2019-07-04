@@ -211,3 +211,38 @@ export const getParameterDetail = name =>
       description: 'Period of time for data provider to with draw their stake',
     },
   }[name] || { type: 'Unknown', description: 'UNKNOWN' })
+
+// convert data format for lottery balls
+export const convertToBalls = value => {
+  const valueAsHex = new BN(value).toString(16).padStart(64, '0')
+  const keys = [
+    'whiteBall1',
+    'whiteBall2',
+    'whiteBall3',
+    'whiteBall4',
+    'whiteBall5',
+    'redBall',
+    'mul',
+  ]
+
+  return keys.reduce(
+    (acc, key, i) => ({
+      ...acc,
+      [key]: parseInt(valueAsHex.slice(i * 2, i * 2 + 2), 16),
+    }),
+    {},
+  )
+}
+
+// convert data format for sport match
+export const decodeScores = scores => {
+  const bits = new BN(scores)
+    .toString(2)
+    .padStart(256, '0')
+    .slice(0, 16)
+
+  return [
+    new BN(bits.slice(0, 8), 2).toNumber(),
+    new BN(bits.slice(8), 2).toNumber(),
+  ]
+}
