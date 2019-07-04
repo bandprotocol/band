@@ -8,12 +8,13 @@ import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
-  height: 380px;
+  height: 315px;
   width: 100%;
   background: url('${HeaderBackgroundSrc}');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  border-bottom-right-radius: 345px;
 `
 
 const AbsoluteLink = styled.a.attrs(props => ({
@@ -52,7 +53,7 @@ const WhiteOutlineButton = styled(Button).attrs({
 
 const CountBadge = styled(Flex).attrs({
   color: '#fff',
-  bg: '#5269ff',
+  bg: '#42c47f',
   width: '43px',
   justifyContent: 'center',
   alignItems: 'center',
