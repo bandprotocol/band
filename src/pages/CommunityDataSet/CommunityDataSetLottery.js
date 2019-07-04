@@ -83,7 +83,6 @@ const renderDataPoints = (
                   <Ball>{pad(whiteBall3)}</Ball>
                   <Ball>{pad(whiteBall4)}</Ball>
                   <Ball>{pad(whiteBall5)}</Ball>
-                  <Ball>{pad(whiteBall5)}</Ball>
                   <Ball mr={3} red>
                     {pad(redBall)}
                   </Ball>
