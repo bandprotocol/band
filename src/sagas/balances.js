@@ -7,6 +7,7 @@ import { bandSelector } from 'selectors/basic'
 import BN from 'utils/bignumber'
 
 function* handleReloadBalance() {
+  // console.log('Reload price', new Date().getTime())
   const userAddress = yield select(currentUserSelector)
   const bandAddress = (yield select(bandSelector)).get('address')
   const query = yield Utils.graphqlRequest(`{
@@ -22,19 +23,17 @@ function* handleReloadBalance() {
       }
     }
   }`)
-  for (const { address } of query.allTokens.nodes) {
-    if (address === bandAddress) {
-      yield put(saveBandBalance(new BN(0)))
-    } else {
-      yield put(saveCTBalance(address, new BN(0)))
-    }
+
+  const balances = {}
+  for (const { value, tokenAddress } of query.allBalances.nodes) {
+    balances[tokenAddress] = new BN(value)
   }
 
-  for (const { value, tokenAddress } of query.allBalances.nodes) {
-    if (tokenAddress === bandAddress) {
-      yield put(saveBandBalance(new BN(value)))
+  for (const { address } of query.allTokens.nodes) {
+    if (address === bandAddress) {
+      yield put(saveBandBalance(balances[address] || new BN(0)))
     } else {
-      yield put(saveCTBalance(tokenAddress, new BN(value)))
+      yield put(saveCTBalance(address, balances[address] || new BN(0)))
     }
   }
 }

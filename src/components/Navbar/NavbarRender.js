@@ -16,6 +16,7 @@ import WhiteLogoSrc from 'images/band-white.png'
 
 // Other Page
 import LogoSrc from 'images/logo-dark.png'
+import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const Nav = styled.nav`
   display: flex;
@@ -356,10 +357,12 @@ export default ({
                   </Box>
                 </BlockTransactions>
               </ClickOutSide>
-            ) : (
+            ) : user === 'NOT_SIGNIN' ? (
               <SignIn onClick={showWallet} isDashboard={isDashboard}>
                 Sign in
               </SignIn>
+            ) : (
+              <CircleLoadingSpinner radius="40px" color="red" />
             )}
           </Flex>
         </Flex>

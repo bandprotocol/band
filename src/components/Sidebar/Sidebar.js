@@ -59,7 +59,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
   if (!community) return {}
   const tcds = community.get('tcds').toJS()
   return {
-    logedin: !!currentUserSelector(state),
+    logedin: currentUserSelector(state) !== 'NOT_SIGNIN',
     name: community.get('name'),
     src: community.get('logo'),
     balance: community.get('balance'),

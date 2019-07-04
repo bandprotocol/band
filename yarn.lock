@@ -2474,10 +2474,10 @@ balanced-match@^1.0.0:
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
-band-wallet@^0.2.11:
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/band-wallet/-/band-wallet-0.2.11.tgz#4b611d8d31e832cb0532ead63671d2a7aa49e6df"
-  integrity sha512-vqdbBL5UDLY9G8j8WEjOJ87+XYg2t5xJ8Pza8JN5bZhSK/bYb0SLMcvkpZ4RErJkkCdS1g1zSXnPh0Go6lwNaw==
+band-wallet@^0.2.13:
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/band-wallet/-/band-wallet-0.2.13.tgz#bef9f00284adccf3004bd4e2bc4784ed4a9a5f4f"
+  integrity sha512-rJ72MI3i6glJ8KXB7vVtEWMhM+1EzRlw3BNuKxwvT8C/BjWfFvSDQjDoUQox3Me+fFjGbbo1AGJBdZ3JNU+UZA==
   dependencies:
     class-autobind "^0.1.4"
     react-click-outside tj/react-click-outside
@@ -10709,7 +10709,7 @@ react-chartjs-2@^2.7.4:
     lodash "^4.17.4"
     prop-types "^15.5.8"
 
-react-click-outside@tj/react-click-outside:
+"react-click-outside@github:tj/react-click-outside", react-click-outside@tj/react-click-outside:
   version "1.1.1"
   resolved "https://codeload.github.com/tj/react-click-outside/tar.gz/a833ddc5be47490307f9fcc6ed09d8c353108510"
 

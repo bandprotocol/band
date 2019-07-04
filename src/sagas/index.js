@@ -1,13 +1,12 @@
-import { all, fork, put, delay, select } from 'redux-saga/effects'
-import {
-  currentUserSelector,
-  currentBandClientSelector,
-} from 'selectors/current'
+import { all, fork, put, delay, select, takeEvery } from 'redux-saga/effects'
+import { currentUserSelector } from 'selectors/current'
+import { channel } from 'redux-saga'
 import { web3Selector } from 'selectors/wallet'
 import {
   updateProvider,
   saveBandInfo,
   saveCommunityInfo,
+  setUserAddress,
   setWallet,
   setWeb3,
   saveTxs,
@@ -56,9 +55,34 @@ switch (network) {
     WALLET_ENDPOINT = 'http://localhost:3000'
 }
 
-const web3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
+const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
+const web3Channel = channel()
+
+function* handleWeb3Channel({ status }) {
+  switch (status) {
+    case 'UNINITIALIZED':
+      yield put(setUserAddress('NOT_READY'))
+      break
+    case 'INITIALIZED':
+      yield put(setUserAddress('INITIALIZED'))
+      break
+    case 'NOT_SIGNIN':
+      yield put(updateProvider())
+      break
+    case 'PROVIDER_READY': {
+      const provider = yield window.BandWallet.provider
+      const web3 = new Web3(provider)
+      const userAddress = yield getUser(web3)
+      yield put(setWeb3(web3))
+      yield put(updateProvider(userAddress, provider))
+      break
+    }
+    default:
+  }
+}
 
 function* baseInitialize() {
+  // console.log('Start time', new Date().getTime())
   // start fetching state
   yield put(toggleFetch(true))
   window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
@@ -80,16 +104,24 @@ function* baseInitialize() {
     }
   })
 
+  window.BandWallet.on('status', s =>
+    // console.log('status', s, new Date().getTime()) ||
+    web3Channel.put({ status: s }),
+  )
+
+  yield put(setWallet(window.BandWallet))
+  yield put(setWeb3(defaultWeb3))
+
   const query = yield Utils.graphqlRequest(`
     {
-      allContracts(condition: {contractType: "BAND_TOKEN"}) {
-        nodes {
+      allTokens(condition: {name: "BAND"}){
+        nodes{
           address
         }
       }
     }
   `)
-  const bandAddress = query.allContracts.nodes[0].address
+  const bandAddress = query.allTokens.nodes[0].address
   yield put(
     // TODO: Mock on price and last24hr
     saveBandInfo(bandAddress, '1000000000000000000000000', 1.0, 0),
@@ -206,19 +238,15 @@ function* baseInitialize() {
     )
   }
 
-  yield put(setWallet(window.BandWallet))
-  yield put(setWeb3(new Web3(window.BandWallet.ref.current.state.provider)))
   // Auto update pending transaction
   yield fork(checkTransaction)
-  // Update user address and balance after fetch all data
-  yield fork(checkProvider)
   // stop fetching state
   yield put(toggleFetch(false))
 }
 
 function* checkTransaction() {
   while (true) {
-    const currentBlock = yield web3.eth.getBlockNumber()
+    const currentBlock = yield defaultWeb3.eth.getBlockNumber()
     if (currentBlock !== (yield select(blockNumberSelector))) {
       const allTxs = yield select(transactionSelector)
       if (allTxs) {
@@ -237,7 +265,7 @@ function* checkTransaction() {
                     return tx
                   }
 
-                  const receipt = yield web3.eth.getTransactionReceipt(
+                  const receipt = yield defaultWeb3.eth.getTransactionReceipt(
                     tx.get('txHash'),
                   )
 
@@ -278,43 +306,13 @@ function* checkTransaction() {
   }
 }
 
-function* checkProvider() {
-  while (true) {
-    const web3 = yield select(web3Selector)
-    window.bandClient = yield select(currentBandClientSelector)
-    const userAddress =
-      (web3 &&
-        (yield new Promise((resolve, reject) => {
-          web3.eth.getAccounts((error, users) => {
-            if (error) reject(error)
-            else resolve(web3.utils.toChecksumAddress(users[0]))
-          })
-        }))) ||
-      null
-    yield put(updateProvider(userAddress, web3 && web3.currentProvider))
-    if (userAddress) {
-      // Load transaction history here!
-      const rawTxState = localStorage.getItem(`txs-${userAddress}`)
-      const rawHiddenTxState = localStorage.getItem(`hiddenTxs-${userAddress}`)
-      if (rawTxState && rawHiddenTxState) {
-        const txState = transit.fromJSON(rawTxState)
-        const hiddenTxState = transit.fromJSON(rawHiddenTxState)
-        yield put(saveTxs(0, txState, true))
-        yield put(saveHiddenTxs(hiddenTxState))
-      } else if (rawTxState) {
-        const txState = transit.fromJSON(rawTxState)
-        yield put(saveTxs(0, txState, true))
-        yield put(saveHiddenTxs(Set()))
-      } else {
-        yield put(saveTxs(0, List(), true))
-        yield put(saveHiddenTxs(Set()))
-      }
-    } else {
-      yield put(saveTxs(0, List(), true))
-      yield put(saveHiddenTxs(Set()))
-    }
-    yield delay(3000)
-  }
+function* getUser(web3) {
+  return yield new Promise((resolve, reject) => {
+    web3.eth.getAccounts((error, users) => {
+      if (error) reject(error)
+      else resolve(web3.utils.toChecksumAddress(users[0]))
+    })
+  }) || null
 }
 
 export default function*() {
@@ -331,5 +329,6 @@ export default function*() {
     fork(holderSaga),
     fork(tcdSaga),
   ])
+  yield takeEvery(web3Channel, handleWeb3Channel)
   yield* baseInitialize()
 }

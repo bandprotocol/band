@@ -9,15 +9,20 @@ import {
   saveTCDClient,
   removeBalance,
   reloadBalance,
+  saveTxs,
+  saveHiddenTxs,
 } from 'actions'
 
 import { nameAndAddressCommunitySelector } from 'selectors/communities'
 import { currentBandClientSelector } from 'selectors/current'
 
+import transit from 'transit-immutable-js'
+import { List, Set } from 'immutable'
+
 function* handleUpdateProvider({ address, provider }) {
-  console.log('Update provider', address)
   if (address) {
     yield put(setUserAddress(address))
+    yield put(reloadBalance())
     yield put(
       saveBandClient(
         yield BandProtocolClient.make({
@@ -25,10 +30,24 @@ function* handleUpdateProvider({ address, provider }) {
         }),
       ),
     )
-    yield put(reloadBalance())
+    const rawTxState = localStorage.getItem(`txs-${address}`)
+    const rawHiddenTxState = localStorage.getItem(`hiddenTxs-${address}`)
+    if (rawTxState && rawHiddenTxState) {
+      const txState = transit.fromJSON(rawTxState)
+      const hiddenTxState = transit.fromJSON(rawHiddenTxState)
+      yield put(saveTxs(0, txState, true))
+      yield put(saveHiddenTxs(hiddenTxState))
+    } else if (rawTxState) {
+      const txState = transit.fromJSON(rawTxState)
+      yield put(saveTxs(0, txState, true))
+      yield put(saveHiddenTxs(Set()))
+    } else {
+      yield put(saveTxs(0, List(), true))
+      yield put(saveHiddenTxs(Set()))
+    }
   } else {
     yield put(removeBalance())
-    yield put(setUserAddress(null))
+    yield put(setUserAddress('NOT_SIGNIN'))
     yield put(
       saveBandClient(
         yield BandProtocolClient.make({
@@ -36,6 +55,8 @@ function* handleUpdateProvider({ address, provider }) {
         }),
       ),
     )
+    yield put(saveTxs(0, List(), true))
+    yield put(saveHiddenTxs(Set()))
   }
 
   const bandClient = yield select(currentBandClientSelector)
