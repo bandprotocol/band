@@ -28,7 +28,7 @@ class CommunityProposal extends React.Component {
       <PageStructure
         name={name}
         communityAddress={tokenAddress}
-        breadcrumb={{ path: 'proposal', label: 'Prososal' }}
+        breadcrumb={{ path: 'proposal', label: 'Proposal' }}
         renderHeader={() => (
           <Flex
             flexDirection="column"
