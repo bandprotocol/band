@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import ParameterPanelRender from './ParameterPanelRender'
-import { currentUserSelector } from 'selectors/current'
-import { prefixListSelector } from 'selectors/parameter'
+import { communityDetailSelector } from 'selectors/communities'
 import { loadParameters, showModal } from 'actions'
 import { walletSelector } from 'selectors/wallet'
+import { currentUserSelector } from 'selectors/current'
+import { prefixListSelector } from 'selectors/parameter'
+import CommunityParameterRender from './CommunityParameterRender'
 
-class ParameterPanel extends React.Component {
+class CommunityParameter extends React.Component {
   state = {
     prefix: null,
     isEdit: false,
@@ -70,28 +71,36 @@ class ParameterPanel extends React.Component {
 
   render() {
     return (
-      <ParameterPanelRender
+      <CommunityParameterRender
+        {...this.props}
         currentPrefix={this.state.prefix}
+        isEdit={this.state.isEdit}
         onChangePrefix={this.onPrefixChange.bind(this)}
         toggleEdit={this.toggleEdit.bind(this)}
-        isEdit={this.state.isEdit}
         handleParameterChange={this.handleParameterChange.bind(this)}
         submitChanges={this.submitChanges.bind(this)}
-        prefixList={this.props.prefixList}
         signin={() => this.showWallet()}
-        logedin={this.props.logedin}
       />
     )
   }
 }
 
-const mapStateToProps = (state, { tokenAddress }) => ({
-  prefixList: prefixListSelector(state, { address: tokenAddress }).map(
-    prefix => ({ value: prefix, label: prefix }),
-  ),
-  logedin: !!currentUserSelector(state),
-  wallet: walletSelector(state),
-})
+const mapStateToProps = (state, { tokenAddress }) => {
+  const community = communityDetailSelector(state, {
+    address: tokenAddress,
+  })
+
+  if (!community) return {}
+
+  return {
+    name: community.get('name'),
+    prefixList: prefixListSelector(state, { address: tokenAddress }).map(
+      prefix => ({ value: prefix, label: prefix }),
+    ),
+    logedin: !!currentUserSelector(state),
+    wallet: walletSelector(state),
+  }
+}
 
 const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   loadParameters: () => dispatch(loadParameters(tokenAddress)),
@@ -102,4 +111,4 @@ const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ParameterPanel)
+)(CommunityParameter)

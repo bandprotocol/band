@@ -80,7 +80,7 @@ export default ({
         justifyContent="center"
         bg="#ffffff"
         flex={1}
-        px="40px"
+        px="20px"
         style={{
           lineHeight: '50px',
           cursor: 'pointer',

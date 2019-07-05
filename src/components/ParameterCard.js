@@ -25,10 +25,11 @@ export default ({
   width,
   padding,
   margin,
+  whiteCardStyle,
 }) => {
   const [convertedValue, unit] = convertFromChain(value, detail.type)
   return (
-    <WhiteCard width={width} margin={margin}>
+    <WhiteCard width={width} margin={margin} style={whiteCardStyle}>
       <Flex
         flexDirection="column"
         style={{ height: '100%', padding: padding || '28px 40px 28px 21px' }}

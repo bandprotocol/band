@@ -4,7 +4,7 @@ import ParameterCard from 'components/ParameterCard'
 
 import { getParameterDetail } from 'utils/helper'
 
-export default ({ params, isEdit, handleParameterChange }) => (
+export default ({ params, isEdit, handleParameterChange, whiteCardStyle }) => (
   <Flex flexWrap="wrap" mr="-24px">
     {params.map(param => (
       <ParameterCard
@@ -12,6 +12,7 @@ export default ({ params, isEdit, handleParameterChange }) => (
         key={param.name}
         detail={getParameterDetail(param.name)}
         isEdit={isEdit}
+        whiteCardStyle={whiteCardStyle}
         handleParameterChange={value =>
           handleParameterChange(param.name, value)
         }

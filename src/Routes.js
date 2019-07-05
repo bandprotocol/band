@@ -9,7 +9,7 @@ import Backdrop from 'components/Backdrop'
 import Sidebar from 'components/Sidebar'
 import CommunitiesPage from 'pages/Communities'
 import CommunityDetailPage from 'pages/CommunityDetail'
-import CommunityGovernancePage from 'pages/CommunityGovernance'
+import CommunityParameterPage from 'pages/CommunityParameter'
 import CommunityProposalPage from 'pages/CommunityProposal'
 import CreateCommunityPage from 'pages/CreateCommunity'
 
@@ -38,7 +38,7 @@ export default ({ match, location }) => (
                   <Route
                     path="/community/:community/parameters"
                     render={({ match }) => (
-                      <CommunityGovernancePage
+                      <CommunityParameterPage
                         tokenAddress={match.params.community}
                       />
                     )}
