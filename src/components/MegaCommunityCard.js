@@ -189,7 +189,10 @@ export default ({
             statusBg={statusBg}
           />
           <Flex flexDirection="row" alignItems="center" mt={2}>
-            <Link to={`/community/${tokenAddress}/overview`}>
+            <Link
+              to={`/community/${tokenAddress}/overview`}
+              onClick={e => e.stopPropagation()}
+            >
               <Button
                 variant="blue"
                 style={{
@@ -198,12 +201,14 @@ export default ({
                   maxWidth: '120px',
                   fontWeight: '900',
                 }}
-                onClick={e => e.stopPropagation(e)}
               >
                 Overview
               </Button>
             </Link>
-            <Link to={`/community/${tokenAddress}/${defaultTcd}/dataset`}>
+            <Link
+              to={`/community/${tokenAddress}/${defaultTcd}/dataset`}
+              onClick={e => e.stopPropagation()}
+            >
               <Button
                 variant="lightblue"
                 ml={3}
@@ -214,7 +219,6 @@ export default ({
                   whiteSpace: 'noWrap',
                   fontWeight: '900',
                 }}
-                onClick={e => e.stopPropagation(e)}
               >
                 {isTcd ? 'Dataset' : 'Visit Website'}
               </Button>
