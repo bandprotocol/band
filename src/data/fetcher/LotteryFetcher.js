@@ -49,9 +49,9 @@ export const LotteyByTCDAddress = withRouter(
       return prevProps.tcdAddress !== this.props.tcdAddress
     }
     async fetch() {
-      const rawData = await Utils.getDataRequest(
-        `/lotteries/${this.props.tcdAddress}`,
-      )
+      const { setNumDataPoints, tcdAddress } = this.props
+      const rawData = await Utils.getDataRequest(`/lotteries/${tcdAddress}`)
+      setNumDataPoints(rawData.length)
       return rawData
         .map(({ date, key, timestamp, value }) => {
           return {

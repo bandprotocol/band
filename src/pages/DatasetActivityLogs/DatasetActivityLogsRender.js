@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import colors from 'ui/colors'
 import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
@@ -14,6 +13,7 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
 import { getFormat } from 'data/Format'
+import ActivityHeader from 'images/activity-header.svg'
 
 import FilterSrc from 'images/filter.svg'
 import SearchInputIconSrc from 'images/search-input-icon.svg'
@@ -69,7 +69,7 @@ const Choice = ({ selected, children, onClick }) => (
     </Card>
     <Text
       ml={3}
-      color={selected ? '#5269ff' : 'inherit'}
+      color={selected ? '#5269ff' : '#4a4a4a'}
       fontSize="14px"
       fontWeight={selected ? '700' : '400'}
     >
@@ -264,30 +264,26 @@ export default props => (
         ]}
       />
     )}
-    {...props}
-  >
-    <Card
-      bg="#ffffff"
-      px="25px"
-      py={3}
-      borderRadius="10px"
-      boxShadow="0 2px 9px 4px rgba(0, 0, 0, 0.04)"
-    >
-      <Flex pb={2} alignItems="center">
-        <Text fontWeight="700" fontSize="20px">
-          Activity Logs
-        </Text>
-        <Box flex={1} />
-        {!searchProviderAddress(props.query) && (
-          <Text fontWeight="700" fontSize="12px" color="#ec6363" mr={2}>
-            NOT FOUND
-          </Text>
-        )}
-        <SearchBox
-          placeholder="Search"
-          value={props.search}
-          onChange={props.onSearch}
-        />
+    renderSubheader={() => (
+      <Flex
+        width="100%"
+        alignItems="center"
+        justifyContent="space-between"
+        px="30px"
+        style={{ height: '60px' }}
+      >
+        <Flex alignItems="center">
+          <SearchBox
+            placeholder="Search"
+            value={props.search}
+            onChange={props.onSearch}
+          />
+          {!searchProviderAddress(props.query) && (
+            <Text fontWeight="700" fontSize="12px" color="#ec6363" ml={2}>
+              NOT FOUND
+            </Text>
+          )}
+        </Flex>
         <Box ml={2} style={{ position: 'relative' }}>
           <FilterButton onClick={props.toggleShowFilter}>
             Filter (
@@ -346,6 +342,23 @@ export default props => (
             </SelectionContainer>
           </ClickOutSide>
         </Box>
+      </Flex>
+    )}
+    headerImage={ActivityHeader}
+    {...props}
+  >
+    <Card
+      bg="#ffffff"
+      px="25px"
+      py={3}
+      borderRadius="10px"
+      boxShadow="0 2px 9px 4px rgba(0, 0, 0, 0.04)"
+    >
+      <Flex pb={2} alignItems="center">
+        <Text fontWeight="700" fontSize="20px">
+          Activity Logs
+        </Text>
+        <Box flex={1} />
       </Flex>
       <Box mt={2}>
         <LogFetcher

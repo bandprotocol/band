@@ -1,11 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Button, Heading } from 'ui/common'
+import { Flex, Box, Text, Card, Button } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
 import PageStructure from 'components/DataSetPageStructure'
 import DataPoint from 'components/DataPoint'
-import DataCard from 'components/DataCard'
 import FlipMove from 'react-flip-move'
 import {
   SportCountByTypeFetcher,
@@ -194,69 +193,84 @@ class SportPage extends React.Component {
     return (
       <PageStructure
         renderHeader={() => (
-          <Flex flexDirection="column" style={{ width: '100%' }}>
-            <Flex flexDirection="column" pl="52px">
-              <Text
-                fontSize="27px"
-                color="white"
-                fontWeight="900"
-                width="50%"
-                style={{ lineHeight: '38px' }}
-              >
-                Integrate Off-Chain Soccer Data Short ribs sirloin chicken!
-              </Text>
-              <Text
-                fontSize="18px"
-                color="white"
-                fontWeight="500"
-                width="60%"
-                style={{ lineHeight: '33px' }}
-              >
-                Accurate live scores from soccer, basketball, American football
-                and baseball.
-              </Text>
-            </Flex>
+          <Flex
+            flexDirection="column"
+            pl="52px"
+            width="100%"
+            style={{ height: '100%' }}
+            justifyContent="center"
+          >
+            <Text
+              fontSize="27px"
+              color="white"
+              fontWeight="900"
+              width="50%"
+              style={{ lineHeight: '38px' }}
+            >
+              On-chain Data You Can Trust Readily Available for Ethereum Smart
+              Contract
+            </Text>
+            <Text
+              fontSize="18px"
+              color="white"
+              fontWeight="500"
+              width="60%"
+              style={{ lineHeight: '33px' }}
+            >
+              Token holders collectively curate trustworthy data providers. By
+              staking their tokens, they earn a portion of fee from the
+              providers.
+            </Text>
+          </Flex>
+        )}
+        renderSubheader={() => (
+          <Flex
+            width="100%"
+            alignItems="center"
+            color="#5269ff"
+            pl="52px"
+            style={{ height: '60px' }}
+          >
+            <Text fontWeight="900">
+              {`${this.state.numDataPoints} Keys Available`}
+            </Text>
           </Flex>
         )}
         {...this.props}
       >
-        <DataCard
-          headerText={`${this.state.numDataPoints} Data Soccer Matches`}
+        <SportByTypeFetcher
+          tcdAddress={tcdAddress}
+          tcdPrefix={tcdPrefix}
+          setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
         >
-          <SportByTypeFetcher
-            tcdAddress={tcdAddress}
-            tcdPrefix={tcdPrefix}
-            setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
-          >
-            {({ fetching, data, forceFetch }) => {
-              if (fetching) {
-                return (
-                  <Loading
-                    height={281}
-                    width={924}
-                    rects={[
-                      [0, 0, 120, 32],
-                      [880, 0, 32, 32],
-                      [0, 52, 924, 61],
-                      [0, 135, 924, 61],
-                      [0, 218, 924, 61],
-                    ]}
-                  />
-                )
-              } else {
-                this.currentSportLength = data.length
-                return renderDataPoints(
-                  tcdAddress,
-                  this.state,
-                  data,
-                  this.currentSportLength,
-                  this.loadMoreList.bind(this, forceFetch),
-                  this.onSearchTeam.bind(this, forceFetch),
-                )
-              }
-            }}
-          </SportByTypeFetcher>
-        </DataCard>
+          {({ fetching, data, forceFetch }) => {
+            if (fetching) {
+              return (
+                <Loading
+                  height={281}
+                  width={924}
+                  rects={[
+                    [0, 0, 120, 32],
+                    [880, 0, 32, 32],
+                    [0, 52, 924, 61],
+                    [0, 135, 924, 61],
+                    [0, 218, 924, 61],
+                  ]}
+                />
+              )
+            } else {
+              this.currentSportLength = data.length
+              return renderDataPoints(
+                tcdAddress,
+                this.state,
+                data,
+                this.currentSportLength,
+                this.loadMoreList.bind(this, forceFetch),
+                this.onSearchTeam.bind(this, forceFetch),
+              )
+            }
+          }}
+        </SportByTypeFetcher>
       </PageStructure>
     )
   }

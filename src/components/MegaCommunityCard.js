@@ -33,6 +33,35 @@ const StyledCard = styled(Flex)`
   }
 `
 
+const MagicPattern = ({ color, num = 25, size = '5px', space = '5px' }) => {
+  const numPoints = [...Array(num).keys()]
+  return (
+    <Flex
+      flexWrap="wrap"
+      style={{
+        width: '80px',
+        position: 'absolute',
+        bottom: '10px',
+        left: '15px',
+      }}
+    >
+      {numPoints.map(() => (
+        <Box
+          width={size}
+          m={space}
+          style={{
+            height: size,
+            borderRadius: '50%',
+            backgroundImage:
+              color || 'linear-gradient(52deg, #406ae7, #c63ad6)',
+          }}
+        />
+      ))}
+    </Flex>
+  )
+  return <div />
+}
+
 const DisplayIcon = ({ src, bgColor }) => (
   <Flex
     width="95px"
@@ -141,8 +170,9 @@ export default ({
     <Flex
       bg="white"
       m="1px"
-      style={{ overflow: 'hidden', borderRadius: '10px' }}
+      style={{ overflow: 'hidden', borderRadius: '10px', position: 'relative' }}
     >
+      <MagicPattern color={borderColor} />
       <Flex p="25px 30px" color="#4a4a4a">
         <DisplayIcon src={logo} bgColor={borderColor} />
         <Flex flexDirection="column" mx="18px">

@@ -2,11 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Box, Button, Image } from 'ui/common'
 import colors from 'ui/colors'
-import EditPropose from 'images/edit-proposal.svg'
+import PageStructure from 'components/DataSetPageStructure'
 import Select from 'react-select'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import ToolTip from 'components/ToolTip'
 import ParameterList from 'components/ParameterList'
+import EditPropose from 'images/edit-proposal.svg'
 
 const PrefixSelect = styled(Select).attrs({
   isSearchable: false,

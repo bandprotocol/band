@@ -4,7 +4,9 @@ import { communityDetailSelector } from 'selectors/communities'
 import Breadcrumb from 'components/Breadcrumb'
 import PageContainer from 'components/PageContainer'
 import ProposalList from 'components/ProposalList'
-import { Flex } from 'ui/common'
+import PageStructure from 'components/DataSetPageStructure'
+import { Flex, Text } from 'ui/common'
+import ProposalHeader from 'images/proposal-header.svg'
 
 import { loadProposals, loadParameters } from 'actions'
 
@@ -23,16 +25,45 @@ class CommunityProposal extends React.Component {
   render() {
     const { tokenAddress, name } = this.props
     return (
-      <PageContainer withSidebar>
-        <Breadcrumb
-          links={[
-            { path: `/community/${tokenAddress}`, label: name },
-            {
-              path: `/community/${tokenAddress}/proposal`,
-              label: 'Proposal',
-            },
-          ]}
-        />
+      <PageStructure
+        name={name}
+        communityAddress={tokenAddress}
+        breadcrumb={{ path: 'proposal', label: 'Prososal' }}
+        renderHeader={() => (
+          <Flex
+            flexDirection="column"
+            pl="52px"
+            width="100%"
+            style={{ height: '100%' }}
+            justifyContent="center"
+          >
+            <Text
+              fontSize="27px"
+              color="white"
+              fontWeight="900"
+              width="50%"
+              style={{ lineHeight: '38px' }}
+            >
+              Proposal
+            </Text>
+            <Text
+              fontSize="18px"
+              color="white"
+              fontWeight="500"
+              width="60%"
+              style={{ lineHeight: '33px' }}
+            >
+              Spicy jalapeno bacon ipsum dolor amet meatball t-bone brisket,
+              shank ground round tail strip steak tongue filet mignon hamburger.
+              Cow landjaeger salami jowl turkey spare ribs fatback biltong
+              strip.
+            </Text>
+          </Flex>
+        )}
+        noSubheader
+        headerImage={ProposalHeader}
+        {...this.props}
+      >
         <Flex pb="50px" style={{ borderBottom: '1px solid #cbcfe3' }}>
           <ProposalList
             title={'OPEN PROPOSALS'}
@@ -50,7 +81,7 @@ class CommunityProposal extends React.Component {
             tokenAddress={tokenAddress}
           />
         </Flex>
-      </PageContainer>
+      </PageStructure>
     )
   }
 }

@@ -7,23 +7,17 @@ import Snippet from 'components/Snippet'
 import Integration from 'data/Integration/index'
 import DataHeader from 'components/DataHeader'
 
-const RoundButton = styled(Button)`
-  margin: auto 20px;
-  width: 200px;
-  height: 36px;
-  border-radius: 20px;
-  background-color: ${p => (p.active ? '#dbe4ff' : 'white')};
+const TabButton = styled(Flex).attrs({
+  width: '380px',
+  justifyContent: 'center',
+  alignItems: 'center',
+})`
+  background-color: transparent;
   color: ${p => (p.active ? '#5269ff' : '#4a4a4a')};
-  transition: all 200ms;
-  box-shadow: ${p =>
-    p.active
-      ? '0 2px 5px 0px rgba(0, 0, 0, 0.1)'
-      : '0 1px 2px 0px rgba(0, 0, 0, 0.05)'};
   cursor: pointer;
-
-  &:hover {
-    box-shadow: 0 2px 5px 0px rgba(0, 0, 0, 0.1);
-  }
+  border-bottom: ${p => (p.active ? '1px solid #5269ff' : '0')};
+  font-weight: 500;
+  height: 60px;
 `
 
 const Pointer = styled(Flex)`
@@ -54,7 +48,8 @@ const Pointer = styled(Flex)`
 
 const HighlightSpan = styled.span`
   color: #ff5252;
-  background-color: #fff8de;
+  background-color: #efefef;
+  border: 1px solid #9e9e9e;
   text-align: center;
   padding: 0px 5px;
   border-radius: 4px;
@@ -120,6 +115,35 @@ export default class CommunityIntegrationRender extends React.Component {
             ]}
           />
         )}
+        renderSubheader={() => (
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            width="100%"
+            style={{
+              height: '60px',
+            }}
+          >
+            <TabButton
+              active={this.state.tabNum === 0}
+              onClick={() => this.setState({ tabNum: 0 })}
+            >
+              Example Situation <span>🤔</span>
+            </TabButton>
+            <TabButton
+              active={this.state.tabNum === 1}
+              onClick={() => this.setState({ tabNum: 1 })}
+            >
+              Key Format <span>🔑</span>
+            </TabButton>
+            <TabButton
+              active={this.state.tabNum === 2}
+              onClick={() => this.setState({ tabNum: 2 })}
+            >
+              Data Format <span>📝</span>
+            </TabButton>
+          </Flex>
+        )}
         {...this.props}
       >
         <PageContainer
@@ -130,40 +154,7 @@ export default class CommunityIntegrationRender extends React.Component {
             boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)',
           }}
         >
-          <Flex
-            justifyContent="center"
-            style={{
-              width: '100%',
-              left: '0px',
-              top: '0px',
-              height: '65px',
-              position: 'absolute',
-              borderBottom: 'solid 1px #e7ecff',
-            }}
-          >
-            {/* Hack for hiding */}
-            {hideTodo ? null : (
-              <RoundButton
-                active={this.state.tabNum === 0}
-                onClick={() => this.setState({ tabNum: 0 })}
-              >
-                Example Situation <span>🤔</span>
-              </RoundButton>
-            )}
-            <RoundButton
-              active={this.state.tabNum === 1}
-              onClick={() => this.setState({ tabNum: 1 })}
-            >
-              Key Format <span>🔑</span>
-            </RoundButton>
-            <RoundButton
-              active={this.state.tabNum === 2}
-              onClick={() => this.setState({ tabNum: 2 })}
-            >
-              Data Format <span>📝</span>
-            </RoundButton>
-          </Flex>
-          <Text fontSize="24px" mt="95px" mx="80px" fontWeight={900}>
+          <Text fontSize="24px" mt="28px" mx="80px" fontWeight={900}>
             {this.state.tabNum === 0 && 'Example Situation 🤔'}
             {this.state.tabNum === 1 && 'Key Format 🔑'}
             {this.state.tabNum === 2 && 'Data Format 📝'}

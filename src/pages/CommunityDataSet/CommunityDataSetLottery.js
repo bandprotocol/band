@@ -50,12 +50,6 @@ const renderDataPoints = (
   loadMoreList,
 ) => (
   <React.Fragment>
-    <Flex>
-      <Heading>{lotteries.length} Ðata Points</Heading>
-      <Box ml="auto" mr={3}>
-        <Text fontSize={26}>{/* <ion-icon name="md-search" /> */}</Text>
-      </Box>
-    </Flex>
     <Box mt={3}>
       <FlipMove>
         {lotteries.map(
@@ -148,7 +142,7 @@ const renderDataPoints = (
 )
 
 export default class LotteryPage extends React.Component {
-  state = { nLotteryList: 10 }
+  state = { numDataPoints: 0, nLotteryList: 10 }
 
   async loadMoreList(forceFetch) {
     const currentLength = this.currentLotteryLength
@@ -175,54 +169,81 @@ export default class LotteryPage extends React.Component {
       <PageStructure
         renderHeader={() => (
           <Flex
-            alignItems="center"
-            justifyContent="center"
             flexDirection="column"
+            pl="52px"
+            width="100%"
+            style={{ height: '100%' }}
+            justifyContent="center"
           >
-            <Text fontSize="36px" fontWeight="900">
-              Lottery
+            <Text
+              fontSize="27px"
+              color="white"
+              fontWeight="900"
+              width="50%"
+              style={{ lineHeight: '38px' }}
+            >
+              On-chain Data You Can Trust Readily Available for Ethereum Smart
+              Contract
             </Text>
-            <Text fontSize="20px" mt={3}>
-              Get winning numbers of lotteries all around the world
+            <Text
+              fontSize="18px"
+              color="white"
+              fontWeight="500"
+              width="60%"
+              style={{ lineHeight: '33px' }}
+            >
+              Token holders collectively curate trustworthy data providers. By
+              staking their tokens, they earn a portion of fee from the
+              providers.
+            </Text>
+          </Flex>
+        )}
+        renderSubheader={() => (
+          <Flex
+            width="100%"
+            alignItems="center"
+            color="#5269ff"
+            pl="52px"
+            style={{ height: '60px' }}
+          >
+            <Text fontWeight="900">
+              {`${this.state.numDataPoints} Keys Available`}
             </Text>
           </Flex>
         )}
         {...this.props}
       >
-        <PageContainer>
-          <Box mt={5}>
-            <LotteyByTCDAddress
-              tcdAddress={tcdAddress}
-              nList={this.state.nLotteryList} // TODO: for infinity scroll
-            >
-              {({ fetching, data, forceFetch }) => {
-                if (fetching) {
-                  return (
-                    <Loading
-                      height={281}
-                      width={924}
-                      rects={[
-                        [0, 0, 120, 32],
-                        [880, 0, 32, 32],
-                        [0, 52, 924, 61],
-                        [0, 135, 924, 61],
-                        [0, 218, 924, 61],
-                      ]}
-                    />
-                  )
-                } else {
-                  this.currentLotteryLength = data.length
-                  return renderDataPoints(
-                    tcdAddress,
-                    data,
-                    this.currentLotteryLength,
-                    this.loadMoreList.bind(this, forceFetch),
-                  )
-                }
-              }}
-            </LotteyByTCDAddress>
-          </Box>
-        </PageContainer>
+        <LotteyByTCDAddress
+          tcdAddress={tcdAddress}
+          nList={this.state.nLotteryList} // TODO: for infinity scroll
+          setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
+        >
+          {({ fetching, data, forceFetch }) => {
+            if (fetching) {
+              return (
+                <Loading
+                  height={281}
+                  width={924}
+                  rects={[
+                    [0, 0, 120, 32],
+                    [880, 0, 32, 32],
+                    [0, 52, 924, 61],
+                    [0, 135, 924, 61],
+                    [0, 218, 924, 61],
+                  ]}
+                />
+              )
+            } else {
+              this.currentLotteryLength = data.length
+              return renderDataPoints(
+                tcdAddress,
+                data,
+                this.currentLotteryLength,
+                this.loadMoreList.bind(this, forceFetch),
+              )
+            }
+          }}
+        </LotteyByTCDAddress>
       </PageStructure>
     )
   }

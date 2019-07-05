@@ -9,6 +9,7 @@ import PageStructure from 'components/DataSetPageStructure'
 import ProviderList from './ProviderList'
 import ConfigurationList from 'components/ConfigurationList'
 import DataHeader from 'components/DataHeader'
+import GovernanceHeader from 'images/govenance-header.svg'
 
 class CommunityDataProvider extends React.Component {
   render() {
@@ -28,6 +29,8 @@ class CommunityDataProvider extends React.Component {
             ]}
           />
         )}
+        headerImage={GovernanceHeader}
+        noSubheader={true}
         {...this.props}
       >
         <Flex mt="30px" flexDirection="column">
