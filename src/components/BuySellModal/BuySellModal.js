@@ -5,6 +5,7 @@ import { buyToken, sellToken } from 'actions'
 import { bandBalanceSelector } from 'selectors/balances'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentCommunityClientSelector } from 'selectors/current'
+import { communityBalanceSelector } from 'selectors/balances'
 import BN from 'utils/bignumber'
 import { Utils } from 'band.js'
 import { isPositiveNumber } from 'utils/helper'
@@ -250,7 +251,7 @@ const mapStateToProps = (state, { type, tokenAddress }) => {
     logo: community.get('logo'),
     symbol: community.get('symbol'),
     bandBalance: bandBalanceSelector(state),
-    tokenBalance: community.get('balance'),
+    tokenBalance: communityBalanceSelector(state, { address: tokenAddress }),
     tokenNormalPrice: community.get('price'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {

@@ -1,12 +1,11 @@
-export const UPDATE_PROVIDER = 'UPDATE_PROVIDER'
+export const UPDATE_CLIENT = 'UPDATE_CLIENT'
 export const SAVE_BAND_CLIENT = 'SAVE_BAND_CLIENT'
 export const SAVE_BAND_INFO = 'SAVE_BAND_INFO'
 export const SET_WALLET = 'SET_WALLET'
 export const SET_WEB3 = 'SET_WEB3'
 
-export const updateProvider = (address, provider) => ({
-  type: UPDATE_PROVIDER,
-  address,
+export const updateClient = provider => ({
+  type: UPDATE_CLIENT,
   provider,
 })
 

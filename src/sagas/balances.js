@@ -1,15 +1,10 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
-import { RELOAD_BALANCE, saveBandBalance, saveCTBalance } from 'actions'
+import { RELOAD_BALANCE, saveBalance, dumpCurrent } from 'actions'
 import { Utils } from 'band.js'
 import { currentUserSelector } from 'selectors/current'
-import { bandSelector } from 'selectors/basic'
-
-import BN from 'utils/bignumber'
 
 function* handleReloadBalance() {
-  // console.log('Reload price', new Date().getTime())
   const userAddress = yield select(currentUserSelector)
-  const bandAddress = (yield select(bandSelector)).get('address')
   const query = yield Utils.graphqlRequest(`{
     allBalances(condition: {user: "${userAddress}"}) {
       nodes {
@@ -26,16 +21,10 @@ function* handleReloadBalance() {
 
   const balances = {}
   for (const { value, tokenAddress } of query.allBalances.nodes) {
-    balances[tokenAddress] = new BN(value)
+    balances[tokenAddress] = value
   }
-
-  for (const { address } of query.allTokens.nodes) {
-    if (address === bandAddress) {
-      yield put(saveBandBalance(balances[address] || new BN(0)))
-    } else {
-      yield put(saveCTBalance(address, balances[address] || new BN(0)))
-    }
-  }
+  yield put(saveBalance(balances))
+  yield put(dumpCurrent())
 }
 
 export default function*() {

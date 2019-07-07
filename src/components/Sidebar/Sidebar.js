@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import SidebarRender from 'components/Sidebar/SidebarRender'
 
 import { communityDetailSelector } from 'selectors/communities'
+import { communityBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { currentUserSelector } from 'selectors/current'
 
@@ -62,7 +63,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
     logedin: currentUserSelector(state) !== 'NOT_SIGNIN',
     name: community.get('name'),
     src: community.get('logo'),
-    balance: community.get('balance'),
+    balance: communityBalanceSelector(state, { address: tokenAddress }),
     symbol: community.get('symbol'),
     communityPrice: community.get('price'),
     bandPrice: bandPriceSelector(state),

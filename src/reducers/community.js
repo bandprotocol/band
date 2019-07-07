@@ -1,6 +1,6 @@
 import createReducer from 'reducers/creator'
 
-import { SAVE_COMMUNITY_INFO, SAVE_CT_BALANCE, REMOVE_BALANCE } from 'actions'
+import { SAVE_COMMUNITY_INFO } from 'actions'
 import { Map } from 'immutable'
 
 const handleSaveCommunityInfo = (
@@ -44,14 +44,6 @@ const handleSaveCommunityInfo = (
     }),
   )
 
-const handleSaveCTBalance = (state, { tokenAddress, balance }) =>
-  state.setIn([tokenAddress, 'balance'], balance)
-
-const handleRemoveBalance = state =>
-  state.map(community => community.delete('balance'))
-
 export default createReducer({
-  [REMOVE_BALANCE]: handleRemoveBalance,
   [SAVE_COMMUNITY_INFO]: handleSaveCommunityInfo,
-  [SAVE_CT_BALANCE]: handleSaveCTBalance,
 })

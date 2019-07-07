@@ -17,7 +17,7 @@ console.warn(network)
 switch (network) {
   case 'mainnet':
   case 'kovan':
-    BandProtocolClient.setAPI('https://band-kovan-test.herokuapp.com/')
+    BandProtocolClient.setAPI('https://band-kovan-test.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-kovan-test.bandprotocol.com/graphql',
     )

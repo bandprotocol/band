@@ -1,16 +1,30 @@
 import createReducer from 'reducers/creator'
-import { fromJS } from 'immutable'
+import { fromJS, Map } from 'immutable'
 
 import {
   SET_USER_ADDRESS,
+  SET_NETWORK,
   SAVE_BAND_CLIENT,
   SAVE_COMMUNITY_CLIENT,
+  SAVE_BALANCE,
   SAVE_TCD_CLIENT,
   SHOW_MODAL,
   HIDE_MODAL,
 } from 'actions'
+import BN from 'utils/bignumber'
 
 const handleSetUserAddress = (state, { address }) => state.set('user', address)
+
+const handleSetNetwork = (state, { network }) => state.set('network', network)
+
+const handleSaveBalance = (state, { balances }) =>
+  state.set(
+    'balances',
+    Object.entries(balances).reduce(
+      (agg, [address, value]) => agg.set(address, new BN(value)),
+      Map(),
+    ),
+  )
 
 const handleSaveBandClient = (state, { client }) =>
   state.setIn(['client', 'band'], client)
@@ -34,6 +48,8 @@ const handleHideModal = (state, _) => state.delete('modal')
 
 export default createReducer({
   [SET_USER_ADDRESS]: handleSetUserAddress,
+  [SET_NETWORK]: handleSetNetwork,
+  [SAVE_BALANCE]: handleSaveBalance,
   [SAVE_BAND_CLIENT]: handleSaveBandClient,
   [SAVE_COMMUNITY_CLIENT]: handleSaveCommunityClient,
   [SAVE_TCD_CLIENT]: handleSaveTCDClient,

@@ -1,9 +1,8 @@
 import { all, fork, put, delay, select, takeEvery } from 'redux-saga/effects'
 import { currentUserSelector } from 'selectors/current'
 import { channel } from 'redux-saga'
-import { web3Selector } from 'selectors/wallet'
 import {
-  updateProvider,
+  updateClient,
   saveBandInfo,
   saveCommunityInfo,
   setUserAddress,
@@ -12,6 +11,9 @@ import {
   saveTxs,
   saveHiddenTxs,
   dumpTxs,
+  loadCurrent,
+  dumpCurrent,
+  reloadBalance,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
@@ -19,7 +21,7 @@ import { blockNumberSelector, transactionSelector } from 'selectors/basic'
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
 import priceSaga from 'sagas/prices'
-import providersSaga from 'sagas/providers'
+import providersSaga from 'sagas/current'
 import rewardsSaga from 'sagas/rewards'
 import transactionsSaga from 'sagas/transaction'
 import parameterSaga from 'sagas/parameters'
@@ -58,33 +60,43 @@ switch (network) {
 const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 const web3Channel = channel()
 
-function* handleWeb3Channel({ status }) {
-  switch (status) {
-    case 'UNINITIALIZED':
-      yield put(setUserAddress('NOT_READY'))
+function* handleWeb3Channel({ type, status }) {
+  switch (type) {
+    case 'CHANGE_STATUS':
+      switch (status) {
+        case 'UNINITIALIZED':
+          break
+        case 'INITIALIZED':
+          break
+        case 'NOT_SIGNIN':
+          yield put(setUserAddress('NOT_SIGNIN'))
+          yield put(updateClient())
+          break
+        case 'PROVIDER_READY': {
+          const provider = yield window.BandWallet.provider
+          const web3 = new Web3(provider)
+          const userAddress = yield getUser(web3)
+          yield put(setWeb3(web3))
+          yield put(setUserAddress(userAddress))
+          yield put(updateClient(provider))
+          break
+        }
+        default:
+          alert('Status error')
+      }
+      yield put(dumpCurrent())
       break
-    case 'INITIALIZED':
-      yield put(setUserAddress('INITIALIZED'))
-      break
-    case 'NOT_SIGNIN':
-      yield put(updateProvider())
-      break
-    case 'PROVIDER_READY': {
-      const provider = yield window.BandWallet.provider
-      const web3 = new Web3(provider)
-      const userAddress = yield getUser(web3)
-      yield put(setWeb3(web3))
-      yield put(updateProvider(userAddress, provider))
-      break
-    }
     default:
+      alert('Action type not recognized')
   }
 }
 
 function* baseInitialize() {
-  // console.log('Start time', new Date().getTime())
   // start fetching state
   yield put(toggleFetch(true))
+
+  yield put(loadCurrent())
+  // Initialize wallet
   window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
     walletPosition: {
       top: 60,
@@ -105,8 +117,7 @@ function* baseInitialize() {
   })
 
   window.BandWallet.on('status', s =>
-    // console.log('status', s, new Date().getTime()) ||
-    web3Channel.put({ status: s }),
+    web3Channel.put({ type: 'CHANGE_STATUS', status: s }),
   )
 
   yield put(setWallet(window.BandWallet))
@@ -114,14 +125,15 @@ function* baseInitialize() {
 
   const query = yield Utils.graphqlRequest(`
     {
-      allTokens(condition: {name: "BAND"}){
+      allContracts(condition: {contractType: "BAND_TOKEN"}){
         nodes{
           address
         }
       }
     }
   `)
-  const bandAddress = query.allTokens.nodes[0].address
+  const bandAddress = query.allContracts.nodes[0].address
+
   yield put(
     // TODO: Mock on price and last24hr
     saveBandInfo(bandAddress, '1000000000000000000000000', 1.0, 0),
@@ -238,10 +250,19 @@ function* baseInitialize() {
     )
   }
 
+  // Auto reload balance
+  yield fork(autoRefresh)
   // Auto update pending transaction
   yield fork(checkTransaction)
   // stop fetching state
   yield put(toggleFetch(false))
+}
+
+function* autoRefresh() {
+  while (true) {
+    yield put(reloadBalance())
+    yield delay(10000)
+  }
 }
 
 function* checkTransaction() {
