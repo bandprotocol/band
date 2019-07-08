@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Button } from 'ui/common'
+import { Flex, Text, Button, Image } from 'ui/common'
 import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
+import EditPropose from 'images/edit-proposal.svg'
 import { getParameterDetail } from 'utils/helper'
 
 const CustomButton = styled(Button).attrs({
@@ -39,7 +40,16 @@ export default ({ params, communityAddress }) => (
               lineHeight: '1.4em',
             }}
           >
-            Propose Change
+            <Flex
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <Image src={EditPropose} />
+              <Text ml="10px" fontSize="16px" font-weight="500">
+                Propose Change
+              </Text>
+            </Flex>
           </NavLink>
         </CustomButton>
       </Flex>
