@@ -8,8 +8,7 @@ contract AggTCDFactory {
   function createTCD(bytes8 prefix, BondingCurve bondingCurve, BandRegistry registry, Parameters params)
     external returns (AggTCD)
   {
-    AggTCD atcd;
-    atcd = new AggTCD(prefix, bondingCurve, params, registry);
+    AggTCD atcd = new AggTCD(prefix, bondingCurve, params, registry);
     LockableToken(address(params.token())).addCapper(address(atcd));
     emit AggTCDCreated(atcd, msg.sender);
     return atcd;
