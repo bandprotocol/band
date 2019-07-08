@@ -105,10 +105,10 @@ export const SportByTypeFetcher = withRouter(
             keyOnChain: sport.key,
             home,
             away,
-            homeFullName:
-              '🏠 ' + getSportTeamByCode(tcdPrefix.toUpperCase(), home).label,
-            awayFullName:
-              '🏕 ' + getSportTeamByCode(tcdPrefix.toUpperCase(), away).label,
+            homeFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), home)
+              .label,
+            awayFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), away)
+              .label,
             scoreAway: scoreAway,
             scoreHome: scoreHome,
           }

@@ -110,9 +110,9 @@ interface QueryInterface {
   enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
 
   function query(bytes calldata input)
-      external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
   function queryPrice(bytes calldata input)
-      external view returns (uint256);
+    external view returns (uint256);
 }
 
 contract TicketContract {

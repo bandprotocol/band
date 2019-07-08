@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
+import { Flex, Text, Card } from 'ui/common'
 import colors from 'ui/colors'
 import AutoDate from 'components/AutoDate'
 import { copy } from 'utils/clipboard'
@@ -94,14 +94,21 @@ export default class DataPoint extends React.Component {
           style={{ height: '60px', overflow: 'hidden' }}
         >
           <Flex flex="0 0 160px" alignItems="center">
-            <Text fontFamily="code" fontSize={14} color="blue">
+            <Text
+              fontFamily="code"
+              fontSize={14}
+              fontWeight={900}
+              color="#506fff"
+            >
               <AutoDate>{updatedAt}</AutoDate>
             </Text>
           </Flex>
           <Flex flexDirection="row" className="label">
             <Logo />
             <Text fontFamily="code" fontSize={15} fontWeight="700">
-              {label}
+              {label && {}.toString.call(label) === '[object Function]'
+                ? label()
+                : label}
             </Text>
           </Flex>
           <Flex flex={1} justifyContent="flex-end">

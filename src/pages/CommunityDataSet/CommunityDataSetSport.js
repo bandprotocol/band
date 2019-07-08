@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Button } from 'ui/common'
+import { Flex, Box, Text, Card, Button, Image } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
 import PageStructure from 'components/DataSetPageStructure'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
+import { getDetail } from 'data/detail/sport'
 import {
   SportCountByTypeFetcher,
   SportByTypeFetcher,
@@ -55,15 +56,34 @@ const renderDataPoints = (
               <DataPoint
                 key={`${time.valueOf()}/${home}/${away}`}
                 keyOnChain={keyOnChain}
-                label={`${time.format(
-                  hasStartTime ? 'YYYY/MM/DD hh:mm a' : 'YYYY/MM/DD',
-                )}: ${homeFullName} - ${awayFullName}`}
+                label={() => (
+                  <Flex alignItems="center" pt="3px">
+                    {time.format(
+                      hasStartTime ? 'YYYY/MM/DD hh:mm a' : 'YYYY/MM/DD',
+                    )}
+                    :{' '}
+                    <Image
+                      mx="5px"
+                      src={getDetail(homeFullName, 'home').logo}
+                      height="30px"
+                      style={{ maxHeight: '30px' }}
+                    />
+                    {homeFullName} {` vs. `}
+                    <Image
+                      mx="5px"
+                      src={getDetail(awayFullName, 'away').logo}
+                      height="30px"
+                      style={{ maxHeight: '30px' }}
+                    />
+                    {awayFullName}
+                  </Flex>
+                )}
                 k={time}
                 v={() => (
                   <Flex mr="-20px">
                     <Card
                       flex="0 0 auto"
-                      bg="white"
+                      bg="#eaf2ff"
                       px="auto"
                       mx="20px"
                       borderRadius="4px"
@@ -78,7 +98,7 @@ const renderDataPoints = (
                         fontSize={14}
                         fontWeight="bold"
                         textAlign="center"
-                        color="#4a4a4a"
+                        color="#506fff"
                       >
                         {scoreHome} - {scoreAway}
                       </Text>
