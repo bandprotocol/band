@@ -19,16 +19,14 @@ contract QueryInterface {
     external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status)
   {
     require(registry.verify(msg.sender));
-    uint256 price = queryPrice(input);
+    uint256 price = queryPrice();
     require(msg.value >= price);
     if (msg.value > price) msg.sender.transfer(msg.value - price);
     (output, updatedAt, status) = queryImpl(input);
     emit Query(msg.sender, input, status);
   }
 
-  function queryPrice(bytes memory input)
-    public view returns (uint256);
-
+  function queryPrice() public view returns (uint256);
   function queryImpl(bytes memory input)
     internal returns (bytes32 output, uint256 updatedAt, QueryStatus status);
 }

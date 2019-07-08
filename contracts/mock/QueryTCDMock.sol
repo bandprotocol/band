@@ -15,6 +15,6 @@ contract QueryTCDMock {
   }
 
   function query(bytes calldata input) external payable {
-    (result, updatedAt, status) = tcd.query.value(tcd.queryPrice(input))(input);
+    (result, updatedAt, status) = tcd.query.value(tcd.queryPrice())(input);
   }
 }

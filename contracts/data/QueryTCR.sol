@@ -11,7 +11,7 @@ contract QueryTCR is TCRBase, QueryInterface {
   constructor(bytes8 _prefix, Parameters _params, BandRegistry _registry)
     public TCRBase(_prefix, _params) QueryInterface(_registry) {}
 
-  function queryPrice(bytes memory) public view returns (uint256) {
+  function queryPrice() public view returns (uint256) {
     return 0;
   }
 

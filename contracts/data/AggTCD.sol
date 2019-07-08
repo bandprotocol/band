@@ -14,7 +14,7 @@ contract AggTCD is TCDBase {
   constructor(bytes8 _prefix, BondingCurve _bondingCurve, Parameters _params, BandRegistry _registry)
     public TCDBase(_prefix, _bondingCurve, _params, _registry) {}
 
-  function queryPrice(bytes memory) public view returns (uint256) {
+  function queryPrice() public view returns (uint256) {
     return params.get(prefix, "query_price");
   }
 
