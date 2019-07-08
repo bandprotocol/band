@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { BackdropConsumer } from 'context/backdrop'
 
 const Backdrop = styled.div`
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(160, 172, 191, 0.45);
   z-index: 3;
   position: absolute;
   top: 60px;
