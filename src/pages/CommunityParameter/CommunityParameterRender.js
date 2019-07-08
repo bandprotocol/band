@@ -9,19 +9,51 @@ import ParameterList from 'components/ParameterList'
 import EditPropose from 'images/edit-proposal.svg'
 import GovernanceHeader from 'images/govenance-header.svg'
 
-const PrefixSelect = styled(Select).attrs({
-  isSearchable: false,
-})`
-  width: 200px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  line-height: 30px;
-`
-
 const selectStyles = {
-  control: (styles, { isDisabled }) => ({
+  control: (styles, { menuIsOpen }) => ({
     ...styles,
-    border: isDisabled ? '1px solid #cccccc' : '1px solid #718bff',
+    border: menuIsOpen ? '1px solid #5269ff' : '1px solid #fff',
+    width: '260px',
+    minHeight: '35px',
+    borderRadius: '17.5px',
+    '&:hover': {
+      borderColor: '#5269ff',
+    },
+  }),
+  indicatorSeparator: () => ({
+    display: 'none',
+  }),
+  dropdownIndicator: (styles, state) => ({
+    ...styles,
+    transition: 'all .2s ease',
+    transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null,
+    padding: '2px 9px',
+    color: '#5269ff',
+    width: '90%',
+    height: '70%',
+    '&:hover': {
+      color: '#5269ff',
+    },
+  }),
+  menu: styles => ({
+    ...styles,
+    backgroundColor: '#fff',
+  }),
+  option: (styles, { isSelected }) => ({
+    ...styles,
+    fontSize: '14px',
+    color: isSelected ? '#5269ff' : '#4a4a4a',
+    fontWeight: isSelected ? '600' : '400',
+    backgroundColor: isSelected ? '#f3f7ff' : 'fff',
+    padding: '8px 22px',
+  }),
+  singleValue: (styles, {}) => ({
+    ...styles,
+    paddingLeft: '10px',
+    width: '100%',
+    color: '#4a4a4a',
+    fontWeight: '600',
+    fontSize: '14px',
   }),
 }
 
@@ -106,12 +138,13 @@ export default ({
           Parameter Group:
         </Text>
 
-        <PrefixSelect
+        <Select
           value={currentPrefix}
           options={prefixList}
           onChange={onChangePrefix}
           isDisabled={isEdit}
           styles={selectStyles}
+          isSearchable={false}
         />
         <Flex ml="auto">
           {isEdit ? (
