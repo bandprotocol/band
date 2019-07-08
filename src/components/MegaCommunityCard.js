@@ -75,7 +75,7 @@ const DisplayIcon = ({ src, bgColor }) => (
       boxShadow: '0 5px 10px 0 #d3dcea',
     }}
   >
-    <Image src={src} />
+    <Image src={src} width="75px" />
   </Flex>
 )
 

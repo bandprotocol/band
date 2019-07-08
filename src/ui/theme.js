@@ -100,7 +100,7 @@ export default {
       transition: 'all 250ms',
       borderRadius: '20px',
       '&:hover': {
-        backgroundColor: '#ffca55',
+        backgroundColor: '#384cc9',
         boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
       },
     },
@@ -117,7 +117,7 @@ export default {
       transition: 'all 250ms',
       borderRadius: '20px',
       '&:hover': {
-        backgroundColor: '#ffca55',
+        backgroundColor: '#d3d7f0',
         boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
       },
     },
