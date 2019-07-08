@@ -1,8 +1,14 @@
-// Sport Image
-import BasketballSrc from 'images/basketball.svg'
-import SoccerSrc from 'images/soccer.svg'
-import USAFootballSrc from 'images/football.svg'
-import BaseballSrc from 'images/baseball.svg'
+// Sport Image(Active)
+import BasketballActive from 'images/basketballActive.svg'
+import SoccerActive from 'images/soccerActive.svg'
+import USAFootballActive from 'images/footballActive.svg'
+import BaseballActive from 'images/baseballActive.svg'
+
+// Sport Image(Inactive)
+import BasketballInactive from 'images/basketballInactive.svg'
+import SoccerInactive from 'images/soccerInactive.svg'
+import USAFootballInactive from 'images/footballInactive.svg'
+import BaseballInactive from 'images/baseballInactive.svg'
 
 // Fiat Image(Inactive)
 import ERC20Inactive from 'images/erc20Inactive.svg'
@@ -59,29 +65,29 @@ export const getTCDInfomation = prefix =>
       datapoints: 10,
     },
     'nba:': {
-      imageInactive: BasketballSrc,
-      imageActive: BasketballSrc,
+      imageInactive: BasketballInactive,
+      imageActive: BasketballActive,
       label: 'NBA',
       shortLabel: 'Basketball',
       order: 1,
     },
     'mlb:': {
-      imageInactive: BaseballSrc,
-      imageActive: BaseballSrc,
+      imageInactive: BaseballInactive,
+      imageActive: BaseballActive,
       label: 'MLB',
       shortLabel: 'Baseball',
       order: 2,
     },
     'nfl:': {
-      imageInactive: USAFootballSrc,
-      imageActive: USAFootballSrc,
+      imageInactive: USAFootballInactive,
+      imageActive: USAFootballActive,
       label: 'NFL',
       shortLabel: 'USA Football',
       order: 3,
     },
     'epl:': {
-      imageInactive: SoccerSrc,
-      imageActive: SoccerSrc,
+      imageInactive: SoccerInactive,
+      imageActive: SoccerActive,
       label: 'Soccer',
       shortLabel: 'Soccer',
       order: 4,
@@ -101,7 +107,7 @@ export const getTCDInfomation = prefix =>
       order: 2,
     },
   }[prefix] || {
-    imageActive: USAFootballSrc,
-    imageInactive: USAFootballSrc,
+    imageActive: FiatActive,
+    imageInactive: FiatInactive,
     label: 'Unknown',
   })
