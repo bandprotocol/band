@@ -252,7 +252,7 @@ export default ({
                 </Text>
               </Flex>
             </Link> */}
-            {user.length === 42 ? (
+            {user && user.length === 42 ? (
               <ClickOutSide
                 onClickOutside={onClickOutside}
                 style={{ position: 'relative' }}
