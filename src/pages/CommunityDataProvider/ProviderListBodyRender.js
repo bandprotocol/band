@@ -77,7 +77,17 @@ const ProvidersRow = ({
       </Text>
     </Tab>
     <Tab flex={20} alignItems="center">
-      <Image src={image} width="20px" mr={2} />
+      <Box
+        width="20px"
+        mr={2}
+        style={{
+          height: '20px',
+          backgroundImage: `url(${image})`,
+          backgroundSize: 'contain',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+        }}
+      />
       <Text
         color={colors.text}
         fontSize="14px"
