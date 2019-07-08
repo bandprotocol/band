@@ -21,11 +21,15 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 const Nav = styled.nav`
   display: flex;
   height: 60px;
+  width: 100vw;
   align-items: center;
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
-  position: sticky;
-  top: 0;
+  position: absolute;
+  top: 0px;
+  transform: translateY(${p => (p.showNav ? '0' : '-60')}px);
   z-index: 5;
+
+  transition: all 200ms;
 
   ${p =>
     p.isDashboard
@@ -214,6 +218,7 @@ export default ({
   user,
   balance,
   isBND,
+  showNav,
   toggleBalance,
   txs,
   onClickOutside,
@@ -227,7 +232,7 @@ export default ({
 
   const isDashboard = document.location.pathname === '/'
   return (
-    <Nav isDashboard={isDashboard}>
+    <Nav isDashboard={isDashboard} showNav={showNav}>
       <PageContainer fullWidth>
         <Flex alignItems="center">
           <Link dark="true" to="/">

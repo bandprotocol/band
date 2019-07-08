@@ -14,6 +14,44 @@ class Navbar extends React.Component {
     showBlockTransactions: false,
     showSignOut: false,
     isWalletShow: false,
+    showNav: true,
+  }
+
+  componentDidMount() {
+    window.document.body.addEventListener(
+      'scroll',
+      this.handleScroll.bind(this),
+    )
+  }
+
+  handleScroll(e) {
+    if (e.target.scrollTop < 80) {
+      if (!this.state.showNav) this.setState({ showNav: true })
+      return
+    }
+    const newST = Math.floor(e.target.scrollTop)
+    if (!this.scrollHistory || this.scrollHistory.length === 0) {
+      this.scrollHistory = [0]
+    }
+    if (this.scrollHistory.length === 1) {
+      this.setState({ showNav: false })
+    } else {
+      if (
+        this.scrollHistory[0] < this.scrollHistory[1] &&
+        this.scrollHistory[1] > newST
+      ) {
+        this.setState({ showNav: true })
+      } else if (
+        this.scrollHistory[0] > this.scrollHistory[1] &&
+        this.scrollHistory[1] < newST
+      ) {
+        this.setState({ showNav: false })
+      }
+    }
+    this.scrollHistory = [
+      this.scrollHistory[this.scrollHistory.length - 1],
+      newST,
+    ]
   }
 
   toggleBalance() {

@@ -44,32 +44,34 @@ export default ({
 }) => (
   <Box width="100%">
     <PageContainer withSidebar>
-      {tcdAddress ? (<Breadcrumb
-        links={[
-          { path: `/community/${communityAddress}`, label: name },
-          {
-            path: `/community/${communityAddress}/${tcdAddress}`,
-            label: tcdName,
-          },
-          {
-            path: `/community/${communityAddress}/${tcdAddress}/${
-              breadcrumb.path
-            }`,
-            label: breadcrumb.label,
-          },
-        ]}
-      />) : (
+      <Flex style={{ minWidth: '100%', minHeight: '60px' }} />
+      {tcdAddress ? (
         <Breadcrumb
-        links={[
-          { path: `/community/${communityAddress}`, label: name },
-          {
-            path: `/community/${communityAddress}/${breadcrumb.path}`,
-            label: breadcrumb.label,
-          },
-        ]}
-      />
+          links={[
+            { path: `/community/${communityAddress}`, label: name },
+            {
+              path: `/community/${communityAddress}/${tcdAddress}`,
+              label: tcdName,
+            },
+            {
+              path: `/community/${communityAddress}/${tcdAddress}/${
+                breadcrumb.path
+              }`,
+              label: breadcrumb.label,
+            },
+          ]}
+        />
+      ) : (
+        <Breadcrumb
+          links={[
+            { path: `/community/${communityAddress}`, label: name },
+            {
+              path: `/community/${communityAddress}/${breadcrumb.path}`,
+              label: breadcrumb.label,
+            },
+          ]}
+        />
       )}
-      
       <Header style={headerStyle} noSubheader={noSubheader}>
         <HeaderImage noSubheader={noSubheader} headerImage={headerImage}>
           {renderHeader()}

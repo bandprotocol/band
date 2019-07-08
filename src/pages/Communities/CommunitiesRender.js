@@ -8,6 +8,7 @@ import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
+  margin-top: 60px;
   height: 315px;
   width: 100%;
   background: url('${HeaderBackgroundSrc}');
@@ -76,7 +77,11 @@ const getProfileColor = symbol =>
 export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
   <PageContainer
     fullWidth
-    style={{ background: 'white', paddingLeft: '0px', position: 'relative' }}
+    style={{
+      background: 'white',
+      paddingLeft: '0px',
+      position: 'relative',
+    }}
   >
     <Header>
       <Flex
