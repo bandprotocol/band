@@ -71,7 +71,8 @@ class ProviderList extends React.Component {
           flexDirection="row"
           pt="15px"
           pb="10px"
-          px="25px"
+          px="36px"
+          pr="26px"
           alignItems="center"
         >
           <Text flex="0 0 auto" fontWeight="700" fontSize="20px">
@@ -90,19 +91,17 @@ class ProviderList extends React.Component {
             </Flex>
           </Flex>
         </Flex>
-        <Flex>
-          <ProviderListRender
-            user={user}
-            symbol={symbol}
-            fetching={fetching}
-            numDataProviders={numDataProviders}
-            tokenAddress={tokenAddress}
-            tcdAddress={tcdAddress}
-            currentPage={currentPage}
-            onChangePage={this.onChangePage.bind(this)}
-            pageSize={pageSize}
-          />
-        </Flex>
+        <ProviderListRender
+          user={user}
+          symbol={symbol}
+          fetching={fetching}
+          numDataProviders={numDataProviders}
+          tokenAddress={tokenAddress}
+          tcdAddress={tcdAddress}
+          currentPage={currentPage}
+          onChangePage={this.onChangePage.bind(this)}
+          pageSize={pageSize}
+        />
       </Flex>
     )
   }

@@ -39,12 +39,12 @@ const selectStyles = {
     ...styles,
     backgroundColor: '#fff',
   }),
-  option: (styles, { isSelected }) => ({
+  option: (styles, { isSelected, isFocused }) => ({
     ...styles,
     fontSize: '14px',
     color: isSelected ? '#5269ff' : '#4a4a4a',
     fontWeight: isSelected ? '600' : '400',
-    backgroundColor: isSelected ? '#f3f7ff' : 'fff',
+    backgroundColor: isSelected ? '#f3f7ff' : isFocused ? '#f7f9fc' : '#fff',
     padding: '8px 22px',
   }),
   singleValue: (styles, {}) => ({

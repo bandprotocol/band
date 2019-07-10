@@ -7,14 +7,12 @@ import PaginationRender from 'components/Pagination/PaginationRender'
 import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 import DataHeader from 'components/DataHeader'
-
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
 import { getFormat } from 'data/Format'
 import ActivityHeader from 'images/activity-header.svg'
-
 import FilterSrc from 'images/filter.svg'
 import SearchInputIconSrc from 'images/search-input-icon.svg'
 import SecureSrc from 'images/activity-secure.svg'
@@ -82,15 +80,9 @@ const SearchBoxInput = styled.input`
   border-radius: 18px;
   border: solid 1px #e7ecff;
   padding: 0 2.8em 0 1.4em;
-  width: 200px;
+  width: 400px;
   line-height: 32px;
   font-size: 14px;
-
-  transition: width 300ms;
-
-  &:focus {
-    width: 360px;
-  }
 `
 
 const SearchBox = props => (
@@ -269,7 +261,8 @@ export default props => (
         width="100%"
         alignItems="center"
         justifyContent="space-between"
-        px="30px"
+        pl="52px"
+        pr="30px"
         style={{ height: '60px' }}
       >
         <Flex alignItems="center">
@@ -349,13 +342,13 @@ export default props => (
   >
     <Card
       bg="#ffffff"
-      px="25px"
-      py={3}
+      px="36px"
+      py="26px"
       borderRadius="10px"
       boxShadow="0 2px 9px 4px rgba(0, 0, 0, 0.04)"
     >
       <Flex pb={2} alignItems="center">
-        <Text fontWeight="700" fontSize="20px">
+        <Text fontWeight="900" fontSize="20px">
           Activity Logs
         </Text>
         <Box flex={1} />

@@ -26,11 +26,7 @@ const Description = styled(Text)`
 const StyledCard = styled(Flex)`
   cursor: pointer;
   transition: all 200ms;
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25);
-  &:hover: {
-    box-shadow: 0 5px 10px 0 red;
-    transform: scale(1.7);
-  }
+  box-shadow: 0 2px 6px 0 #d4deed;
 `
 
 const MagicPattern = ({ color, num = 25, size = '5px', space = '5px' }) => {
@@ -59,7 +55,6 @@ const MagicPattern = ({ color, num = 25, size = '5px', space = '5px' }) => {
       ))}
     </Flex>
   )
-  return <div />
 }
 
 const DisplayIcon = ({ src, bgColor }) => (
@@ -159,71 +154,64 @@ export default ({
     style={{
       height: '290px',
       borderRadius: '10px',
-      borderColor,
       padding: '0px',
       overflow: 'hidden',
-      backgroundImage:
-        borderColor || 'linear-gradient(to left, #ffca55, #ff7155)',
+      backgroundColor: '#f1f6ff',
+      position: 'relative',
     }}
     onClick={onClick}
   >
-    <Flex
-      bg="white"
-      m="1px"
-      style={{ overflow: 'hidden', borderRadius: '10px', position: 'relative' }}
-    >
-      <MagicPattern color={borderColor} />
-      <Flex p="25px 30px" color="#4a4a4a">
-        <DisplayIcon src={logo} bgColor={borderColor} />
-        <Flex flexDirection="column" mx="18px">
-          <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
-            {name}
-          </WrapText>
-          <Description fontSize="15px" mb={2}>
-            {description}
-          </Description>
-          <PriceDetail
-            marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
-            price={BN.parse(price).bandToUSD(bandPrice)}
-            last24Hrs={last24Hrs.toFixed(2)}
-            statusBg={statusBg}
-          />
-          <Flex flexDirection="row" alignItems="center" mt={2}>
-            <Link
-              to={`/community/${tokenAddress}/overview`}
-              onClick={e => e.stopPropagation()}
+    <MagicPattern color={borderColor} />
+    <Flex p="25px 30px" color="#4a4a4a">
+      <DisplayIcon src={logo} bgColor={borderColor} />
+      <Flex flexDirection="column" mx="18px">
+        <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
+          {name}
+        </WrapText>
+        <Description fontSize="15px" mb={2}>
+          {description}
+        </Description>
+        <PriceDetail
+          marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
+          price={BN.parse(price).bandToUSD(bandPrice)}
+          last24Hrs={last24Hrs.toFixed(2)}
+          statusBg={statusBg}
+        />
+        <Flex flexDirection="row" alignItems="center" mt={2}>
+          <Link
+            to={`/community/${tokenAddress}/overview`}
+            onClick={e => e.stopPropagation()}
+          >
+            <Button
+              variant="blue"
+              style={{
+                padding: '12px 25px',
+                minWidth: '120px',
+                maxWidth: '120px',
+                fontWeight: '900',
+              }}
             >
-              <Button
-                variant="blue"
-                style={{
-                  padding: '12px 25px',
-                  minWidth: '120px',
-                  maxWidth: '120px',
-                  fontWeight: '900',
-                }}
-              >
-                Overview
-              </Button>
-            </Link>
-            <Link
-              to={`/community/${tokenAddress}/${defaultTcd}/dataset`}
-              onClick={e => e.stopPropagation()}
+              Overview
+            </Button>
+          </Link>
+          <Link
+            to={`/community/${tokenAddress}/${defaultTcd}/dataset`}
+            onClick={e => e.stopPropagation()}
+          >
+            <Button
+              variant="lightblue"
+              ml={3}
+              style={{
+                padding: isTcd ? '12px 25px' : '12px 5px',
+                minWidth: '120px',
+                maxWidth: '120px',
+                whiteSpace: 'noWrap',
+                fontWeight: '900',
+              }}
             >
-              <Button
-                variant="lightblue"
-                ml={3}
-                style={{
-                  padding: isTcd ? '12px 25px' : '12px 5px',
-                  minWidth: '120px',
-                  maxWidth: '120px',
-                  whiteSpace: 'noWrap',
-                  fontWeight: '900',
-                }}
-              >
-                {isTcd ? 'Dataset' : 'Visit Website'}
-              </Button>
-            </Link>
-          </Flex>
+              {isTcd ? 'Dataset' : 'Visit Website'}
+            </Button>
+          </Link>
         </Flex>
       </Flex>
     </Flex>

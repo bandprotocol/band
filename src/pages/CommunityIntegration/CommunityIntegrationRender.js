@@ -48,10 +48,11 @@ const Pointer = styled(Flex)`
 
 const HighlightSpan = styled.span`
   color: #ff5252;
-  background-color: #efefef;
-  border: 1px solid #9e9e9e;
+  border: solid 1px #eaeaea;
+  background-color: #fbfbfb;
   text-align: center;
   padding: 0px 5px;
+  margin-right: 5px;
   border-radius: 4px;
 `
 
@@ -78,7 +79,7 @@ const HighlightText = ({ text }) => {
           }
           for (const k of keyWords) {
             if (word.toLowerCase().includes(k)) {
-              return <HighlightSpan>{word + ' '}</HighlightSpan>
+              return <HighlightSpan>{word}</HighlightSpan>
             }
           }
         } catch (e) {}
@@ -89,10 +90,10 @@ const HighlightText = ({ text }) => {
 }
 
 export default class CommunityIntegrationRender extends React.Component {
-  state = { codingStepNum: 0, tabNum: this.props.hideTodo ? 1 : 0 }
+  state = { codingStepNum: 0, tabNum: 0 }
 
   render() {
-    const { name: communityName, tcdPrefix, hideTodo } = this.props
+    const { name: communityName, tcdPrefix } = this.props
     const info =
       (tcdPrefix && Integration[communityName][tcdPrefix]) ||
       Integration[communityName][Object.keys(Integration[communityName])[0]]

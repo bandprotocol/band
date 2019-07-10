@@ -13,50 +13,38 @@ const ProviderListHeader = ({ symbol }) => (
     style={{ minHeight: '50px' }}
     alignItems="center"
   >
-    <Flex ml="17px" width="60px" px="10px">
-      <Text
-        color="#4a4a4a"
-        fontSize="13px"
-        lineHeight="1.4em"
-        fontWeight={500}
-        fontFamily="Avenir-Heavy"
-      >
-        Rank
-      </Text>
-    </Flex>
+    <Flex ml="17px" width="60px" />
     <Flex flex={20} px="10px">
       <Text
-        color="#4a4a4a"
-        fontSize="13px"
+        color="#6878e2"
+        fontSize="14px"
         lineHeight="1.4em"
-        fontWeight={500}
-        fontFamily="Avenir-Heavy"
+        fontWeight="bold"
       >
         Source
       </Text>
     </Flex>
     <Flex flex={20} px="10px">
       <Text
-        color="#4a4a4a"
-        fontSize="13px"
+        color="#6878e2"
+        fontSize="14px"
         lineHeight="1.4em"
-        fontWeight={500}
-        fontFamily="Avenir-Heavy"
+        fontWeight="bold"
       >
         Contract Address
       </Text>
     </Flex>
     <Flex flex={12} justifyContent="center" px="10px">
       <Text
-        color="#4a4a4a"
-        fontSize="13px"
+        color="#6878e2"
+        fontSize="14px"
         lineHeight="1.4em"
-        fontWeight={700}
+        fontWeight="bold"
         textAlign="center"
       >
         {`Provider Stake`}
         {symbol && (
-          <Text color="#777" fontSize="11px" fontWeight={500}>
+          <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
           </Text>
         )}
@@ -64,16 +52,15 @@ const ProviderListHeader = ({ symbol }) => (
     </Flex>
     <Flex flex={12} justifyContent="center" px="10px">
       <Text
-        color="#4a4a4a"
-        fontSize="13px"
+        color="#6878e2"
+        fontSize="14px"
         lineHeight="1.4em"
-        fontWeight={500}
-        fontFamily="Avenir-Heavy"
+        fontWeight="bold"
         textAlign="center"
       >
         {`Total Stake`}
         {symbol && (
-          <Text color="#777" fontSize="11px" fontWeight={500}>
+          <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
           </Text>
         )}
@@ -81,16 +68,15 @@ const ProviderListHeader = ({ symbol }) => (
     </Flex>
     <Flex flex={12} justifyContent="center" px="10px">
       <Text
-        color="#4a4a4a"
-        fontSize="13px"
+        color="#6878e2"
+        fontSize="14px"
         lineHeight="1.4em"
-        fontWeight={500}
-        fontFamily="Avenir-Heavy"
+        fontWeight="bold"
         textAlign="center"
       >
         {`Your Stake`}
         {symbol && (
-          <Text color="#777" fontSize="11px" fontWeight={500}>
+          <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
           </Text>
         )}

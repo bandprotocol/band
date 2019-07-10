@@ -1,8 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
-import Breadcrumb from 'components/Breadcrumb'
-import PageContainer from 'components/PageContainer'
 import ProposalList from 'components/ProposalList'
 import PageStructure from 'components/DataSetPageStructure'
 import { Flex, Text } from 'ui/common'

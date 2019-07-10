@@ -1,9 +1,21 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Flex, Image, Text } from 'ui/common'
 import Link from 'components/Link'
 import colors from 'ui/colors'
 import { createTable } from 'components/Table'
 import ReactTooltip from 'react-tooltip'
+
+const LogoTeam = styled(Flex).attrs({
+  mr: '10px',
+})`
+  background-image: url(${p => p.src});
+  width: ${p => p.size};
+  height: ${p => p.size};
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+`
 
 export default createTable({
   columns: [
@@ -24,16 +36,7 @@ export default createTable({
     {
       data: d => (
         <Flex flexDirection="row" alignItems="center">
-          <Image
-            src={d.image}
-            height="16px"
-            mr={2}
-            style={{
-              filter: 'grayscale(1)',
-              minWidth: '16px',
-              maxWidth: '16px',
-            }}
-          />
+          <LogoTeam src={d.image} size="20px" />
           {d.name}
         </Flex>
       ),

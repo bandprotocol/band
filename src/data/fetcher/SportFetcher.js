@@ -6,113 +6,61 @@ import { decodeScores } from 'utils/helper'
 import { getProvider } from 'data/Providers'
 import { getSportTeamByCode } from 'utils/sportTeam'
 
-const randNum = n =>
-  n > 0
-    ? `${Math.ceil(Math.random() * 9)}${randNum(n - 1)}`
-    : Math.ceil(Math.random() * 9)
-
-const randStr = n =>
-  n > 0
-    ? `${'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]}${randStr(
-        n - 1,
-      )}`
-    : 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]
-
-const countSportAllQL = type => `
-{
-  allDataSportFeeds(
-    orderBy: LAST_UPDATE_DESC
-    filter: { scoreAway: { isNull: false } }
-  ) {
-    totalCount
-  }
-}
-`
-const countSportQL = (type, home, away) => `
-{
-  allDataSportFeeds(
-    orderBy: LAST_UPDATE_DESC
-    condition: { sportType: "${type}" }
-    filter: {
-      scoreAway: { isNull: false }
-      ${home ? `home: { equalTo: "${home}" }` : ``}
-      ${away ? `away: { equalTo: "${away}" }` : ``}
-    }
-  ) {
-    totalCount
-  }
-}
-`
-
-export const SportCountAllFetcher = withRouter(
-  class extends BaseFetcher {
-    shouldFetch(prevProps) {
-      return false
-    }
-
-    async fetch() {
-      const {
-        allDataSportFeeds: { totalCount },
-      } = await Utils.graphqlRequest(countSportAllQL())
-
-      return totalCount
-    }
-  },
-)
-
-export const SportCountByTypeFetcher = withRouter(
-  class extends BaseFetcher {
-    shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
-    }
-
-    async fetch() {
-      const { type, home, away } = this.props
-
-      const {
-        allDataSportFeeds: { totalCount },
-      } = await Utils.graphqlRequest(countSportQL(type, home, away))
-
-      return totalCount
-    }
-  },
-)
-
-export const SportByTypeFetcher = withRouter(
+export const SportCountByTCDFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
       return prevProps.tcdAddress !== this.props.tcdAddress
     }
 
     async fetch() {
-      const { tcdAddress, tcdPrefix, setNumDataPoints } = this.props
+      const sports = await Utils.getDataRequest(
+        `/sports/${this.props.tcdAddress}`,
+      )
+      return sports.length
+    }
+  },
+)
 
-      const sports = await Utils.getDataRequest(`/sports/${tcdAddress}`)
-      setNumDataPoints(sports.length)
+export const SportByTCDFetcher = withRouter(
+  class extends BaseFetcher {
+    shouldFetch(prevProps) {
+      return (
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.currentPage !== this.props.currentPage
+      )
+    }
 
-      return sports
-        .sort((s1, s2) => (s1.timestamp > s2.timestamp ? 1 : -1))
-        .map(sport => {
-          // console.log(sport)
-          const home = sport.home
-          const away = sport.away
-          const [scoreHome, scoreAway] = decodeScores(sport.value)
-          return {
-            time: moment(new Date(sport.date).getTime()),
-            hasStartTime:
-              sport.sportStartTime && sport.sportStartTime !== '9999',
-            lastUpdate: moment(sport.timestamp * 1000),
-            keyOnChain: sport.key,
-            home,
-            away,
-            homeFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), home)
-              .label,
-            awayFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), away)
-              .label,
-            scoreAway: scoreAway,
-            scoreHome: scoreHome,
-          }
-        })
+    async fetch() {
+      const { tcdAddress, tcdPrefix, currentPage, nSportList } = this.props
+      const skip = (currentPage - 1) * nSportList
+      const params =
+        skip > 0
+          ? {
+              limit: nSportList,
+              skip,
+            }
+          : {
+              limit: nSportList,
+            }
+      const sports = await Utils.getDataRequest(`/sports/${tcdAddress}`, params)
+
+      return sports.map(sport => {
+        const home = sport.home
+        const away = sport.away
+        const [scoreHome, scoreAway] = decodeScores(sport.value)
+        return {
+          time: moment(new Date(sport.date).getTime()),
+          hasStartTime: sport.sportStartTime && sport.sportStartTime !== '9999',
+          lastUpdate: moment(sport.timestamp * 1000),
+          keyOnChain: sport.key,
+          home,
+          away,
+          homeFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), home).label,
+          awayFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), away).label,
+          scoreAway: scoreAway,
+          scoreHome: scoreHome,
+        }
+      })
     }
   },
 )

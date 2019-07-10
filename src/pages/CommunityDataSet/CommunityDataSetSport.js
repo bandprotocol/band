@@ -1,41 +1,33 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Flex, Box, Text, Card } from 'ui/common'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Button, Image } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
 import PageStructure from 'components/DataSetPageStructure'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { getDetail } from 'data/detail/sport'
 import {
-  SportCountByTypeFetcher,
-  SportByTypeFetcher,
+  SportCountByTCDFetcher,
+  SportByTCDFetcher,
   SportProvidersByTypeTimeTeamFetcher,
 } from 'data/fetcher/SportFetcher'
 import SportTable from 'components/table/SportTable'
 import Loading from 'components/Loading'
-import { createLoadingButton } from 'components/BaseButton'
+import PaginationRender from 'components/Pagination/PaginationRender'
 
-const LoadMoreButton = createLoadingButton(styled(Button)`
-  width: 200px;
-  height: 40px;
-  background-color: #7c84a6;
-  margin: 10px 0px;
-  cursor: pointer;
-  border-radius: 20px;
-  box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.2);
-  background-image: linear-gradient(to right, #5269ff, #4890ff);
-`)
+const LogoTeam = styled(Flex).attrs({
+  mx: '5px',
+})`
+  background-image: url(${p => p.src});
+  width: ${p => p.size};
+  height: ${p => p.size};
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+`
 
-const renderDataPoints = (
-  tcdAddress,
-  state,
-  matches,
-  currentSportLength,
-  loadMoreList,
-  onSearchTeam,
-) => {
-  const { type, home: searchHome, away: searchAway } = state
+const renderDataPoints = (tcdAddress, state, matches, onSearchTeam) => {
   return (
     <React.Fragment>
       <Box mt={3}>
@@ -62,18 +54,14 @@ const renderDataPoints = (
                       hasStartTime ? 'YYYY/MM/DD hh:mm a' : 'YYYY/MM/DD',
                     )}
                     :{' '}
-                    <Image
-                      mx="5px"
+                    <LogoTeam
                       src={getDetail(homeFullName, 'home').logo}
-                      height="30px"
-                      style={{ maxHeight: '30px' }}
+                      size="30px"
                     />
                     {homeFullName} {` vs. `}
-                    <Image
-                      mx="5px"
+                    <LogoTeam
                       src={getDetail(awayFullName, 'away').logo}
-                      height="30px"
-                      style={{ maxHeight: '30px' }}
+                      size="30px"
                     />
                     {awayFullName}
                   </Flex>
@@ -110,7 +98,6 @@ const renderDataPoints = (
                 <SportProvidersByTypeTimeTeamFetcher
                   tcdAddress={tcdAddress}
                   keyOnChain={keyOnChain}
-                  type={type}
                   time={time.format('YYYYMMDD')}
                   home={home}
                   away={away}
@@ -119,15 +106,15 @@ const renderDataPoints = (
                   {({ fetching, data }) =>
                     fetching ? (
                       <Loading
-                        height={214}
+                        height={90}
                         width={922}
                         rects={[
                           [24, 6, 922 - 48, 28, 8],
                           [24, 36 + 8 + 4, 922 - 48, 32 - 8, 8],
-                          [24, 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
-                          [24, 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
-                          [24, 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
-                          [24, 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
+                          // [24, 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
+                          // [24, 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
+                          // [24, 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
+                          // [24, 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
                         ]}
                       />
                     ) : (
@@ -142,61 +129,18 @@ const renderDataPoints = (
           )}
         </FlipMove>
       </Box>
-      <SportCountByTypeFetcher type={type} home={searchHome} away={searchAway}>
-        {({ fetching, data }) =>
-          !data ||
-          fetching ||
-          currentSportLength == 0 ||
-          currentSportLength >= data ||
-          searchHome ||
-          searchAway ? null : (
-            <Flex width="100%" justifyContent="center" alignItems="center">
-              <LoadMoreButton onClick={loadMoreList}>
-                Load More Data
-              </LoadMoreButton>
-            </Flex>
-          )
-        }
-      </SportCountByTypeFetcher>
     </React.Fragment>
   )
 }
 
 class SportPage extends React.Component {
   state = {
-    numDataPoints: 0,
-    type: 'EPL',
     nSportList: 10,
+    currentPage: 1,
+
+    // search
     home: null,
     away: null,
-  }
-
-  changeType(type) {
-    this.setState({
-      type,
-      nSportList: 10,
-      home: null,
-      away: null,
-    })
-  }
-
-  async loadMoreList(forceFetch) {
-    const currentLength = this.currentSportLength
-    this.setState({
-      nSportList: this.state.nSportList + 10,
-    })
-    await new Promise(r => {
-      const fetchChecker = setInterval(() => {
-        forceFetch(true, true)
-      }, 1500)
-      const checker = setInterval(() => {
-        if (this.currentSportLength > currentLength) {
-          clearInterval(checker)
-          clearInterval(fetchChecker)
-          r()
-        }
-      }, 500)
-    })
   }
 
   onSearchTeam(forceFetch, teamType, team) {
@@ -208,90 +152,109 @@ class SportPage extends React.Component {
     )
   }
 
+  onChangePage(selectedPage) {
+    this.setState({
+      currentPage: selectedPage,
+    })
+  }
+
   render() {
     const { tcdAddress, tcdPrefix } = this.props
+    const { currentPage, nSportList } = this.state
     return (
-      <PageStructure
-        renderHeader={() => (
-          <Flex
-            flexDirection="column"
-            pl="52px"
-            width="100%"
-            style={{ height: '100%' }}
-            justifyContent="center"
+      <SportCountByTCDFetcher tcdAddress={tcdAddress}>
+        {({ fetching, data: totalCount }) => (
+          <PageStructure
+            renderHeader={() => (
+              <Flex
+                flexDirection="column"
+                pl="52px"
+                width="100%"
+                style={{ height: '100%' }}
+                justifyContent="center"
+              >
+                <Text
+                  fontSize="27px"
+                  color="white"
+                  fontWeight="900"
+                  width="50%"
+                  style={{ lineHeight: '38px' }}
+                >
+                  On-chain Data You Can Trust Readily Available for Ethereum
+                  Smart Contract
+                </Text>
+                <Text
+                  fontSize="18px"
+                  color="white"
+                  fontWeight="500"
+                  width="60%"
+                  style={{ lineHeight: '33px' }}
+                >
+                  Token holders collectively curate trustworthy data providers.
+                  By staking their tokens, they earn a portion of fee from the
+                  providers.
+                </Text>
+              </Flex>
+            )}
+            renderSubheader={() => (
+              <Flex
+                width="100%"
+                alignItems="center"
+                color="#5269ff"
+                pl="52px"
+                style={{ height: '60px' }}
+              >
+                <Text fontWeight="900">{`${totalCount} Keys Available`}</Text>
+              </Flex>
+            )}
+            {...this.props}
           >
-            <Text
-              fontSize="27px"
-              color="white"
-              fontWeight="900"
-              width="50%"
-              style={{ lineHeight: '38px' }}
+            <SportByTCDFetcher
+              tcdAddress={tcdAddress}
+              tcdPrefix={tcdPrefix}
+              {...this.state}
             >
-              On-chain Data You Can Trust Readily Available for Ethereum Smart
-              Contract
-            </Text>
-            <Text
-              fontSize="18px"
-              color="white"
-              fontWeight="500"
-              width="60%"
-              style={{ lineHeight: '33px' }}
-            >
-              Token holders collectively curate trustworthy data providers. By
-              staking their tokens, they earn a portion of fee from the
-              providers.
-            </Text>
-          </Flex>
+              {({ fetching, data, forceFetch }) => {
+                if (fetching) {
+                  return (
+                    <Loading
+                      height={700}
+                      width={1141}
+                      rects={[
+                        [0, 0, 1141, 60],
+                        [0, 80, 1141, 60],
+                        [0, 80 * 2, 1141, 60],
+                        [0, 80 * 3, 1141, 60],
+                        [0, 80 * 4, 1141, 60],
+                        [0, 80 * 5, 1141, 60],
+                        [0, 80 * 6, 1141, 60],
+                        [0, 80 * 7, 1141, 60],
+                        [0, 80 * 8, 1141, 60],
+                      ]}
+                    />
+                  )
+                } else {
+                  return (
+                    <React.Fragment>
+                      {renderDataPoints(
+                        tcdAddress,
+                        this.state,
+                        data,
+                        // this.onSearchTeam.bind(this, forceFetch),
+                      )}
+                    </React.Fragment>
+                  )
+                }
+              }}
+            </SportByTCDFetcher>
+            <PaginationRender
+              currentPage={currentPage}
+              numberOfPages={Math.ceil(totalCount / nSportList) || 1}
+              onChangePage={this.onChangePage.bind(this)}
+            />
+          </PageStructure>
         )}
-        renderSubheader={() => (
-          <Flex
-            width="100%"
-            alignItems="center"
-            color="#5269ff"
-            pl="52px"
-            style={{ height: '60px' }}
-          >
-            <Text fontWeight="900">
-              {`${this.state.numDataPoints} Keys Available`}
-            </Text>
-          </Flex>
-        )}
-        {...this.props}
-      >
-        <SportByTypeFetcher
-          tcdAddress={tcdAddress}
-          tcdPrefix={tcdPrefix}
-          setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
-        >
-          {({ fetching, data, forceFetch }) => {
-            if (fetching) {
-              return (
-                <Loading
-                  height={281}
-                  width={924}
-                  rects={[
-                    [0, 0, 120, 32],
-                    [880, 0, 32, 32],
-                    [0, 52, 924, 61],
-                    [0, 135, 924, 61],
-                    [0, 218, 924, 61],
-                  ]}
-                />
-              )
-            } else {
-              this.currentSportLength = data.length
-              return renderDataPoints(
-                tcdAddress,
-                this.state,
-                data,
-                this.currentSportLength,
-                this.loadMoreList.bind(this, forceFetch),
-                this.onSearchTeam.bind(this, forceFetch),
-              )
-            }
-          }}
-        </SportByTypeFetcher>
-      </PageStructure>
+      </SportCountByTCDFetcher>
     )
   }
 }

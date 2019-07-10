@@ -94,14 +94,12 @@ export default {
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: 'white',
-      boxShadow: '0 3px 5px 0 rgba(0, 0, 0, 0.2)',
       backgroundColor: '#5269ff',
       border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
       borderRadius: '20px',
       '&:hover': {
-        backgroundColor: '#384cc9',
-        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
+        backgroundColor: '#3c55f9',
       },
     },
     lightblue: {
@@ -111,14 +109,12 @@ export default {
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: '#5269ff',
-      boxShadow: '0 3px 5px 0 rgba(0, 0, 0, 0.2)',
       backgroundColor: '#e1e5ff',
       border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
       borderRadius: '20px',
       '&:hover': {
-        backgroundColor: '#d3d7f0',
-        boxShadow: '0 2px 12px 0 rgba(0, 0, 0, 0.15)',
+        backgroundColor: '#d4deed',
       },
     },
     submit: {

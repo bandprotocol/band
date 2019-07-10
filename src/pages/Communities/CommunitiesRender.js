@@ -9,7 +9,7 @@ import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
   margin-top: 60px;
-  height: 315px;
+  height: 204px;
   width: 100%;
   background: url('${HeaderBackgroundSrc}');
   background-repeat: no-repeat;
@@ -28,11 +28,12 @@ const AbsoluteLink = styled.a.attrs(props => ({
 `
 
 const WhiteButton = styled(Button).attrs({
-  fontSize: '18px',
+  fontSize: '16px',
   color: '#5269ff',
   fontWeight: '500',
   bg: '#fff',
   width: '226px',
+  py: '6px',
 })`
   line-height: 35px;
   border-radius: 24px;
@@ -40,10 +41,11 @@ const WhiteButton = styled(Button).attrs({
 `
 
 const WhiteOutlineButton = styled(Button).attrs({
-  fontSize: '18px',
+  fontSize: '16px',
   color: '#fff',
   fontWeight: '500',
   mx: '15px',
+  py: '6px',
 })`
   background-color: transparent;
   border: 1px solid #fff;
@@ -81,6 +83,8 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
       background: 'white',
       paddingLeft: '0px',
       position: 'relative',
+      backgroundImage:
+        'linear-gradient(to right, rgba(107, 139, 245, 0.13), rgba(107, 245, 205, 0.13))',
     }}
   >
     <Header>
@@ -93,7 +97,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
         style={{ height: '100%', margin: '0 auto' }}
       >
         <Text
-          fontSize="50px"
+          fontSize="30px"
           color="#fff"
           fontWeight="900"
           mb={2}
@@ -102,9 +106,9 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
           Data Governance Portal
         </Text>
         <Text
-          fontSize="20px"
+          fontSize="18px"
           color="#fff"
-          my={3}
+          my={1}
           width="850px"
           style={{ lineHeight: '1.7' }}
         >
@@ -112,7 +116,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
           curated through a decentralized network of data providers. We use
           dataset tokens to incentivize providers.
         </Text>
-        <Box mt={4}>
+        <Box mt={1}>
           <AbsoluteLink href="https://developer.bandprotocol.com/">
             <WhiteButton>Developer Reference</WhiteButton>
           </AbsoluteLink>
@@ -128,12 +132,17 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
     check yourcommunity, feature community as well */}
     {tcdCommunities && tcrCommunities ? (
       <Flex flexDirection="column">
-        <Box style={{ width: '100%', height: '100%' }}>
+        <Box
+          style={{
+            width: '100%',
+            height: '100%',
+          }}
+        >
           <PageContainer dashboard>
             {/* TCD Communities */}
             <Flex flexDirection="row" alignItems="center" mt="12px" mb={3}>
               <Text
-                fontSize="25px"
+                fontSize="20px"
                 fontWeight="900"
                 color="#4a4a4a"
                 style={{ letterSpacing: '1px' }}

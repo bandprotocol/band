@@ -61,18 +61,17 @@ const ProvidersRow = ({
       minWidth: 0,
       overflow: 'hidden',
       height: '60px',
-      borderLeft: status === 'LISTED' ? '8px solid #718bff' : 'none',
+      borderLeft: status === 'ACTIVE' ? '8px solid #718bff' : 'none',
       borderBottom: '1px solid rgba(227, 227, 227, 0.5)',
     }}
-    bg={status === 'LISTED' ? '#f9fbff' : 'white'}
     alignItems="center"
   >
     <Tab
       ml="17px"
-      width={status === 'LISTED' ? '45px' : '60px'}
+      width={status === 'ACTIVE' ? '45px' : '60px'}
       justifyContent="center"
     >
-      <Text color={colors.text} fontSize="14px">
+      <Text color="#5269ff" fontWeight="900" fontSize="14px">
         {rank}
       </Text>
     </Tab>
@@ -198,7 +197,7 @@ const ProvidersRow = ({
         >
           {user && (
             <Box flex="0 0 auto">
-              <Image mr={2} src={ArrowDown} width="14px" height="14px" />
+              <Image mr={1} src={ArrowDown} width="14px" height="14px" />
             </Box>
           )}
           <Text fontSize="13px" fontWeight="700">
@@ -233,7 +232,7 @@ const ProvidersRow = ({
         >
           {user && (
             <Box flex="0 0 auto">
-              <Image mr={2} src={ArrowUp} width="14px" height="14px" />
+              <Image mr={1} src={ArrowUp} width="14px" height="14px" />
             </Box>
           )}
           <Text fontSize="13px" fontWeight="700">
