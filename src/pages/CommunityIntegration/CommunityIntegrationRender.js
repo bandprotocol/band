@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { Children } from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Text, AbsoluteLink, Button, Image } from 'ui/common'
+import { Flex, Box, Text, AbsoluteLink } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
@@ -22,31 +22,41 @@ const TabButton = styled(Flex).attrs({
   height: 60px;
 `
 
-const Pointer = styled(Flex)`
+const PointerLeftPart = styled(Flex)`
   position: relative;
   padding-left: 10px;
   font-size: 16px;
-  font-weight: ${props => (props.isSelected ? '900' : '500')};
+  border-radius: 4px;
   color: ${props => (props.isSelected ? 'white' : '#4a4a4a')}
-  background: ${props =>
-    props.isSelected
-      ? `linear-gradient(to right, #5269ff, #4890ff)`
-      : `#f4f8ff`};
-  transition: all 200ms;
+  background: ${props => (props.isSelected ? '#5269ff' : 'rgba(0,0,0,0)')};
+  ${props =>
+    props.isSelected && 'box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.34);'}
   cursor: pointer;
-  :before {
-    content: '';
-    position: absolute;
-    right: -15px;
-    bottom: 0;
-    width: 0;
-    height: 0;
-    border-left: 15px solid
-      ${props => (props.isSelected ? `#4890ff` : `#f4f8ff`)};
-    border-top: 25px solid transparent;
-    border-bottom: 25px solid transparent;
-  }
 `
+
+const Pointer = props => (
+  <PointerLeftPart
+    {...props}
+    flex={1}
+    justifyContent="center"
+    alignItems="center"
+  >
+    {props.isSelected && (
+      <Flex
+        bg="#5269ff"
+        style={{
+          position: 'absolute',
+          right: '-12px',
+          minWidth: '28px',
+          minHeight: '28px',
+          borderRadius: '4px',
+          transform: 'matrix(0.5, -0.7071, 0.5, 0.7071, 0, 0)',
+        }}
+      />
+    )}
+    {props.children}
+  </PointerLeftPart>
+)
 
 const HighlightSpan = styled.span`
   color: #ff5252;
@@ -184,18 +194,13 @@ export default class CommunityIntegrationRender extends React.Component {
             <React.Fragment>
               <Text
                 lineHeight={1.65}
-                fontWeight={500}
-                fontSize="16px"
+                fontWeight={700}
+                fontSize="18px"
                 mt="30px"
                 mx="80px"
               >
-                This page will explains how to integrate data portal in to your
-                smart contract. So your smart contract can easily get any data
-                from trusted but trustless dimension.
+                Example Situation
               </Text>
-              <Flex mt="30px" mx="80px">
-                <Image src={DataPortal} width="50%" />
-              </Flex>
               <Text
                 lineHeight={1.65}
                 fontWeight={500}
@@ -209,27 +214,55 @@ export default class CommunityIntegrationRender extends React.Component {
                 flexDirection="row-reverse"
                 mt="30px"
                 mx="80px"
-                pr="30px"
+                py="5px"
+                pl="5px"
+                pr="25px"
                 style={{
+                  position: 'relative',
+                  border: '1px solid #c8cfff',
                   minHeight: '50px',
                   borderRadius: '4px',
-                  overflow: 'hidden',
                 }}
               >
+                <Flex
+                  bg="white"
+                  style={{
+                    right: '-17px',
+                    minWidth: '37px',
+                    minHeight: '37px',
+                    borderRadius: '4px',
+                    position: 'absolute',
+                    border: '1px solid #c8cfff',
+                    transform: 'matrix(0.5, -0.7071, 0.5, 0.7071, 0, 0)',
+                  }}
+                />
+                <Flex
+                  bg="white"
+                  style={{
+                    top: '0px',
+                    right: '0px',
+                    minWidth: '30px',
+                    minHeight: '48px',
+                    position: 'absolute',
+                    borderRadius: '4px',
+                  }}
+                />
                 <Pointer
-                  flex={1}
-                  justifyContent="center"
-                  alignItems="center"
                   isSelected={this.state.codingStepNum === 2}
                   onClick={() => this.setState({ codingStepNum: 2 })}
                 >
                   Step # 3: Call
                   <Text
-                    bg={this.state.codingStepNum === 2 ? '#3c55f9' : '#fff8de'}
+                    bg={this.state.codingStepNum === 2 ? '#3c55f9' : '#fbfbfb'}
+                    color={this.state.codingStepNum === 2 ? 'white' : '#ff5252'}
                     mx="5px"
                     p="5px"
                     style={{
                       borderRadius: '4px',
+                      border:
+                        this.state.codingStepNum === 2
+                          ? '0px'
+                          : '1px solid #eaeaea',
                       fontFamily: 'Source Code Pro',
                     }}
                   >
@@ -238,19 +271,21 @@ export default class CommunityIntegrationRender extends React.Component {
                   Function
                 </Pointer>
                 <Pointer
-                  flex={1}
-                  justifyContent="center"
-                  alignItems="center"
                   isSelected={this.state.codingStepNum === 1}
                   onClick={() => this.setState({ codingStepNum: 1 })}
                 >
                   Step # 2: Add
                   <Text
-                    bg={this.state.codingStepNum === 1 ? '#3c55f9' : '#fff8de'}
+                    bg={this.state.codingStepNum === 1 ? '#3c55f9' : '#fbfbfb'}
+                    color={this.state.codingStepNum === 1 ? 'white' : '#ff5252'}
                     ml="5px"
                     p="5px"
                     style={{
                       borderRadius: '4px',
+                      border:
+                        this.state.codingStepNum === 1
+                          ? '0px'
+                          : '1px solid #eaeaea',
                       fontFamily: 'Source Code Pro',
                     }}
                   >
@@ -258,20 +293,22 @@ export default class CommunityIntegrationRender extends React.Component {
                   </Text>
                 </Pointer>
                 <Pointer
-                  flex={1}
-                  justifyContent="center"
-                  alignItems="center"
                   isSelected={this.state.codingStepNum === 0}
                   onClick={() => this.setState({ codingStepNum: 0 })}
                 >
                   Step # 1: Create
                   <Text
-                    bg={this.state.codingStepNum === 0 ? '#3c55f9' : '#fff8de'}
+                    bg={this.state.codingStepNum === 0 ? '#3c55f9' : '#fbfbfb'}
+                    color={this.state.codingStepNum === 0 ? 'white' : '#ff5252'}
                     ml="5px"
                     p="5px"
                     fontSize="12px"
                     style={{
                       borderRadius: '4px',
+                      border:
+                        this.state.codingStepNum === 0
+                          ? '0px'
+                          : '1px solid #eaeaea',
                       fontFamily: 'Source Code Pro',
                     }}
                   >
