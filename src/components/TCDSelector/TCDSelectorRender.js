@@ -44,8 +44,24 @@ const SelectionList = styled(Flex).attrs({
   height: 60px;
   border-radius: 3px;
 
+  #tcd-image {
+    display: block;
+  }
+
+  #tcd-image-hover {
+    display: none;
+  }
+
   &: hover {
     background: #f2f5ff;
+
+    #tcd-image {
+      display: none;
+    }
+
+    #tcd-image-hover {
+      display: block;
+    }
   }
 `
 
@@ -122,6 +138,7 @@ const CurrentCard = styled(Flex)`
 
 const List = ({
   imageInactive,
+  imageActive,
   label,
   datapoints,
   path,
@@ -130,12 +147,9 @@ const List = ({
 }) => (
   <NavLink to={path} style={{ textDecoration: 'none' }}>
     <SelectionList onClick={() => handleSelect(index)}>
-      <Flex
-        justifyContent="center"
-        alignItems="center"
-        style={{ minWidth: '50px' }}
-      >
-        <Image src={imageInactive} />
+      <Flex justifyContent="center" alignItems="center" mx="10px">
+        <Image id="tcd-image" src={imageInactive} width="32px" />
+        <Image id="tcd-image-hover" src={imageActive} width="32px" />
       </Flex>
       <Flex flexDirection="column" ml="14px">
         <Text fontSize="14px" fontWeight="900" color="#3b57d1">
