@@ -10,8 +10,8 @@ const Parameters = artifacts.require('Parameters');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
 
 module.exports = function(deployer, network, accounts) {
-  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 6');
-  if (!process.env.DEPLOY_LOTTERY) return;
+  console.log('⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ 7');
+  if (!process.env.DEPLOY_WEB_CRAWLER) return;
   deployer
     .then(async () => {
       const registry = await BandRegistry.deployed();
@@ -19,50 +19,46 @@ module.exports = function(deployer, network, accounts) {
       const band = await BandToken.at(await registry.band());
 
       const dataProviders = {
-        DATA_NY_GOV: '0xda7a198618105fd301958ca76548ce9ea5d1de42',
-        POWERBALL: '0xda7ad157eda297c1412bbdbe0e3600670e4560f6',
-        MEGA_MILLIONS: '0xda7a08e515dab7cec794f804ce2b1c850ff19b7f',
+        C1: '0xda7aff0d0142ea8a6df33ba9e6307922c7838489',
+        C2: '0xda7a8afb5035045a58eedecc6b6f26247c8f20f5',
+        C3: '0xda7a7bd990030359e4e30e41ba0e5b33f740db47',
       };
 
       const tcds = [
         {
-          prefix: 'pwb:',
-          providers: ['DATA_NY_GOV', 'POWERBALL'],
-        },
-        {
-          prefix: 'mmn:',
-          providers: ['DATA_NY_GOV', 'MEGA_MILLIONS'],
+          prefix: 'web:',
+          providers: ['C1', 'C2', 'C3'],
         },
       ];
-      // Create Lottery community
-      const lotteryTx = await commFactory.create(
-        'Lottery Data Feeds',
-        'XLT',
+
+      // Create Sport community
+      const commTx = await commFactory.create(
+        'Web Request Oracle',
+        'XWB',
         BondingCurveExpression.address,
         '0',
-        '86400',
+        '60',
         '50000000000000000',
         '800000000000000000',
       );
 
-      console.log(
-        'Created LotteryFeedCommunity [bondingCurve,params,token] at',
-        [
-          lotteryTx.receipt.logs[2].args.bondingCurve,
-          lotteryTx.receipt.logs[2].args.params,
-          lotteryTx.receipt.logs[2].args.token,
-        ],
-      );
+      console.log('Created Web Oracle [bondingCurve,params,token] at', [
+        commTx.receipt.logs[2].args.bondingCurve,
+        commTx.receipt.logs[2].args.params,
+        commTx.receipt.logs[2].args.token,
+      ]);
+
       const tcdFactory = await OffchainAggTCDFactory.deployed();
       const commToken = await CommunityToken.at(
-        lotteryTx.receipt.logs[2].args.token,
+        commTx.receipt.logs[2].args.token,
       );
-      const params = await Parameters.at(lotteryTx.receipt.logs[2].args.params);
+      const params = await Parameters.at(commTx.receipt.logs[2].args.params);
+
       await commToken.addCapper(tcdFactory.address);
 
       // Buy tokens
       const curve = await BondingCurve.at(
-        lotteryTx.receipt.logs[2].args.bondingCurve,
+        commTx.receipt.logs[2].args.bondingCurve,
       );
 
       await band.approve(curve.address, '620000000000000148973918');
@@ -113,11 +109,6 @@ module.exports = function(deployer, network, accounts) {
           }),
         );
       }
-
-      console.error(
-        'DataSourceBookkeepingSportAddress:',
-        JSON.stringify(tcdList),
-      );
     })
     .catch(console.log);
 };

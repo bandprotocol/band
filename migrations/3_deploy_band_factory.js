@@ -8,6 +8,7 @@ const CommunityFactory = artifacts.require('CommunityFactory');
 const TCRFactory = artifacts.require('TCRFactory');
 const AggTCDFactory = artifacts.require('AggTCDFactory');
 const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
+const OffchainAggTCDFactory = artifacts.require('OffchainAggTCDFactory');
 const MultiSigWalletFactory = artifacts.require('MultiSigWalletFactory');
 
 module.exports = function(deployer, network, accounts) {
@@ -17,6 +18,7 @@ module.exports = function(deployer, network, accounts) {
   deployer.link(ParametersFactory, CommunityFactory);
   deployer.deploy(AggTCDFactory);
   deployer.deploy(MultiSigTCDFactory);
+  deployer.deploy(OffchainAggTCDFactory);
   deployer.deploy(TCRFactory);
 
   deployer
@@ -41,6 +43,7 @@ module.exports = function(deployer, network, accounts) {
       console.error('bandRegistry:', bandRegistry.address);
       console.error('AggTCDFactory:', AggTCDFactory.address);
       console.error('MultiSigTCDFactory:', MultiSigTCDFactory.address);
+      console.error('OffchainAggTCDFactory:', OffchainAggTCDFactory.address);
       console.error('TCRFactory:', TCRFactory.address);
 
       if (network === 'development') {

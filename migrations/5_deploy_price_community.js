@@ -1,7 +1,7 @@
 const BandRegistry = artifacts.require('BandRegistry');
 const BandToken = artifacts.require('BandToken');
 const TCDBase = artifacts.require('TCDBase');
-const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
+const OffchainAggTCDFactory = artifacts.require('OffchainAggTCDFactory');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
@@ -104,7 +104,7 @@ module.exports = function(deployer, network, accounts) {
         priceTx.receipt.logs[2].args.params,
         priceTx.receipt.logs[2].args.token,
       ]);
-      const tcdFactory = await MultiSigTCDFactory.deployed();
+      const tcdFactory = await OffchainAggTCDFactory.deployed();
       const commToken = await CommunityToken.at(
         priceTx.receipt.logs[2].args.token,
       );
@@ -143,7 +143,7 @@ module.exports = function(deployer, network, accounts) {
             MedianAggregator.address,
           ],
         );
-        const tcdtx = await tcdFactory.createMultiSigTCD(
+        const tcdtx = await tcdFactory.createOffchainAggTCD(
           web3.utils.fromAscii(tcdDetail.prefix),
           priceTx.receipt.logs[2].args.bondingCurve,
           registry.address,
