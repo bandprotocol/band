@@ -11,6 +11,7 @@ const HistoryHeader = () => (
     py={3}
     bg="#f5f7ff"
     alignItems="center"
+    color="#6878e2"
     style={{ border: 'solid 1px #e7ecff' }}
   >
     <Flex ml="30px" flex={1}>
