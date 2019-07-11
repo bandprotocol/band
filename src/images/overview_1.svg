@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="265" height="115" viewBox="0 0 265 115">
+    <g fill="none" fill-rule="evenodd">
+        <path fill="#FFF8F8" stroke="#FFBEBE" d="M4 85.5A3.5 3.5 0 0 0 .5 89v22a3.5 3.5 0 0 0 3.5 3.5h89a3.5 3.5 0 0 0 3.5-3.5V89a3.5 3.5 0 0 0-3.5-3.5H4z"/>
+        <text fill="#4A4A4A" font-family="Avenir-Medium, Avenir" font-size="15" font-weight="400" transform="translate(0 85)">
+            <tspan x="26.413" y="20">Values</tspan>
+        </text>
+        <path fill="#F8FAFF" stroke="#C4BEFF" d="M4 34.5A3.5 3.5 0 0 0 .5 38v22A3.5 3.5 0 0 0 4 63.5h89a3.5 3.5 0 0 0 3.5-3.5V38a3.5 3.5 0 0 0-3.5-3.5H4z"/>
+        <text fill="#4A4A4A" font-family="Avenir-Medium, Avenir" font-size="15" font-weight="400" transform="translate(0 34)">
+            <tspan x="32.39" y="20">Keys</tspan>
+        </text>
+        <g transform="translate(178.2 37)">
+            <ellipse cx="39.477" cy="63.545" fill="#B7BED8" rx="39.477" ry="13.34"/>
+            <path fill="#C5CBE0" d="M39.477 63.173c21.803 0 39.477-5.712 39.477-12.76 0-3.199-3.644-6.124-9.664-8.363-7.238-2.693-17.911-4.396-29.813-4.396C17.674 37.654 0 43.367 0 50.414s17.674 12.76 39.477 12.76z"/>
+            <ellipse cx="39.477" cy="37.862" fill="#D4DAEC" rx="39.477" ry="12.76"/>
+            <ellipse cx="39.477" cy="25.311" fill="#DBE0EF" rx="39.477" ry="12.76"/>
+            <ellipse cx="39.477" cy="12.76" fill="#E3E8F5" rx="39.477" ry="12.76"/>
+        </g>
+        <g fill-rule="nonzero">
+            <path fill="#5269FF" stroke="#5269FF" stroke-width=".81" d="M264.385 108.639l-10.802-11.284a15.32 15.32 0 0 0 4.462-10.821c0-8.456-6.847-15.334-15.265-15.334s-15.265 6.878-15.265 15.334 6.847 15.334 15.265 15.334c3.695 0 7.086-1.327 9.73-3.528l10.827 11.311a.723.723 0 0 0 1.028.02.733.733 0 0 0 .02-1.032z"/>
+            <path fill="#F0F4FF" d="M242.78 100.408c-7.616 0-13.812-6.224-13.812-13.874s6.196-13.874 13.812-13.874 13.811 6.224 13.811 13.874-6.196 13.874-13.811 13.874z"/>
+        </g>
+        <g transform="translate(171)">
+            <rect width="93.6" height="30" fill="#5269FF" fill-rule="nonzero" rx="15"/>
+            <text fill="#FFF" font-family="Avenir-Heavy, Avenir" font-size="12" font-weight="600">
+                <tspan x="10.004" y="19">TCD contract</tspan>
+            </text>
+        </g>
+        <g fill="#C4BEFF" transform="translate(99 45)">
+            <path fill-rule="nonzero" d="M68.5 4H3V3h65.5v-4l9 4.5-9 4.5V4z"/>
+            <circle cx="3" cy="3" r="3"/>
+        </g>
+        <g fill="#FFBEBE" transform="matrix(-1 0 0 1 176 97)">
+            <path fill-rule="nonzero" d="M68.5 4H3V3h65.5v-4l9 4.5-9 4.5V4z"/>
+            <circle cx="3" cy="3" r="3"/>
+        </g>
+    </g>
+</svg>

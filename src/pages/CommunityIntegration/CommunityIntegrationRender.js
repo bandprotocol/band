@@ -1,6 +1,6 @@
-import React, { Children } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Text, AbsoluteLink } from 'ui/common'
+import { Flex, Box, Text, AbsoluteLink, Image } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
@@ -8,6 +8,9 @@ import Integration from 'data/Integration/index'
 import DataHeader from 'components/DataHeader'
 import IntegrationHeader from 'images/integration-header.svg'
 import DataPortal from 'images/dataportal.svg'
+import Overview1 from 'images/overview_1.svg'
+import Overview2 from 'images/overview_2.svg'
+import Overview3 from 'images/overview_3.png'
 
 const TabButton = styled(Flex).attrs({
   width: '380px',
@@ -73,9 +76,26 @@ const Sup = styled.span`
   font-size: smaller;
 `
 
+const Oval = ({ text, radius }) => (
+  <Flex
+    bg="#e7ecff"
+    style={{
+      minWidth: radius,
+      minHeight: radius,
+      maxWidth: radius,
+      maxHeight: radius,
+      borderRadius: '50%',
+    }}
+  >
+    <Text color="#5269ff" fontWeight={900} m="auto">
+      {text}
+    </Text>
+  </Flex>
+)
+
 const HighlightText = ({ text }) => {
   const words = text.split(' ')
-  const keyWords = ['/', '0x', 'byte', 'query', 'uint']
+  const keyWords = ['/', '0x', 'byte', 'queryinterface', 'uint']
   return (
     <React.Fragment>
       {words.map((word, i) => {
@@ -92,6 +112,8 @@ const HighlightText = ({ text }) => {
           for (const k of keyWords) {
             if (word.toLowerCase().includes(k)) {
               return <HighlightSpan>{word}</HighlightSpan>
+            } else if (word[0] === '•') {
+              return <HighlightSpan>{word.slice(1)}</HighlightSpan>
             }
           }
         } catch (e) {}
@@ -100,6 +122,26 @@ const HighlightText = ({ text }) => {
     </React.Fragment>
   )
 }
+
+const TwoColumnList = ({ list }) => (
+  <Flex flex={1} flexDirection="column">
+    {list.map(e => (
+      <Flex flexDirection="row" mt="10px">
+        <Text
+          lineHeight={1.65}
+          fontWeight={500}
+          fontSize="16px"
+          style={{ minWidth: '30px' }}
+        >
+          {e[0]}
+        </Text>
+        <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+          <HighlightText text={e[1]} />
+        </Text>
+      </Flex>
+    ))}
+  </Flex>
+)
 
 export default class CommunityIntegrationRender extends React.Component {
   state = { codingStepNum: 0, tabNum: 0 }
@@ -175,18 +217,132 @@ export default class CommunityIntegrationRender extends React.Component {
           </Text>
           {this.state.tabNum === 0 && (
             <React.Fragment>
-              <Flex>
+              <Flex flexDirection="row">
                 <Text
                   lineHeight={1.65}
                   fontWeight={500}
                   fontSize="16px"
                   mt="30px"
-                  pl="10px"
                   mx="80px"
                   style={{ whiteSpace: 'pre-wrap' }}
                 >
-                  <HighlightText text={keyFormat.description} />
+                  Welcome to Band Protocol's{' '}
+                  <HighlightSpan>crypto-fiat</HighlightSpan>dataset integration.
+                  You can integrate cryptocurrency prices to your dApps with 3
+                  simple steps:
                 </Text>
+              </Flex>
+              <Flex flexDirection="row" mt="30px" mx="80px">
+                <Flex flex={1} justifyContent="center" alignItems="center">
+                  <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                    <HighlightText
+                      text={` 1. Pick the query •key for data lookup. For instance, key
+                      ETH/USD for Ethereum to USD conversion rate. Each dataset
+                      has its own method to construct a valid key. See
+                      Specification for more details.`}
+                    />
+                  </Text>
+                </Flex>
+                <Flex flex={1} pr="20px" justifyContent="flex-end" mb="30px">
+                  <Image src={Overview1} height="100%" />
+                </Flex>
+              </Flex>
+              <Flex
+                flexDirection="row"
+                pt="30px"
+                mr="40px"
+                style={{ borderTop: '1px solid #e7ecff' }}
+              >
+                <Flex flex={2} mr="20px">
+                  <Image src={Overview2} height="280px" />
+                </Flex>
+                <TwoColumnList
+                  list={[
+                    ['2.', 'Add some codes to your smart contract'],
+                    [
+                      '🔸',
+                      `Declare Band Protocol's generic  QueryInterface  on your code.`,
+                    ],
+                    [
+                      '🔸',
+                      `Create a QueryInterface instance pointing to contract address ↴ 0x0e28131369CC48C93a04487a32c9A0ADe5AA0a36 .`,
+                    ],
+                    [
+                      '🔸',
+                      `Call •query function with the chosen •key . Do not forget to attach 0.001 ETH as query fee.`,
+                    ],
+                  ]}
+                />
+              </Flex>
+              <Flex
+                flexDirection="row"
+                pt="30px"
+                mt="30px"
+                mx="80px"
+                style={{
+                  borderTop: '1px solid #e7ecff',
+                  borderBottom: '1px solid #e7ecff',
+                }}
+              >
+                <TwoColumnList
+                  list={[
+                    [
+                      '3.',
+                      'Receive query result as a bundle of •output , •updatedAt , and •status .  See  Specification  for more details.',
+                    ],
+                    [
+                      '🔸',
+                      `•output is the query's output, which can be casted to an  uint256 .`,
+                    ],
+                    [
+                      '🔸',
+                      `•updatedAt is the unix timestamp at which the data is updated.`,
+                    ],
+                    [
+                      '🔸',
+                      `•status is the query's status, one of •OK , •NOT_AVAILABLE , or •DISAGREEMENT .`,
+                    ],
+                  ]}
+                />
+                <Flex flex={1} mb="30px" justifyContent="flex-end">
+                  <Image src={Overview3} height="300px" />
+                </Flex>
+              </Flex>
+              <Flex
+                mt="30px"
+                mx="80px"
+                bg="#6b8bf5"
+                style={{
+                  overflow: 'hidden',
+                  maxHeight: '80px',
+                  minHeight: '80px',
+                  borderRadius: '10px',
+                  position: 'relative',
+                }}
+              >
+                <Flex
+                  bg="#4b6fe6"
+                  style={{
+                    position: 'absolute',
+                    borderRadius: '50%',
+                    minHeight: '500px',
+                    minWidth: '500px',
+                    right: '-220px',
+                    top: '-420px',
+                  }}
+                />
+                <Flex style={{ margin: 'auto', zIndex: 1 }}>
+                  <Text color="white" fontSize="18px">
+                    For more detail about overall dataset group work please
+                    visit this{' '}
+                    <AbsoluteLink
+                      style={{ color: 'white', textDecoration: 'underline' }}
+                      href="https://medium.com/bandprotocol"
+                    >
+                      article.
+                    </AbsoluteLink>
+                  </Text>
+                </Flex>
               </Flex>
             </React.Fragment>
           )}
@@ -376,15 +532,41 @@ export default class CommunityIntegrationRender extends React.Component {
                   The specification of calling query function only have 3 things
                   to concern.
                 </Text>
-                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                  1. How much to pay per each query ↓.
-                </Text>
-                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                  2. How a single key of this TCD is form ↓.
-                </Text>
-                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                  3. How to decode the return result ↓.
-                </Text>
+                <Flex flexDirection="row" mt="30px">
+                  <Flex flex={1} flexDirection="column">
+                    <Oval radius="30px" text="1" />
+                    <Text
+                      mt="15px"
+                      lineHeight={1.65}
+                      fontWeight={900}
+                      fontSize="16px"
+                    >
+                      How much to pay per each query
+                    </Text>
+                  </Flex>
+                  <Flex flex={1} flexDirection="column">
+                    <Oval radius="30px" text="2" />
+                    <Text
+                      mt="15px"
+                      lineHeight={1.65}
+                      fontWeight={900}
+                      fontSize="16px"
+                    >
+                      How a single key of this TCD is form
+                    </Text>
+                  </Flex>
+                  <Flex flex={1} flexDirection="column">
+                    <Oval radius="30px" text="3" />
+                    <Text
+                      mt="15px"
+                      lineHeight={1.65}
+                      fontWeight={900}
+                      fontSize="16px"
+                    >
+                      How to decode the return result
+                    </Text>
+                  </Flex>
+                </Flex>
               </Flex>
               <Flex>
                 <Text
