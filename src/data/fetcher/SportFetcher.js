@@ -13,10 +13,10 @@ export const SportCountByTCDFetcher = withRouter(
     }
 
     async fetch() {
-      const sports = await Utils.getDataRequest(
-        `/sports/${this.props.tcdAddress}`,
+      const sportCount = await Utils.getDataRequest(
+        `/sports/${this.props.tcdAddress}/count`,
       )
-      return sports.length
+      return sportCount
     }
   },
 )

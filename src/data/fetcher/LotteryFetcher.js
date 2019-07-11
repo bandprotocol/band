@@ -14,31 +14,17 @@ const compareBalls = (a, b) =>
   a.redBall === b.redBall &&
   a.mul === b.mul
 
-const countLotteryQL = type => `
-{
-  allDataLotteryFeeds(
-    condition: {lotteryType: "${type}"}
-    filter: { redBall: { isNull: false } }
-  ) {
-    totalCount
-  }
-}
-`
-
-export const LotteryCountByTypeFetcher = withRouter(
+export const LotteryCountByTCDFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.type !== this.props.type
+      return prevProps.tcdAddress !== this.props.tcdAddress
     }
 
     async fetch() {
-      const { type } = this.props
-
-      const {
-        allDataLotteryFeeds: { totalCount },
-      } = await Utils.graphqlRequest(countLotteryQL(type))
-
-      return totalCount
+      const lotteriesCount = await Utils.getDataRequest(
+        `/lotteries/${this.props.tcdAddress}/count`,
+      )
+      return lotteriesCount
     }
   },
 )
@@ -46,27 +32,35 @@ export const LotteryCountByTypeFetcher = withRouter(
 export const LotteyByTCDAddress = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.tcdAddress !== this.props.tcdAddress
+      return (
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.currentPage !== this.props.currentPage
+      )
     }
     async fetch() {
-      const { setNumDataPoints, tcdAddress } = this.props
-      const rawData = await Utils.getDataRequest(`/lotteries/${tcdAddress}`)
-      setNumDataPoints(rawData.length)
-      return rawData
-        .map(({ date, key, timestamp, value }) => {
-          return {
-            time: moment(date),
-            lastUpdate: moment(timestamp * 1000),
-            keyOnChain: key,
-            ...convertToBalls(value),
-          }
-        })
-        .sort((a, b) => {
-          if (a.time.isBefore(b.time)) {
-            return 1
-          }
-          return -1
-        })
+      const { tcdAddress, currentPage, nLotteryList } = this.props
+      const skip = (currentPage - 1) * nLotteryList
+      const params =
+        skip > 0
+          ? {
+              limit: nLotteryList,
+              skip,
+            }
+          : {
+              limit: nLotteryList,
+            }
+      const rawData = await Utils.getDataRequest(
+        `/lotteries/${tcdAddress}`,
+        params,
+      )
+      return rawData.map(({ date, key, timestamp, value }) => {
+        return {
+          time: moment(date),
+          lastUpdate: moment(timestamp * 1000),
+          keyOnChain: key,
+          ...convertToBalls(value),
+        }
+      })
     }
   },
 )

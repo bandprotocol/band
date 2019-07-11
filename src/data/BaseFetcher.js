@@ -60,7 +60,11 @@ export default class BaseFetcher extends React.Component {
     }
 
     const pathName = this.props.location.pathname
-    const data = await this.fetch()
+    const currentRequest = (this.lastRequest = this.fetch())
+    const data = await currentRequest
+
+    // Ignore fetch result if the request isn't lastRequest
+    if (this.lastRequest !== currentRequest) return false
 
     // Ignore fetch result if
     // (1) Route changes, or

@@ -143,6 +143,14 @@ class SportPage extends React.Component {
     away: null,
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.tcdAddress !== this.props.tcdAddress) {
+      this.setState({
+        currentPage: 1,
+      })
+    }
+  }
+
   onSearchTeam(forceFetch, teamType, team) {
     this.setState(
       {
@@ -163,7 +171,7 @@ class SportPage extends React.Component {
     const { currentPage, nSportList } = this.state
     return (
       <SportCountByTCDFetcher tcdAddress={tcdAddress}>
-        {({ fetching, data: totalCount }) => (
+        {({ fetching: countFetching, data: totalCount }) => (
           <PageStructure
             renderHeader={() => (
               <Flex
@@ -204,7 +212,11 @@ class SportPage extends React.Component {
                 pl="52px"
                 style={{ height: '60px' }}
               >
-                <Text fontWeight="900">{`${totalCount} Keys Available`}</Text>
+                <Text fontWeight="900">
+                  {countFetching
+                    ? 'loading... '
+                    : `${totalCount} Keys Available`}
+                </Text>
               </Flex>
             )}
             {...this.props}
@@ -215,7 +227,7 @@ class SportPage extends React.Component {
               {...this.state}
             >
               {({ fetching, data, forceFetch }) => {
-                if (fetching) {
+                if (fetching || countFetching) {
                   return (
                     <Loading
                       height={700}
