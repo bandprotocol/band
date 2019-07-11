@@ -193,44 +193,51 @@ export default props => {
           </Box>
           <Flex mb={1}>
             <Box flex={1} pl={2}>
-              <Text py={2} fontSize="14px" fontWeight="500" color="#777777">
+              <Text py={2} fontSize="14px" fontWeight="900" color="#777777">
                 Current Price
               </Text>
-              <Text
-                mt="8px"
-                fontSize="25px"
-                letterSpacing="0.1px"
-                fontWeight={500}
-              >
-                {BN.parse(price).pretty()} BAND
+              <Flex flexDirection="row" mt="8px" alignItems="flex-end">
                 <Text
-                  ml={2}
-                  fontSize="0.7em"
-                  style={{ display: 'inline-block' }}
+                  color="#5269ff"
+                  fontSize="25px"
+                  letterSpacing="0.1px"
+                  fontWeight="900"
+                  mr="8px"
                 >
+                  {BN.parse(price).pretty()}
+                </Text>
+                <Text
+                  fontSize="25px"
+                  letterSpacing="0.1px"
+                  fontWeight="600"
+                  color="#4a4a4a"
+                >
+                  BAND
+                </Text>
+                <Text ml={2} fontSize="16px" color="#4a4a4a" fontWeight="600">
                   / {symbol}
                 </Text>
-              </Text>
-              <Text
-                fontSize="18px"
-                fontWeight="500"
-                lineHeight="2.2em"
-                color="#757575"
-              >
-                {BN.parse(price)
-                  .bandToUSD(bandPrice)
-                  .pretty()}{' '}
-                USD / {symbol}
-              </Text>
+              </Flex>
+              <Flex flexDirection="row" alignItems="flex-end" mt={3}>
+                <Text fontSize="18px" fontWeight="500" color="#757575">
+                  {BN.parse(price)
+                    .bandToUSD(bandPrice)
+                    .pretty()}{' '}
+                  USD
+                </Text>
+                <Text ml={2} fontSize="13px" color="#757575" fontWeight="500">
+                  / {symbol}
+                </Text>
+              </Flex>
             </Box>
             <Flex flexDirection="column" justifyContent="center" mr={2}>
               <Button onClick={showBuy} variant="blue">
-                <Text fontSize="14px" fontWeight="600">
+                <Text fontSize="16px" fontWeight="900">
                   BUY
                 </Text>
               </Button>
               <Button mt={2} onClick={showSell} variant="grey">
-                <Text fontSize="14px" fontWeight="600">
+                <Text fontSize="16px" fontWeight="900">
                   SELL
                 </Text>
               </Button>

@@ -4,12 +4,24 @@ import { Flex, Card, Text } from 'ui/common'
 export default ({ title, value, unit, subValue }) => (
   <Card variant="dashboard" my="4px" style={{ minWidth: 260, minHeight: 120 }}>
     <Flex flexDirection="column">
-      <Text py={2} fontSize="14px" fontWeight="500" color="#777777">
+      <Text py={2} fontSize="14px" fontWeight="900" color="#4a4a4a">
         {title}
       </Text>
-      <Text mt="8px" fontSize="24px" letterSpacing="0.1px" fontWeight={500}>
+      <Text
+        mt="8px"
+        fontSize="24px"
+        letterSpacing="0.1px"
+        fontWeight={900}
+        color="#5269ff"
+      >
         {`${value}`}
-        <Text ml={2} fontSize="0.7em" style={{ display: 'inline-block' }}>
+        <Text
+          ml={2}
+          fontSize="18px"
+          style={{ display: 'inline-block' }}
+          color="#4a4a4a"
+          fontWeight="500"
+        >
           {unit}
         </Text>
       </Text>
