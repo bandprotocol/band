@@ -1,7 +1,7 @@
 import React from 'react'
 import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
-import { Flex, Text, Box, Card, Button } from 'ui/common'
+import { Flex, Text, Box, Card, Button, H1, H3, H4 } from 'ui/common'
 import { getTCDInfomation } from 'utils/tcds'
 import { getProfileColor } from 'ui/communities'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
@@ -89,26 +89,14 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
         p="0px 32px"
         style={{ height: '100%', margin: '0 auto' }}
       >
-        <Text
-          fontSize="30px"
-          color="#fff"
-          fontWeight="900"
-          mb={2}
-          style={{ letterSpacing: '0.95px' }}
-        >
+        <H1 mb={2} style={{ letterSpacing: '0.95px' }}>
           Data Governance Portal
-        </Text>
-        <Text
-          fontSize="18px"
-          color="#fff"
-          my={1}
-          width="850px"
-          style={{ lineHeight: '1.7' }}
-        >
+        </H1>
+        <H4 my={1} width="850px" style={{ lineHeight: '1.7' }}>
           Band Protocol connects ÐApps with trusted off-chain information,
           curated through a decentralized network of data providers. We use
           dataset tokens to incentivize providers.
-        </Text>
+        </H4>
         <Box mt={1}>
           <AbsoluteLink href="https://developer.bandprotocol.com/">
             <WhiteButton>Developer Reference</WhiteButton>
@@ -134,14 +122,9 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
           <PageContainer dashboard>
             {/* TCD Communities */}
             <Flex flexDirection="row" alignItems="center" mt="12px" mb={3}>
-              <Text
-                fontSize="20px"
-                fontWeight="900"
-                color="#4a4a4a"
-                style={{ letterSpacing: '1px' }}
-              >
+              <H3 color="#4a4a4a" style={{ letterSpacing: '1px' }}>
                 Available Datasets for DApps
-              </Text>
+              </H3>
               <CountBadge>{tcdCommunities.length}</CountBadge>
             </Flex>
             <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">

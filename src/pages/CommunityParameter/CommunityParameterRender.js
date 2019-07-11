@@ -58,7 +58,7 @@ const selectStyles = {
 }
 
 const ProposeButton = styled(Button).attrs({
-  variant: 'blue',
+  variant: 'gradientBlue',
 })`
   padding: 0;
   width: 210px;

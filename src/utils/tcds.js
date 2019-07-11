@@ -38,7 +38,7 @@ export const getTCDInfomation = prefix =>
       label: 'Crypto-Fiat Conversion',
       shortLabel: 'Crypto-Fiat',
       order: 1,
-      datapoints: 5,
+      type: 'prices',
     },
     'erc20:': {
       imageActive: ERC20Active,
@@ -46,7 +46,7 @@ export const getTCDInfomation = prefix =>
       label: 'ERC-20 Pairs',
       shortLabel: 'ERC-20',
       order: 2,
-      datapoints: 9,
+      type: 'prices',
     },
     'fx:': {
       imageActive: FiatActive,
@@ -54,7 +54,7 @@ export const getTCDInfomation = prefix =>
       label: 'Foreign Exchange',
       shortLabel: 'FX',
       order: 3,
-      datapoints: 7,
+      type: 'prices',
     },
     'useq:': {
       imageActive: StockActive,
@@ -62,7 +62,7 @@ export const getTCDInfomation = prefix =>
       label: 'US Equities',
       shortLabel: 'US Equities',
       order: 4,
-      datapoints: 10,
+      type: 'prices',
     },
     'nba:': {
       imageInactive: BasketballInactive,
@@ -70,6 +70,7 @@ export const getTCDInfomation = prefix =>
       label: 'NBA',
       shortLabel: 'Basketball',
       order: 1,
+      type: 'sports',
     },
     'mlb:': {
       imageInactive: BaseballInactive,
@@ -77,6 +78,7 @@ export const getTCDInfomation = prefix =>
       label: 'MLB',
       shortLabel: 'Baseball',
       order: 2,
+      type: 'sports',
     },
     'nfl:': {
       imageInactive: USAFootballInactive,
@@ -84,6 +86,7 @@ export const getTCDInfomation = prefix =>
       label: 'NFL',
       shortLabel: 'USA Football',
       order: 3,
+      type: 'sports',
     },
     'epl:': {
       imageInactive: SoccerInactive,
@@ -91,6 +94,7 @@ export const getTCDInfomation = prefix =>
       label: 'Soccer',
       shortLabel: 'Soccer',
       order: 4,
+      type: 'sports',
     },
     'pwb:': {
       imageInactive: PWBInactive,
@@ -98,6 +102,7 @@ export const getTCDInfomation = prefix =>
       label: 'Powerball',
       shortLabel: 'Powerball',
       order: 1,
+      type: 'lotteries',
     },
     'mmn:': {
       imageInactive: MMNInactive,
@@ -105,6 +110,7 @@ export const getTCDInfomation = prefix =>
       label: 'Megamillions',
       shortLabel: 'Megamillions',
       order: 2,
+      type: 'lotteries',
     },
   }[prefix] || {
     imageActive: FiatActive,

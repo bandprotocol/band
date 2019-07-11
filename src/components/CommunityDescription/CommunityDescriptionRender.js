@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Card, Box, Flex, Text } from 'ui/common'
+import { Card, Box, Flex, Text, H5 } from 'ui/common'
 import TxHashLink from 'components/TxHashLink'
 
 const Field = ({ label, children }) => (
@@ -40,9 +40,9 @@ export default ({
   <Card variant="dashboard">
     <Flex>
       <Box mr={3}>
-        <Text fontSize="15px" mt="12px" mb={3} fontWeight="900" color="#393939">
+        <H5 mt="12px" mb={3} color="#393939">
           DATASET INFORMATION
-        </Text>
+        </H5>
         <Description>{description}</Description>
       </Box>
 
@@ -79,7 +79,7 @@ export default ({
       <Box
         ml={4}
         mr="-14px"
-        flex="0 0 270px"
+        flex="0 0 340px"
         style={{
           backgroundImage: `url(${banner})`,
           backgroundSize: 'cover',

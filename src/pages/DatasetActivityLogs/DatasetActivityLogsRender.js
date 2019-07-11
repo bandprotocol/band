@@ -101,7 +101,7 @@ const SearchBox = props => (
 )
 
 const FilterButton = styled(Button).attrs({
-  variant: 'blue',
+  variant: 'gradientBlue',
 })`
   cursor: pointer;
   font-size: 14px;

@@ -7,7 +7,7 @@ import EditPropose from 'images/edit-proposal.svg'
 import { getParameterDetail } from 'utils/helper'
 
 const CustomButton = styled(Button).attrs({
-  variant: 'blue',
+  variant: 'gradientBlue',
 })`
   cursor: pointer;
   font-size: 15px;

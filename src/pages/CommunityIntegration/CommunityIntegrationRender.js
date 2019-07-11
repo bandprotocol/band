@@ -6,6 +6,7 @@ import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
 import Integration from 'data/Integration/index'
 import DataHeader from 'components/DataHeader'
+import IntegrationHeader from 'images/integration-header.svg'
 
 const TabButton = styled(Flex).attrs({
   width: '380px',
@@ -145,6 +146,7 @@ export default class CommunityIntegrationRender extends React.Component {
             </TabButton>
           </Flex>
         )}
+        headerImage={IntegrationHeader}
         {...this.props}
       >
         <PageContainer

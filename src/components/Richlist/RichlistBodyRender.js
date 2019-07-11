@@ -1,6 +1,7 @@
 import React from 'react'
 import { colors } from 'ui'
 import { Flex, Text } from 'ui/common'
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 
 const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
   <Flex
@@ -33,18 +34,24 @@ const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
       }}
       letterSpacing="0.5px"
     >
-      <Text
-        fontFamily="code"
-        color={colors.text}
-        fontSize={0}
-        style={{
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-        }}
-      >
-        {address}
-      </Text>
+      <Flex alignItems="center">
+        {!!address && (
+          <Jazzicon diameter={22} seed={jsNumberForAddress(address)} />
+        )}
+        <Text
+          fontFamily="code"
+          color={colors.text}
+          fontSize={0}
+          ml={2}
+          style={{
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+          }}
+        >
+          {address}
+        </Text>
+      </Flex>
     </Flex>
     <Flex
       flex={3}

@@ -159,7 +159,7 @@ export default props => {
     // tcd,
   } = props
   return (
-    <PageContainer withSidebar style={{ minWidth: 0 }}>
+    <PageContainer withSidebar style={{ minWidth: 0, marginTop: '60px' }}>
       <Breadcrumb
         links={[
           { path: `/community/${address}`, label: name },
@@ -231,7 +231,7 @@ export default props => {
               </Flex>
             </Box>
             <Flex flexDirection="column" justifyContent="center" mr={2}>
-              <Button onClick={showBuy} variant="blue">
+              <Button onClick={showBuy} variant="gradientBlue">
                 <Text fontSize="16px" fontWeight="900">
                   BUY
                 </Text>

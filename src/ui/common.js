@@ -29,34 +29,31 @@ export const Highlight = styled.span`
 `
 
 export const H1 = styled(Text).attrs({
-  fontSize: [20, 30],
+  fontSize: 30,
 })`
-  line-height: 1.6em;
-  font-weight: ${p => (p.slim ? 600 : 900)};
+  font-weight: ${p => (p.slim ? 600 : 'bold')};
   letter-spacing: 0.03em;
-  color: ${p =>
-    p.color || (p.dark ? colors.purple.dark : colors.purple.normal)};
-  text-transform: ${p => (p.uppercase ? 'uppercase' : 'none')};
+  color: ${p => p.color || 'white'};
+  font-family: Open Sans;
 `
 
 export const H2 = styled(H1).attrs({
-  fontSize: 24,
+  fontSize: 27,
 })`
-  letter-spacing: 0.02em;
-  font-weight: 600;
+  letter-spacing: normal;
 `
 
 export const H3 = styled(H2).attrs({
-  fontSize: 18,
-})`
-  letter-spacing: 0.01em;
-`
+  fontSize: 20,
+})``
 
 export const H4 = styled(H3).attrs({
+  fontSize: 18,
+})``
+
+export const H5 = styled(H3).attrs({
   fontSize: 15,
-})`
-  letter-spacing: 0;
-`
+})``
 
 export const Image = styled(BaseImage)`
   display: ${p => (p.block ? 'block' : 'inline-block')};

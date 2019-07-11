@@ -2,9 +2,10 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { colors } from 'ui'
 import BN from 'utils/bignumber'
-import { Flex, Text, Image, Box, Button, Link } from 'ui/common'
+import { Flex, Text, Image, Box, Button, Link, H3 } from 'ui/common'
 
-const WrapText = styled(Text)`
+const WrapText = styled(H3)`
+  color: #4a4a4a;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 250px;
@@ -12,6 +13,9 @@ const WrapText = styled(Text)`
 `
 
 const Description = styled(Text)`
+  fontsize: 16px;
+  color: #747474;
+  font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -20,7 +24,7 @@ const Description = styled(Text)`
   -webkit-line-clamp: 2;
   height: 45px;
   line-height: 25px;
-  width: 325px;
+  width: 310px;
 `
 
 const StyledCard = styled(Flex)`
@@ -168,9 +172,7 @@ export default ({
         <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
           {name}
         </WrapText>
-        <Description fontSize="15px" mb={2}>
-          {description}
-        </Description>
+        <Description mb={2}>{description}</Description>
         <PriceDetail
           marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
           price={BN.parse(price).bandToUSD(bandPrice)}
@@ -189,6 +191,7 @@ export default ({
                 minWidth: '120px',
                 maxWidth: '120px',
                 fontWeight: '900',
+                fontSize: '15px',
               }}
             >
               Overview
@@ -202,14 +205,15 @@ export default ({
               variant="lightblue"
               ml={3}
               style={{
-                padding: isTcd ? '12px 25px' : '12px 5px',
+                padding: isTcd ? '12px 10px' : '12px 5px',
                 minWidth: '120px',
                 maxWidth: '120px',
                 whiteSpace: 'noWrap',
                 fontWeight: '900',
+                fontSize: '15px',
               }}
             >
-              {isTcd ? 'Dataset' : 'Visit Website'}
+              {isTcd ? 'Explre Data' : 'Visit Website'}
             </Button>
           </Link>
         </Flex>
