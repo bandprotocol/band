@@ -3,6 +3,7 @@ import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
 import { Flex, Text, Box, Card, Button } from 'ui/common'
 import { getTCDInfomation } from 'utils/tcds'
+import { getProfileColor } from 'ui/communities'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.png'
@@ -67,14 +68,6 @@ const CountBadge = styled(Flex).attrs({
   height: 30px;
   border-radius: 15px;
 `
-
-const getProfileColor = symbol =>
-  ({
-    XSP: 'linear-gradient(52deg, #406ae7, #c63ad6)',
-    XLT: 'linear-gradient(to left, #ffca55, #ff7155)',
-    XFN:
-      'linear-gradient(69deg, rgba(190, 60, 218, 0.9), rgba(239, 62, 150, 0.9))',
-  }[symbol] || '#fff')
 
 export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
   <PageContainer

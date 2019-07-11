@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Text, Bold, HighlightNavLink, Box } from 'ui/common'
+import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
+import { getProfileColor } from 'ui/communities'
 import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
@@ -80,7 +81,7 @@ export default ({
           borderRadius="50%"
           style={{
             boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
-            border: 'solid 4px rgba(255,255,255,0.9)',
+            backgroundImage: getProfileColor(symbol),
             padding: 5,
           }}
         />
