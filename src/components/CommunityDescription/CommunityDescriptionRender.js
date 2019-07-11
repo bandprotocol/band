@@ -7,8 +7,8 @@ const Field = ({ label, children }) => (
   <Flex my={2} style={{ lineHeight: '24px' }}>
     <Text
       fontSize="14px"
-      fontWeight="500"
-      color="#6976b7"
+      fontWeight="600"
+      color="#4a4a4a"
       textAlign="right"
       style={{ width: 110 }}
       mr={2}

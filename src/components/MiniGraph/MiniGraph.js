@@ -14,7 +14,7 @@ export default ({ title, value, unit, subValue }) => (
         fontWeight={900}
         color="#5269ff"
       >
-        {`${value}`}
+        {value}
         <Text
           ml={2}
           fontSize="18px"
