@@ -14,7 +14,7 @@ export default {
     crypto: {
       // header: 'List of Available Pairs',
       description:
-        'The following pairs are available for crypto-fiat trading data. Note that dapps can use `ETH/USD` conversion rate together with ERC-20 datasets to compute the rates between ERC-20 tokens and USD.',
+        'The following pairs are available for crypto-fiat trading data. Note that dapps can use ETH/USD conversion rate together with ERC-20 datasets to compute the rates between ERC-20 tokens and USD.',
       keys: [
         [
           'BCH/USD',

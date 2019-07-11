@@ -7,6 +7,7 @@ import Snippet from 'components/Snippet'
 import Integration from 'data/Integration/index'
 import DataHeader from 'components/DataHeader'
 import IntegrationHeader from 'images/integration-header.svg'
+import DataPortal from 'images/dataportal.svg'
 
 const TabButton = styled(Flex).attrs({
   width: '380px',
@@ -49,8 +50,8 @@ const Pointer = styled(Flex)`
 
 const HighlightSpan = styled.span`
   color: #ff5252;
-  border: solid 1px #eaeaea;
   background-color: #fbfbfb;
+  border: 1px solid #eaeaea;
   text-align: center;
   padding: 0px 5px;
   margin-right: 5px;
@@ -130,19 +131,19 @@ export default class CommunityIntegrationRender extends React.Component {
               active={this.state.tabNum === 0}
               onClick={() => this.setState({ tabNum: 0 })}
             >
-              Example Situation <span>🤔</span>
+              {'Overview 🔍'}
             </TabButton>
             <TabButton
               active={this.state.tabNum === 1}
               onClick={() => this.setState({ tabNum: 1 })}
             >
-              Key Format <span>🔑</span>
+              {'Coding 👨‍💻'}
             </TabButton>
             <TabButton
               active={this.state.tabNum === 2}
               onClick={() => this.setState({ tabNum: 2 })}
             >
-              Data Format <span>📝</span>
+              {'Specification 📝'}
             </TabButton>
           </Flex>
         )}
@@ -158,12 +159,43 @@ export default class CommunityIntegrationRender extends React.Component {
           }}
         >
           <Text fontSize="24px" mt="28px" mx="80px" fontWeight={900}>
-            {this.state.tabNum === 0 && 'Example Situation 🤔'}
-            {this.state.tabNum === 1 && 'Key Format 🔑'}
-            {this.state.tabNum === 2 && 'Data Format 📝'}
+            {this.state.tabNum === 0 && 'Overview 🔍'}
+            {this.state.tabNum === 1 && 'Coding 👨‍💻'}
+            {this.state.tabNum === 2 && 'Specification 📝'}
           </Text>
           {this.state.tabNum === 0 && (
             <React.Fragment>
+              <Flex>
+                <Text
+                  lineHeight={1.65}
+                  fontWeight={500}
+                  fontSize="16px"
+                  mt="30px"
+                  pl="10px"
+                  mx="80px"
+                  style={{ whiteSpace: 'pre-wrap' }}
+                >
+                  <HighlightText text={keyFormat.description} />
+                </Text>
+              </Flex>
+            </React.Fragment>
+          )}
+          {this.state.tabNum === 1 && (
+            <React.Fragment>
+              <Text
+                lineHeight={1.65}
+                fontWeight={500}
+                fontSize="16px"
+                mt="30px"
+                mx="80px"
+              >
+                This page will explains how to integrate data portal in to your
+                smart contract. So your smart contract can easily get any data
+                from trusted but trustless dimension.
+              </Text>
+              <Flex mt="30px" mx="80px">
+                <Image src={DataPortal} width="50%" />
+              </Flex>
               <Text
                 lineHeight={1.65}
                 fontWeight={500}
@@ -300,8 +332,23 @@ export default class CommunityIntegrationRender extends React.Component {
               </Box>
             </React.Fragment>
           )}
-          {this.state.tabNum === 1 && (
+          {this.state.tabNum === 2 && (
             <React.Fragment>
+              <Flex flexDirection="column" mt="30px" pl="10px" mx="80px">
+                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                  The specification of calling query function only have 3 things
+                  to concern.
+                </Text>
+                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                  1. How much to pay per each query ↓.
+                </Text>
+                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                  2. How a single key of this TCD is form ↓.
+                </Text>
+                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                  3. How to decode the return result ↓.
+                </Text>
+              </Flex>
               <Flex>
                 <Text
                   lineHeight={1.65}
@@ -312,7 +359,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   mx="80px"
                   style={{ whiteSpace: 'pre-wrap' }}
                 >
-                  <HighlightText text={keyFormat.description} />
+                  <HighlightText text={dataFormat.description} />
                 </Text>
               </Flex>
               <Flex mt="30px" mx="60px" flexWrap="wrap">
@@ -361,23 +408,6 @@ export default class CommunityIntegrationRender extends React.Component {
                     </Text>
                   </Flex>
                 ))}
-              </Flex>
-            </React.Fragment>
-          )}
-          {this.state.tabNum === 2 && (
-            <React.Fragment>
-              <Flex>
-                <Text
-                  lineHeight={1.65}
-                  fontWeight={500}
-                  fontSize="16px"
-                  mt="30px"
-                  pl="10px"
-                  mx="80px"
-                  style={{ whiteSpace: 'pre-wrap' }}
-                >
-                  <HighlightText text={dataFormat.description} />
-                </Text>
               </Flex>
             </React.Fragment>
           )}
