@@ -7,11 +7,16 @@ import OutImg from 'images/out.svg'
 const HistoryRow = ({ index, time, price, amount, type, txLink }) => (
   <Flex
     flexDirection="row"
-    style={{ minWidth: 0, overflow: 'hidden', height: '40px' }}
-    bg={index % 2 === 0 ? 'white' : '#f9fbff'}
+    mx="20px"
+    style={{
+      minWidth: 0,
+      overflow: 'hidden',
+      height: '40px',
+      borderBottom: 'solid 1px #eef3ff',
+    }}
     alignItems="center"
   >
-    <Flex flex={1} ml="30px">
+    <Flex flex={1} ml="10px">
       <Text color={colors.text} fontSize={0} letterSpacing="0.5px">
         {time}
       </Text>
@@ -31,7 +36,7 @@ const HistoryRow = ({ index, time, price, amount, type, txLink }) => (
         {type}
       </Bold>
     </Flex>
-    <Flex flex={1} justifyContent="center">
+    <Flex flex={0.9} justifyContent="center">
       <AbsoluteLink href={txLink}>
         <Image src={OutImg} width="14px" height="14px" />
       </AbsoluteLink>

@@ -5,13 +5,18 @@ import { Flex, Text } from 'ui/common'
 const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
   <Flex
     flexDirection="row"
-    style={{ minWidth: 0, overflow: 'hidden', height: '40px' }}
-    bg={index % 2 === 0 ? 'white' : '#f9fbff'}
+    mx="30px"
+    style={{
+      minWidth: 0,
+      overflow: 'hidden',
+      height: '40px',
+      borderBottom: 'solid 1px #eef3ff',
+    }}
     alignItems="center"
   >
     <Flex
       flex={2}
-      ml="40px"
+      ml="10px"
       style={{
         minWidth: 0,
       }}
@@ -64,7 +69,6 @@ const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
     </Flex>
     <Flex
       flex={2}
-      mr="30px"
       style={{
         minWidth: 0,
       }}

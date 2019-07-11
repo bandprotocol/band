@@ -26,7 +26,6 @@ export const createTable = ({ columns }) =>
     render() {
       const { data, numDigits, ...props } = this.props
       const numDataProviders = data.length
-      // console.log('DATA', data)
 
       return (
         <Box {...props} style={{ backgroundColor: 'white', color: '#4a4a4a' }}>

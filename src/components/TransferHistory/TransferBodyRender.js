@@ -6,13 +6,18 @@ import TxHashLink from 'components/TxHashLink'
 const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
   <Flex
     flexDirection="row"
-    style={{ minWidth: 0, overflow: 'hidden', height: '40px' }}
-    bg={index % 2 === 0 ? 'white' : '#f9fbff'}
+    mx="20px"
+    style={{
+      minWidth: 0,
+      overflow: 'hidden',
+      height: '40px',
+      borderBottom: 'solid 1px #eef3ff',
+    }}
     alignItems="center"
   >
     <Flex
       flex={5}
-      ml="30px"
+      ml="10px"
       style={{
         minWidth: 0,
       }}
@@ -75,7 +80,7 @@ const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
         {timeStamp}
       </Text>
     </Flex>
-    <Flex flex={2} justifyContent="center">
+    <Flex flex={1.7} justifyContent="center">
       <TxHashLink href={txLink} />
     </Flex>
   </Flex>

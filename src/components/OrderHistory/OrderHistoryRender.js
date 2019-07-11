@@ -6,7 +6,13 @@ import MockProposal from 'images/mock-proposal.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const HistoryHeader = () => (
-  <Flex flexDirection="row" py={3} bg="#f5f7ff" alignItems="center">
+  <Flex
+    flexDirection="row"
+    py={3}
+    bg="#f5f7ff"
+    alignItems="center"
+    style={{ border: 'solid 1px #e7ecff' }}
+  >
     <Flex ml="30px" flex={1}>
       <Text fontSize="14px" fontWeight={600}>
         Time
