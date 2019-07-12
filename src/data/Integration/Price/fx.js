@@ -4,7 +4,7 @@ export default {
   example: `Coming soon!`,
   contractName: 'TODO',
   dataFormat: {
-    description: `The return value is a bytes32 that can be converted directly to uint256. Note that to maintain arithmetic precision, the value is multiplied by 10^18 . See Example tab for, well, example.`,
+    description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,
   },
   keyFormat: {
     crypto: {

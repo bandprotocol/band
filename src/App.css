@@ -239,6 +239,7 @@ body {
   overflow: auto;
   font-family: 'Avenir', sans-serif;
   background: #f3f7ff;
+  scroll-behavior: smooth;
 }
 
 *:focus {

@@ -185,7 +185,7 @@ export default class Snippet extends React.Component {
   }
 
   render() {
-    const { dataset, codeIndex, code } = this.props
+    const { codeIndex, code } = this.props
 
     return (
       <React.Fragment>
@@ -223,7 +223,9 @@ export default class Snippet extends React.Component {
               {this.state.tab === 'solidity' ? '0.001 ETH/query' : 'free'}
             </Text>
           </Flex>
-          {renderSolidity(code[codeIndex || 0])}
+          {Array.isArray(code)
+            ? renderSolidity(code[codeIndex || 0])
+            : renderSolidity(code)}
         </Card>
       </React.Fragment>
     )

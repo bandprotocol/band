@@ -1,14 +1,14 @@
 export default {
   description: [
-    `Write a simple version of the smart contract. We set the price at 10 USD. As you can see 'buyTicket', function allows anyone to buy a ticket. The function to get the exchange rate between ETH and USD is left to be implemented.`,
+    `Write a simple version of the smart contract. We set the price at 10 USD. As you can see •buyTicket function which allows anyone to buy a ticket. The function to get the exchange rate between ETH and USD is left to be implemented.`,
     `Copy-paste QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32 together with additional statuses.`,
-    `Instantiate a QueryInterface object with TCD address 0x61518CA6F924348465B5126C0c20e843E5E6aA41. ETH/USD exchange rate can be obtained by query with key ETH/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
+    `Instantiate a QueryInterface object with TCD address 0x61518CA6F924348465B5126C0c20e843E5E6aA41 . ETH/USD exchange rate can be obtained by query with key ETH/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
   label: 'price',
-  example: `🎫 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD. 👇👇👇`,
+  example: `🎫 Say you have a simple smart contract for selling concert tickets. Users must pay in ETH, but we want the price of each ticket to be exactly 10 USD. In other words, a ticket costs whatever amount ETH worth 10 USD at the purchase time. The smart contract needs a real-time exchange rate of ETH/USD . 👇👇👇`,
   contractName: 'TicketContract',
   dataFormat: {
-    description: `The return value is a bytes32 that can be converted directly to uint256. Note that to maintain arithmetic precision, the value is multiplied by 10^18 . See Example tab for, well, example.`,
+    description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,
   },
   keyFormat: {
     crypto: {
@@ -92,7 +92,7 @@ contract TicketContract {
 
   function buyTicket() public payable {
     require(!hasTicket[msg.sender], "Must not already have a ticket");
-    require(msg.value * getETHUSDRate() / 1e36 >= ticketPrice, "INSUFFICIENT_ETHER");
+    require(msg.value * getETHUSDRate() / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
     hasTicket[msg.sender] = true;
   }
 
