@@ -33,23 +33,30 @@ const StyledCard = styled(Flex)`
   box-shadow: 0 2px 6px 0 #d4deed;
 `
 
-const MagicPattern = ({ color, num = 25, size = '5px', space = '5px' }) => {
+const MagicPattern = ({ color, num = 25, size = 5, space = 5 }) => {
   const numPoints = [...Array(num).keys()]
+
+  const ratio = 10
+  size = size * ratio
+  space = space * ratio
+
   return (
     <Flex
       flexWrap="wrap"
       style={{
-        width: '80px',
+        width: Math.sqrt(num) * size + Math.sqrt(num) * space * 2,
         position: 'absolute',
         bottom: '10px',
         left: '15px',
+        transformOrigin: 'bottom left',
+        transform: `scale(${1 / ratio})`,
       }}
     >
       {numPoints.map(() => (
         <Box
-          width={size}
-          m={space}
           style={{
+            margin: space,
+            width: size,
             height: size,
             borderRadius: '50%',
             backgroundImage:
