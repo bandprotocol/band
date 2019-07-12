@@ -196,7 +196,7 @@ export default ({
       }}
     >
       {currentPrefix === null ? (
-        <Box m="100px auto 0px auto">
+        <Box m="100px auto 0px auto" style={{ height: 400 }}>
           <CircleLoadingSpinner radius="60px" />
         </Box>
       ) : (

@@ -278,18 +278,17 @@ export default props => (
           )}
         </Flex>
         <Box ml={2} style={{ position: 'relative' }}>
-          <FilterButton onClick={props.toggleShowFilter}>
-            Filter (
-            {(props.activeFilter.REPORT ? 1 : 0) +
-              (props.activeFilter.BROADCAST ? 1 : 0)}
-            ) <Image ml={1} src={FilterSrc} width="14px" />
-          </FilterButton>
-
           <ClickOutSide
             onClickOutside={() =>
               props.showFilter && props.toggleShowFilter(false)
             }
           >
+            <FilterButton onClick={props.toggleShowFilter}>
+              Filter (
+              {(props.activeFilter.REPORT ? 1 : 0) +
+                (props.activeFilter.BROADCAST ? 1 : 0)}
+              ) <Image ml={1} src={FilterSrc} width="14px" />
+            </FilterButton>
             <SelectionContainer show={props.showFilter}>
               <Text fontSize="12px" color="#393939" fontWeight="700" ml={1}>
                 FILTER
