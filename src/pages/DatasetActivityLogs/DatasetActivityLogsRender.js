@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image, Button, Heading } from 'ui/common'
+import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import PaginationRender from 'components/Pagination/PaginationRender'
@@ -251,8 +251,8 @@ export default props => (
         lines={[
           'Monitor Smart Contract Activities',
           'See How the Data Comes to Life',
-          'Band Protocol aggregates data from multiple sources.',
-          'The data are validated on the smart contract.',
+          'Looking for a simple, decentralized, and secured way for your',
+          'Dapps to consume trusted price information? We got you covered!',
         ]}
       />
     )}

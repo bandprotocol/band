@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Flex, Box, Text, Card } from 'ui/common'
+import DataHeader from 'components/DataHeader'
 import styled from 'styled-components'
 import { communityDetailSelector } from 'selectors/communities'
 import PageStructure from 'components/DataSetPageStructure'
@@ -174,35 +175,14 @@ class SportPage extends React.Component {
         {({ fetching: countFetching, data: totalCount }) => (
           <PageStructure
             renderHeader={() => (
-              <Flex
-                flexDirection="column"
-                pl="52px"
-                width="100%"
-                style={{ height: '100%' }}
-                justifyContent="center"
-              >
-                <Text
-                  fontSize="27px"
-                  color="white"
-                  fontWeight="900"
-                  width="50%"
-                  style={{ lineHeight: '38px' }}
-                >
-                  On-chain Data You Can Trust Readily Available for Ethereum
-                  Smart Contract
-                </Text>
-                <Text
-                  fontSize="18px"
-                  color="white"
-                  fontWeight="500"
-                  width="60%"
-                  style={{ lineHeight: '33px' }}
-                >
-                  Token holders collectively curate trustworthy data providers.
-                  By staking their tokens, they earn a portion of fee from the
-                  providers.
-                </Text>
-              </Flex>
+              <DataHeader
+                lines={[
+                  'On-chain Data You Can Trust',
+                  'Readily Available for Ethereum Smart Contract',
+                  'Token holders collectively curate trustworthy data providers.',
+                  'By staking their tokens, they earn a portion of fee from the providers.',
+                ]}
+              />
             )}
             renderSubheader={() => (
               <Flex

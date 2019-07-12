@@ -7,7 +7,7 @@ import ParameterInput from 'components/ParameterInput'
 import { convertFromChain } from 'utils/helper'
 
 const WhiteCard = styled(Card).attrs({
-  border: 'solid 1px #dee2f0',
+  border: 'solid 1px #e7ecff',
   bg: '#ffffff',
 })`
   width: ${p => p.width || '365px'};

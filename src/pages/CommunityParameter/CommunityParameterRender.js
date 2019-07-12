@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Box, Button, Image } from 'ui/common'
+import { Flex, Text, Box, Button, Image, H2, H4, H5 } from 'ui/common'
 import colors from 'ui/colors'
 import PageStructure from 'components/DataSetPageStructure'
 import Select from 'react-select'
+import { getDescription } from 'data/parameters'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import ParameterList from 'components/ParameterList'
 import EditPropose from 'images/edit-proposal.svg'
@@ -67,7 +68,7 @@ const ProposeButton = styled(Button).attrs({
 `
 
 const SubmitButton = styled(Button).attrs({
-  variant: 'blue',
+  variant: 'gradientBlue',
 })`
   padding: 0;
   width: 100px;
@@ -102,21 +103,17 @@ export default ({
         style={{ height: '100%' }}
         justifyContent="center"
       >
-        <Text
-          fontSize="27px"
-          color="white"
-          fontWeight="900"
-          width="50%"
-          style={{ lineHeight: '38px' }}
-        >
+        <H2 width="50%" style={{ lineHeight: '38px' }}>
           Parameter
-        </Text>
+        </H2>
+        {/* TODO */}
         <Text
+          mt="13px"
           fontSize="18px"
           color="white"
           fontWeight="500"
           width="60%"
-          style={{ lineHeight: '33px' }}
+          style={{ lineHeight: '28px' }}
         >
           Spicy jalapeno bacon ipsum dolor amet meatball t-bone brisket, shank
           ground round tail strip steak tongue filet mignon hamburger. Cow
@@ -134,10 +131,9 @@ export default ({
         pr="20px"
         style={{ height: '60px' }}
       >
-        <Text fontSize={1} color={colors.text.normal} mr={2}>
+        <H5 mr={2} color="#4a4a4a" fontWeight="500">
           Parameter Group:
-        </Text>
-
+        </H5>
         <Select
           value={currentPrefix}
           options={prefixList}
@@ -150,8 +146,8 @@ export default ({
           {isEdit ? (
             <Flex>
               <Box
-                fontSize={1}
-                color={colors.text.grey}
+                fontSize="16px"
+                color="#4a4a4a"
                 px={3}
                 mr={3}
                 alignSelf="center"
@@ -209,19 +205,13 @@ export default ({
             <Text fontSize="20px" fontWeight="600">
               {currentPrefix.label}
             </Text>
-            {/* TODO: get info by current prefix */}
             <Text
               fontSize="15px"
               fontWeight="500"
               my={2}
               style={{ lineHeight: '25px' }}
             >
-              Spicy jalapeno bacon ipsum dolor amet meatball t-bone brisket,
-              shank ground round tail strip steak tongue filet mignon hamburger.
-              Cow landjaeger salami jowl turkey spare ribs fatback biltong strip
-              steak chuck meatball. Ribeye meatball turkey beef ribs. Kielbasa
-              swine tri-tip, salami pancetta fatback venison alcatra flank
-              sausage drumstick ham pork turkey.{' '}
+              {getDescription(currentPrefix.label).info}
             </Text>
           </Flex>
           <ParameterList

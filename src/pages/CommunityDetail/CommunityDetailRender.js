@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Card, Text, Box, Button } from 'ui/common'
+import { Flex, Card, Text, Box, Button, H5 } from 'ui/common'
 import PageContainer from 'components/PageContainer'
 import MiniGraph from 'components/MiniGraph'
 import CommunityDescription from 'components/CommunityDescription'
@@ -169,15 +169,9 @@ export default props => {
       <CommunityDescription tokenAddress={tokenAddress} />
       <Flex flexDirection="row" mt="12px" mx="-6px">
         <Card flex={1} variant="dashboard" mx="6px">
-          <Text
-            mt={1}
-            fontSize="15px"
-            mt="12px"
-            fontWeight="900"
-            color="#393939"
-          >
+          <H5 mt="12px" color="#393939">
             PRICE MOVEMENT
-          </Text>
+          </H5>
           <Box style={{ height: 220 }}>
             <AutoSizer>
               {({ height, width }) => (
@@ -201,24 +195,37 @@ export default props => {
                   color="#5269ff"
                   fontSize="25px"
                   letterSpacing="0.1px"
-                  fontWeight="900"
+                  fontWeight="600"
                   mr="8px"
+                  fontFamily="Open Sans"
                 >
                   {BN.parse(price).pretty()}
                 </Text>
                 <Text
                   fontSize="25px"
                   letterSpacing="0.1px"
-                  fontWeight="600"
+                  fontWeight="500"
                   color="#4a4a4a"
+                  fontFamily="Open Sans"
                 >
                   BAND
                 </Text>
-                <Text ml={2} fontSize="16px" color="#4a4a4a" fontWeight="600">
+                <Text
+                  ml={2}
+                  fontSize="16px"
+                  color="#4a4a4a"
+                  fontWeight="500"
+                  fontFamily="Open Sans"
+                >
                   / {symbol}
                 </Text>
               </Flex>
-              <Flex flexDirection="row" alignItems="flex-end" mt={3}>
+              <Flex
+                flexDirection="row"
+                alignItems="flex-end"
+                mt={3}
+                fontFamily="Open Sans"
+              >
                 <Text fontSize="18px" fontWeight="500" color="#757575">
                   {BN.parse(price)
                     .bandToUSD(bandPrice)
@@ -246,7 +253,7 @@ export default props => {
         </Card>
         <Flex flexDirection="column" mx="6px" my="-4px">
           <MiniGraph
-            title="Market Cap"
+            title="Market Cap."
             value={BN.parse(marketCap)
               .bandToUSD(bandPrice)
               .shortPretty()}

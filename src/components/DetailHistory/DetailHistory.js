@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text } from 'ui/common'
+import { Flex, Text, H5 } from 'ui/common'
 import Richlist from 'components/Richlist'
 import TransferHistory from 'components/TransferHistory'
 import OrderHistory from 'components/OrderHistory'
@@ -53,9 +53,9 @@ export default class DetailHistory extends React.Component {
           px="30px"
           style={{ height: 72 }}
         >
-          <Text mr={4} fontSize="15px" fontWeight="900" color="#393939">
+          <H5 mr={4} color="#393939">
             EXPLORE
-          </Text>
+          </H5>
           {this.renderTab('Rich List', 0)}
           {this.renderTab('Token Transfers', 1)}
           {this.renderTab('Orders', 2)}

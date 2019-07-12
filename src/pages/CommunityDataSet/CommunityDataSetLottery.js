@@ -3,6 +3,7 @@ import colors from 'ui/colors'
 import styled from 'styled-components'
 import { Flex, Box, Text, Card } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
+import DataHeader from 'components/DataHeader'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import {
@@ -116,19 +117,11 @@ const renderDataPoints = (tcdAddress, lotteries) => (
 export default class LotteryPage extends React.Component {
   state = { nLotteryList: 10, currentPage: 1 }
 
-  initialize() {
-    this.setState({
-      currentPage: 1,
-    })
-  }
-
-  componentDidMount() {
-    this.initialize()
-  }
-
   componentDidUpdate(prevProps) {
     if (prevProps.tcdAddress !== this.props.tcdAddress) {
-      this.initialize()
+      this.setState({
+        currentPage: 1,
+      })
     }
   }
   onChangePage(selectedPage) {
@@ -145,35 +138,14 @@ export default class LotteryPage extends React.Component {
         {({ fetching: countFetching, data: totalCount }) => (
           <PageStructure
             renderHeader={() => (
-              <Flex
-                flexDirection="column"
-                pl="52px"
-                width="100%"
-                style={{ height: '100%' }}
-                justifyContent="center"
-              >
-                <Text
-                  fontSize="27px"
-                  color="white"
-                  fontWeight="900"
-                  width="50%"
-                  style={{ lineHeight: '38px' }}
-                >
-                  On-chain Data You Can Trust Readily Available for Ethereum
-                  Smart Contract
-                </Text>
-                <Text
-                  fontSize="18px"
-                  color="white"
-                  fontWeight="500"
-                  width="60%"
-                  style={{ lineHeight: '33px' }}
-                >
-                  Token holders collectively curate trustworthy data providers.
-                  By staking their tokens, they earn a portion of fee from the
-                  providers.
-                </Text>
-              </Flex>
+              <DataHeader
+                lines={[
+                  'On-chain Data You Can Trust',
+                  'Readily Available for Ethereum Smart Contract',
+                  'Token holders collectively curate trustworthy data providers.',
+                  'By staking their tokens, they earn a portion of fee from the providers.',
+                ]}
+              />
             )}
             renderSubheader={() => (
               <Flex

@@ -79,9 +79,18 @@ const DisplayIcon = ({ src, bgColor }) => (
       borderRadius: '50%',
       backgroundImage: bgColor,
       boxShadow: '0 5px 10px 0 #d3dcea',
+      overflow: 'hidden',
     }}
   >
-    <Image src={src} width="75px" />
+    <Box
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundImage: `url(${src})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+      }}
+    />
   </Flex>
 )
 
@@ -176,7 +185,7 @@ export default ({
     <Flex p="25px 30px" color="#4a4a4a">
       <DisplayIcon src={logo} bgColor={borderColor} />
       <Flex flexDirection="column" mx="18px">
-        <WrapText fontSize="20px" fontWeight="900" lineHeight={2} mt={1}>
+        <WrapText fontWeight="600" lineHeight={2} mt={1}>
           {name}
         </WrapText>
         <Description mb={2}>{description}</Description>

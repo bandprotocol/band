@@ -121,7 +121,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
         >
           <PageContainer dashboard>
             {/* TCD Communities */}
-            <Flex flexDirection="row" alignItems="center" mt="12px" mb={3}>
+            <Flex flexDirection="row" alignItems="center" mt="15px" mb="10px">
               <H3 color="#4a4a4a" style={{ letterSpacing: '1px' }}>
                 Available Datasets for DApps
               </H3>

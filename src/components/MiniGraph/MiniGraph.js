@@ -4,7 +4,7 @@ import { Flex, Card, Text } from 'ui/common'
 export default ({ title, value, unit, subValue }) => (
   <Card variant="dashboard" my="4px" style={{ minWidth: 260, minHeight: 120 }}>
     <Flex flexDirection="column">
-      <Text py={2} fontSize="14px" fontWeight="900" color="#4a4a4a">
+      <Text py={2} fontSize="14px" fontWeight="600" color="#4a4a4a">
         {title}
       </Text>
       <Text

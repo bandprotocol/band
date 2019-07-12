@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
 import ProposalList from 'components/ProposalList'
 import PageStructure from 'components/DataSetPageStructure'
-import { Flex, Text } from 'ui/common'
+import { Flex, Text, H2 } from 'ui/common'
 import ProposalHeader from 'images/proposal-header.svg'
 
 import { loadProposals, loadParameters } from 'actions'
@@ -35,26 +35,21 @@ class CommunityProposal extends React.Component {
             style={{ height: '100%' }}
             justifyContent="center"
           >
-            <Text
-              fontSize="27px"
-              color="white"
-              fontWeight="900"
-              width="50%"
-              style={{ lineHeight: '38px' }}
-            >
+            <H2 width="50%" style={{ lineHeight: '38px' }}>
               Proposal
-            </Text>
+            </H2>
+            {/* TODO: */}
             <Text
+              mt="13px"
               fontSize="18px"
               color="white"
               fontWeight="500"
               width="60%"
-              style={{ lineHeight: '33px' }}
+              style={{ lineHeight: '28px' }}
             >
               Spicy jalapeno bacon ipsum dolor amet meatball t-bone brisket,
               shank ground round tail strip steak tongue filet mignon hamburger.
-              Cow landjaeger salami jowl turkey spare ribs fatback biltong
-              strip.
+              Cow drumstick ham pork turkey. wine pork loin shank kielbasa.
             </Text>
           </Flex>
         )}

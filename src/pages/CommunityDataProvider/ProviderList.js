@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Button, Text } from 'ui/common'
+import { Flex, Button, Text, H3 } from 'ui/common'
 import styled from 'styled-components'
 import ProviderListRender from './ProviderListRender'
 import { communityDetailSelector } from 'selectors/communities'
@@ -75,9 +75,9 @@ class ProviderList extends React.Component {
           pr="26px"
           alignItems="center"
         >
-          <Text flex="0 0 auto" fontWeight="700" fontSize="20px">
+          <H3 flex="0 0 auto" color="#4a4a4a">
             Data Providers
-          </Text>
+          </H3>
           <Flex width={1} justifyContent="flex-end">
             <Flex
               style={{

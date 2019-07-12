@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Text, Bold, HighlightNavLink } from 'ui/common'
+import { Image, Flex, Text, Bold, HighlightNavLink, Box } from 'ui/common'
 import { getProfileColor } from 'ui/communities'
 import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
@@ -73,18 +73,29 @@ export default ({
   <Left>
     <Flex flexDirection="column" alignItems="center" py={3}>
       <Flex flexDirection="column" alignItems="center" flex="0 0 auto">
-        <Image
-          src={src || MockProfileSrc}
+        <Flex
           width="80px"
-          height="80px"
+          justifyContent="center"
+          alignItems="center"
           m={3}
-          borderRadius="50%"
           style={{
-            boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
+            height: '80px',
+            borderRadius: '50%',
             backgroundImage: getProfileColor(symbol),
-            padding: 5,
+            boxShadow: '0 5px 20px 0 rgba(0, 0, 0, 0.2)',
+            overflow: 'hidden',
           }}
-        />
+        >
+          <Box
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${src || MockProfileSrc})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+            }}
+          />
+        </Flex>
         <Flex mb="20px">
           <Text py={1} fontSize="18px" fontWeight={700} color="white">
             {name}

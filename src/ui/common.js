@@ -31,7 +31,7 @@ export const Highlight = styled.span`
 export const H1 = styled(Text).attrs({
   fontSize: 30,
 })`
-  font-weight: ${p => (p.slim ? 600 : 'bold')};
+  font-weight: ${p => p.fontWeight || 'bold'};
   letter-spacing: 0.03em;
   color: ${p => p.color || 'white'};
   font-family: Open Sans;
@@ -49,7 +49,9 @@ export const H3 = styled(H2).attrs({
 
 export const H4 = styled(H3).attrs({
   fontSize: 18,
-})``
+})`
+  font-weight: 400;
+`
 
 export const H5 = styled(H3).attrs({
   fontSize: 15,

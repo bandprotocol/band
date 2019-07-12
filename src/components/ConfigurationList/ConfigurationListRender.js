@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Button, Image } from 'ui/common'
+import { Flex, Text, Button, Image, H3 } from 'ui/common'
 import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
 import EditPropose from 'images/edit-proposal.svg'
@@ -26,10 +26,8 @@ export default ({ params, communityAddress }) => (
       boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)',
     }}
   >
-    <Flex flexDirection="row" alignItems="center">
-      <Text fontWeight="700" fontSize="20px">
-        Configurations
-      </Text>
+    <Flex flexDirection="row" alignItems="center" mx="11px">
+      <H3 color="#4a4a4a">Configurations</H3>
       <Flex width={1} justifyContent="flex-end">
         <CustomButton>
           <NavLink

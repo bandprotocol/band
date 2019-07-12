@@ -62,6 +62,7 @@ const ProvidersRow = ({
       overflow: 'hidden',
       height: '60px',
       borderLeft: status === 'ACTIVE' ? '8px solid #718bff' : 'none',
+      backgroundColor: status === 'ACTIVE' ? '#fbfcff' : '#fff',
       borderBottom: '1px solid rgba(227, 227, 227, 0.5)',
     }}
     alignItems="center"
@@ -119,7 +120,7 @@ const ProvidersRow = ({
           src={OutImg}
           width="14px"
           height="14px"
-          ml={2}
+          ml={1}
         />
       </AbsoluteLink>
     </Tab>
