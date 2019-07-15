@@ -142,7 +142,7 @@ const HighlightText = ({ text }) => {
 }
 
 const TwoColumnList = ({ list }) => (
-  <Flex flex={1} flexDirection="column">
+  <React.Fragment>
     {list.map(e => (
       <Flex flexDirection="row" mt="10px">
         <Text
@@ -158,7 +158,7 @@ const TwoColumnList = ({ list }) => (
         </Text>
       </Flex>
     ))}
-  </Flex>
+  </React.Fragment>
 )
 
 const getQueryFeeCode = address => `
@@ -275,14 +275,37 @@ export default class CommunityIntegrationRender extends React.Component {
                 mx="80px"
                 style={{ borderBottom: '1px solid #e7ecff' }}
               >
-                <Flex flex={1} justifyContent="center" alignItems="center">
+                <Flex
+                  flex={1}
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
                   <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
                     <HighlightText
                       text={` 1. Pick the query •key for data lookup. For instance, key
                       ETH/USD for Ethereum to USD conversion rate. Each dataset
-                      has its own method to construct a valid key. See
-                      Specification for more details.`}
+                      has its own method to construct a valid key.`}
                     />
+                    <br />
+                    See{' '}
+                    <span
+                      onClick={() => {
+                        this.setState({ tabNum: 2 })
+                        window.document.body.scrollTo(
+                          0,
+                          this.containerRef.current.offsetTop - 60,
+                        )
+                      }}
+                      style={{
+                        color: '#5269ff',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Specification
+                    </span>{' '}
+                    for more details.
                   </Text>
                 </Flex>
                 <Flex flex={1} pr="20px" justifyContent="flex-end" mb="30px">
@@ -293,23 +316,56 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Flex flex={2} mr="20px">
                   <Image src={Overview2} height="280px" />
                 </Flex>
-                <TwoColumnList
-                  list={[
-                    ['2.', 'Add some codes to your smart contract'],
-                    [
-                      '🔸',
-                      `Declare Band Protocol's generic  QueryInterface  on your code.`,
-                    ],
-                    [
-                      '🔸',
-                      `Create a QueryInterface instance pointing to contract address ↴ ${tcdAddress} .`,
-                    ],
-                    [
-                      '🔸',
-                      `Call •query function with the chosen •key . Do not forget to attach 0.001 ETH as query fee.`,
-                    ],
-                  ]}
-                />
+                <Flex flex={1} flexDirection="column">
+                  <Flex flexDirection="row" mt="10px">
+                    <Text
+                      lineHeight={1.65}
+                      fontWeight={500}
+                      fontSize="16px"
+                      style={{ minWidth: '30px' }}
+                    >
+                      2.
+                    </Text>
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                      <HighlightText text="Add some codes to your smart contract." />
+                      <br />
+                      See{' '}
+                      <span
+                        onClick={() => {
+                          this.setState({ tabNum: 1 })
+                          window.document.body.scrollTo(
+                            0,
+                            this.containerRef.current.offsetTop - 60,
+                          )
+                        }}
+                        style={{
+                          color: '#5269ff',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                        }}
+                      >
+                        Coding
+                      </span>{' '}
+                      for more details.
+                    </Text>
+                  </Flex>
+                  <TwoColumnList
+                    list={[
+                      [
+                        '🔸',
+                        `Declare Band Protocol's generic  QueryInterface  on your code.`,
+                      ],
+                      [
+                        '🔸',
+                        `Create a QueryInterface instance pointing to contract address ↴ ${tcdAddress} .`,
+                      ],
+                      [
+                        '🔸',
+                        `Call •query function with the chosen •key . Do not forget to attach 0.001 ETH as query fee.`,
+                      ],
+                    ]}
+                  />
+                </Flex>
               </Flex>
               <Flex
                 flexDirection="row"
@@ -321,26 +377,55 @@ export default class CommunityIntegrationRender extends React.Component {
                   borderBottom: '1px solid #e7ecff',
                 }}
               >
-                <TwoColumnList
-                  list={[
-                    [
-                      '3.',
-                      'Receive query result as a bundle of •output , •updatedAt , and •status .  See  Specification  for more details.',
-                    ],
-                    [
-                      '🔸',
-                      `•output is the query's output, which can be casted to an  uint256 .`,
-                    ],
-                    [
-                      '🔸',
-                      `•updatedAt is the unix timestamp at which the data is updated.`,
-                    ],
-                    [
-                      '🔸',
-                      `•status is the query's status, one of •OK , •NOT_AVAILABLE , or •DISAGREEMENT .`,
-                    ],
-                  ]}
-                />
+                <Flex flex={1} flexDirection="column">
+                  <Flex flexDirection="row" mt="10px">
+                    <Text
+                      lineHeight={1.65}
+                      fontWeight={500}
+                      fontSize="16px"
+                      style={{ minWidth: '30px' }}
+                    >
+                      3.
+                    </Text>
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                      <HighlightText text="Receive query result as a bundle of •output , •updatedAt , and •status ." />
+                      See{' '}
+                      <span
+                        onClick={() => {
+                          this.setState({ tabNum: 2 })
+                          window.document.body.scrollTo(
+                            0,
+                            this.containerRef.current.offsetTop - 60,
+                          )
+                        }}
+                        style={{
+                          color: '#5269ff',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                        }}
+                      >
+                        Specification
+                      </span>{' '}
+                      for more details.
+                    </Text>
+                  </Flex>
+                  <TwoColumnList
+                    list={[
+                      [
+                        '🔸',
+                        `•output is the query's output, which can be casted to an  uint256 .`,
+                      ],
+                      [
+                        '🔸',
+                        `•updatedAt is the unix timestamp at which the data is updated.`,
+                      ],
+                      [
+                        '🔸',
+                        `•status is the query's status, one of •OK , •NOT_AVAILABLE , or •DISAGREEMENT .`,
+                      ],
+                    ]}
+                  />
+                </Flex>
                 <Flex flex={1} mb="30px" justifyContent="flex-end">
                   <Image src={Overview3} height="300px" />
                 </Flex>
@@ -497,6 +582,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     p="5px"
                     fontSize="12px"
                     style={{
+                      zIndex: 1,
                       borderRadius: '4px',
                       border:
                         this.state.codingStepNum === 0
@@ -627,23 +713,25 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Flex mt="30px">
                   <Snippet code={getQueryFeeCode(tcdAddress)} />
                 </Flex>
-                <Text
-                  mt="30px"
-                  fontSize="16px"
-                  color="#5269ff"
-                  onClick={() => {
-                    this.setState({ tabNum: 1, codingStepNum: 2 })
-                    window.document.body.scrollTo(
-                      0,
-                      this.containerRef.current.offsetTop - 60,
-                    )
-                  }}
-                  style={{
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                >
-                  For more details, please visit Coding tab
+                <Text mt="30px" fontSize="16px">
+                  For more details, please visit{' '}
+                  <span
+                    onClick={() => {
+                      this.setState({ tabNum: 1, codingStepNum: 2 })
+                      window.document.body.scrollTo(
+                        0,
+                        this.containerRef.current.offsetTop - 60,
+                      )
+                    }}
+                    style={{
+                      color: '#5269ff',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Coding
+                  </span>{' '}
+                  tab
                 </Text>
                 <Text fontSize="16px" mt="30px">
                   Difference TCD might have difference query price and query
@@ -778,24 +866,25 @@ export default class CommunityIntegrationRender extends React.Component {
                 >
                   <HighlightText text={dataFormat.description} />
                 </Text>
-                <Text
-                  lineHeight={1.65}
-                  fontWeight={500}
-                  fontSize="16px"
-                  color="#5269ff"
-                  style={{
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => {
-                    this.setState({ tabNum: 1, codingStepNum: 0 })
-                    window.document.body.scrollTo(
-                      0,
-                      this.containerRef.current.offsetTop - 60,
-                    )
-                  }}
-                >
-                  See Coding tab for, well, example.
+                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                  See{' '}
+                  <span
+                    onClick={() => {
+                      this.setState({ tabNum: 1, codingStepNum: 0 })
+                      window.document.body.scrollTo(
+                        0,
+                        this.containerRef.current.offsetTop - 60,
+                      )
+                    }}
+                    style={{
+                      color: '#5269ff',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Coding
+                  </span>{' '}
+                  tab for, well, example.
                 </Text>
               </Flex>
             </React.Fragment>
