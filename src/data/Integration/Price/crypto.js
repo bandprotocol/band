@@ -23,27 +23,27 @@ export default {
         [
           'BCH/USD',
           'Bitcoin Cash price in USD (times 10^18 )',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1831.png',
+          'https://www.bitcoincash.org/img/favicon/apple-icon-57x57.png',
         ],
         [
           'BTC/USD',
           'Bitcoin price in USD (times by 10^18 )',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1.png',
+          'https://bitcoin.org/favicon.png?1563289583',
         ],
         [
           'ETH/USD',
           'Ethereum price in USD (times by 10^18 )',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png',
+          'https://www.ethereum.org/favicon.png',
         ],
         [
           'LTC/USD',
           'Litecoin price in USD (times by 10^18 )',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/2.png',
+          'https://litecoin.org/img/litecoin.png',
         ],
         [
           'XRP/USD',
           'Ripple (XRP) price in USD (times by 10^18 )',
-          'https://s2.coinmarketcap.com/static/img/coins/64x64/52.png',
+          'https://www.ripple.com/wp-content/themes/ripple-beta/assets/img/favicon-32x32-new.png',
         ],
       ],
     },

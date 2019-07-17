@@ -14,27 +14,29 @@ const allProviders = {
   },
   '0xdA7af0fD57c5D2e918704f034fd9e13aEB28Ad13': {
     name: 'Coinbase',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/89.png',
+    image: 'https://assets.coinbase.com/exchange/favicon.ico',
   },
   '0xda7a01d6d7568868b21a6789968B06Bb3af5c191': {
     name: 'Bitstamp',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/70.png',
+    image: 'https://www.bitstamp.net/s/webapp/images/meta/favicon-32x32.png',
   },
   '0xDa7A2A9C0bB0F94f9ddF54Dde3dBE2530A8269A2': {
     name: 'Bitfinex',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/37.png',
+    image: 'https://www.bitfinex.com/assets/favicon.ico',
   },
   '0xDa7A90B4b2078e0446974014C319157ab02c24b7': {
     name: 'Bittrex',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/22.png',
+    image:
+      'https://raw.githubusercontent.com/Bittrex/bittrex.github.io/master/favicon.ico',
   },
   '0xDA7A2E3d741f025010C44AfA2A6a7353F70D6b23': {
     name: 'Gemini',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/151.png',
+    image:
+      'https://gemini.com/wp-content/uploads/2016/02/gemini_symbol_rgb.png',
   },
   '0xda7A6811d4dd6A6b0f0EF1f1FE2f99ECd0cE9b7A': {
     name: 'Kraken',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/24.png',
+    image: 'https://www.kraken.com/img/favicon.ico?v=2',
   },
   '0xdA7af2D3f2321e815CF3841Bd0d9A889dE22E37C': {
     name: 'CoinMarketCap',
@@ -54,11 +56,11 @@ const allProviders = {
   },
   '0xdA7A3C7309Bd2De2e89a554191b2d7c71125186c': {
     name: 'Bancor Protocol',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/267.png',
+    image: 'https://www.bancor.network/static/images/favicon.ico',
   },
   '0xDa7AeEc22311453193C55af63EF7F2df4E6A73D2': {
     name: 'Kyber Network',
-    image: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/404.png',
+    image: 'https://kyber.network/favicon-32x32.png',
   },
   '0xdA7A7F095BE77012679df0744D8a163823C0558E': {
     name: 'Uniswap Protocol',
