@@ -282,7 +282,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   alignItems="center"
                 >
                   <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                    <HighlightText text={overviews[1]} />
+                    1. <HighlightText text={overviews[1]} />
                     <br />
                     See{' '}
                     <span
