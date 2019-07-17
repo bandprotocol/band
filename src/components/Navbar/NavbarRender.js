@@ -55,14 +55,14 @@ const TextClickable = styled(Text)`
 
 const SignIn = styled(Text).attrs({
   fontSize: '16px',
-  fontWeight: '900',
+  fontWeight: '600',
   mr: '40px',
 })`
   cursor: pointer;
-  color: ${p => (p.isDashboard ? '#ffffff' : '#2972fb')};
+  color: ${p => (p.isDashboard ? '#ffffff' : '#4d5cbd')};
 
   &:hover {
-    color: ${p => (p.isDashboard ? '#a6b2ff' : '#4d5cbd')};
+    color: ${p => (p.isDashboard ? '#a6b2ff' : '#2972fb')};
   }
 `
 
@@ -249,9 +249,9 @@ export default ({
               style={{ height: 60, width: 220 }}
             >
               {isDashboard ? (
-                <Image src={WhiteLogoSrc} height="34px" />
+                <Image src={WhiteLogoSrc} height="32px" />
               ) : (
-                <Image src={LogoSrc} height="34px" />
+                <Image src={LogoSrc} height="32px" />
               )}
             </Flex>
           </Link>

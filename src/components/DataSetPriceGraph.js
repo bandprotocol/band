@@ -68,7 +68,7 @@ export default ({ data, numberOfProvider }) => (
           textPosition: 'in',
           textStyle: {
             color: colors.text.graph,
-            fontSize: 11,
+            fontSize: 11, // TODO: Change back to 11
             fontName: 'Source Code Pro',
           },
           gridlines: {

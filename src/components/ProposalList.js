@@ -68,7 +68,7 @@ const ProposalList = ({
               px="5px"
               underline
             >
-              Governance
+              Parameters
             </Link>
             Page to propose the new change.
           </Text>

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import media from 'ui/media'
 
 const Background = styled.div`
-  background-color: rgba(160, 172, 191, 0.45);
+  background-color: rgba(35, 44, 60, 0.45);
   position: fixed;
   height: 100%;
   width: 100%;

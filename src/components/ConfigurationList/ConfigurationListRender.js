@@ -45,6 +45,7 @@ export default ({ params, communityAddress }) => (
               flexDirection="row"
               justifyContent="center"
               alignItems="center"
+              style={{ fontFamily: 'bio-sans' }}
             >
               <Image src={EditPropose} height="18px" mr={2} />
               Propose Change

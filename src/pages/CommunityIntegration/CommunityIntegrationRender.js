@@ -40,7 +40,7 @@ const TabButton = styled(Flex).attrs({
 const PointerLeftPart = styled(Flex)`
   position: relative;
   padding-left: 10px;
-  font-size: 16px;
+  font-size: 15px;
   border-radius: 4px;
   color: ${props => (props.isSelected ? 'white' : '#4a4a4a')}
   background: ${props => (props.isSelected ? '#5269ff' : 'rgba(0,0,0,0)')};
@@ -159,12 +159,12 @@ const TwoColumnList = ({ list }) => (
         <Text
           lineHeight={1.65}
           fontWeight={500}
-          fontSize="16px"
+          fontSize="15px"
           style={{ minWidth: '30px' }}
         >
           {e[0]}
         </Text>
-        <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+        <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
           <HighlightText text={e[1]} />
         </Text>
       </Flex>
@@ -258,7 +258,13 @@ export default class CommunityIntegrationRender extends React.Component {
             boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)',
           }}
         >
-          <Text fontSize="24px" mt="28px" mx="80px" fontWeight={900}>
+          <Text
+            fontSize="24px"
+            mt="28px"
+            mx="80px"
+            fontFamily="head"
+            fontWeight={900}
+          >
             {this.state.tabNum === 0 && 'Overview 🔍'}
             {this.state.tabNum === 1 && 'Coding 👨‍💻'}
             {this.state.tabNum === 2 && 'Specification 📝'}
@@ -269,7 +275,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Text
                   lineHeight={1.65}
                   fontWeight={500}
-                  fontSize="16px"
+                  fontSize="15px"
                   mt="30px"
                   mx="80px"
                   style={{ whiteSpace: 'pre-wrap' }}
@@ -290,12 +296,12 @@ export default class CommunityIntegrationRender extends React.Component {
                   <Text
                     lineHeight={1.65}
                     fontWeight={500}
-                    fontSize="16px"
+                    fontSize="15px"
                     style={{ minWidth: '30px' }}
                   >
                     1.
                   </Text>
-                  <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                  <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                     <HighlightText text={overviews[1]} />
                     <br />
                     See{' '}
@@ -331,12 +337,12 @@ export default class CommunityIntegrationRender extends React.Component {
                     <Text
                       lineHeight={1.65}
                       fontWeight={500}
-                      fontSize="16px"
+                      fontSize="15px"
                       style={{ minWidth: '30px' }}
                     >
                       2.
                     </Text>
-                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       <HighlightText text="Add some codes to your smart contract." />
                       <br />
                       See{' '}
@@ -391,12 +397,12 @@ export default class CommunityIntegrationRender extends React.Component {
                     <Text
                       lineHeight={1.65}
                       fontWeight={500}
-                      fontSize="16px"
+                      fontSize="15px"
                       style={{ minWidth: '30px' }}
                     >
                       3.
                     </Text>
-                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       <HighlightText text="Receive query result as a bundle of •output , •updatedAt , and •status ." />
                       See{' '}
                       <span
@@ -491,7 +497,7 @@ export default class CommunityIntegrationRender extends React.Component {
               <Text
                 lineHeight={1.65}
                 fontWeight={500}
-                fontSize="16px"
+                fontSize="15px"
                 mt="30px"
                 mx="80px"
               >
@@ -608,7 +614,7 @@ export default class CommunityIntegrationRender extends React.Component {
               <Flex mt="-140px" mx="-8px" justifyContent="center" />
               <Box mx="80px">
                 <Flex alignItems="center" style={{ minHeight: '140px' }}>
-                  <Text fontSize="16px" lineHeight={1.67} fontWeight={500}>
+                  <Text fontSize="15px" lineHeight={1.67} fontWeight={500}>
                     <HighlightText
                       text={replaceAllAddresses(
                         info.description[this.state.codingStepNum || 0],
@@ -664,7 +670,7 @@ export default class CommunityIntegrationRender extends React.Component {
           {this.state.tabNum === 2 && (
             <React.Fragment>
               <Flex flexDirection="column" mt="30px" mx="80px">
-                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                   The specification of calling query function only have 3 things
                   to concern.
                 </Text>
@@ -680,7 +686,7 @@ export default class CommunityIntegrationRender extends React.Component {
                         mt="15px"
                         lineHeight={1.65}
                         fontWeight={900}
-                        fontSize="16px"
+                        fontSize="15px"
                       >
                         {e}
                       </Text>
@@ -715,14 +721,14 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Text fontSize="20px" fontWeight={900} mt="30px">
                   How much to pay per query? 💸
                 </Text>
-                <Text fontSize="16px" mt="30px">
+                <Text fontSize="15px" mt="30px">
                   Your smart contract can know this by asking TCD contract via
                   function queryPrice().
                 </Text>
                 <Flex mt="30px">
                   <Snippet code={getQueryFeeCode(tcdAddress)} />
                 </Flex>
-                {/* <Text mt="30px" fontSize="16px">
+                {/* <Text mt="30px" fontSize="15px">
                   For more details, please visit{' '}
                   <span
                     onClick={() => {
@@ -742,7 +748,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   </span>{' '}
                   tab
                 </Text> */}
-                <Text fontSize="16px" mt="30px" lineHeight="1.65">
+                <Text fontSize="15px" mt="30px" lineHeight="1.65">
                   Query prices are controlled by dataset token holders via
                   governance parameters voting. Therefore, it is important to
                   note that different datasets may have different query prices
@@ -761,7 +767,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Text
                   lineHeight={1.65}
                   fontWeight={500}
-                  fontSize="16px"
+                  fontSize="15px"
                   mt="30px"
                   style={{ whiteSpace: 'pre-wrap' }}
                 >
@@ -807,7 +813,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       </Text>
                       <Text
                         ml="20px"
-                        fontSize={key[1].length >= 32 ? '13px' : '16px'}
+                        fontSize={key[1].length >= 32 ? '13px' : '15px'}
                         fontWeight={500}
                       >
                         <HighlightText text={key[1]} />
@@ -832,36 +838,36 @@ export default class CommunityIntegrationRender extends React.Component {
                 </Text>
                 <Flex width={1 / 2} mb="15px" flexDirection="row">
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={900} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={900} fontSize="15px">
                       1. output
                     </Text>
                   </Flex>
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       The raw output value
                     </Text>
                   </Flex>
                 </Flex>
                 <Flex width={1 / 2} mb="15px" flexDirection="row">
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={900} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={900} fontSize="15px">
                       2. updatedAt
                     </Text>
                   </Flex>
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       Last update time
                     </Text>
                   </Flex>
                 </Flex>
                 <Flex width={1 / 2} mb="15px" flexDirection="row">
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={900} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={900} fontSize="15px">
                       3. status
                     </Text>
                   </Flex>
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       The status of this query
                     </Text>
                   </Flex>
@@ -874,12 +880,12 @@ export default class CommunityIntegrationRender extends React.Component {
                   mt="30px"
                   lineHeight={1.65}
                   fontWeight={500}
-                  fontSize="16px"
+                  fontSize="15px"
                   style={{ whiteSpace: 'pre-wrap' }}
                 >
                   <HighlightText text={dataFormat.description} />
                 </Text>
-                {/* <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                {/* <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                   See{' '}
                   <span
                     onClick={() => {

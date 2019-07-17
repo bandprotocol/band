@@ -19,6 +19,7 @@ const options = {
     },
   },
   xAxis: {
+    // visible: false, // TODO: Remove this
     ordinal: false,
     title: false,
     gapGridLineWidth: 0,
