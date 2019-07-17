@@ -14,7 +14,7 @@ import Overview3 from 'images/overview_3.svg'
 import QueryResult from 'images/queryResult.svg'
 
 const TabButton = styled(Flex).attrs({
-  width: '380px',
+  flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
 })`

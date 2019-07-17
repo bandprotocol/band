@@ -54,7 +54,7 @@ const TextClickable = styled(Text)`
 `
 
 const SignIn = styled(Text).attrs({
-  fontSize: '16px',
+  fontSize: '15px',
   fontWeight: '600',
   mr: '40px',
 })`
