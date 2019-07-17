@@ -5,7 +5,7 @@ export default {
   ],
   description: [
     `Write a simple version of the Mega Millions rewarding contract. We mock the result of Mega Millions to bytes6(0) at first. We are going to replace the result by getting it from the Lottery community later.`,
-    `Copy-paste •QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 .`,
+    `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
     `Instantiate a •QueryInterface object with Lottery community contract address at 0x6863019Ec1A5f675ce64699020A338Ee2256B981. Mega Millions result can be obtained by query with key •MMN/20190420. Note Mega Millions result consist of 6 number, so we represent it by using bytes6.`,
   ],
   label: 'lottery',

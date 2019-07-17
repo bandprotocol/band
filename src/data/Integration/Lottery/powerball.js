@@ -5,7 +5,7 @@ export default {
   ],
   description: [
     `Write a simple version of the Power ball rewarding contract. We mock the result of Power ball to bytes6(0) at first. We are going to replace the result with data provided by Band Protocol later.`,
-    `Copy-paste •QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32.`,
+    `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
     `Instantiate a •QueryInterface object with Lottery community contract address at 0x9cd0E16C9b950971fa6c0BA37b9d358117F582aE. Power ball result can be obtained by query with key •PWB/20190420. Note Power ball result consist of 6 number, so we represent it by using bytes6.`,
   ],
   label: 'lottery',

@@ -4,12 +4,12 @@ export default {
     `Pick the query key for data lookup. For instance, key ETH/USD for Ethereum to USD conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
-    `We begin with writing a simple version of ticket selling smart contract. The •buyTicket function allows anyone to buy a ticket at a fixed cost of 10 USD, with a function to get the exchange rate between ETH and USD left to be implemented.`,
-    `We define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
-    `We then instantiate a •QueryInterface object with TCD address 0x61518CA6F924348465B5126C0c20e843E5E6aA41. ETH/USD exchange rate can be obtained by calling the •query function with key ETH/USD. Note that you need to convert bytes32 result to uint256 before doing further calculations. With this, we have completed our contract in less than 30 lines of code.`,
+    `First we begin by writing a simple version of ticket selling smart contract. The •buyTicket function allows anyone to buy a ticket at a fixed cost of 10 USD, with a function to get the exchange rate between ETH and USD left to be implemented.`,
+    `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
+    `Finally we instantiate a •QueryInterface object with TCD address 0x61518CA6F924348465B5126C0c20e843E5E6aA41. ETH/USD exchange rate can be obtained by calling the •query function with key ETH/USD. Note that you need to convert bytes32 result to uint256 before doing further calculations. With this, we have completed our contract in less than 30 lines of code.`,
   ],
   label: 'price',
-  example: `🎫 Let's assume you want to create a simple smart contract for selling concert tickets. You want the users to pay a fixed 10 USD for each ticket, but you're accepting the payment in ETH. The smart contract needs to know an exchange rate of ETH/USD at the time of purchase. With Band Protocol, this is easy to implement. Let's explore how we can build this contract in a few lines of code. 👇👇👇`,
+  example: `🎫 Let's assume we want to create a simple smart contract for selling concert tickets. You want the users to pay a fixed 10 USD for each ticket, but you're accepting the payment in ETH. The smart contract needs to know an exchange rate of ETH/USD at the time of purchase. With Band Protocol, this is easy to implement. Let's explore how we can build this contract in a few lines of code. 👇👇👇`,
   contractName: 'TicketContract',
   dataFormat: {
     description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,

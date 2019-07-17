@@ -5,7 +5,7 @@ export default {
   ],
   description: [
     `Write a simple version of the smart contract. The function that is left to be implemented is •getFBUSDRate function, which will return •FB/ETH rate multiplied by 10^18 . Note that, we omit some functions to make this example short`,
-    `Copy-paste •QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 together with additional statuses.`,
+    `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
     `Instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. FB/USD exchange rate can be obtained by query with key •FB/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
   label: 'price',

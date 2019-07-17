@@ -4,12 +4,12 @@ export default {
     `Pick the query key for data lookup. For instance, key KNC/LINK for KyberNetwork to ChainLink conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
-    `Write a simple version of the smart contract. The function that is left to be implemented is •getLINKETHRate function, which will return •LINK/ETH rate multiplied by 10^18 . Note that, we omit some functions to make this example short`,
-    `Copy-paste •QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 together with additional statuses.`,
-    `Instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. LINK/USD exchange rate can be obtained by query with key •LINK/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
+    `First we begin by writing a simple version of the contract with •sellToken function. The •getLINKETHRate function, which will return •LINK/ETH rate is left to be implemented. Note that, we omit some of the functions to make this example short`,
+    `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
+    `Finally we instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. LINK/ETH exchange rate can be obtained by calling the •query function with key LINK/ETH. Note that you need to convert bytes32 result to uint256 before doing further calculations. The converted value is the (exchange rate) multipled by 10^18.`,
   ],
   label: 'price',
-  example: `🏛 Say you want a simple automated exchange smart contract that can receive LINK tokens from users and return proper amount of ETH based on the current rate of •LINK/ETH . The contract needs the real-time exchange rate 👇👇👇`,
+  example: `🏛 Let's assume we want to build a simple automated exchange contract that buy LINK tokens from the users and pay an appropriate amount of ETH based on the current exchange rate of •LINK/ETH. The contract needs access to real-time exchange rate. With Band Protocol's price feed, implementing this contract is a breeze. Let's go through the code 👇👇👇`,
   contractName: 'ExchangeContract',
   dataFormat: {
     description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,
@@ -86,7 +86,8 @@ interface ERC20 {
 }
 
 contract ExchangeContract {
-  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);  // Kovan address of ChainLink token
+  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088); 
+                            // Kovan address of ChainLink token
 
   function sellToken(uint256 amount) public {
     require(LINK.transferFrom(msg.sender, address(this), amount));
@@ -120,7 +121,8 @@ interface ERC20 {
 }
 
 contract ExchangeContract {
-  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);  // Kovan address of ChainLink token
+  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);
+                            // Kovan address of ChainLink token
 
   function sellToken(uint256 amount) public {
     require(LINK.transferFrom(msg.sender, address(this), amount));
@@ -154,7 +156,8 @@ interface ERC20 {
 }
 
 contract ExchangeContract {
-  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);  // Kovan address of ChainLink token
+  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);
+                            // Kovan address of ChainLink token
 
   function sellToken(uint256 amount) public {
     require(LINK.transferFrom(msg.sender, address(this), amount));

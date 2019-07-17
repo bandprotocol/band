@@ -1,7 +1,7 @@
 export default {
   description: [
     `Write a simple version of poll contract. Current the hasIdentity variable is always true, so every address can participate in this voting contract. This is vulnerable to sybil attack, we can fix it by asking identity community whether the voter/sender has an idenity.`,
-    `Copy-paste •QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 .`,
+    `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
     `Instantiate a •QueryInterface object with identity community contract address at 0x616aa37B3e630fce6d96Abc2Afa767aa98280743. Use sender's address to ask the identity community whether sender has identity or not. The community will return bytes32(0) if sender has no identity and return bytes32(1) if sender has identity.`,
   ],
   label: 'identitity',
