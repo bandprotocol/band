@@ -30,6 +30,21 @@ export const CurrentPriceFetcher = withRouter(
   },
 )
 
+export const PriceCountByTCDFetcher = withRouter(
+  class extends BaseFetcher {
+    shouldFetch(prevProps) {
+      return prevProps.tcdAddress !== this.props.tcdAddress
+    }
+
+    async fetch() {
+      const pricesCount = await Utils.getDataRequest(
+        `/prices/${this.props.tcdAddress}/count`,
+      )
+      return pricesCount
+    }
+  },
+)
+
 export const PricePairFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {

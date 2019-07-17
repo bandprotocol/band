@@ -104,10 +104,11 @@ const FilterButton = styled(Button).attrs({
   variant: 'gradientBlue',
 })`
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   padding: 0 20px;
   line-height: 32px;
+  padding-bottom: 2px;
 `
 
 const Report = ({

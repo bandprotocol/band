@@ -149,10 +149,8 @@ export default class LotteryPage extends React.Component {
             )}
             renderSubheader={() => (
               <Flex width="100%" alignItems="center" color="#4a4a4a" pl="52px">
-                <Text fontSize="16px" fontFamily="head" fontWeight="600">
-                  {countFetching
-                    ? 'loading... '
-                    : `${totalCount} Keys Available`}
+                <Text fontSize="15px" fontFamily="head" fontWeight="600">
+                  {countFetching ? '' : `${totalCount} Keys Available`}
                 </Text>
               </Flex>
             )}

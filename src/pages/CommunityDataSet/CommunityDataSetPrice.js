@@ -11,6 +11,7 @@ import { getTCDInfomation } from 'utils/tcds'
 import { getAsset } from 'utils/assetData'
 import {
   CurrentPriceFetcher,
+  PriceCountByTCDFetcher,
   PricePairFetcher,
   formatPricePairsForGraph,
 } from 'data/fetcher/PriceFetcher'
@@ -114,49 +115,60 @@ class CommunityPricePage extends React.Component {
   render() {
     const { tcdAddress, tcdPrefix } = this.props
     return (
-      <PageStructure
-        renderHeader={() => (
-          <DataHeader
-            lines={[
-              'On-chain Data You Can Trust',
-              'Readily Available for Ethereum Smart Contract',
-              'Token holders collectively curate trustworthy data providers.',
-              'By staking their tokens, they earn a portion of fee from the providers.',
-            ]}
-          />
-        )}
-        {...this.props}
-      >
-        {/* <DataCard
+      <PriceCountByTCDFetcher tcdAddress={tcdAddress}>
+        {({ fetching: countFetching, data: totalCount }) => (
+          <PageStructure
+            renderHeader={() => (
+              <DataHeader
+                lines={[
+                  'On-chain Data You Can Trust',
+                  'Readily Available for Ethereum Smart Contract',
+                  'Token holders collectively curate trustworthy data providers.',
+                  'By staking their tokens, they earn a portion of fee from the providers.',
+                ]}
+              />
+            )}
+            renderSubheader={() => (
+              <Flex width="100%" alignItems="center" color="#4a4a4a" pl="52px">
+                <Text fontSize="15px" fontFamily="head" fontWeight="600">
+                  {countFetching ? '' : `${totalCount} Keys Available`}
+                </Text>
+              </Flex>
+            )}
+            {...this.props}
+          >
+            {/* <DataCard
           headerText={`${this.state.numDataPoints} Keys for ${
             getTCDInfomation(tcdPrefix).label
           } `}
           withSearch={false}
         >
         </DataCard> */}
-        <CurrentPriceFetcher
-          tcdAddress={tcdAddress}
-          setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
-        >
-          {({ fetching, data }) =>
-            fetching ? (
-              <Loading
-                height={281}
-                width={924}
-                rects={[
-                  [0, 0, 120, 32],
-                  [880, 0, 32, 32],
-                  [0, 52, 924, 61],
-                  [0, 135, 924, 61],
-                  [0, 218, 924, 61],
-                ]}
-              />
-            ) : (
-              renderDataPoints(data, tcdAddress, tcdPrefix)
-            )
-          }
-        </CurrentPriceFetcher>
-      </PageStructure>
+            <CurrentPriceFetcher
+              tcdAddress={tcdAddress}
+              setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
+            >
+              {({ fetching, data }) =>
+                fetching ? (
+                  <Loading
+                    height={281}
+                    width={924}
+                    rects={[
+                      [0, 0, 120, 32],
+                      [880, 0, 32, 32],
+                      [0, 52, 924, 61],
+                      [0, 135, 924, 61],
+                      [0, 218, 924, 61],
+                    ]}
+                  />
+                ) : (
+                  renderDataPoints(data, tcdAddress, tcdPrefix)
+                )
+              }
+            </CurrentPriceFetcher>
+          </PageStructure>
+        )}
+      </PriceCountByTCDFetcher>
     )
   }
 }

@@ -24,7 +24,7 @@ const HeaderImage = styled(Flex).attrs({
   height: 220px;
   background-image: url(${p => p.headerImage});
   background-size: 1400px;
-  background-position: right 0;
+  background-position: center 0;
   background-repeat: no-repeat;
   border-radius: 10px;
 `

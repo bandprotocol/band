@@ -31,6 +31,14 @@ const TabButton = styled(Flex).attrs({
     font-weight: 600;
     background: rgba(36, 77, 255, 0.05);
     border-bottom: 2px solid #5269ff;
+
+
+    &:first-child {
+      border-bottom-left-radius: 10px;
+    }
+    &:last-child {
+      border-bottom-right-radius: 10px;
+    }
   `
       : `
     font-weight: 400;
