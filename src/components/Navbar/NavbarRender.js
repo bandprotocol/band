@@ -12,7 +12,7 @@ import { colors } from 'ui'
 import Eth from 'images/eth.svg'
 import Wallet from 'images/blueWallet.svg'
 // Dashboard Page
-import WhiteLogoSrc from 'images/band-white.png'
+import WhiteLogoSrc from 'images/logo-white.png'
 
 // Other Page
 import LogoSrc from 'images/logo-dark.png'
@@ -33,7 +33,7 @@ const Nav = styled.nav`
 
   ${p =>
     p.isDashboard
-      ? 'background: unset; background-image: linear-gradient(92deg, #6b8bf5, #6bf5cd); box-shadow: 0 0 0 0 #000000;'
+      ? 'background: unset; background-image: linear-gradient(92deg, #6583e6,#5060c9); box-shadow: 0 0 0 0 #000000;'
       : 'background: #fff; box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);'}
 
   ${media.mobile} {
@@ -242,7 +242,7 @@ export default ({
               style={{ height: 60, width: 220 }}
             >
               {isDashboard ? (
-                <Image src={WhiteLogoSrc} width="163px" height="30px" />
+                <Image src={WhiteLogoSrc} height="34px" />
               ) : (
                 <Image src={LogoSrc} height="34px" />
               )}

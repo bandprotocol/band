@@ -22,7 +22,7 @@ export default {
   },
   buttons: {
     primary: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -36,7 +36,7 @@ export default {
       },
     },
     outline: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -50,7 +50,7 @@ export default {
       },
     },
     grey: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -70,7 +70,7 @@ export default {
       },
     },
     white: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: '#5269ff',
@@ -88,7 +88,7 @@ export default {
       },
     },
     blue: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -104,7 +104,7 @@ export default {
       },
     },
     gradientBlue: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -121,7 +121,7 @@ export default {
       },
     },
     lightblue: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -136,7 +136,7 @@ export default {
       },
     },
     submit: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -153,7 +153,7 @@ export default {
       },
     },
     cancel: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -170,7 +170,7 @@ export default {
       },
     },
     disable: {
-      fontFamily: 'Avenir',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',

@@ -12,7 +12,8 @@ const Header = styled(Card)`
   margin-top: 60px;
   height: 204px;
   width: 100%;
-  background: url('${HeaderBackgroundSrc}');
+  background: linear-gradient(90deg, #6483e6 0%,#505fc9 99%);
+  background-image: url('${HeaderBackgroundSrc}'); 
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -30,15 +31,17 @@ const AbsoluteLink = styled.a.attrs(props => ({
 
 const WhiteButton = styled(Button).attrs({
   fontSize: '16px',
-  color: '#5269ff',
   fontWeight: '500',
+  color: '#5269ff',
   bg: '#fff',
   width: '226px',
-  py: '6px',
 })`
-  line-height: 35px;
+  font-family: bio-sans;
+  font-weight: 600;
+  line-height: 44px;
   border-radius: 24px;
   cursor: pointer;
+  padding: 0;
 `
 
 const WhiteOutlineButton = styled(Button).attrs({
@@ -46,26 +49,29 @@ const WhiteOutlineButton = styled(Button).attrs({
   color: '#fff',
   fontWeight: '500',
   mx: '15px',
-  py: '6px',
 })`
+  font-family: bio-sans;
+  font-weight: 600;
   background-color: transparent;
   border: 1px solid #fff;
-  line-height: 35px;
+  line-height: 44px;
   border-radius: 24px;
   cursor: pointer;
+  padding: 0 20px;
 `
 
 const CountBadge = styled(Flex).attrs({
   color: '#fff',
   bg: '#42c47f',
-  width: '43px',
+  width: '40px',
   justifyContent: 'center',
   alignItems: 'center',
-  fontSize: '20px',
-  fontWeight: '900',
+  fontSize: '16px',
   ml: '10px',
 })`
-  height: 30px;
+  font-family: bio-sans;
+  font-weight: 600;
+  line-height: 26px;
   border-radius: 15px;
 `
 
@@ -76,28 +82,32 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
       background: 'white',
       paddingLeft: '0px',
       position: 'relative',
-      backgroundImage:
-        'linear-gradient(to right, rgba(107, 139, 245, 0.13), rgba(107, 245, 205, 0.13))',
+      background: '#E4EDFF',
     }}
   >
     <Header>
       <Flex
         flexDirection="column"
         alignItems="flex-start"
-        justifyContent="center"
         width="1170px"
         p="0px 32px"
         style={{ height: '100%', margin: '0 auto' }}
       >
-        <H1 mb={2} style={{ letterSpacing: '0.95px' }}>
+        <H1 mb={2} py={2}>
           Data Governance Portal
         </H1>
-        <H4 my={1} width="850px" style={{ lineHeight: '1.7' }}>
+        <Text
+          my={1}
+          width="750px"
+          fontSize="17px"
+          lineHeight="1.6"
+          color="#ffffff"
+        >
           Band Protocol connects ÐApps with trusted off-chain information,
           curated through a decentralized network of data providers. We use
           dataset tokens to incentivize providers.
-        </H4>
-        <Box mt={1}>
+        </Text>
+        <Box mt={3}>
           <AbsoluteLink href="https://developer.bandprotocol.com/">
             <WhiteButton>Developer Reference</WhiteButton>
           </AbsoluteLink>

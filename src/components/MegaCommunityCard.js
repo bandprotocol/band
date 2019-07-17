@@ -13,7 +13,7 @@ const WrapText = styled(H3)`
 `
 
 const Description = styled(Text)`
-  fontsize: 16px;
+  font-size: 16px;
   color: #747474;
   font-weight: 500;
   overflow: hidden;
@@ -70,12 +70,12 @@ const MagicPattern = ({ color, num = 25, size = 5, space = 5 }) => {
 
 const DisplayIcon = ({ src, bgColor }) => (
   <Flex
-    width="95px"
+    width="76px"
     justifyContent="center"
     alignItems="center"
     mt="5px"
     style={{
-      height: '95px',
+      height: '76px',
       borderRadius: '50%',
       backgroundImage: bgColor,
       boxShadow: '0 5px 10px 0 #d3dcea',
@@ -84,8 +84,8 @@ const DisplayIcon = ({ src, bgColor }) => (
   >
     <Box
       style={{
-        width: '100%',
-        height: '100%',
+        width: '68px',
+        height: '68px',
         backgroundImage: `url(${src})`,
         backgroundSize: 'contain',
         backgroundPosition: 'center',
@@ -176,15 +176,15 @@ export default ({
       borderRadius: '10px',
       padding: '0px',
       overflow: 'hidden',
-      backgroundColor: '#f1f6ff',
+      backgroundColor: '#FAFCFF',
       position: 'relative',
     }}
     onClick={onClick}
   >
     <MagicPattern color={borderColor} />
-    <Flex p="25px 30px" color="#4a4a4a">
+    <Flex p="16px 24px" color="#4a4a4a">
       <DisplayIcon src={logo} bgColor={borderColor} />
-      <Flex flexDirection="column" mx="18px">
+      <Flex flexDirection="column" ml="28px">
         <WrapText fontWeight="600" lineHeight={2} mt={1}>
           {name}
         </WrapText>
@@ -203,7 +203,7 @@ export default ({
             <Button
               variant="blue"
               style={{
-                padding: '12px 25px',
+                padding: '10px 25px 14px',
                 minWidth: '120px',
                 maxWidth: '120px',
                 fontWeight: '900',
@@ -221,15 +221,15 @@ export default ({
               variant="lightblue"
               ml={3}
               style={{
-                padding: isTcd ? '12px 10px' : '12px 5px',
-                minWidth: '120px',
-                maxWidth: '120px',
+                padding: '10px 25px 14px',
+                minWidth: '140px',
+                maxWidth: '140px',
                 whiteSpace: 'noWrap',
                 fontWeight: '900',
                 fontSize: '15px',
               }}
             >
-              {isTcd ? 'Explre Data' : 'Visit Website'}
+              {isTcd ? 'Explore Data' : 'Visit Website'}
             </Button>
           </Link>
         </Flex>

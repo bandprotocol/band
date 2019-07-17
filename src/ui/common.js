@@ -32,9 +32,9 @@ export const H1 = styled(Text).attrs({
   fontSize: 30,
 })`
   font-weight: ${p => p.fontWeight || 'bold'};
-  letter-spacing: 0.03em;
+  letter-spacing: 0.01em;
   color: ${p => p.color || 'white'};
-  font-family: Open Sans;
+  font-family: bio-sans;
 `
 
 export const H2 = styled(H1).attrs({
