@@ -21,7 +21,7 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 const Nav = styled.nav`
   display: flex;
   height: 60px;
-  width: 100vw;
+  width: 100%;
   align-items: center;
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
   top: 0px;

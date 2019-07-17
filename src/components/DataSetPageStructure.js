@@ -23,8 +23,8 @@ const HeaderImage = styled(Flex).attrs({
 })`
   height: 220px;
   background-image: url(${p => p.headerImage});
-  background-size: 1400px;
-  background-position: center 0;
+  background-size: 1350px;
+  background-position: center top;
   background-repeat: no-repeat;
   border-radius: 10px;
 `
@@ -39,7 +39,7 @@ const HeaderImageSubHeader = styled(Flex).attrs({
   alignItems: 'center',
   flex: '0 0 46px',
 })`
-  background: rgba(211, 225, 255, 0.9);
+  background: rgba(238, 243, 255, 0.9);
   border-bottom-right-radius: 10px;
   border-bottom-left-radius: 10px;
 `

@@ -188,9 +188,9 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
                   >
                     <Text
                       fontSize="25px"
-                      fontWeight="900"
+                      fontWeight="700"
                       color="#4a4a4a"
-                      style={{ letterSpacing: '1px' }}
+                      style={{ letterSpacing: '0.01em' }}
                     >
                       DApps built with Token Curated Registry
                     </Text>

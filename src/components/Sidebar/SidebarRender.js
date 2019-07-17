@@ -18,9 +18,10 @@ import GovernanceActiveSrc from 'images/govActive.svg'
 import ProposalActiveSrc from 'images/voteActive.svg'
 
 const Left = styled.div`
+  align-self: stretch;
   height: auto;
   padding: 60px 0;
-  min-height: calc(100vh);
+  min-height: 100%;
   z-index: 4;
   width: 220px;
   flex: 0 0 220px;
