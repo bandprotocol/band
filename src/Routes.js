@@ -22,7 +22,12 @@ export default ({ match, location }) => (
           path="/community/:community/:tcd?"
           render={({ match, history, location }) => (
             <React.Fragment>
-              <Flex flexDirection="row">
+              <Flex
+                flexDirection="row"
+                style={{
+                  minHeight: '100vh',
+                }}
+              >
                 <Sidebar tokenAddress={match.params.community} />
                 <Backdrop />
                 <Switch>
