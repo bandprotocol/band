@@ -157,23 +157,23 @@ const HighlightText = ({ text }) => {
 }
 
 const TwoColumnList = ({ list }) => (
-  <React.Fragment>
+  <Box pl={4}>
     {list.map(e => (
       <Flex flexDirection="row" mt="10px">
         <Text
-          lineHeight={1.65}
+          lineHeight="23px"
           fontWeight={500}
-          fontSize="15px"
-          style={{ minWidth: '30px' }}
+          fontSize="13px"
+          style={{ minWidth: '20px' }}
         >
           {e[0]}
         </Text>
-        <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+        <Text lineHeight="23px" fontWeight={500} fontSize="15px">
           <HighlightText text={e[1]} />
         </Text>
       </Flex>
     ))}
-  </React.Fragment>
+  </Box>
 )
 
 const getQueryFeeCode = address => `
@@ -297,118 +297,24 @@ export default class CommunityIntegrationRender extends React.Component {
                 style={{ borderBottom: '1px solid #e7ecff' }}
               >
                 <Flex flex={1} flexDirection="row" justifyContent="center">
-                  <Text
-                    lineHeight={1.65}
-                    fontWeight={500}
-                    fontSize="15px"
-                    style={{ minWidth: '30px' }}
-                  >
-                    1.
-                  </Text>
-                  <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                    <HighlightText text={overviews[1]} />
-                    <br />
-                    See{' '}
-                    <span
-                      onClick={() => {
-                        this.setState({ tabNum: 2 })
-                        window.document.body.scrollTo(
-                          0,
-                          this.containerRef.current.offsetTop - 60,
-                        )
-                      }}
-                      style={{
-                        color: '#5269ff',
-                        cursor: 'pointer',
-                        textDecoration: 'underline',
-                      }}
-                    >
-                      Specification
-                    </span>{' '}
-                    for more details.
-                  </Text>
-                </Flex>
-                <Flex flex={1} pr="20px" justifyContent="flex-end" mb="30px">
-                  <Image src={Overview1} height="100%" />
-                </Flex>
-              </Flex>
-              <Flex flexDirection="row" pt="60px" pb="20px" mr="40px">
-                <Flex flex={2} mr="20px">
-                  <Image src={Overview2} height="280px" />
-                </Flex>
-                <Flex flex={1} flexDirection="column">
-                  <Flex flexDirection="row" mt="10px">
-                    <Text
-                      lineHeight={1.65}
-                      fontWeight={500}
-                      fontSize="15px"
-                      style={{ minWidth: '30px' }}
-                    >
-                      2.
-                    </Text>
-                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                      <HighlightText text="Add some codes to your smart contract." />
-                      <br />
-                      See{' '}
-                      <span
-                        onClick={() => {
-                          this.setState({ tabNum: 1 })
-                          window.document.body.scrollTo(
-                            0,
-                            this.containerRef.current.offsetTop - 60,
-                          )
-                        }}
-                        style={{
-                          color: '#5269ff',
-                          cursor: 'pointer',
-                          textDecoration: 'underline',
-                        }}
+                  <Box>
+                    <Flex flex={1} flexDirection="row" justifyContent="center">
+                      <Text
+                        lineHeight="20px"
+                        fontWeight={700}
+                        fontSize="16px"
+                        fontFamily="head"
+                        style={{ minWidth: '30px' }}
                       >
-                        Coding
-                      </span>{' '}
-                      for more details.
-                    </Text>
-                  </Flex>
-                  <TwoColumnList
-                    list={[
-                      [
-                        '🔸',
-                        `Declare Band Protocol's generic  QueryInterface  on your code.`,
-                      ],
-                      [
-                        '🔸',
-                        `Create a QueryInterface instance pointing to contract address ↴ ${tcdAddress} .`,
-                      ],
-                      [
-                        '🔸',
-                        `Call •query function with the chosen •key . Do not forget to attach 0.001 ETH as query fee.`,
-                      ],
-                    ]}
-                  />
-                </Flex>
-              </Flex>
-              <Flex
-                flexDirection="row"
-                pt="60px"
-                mt="30px"
-                mx="80px"
-                style={{
-                  borderTop: '1px solid #e7ecff',
-                }}
-              >
-                <Flex flex={1} flexDirection="column">
-                  <Flex flexDirection="row" mt="10px">
-                    <Text
-                      lineHeight={1.65}
-                      fontWeight={500}
-                      fontSize="15px"
-                      style={{ minWidth: '30px' }}
-                    >
-                      3.
-                    </Text>
+                        1.
+                      </Text>
+                      <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+                        <HighlightText text={overviews[1]} />
+                      </Text>
+                    </Flex>
+                    <br />
                     <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                      <HighlightText text="Receive query result as a bundle of •output , •updatedAt , and •status ." />
-                      See{' '}
+                      📌 See{' '}
                       <span
                         onClick={() => {
                           this.setState({ tabNum: 2 })
@@ -425,7 +331,95 @@ export default class CommunityIntegrationRender extends React.Component {
                       >
                         Specification
                       </span>{' '}
-                      for more details.
+                      to learn how query keys are constructed.
+                    </Text>
+                  </Box>
+                </Flex>
+                <Flex flex={1} pr="20px" justifyContent="flex-end" mb="30px">
+                  <Image src={Overview1} height="100%" />
+                </Flex>
+              </Flex>
+              <Flex flexDirection="row" pt="60px" pb="20px" mr="40px">
+                <Flex flex={2} mr="20px">
+                  <Image src={Overview2} height="26 0px" />
+                </Flex>
+                <Flex ml={3} flex={1} flexDirection="column">
+                  <Flex flexDirection="row" mt="10px">
+                    <Text
+                      lineHeight="20px"
+                      fontWeight={700}
+                      fontSize="16px"
+                      fontFamily="head"
+                      style={{ minWidth: '30px' }}
+                    >
+                      2.
+                    </Text>
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+                      <HighlightText text="Query data from the chosen key:" />
+                      <br />
+                    </Text>
+                  </Flex>
+                  <TwoColumnList
+                    list={[
+                      [
+                        '🔸',
+                        `Declare Band Protocol's provided •QueryInterface.`,
+                      ],
+                      [
+                        '🔸',
+                        `Create a QueryInterface instance referencing to contract address ↴ ${tcdAddress} .`,
+                      ],
+                      [
+                        '🔸',
+                        `Call •query function with the •key along with the 0.001 ETH query fee.`,
+                      ],
+                    ]}
+                  />
+                  <br />
+                  <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+                    📌 See{' '}
+                    <span
+                      onClick={() => {
+                        this.setState({ tabNum: 1 })
+                        window.document.body.scrollTo(
+                          0,
+                          this.containerRef.current.offsetTop - 60,
+                        )
+                      }}
+                      style={{
+                        color: '#5269ff',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Coding
+                    </span>{' '}
+                    for code example.
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex
+                flexDirection="row"
+                pt="60px"
+                mt="30px"
+                mx="80px"
+                style={{
+                  borderTop: '1px solid #e7ecff',
+                }}
+              >
+                <Flex flex={1} flexDirection="column">
+                  <Flex flexDirection="row" mt="10px">
+                    <Text
+                      lineHeight="20px"
+                      fontWeight={700}
+                      fontSize="16px"
+                      fontFamily="head"
+                      style={{ minWidth: '30px' }}
+                    >
+                      3.
+                    </Text>
+                    <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+                      <HighlightText text="The •query call returns a bundle of •output , •updatedAt , and •status ." />
                     </Text>
                   </Flex>
                   <TwoColumnList
@@ -444,6 +438,27 @@ export default class CommunityIntegrationRender extends React.Component {
                       ],
                     ]}
                   />
+                  <br />
+                  <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+                    📌 See{' '}
+                    <span
+                      onClick={() => {
+                        this.setState({ tabNum: 2 })
+                        window.document.body.scrollTo(
+                          0,
+                          this.containerRef.current.offsetTop - 60,
+                        )
+                      }}
+                      style={{
+                        color: '#5269ff',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                      }}
+                    >
+                      Specification
+                    </span>{' '}
+                    to learn how to parse the output data.
+                  </Text>
                 </Flex>
                 <Flex flex={1} justifyContent="flex-end">
                   <Image src={Overview3} height="300px" />
@@ -513,7 +528,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 mx="80px"
                 py="5px"
                 pl="5px"
-                pr="25px"
+                pr="5px"
                 style={{
                   position: 'relative',
                   border: '1px solid #c8cfff',

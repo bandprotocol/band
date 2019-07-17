@@ -1,6 +1,6 @@
 export default {
   overview: [
-    `You can integrate sport data to your DApps with 3 simple steps`,
+    `You can integrate the sport data to your DApps with 3 simple steps`,
     `Pick the query key for data lookup. For instance, key •20190427/ARS-AFC for Arsenal vs AFC Bournemouth at 27/04/2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
