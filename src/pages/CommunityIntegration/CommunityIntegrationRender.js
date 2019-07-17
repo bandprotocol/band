@@ -415,7 +415,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       ],
                       [
                         '🔸',
-                        `•updatedAt is the unix timestamp at which the data is updated.`,
+                        `•updatedAt is the timestamp at which the data is updated.`,
                       ],
                       [
                         '🔸',
@@ -659,9 +659,9 @@ export default class CommunityIntegrationRender extends React.Component {
                 </Text>
                 <Flex flexDirection="row" mt="30px">
                   {[
-                    'How much to pay per each query',
-                    'How a single key of this TCD is form',
-                    'How to decode the return result',
+                    'How much ETH to pay per query?',
+                    'How to build a query key?',
+                    'How to decode the query result?',
                   ].map((e, i) => (
                     <Flex flex={1} flexDirection="column">
                       <Oval radius="30px" text={i + 1} />
@@ -702,7 +702,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[0]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  How much to pay per each query
+                  How much to pay per query? 💸
                 </Text>
                 <Text fontSize="16px" mt="30px">
                   Your smart contract can know this by asking TCD contract via
@@ -711,7 +711,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Flex mt="30px">
                   <Snippet code={getQueryFeeCode(tcdAddress)} />
                 </Flex>
-                <Text mt="30px" fontSize="16px">
+                {/* <Text mt="30px" fontSize="16px">
                   For more details, please visit{' '}
                   <span
                     onClick={() => {
@@ -730,10 +730,11 @@ export default class CommunityIntegrationRender extends React.Component {
                     Coding
                   </span>{' '}
                   tab
-                </Text>
-                <Text fontSize="16px" mt="30px">
-                  Difference TCD might have difference query price and query
-                  price can be change by voting of the dataset group.
+                </Text> */}
+                <Text fontSize="16px" mt="30px" lineHeight="1.65">
+                  Query prices are controlled by dataset token holders via
+                  governance parameters voting. Therefore, it is important to
+                  note that different datasets may have different query prices
                 </Text>
               </Flex>
               <Flex
@@ -744,7 +745,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[1]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  {`Key Format 🔑`}
+                  {`How to build a query key? 🔑`}
                 </Text>
                 <Text
                   lineHeight={1.65}
@@ -812,9 +813,12 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[2]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  How to decode the return result
+                  How to decode the query result? ❓
                 </Text>
-                <Text my="15px">Return result consist of 3 things.</Text>
+                <Text my="15px">
+                  Result returned from calling query function consists of 3
+                  parts.
+                </Text>
                 <Flex width={1 / 2} mb="15px" flexDirection="row">
                   <Flex flex={1}>
                     <Text lineHeight={1.65} fontWeight={900} fontSize="16px">
@@ -823,19 +827,19 @@ export default class CommunityIntegrationRender extends React.Component {
                   </Flex>
                   <Flex flex={1}>
                     <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                      Output is the raw value
+                      The raw output value
                     </Text>
                   </Flex>
                 </Flex>
                 <Flex width={1 / 2} mb="15px" flexDirection="row">
                   <Flex flex={1}>
                     <Text lineHeight={1.65} fontWeight={900} fontSize="16px">
-                      2. updateAt
+                      2. updatedAt
                     </Text>
                   </Flex>
                   <Flex flex={1}>
                     <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                      Most recent update time
+                      Last update time
                     </Text>
                   </Flex>
                 </Flex>
@@ -847,7 +851,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   </Flex>
                   <Flex flex={1}>
                     <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                      query status
+                      The status of this query
                     </Text>
                   </Flex>
                 </Flex>
@@ -864,7 +868,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 >
                   <HighlightText text={dataFormat.description} />
                 </Text>
-                <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
+                {/* <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
                   See{' '}
                   <span
                     onClick={() => {
@@ -883,7 +887,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     Coding
                   </span>{' '}
                   tab for, well, example.
-                </Text>
+                </Text> */}
               </Flex>
             </React.Fragment>
           )}

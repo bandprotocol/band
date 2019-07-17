@@ -1,6 +1,6 @@
 export default {
   overview: [
-    `You can integrate crypto-fiat prices to your DApps with 3 simple steps`,
+    `You can integrate crypto-fiat prices to your DApps in 3 steps`,
     `Pick the query key for data lookup. For instance, key ETH/USD for Ethereum to USD conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
