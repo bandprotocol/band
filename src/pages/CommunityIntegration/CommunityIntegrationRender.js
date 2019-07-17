@@ -754,7 +754,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   mt="30px"
                   style={{ whiteSpace: 'pre-wrap' }}
                 >
-                  <HighlightText text={dataFormat.description} />
+                  <HighlightText text={keyFormat.description} />
                 </Text>
                 <Flex mt="30px" flexWrap="wrap">
                   {keyFormat.keys.map(key => (
