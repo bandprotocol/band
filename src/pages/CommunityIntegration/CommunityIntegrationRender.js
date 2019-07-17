@@ -275,14 +275,17 @@ export default class CommunityIntegrationRender extends React.Component {
                 mx="80px"
                 style={{ borderBottom: '1px solid #e7ecff' }}
               >
-                <Flex
-                  flex={1}
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="center"
-                >
+                <Flex flex={1} flexDirection="row" justifyContent="center">
+                  <Text
+                    lineHeight={1.65}
+                    fontWeight={500}
+                    fontSize="16px"
+                    style={{ minWidth: '30px' }}
+                  >
+                    1.
+                  </Text>
                   <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                    1. <HighlightText text={overviews[1]} />
+                    <HighlightText text={overviews[1]} />
                     <br />
                     See{' '}
                     <span
