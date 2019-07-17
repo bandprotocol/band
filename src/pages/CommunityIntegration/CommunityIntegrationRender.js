@@ -363,7 +363,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     list={[
                       [
                         '🔸',
-                        `Declare Band Protocol's provided •QueryInterface.`,
+                        `Declare Band Protocol universal •QueryInterface.`,
                       ],
                       [
                         '🔸',
@@ -371,7 +371,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       ],
                       [
                         '🔸',
-                        `Call •query function with the •key along with the 0.001 ETH query fee.`,
+                        `Call •query function with the •key as parameter along with the 0.001 ETH query fee.`,
                       ],
                     ]}
                   />
@@ -426,15 +426,12 @@ export default class CommunityIntegrationRender extends React.Component {
                     list={[
                       [
                         '🔸',
-                        `•output is the query's output, which can be decoded .`,
+                        `•output is the raw bytes32 query output. You'll need to parse it before using.`,
                       ],
+                      ['🔸', `•updatedAt is timestamp the data was update.`],
                       [
                         '🔸',
-                        `•updatedAt is the timestamp at which the data is updated.`,
-                      ],
-                      [
-                        '🔸',
-                        `•status is the query's status, one of •OK , •NOT_AVAILABLE , or •DISAGREEMENT .`,
+                        `•status is the query's status. I can be one of •OK , •NOT_AVAILABLE , or •DISAGREEMENT.`,
                       ],
                     ]}
                   />
