@@ -24,6 +24,7 @@ const TabButton = styled(Flex).attrs({
   font-weight: 500;
   height: 46px;
   color: #333;
+  font-size: 15px;
 
   ${p =>
     p.active
