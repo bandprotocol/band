@@ -300,7 +300,9 @@ export default {
           // Create a QueryInterface pointing to Sport community contract
           QueryInterface q = QueryInterface(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
           // Get the scores at date 2019 04 27
-          bytes32 rawData = q.query.value(q.queryPrice())("20190427/ARI-BAL");
+          (bytes32 rawData,,QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("20190427/ARI-BAL");
+          // Query status should be OK to continue
+          require(status == QueryInterface.QueryStatus.OK);
           // Get ARI's score from the first byte and then convert from byte to uint8
           uint8 ariScore = uint8(rawData[0]);
           // Get BAL's score from the second byte and then convert from byte to uint8
