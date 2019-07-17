@@ -687,21 +687,21 @@ export default class CommunityIntegrationRender extends React.Component {
             <React.Fragment>
               <Flex flexDirection="column" mt="30px" mx="80px">
                 <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                  The specification of calling query function only have 3 things
-                  to concern.
+                  There are 3 important details you need to know before using{' '}
+                  <HighlightSpan>query</HighlightSpan> in your dApps:
                 </Text>
                 <Flex flexDirection="row" mt="30px">
                   {[
-                    'How much ETH to pay per query?',
-                    'How to build a query key?',
-                    'How to decode the query result?',
+                    'How much is query fee?',
+                    'How to construct a query key?',
+                    'How to parse the query result?',
                   ].map((e, i) => (
                     <Flex flex={1} flexDirection="column">
                       <Oval radius="30px" text={i + 1} />
                       <Text
                         mt="15px"
                         lineHeight={1.65}
-                        fontWeight={900}
+                        fontWeight={600}
                         fontSize="15px"
                       >
                         {e}
@@ -721,7 +721,7 @@ export default class CommunityIntegrationRender extends React.Component {
                           cursor: 'pointer',
                         }}
                       >
-                        Read more
+                        Jump to the answer
                       </Text>
                     </Flex>
                   ))}
@@ -735,11 +735,13 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[0]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  How much to pay per query? 💸
+                  How much is query fee? 💸
                 </Text>
-                <Text fontSize="15px" mt="30px">
-                  Your smart contract can know this by asking TCD contract via
-                  function <HighlightSpan>queryPrice()</HighlightSpan>.
+                <Text fontSize="15px" mt="30px" lineHeight="1.65">
+                  To query the data, you have to pay a small fee defined by
+                  community through governance process. You can get fee (in ETH)
+                  by calling <HighlightSpan>queryPrice()</HighlightSpan>{' '}
+                  function.
                 </Text>
                 <Flex mt="30px">
                   <Snippet code={getQueryFeeCode(tcdAddress)} />
@@ -765,9 +767,9 @@ export default class CommunityIntegrationRender extends React.Component {
                   tab
                 </Text> */}
                 <Text fontSize="15px" mt="30px" lineHeight="1.65">
-                  Query prices are controlled by dataset token holders via
-                  governance parameters voting. Therefore, it is important to
-                  note that different datasets may have different query prices
+                  If you call the <HighlightSpan>query()</HighlightSpan>{' '}
+                  function without sending enough fee, the transaction will be
+                  reverted.
                 </Text>
               </Flex>
               <Flex
@@ -778,7 +780,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[1]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  {`How to build a query key? 🔑`}
+                  {`How to construct a query key? 🔑`}
                 </Text>
                 <Text
                   lineHeight={1.65}
@@ -846,15 +848,14 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[2]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  How to decode the query result? ❓
+                  How to parse the query result? ❓
                 </Text>
                 <Text my="15px">
-                  Result returned from calling query function consists of 3
-                  parts.
+                  The result returned from query function consists of 3 parts.
                 </Text>
-                <Flex width={1 / 2} mb="15px" flexDirection="row">
+                <Flex width={1 / 2} mb="5px" flexDirection="row">
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={900} fontSize="15px">
+                    <Text lineHeight={1.65} fontWeight={600} fontSize="15px">
                       1. output
                     </Text>
                   </Flex>
@@ -864,9 +865,9 @@ export default class CommunityIntegrationRender extends React.Component {
                     </Text>
                   </Flex>
                 </Flex>
-                <Flex width={1 / 2} mb="15px" flexDirection="row">
+                <Flex width={1 / 2} mb="5px" flexDirection="row">
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={900} fontSize="15px">
+                    <Text lineHeight={1.65} fontWeight={600} fontSize="15px">
                       2. updatedAt
                     </Text>
                   </Flex>
@@ -876,9 +877,9 @@ export default class CommunityIntegrationRender extends React.Component {
                     </Text>
                   </Flex>
                 </Flex>
-                <Flex width={1 / 2} mb="15px" flexDirection="row">
+                <Flex width={1 / 2} mb="5px" flexDirection="row">
                   <Flex flex={1}>
-                    <Text lineHeight={1.65} fontWeight={900} fontSize="15px">
+                    <Text lineHeight={1.65} fontWeight={600} fontSize="15px">
                       3. status
                     </Text>
                   </Flex>
@@ -888,9 +889,14 @@ export default class CommunityIntegrationRender extends React.Component {
                     </Text>
                   </Flex>
                 </Flex>
-                <Image src={QueryResult} width="100%" />
-                <Text fontSize="18px" fontWeight={500} mt="20px">
-                  {`Output decoding 🧬⚙`}
+                <Image
+                  mt={4}
+                  src={QueryResult}
+                  width="100%"
+                  style={{ maxWidth: 800 }}
+                />
+                <Text fontSize="16px" fontWeight={600} mt="20px">
+                  {`Decoding the output 🧬⚙`}
                 </Text>
                 <Text
                   mt="30px"
