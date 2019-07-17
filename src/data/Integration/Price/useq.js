@@ -3,10 +3,14 @@ export default {
     `You can integrate useq prices to your DApps with 3 simple steps`,
     `Pick the query key for data lookup. For instance, key •FB/USD for Facebook stock price to US dollar conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
-  description: [``, ``, ``],
+  description: [
+    `Write a simple version of the smart contract. The function that is left to be implemented is •getFBUSDRate function, which will return •FB/ETH rate multiplied by 10^18 . Note that, we omit some functions to make this example short`,
+    `Copy-paste •QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 together with additional statuses.`,
+    `Instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. FB/USD exchange rate can be obtained by query with key •FB/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
+  ],
   label: 'price',
-  example: `Coming soon!`,
-  contractName: 'TODO',
+  example: `💸 Say you want to create USeq betting smart contract. First bettor will get a reward if FB/USD is going down after 1 day has passed otherwise second bettor will get the reward instead 👇👇👇`,
+  contractName: 'USeqBettingContract',
   dataFormat: {
     description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,
   },
@@ -69,5 +73,153 @@ export default {
       ],
     },
   },
-  solidity: [``, ``, ``],
+  solidity: [
+    `
+pragma solidity 0.5.9;
+
+
+
+
+
+
+
+
+
+
+contract USeqBettingContract {
+  address payable public bettor_1;        // first bettor
+  address payable public bettor_2;        // second bettor
+  uint256 public bettingStartDate;
+  uint256 public startRate;
+
+  constructor(
+    address payable _bettor_1,
+    address payable _bettor_2
+  ) public payable {              // Contract creator can deposit some amount of ETH as reward
+    bettor_1 = _bettor_1;       // initiate first bettor
+    bettor_2 = _bettor_2;       // initiate second bettor
+    bettingStartDate = now;
+    startRate = getFBUSDRate();
+  }
+
+  function getFBUSDRate() internal returns (uint256 rate) {
+
+
+
+
+  }
+
+  function resolve() public payable {
+    // have to wait 1 day after start betting
+    require(now - bettingStartDate >= 1 days);
+    // get rate again after 1 day
+    uint256 currentRate = getFBUSDRate();
+    if (currentRate > startRate) {
+      // if currentRate > startRate then give all ETH in this contract to the first bettor
+      bettor_1.transfer(address(this).balance);
+    } else {
+      // if currentRate <= startRate then give all ETH in this contract to the second bettor
+      bettor_2.transfer(address(this).balance);
+    }
+  }
+}`,
+    `
+pragma solidity 0.5.9;
+
+interface QueryInterface {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+
+  function query(bytes calldata input)
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+
+  function queryPrice() external view returns (uint256);
+}
+
+contract USeqBettingContract {
+  address payable public bettor_1;        // first bettor
+  address payable public bettor_2;        // second bettor
+  uint256 public bettingStartDate;
+  uint256 public startRate;
+
+  constructor(
+    address payable _bettor_1,
+    address payable _bettor_2
+  ) public payable {              // Contract creator can deposit some amount of ETH as reward
+    bettor_1 = _bettor_1;       // initiate first bettor
+    bettor_2 = _bettor_2;       // initiate second bettor
+    bettingStartDate = now;
+    startRate = getFBUSDRate();
+  }
+
+  function getFBUSDRate() internal returns (uint256 rate) {
+
+
+
+
+  }
+
+  function resolve() public payable {
+    // have to wait 1 day after start betting
+    require(now - bettingStartDate >= 1 days);
+    // get rate again after 1 day
+    uint256 currentRate = getFBUSDRate();
+    if (currentRate > startRate) {
+      // if currentRate > startRate then give all ETH in this contract to the first bettor
+      bettor_1.transfer(address(this).balance);
+    } else {
+      // if currentRate <= startRate then give all ETH in this contract to the second bettor
+      bettor_2.transfer(address(this).balance);
+    }
+  }
+}`,
+    `
+pragma solidity 0.5.9;
+
+interface QueryInterface {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+
+  function query(bytes calldata input)
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+
+  function queryPrice() external view returns (uint256);
+}
+
+contract USeqBettingContract {
+  address payable public bettor_1;        // first bettor
+  address payable public bettor_2;        // second bettor
+  uint256 public bettingStartDate;
+  uint256 public startRate;
+
+  constructor(
+    address payable _bettor_1,
+    address payable _bettor_2
+  ) public payable {              // Contract creator can deposit some amount of ETH as reward
+    bettor_1 = _bettor_1;       // initiate first bettor
+    bettor_2 = _bettor_2;       // initiate second bettor
+    bettingStartDate = now;
+    startRate = getFBUSDRate();
+  }
+
+  function getFBUSDRate() internal returns (uint256 rate) {
+    QueryInterface q = QueryInterface(0x869e8e455816153A9330D59a854817231E49D9F9);
+    (bytes32 rawRate,, QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("FB/USD");
+    require(status == QueryInterface.QueryStatus.OK);
+    return uint256(rawRate);
+  }
+
+  function resolve() public payable {
+    // have to wait 1 day after start betting
+    require(now - bettingStartDate >= 1 days);
+    // get rate again after 1 day
+    uint256 currentRate = getFBUSDRate();
+    if (currentRate > startRate) {
+      // if currentRate > startRate then give all ETH in this contract to the first bettor
+      bettor_1.transfer(address(this).balance);
+    } else {
+      // if currentRate <= startRate then give all ETH in this contract to the second bettor
+      bettor_2.transfer(address(this).balance);
+    }
+  }
+}`,
+  ],
 }
