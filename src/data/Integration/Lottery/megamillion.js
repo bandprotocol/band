@@ -1,4 +1,8 @@
 export default {
+  overview: [
+    `You can integrate lottery data to your DApps with 3 simple steps`,
+    `Pick the query key for data lookup. For instance, key JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
+  ],
   description: [
     `Write a simple version of the Power ball rewarding contract. We mock the result of Power ball to bytes7(0) at first. We are going to replace the result by getting it from the Lottery community later.`,
     `Copy-paste QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32.`,

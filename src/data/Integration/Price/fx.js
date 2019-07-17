@@ -1,4 +1,8 @@
 export default {
+  overview: [
+    `You can integrate fx prices to your DApps with 3 simple steps`,
+    `Pick the query key for data lookup. For instance, key JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
+  ],
   description: [``, ``, ``],
   label: 'price',
   example: `Coming soon!`,

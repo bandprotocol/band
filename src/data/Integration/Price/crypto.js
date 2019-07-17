@@ -1,4 +1,8 @@
 export default {
+  overview: [
+    `You can integrate crypto-fiat prices to your DApps with 3 simple steps`,
+    `Pick the query key for data lookup. For instance, key ETH/USD for Ethereum to USD conversion rate. Each dataset has its own method to construct a valid key.`,
+  ],
   description: [
     `Write a simple version of the smart contract. We set the price at 10 USD. As you can see •buyTicket function which allows anyone to buy a ticket. The function to get the exchange rate between ETH and USD is left to be implemented.`,
     `Copy-paste QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32 together with additional statuses.`,

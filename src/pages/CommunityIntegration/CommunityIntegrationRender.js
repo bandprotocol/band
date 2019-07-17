@@ -10,7 +10,7 @@ import { getTCDInfomation } from 'utils/tcds'
 import IntegrationHeader from 'images/integration-header.svg'
 import Overview1 from 'images/overview_1.svg'
 import Overview2 from 'images/overview_2.svg'
-import Overview3 from 'images/overview_3.png'
+import Overview3 from 'images/overview_3.svg'
 import QueryResult from 'images/queryResult.svg'
 
 const TabButton = styled(Flex).attrs({
@@ -186,6 +186,7 @@ export default class CommunityIntegrationRender extends React.Component {
       Integration[communityName][Object.keys(Integration[communityName])[0]]
 
     const keyFormat = info.keyFormat[Object.keys(info.keyFormat)[0]]
+    const overviews = info.overview
     const dataFormat = info.dataFormat
 
     const tcdInfo = getTCDInfomation(tcdPrefix + ':')
@@ -264,8 +265,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 >
                   Welcome to Band Protocol's{' '}
                   <HighlightSpan>{tcdInfo.shortLabel}</HighlightSpan>dataset
-                  integration. You can integrate cryptocurrency prices to your
-                  DApps with 3 simple steps:
+                  integration. {overviews[0]}
                 </Text>
               </Flex>
               <Flex
@@ -282,11 +282,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   alignItems="center"
                 >
                   <Text lineHeight={1.65} fontWeight={500} fontSize="16px">
-                    <HighlightText
-                      text={` 1. Pick the query •key for data lookup. For instance, key
-                      ETH/USD for Ethereum to USD conversion rate. Each dataset
-                      has its own method to construct a valid key.`}
-                    />
+                    <HighlightText text={overviews[1]} />
                     <br />
                     See{' '}
                     <span
@@ -413,7 +409,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     list={[
                       [
                         '🔸',
-                        `•output is the query's output, which can be casted to an  uint256 .`,
+                        `•output is the query's output, which can be decoded .`,
                       ],
                       [
                         '🔸',
