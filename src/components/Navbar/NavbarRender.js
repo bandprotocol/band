@@ -28,7 +28,7 @@ const Nav = styled.nav`
   transform: translateY(${p => (p.showNav ? '0' : '-60')}px);
   z-index: 5;
 
-  transition: all 200ms;
+  transition: transform 200ms;
 
   ${p =>
     p.isDashboard

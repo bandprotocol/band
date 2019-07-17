@@ -71,9 +71,11 @@ const CountBadge = styled(Flex).attrs({
   ml: '10px',
 })`
   font-family: bio-sans;
-  font-weight: 600;
-  line-height: 26px;
+  font-weight: 700;
   border-radius: 15px;
+  line-height: 22px;
+  padding-bottom: 2px;
+  margin-top: 4px;
 `
 
 export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (

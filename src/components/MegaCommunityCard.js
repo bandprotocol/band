@@ -185,7 +185,7 @@ export default ({
     <Flex p="16px 24px" color="#4a4a4a">
       <DisplayIcon src={logo} bgColor={borderColor} />
       <Flex flexDirection="column" ml="28px">
-        <WrapText fontWeight="600" lineHeight={2} mt={1}>
+        <WrapText fontWeight="600" lineHeight={1.2} mt={1} mb="0.5em">
           {name}
         </WrapText>
         <Description mb={2}>{description}</Description>
