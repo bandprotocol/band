@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate sport data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •20190427/ARI-BAL for baseball match Arizona Cardinals vs Baltimore Ravens at date 27/04/2019. Each dataset has its own method to construct a valid key.`,
+    `Pick the query key for data lookup. For instance, key •20190427/ARI-BAL for baseball match Arizona Diamondbacks vs Baltimore Orioles at date 27/04/2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of smart contract for sport betting. We set the scores of both teams to 0 (just mock scores). We will replace these mock scores by real scores from Sport community later.`,
@@ -24,120 +24,159 @@ export default {
   keyFormat: {
     nfl: {
       header: 'List of Available NFL Teams',
-      description: `⚾️
-      MLB or Major League Baseball dataset group has provided keys for query matches score.
+      description: `⚾️ MLB or Major League Baseball dataset group has provided keys for query matches score.
       Format of the key is composed of Date(year,month,day)/home-away . For example •20190427/ARI-BAL which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
       The return result from query is 32 bytes , so the score of ARI will be encoded in first byte and score of BAL will be encoded in second byte .`,
       keys: [
         [
-          'ARI',
-          'Arizona Cardinals',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ARI.svg',
-        ],
-        [
           'ATL',
-          'Atlanta Falcons',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ATL.svg',
+          'Atlanta Braves',
+          'https://upload.wikimedia.org/wikipedia/en/f/f2/Atlanta_Braves.svg',
         ],
         [
-          'BAL',
-          'Baltimore Ravens',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/BAL.svg',
+          'MIA',
+          'Miami Marlins',
+          'https://upload.wikimedia.org/wikipedia/en/f/fd/Marlins_team_logo.svg',
         ],
         [
-          'BUF',
-          'Buffalo Bills',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/BUF.svg',
-        ],
-        [
-          'CHI',
-          'Chicago Bears',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/CHI.svg',
-        ],
-        [
-          'CIN',
-          'Cincinnati Bengals',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/CIN.svg',
-        ],
-        [
-          'DAL',
-          'Dallas Cowboys',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/DAL.svg',
-        ],
-        [
-          'DEN',
-          'Denver Broncos',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/DEN.svg',
-        ],
-        [
-          'HOU',
-          'Houston Texans',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/HOU.svg',
-        ],
-        [
-          'IND',
-          'Indianapolis Colts',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/IND.svg',
-        ],
-        [
-          'KC',
-          'Kansas City Chiefs',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/KC.svg',
-        ],
-        [
-          'ARI',
-          'Los Angeles Chargers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ARI.svg',
-        ],
-        [
-          'LAR',
-          'Los Angeles Rams',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/LA.svg',
-        ],
-        [
-          'NE',
-          'New England Patriots',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/NE.svg',
-        ],
-        [
-          'NO',
-          'New Orleans Saints',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/NO.svg',
+          'NEW',
+          'New York Mets',
+          'https://upload.wikimedia.org/wikipedia/en/7/7b/New_York_Mets.svg',
         ],
         [
           'PHI',
-          'Philadelphia Eagles',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/PHI.svg',
-        ],
-        [
-          'PIT',
-          'Pittsburgh Steelers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/PIT.svg',
-        ],
-        [
-          'SEA',
-          'Seattle Seahawks',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/SEA.svg',
-        ],
-        [
-          'SF',
-          'San Francisco',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/SF.svg',
-        ],
-        [
-          'TB',
-          'Tampa Bay Buccaneers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/TB.svg',
-        ],
-        [
-          'TEN',
-          'Tennessee Titans',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/TEN.svg',
+          'Philadelphia Phillies',
+          'https://upload.wikimedia.org/wikipedia/en/4/47/New_Phillies_logo.png',
         ],
         [
           'WAS',
-          'Washington Redskins',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/WAS.svg',
+          'Washington Nationals',
+          'https://upload.wikimedia.org/wikipedia/en/a/a3/Washington_Nationals_logo.svg',
+        ],
+        [
+          'CHI',
+          'Chicago Cubs',
+          'https://upload.wikimedia.org/wikipedia/commons/8/80/Chicago_Cubs_logo.svg',
+        ],
+        [
+          'CIN',
+          'Cincinnati Reds',
+          'https://upload.wikimedia.org/wikipedia/commons/0/01/Cincinnati_Reds_Logo.svg',
+        ],
+        [
+          'MIL',
+          'Milwaukee Brewers',
+          'https://upload.wikimedia.org/wikipedia/en/1/11/Milwaukee_Brewers_Logo.svg',
+        ],
+        [
+          'PIT',
+          'Pittsburgh Pirates',
+          'https://upload.wikimedia.org/wikipedia/commons/8/81/Pittsburgh_Pirates_logo_2014.svg',
+        ],
+        [
+          'SLC',
+          'St. Louis Cardinals',
+          'https://upload.wikimedia.org/wikipedia/en/9/9d/St._Louis_Cardinals_logo.svg',
+        ],
+        [
+          'ARI',
+          'Arizona Diamondbacks',
+          'https://upload.wikimedia.org/wikipedia/en/8/89/Arizona_Diamondbacks_logo.svg',
+        ],
+        [
+          'COL',
+          'Colorado Rockies',
+          'https://upload.wikimedia.org/wikipedia/commons/3/31/Colorado_Rockies_logo.svg',
+        ],
+        [
+          'LOS',
+          'Los Angeles Dodgers',
+          'https://upload.wikimedia.org/wikipedia/en/6/69/Los_Angeles_Dodgers_logo.svg',
+        ],
+        [
+          'SAN',
+          'San Diego Padres',
+          'https://upload.wikimedia.org/wikipedia/commons/a/a4/SDPadres_logo.svg',
+        ],
+        [
+          'SAN',
+          'San Francisco Giants',
+          'https://upload.wikimedia.org/wikipedia/en/5/58/San_Francisco_Giants_Logo.svg',
+        ],
+        [
+          'BAL',
+          'Baltimore Orioles',
+          'https://upload.wikimedia.org/wikipedia/en/7/75/Baltimore_Orioles_cap.svg',
+        ],
+        [
+          'BOS',
+          'Boston Red Sox',
+          'https://upload.wikimedia.org/wikipedia/en/6/6d/RedSoxPrimary_HangingSocks.svg',
+        ],
+        [
+          'NEW',
+          'New York Yankees',
+          'https://upload.wikimedia.org/wikipedia/en/2/25/NewYorkYankees_PrimaryLogo.svg',
+        ],
+        [
+          'TAM',
+          'Tampa Bay Rays',
+          'https://upload.wikimedia.org/wikipedia/en/c/c6/Tampa_Bay_Rays.svg',
+        ],
+        [
+          'TOR',
+          'Toronto Blue Jays',
+          'https://upload.wikimedia.org/wikipedia/en/b/ba/Toronto_Blue_Jays_logo.svg',
+        ],
+        [
+          'CHI',
+          'Chicago White Sox',
+          'https://upload.wikimedia.org/wikipedia/commons/c/c1/Chicago_White_Sox.svg',
+        ],
+        [
+          'CLE',
+          'Cleveland Indians',
+          'https://upload.wikimedia.org/wikipedia/commons/e/ee/Cleveland_Indians_primary_logo.svg',
+        ],
+        [
+          'DET',
+          'Detroit Tigers',
+          'https://upload.wikimedia.org/wikipedia/commons/e/e3/Detroit_Tigers_logo.svg',
+        ],
+        [
+          'KAN',
+          'Kansas City Royals',
+          'https://upload.wikimedia.org/wikipedia/en/1/1c/Kansas_City_Royals.svg',
+        ],
+        [
+          'MIN',
+          'Minnesota Twins',
+          'https://upload.wikimedia.org/wikipedia/en/7/71/Minnesota_Twins_logo.svg',
+        ],
+        [
+          'HOU',
+          'Houston Astros',
+          'https://upload.wikimedia.org/wikipedia/commons/6/6b/Houston-Astros-Logo.svg',
+        ],
+        [
+          'LOS',
+          'Los Angeles Angels',
+          'https://upload.wikimedia.org/wikipedia/commons/8/8b/Los_Angeles_Angels_of_Anaheim.svg',
+        ],
+        [
+          'OAK',
+          'Oakland Athletics',
+          'https://upload.wikimedia.org/wikipedia/commons/a/a4/Oakland_A%27s_logo.svg',
+        ],
+        [
+          'SEA',
+          'Seattle Mariners',
+          'https://upload.wikimedia.org/wikipedia/en/b/b0/Seattle_Mariners_logo.svg',
+        ],
+        [
+          'TEX',
+          'Texas Rangers',
+          'https://upload.wikimedia.org/wikipedia/en/4/41/Texas_Rangers.svg',
         ],
       ],
     },

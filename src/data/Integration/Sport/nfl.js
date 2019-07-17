@@ -9,7 +9,7 @@ export default {
     `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •20190427/LAC-GSW and the scores was encoded in first byte and second byte of the return value.`,
   ],
   label: 'sport',
-  example: `🏈 Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If LAC (a baseball team) win first bettor will receive all ETH in the contract. If GSW (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
+  example: `🏈 Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If LAC (a basketball team) win first bettor will receive all ETH in the contract. If GSW (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
   contractName: 'SportBettingContract',
   dataFormat: {
     description: `Return value from community's contract always •bytes32 .　
@@ -24,120 +24,169 @@ export default {
   keyFormat: {
     nfl: {
       header: 'List of Available NFL Teams',
-      description: `🇺🇸 🏈
-      NFL or National Football League community has provided keys for query matches score.
+      description: `🇺🇸 🏈 NFL or National Football League dataset group has provided keys for query matches score.
       Format of the key is composed of Date(year,month,day)/home-away . For example •20190120/LAC-NE which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
       The return result from query is 32 bytes , so the score of LAC will be encoded in first byte and score of NE will be encoded in second byte .`,
       keys: [
         [
           'ARI',
           'Arizona Cardinals',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ARI.svg',
+          'https://upload.wikimedia.org/wikipedia/en/7/72/Arizona_Cardinals_logo.svg',
         ],
         [
           'ATL',
           'Atlanta Falcons',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ATL.svg',
+          'https://upload.wikimedia.org/wikipedia/en/c/c5/Atlanta_Falcons_logo.svg',
         ],
         [
           'BAL',
           'Baltimore Ravens',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/BAL.svg',
+          'https://upload.wikimedia.org/wikipedia/en/1/16/Baltimore_Ravens_logo.svg',
         ],
         [
           'BUF',
           'Buffalo Bills',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/BUF.svg',
+          'https://upload.wikimedia.org/wikipedia/en/7/77/Buffalo_Bills_logo.svg',
+        ],
+        [
+          'CAR',
+          'Carolina Panthers',
+          'https://upload.wikimedia.org/wikipedia/en/1/1c/Carolina_Panthers_logo.svg',
         ],
         [
           'CHI',
           'Chicago Bears',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/CHI.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/5/5c/Chicago_Bears_logo.svg',
         ],
         [
           'CIN',
           'Cincinnati Bengals',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/CIN.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/8/81/Cincinnati_Bengals_logo.svg',
+        ],
+        [
+          'CLE',
+          'Cleveland Browns',
+          'https://upload.wikimedia.org/wikipedia/en/d/d9/Cleveland_Browns_logo.svg',
         ],
         [
           'DAL',
           'Dallas Cowboys',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/DAL.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/1/15/Dallas_Cowboys.svg',
         ],
         [
           'DEN',
           'Denver Broncos',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/DEN.svg',
+          'https://upload.wikimedia.org/wikipedia/en/4/44/Denver_Broncos_logo.svg',
+        ],
+        [
+          'DET',
+          'Detroit Lions',
+          'https://upload.wikimedia.org/wikipedia/en/7/71/Detroit_Lions_logo.svg',
+        ],
+        [
+          'GRE',
+          'Green Bay Packers',
+          'https://upload.wikimedia.org/wikipedia/commons/5/50/Green_Bay_Packers_logo.svg',
         ],
         [
           'HOU',
           'Houston Texans',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/HOU.svg',
+          'https://upload.wikimedia.org/wikipedia/en/2/28/Houston_Texans_logo.svg',
         ],
         [
           'IND',
           'Indianapolis Colts',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/IND.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/0/00/Indianapolis_Colts_logo.svg',
         ],
         [
-          'KC',
+          'JAC',
+          'Jacksonville Jaguars',
+          'https://upload.wikimedia.org/wikipedia/en/7/74/Jacksonville_Jaguars_logo.svg',
+        ],
+        [
+          'KAN',
           'Kansas City Chiefs',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/KC.svg',
+          'https://upload.wikimedia.org/wikipedia/en/e/e1/Kansas_City_Chiefs_logo.svg',
         ],
         [
           'LAC',
           'Los Angeles Chargers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/LAC.svg',
+          'https://upload.wikimedia.org/wikipedia/en/7/72/NFL_Chargers_logo.svg',
         ],
         [
           'LAR',
           'Los Angeles Rams',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/LA.svg',
+          'https://upload.wikimedia.org/wikipedia/en/8/8a/Los_Angeles_Rams_logo.svg',
         ],
         [
-          'NE',
+          'MIA',
+          'Miami Dolphins',
+          'https://upload.wikimedia.org/wikipedia/en/3/37/Miami_Dolphins_logo.svg',
+        ],
+        [
+          'MIN',
+          'Minnesota Vikings',
+          'https://upload.wikimedia.org/wikipedia/en/4/48/Minnesota_Vikings_logo.svg',
+        ],
+        [
+          'NEW',
           'New England Patriots',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/NE.svg',
+          'https://upload.wikimedia.org/wikipedia/en/b/b9/New_England_Patriots_logo.svg',
         ],
         [
-          'NO',
+          'NEW',
           'New Orleans Saints',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/NO.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/5/50/New_Orleans_Saints_logo.svg',
+        ],
+        [
+          'NYG',
+          'New York Giants',
+          'https://upload.wikimedia.org/wikipedia/commons/6/60/New_York_Giants_logo.svg',
+        ],
+        [
+          'NYJ',
+          'New York Jets',
+          'https://upload.wikimedia.org/wikipedia/en/6/6b/New_York_Jets_logo.svg',
+        ],
+        [
+          'OAK',
+          'Oakland Raiders',
+          'https://upload.wikimedia.org/wikipedia/en/e/ec/Oakland_Raiders_logo.svg',
         ],
         [
           'PHI',
           'Philadelphia Eagles',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/PHI.svg',
+          'https://upload.wikimedia.org/wikipedia/en/8/8e/Philadelphia_Eagles_logo.svg',
         ],
         [
           'PIT',
           'Pittsburgh Steelers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/PIT.svg',
+          'https://upload.wikimedia.org/wikipedia/commons/d/de/Pittsburgh_Steelers_logo.svg',
+        ],
+        [
+          'SAN',
+          'San Francisco 49ers',
+          'https://upload.wikimedia.org/wikipedia/commons/3/3a/San_Francisco_49ers_logo.svg',
         ],
         [
           'SEA',
           'Seattle Seahawks',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/SEA.svg',
+          'https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg',
         ],
         [
-          'SF',
-          'San Francisco',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/SF.svg',
-        ],
-        [
-          'TB',
+          'TAM',
           'Tampa Bay Buccaneers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/TB.svg',
+          'https://upload.wikimedia.org/wikipedia/en/a/a2/Tampa_Bay_Buccaneers_logo.svg',
         ],
         [
           'TEN',
           'Tennessee Titans',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/TEN.svg',
+          'https://upload.wikimedia.org/wikipedia/en/c/c1/Tennessee_Titans_logo.svg',
         ],
         [
           'WAS',
           'Washington Redskins',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/WAS.svg',
+          'https://upload.wikimedia.org/wikipedia/en/6/63/Washington_Redskins_logo.svg',
         ],
       ],
     },

@@ -1,143 +1,132 @@
 export default {
   overview: [
     `You can integrate sport data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
+    `Pick the query key for data lookup. For instance, key •20190427/ARS-AFC for Arsenal vs AFC Bournemouth at 27/04/2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of smart contract for sport betting. We set the scores of both teams to 0 (just mock scores). We will replace these mock scores by real scores from Sport community later.`,
     `Copy-paste •QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 .`,
-    `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •20190427/LAC-GSW and the scores was encoded in first byte and second byte of the return value.`,
+    `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •20190427/ARS-AFC and the scores was encoded in first byte and second byte of the return value.`,
   ],
   label: 'sport',
-  example: `⚽️ Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If LAC (a basketball team) win first bettor will receive all ETH in the contract. If GSW (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
+  example: `⚽️ Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If ARS (a basketball team) win first bettor will receive all ETH in the contract. If AFC (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
   contractName: 'SportBettingContract',
   dataFormat: {
     description: `Return value from community's contract always •bytes32 .　
       Sport Community will return score of home team and score of away team which are represented with first 2 bytes of the return value.
       For example
-        👉 You have called •q.query.value(q.queryPrice())("20190427/LAC-GSW") 　
+        👉 You have called •q.query.value(q.queryPrice())("20190427/ARS-AFC") 　
         👉 The return value is 0x1f3c000000000000000000000000000000000000000000000000000000000000 　
-        👉 So the score of LAC is 0x1f (base 16) which is equal to 31 (base 10) 　
-        👉 And the score of GSW is 0x3c (base 16) which is equal to 60 (base 10) 　
+        👉 So the score of ARS is 0x1f (base 16) which is equal to 31 (base 10) 　
+        👉 And the score of AFC is 0x3c (base 16) which is equal to 60 (base 10) 　
       `,
   },
   keyFormat: {
     nfl: {
       header: 'List of Available NFL Teams',
-      description: `🇺🇸 🏈
-      NFL or National Football League community has provided keys for query matches score.
-      Format of the key is composed of Date(year,month,day)/home-away . For example •20190120/LAC-NE which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
-      The return result from query is 32 bytes , so the score of LAC will be encoded in first byte and score of NE will be encoded in second byte .`,
+      description: `⚽️ EPL or Premier League dataset group has provided keys for query matches score.
+      Format of the key is composed of Date(year,month,day)/home-away . For example •20190120/ARS-AFC which mean the key for query score of Arsenal(home team) and AFC Bournemouth(away team).
+      The return result from query is 32 bytes , so the score of ARS will be encoded in first byte and score of AFC will be encoded in second byte .`,
       keys: [
         [
-          'ARI',
-          'Arizona Cardinals',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ARI.svg',
+          'AFC',
+          'AFC Bournemouth',
+          'https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg',
         ],
         [
-          'ATL',
-          'Atlanta Falcons',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/ATL.svg',
+          'ARS',
+          'Arsenal',
+          'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
         ],
         [
-          'BAL',
-          'Baltimore Ravens',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/BAL.svg',
+          'AST',
+          'Aston Villa',
+          'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg',
         ],
         [
-          'BUF',
-          'Buffalo Bills',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/BUF.svg',
+          'BRI',
+          'Brighton & Hove Albion',
+          'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg',
         ],
         [
-          'CHI',
-          'Chicago Bears',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/CHI.svg',
+          'BUR',
+          'Burnley',
+          'https://upload.wikimedia.org/wikipedia/en/6/62/Burnley_F.C._Logo.svg',
         ],
         [
-          'CIN',
-          'Cincinnati Bengals',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/CIN.svg',
+          'CHE',
+          'Chelsea',
+          'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
         ],
         [
-          'DAL',
-          'Dallas Cowboys',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/DAL.svg',
+          'CRY',
+          'Crystal Palace',
+          'https://upload.wikimedia.org/wikipedia/en/0/0c/Crystal_Palace_FC_logo.svg',
         ],
         [
-          'DEN',
-          'Denver Broncos',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/DEN.svg',
+          'EVE',
+          'Everton',
+          'https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg',
         ],
         [
-          'HOU',
-          'Houston Texans',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/HOU.svg',
+          'LEI',
+          'Leicester City',
+          'https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg',
         ],
         [
-          'IND',
-          'Indianapolis Colts',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/IND.svg',
+          'LIV',
+          'Liverpool',
+          'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg',
         ],
         [
-          'KC',
-          'Kansas City Chiefs',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/KC.svg',
+          'MAN',
+          'Manchester City',
+          'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
         ],
         [
-          'LAC',
-          'Los Angeles Chargers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/LAC.svg',
+          'MAN',
+          'Manchester United',
+          'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
         ],
         [
-          'LAR',
-          'Los Angeles Rams',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/LA.svg',
+          'NEW',
+          'Newcastle United',
+          'https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg',
         ],
         [
-          'NE',
-          'New England Patriots',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/NE.svg',
+          'NOR',
+          'Norwich City',
+          'https://upload.wikimedia.org/wikipedia/en/8/8c/Norwich_City.svg',
         ],
         [
-          'NO',
-          'New Orleans Saints',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/NO.svg',
+          'SHE',
+          'Sheffield United',
+          'https://upload.wikimedia.org/wikipedia/en/9/9c/Sheffield_United_FC_logo.svg',
         ],
         [
-          'PHI',
-          'Philadelphia Eagles',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/PHI.svg',
+          'SOU',
+          'Southampton',
+          'https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg',
         ],
         [
-          'PIT',
-          'Pittsburgh Steelers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/PIT.svg',
+          'TOT',
+          'Tottenham Hotspur',
+          'https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg',
         ],
         [
-          'SEA',
-          'Seattle Seahawks',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/SEA.svg',
+          'WAT',
+          'Watford',
+          'https://upload.wikimedia.org/wikipedia/en/e/e2/Watford.svg',
         ],
         [
-          'SF',
-          'San Francisco',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/SF.svg',
+          'WES',
+          'West Ham United',
+          'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg',
         ],
         [
-          'TB',
-          'Tampa Bay Buccaneers',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/TB.svg',
-        ],
-        [
-          'TEN',
-          'Tennessee Titans',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/TEN.svg',
-        ],
-        [
-          'WAS',
-          'Washington Redskins',
-          'https://static.nfl.com/static/site/img/logos/svg/teams/WAS.svg',
+          'WOL',
+          'Wolverhampton Wanderers',
+          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
         ],
       ],
     },
@@ -172,17 +161,17 @@ export default {
 
 
 
-          // Mock LAC's scores
-          uint8 lacScore = 0;
-          // Mock GSW's scores
-          uint8 gswScore = 0;
+          // Mock ARS's scores
+          uint8 arsScore = 0;
+          // Mock AFC's scores
+          uint8 afcScore = 0;
           // if the scores are equal then nobody can get ETH in this contract
-          require(lacScore != gswScore);
-          if (lacScore > gswScore) {
-              // if LAC win then give all ETH in this contract to the first bettor
+          require(arsScore != afcScore);
+          if (arsScore > afcScore) {
+              // if ARS win then give all ETH in this contract to the first bettor
               bettor_1.transfer(address(this).balance);
           } else {
-              // if GSW win then give all ETH in this contract to the second bettor
+              // if AFC win then give all ETH in this contract to the second bettor
               bettor_2.transfer(address(this).balance);
           }
       }
@@ -217,17 +206,17 @@ export default {
 
 
 
-          // Mock LAC's scores
-          uint8 lacScore = 0;
-          // Mock GSW's scores
-          uint8 gswScore = 0;
+          // Mock ARS's scores
+          uint8 arsScore = 0;
+          // Mock AFC's scores
+          uint8 afcScore = 0;
           // if the scores are equal then nobody can get ETH in this contract
-          require(lacScore != gswScore);
-          if (lacScore > gswScore) {
-              // if LAC win then give all ETH in this contract to the first bettor
+          require(arsScore != afcScore);
+          if (arsScore > afcScore) {
+              // if ARS win then give all ETH in this contract to the first bettor
               bettor_1.transfer(address(this).balance);
           } else {
-              // if GSW win then give all ETH in this contract to the second bettor
+              // if AFC win then give all ETH in this contract to the second bettor
               bettor_2.transfer(address(this).balance);
           }
       }
@@ -261,18 +250,18 @@ export default {
           // Create a QueryInterface pointing to Sport community contract
           QueryInterface q = QueryInterface(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
           // Get the scores at date 2019 04 27
-          bytes32 rawData = q.query.value(q.queryPrice())("20190427/LAC-GSW");
-          // Get LAC's score from the first byte and then convert from byte to uint8
-          uint8 lacScore = uint8(rawData[0]);
-          // Get GSW's score from the second byte and then convert from byte to uint8
-          uint8 gswScore = uint8(rawData[1]);
+          bytes32 rawData = q.query.value(q.queryPrice())("20190427/ARS-AFC");
+          // Get ARS's score from the first byte and then convert from byte to uint8
+          uint8 arsScore = uint8(rawData[0]);
+          // Get AFC's score from the second byte and then convert from byte to uint8
+          uint8 afcScore = uint8(rawData[1]);
           // if the scores are equal then nobody can get ETH in this contract
-          require(lacScore != gswScore);
-          if (lacScore > gswScore) {
-              // if LAC win then give all ETH in this contract to the first bettor
+          require(arsScore != afcScore);
+          if (arsScore > afcScore) {
+              // if ARS win then give all ETH in this contract to the first bettor
               bettor_1.transfer(address(this).balance);
           } else {
-              // if GSW win then give all ETH in this contract to the second bettor
+              // if AFC win then give all ETH in this contract to the second bettor
               bettor_2.transfer(address(this).balance);
           }
       }
