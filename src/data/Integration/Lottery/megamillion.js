@@ -52,6 +52,10 @@ export default {
     function claimReward() public payable {
 
 
+
+
+
+
         // Mock MegaMillion result
         bytes6 result = bytes6(0);
         // sender should provide the right guess before getting reward (all ETH in this contract)
@@ -88,6 +92,10 @@ export default {
     }
 
     function claimReward() public payable {
+
+
+
+
 
 
         // Mock MegaMillion result
@@ -127,9 +135,13 @@ export default {
 
     function claimReward() public payable {
         // Create a QueryInterface pointing to Lottery community contract
-        QueryInterface q = QueryInterface(0x6863019Ec1A5f675ce64699020A338Ee2256B981);
+        QueryInterface q = QueryInterface(0x9cd0E16C9b950971fa6c0BA37b9d358117F582aE);
         // Get MegaMillion result from Lottery community
-        bytes6 result = bytes6(q.query.value(q.queryPrice())("MMN/20190420"));
+        (bytes32 rawResult,, QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("MMN/20190420");
+        // Query status should be OK to continue
+        require(status == QueryInterface.QueryStatus.OK);
+        // The real value only contain in first 6 bytes
+        bytes6 result = bytes6(rawResult);
         // sender should provide the right guess before getting reward (all ETH in this contract)
         require(result == guesses[msg.sender]);
         // give all ETH in this contract to the sender

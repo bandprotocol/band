@@ -19,27 +19,27 @@ export default {
         [
           'CNY/USD',
           '1 Chinese Yuan in USD (times by 10^18 )',
-          'https://www.countries-ofthe-world.com/flags-normal/flag-of-China.png',
+          'https://upload.wikimedia.org/wikipedia/commons/f/fa/Flag_of_the_People%27s_Republic_of_China.svg',
         ],
         [
           'EUR/USD',
           '1 Euro in USD (times by 10^18 )',
-          'https://www.crwflags.com/fotw/images/e/eu-eun.gif',
+          'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
         ],
         [
           'GBP/USD',
           '1 British Pound in USD (times by 10^18 )',
-          'https://www.countries-ofthe-world.com/flags-normal/flag-of-United-Kingdom.png',
+          'https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg',
         ],
         [
           'JPY/USD',
           '1 Japanese Yen in USD (times by 10^18 )',
-          'https://www.countries-ofthe-world.com/flags-normal/flag-of-Japan.png',
+          'https://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg',
         ],
         [
           'THB/USD',
           '1 Thai Baht in USD (times by 10^18 )',
-          'https://www.countries-ofthe-world.com/flags-normal/flag-of-Thailand.png',
+          'https://upload.wikimedia.org/wikipedia/commons/a/a9/Flag_of_Thailand.svg',
         ],
         [
           'XAG/USD',

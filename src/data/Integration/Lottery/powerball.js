@@ -52,42 +52,8 @@ contract PowerBallContract {
   function claimReward() public payable {
 
 
-      // Mock PowerBall result
-      bytes6 result = bytes6(0);
-      // sender should provide the right guess before getting reward (all ETH in this contract)
-      require(result == guesses[msg.sender]);
-      // give all ETH in this contract to the sender
-      msg.sender.transfer(address(this).balance);
-  }
-}
-`,
-    `
-pragma solidity 0.5.9;
 
-interface QueryInterface {
-  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
 
-  function query(bytes calldata input)
-    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
-
-  function queryPrice() external view returns (uint256);
-}
-
-contract PowerBallContract {
-  // keep the record of guesses submitted by each participant
-  mapping (address => bytes6) public guesses;
-
-  function guess(bytes6 _guess) public payable  {
-      // sender should never submit his/her guess before
-      require(guesses[msg.sender] == bytes6(0));
-      // Anyone can participate util 04/20/2019 @ 12:00am (UTC)
-      require(now <= 1555718400);
-      // sender should pay 1 finney to submit his/her guess
-      require(msg.value == 1 finney);
-      guesses[msg.sender] = _guess;
-  }
-
-  function claimReward() public payable {
 
 
       // Mock PowerBall result
@@ -126,14 +92,60 @@ contract PowerBallContract {
   }
 
   function claimReward() public payable {
-      // Create a QueryInterface pointing to Lottery community contract
-      QueryInterface q = QueryInterface(0x6863019Ec1A5f675ce64699020A338Ee2256B981);
-      // Get PowerBall result from Lottery community
-      bytes6 result = bytes6(q.query.value(q.queryPrice())("PWB/20190420"));
+
+
+
+
+
+
+      // Mock PowerBall result
+      bytes6 result = bytes6(0);
       // sender should provide the right guess before getting reward (all ETH in this contract)
       require(result == guesses[msg.sender]);
       // give all ETH in this contract to the sender
       msg.sender.transfer(address(this).balance);
+  }
+}
+`,
+    `
+pragma solidity 0.5.9;
+
+interface QueryInterface {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+
+  function query(bytes calldata input)
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+
+  function queryPrice() external view returns (uint256);
+}
+
+contract PowerBallContract {
+  // keep the record of guesses submitted by each participant
+  mapping (address => bytes6) public guesses;
+
+  function guess(bytes6 _guess) public payable  {
+      // sender should never submit his/her guess before
+      require(guesses[msg.sender] == bytes6(0));
+      // Anyone can participate util 04/20/2019 @ 12:00am (UTC)
+      require(now <= 1555718400);
+      // sender should pay 1 finney to submit his/her guess
+      require(msg.value == 1 finney);
+      guesses[msg.sender] = _guess;
+  }
+
+  function claimReward() public payable {
+    // Create a QueryInterface pointing to Lottery community contract
+    QueryInterface q = QueryInterface(0x9cd0E16C9b950971fa6c0BA37b9d358117F582aE);
+    // Get PowerBall result from Lottery community
+    (bytes32 rawResult,, QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("PWB/20190420");
+    // Query status should be OK to continue
+    require(status == QueryInterface.QueryStatus.OK);
+    // The real value only contain in first 6 bytes
+    bytes6 result = bytes6(rawResult);
+    // sender should provide the right guess before getting reward (all ETH in this contract)
+    require(result == guesses[msg.sender]);
+    // give all ETH in this contract to the sender
+    msg.sender.transfer(address(this).balance);
   }
 }
 `,

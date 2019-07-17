@@ -131,7 +131,7 @@ contract TicketContract {
 
   function getETHUSDRate() internal returns (uint256 rate) {
     QueryInterface q = QueryInterface(0x61518CA6F924348465B5126C0c20e843E5E6aA41);
-    (bytes32 rawRate,, QueryInterface.QueryStatus status) = q.query.value(q.queryPrice("ETH/USD"))("ETH/USD");
+    (bytes32 rawRate,, QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("ETH/USD");
     require(status == QueryInterface.QueryStatus.OK);
     return uint256(rawRate);
   }
