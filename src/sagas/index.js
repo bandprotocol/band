@@ -43,13 +43,15 @@ import Web3 from 'web3'
 
 // Select network (HARDCODE)!!!
 let RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
-let WALLET_ENDPOINT = 'https://wallet.bandprotocol.com'
+let WALLET_ENDPOINT = 'https://wallet.kovan.bandprotocol.com'
+
 const network = localStorage.getItem('network') || 'kovan'
 switch (network) {
   case 'mainnet':
   case 'kovan':
     RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
-    WALLET_ENDPOINT = 'http://localhost:3000'
+    if (process.env.NODE_ENV !== 'production')
+      WALLET_ENDPOINT = 'http://localhost:3000'
     break
   case 'rinkeby':
   case 'local':
@@ -100,7 +102,7 @@ function* baseInitialize() {
   window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
     walletPosition: {
       top: 60,
-      right: 130,
+      right: 30,
     },
     approvalPosition: {
       bottom: 0,

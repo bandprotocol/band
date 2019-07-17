@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "band-protocol-app",
-    "wip": "band-app-test"
+    "default": "bandapp-kovan"
   }
 }
