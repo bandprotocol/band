@@ -9,8 +9,8 @@ import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
-  margin-top: 60px;
-  height: 204px;
+  padding-top: 60px;
+  height: 264px;
   width: 100%;
   background: linear-gradient(90deg, #6483e6 0%,#505fc9 99%);
   background-image: url('${HeaderBackgroundSrc}'); 
