@@ -5,8 +5,8 @@ export default {
   ],
   description: [
     `Write a simple version of the smart contract. The function that is left to be implemented is •getLINKETHRate function, which will return LINK/ETH rate multiplied by 10^18 . Note that, we omit some functions to make this example short`,
-    `Copy-paste QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes bytes and returns bytes32 together with additional statuses.`,
-    `Instantiate a QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. LINK/USD exchange rate can be obtained by query with key LINK/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
+    `Copy-paste •QueryInterface to the top of the contract. This acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 together with additional statuses.`,
+    `Instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. LINK/USD exchange rate can be obtained by query with key LINK/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
   label: 'price',
   example: `🏛 Say you want a simple automated exchange smart contract that can receive LINK tokens from users and return proper amount of ETH based on the current rate of LINK/ETH . The contract needs the real-time exchange rate 👇👇👇`,
@@ -111,8 +111,8 @@ interface QueryInterface {
 
   function query(bytes calldata input)
     external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
-  function queryPrice(bytes calldata input)
-    external view returns (uint256);
+
+  function queryPrice() external view returns (uint256);
 }
 
 interface ERC20 {
@@ -145,8 +145,8 @@ interface QueryInterface {
 
   function query(bytes calldata input)
     external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
-  function queryPrice(bytes calldata input)
-    external view returns (uint256);
+
+  function queryPrice() external view returns (uint256);
 }
 
 interface ERC20 {

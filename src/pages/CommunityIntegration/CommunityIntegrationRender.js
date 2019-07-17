@@ -122,7 +122,6 @@ const replaceAllAddresses = (text, address) => {
 
 const HighlightText = ({ text }) => {
   const words = text.split(' ')
-  const keyWords = ['/', 'byte', 'queryinterface', 'uint']
   return (
     <React.Fragment>
       {words.map((word, i) => {
@@ -136,14 +135,10 @@ const HighlightText = ({ text }) => {
               </span>
             )
           }
-          for (const k of keyWords) {
-            if (word.toLowerCase().includes(k)) {
-              return <HighlightSpan>{word}</HighlightSpan>
-            } else if (word[0] === '•') {
-              return <HighlightSpan>{word.slice(1)}</HighlightSpan>
-            } else if (word.includes('0x') && word.length > 40) {
-              return <HighlightSpan>{word}</HighlightSpan>
-            }
+          if (word[0] === '•') {
+            return <HighlightSpan>{word.slice(1)}</HighlightSpan>
+          } else if (word.includes('0x') && word.length > 40) {
+            return <HighlightSpan>{word}</HighlightSpan>
           }
         } catch (e) {}
         return <React.Fragment>{word + ' '}</React.Fragment>
@@ -723,7 +718,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 </Text>
                 <Text fontSize="15px" mt="30px">
                   Your smart contract can know this by asking TCD contract via
-                  function queryPrice().
+                  function <HighlightSpan>queryPrice()</HighlightSpan>.
                 </Text>
                 <Flex mt="30px">
                   <Snippet code={getQueryFeeCode(tcdAddress)} />
