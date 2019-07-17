@@ -105,7 +105,7 @@ export default ({
         lines={[
           'Parameters:',
           'Decentralized Configurations for Smart Contract',
-          'Community aggrees on how smart contracts work though parameters.',
+          'Community agrees on how smart contracts work though parameters.',
           'Token holders can propose a change, which initiate a community-wide vote.',
         ]}
       />

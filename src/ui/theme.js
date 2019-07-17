@@ -128,7 +128,7 @@ export default {
       padding: '0.9em 3em',
       cursor: 'pointer',
       color: '#5269ff',
-      backgroundColor: '#e1e5ff',
+      backgroundColor: '#eff1ff',
       border: `solid 0px ${colors.text.grey}`,
       transition: 'all 250ms',
       borderRadius: '20px',

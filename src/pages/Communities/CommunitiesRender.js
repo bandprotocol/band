@@ -43,6 +43,11 @@ const WhiteButton = styled(Button).attrs({
   border-radius: 24px;
   cursor: pointer;
   padding: 0;
+  transition: all 250ms;
+
+  &:hover {
+    background: #e5f3ff;
+  }
 `
 
 const WhiteOutlineButton = styled(Button).attrs({
@@ -59,6 +64,11 @@ const WhiteOutlineButton = styled(Button).attrs({
   border-radius: 24px;
   cursor: pointer;
   padding: 0 20px;
+  transition: all 250ms;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 `
 
 const CountBadge = styled(Flex).attrs({
@@ -111,8 +121,8 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
           dataset tokens to incentivize providers.
         </Text>
         <Box mt={3}>
-          <AbsoluteLink href="https://developer.bandprotocol.com/">
-            <WhiteButton>Developer Reference</WhiteButton>
+          <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
+            <WhiteButton>Whitepaper v3.0</WhiteButton>
           </AbsoluteLink>
           <AbsoluteLink href="https://bandprotocol.com">
             <WhiteOutlineButton>
