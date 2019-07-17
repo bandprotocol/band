@@ -24,7 +24,6 @@ const Nav = styled.nav`
   width: 100vw;
   align-items: center;
   box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
-  position: absolute;
   top: 0px;
   transform: translateY(${p => (p.showNav ? '0' : '-60')}px);
   z-index: 5;
@@ -33,8 +32,16 @@ const Nav = styled.nav`
 
   ${p =>
     p.isDashboard
-      ? 'background: unset; box-shadow: 0 0 0 0 #000000;'
-      : 'background: #fff; box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);'}
+      ? `
+      background: unset; 
+      box-shadow: 0 0 0 0 #000000;
+      position: relative;
+    `
+      : `
+      background: #ffffff;
+      box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.07);
+      position: absolute;
+    `}
 
   ${media.mobile} {
     height: 60px;

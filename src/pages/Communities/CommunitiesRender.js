@@ -10,6 +10,7 @@ import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
   padding-top: 60px;
+  margin-top: -60px;
   height: 264px;
   width: 100%;
   background: linear-gradient(90deg, #6483e6 0%,#505fc9 99%);
@@ -32,7 +33,7 @@ const AbsoluteLink = styled.a.attrs(props => ({
 const WhiteButton = styled(Button).attrs({
   fontSize: '16px',
   fontWeight: '500',
-  color: '#5269ff',
+  color: '#5775e6',
   bg: '#fff',
   width: '226px',
 })`

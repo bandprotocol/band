@@ -19,8 +19,8 @@ import ProposalActiveSrc from 'images/voteActive.svg'
 
 const Left = styled.div`
   height: auto;
-  margin-top: 60px;
-  min-height: calc(100vh - 60px);
+  padding: 60px 0;
+  min-height: calc(100vh);
   z-index: 4;
   width: 220px;
   flex: 0 0 220px;
