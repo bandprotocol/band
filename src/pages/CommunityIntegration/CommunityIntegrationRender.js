@@ -669,14 +669,15 @@ export default class CommunityIntegrationRender extends React.Component {
                   />
                   <Flex style={{ margin: 'auto', zIndex: 1 }}>
                     <Text color="white" fontSize="18px">
-                      We encourage you to see it in action, so feel free to try
-                      these codes on {` `}
+                      It's that simple to use Band Protocol! Try the code now on
+                      {` `}
                       <AbsoluteLink
                         style={{ color: 'white' }}
                         href="https://remix.ethereum.org"
                       >
                         https://remix.ethereum.org
-                      </AbsoluteLink>
+                      </AbsoluteLink>{' '}
+                      (Kovan testnet).
                     </Text>
                   </Flex>
                 </Flex>
