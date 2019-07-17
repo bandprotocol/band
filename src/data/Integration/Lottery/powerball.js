@@ -12,7 +12,7 @@ export default {
   example: `Say you have a simple Power ball rewarding contract. Participant can pay 1 finney to submit their guess to the contract before 04/20/2019. Participant can claim reward (all ETH in the contract) if they submitted the right guess. 👇👇👇`,
   contractName: 'PowerBallContract',
   dataFormat: {
-    description: `Each of the first 6 bytes of the output contains a number of a ball. The first 5 bytes are for the white balls, while the 6th byte is the number of the power ball. The 7th byte is the power play multiplier.`,
+    description: `Each of the first 6 bytes of the output contains a number of a ball. The first 5 bytes are for the white balls, while the 6th byte is the number of the power ball.`,
   },
   keyFormat: {
     crypto: {

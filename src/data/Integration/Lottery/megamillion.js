@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate lottery data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
+    `Pick the query key for data lookup. For instance, key •MMN/20190713 for Mega Millions result for July 13, 2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of the Mega Millions rewarding contract. We mock the result of Mega Millions to bytes6(0) at first. We are going to replace the result by getting it from the Lottery community later.`,
@@ -12,7 +12,7 @@ export default {
   example: `Say you have a simple Mega Millions rewarding contract. Participant can pay 1 finney to submit his/her guess to the contract before 04/20/2019. Participant can claim reward (all ETH in the contract) if he/she has submitted the right guess. 👇👇👇`,
   contractName: 'MegaMillionContract',
   dataFormat: {
-    description: `The return value from community's contract always bytes32. For ... TODO`,
+    description: `Each of the first 6 bytes of the output contains a number of a ball. The first 5 bytes are for the white balls, while the 6th byte is the number of the mega ball.`,
   },
   keyFormat: {
     crypto: {
