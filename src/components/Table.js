@@ -8,6 +8,7 @@ const THead = styled(Flex).attrs(p => ({
 }))`
   background: #eef3ff;
   height: 36px;
+  border: 1px solid rgb(231, 236, 255);
 `
 
 const TBody = styled(Box).attrs(p => ({

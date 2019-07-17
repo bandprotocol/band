@@ -44,7 +44,7 @@ export const H2 = styled(H1).attrs({
 `
 
 export const H3 = styled(H2).attrs({
-  fontSize: 20,
+  fontSize: 18,
 })``
 
 export const H4 = styled(H3).attrs({

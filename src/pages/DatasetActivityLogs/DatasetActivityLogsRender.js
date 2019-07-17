@@ -81,7 +81,7 @@ const SearchBoxInput = styled.input`
   border: solid 1px #e7ecff;
   padding: 0 2.8em 0 1.4em;
   width: 400px;
-  line-height: 32px;
+  line-height: 30px;
   font-size: 14px;
 `
 
@@ -107,7 +107,7 @@ const FilterButton = styled(Button).attrs({
   font-size: 14px;
   font-weight: 700;
   padding: 0 20px;
-  line-height: 36px;
+  line-height: 32px;
 `
 
 const Report = ({
@@ -263,7 +263,6 @@ export default props => (
         justifyContent="space-between"
         pl="52px"
         pr="30px"
-        style={{ height: '60px' }}
       >
         <Flex alignItems="center">
           <SearchBox
@@ -347,7 +346,7 @@ export default props => (
       boxShadow="0 2px 9px 4px rgba(0, 0, 0, 0.04)"
     >
       <Flex pb={2} alignItems="center">
-        <Text fontWeight="900" fontSize="20px">
+        <Text fontWeight="900" fontSize="18px" fontFamily="head">
           Activity Logs
         </Text>
         <Box flex={1} />

@@ -9,10 +9,13 @@ import { getParameterDetail } from 'utils/helper'
 const CustomButton = styled(Button).attrs({
   variant: 'gradientBlue',
 })`
-  cursor: pointer;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
-  padding: 9px 17px;
+  display: inline-block;
+  height: 34px;
+  padding: 0 18px 2px;
+  align-self: flex-end;
+  margin-bottom: 2px;
 `
 
 export default ({ params, communityAddress }) => (
@@ -43,16 +46,14 @@ export default ({ params, communityAddress }) => (
               justifyContent="center"
               alignItems="center"
             >
-              <Image src={EditPropose} />
-              <Text ml="10px" fontSize="16px" font-weight="500">
-                Propose Change
-              </Text>
+              <Image src={EditPropose} height="18px" mr={2} />
+              Propose Change
             </Flex>
           </NavLink>
         </CustomButton>
       </Flex>
     </Flex>
-    <Flex flexWrap="wrap" mt="28px">
+    <Flex flexWrap="wrap" mt="12px">
       {params.map(param => (
         <ParameterCard
           {...param}
@@ -62,6 +63,7 @@ export default ({ params, communityAddress }) => (
           padding="17px 23px 19px 19px"
           margin="0px 20px 17px 0px"
           width="346px"
+          whiteCardStyle={{ maxWidth: 'calc(33.33% - 20px)' }}
         />
       ))}
     </Flex>

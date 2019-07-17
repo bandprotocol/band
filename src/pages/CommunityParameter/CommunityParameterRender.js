@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Box, Button, Image, H2, H4, H5 } from 'ui/common'
+import { Flex, Text, Box, Button, Image, H2, H3, H5 } from 'ui/common'
 import colors from 'ui/colors'
 import PageStructure from 'components/DataSetPageStructure'
 import Select from 'react-select'
@@ -9,14 +9,15 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import ParameterList from 'components/ParameterList'
 import EditPropose from 'images/edit-proposal.svg'
 import GovernanceHeader from 'images/govenance-header.svg'
+import DataHeader from 'components/DataHeader'
 
 const selectStyles = {
   control: (styles, { menuIsOpen }) => ({
     ...styles,
     border: menuIsOpen ? '1px solid #5269ff' : '1px solid #fff',
     width: '260px',
-    minHeight: '35px',
-    borderRadius: '17.5px',
+    minHeight: '32px',
+    borderRadius: '16px',
     '&:hover': {
       borderColor: '#5269ff',
     },
@@ -61,21 +62,25 @@ const selectStyles = {
 const ProposeButton = styled(Button).attrs({
   variant: 'gradientBlue',
 })`
-  padding: 0;
-  width: 210px;
-  height: 40px;
-  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-block;
+  height: 34px;
+  padding: 0 18px 2px;
+  align-self: flex-end;
+  margin-bottom: 2px;
 `
 
 const SubmitButton = styled(Button).attrs({
   variant: 'gradientBlue',
 })`
-  padding: 0;
-  width: 100px;
-  height: 40px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-block;
+  height: 34px;
+  padding: 0 12px 2px;
+  align-self: flex-end;
+  margin-bottom: 2px;
 `
 
 export default ({
@@ -96,30 +101,14 @@ export default ({
     communityAddress={tokenAddress}
     breadcrumb={{ path: 'parameters', label: 'Parameters' }}
     renderHeader={() => (
-      <Flex
-        flexDirection="column"
-        pl="52px"
-        width="100%"
-        style={{ height: '100%' }}
-        justifyContent="center"
-      >
-        <H2 width="50%" style={{ lineHeight: '38px' }}>
-          Parameter
-        </H2>
-        {/* TODO */}
-        <Text
-          mt="13px"
-          fontSize="18px"
-          color="white"
-          fontWeight="500"
-          width="60%"
-          style={{ lineHeight: '28px' }}
-        >
-          Spicy jalapeno bacon ipsum dolor amet meatball t-bone brisket, shank
-          ground round tail strip steak tongue filet mignon hamburger. Cow
-          drumstick ham pork turkey. wine pork loin shank kielbasa.
-        </Text>
-      </Flex>
+      <DataHeader
+        lines={[
+          'Parameters:',
+          'Decentralized Configurations for Smart Contract',
+          'Community aggrees on how smart contracts work though parameters.',
+          'Token holders can propose a change, which initiate a community-wide vote.',
+        ]}
+      />
     )}
     renderSubheader={() => (
       <Flex
@@ -129,10 +118,9 @@ export default ({
         width="100%"
         pl="52px"
         pr="20px"
-        style={{ height: '60px' }}
       >
-        <H5 mr={2} color="#4a4a4a" fontWeight="500">
-          Parameter Group:
+        <H5 mr="12px" color="#4a4a4a" fontWeight="600" pb={1}>
+          Parameter Group
         </H5>
         <Select
           value={currentPrefix}
@@ -146,7 +134,6 @@ export default ({
           {isEdit ? (
             <Flex>
               <Box
-                fontSize="16px"
                 color="#4a4a4a"
                 px={3}
                 mr={3}
@@ -157,6 +144,10 @@ export default ({
                   lineHeight: 1.45,
                   fontWeight: 500,
                   cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  fontFamily: 'bio-sans',
+                  paddingBottom: '2px',
                 }}
               >
                 Cancel
@@ -169,11 +160,10 @@ export default ({
                 flexDirection="row"
                 justifyContent="center"
                 alignItems="center"
+                style={{ fontFamily: 'bio-sans' }}
               >
-                <Image src={EditPropose} />
-                <Text ml="20px" fontSize="16px" font-weight="500">
-                  Propose Change
-                </Text>
+                <Image src={EditPropose} height="18px" mr={2} />
+                Propose Change
               </Flex>
             </ProposeButton>
           )}
@@ -202,9 +192,7 @@ export default ({
       ) : (
         <React.Fragment>
           <Flex flexDirection="column" px={1} pb="20px">
-            <Text fontSize="20px" fontWeight="600">
-              {currentPrefix.label}
-            </Text>
+            <H3 color="#4a4a4a">{currentPrefix.label}</H3>
             <Text
               fontSize="15px"
               fontWeight="500"
@@ -218,7 +206,7 @@ export default ({
             prefix={currentPrefix}
             isEdit={isEdit}
             handleParameterChange={handleParameterChange}
-            whiteCardStyle={{ width: '346px' }}
+            whiteCardStyle={{ width: '346px', maxWidth: 'calc(33.33% - 20px)' }}
           />
         </React.Fragment>
       )}

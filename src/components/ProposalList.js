@@ -19,7 +19,13 @@ const ProposalList = ({
   <Flex flexDirection="column" my={3} width="100%">
     <Flex flexDirection="row">
       <Flex justifyContent="center" alignItems="center">
-        <Text mr={3} fontSize="18px" fontWeight="900" color="#393939">
+        <Text
+          mr={3}
+          fontFamily="head"
+          fontSize="18px"
+          fontWeight="900"
+          color="#393939"
+        >
           {`${title} (${proposals ? proposals.length : 0})`}
         </Text>
         {description && (
@@ -45,10 +51,16 @@ const ProposalList = ({
       isActive ? (
         <Flex flexDirection="column" mt="50px" alignItems="center">
           <Image src={MockProposal} />
-          <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-            No proposal right now!
+          <Text
+            fontFamily="head"
+            fontSize="16=7px"
+            fontWeight="600"
+            pt={3}
+            pb={2}
+          >
+            No active proposal!
           </Text>
-          <Text fontSize={1} py={1}>
+          <Text fontSize="15px" py={2}>
             Go to
             <Link
               dark="true"

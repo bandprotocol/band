@@ -1,10 +1,11 @@
 // TODO
 const allParametersDescription = {
   bonding: {
-    info: 'Say anything about bonding ',
+    info: 'This parameter group dictates how the token bonding curve bahaves',
   },
   params: {
-    info: 'Say anything about params ',
+    info:
+      'This parameter group dictates how parameter proposals are voted by the community',
   },
   crypto: {
     info: 'ESPN',

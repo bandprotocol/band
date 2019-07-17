@@ -26,7 +26,7 @@ const Left = styled.div`
   flex: 0 0 220px;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(to right, #6683e5, #6d82ff);
+  background-image: linear-gradient(to right, #547bff, #5f6aec);
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
 `
 
@@ -91,6 +91,7 @@ export default ({
               backgroundImage: `url(${src || MockProfileSrc})`,
               backgroundSize: '85%',
               backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
             }}
           />
         </Flex>

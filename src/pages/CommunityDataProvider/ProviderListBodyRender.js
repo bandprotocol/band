@@ -15,8 +15,7 @@ const Tab = styled(Flex).attrs(props => ({
 `
 
 const DWButton = styled(Button).attrs({
-  fontSize: '14px',
-  p: '10px 15px 8px 7px',
+  p: '0 15px 2px',
   flex: '0 0 auto',
 })`
   border-radius: 17.5px;
@@ -61,7 +60,7 @@ const ProvidersRow = ({
       minWidth: 0,
       overflow: 'hidden',
       height: '60px',
-      borderLeft: status === 'ACTIVE' ? '8px solid #718bff' : 'none',
+      borderLeft: status === 'ACTIVE' ? '6px solid #718bff' : 'none',
       backgroundColor: status === 'ACTIVE' ? '#fbfcff' : '#fff',
       borderBottom: '1px solid rgba(227, 227, 227, 0.5)',
     }}
@@ -198,10 +197,10 @@ const ProvidersRow = ({
         >
           {user && (
             <Box flex="0 0 auto">
-              <Image mr={1} src={ArrowDown} width="14px" height="14px" />
+              <Image mr={1} src={ArrowDown} width="12px" height="12px" />
             </Box>
           )}
-          <Text fontSize="13px" fontWeight="700">
+          <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
             Deposit
           </Text>
         </Flex>
@@ -233,10 +232,10 @@ const ProvidersRow = ({
         >
           {user && (
             <Box flex="0 0 auto">
-              <Image mr={1} src={ArrowUp} width="14px" height="14px" />
+              <Image mr={1} src={ArrowUp} width="12px" height="12px" />
             </Box>
           )}
-          <Text fontSize="13px" fontWeight="700">
+          <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
             Withdraw
           </Text>
         </Flex>

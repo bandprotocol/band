@@ -172,7 +172,7 @@ export default props => {
           <H5 mt="12px" color="#393939">
             PRICE MOVEMENT
           </H5>
-          <Box style={{ height: 220 }}>
+          <Box style={{ height: 215 }}>
             <AutoSizer>
               {({ height, width }) => (
                 <Box style={{ height, width }}>
@@ -187,7 +187,12 @@ export default props => {
           </Box>
           <Flex mb={1}>
             <Box flex={1} pl={2}>
-              <Text py={2} fontSize="14px" fontWeight="900" color="#777777">
+              <Text
+                fontSize="14px"
+                fontFamily="head"
+                fontWeight="600"
+                color="#777777"
+              >
                 Current Price
               </Text>
               <Flex flexDirection="row" mt="8px" alignItems="flex-end">
@@ -202,7 +207,7 @@ export default props => {
                   {BN.parse(price).pretty()}
                 </Text>
                 <Text
-                  fontSize="25px"
+                  fontSize="22px"
                   letterSpacing="0.1px"
                   fontWeight="500"
                   color="#4a4a4a"
@@ -211,7 +216,7 @@ export default props => {
                   BAND
                 </Text>
                 <Text
-                  ml={2}
+                  ml={1}
                   fontSize="16px"
                   color="#4a4a4a"
                   fontWeight="500"
@@ -223,28 +228,28 @@ export default props => {
               <Flex
                 flexDirection="row"
                 alignItems="flex-end"
-                mt={3}
+                mt={2}
                 fontFamily="Open Sans"
               >
-                <Text fontSize="18px" fontWeight="500" color="#757575">
+                <Text fontSize="17px" fontWeight="500" color="#757575">
                   {BN.parse(price)
                     .bandToUSD(bandPrice)
                     .pretty()}{' '}
                   USD
                 </Text>
-                <Text ml={2} fontSize="13px" color="#757575" fontWeight="500">
+                <Text ml={1} fontSize="13px" color="#757575" fontWeight="500">
                   / {symbol}
                 </Text>
               </Flex>
             </Box>
             <Flex flexDirection="column" justifyContent="center" mr={2}>
               <Button onClick={showBuy} variant="gradientBlue">
-                <Text fontSize="16px" fontWeight="900">
+                <Text fontSize="13px" fontWeight="700">
                   BUY
                 </Text>
               </Button>
               <Button mt={2} onClick={showSell} variant="grey">
-                <Text fontSize="16px" fontWeight="900">
+                <Text fontSize="13px" fontWeight="700">
                   SELL
                 </Text>
               </Button>

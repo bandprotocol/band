@@ -13,20 +13,35 @@ const Header = styled(Flex).attrs({
   bg: '#e3ecff',
 })`
   color: ${colors.white};
-  height: ${p => (p.noSubheader ? '185px' : '245px')};
+  height: ${p => (p.noSubheader ? '175px' : '220px')};
   border-radius: 10px;
 `
 
 const HeaderImage = styled(Flex).attrs({
   width: '100%',
-  alignItems: 'center',
+  flexDirection: 'column',
 })`
-  height: 185px;
+  height: 220px;
   background-image: url(${p => p.headerImage});
-  background-size: cover;
-  background-position: center;
+  background-size: 1400px;
+  background-position: right 0;
   background-repeat: no-repeat;
-  ${p => p.noSubheader && 'border-radius: 10px;'}
+  border-radius: 10px;
+`
+
+const HeaderImageBody = styled(Flex).attrs({
+  width: '100%',
+  alignItems: 'center',
+  flex: 1,
+})``
+const HeaderImageSubHeader = styled(Flex).attrs({
+  width: '100%',
+  alignItems: 'center',
+  flex: '0 0 46px',
+})`
+  background: rgba(211, 225, 255, 0.9);
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
 `
 
 export default ({
@@ -74,9 +89,11 @@ export default ({
       )}
       <Header style={headerStyle} noSubheader={noSubheader}>
         <HeaderImage noSubheader={noSubheader} headerImage={headerImage}>
-          {renderHeader()}
+          <HeaderImageBody>{renderHeader()}</HeaderImageBody>
+          {!noSubheader && (
+            <HeaderImageSubHeader>{renderSubheader()}</HeaderImageSubHeader>
+          )}
         </HeaderImage>
-        {renderSubheader()}
       </Header>
       {children}
     </PageContainer>

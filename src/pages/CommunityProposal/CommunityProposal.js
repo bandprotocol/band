@@ -5,6 +5,7 @@ import ProposalList from 'components/ProposalList'
 import PageStructure from 'components/DataSetPageStructure'
 import { Flex, Text, H2 } from 'ui/common'
 import ProposalHeader from 'images/proposal-header.svg'
+import DataHeader from 'components/DataHeader'
 
 import { loadProposals, loadParameters } from 'actions'
 
@@ -28,30 +29,14 @@ class CommunityProposal extends React.Component {
         communityAddress={tokenAddress}
         breadcrumb={{ path: 'proposal', label: 'Proposal' }}
         renderHeader={() => (
-          <Flex
-            flexDirection="column"
-            pl="52px"
-            width="100%"
-            style={{ height: '100%' }}
-            justifyContent="center"
-          >
-            <H2 width="50%" style={{ lineHeight: '38px' }}>
-              Proposal
-            </H2>
-            {/* TODO: */}
-            <Text
-              mt="13px"
-              fontSize="18px"
-              color="white"
-              fontWeight="500"
-              width="60%"
-              style={{ lineHeight: '28px' }}
-            >
-              Spicy jalapeno bacon ipsum dolor amet meatball t-bone brisket,
-              shank ground round tail strip steak tongue filet mignon hamburger.
-              Cow drumstick ham pork turkey. wine pork loin shank kielbasa.
-            </Text>
-          </Flex>
+          <DataHeader
+            lines={[
+              'Parameter Change Proposals:',
+              'Somebody Wants Smart Contract to Behave Differently',
+              'Community agrees on how smart contracts work though parameters.',
+              'Any token holder can vote to agree or disagree with a change.',
+            ]}
+          />
         )}
         noSubheader
         headerImage={ProposalHeader}
@@ -59,7 +44,7 @@ class CommunityProposal extends React.Component {
       >
         <Flex pb="50px" style={{ borderBottom: '1px solid #cbcfe3' }}>
           <ProposalList
-            title={'OPEN PROPOSALS'}
+            title={'Open Proposals'}
             description={
               'Recently proposed change in governance parameter. Please vote before each proposal expires.'
             }
@@ -69,7 +54,7 @@ class CommunityProposal extends React.Component {
         </Flex>
         <Flex mt="25px">
           <ProposalList
-            title={'PAST PROPOSALS'}
+            title={'Past Proposals'}
             isActive={false}
             tokenAddress={tokenAddress}
           />

@@ -13,7 +13,7 @@ const WhiteCard = styled(Card).attrs({
   width: ${p => p.width || '365px'};
   margin: ${p => p.margin || '0px 24px 16px 0px'};
   height: 200px;
-  border-radius: 10px;
+  border-radius: 6px;
 `
 
 export default ({

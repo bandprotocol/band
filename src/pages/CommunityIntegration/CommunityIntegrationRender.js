@@ -18,12 +18,23 @@ const TabButton = styled(Flex).attrs({
   justifyContent: 'center',
   alignItems: 'center',
 })`
+  font-family: bio-sans;
   background-color: transparent;
-  color: ${p => (p.active ? '#5269ff' : '#4a4a4a')};
   cursor: pointer;
-  border-bottom: ${p => (p.active ? '1px solid #5269ff' : '0')};
   font-weight: 500;
-  height: 60px;
+  height: 46px;
+  color: #333;
+
+  ${p =>
+    p.active
+      ? `
+    font-weight: 600;
+    background: rgba(36, 77, 255, 0.05);
+    border-bottom: 2px solid #5269ff;
+  `
+      : `
+    font-weight: 400;
+  `}
 `
 
 const PointerLeftPart = styled(Flex)`
@@ -212,7 +223,7 @@ export default class CommunityIntegrationRender extends React.Component {
             alignItems="center"
             width="100%"
             style={{
-              height: '60px',
+              height: '46px',
             }}
           >
             <TabButton

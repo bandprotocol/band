@@ -15,18 +15,18 @@ export default class DetailHistory extends React.Component {
     return (
       <Flex
         onClick={() => this.setState({ selectedTab: tab })}
-        mr={3}
+        mr={2}
         px={3}
         alignItems="center"
         style={{
           cursor: 'pointer',
           background: selectedTab === tab ? '#f6f9ff' : 'transparent',
           borderRadius: 20,
-          height: 36,
+          height: 32,
         }}
       >
         <Text
-          fontSize="15px"
+          fontSize="14px"
           color={selectedTab === tab ? colors.blue.normal : undefined}
           fontWeight={selectedTab === tab ? '600' : undefined}
         >

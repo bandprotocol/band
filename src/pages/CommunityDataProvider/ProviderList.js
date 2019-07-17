@@ -13,9 +13,13 @@ import { dispatchAsync } from 'utils/reduxSaga'
 const CustomButton = styled(Button).attrs({
   variant: 'gradientBlue',
 })`
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
-  padding: 9px 17px;
+  display: inline-block;
+  height: 34px;
+  padding: 0 18px 4px;
+  align-self: flex-end;
+  margin-bottom: 2px;
 `
 
 class ProviderList extends React.Component {
