@@ -97,7 +97,7 @@ export default class DataPoint extends React.Component {
             <Text
               fontFamily="code"
               fontSize={14}
-              fontWeight={900}
+              fontWeight={600}
               color="#506fff"
             >
               <AutoDate>{updatedAt}</AutoDate>

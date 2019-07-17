@@ -19,16 +19,14 @@ import ProposalActiveSrc from 'images/voteActive.svg'
 
 const Left = styled.div`
   height: auto;
-  padding: 60px 0px;
+  margin-top: 60px;
   min-height: calc(100vh - 60px);
-  // position: sticky;
-  // top: 60px;
   z-index: 4;
   width: 220px;
   flex: 0 0 220px;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(to right, #5269ff, #4890ff);
+  background-image: linear-gradient(to right, #6683e5, #6d82ff);
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
 `
 
@@ -91,7 +89,7 @@ export default ({
               width: '100%',
               height: '100%',
               backgroundImage: `url(${src || MockProfileSrc})`,
-              backgroundSize: 'contain',
+              backgroundSize: '85%',
               backgroundPosition: 'center',
             }}
           />

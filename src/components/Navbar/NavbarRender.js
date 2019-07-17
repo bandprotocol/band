@@ -49,13 +49,13 @@ const TextClickable = styled(Text)`
 const SignIn = styled(Text).attrs({
   fontSize: '16px',
   fontWeight: '900',
-  color: p => (p.isDashboard ? '#fff' : colors.blue.dark),
   mr: '40px',
 })`
   cursor: pointer;
+  color: ${p => (p.isDashboard ? '#ffffff' : '#2972fb')};
 
   &:hover {
-    color: #322185;
+    color: ${p => (p.isDashboard ? '#a6b2ff' : '#4d5cbd')};
   }
 `
 

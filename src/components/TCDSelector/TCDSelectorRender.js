@@ -239,9 +239,9 @@ export default class TCDSelector extends React.Component {
         flexDirection="column"
         mx="11px"
         style={{
-          boxShadow: 'inset 0 1px 11px 0 rgba(0, 0, 0, 0.03)',
+          boxShadow: 'rgba(0, 0, 0, 0.05) 0px 1px 20px 0px inset',
           borderRadius: '28px',
-          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          backgroundColor: 'rgba(64, 70, 180, 0.3)',
         }}
       >
         <ClickOutSide
