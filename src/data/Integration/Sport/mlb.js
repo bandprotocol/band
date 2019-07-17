@@ -183,7 +183,7 @@ export default {
   },
   solidity: [
     `
-    pragma solidity 0.5.9;
+pragma solidity 0.5.9;
 
 
 
@@ -194,130 +194,130 @@ export default {
 
 
 
-    contract SportBettingContract {
-      address payable public bettor_1;        // first bettor
-      address payable public bettor_2;        // second bettor
+contract SportBettingContract {
+  address payable public bettor_1;        // first bettor
+  address payable public bettor_2;        // second bettor
 
-      constructor(
-          address payable _bettor_1,
-          address payable _bettor_2
-      ) public payable {              // Contract creator can deposit some amount of ETH as reward
-          bettor_1 = _bettor_1;       // initiate first bettor
-          bettor_2 = _bettor_2;       // initiate second bettor
-      }
+  constructor(
+    address payable _bettor_1,
+    address payable _bettor_2
+  ) public payable {              // Contract creator can deposit some amount of ETH as reward
+    bettor_1 = _bettor_1;       // initiate first bettor
+    bettor_2 = _bettor_2;       // initiate second bettor
+  }
 
-      function claimReward() public payable {
-
-
+  function claimReward() public payable {
 
 
-          // Mock ARI's scores
-          uint8 ariScore = 0;
-          // Mock BAL's scores
-          uint8 balScore = 0;
-          // if the scores are equal then nobody can get ETH in this contract
-          require(ariScore != balScore);
-          if (ariScore > balScore) {
-              // if ARI win then give all ETH in this contract to the first bettor
-              bettor_1.transfer(address(this).balance);
-          } else {
-              // if BAL win then give all ETH in this contract to the second bettor
-              bettor_2.transfer(address(this).balance);
-          }
-      }
+
+
+    // Mock ARI's scores
+    uint8 ariScore = 0;
+    // Mock BAL's scores
+    uint8 balScore = 0;
+    // if the scores are equal then nobody can get ETH in this contract
+    require(ariScore != balScore);
+    if (ariScore > balScore) {
+      // if ARI win then give all ETH in this contract to the first bettor
+      bettor_1.transfer(address(this).balance);
+    } else {
+      // if BAL win then give all ETH in this contract to the second bettor
+      bettor_2.transfer(address(this).balance);
     }
+  }
+}
     `,
     `
-    pragma solidity 0.5.9;
+pragma solidity 0.5.9;
 
-    interface QueryInterface {
-      enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+interface QueryInterface {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
 
-      function query(bytes calldata input)
-        external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+  function query(bytes calldata input)
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
 
-      function queryPrice() external view returns (uint256);
+  function queryPrice() external view returns (uint256);
+}
+
+contract SportBettingContract {
+  address payable public bettor_1;        // first bettor
+  address payable public bettor_2;        // second bettor
+
+  constructor(
+    address payable _bettor_1,
+    address payable _bettor_2
+  ) public payable {              // Contract creator can deposit some amount of ETH as reward
+    bettor_1 = _bettor_1;       // initiate first bettor
+    bettor_2 = _bettor_2;       // initiate second bettor
+  }
+
+  function claimReward() public payable {
+
+
+
+
+    // Mock ARI's scores
+    uint8 ariScore = 0;
+    // Mock BAL's scores
+    uint8 balScore = 0;
+    // if the scores are equal then nobody can get ETH in this contract
+    require(ariScore != balScore);
+    if (ariScore > balScore) {
+      // if ARI win then give all ETH in this contract to the first bettor
+      bettor_1.transfer(address(this).balance);
+    } else {
+      // if BAL win then give all ETH in this contract to the second bettor
+      bettor_2.transfer(address(this).balance);
     }
-
-    contract SportBettingContract {
-      address payable public bettor_1;        // first bettor
-      address payable public bettor_2;        // second bettor
-
-      constructor(
-          address payable _bettor_1,
-          address payable _bettor_2
-      ) public payable {              // Contract creator can deposit some amount of ETH as reward
-          bettor_1 = _bettor_1;       // initiate first bettor
-          bettor_2 = _bettor_2;       // initiate second bettor
-      }
-
-      function claimReward() public payable {
-
-
-
-
-          // Mock ARI's scores
-          uint8 ariScore = 0;
-          // Mock BAL's scores
-          uint8 balScore = 0;
-          // if the scores are equal then nobody can get ETH in this contract
-          require(ariScore != balScore);
-          if (ariScore > balScore) {
-              // if ARI win then give all ETH in this contract to the first bettor
-              bettor_1.transfer(address(this).balance);
-          } else {
-              // if BAL win then give all ETH in this contract to the second bettor
-              bettor_2.transfer(address(this).balance);
-          }
-      }
-    }
+  }
+}
     `,
     `
-    pragma solidity 0.5.9;
+pragma solidity 0.5.9;
 
-    interface QueryInterface {
-      enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+interface QueryInterface {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
 
-      function query(bytes calldata input)
-        external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
+  function query(bytes calldata input)
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
 
-      function queryPrice() external view returns (uint256);
+  function queryPrice() external view returns (uint256);
+}
+
+contract SportBettingContract {
+  address payable public bettor_1;        // first bettor
+  address payable public bettor_2;        // second bettor
+
+  constructor(
+    address payable _bettor_1,
+    address payable _bettor_2
+  ) public payable {              // Contract creator can deposit some amount of ETH as reward
+    bettor_1 = _bettor_1;       // initiate first bettor
+    bettor_2 = _bettor_2;       // initiate second bettor
+  }
+
+  function claimReward() public payable {
+    // Create a QueryInterface pointing to Sport community contract
+    QueryInterface q = QueryInterface(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
+    // Get the scores at date 2019 04 27
+    (bytes32 rawData,,QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("20190427/ARI-BAL");
+    // Query status should be OK to continue
+    require(status == QueryInterface.QueryStatus.OK);
+    // Get ARI's score from the first byte and then convert from byte to uint8
+    uint8 ariScore = uint8(rawData[0]);
+    // Get BAL's score from the second byte and then convert from byte to uint8
+    uint8 balScore = uint8(rawData[1]);
+    // if the scores are equal then nobody can get ETH in this contract
+    require(ariScore != balScore);
+    if (ariScore > balScore) {
+      // if ARI win then give all ETH in this contract to the first bettor
+      bettor_1.transfer(address(this).balance);
+    } else {
+      // if BAL win then give all ETH in this contract to the second bettor
+      bettor_2.transfer(address(this).balance);
     }
-
-    contract SportBettingContract {
-      address payable public bettor_1;        // first bettor
-      address payable public bettor_2;        // second bettor
-
-      constructor(
-          address payable _bettor_1,
-          address payable _bettor_2
-      ) public payable {              // Contract creator can deposit some amount of ETH as reward
-          bettor_1 = _bettor_1;       // initiate first bettor
-          bettor_2 = _bettor_2;       // initiate second bettor
-      }
-
-      function claimReward() public payable {
-          // Create a QueryInterface pointing to Sport community contract
-          QueryInterface q = QueryInterface(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
-          // Get the scores at date 2019 04 27
-          (bytes32 rawData,,QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("20190427/ARI-BAL");
-          // Query status should be OK to continue
-          require(status == QueryInterface.QueryStatus.OK);
-          // Get ARI's score from the first byte and then convert from byte to uint8
-          uint8 ariScore = uint8(rawData[0]);
-          // Get BAL's score from the second byte and then convert from byte to uint8
-          uint8 balScore = uint8(rawData[1]);
-          // if the scores are equal then nobody can get ETH in this contract
-          require(ariScore != balScore);
-          if (ariScore > balScore) {
-              // if ARI win then give all ETH in this contract to the first bettor
-              bettor_1.transfer(address(this).balance);
-          } else {
-              // if BAL win then give all ETH in this contract to the second bettor
-              bettor_2.transfer(address(this).balance);
-          }
-      }
-    }
+  }
+}
     `,
   ],
 }
