@@ -1,32 +1,32 @@
 export default {
   overview: [
     `You can integrate sport data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
+    `Pick the query key for data lookup. For instance, key •20190427/BAL-BUF for Baltimore Ravens vs Buffalo Bills at 27/04/2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of smart contract for sport betting. We set the scores of both teams to 0 (just mock scores). We will replace these mock scores by real scores from Sport community later.`,
     `Copy-paste •QueryInterface to the top of your smart contract. This interface acts as the gateway to access curated data available on Band Protocol securely. Notice that its query function takes •bytes and returns •bytes32 .`,
-    `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •20190427/LAC-GSW and the scores was encoded in first byte and second byte of the return value.`,
+    `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •20190427/BAL-BUF and the scores was encoded in first byte and second byte of the return value.`,
   ],
   label: 'sport',
-  example: `🏈 Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If LAC (a basketball team) win first bettor will receive all ETH in the contract. If GSW (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
+  example: `🏈 Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If BAL (an american football team) win first bettor will receive all ETH in the contract. If BUF (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
   contractName: 'SportBettingContract',
   dataFormat: {
     description: `Return value from community's contract always •bytes32 .　
       Sport Community will return score of home team and score of away team which are represented with first 2 bytes of the return value.
       For example
-        👉 You have called •q.query.value(q.queryPrice())("20190427/LAC-GSW") 　
+        👉 You have called •q.query.value(q.queryPrice())("20190427/BAL-BUF") 　
         👉 The return value is 0x1f3c000000000000000000000000000000000000000000000000000000000000 　
-        👉 So the score of LAC is 0x1f (base 16) which is equal to 31 (base 10) 　
-        👉 And the score of GSW is 0x3c (base 16) which is equal to 60 (base 10) 　
+        👉 So the score of BAL is 0x1f (base 16) which is equal to 31 (base 10) 　
+        👉 And the score of BUF is 0x3c (base 16) which is equal to 60 (base 10) 　
       `,
   },
   keyFormat: {
     nfl: {
       header: 'List of Available NFL Teams',
       description: `🇺🇸 🏈 NFL or National Football League dataset group has provided keys for query matches score.
-      Format of the key is composed of Date(year,month,day)/home-away . For example •20190120/LAC-NE which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
-      The return result from query is 32 bytes , so the score of LAC will be encoded in first byte and score of NE will be encoded in second byte .`,
+      Format of the key is composed of Date(year,month,day)/home-away . For example •20190120/BAL-BUF which mean the key for query score of Baltimore Ravens(home team) and Buffalo Bills(away team).
+      The return result from query is 32 bytes , so the score of BAL will be encoded in first byte and score of BUF will be encoded in second byte .`,
       keys: [
         [
           'ARI',
@@ -109,7 +109,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/en/e/e1/Kansas_City_Chiefs_logo.svg',
         ],
         [
-          'LAC',
+          'BAL',
           'Los Angeles Chargers',
           'https://upload.wikimedia.org/wikipedia/en/7/72/NFL_Chargers_logo.svg',
         ],
@@ -221,17 +221,17 @@ export default {
 
 
 
-          // Mock LAC's scores
-          uint8 lacScore = 0;
-          // Mock GSW's scores
-          uint8 gswScore = 0;
+          // Mock BAL's scores
+          uint8 balScore = 0;
+          // Mock BUF's scores
+          uint8 bufScore = 0;
           // if the scores are equal then nobody can get ETH in this contract
-          require(lacScore != gswScore);
-          if (lacScore > gswScore) {
-              // if LAC win then give all ETH in this contract to the first bettor
+          require(balScore != bufScore);
+          if (balScore > bufScore) {
+              // if BAL win then give all ETH in this contract to the first bettor
               bettor_1.transfer(address(this).balance);
           } else {
-              // if GSW win then give all ETH in this contract to the second bettor
+              // if BUF win then give all ETH in this contract to the second bettor
               bettor_2.transfer(address(this).balance);
           }
       }
@@ -266,17 +266,17 @@ export default {
 
 
 
-          // Mock LAC's scores
-          uint8 lacScore = 0;
-          // Mock GSW's scores
-          uint8 gswScore = 0;
+          // Mock BAL's scores
+          uint8 balScore = 0;
+          // Mock BUF's scores
+          uint8 bufScore = 0;
           // if the scores are equal then nobody can get ETH in this contract
-          require(lacScore != gswScore);
-          if (lacScore > gswScore) {
-              // if LAC win then give all ETH in this contract to the first bettor
+          require(balScore != bufScore);
+          if (balScore > bufScore) {
+              // if BAL win then give all ETH in this contract to the first bettor
               bettor_1.transfer(address(this).balance);
           } else {
-              // if GSW win then give all ETH in this contract to the second bettor
+              // if BUF win then give all ETH in this contract to the second bettor
               bettor_2.transfer(address(this).balance);
           }
       }
@@ -310,18 +310,18 @@ export default {
           // Create a QueryInterface pointing to Sport community contract
           QueryInterface q = QueryInterface(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
           // Get the scores at date 2019 04 27
-          bytes32 rawData = q.query.value(q.queryPrice())("20190427/LAC-GSW");
-          // Get LAC's score from the first byte and then convert from byte to uint8
-          uint8 lacScore = uint8(rawData[0]);
-          // Get GSW's score from the second byte and then convert from byte to uint8
-          uint8 gswScore = uint8(rawData[1]);
+          bytes32 rawData = q.query.value(q.queryPrice())("20190427/BAL-BUF");
+          // Get BAL's score from the first byte and then convert from byte to uint8
+          uint8 balScore = uint8(rawData[0]);
+          // Get BUF's score from the second byte and then convert from byte to uint8
+          uint8 bufScore = uint8(rawData[1]);
           // if the scores are equal then nobody can get ETH in this contract
-          require(lacScore != gswScore);
-          if (lacScore > gswScore) {
-              // if LAC win then give all ETH in this contract to the first bettor
+          require(balScore != bufScore);
+          if (balScore > bufScore) {
+              // if BAL win then give all ETH in this contract to the first bettor
               bettor_1.transfer(address(this).balance);
           } else {
-              // if GSW win then give all ETH in this contract to the second bettor
+              // if BUF win then give all ETH in this contract to the second bettor
               bettor_2.transfer(address(this).balance);
           }
       }
