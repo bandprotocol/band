@@ -370,7 +370,6 @@ export default class CommunityIntegrationRender extends React.Component {
                 mx="80px"
                 style={{
                   borderTop: '1px solid #e7ecff',
-                  borderBottom: '1px solid #e7ecff',
                 }}
               >
                 <Flex flex={1} flexDirection="column">
@@ -422,11 +421,11 @@ export default class CommunityIntegrationRender extends React.Component {
                     ]}
                   />
                 </Flex>
-                <Flex flex={1} mb="30px" justifyContent="flex-end">
+                <Flex flex={1} justifyContent="flex-end">
                   <Image src={Overview3} height="300px" />
                 </Flex>
               </Flex>
-              <Flex
+              {/* <Flex
                 mt="60px"
                 mx="80px"
                 bg="#6b8bf5"
@@ -461,7 +460,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     </AbsoluteLink>
                   </Text>
                 </Flex>
-              </Flex>
+              </Flex> */}
             </React.Fragment>
           )}
           {this.state.tabNum === 1 && (
