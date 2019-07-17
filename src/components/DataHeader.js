@@ -9,16 +9,17 @@ export default ({ lines }) => (
         <br />
         {lines[1]}
       </H2>
-      <H3
-        mt="8px"
+      <Text
+        mt="10px"
         fontWeight="500"
-        lineHeight="24px"
+        lineHeight="26px"
+        color="#ffffff"
         style={{ fontSize: '16px' }}
       >
         {lines[2]}
         <br />
         {lines[3]}
-      </H3>
+      </Text>
     </Flex>
   </Flex>
 )
