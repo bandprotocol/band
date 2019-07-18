@@ -7,10 +7,7 @@ import RichlistBodyRender from './RichlistBodyRender'
 import { holdersSelector } from 'selectors/holder'
 import { communityDetailSelector } from 'selectors/communities'
 
-const mapStateToProps = (
-  state,
-  { tokenAddress, currentPage, pageSize },
-) => {
+const mapStateToProps = (state, { tokenAddress, currentPage, pageSize }) => {
   const community = communityDetailSelector(state, {
     address: tokenAddress,
   })
@@ -21,6 +18,7 @@ const mapStateToProps = (
     pageSize,
   }).map(item => ({
     ...item,
+    rank: (currentPage - 1) * pageSize + item.rank,
     percentage:
       community &&
       (item.balance.mul(new BN(100)).toString() / totalSupply).toFixed(2),
