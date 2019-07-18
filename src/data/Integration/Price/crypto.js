@@ -67,7 +67,7 @@ contract TicketContract {
 
   function buyTicket() public payable {
     require(!hasTicket[msg.sender], "Must not already have a ticket");
-    require(msg.value * getETHUSDRate() / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
+    require(msg.value * getETHUSDRate() / 1e36 >= ticketPrice, "INSUFFICIENT_ETHER");
     hasTicket[msg.sender] = true;
   }
 
@@ -96,7 +96,7 @@ contract TicketContract {
 
   function buyTicket() public payable {
     require(!hasTicket[msg.sender], "Must not already have a ticket");
-    require(msg.value * getETHUSDRate() / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
+    require(msg.value * getETHUSDRate() / 1e36 >= ticketPrice, "INSUFFICIENT_ETHER");
     hasTicket[msg.sender] = true;
   }
 
@@ -125,7 +125,7 @@ contract TicketContract {
 
   function buyTicket() public payable {
     require(!hasTicket[msg.sender], "Must not already have a ticket");
-    require(msg.value * getETHUSDRate() / 1e18 >= ticketPrice, "INSUFFICIENT_ETHER");
+    require(msg.value * getETHUSDRate() / 1e36 >= ticketPrice, "INSUFFICIENT_ETHER");
     hasTicket[msg.sender] = true;
   }
 
