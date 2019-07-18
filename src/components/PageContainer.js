@@ -12,7 +12,9 @@ const PageContainer = styled(Box)`
     !p.fullWidth &&
     `
     padding: ${p.padding ? p.padding : '18px 32px 48px'};
-    max-width: ${p.withSidebar ? '1218px' : p.dashboard ? '1170px' : '1440px'};
+    max-width: ${
+      p.withSidebar ? '1218px' : p.dashboard ? '1170px' : 'calc(100vw - 300px)'
+    };
 
     ${media.mobile} {
       padding: ${p.padding ? p.padding : '24px 12px'};
