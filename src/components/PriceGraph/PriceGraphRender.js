@@ -81,18 +81,19 @@ class HighChartGraph extends React.Component {
       onMouseOut,
       width = 100,
       height = 330,
+      graphColor: { lineStart, lineEnd, areaStart, areaEnd },
     } = this.props
     return (
       <React.Fragment>
         <svg height={0}>
           <defs>
-            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#496BFF" />
-              <stop offset="100%" stopColor="#6FCBFF" />
+            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor={lineStart} />
+              <stop offset="100%" stopColor={lineEnd} />
             </linearGradient>
             <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="rgba(0, 104, 255, 1)" />
-              <stop offset="100%" stopColor="rgba(0, 104, 255, 0.15)" />
+              <stop offset="0%" stopColor={areaStart} />
+              <stop offset="100%" stopColor={areaEnd} />
             </linearGradient>
           </defs>
         </svg>
@@ -146,7 +147,7 @@ class Graph extends React.Component {
   }
 
   render() {
-    const { data, height, width } = this.props
+    const { data, height, width, graphColor } = this.props
     return (
       <React.Fragment>
         <Box>
@@ -160,6 +161,7 @@ class Graph extends React.Component {
             }
             onMouseOut={() => this.setState({ hovering: null })}
             data={data}
+            graphColor={graphColor}
           />
         </Box>
       </React.Fragment>
