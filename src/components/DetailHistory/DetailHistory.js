@@ -41,7 +41,7 @@ export default class DetailHistory extends React.Component {
     const { tokenAddress, pageSize } = this.props
     return (
       <Flex
-        style={{ borderRadius: '10px', border: 'solid 1px #dee2f0' }}
+        style={{ borderRadius: '10px', border: 'solid 1px #e7ecff' }}
         flexDirection="column"
         bg="white"
         width={1}

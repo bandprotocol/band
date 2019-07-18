@@ -203,7 +203,7 @@ export default {
     dashboard: {
       background: '#ffffff',
       borderRadius: '10px',
-      border: 'solid 1px #dee2f0',
+      border: 'solid 1px #e7ecff',
       padding: '10px 24px',
       overflow: 'hidden',
     },

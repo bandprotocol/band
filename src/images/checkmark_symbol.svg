@@ -1,14 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="75" height="68" viewBox="0 0 75 68">
-    <defs>
-        <filter id="a" width="135.8%" height="139.7%" x="-17.9%" y="-19.8%" filterUnits="objectBoundingBox">
-            <feOffset dy="20" in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="10"/>
-            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.419607843 0 0 0 0 0.443137255 0 0 0 0 0.549019608 0 0 0 0.1 0"/>
-            <feMerge>
-                <feMergeNode in="shadowMatrixOuter1"/>
-                <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-        </filter>
-    </defs>
-    <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="5" d="M21 40.503l9.012 8.788L54.037 26" filter="url(#a)" transform="translate(0 -23)"/>
-</svg>
+<svg height="68" viewBox="0 0 75 68" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><filter id="a" height="139.7%" width="135.8%" x="-17.9%" y="-19.8%"><feOffset dy="20" in="SourceAlpha" result="shadowOffsetOuter1"/><feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="10"/><feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.419607843 0 0 0 0 0.443137255 0 0 0 0 0.549019608 0 0 0 0.1 0"/><feMerge><feMergeNode in="shadowMatrixOuter1"/><feMergeNode in="SourceGraphic"/></feMerge></filter><path d="m21 40.503 9.012 8.788 24.025-23.291" fill="none" filter="url(#a)" stroke="#fff" stroke-linecap="round" stroke-width="5" transform="translate(0 -23)"/></svg>

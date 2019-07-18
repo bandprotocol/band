@@ -1,17 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 46 46">
-    <defs>
-        <filter id="a" width="270%" height="270%" x="-85%" y="-85%" filterUnits="objectBoundingBox">
-            <feOffset dy="5" in="SourceAlpha" result="shadowOffsetOuter1"/>
-            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/>
-            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/>
-            <feMerge>
-                <feMergeNode in="shadowMatrixOuter1"/>
-                <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-        </filter>
-    </defs>
-    <g fill="none" fill-rule="nonzero" filter="url(#a)" transform="translate(8 3)">
-        <circle cx="15" cy="15" r="13.5" fill="#F2F5FF" stroke="#B8C2FF" stroke-width="3"/>
-        <path fill="#FFCA55" d="M17.363 14.026a2.22 2.22 0 0 0 1.14-.566c.394-.37.638-.883.638-1.448 0-1.131-.975-2.048-2.18-2.048h-.906V8h-1.298v1.964h-.821V8h-1.3v1.964H10v1.315h.974s.602-.08.602.553v5.355c0 .634-.602.553-.602.553H10v1.316h2.636V21h1.3v-1.962h.82V21h1.3v-1.962h1.277c.737 0 1.403-.28 1.886-.734.482-.454.781-1.08.781-1.772 0-1.375-1.178-2.491-2.637-2.506zm-3.428-2.664h1.434c.71 0 1.285.541 1.285 1.208 0 .333-.144.635-.377.854a1.323 1.323 0 0 1-.908.354h-1.434v-2.416zm3.004 5.894c-.252.237-.6.383-.984.383h-2.02v-2.616h2.02c.769 0 1.391.586 1.391 1.308 0 .36-.155.688-.407.925z"/>
-    </g>
-</svg>
+<svg height="46" viewBox="0 0 46 46" width="46" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><filter id="a" height="270%" width="270%" x="-85%" y="-85%"><feOffset dy="5" in="SourceAlpha" result="shadowOffsetOuter1"/><feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4"/><feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.17 0"/><feMerge><feMergeNode in="shadowMatrixOuter1"/><feMergeNode in="SourceGraphic"/></feMerge></filter><g fill="none" filter="url(#a)" transform="translate(8 3)"><circle cx="15" cy="15" fill="#f2f5ff" r="13.5" stroke="#b8c2ff" stroke-width="3"/><path d="m17.363 14.026a2.22 2.22 0 0 0 1.14-.566c.394-.37.638-.883.638-1.448 0-1.131-.975-2.048-2.18-2.048h-.906v-1.964h-1.298v1.964h-.821v-1.964h-1.3v1.964h-2.636v1.315h.974s.602-.08.602.553v5.355c0 .634-.602.553-.602.553h-.974v1.316h2.636v1.944h1.3v-1.962h.82v1.962h1.3v-1.962h1.277c.737 0 1.403-.28 1.886-.734.482-.454.781-1.08.781-1.772 0-1.375-1.178-2.491-2.637-2.506zm-3.428-2.664h1.434c.71 0 1.285.541 1.285 1.208 0 .333-.144.635-.377.854a1.323 1.323 0 0 1 -.908.354h-1.434zm3.004 5.894c-.252.237-.6.383-.984.383h-2.02v-2.616h2.02c.769 0 1.391.586 1.391 1.308 0 .36-.155.688-.407.925z" fill="#ffca55"/></g></svg>

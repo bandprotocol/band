@@ -115,7 +115,7 @@ const renderTCR = tcr => {
         <Field label="Governance Method">Token Curated Registry</Field>
         <Field label="Total Entries">{numEntries}</Field>
       </Box>
-      <Box pt="20px" style={{ borderTop: 'solid 1px #dee2f0' }}>
+      <Box pt="20px" style={{ borderTop: 'solid 1px #e7ecff' }}>
         <Text fontSize="14px" fontWeight="500" color="#777777">
           Entry Distribution{' '}
           <Text color="#cccccc" style={{ display: 'inline-block' }}>

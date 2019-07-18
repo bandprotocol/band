@@ -1,3 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="9" height="12" viewBox="0 0 9 12">
-    <path fill="#FFCA55" fill-rule="nonzero" d="M8.472 6.146l-7.5 5a.625.625 0 0 1-.972-.52v-10c0-.5.556-.797.972-.52l7.5 5a.625.625 0 0 1 0 1.04z"/>
-</svg>
+<svg height="12" viewBox="0 0 9 12" width="9" xmlns="http://www.w3.org/2000/svg"><path d="m8.472 6.146-7.5 5a.625.625 0 0 1 -.972-.52v-10c0-.5.556-.797.972-.52l7.5 5a.625.625 0 0 1 0 1.04z" fill="#ffca55"/></svg>
