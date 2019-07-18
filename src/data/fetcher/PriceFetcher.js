@@ -7,14 +7,17 @@ import { Utils } from 'band.js'
 export const CurrentPriceFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.tcdAddress !== this.props.tcdAddress
+      return (
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.query !== this.props.query
+      )
     }
 
     async fetch() {
-      const { tcdAddress, setNumDataPoints } = this.props
-      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`)
-
-      setNumDataPoints(prices.length)
+      const { tcdAddress } = this.props
+      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
+        key: this.props.query,
+      })
 
       return prices
         .map(({ key, value, timestamp }) => ({
@@ -33,12 +36,18 @@ export const CurrentPriceFetcher = withRouter(
 export const PriceCountByTCDFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.tcdAddress !== this.props.tcdAddress
+      return (
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.query !== this.props.query
+      )
     }
 
     async fetch() {
       const pricesCount = await Utils.getDataRequest(
         `/prices/${this.props.tcdAddress}/count`,
+        {
+          key: this.props.query,
+        },
       )
       return pricesCount
     }

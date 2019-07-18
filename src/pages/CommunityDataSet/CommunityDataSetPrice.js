@@ -7,7 +7,6 @@ import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
-import { getTCDInfomation } from 'utils/tcds'
 import { getAsset } from 'utils/assetData'
 import {
   CurrentPriceFetcher,
@@ -18,6 +17,8 @@ import {
 import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
 import DataHeader from 'components/DataHeader'
+import AutocompletedSearch from 'components/AutocompletedSearch'
+import { getPriceKeys } from 'data/detail/price'
 
 const pairToHeader = pair => {
   const [left, right] = pair.split('/')
@@ -110,12 +111,18 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
 )
 
 class CommunityPricePage extends React.Component {
-  state = { numDataPoints: 0 }
+  state = { query: '' }
+
+  onQuery = val => {
+    this.setState({
+      query: val,
+    })
+  }
 
   render() {
     const { tcdAddress, tcdPrefix } = this.props
     return (
-      <PriceCountByTCDFetcher tcdAddress={tcdAddress}>
+      <PriceCountByTCDFetcher tcdAddress={tcdAddress} query={this.state.query}>
         {({ fetching: countFetching, data: totalCount }) => (
           <PageStructure
             renderHeader={() => (
@@ -129,24 +136,28 @@ class CommunityPricePage extends React.Component {
               />
             )}
             renderSubheader={() => (
-              <Flex width="100%" alignItems="center" color="#4a4a4a" pl="52px">
+              <Flex
+                width="100%"
+                alignItems="center"
+                justifyContent="space-between"
+                color="#4a4a4a"
+                pl="52px"
+                pr="20px"
+              >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
                   {countFetching ? '' : `${totalCount} Keys Available`}
                 </Text>
+                <AutocompletedSearch
+                  data={getPriceKeys(tcdPrefix)}
+                  onQuery={this.onQuery}
+                />
               </Flex>
             )}
             {...this.props}
           >
-            {/* <DataCard
-          headerText={`${this.state.numDataPoints} Keys for ${
-            getTCDInfomation(tcdPrefix).label
-          } `}
-          withSearch={false}
-        >
-        </DataCard> */}
             <CurrentPriceFetcher
               tcdAddress={tcdAddress}
-              setNumDataPoints={ndp => this.setState({ numDataPoints: ndp })}
+              query={this.state.query}
             >
               {({ fetching, data }) =>
                 fetching ? (
@@ -186,6 +197,7 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
       .get('tcds')
       .get(tcdAddress)
       .get('prefix')
+      .slice(0, -1)
   } catch (e) {}
 
   return {

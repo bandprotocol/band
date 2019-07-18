@@ -8,14 +8,13 @@ import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 import DataHeader from 'components/DataHeader'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
-import Autosuggest from 'react-autosuggest'
+import AutocompletedSearch from 'components/AutocompletedSearch'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
 import { getFormat } from 'data/Format'
 import ActivityHeader from 'images/activity-header.svg'
 import FilterSrc from 'images/filter.svg'
-import SearchInputIconSrc from 'images/search-input-icon.svg'
 import SecureSrc from 'images/activity-secure.svg'
 import CheckSrc from 'images/check.svg'
 
@@ -75,21 +74,6 @@ const Choice = ({ selected, children, onClick }) => (
       {children}
     </Text>
   </Flex>
-)
-
-const SearchBox = props => (
-  <Box style={{ position: 'relative' }}>
-    <Autosuggest {...props} />
-    <Image
-      src={SearchInputIconSrc}
-      style={{
-        position: 'absolute',
-        right: 15,
-        top: 8,
-      }}
-      width={18}
-    />
-  </Box>
 )
 
 const FilterButton = styled(Button).attrs({
@@ -258,20 +242,7 @@ export default props => (
         pr="30px"
       >
         <Flex alignItems="center">
-          <SearchBox
-            suggestions={props.suggestions}
-            // onSuggestionSelected={(...e) => console.log('clicked', ...e)}
-            onSuggestionsFetchRequested={props.onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={props.onSuggestionsClearRequested}
-            getSuggestionValue={suggestion => suggestion.name}
-            renderSuggestion={suggestion => <Flex>{suggestion.name}</Flex>}
-            inputProps={{
-              placeholder: 'Search',
-              value: props.search,
-              onChange: props.onSearch,
-              onKeyPress: props.onKeyPress,
-            }}
-          />
+          <AutocompletedSearch data={props.providers} onQuery={props.onQuery} />
           {!searchProviderAddress(props.query) && (
             <Text fontWeight="700" fontSize="12px" color="#ec6363" ml={2}>
               NOT FOUND

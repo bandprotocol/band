@@ -1,5 +1,4 @@
 import React from 'react'
-import { debounce } from 'lodash'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
 import { tcdsSelector } from 'selectors/tcd'
@@ -19,9 +18,7 @@ class DatasetActivityLogs extends React.Component {
     activeFilter: {},
 
     // Search
-    search: '',
     query: '',
-    suggestions: [],
   }
 
   componentDidMount() {
@@ -59,55 +56,10 @@ class DatasetActivityLogs extends React.Component {
     })
   }
 
-  onSearch = (e, { newValue, method }) => {
-    this.setState(
-      {
-        search: newValue,
-      },
-      () => {
-        // query when click
-        if (method === 'click' || newValue === '') {
-          this.onQuery(this.state.search)
-        }
-      },
-    )
-  }
-
-  // query when enter
-  onKeyPress = e => {
-    if (e.key === 'Enter') {
-      this.onQuery(this.state.search)
-    }
-  }
-
-  onQuery = debounce(val => {
+  onQuery = val => {
     this.setState({
       currentPage: 1,
       query: val,
-    })
-  }, 350)
-
-  // Autosuggest will call this function every time you need to update suggestions.
-  onSuggestionsFetchRequested = ({ value }) => {
-    const inputValue = value.trim().toLowerCase()
-    const inputLength = inputValue.length
-
-    this.setState({
-      suggestions:
-        inputLength === 0
-          ? []
-          : this.props.providers.filter(
-              provider =>
-                provider.name.toLowerCase().slice(0, inputLength) ===
-                inputValue,
-            ),
-    })
-  }
-
-  // Autosuggest will call this function every time you need to clear suggestions.
-  onSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: [],
     })
   }
 
@@ -117,13 +69,10 @@ class DatasetActivityLogs extends React.Component {
         {...this.props}
         {...this.state}
         onChangePage={this.onChangePage}
-        onSearch={this.onSearch}
-        onKeyPress={this.onKeyPress}
         onQuery={this.onQuery}
         onSetFilter={this.onSetFilter}
         toggleShowFilter={this.toggleShowFilter}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
       />
     )
   }
