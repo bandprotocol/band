@@ -101,7 +101,7 @@ const allProviders = {
       'https://i2.wp.com/www.nysgis.net/wp-content/uploads/2016/09/nyslogo_418x200.png',
   },
   '0xdA7Ad157EdA297C1412BBdBe0E3600670e4560F6': {
-    name: 'PowerballBall',
+    name: 'Powerball',
     image:
       'https://s3.amazonaws.com/cdn.powerball.com/drupal/files/2019-03/Powerball%20Power%20Play_7.png',
   },

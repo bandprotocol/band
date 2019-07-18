@@ -5,13 +5,14 @@ import { communityDetailSelector } from 'selectors/communities'
 import { tcdsSelector } from 'selectors/tcd'
 import { withRouter } from 'react-router-dom'
 import { getTCDInfomation } from 'utils/tcds'
+import { getProvider } from 'data/Providers'
 
 import DatasetActivityLogsRender from './DatasetActivityLogsRender'
 
 class DatasetActivityLogs extends React.Component {
   state = {
     currentPage: 1,
-    numberOfPages: 100,
+    numberOfPages: 10,
 
     // Filter
     showFilter: false,
@@ -20,6 +21,7 @@ class DatasetActivityLogs extends React.Component {
     // Search
     search: '',
     query: '',
+    suggestions: [],
   }
 
   componentDidMount() {
@@ -57,13 +59,26 @@ class DatasetActivityLogs extends React.Component {
     })
   }
 
-  onSearch = e =>
+  onSearch = (e, { newValue, method }) => {
     this.setState(
       {
-        search: e.target.value,
+        search: newValue,
       },
-      () => this.onQuery(this.state.search),
+      () => {
+        // query when click
+        if (method === 'click' || newValue === '') {
+          this.onQuery(this.state.search)
+        }
+      },
     )
+  }
+
+  // query when enter
+  onKeyPress = e => {
+    if (e.key === 'Enter') {
+      this.onQuery(this.state.search)
+    }
+  }
 
   onQuery = debounce(val => {
     this.setState({
@@ -72,6 +87,30 @@ class DatasetActivityLogs extends React.Component {
     })
   }, 350)
 
+  // Autosuggest will call this function every time you need to update suggestions.
+  onSuggestionsFetchRequested = ({ value }) => {
+    const inputValue = value.trim().toLowerCase()
+    const inputLength = inputValue.length
+
+    this.setState({
+      suggestions:
+        inputLength === 0
+          ? []
+          : this.props.providers.filter(
+              provider =>
+                provider.name.toLowerCase().slice(0, inputLength) ===
+                inputValue,
+            ),
+    })
+  }
+
+  // Autosuggest will call this function every time you need to clear suggestions.
+  onSuggestionsClearRequested = () => {
+    this.setState({
+      suggestions: [],
+    })
+  }
+
   render() {
     return (
       <DatasetActivityLogsRender
@@ -79,9 +118,12 @@ class DatasetActivityLogs extends React.Component {
         {...this.state}
         onChangePage={this.onChangePage}
         onSearch={this.onSearch}
+        onKeyPress={this.onKeyPress}
         onQuery={this.onQuery}
         onSetFilter={this.onSetFilter}
         toggleShowFilter={this.toggleShowFilter}
+        onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={this.onSuggestionsClearRequested}
       />
     )
   }
@@ -99,6 +141,13 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
     address: community.get('address'),
     symbol: community.get('symbol'),
     tcdName: tcd && getTCDInfomation(tcd.toJS().prefix).label,
+    providers:
+      tcd &&
+      tcd.toJS().providers.map(address => {
+        return {
+          name: getProvider(address).name,
+        }
+      }),
   }
 }
 

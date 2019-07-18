@@ -1,7 +1,5 @@
-import React from 'react'
 import BaseFetcher from 'data/BaseFetcher'
 import { withRouter } from 'react-router-dom'
-import moment from 'moment'
 import { Utils } from 'band.js'
 
 const PAGESIZE = 10

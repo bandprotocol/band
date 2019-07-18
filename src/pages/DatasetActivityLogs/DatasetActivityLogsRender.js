@@ -8,6 +8,7 @@ import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 import DataHeader from 'components/DataHeader'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import Autosuggest from 'react-autosuggest'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
@@ -76,18 +77,9 @@ const Choice = ({ selected, children, onClick }) => (
   </Flex>
 )
 
-const SearchBoxInput = styled.input`
-  border-radius: 18px;
-  border: solid 1px #e7ecff;
-  padding: 0 2.8em 0 1.4em;
-  width: 400px;
-  line-height: 30px;
-  font-size: 14px;
-`
-
 const SearchBox = props => (
   <Box style={{ position: 'relative' }}>
-    <SearchBoxInput {...props} />
+    <Autosuggest {...props} />
     <Image
       src={SearchInputIconSrc}
       style={{
@@ -267,9 +259,18 @@ export default props => (
       >
         <Flex alignItems="center">
           <SearchBox
-            placeholder="Search"
-            value={props.search}
-            onChange={props.onSearch}
+            suggestions={props.suggestions}
+            // onSuggestionSelected={(...e) => console.log('clicked', ...e)}
+            onSuggestionsFetchRequested={props.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={props.onSuggestionsClearRequested}
+            getSuggestionValue={suggestion => suggestion.name}
+            renderSuggestion={suggestion => <Flex>{suggestion.name}</Flex>}
+            inputProps={{
+              placeholder: 'Search',
+              value: props.search,
+              onChange: props.onSearch,
+              onKeyPress: props.onKeyPress,
+            }}
           />
           {!searchProviderAddress(props.query) && (
             <Text fontWeight="700" fontSize="12px" color="#ec6363" ml={2}>
