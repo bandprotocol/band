@@ -15,6 +15,8 @@ import {
 } from 'data/fetcher/SportFetcher'
 import SportTable from 'components/table/SportTable'
 import Loading from 'components/Loading'
+import SearchSelect from 'components/SearchSelect'
+import { getOptionsByPrefix } from 'utils/sportTeam'
 import PaginationRender from 'components/Pagination/PaginationRender'
 
 const LogoTeam = styled(Flex).attrs({
@@ -28,7 +30,7 @@ const LogoTeam = styled(Flex).attrs({
   background-position: center;
 `
 
-const renderDataPoints = (tcdAddress, state, matches, onSearchTeam) => {
+const renderDataPoints = (tcdAddress, state, matches) => {
   return (
     <React.Fragment>
       <Box mt={3}>
@@ -152,13 +154,10 @@ class SportPage extends React.Component {
     }
   }
 
-  onSearchTeam(forceFetch, teamType, team) {
-    this.setState(
-      {
-        [teamType]: team,
-      },
-      () => forceFetch(true, true),
-    )
+  onSearchTeam(teamType, team) {
+    this.setState({
+      [teamType]: team,
+    })
   }
 
   onChangePage(selectedPage) {
@@ -171,7 +170,7 @@ class SportPage extends React.Component {
     const { tcdAddress, tcdPrefix } = this.props
     const { currentPage, nSportList } = this.state
     return (
-      <SportCountByTCDFetcher tcdAddress={tcdAddress}>
+      <SportCountByTCDFetcher tcdAddress={tcdAddress} {...this.state}>
         {({ fetching: countFetching, data: totalCount }) => (
           <PageStructure
             renderHeader={() => (
@@ -185,10 +184,28 @@ class SportPage extends React.Component {
               />
             )}
             renderSubheader={() => (
-              <Flex width="100%" alignItems="center" color="#4a4a4a" pl="52px">
+              <Flex
+                width="100%"
+                alignItems="center"
+                justifyContent="space-between"
+                color="#4a4a4a"
+                pl="52px"
+              >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
                   {countFetching ? '' : `${totalCount} Keys Available`}
                 </Text>
+                <Flex mr="20px" width="330px" justifyConten="space-around">
+                  <SearchSelect
+                    options={getOptionsByPrefix(tcdPrefix)}
+                    placeholder="Home"
+                    onSearch={value => this.onSearchTeam('home', value)}
+                  />
+                  <SearchSelect
+                    options={getOptionsByPrefix(tcdPrefix)}
+                    placeholder="Away"
+                    onSearch={value => this.onSearchTeam('away', value)}
+                  />
+                </Flex>
               </Flex>
             )}
             {...this.props}
@@ -220,12 +237,7 @@ class SportPage extends React.Component {
                 } else {
                   return (
                     <React.Fragment>
-                      {renderDataPoints(
-                        tcdAddress,
-                        this.state,
-                        data,
-                        // this.onSearchTeam.bind(this, forceFetch),
-                      )}
+                      {renderDataPoints(tcdAddress, this.state, data)}
                     </React.Fragment>
                   )
                 }

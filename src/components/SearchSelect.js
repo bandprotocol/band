@@ -10,19 +10,36 @@ const selectStyles = (width = '150px') => ({
     width,
     borderRadius: '4px',
     justifyContent: 'center',
+    minHeight: 25,
   }),
   option: styles => ({
     ...styles,
     fontSize: '11px',
   }),
+  indicatorSeparator: styles => ({
+    display: 'none',
+  }),
   singleValue: styles => ({
     ...styles,
     fontSize: '11px',
+    minHeight: '10px',
   }),
   placeholder: styles => ({
     ...styles,
     fontSize: '13px',
     color: 'grey',
+  }),
+  dropdownIndicator: styles => ({
+    ...styles,
+    padding: '0px 5px 0px 0px',
+    width: '90%',
+    height: '70%',
+  }),
+  clearIndicator: styles => ({
+    ...styles,
+    width: '90%',
+    height: '70%',
+    padding: '0',
   }),
 })
 

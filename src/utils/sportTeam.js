@@ -146,15 +146,15 @@ export const getNFLTeamByCode = code => {
   ]
 }
 
-export const getOptionsByType = type => {
+export const getOptionsByPrefix = type => {
   switch (type) {
-    case 'NBA':
+    case 'nba':
       return NBA_TEAM
-    case 'EPL':
+    case 'epl':
       return EPL_TEAM
-    case 'MLB':
+    case 'mlb':
       return MLB_TEAM
-    case 'NFL':
+    case 'nfl':
       return NFL_TEAM
     default:
       console.warn('Cannot find this sport type')

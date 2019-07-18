@@ -9,12 +9,22 @@ import { getSportTeamByCode } from 'utils/sportTeam'
 export const SportCountByTCDFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.tcdAddress !== this.props.tcdAddress
+      return (
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.home !== this.props.home ||
+        prevProps.away !== this.props.away
+      )
     }
 
     async fetch() {
+      let params = {}
+      const { home, away } = this.props
+      params = home ? { ...params, home } : { ...params }
+      params = away ? { ...params, away } : { ...params }
+
       const sportCount = await Utils.getDataRequest(
         `/sports/${this.props.tcdAddress}/count`,
+        params,
       )
       return sportCount
     }
@@ -26,14 +36,23 @@ export const SportByTCDFetcher = withRouter(
     shouldFetch(prevProps) {
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
-        prevProps.currentPage !== this.props.currentPage
+        prevProps.currentPage !== this.props.currentPage ||
+        prevProps.home !== this.props.home ||
+        prevProps.away !== this.props.away
       )
     }
 
     async fetch() {
-      const { tcdAddress, tcdPrefix, currentPage, nSportList } = this.props
+      const {
+        tcdAddress,
+        tcdPrefix,
+        currentPage,
+        nSportList,
+        home,
+        away,
+      } = this.props
       const skip = (currentPage - 1) * nSportList
-      const params =
+      let params =
         skip > 0
           ? {
               limit: nSportList,
@@ -42,6 +61,9 @@ export const SportByTCDFetcher = withRouter(
           : {
               limit: nSportList,
             }
+      params = home ? { ...params, home } : { ...params }
+      params = away ? { ...params, away } : { ...params }
+
       const sports = await Utils.getDataRequest(`/sports/${tcdAddress}`, params)
 
       return sports.map(sport => {
