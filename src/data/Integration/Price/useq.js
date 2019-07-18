@@ -9,7 +9,7 @@ export default {
     `Instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. FB/USD exchange rate can be obtained by query with key •FB/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
   label: 'price',
-  example: `💸 Say you want to create USeq betting smart contract. First bettor will get a reward if FB/USD is going down after 1 day has passed otherwise second bettor will get the reward instead 👇👇👇`,
+  example: `💸 Say you want to create USeq betting smart contract. First bettor will get a reward if FB/USD is going down after 1 minute has passed otherwise second bettor will get the reward instead 👇👇👇`,
   contractName: 'USeqBettingContract',
   dataFormat: {
     description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,
@@ -110,9 +110,9 @@ contract USeqBettingContract {
   }
 
   function resolve() public payable {
-    // have to wait 1 day after start betting
-    require(now - bettingStartDate >= 1 days);
-    // get rate again after 1 day
+    // have to wait 1 minute after start betting
+    require(now - bettingStartDate >= 1 minutes);
+    // get rate again after 1 minute
     uint256 currentRate = getFBUSDRate();
     if (currentRate > startRate) {
       // if currentRate > startRate then give all ETH in this contract to the first bettor
@@ -159,9 +159,9 @@ contract USeqBettingContract {
   }
 
   function resolve() public payable {
-    // have to wait 1 day after start betting
-    require(now - bettingStartDate >= 1 days);
-    // get rate again after 1 day
+    // have to wait 1 minute after start betting
+    require(now - bettingStartDate >= 1 minutes);
+    // get rate again after 1 minute
     uint256 currentRate = getFBUSDRate();
     if (currentRate > startRate) {
       // if currentRate > startRate then give all ETH in this contract to the first bettor
@@ -208,9 +208,9 @@ contract USeqBettingContract {
   }
 
   function resolve() public payable {
-    // have to wait 1 day after start betting
-    require(now - bettingStartDate >= 1 days);
-    // get rate again after 1 day
+    // have to wait 1 minute after start betting
+    require(now - bettingStartDate >= 1 minutes);
+    // get rate again after 1 minute
     uint256 currentRate = getFBUSDRate();
     if (currentRate > startRate) {
       // if currentRate > startRate then give all ETH in this contract to the first bettor

@@ -9,7 +9,7 @@ export default {
     `Instantiate a •QueryInterface object with TCD address 0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A. CNY/USD exchange rate can be obtained by query with key •CNY/USD . The return value is the (exchange rate) * 10^18 . Note that you need to convert bytes32 result to uint256 .`,
   ],
   label: 'price',
-  example: `💸 Let's assume we want to create a simple smart contract for betting on the price movement of the foreign exchange rate. Any two people can agree to place bet and pool ETH to create this contract together. The bettor #1 will be rewarded if CNY/USD is goes down after 1 day, otherwise the bettor #2 will get the reward instead. Let's explore how we can implement this using Band Protocol's price feed. 👇👇👇`,
+  example: `💸 Let's assume we want to create a simple smart contract for betting on the price movement of the foreign exchange rate. Any two people can agree to place bet and pool ETH to create this contract together. The bettor #1 will be rewarded if CNY/USD is goes down after 1 minute, otherwise the bettor #2 will get the reward instead. Let's explore how we can implement this using Band Protocol's price feed. 👇👇👇`,
   contractName: 'FXBettingContract',
   dataFormat: {
     description: `The return value is a bytes32 that can be converted directly to uint256 . Note that to maintain arithmetic precision, the value is multiplied by 10^18 .`,
@@ -95,9 +95,9 @@ contract FXBettingContract {
   }
 
   function resolve() public payable {
-    // have to wait 1 day after start betting
-    require(now - bettingStartDate >= 1 days);
-    // get rate again after 1 day
+    // have to wait 1 minute after start betting
+    require(now - bettingStartDate >= 1 minutes);
+    // get rate again after 1 minute
     uint256 currentRate = getCNYUSDRate();
     if (currentRate > startRate) {
       // if currentRate > startRate then give all ETH in this contract to the first bettor
@@ -144,9 +144,9 @@ contract FXBettingContract {
   }
 
   function resolve() public payable {
-    // have to wait 1 day after start betting
-    require(now - bettingStartDate >= 1 days);
-    // get rate again after 1 day
+    // have to wait 1 minute after start betting
+    require(now - bettingStartDate >= 1 minutes);
+    // get rate again after 1 minute
     uint256 currentRate = getCNYUSDRate();
     if (currentRate > startRate) {
       // if currentRate > startRate then give all ETH in this contract to the first bettor
@@ -193,9 +193,9 @@ contract FXBettingContract {
   }
 
   function resolve() public payable {
-    // have to wait 1 day after start betting
-    require(now - bettingStartDate >= 1 days);
-    // get rate again after 1 day
+    // have to wait 1 minute after start betting
+    require(now - bettingStartDate >= 1 minutes);
+    // get rate again after 1 minute
     uint256 currentRate = getCNYUSDRate();
     if (currentRate > startRate) {
       // if currentRate > startRate then give all ETH in this contract to the first bettor

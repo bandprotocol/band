@@ -1,32 +1,32 @@
 export default {
   overview: [
     `You can integrate the sport data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •20190427/ARI-BAL for baseball match Arizona Diamondbacks vs Baltimore Orioles at date 27/04/2019. Each dataset has its own method to construct a valid key.`,
+    `Pick the query key for data lookup. For instance, key •MLB/2019/20190716/MIA-SD/1 for baseball match Miami Marlins vs San Diego Padres at date 2019/07/16. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of smart contract for sport betting. We set the scores of both teams to 0 (just mock scores). We will replace these mock scores by real scores from Sport community later.`,
     `We then define •QueryInterface at the top of the contract. This gives us access trusted data available on Band Protocol. Notice that the •query is a payable function that takes •bytes and returns •bytes32 together with a timestamp an query status.`,
-    `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •20190427/ARI-BAL and the scores was encoded in first byte and second byte of the return value.`,
+    `Instantiate a •QueryInterface object with Sport Feed smart contract address at 0x7d19771a15c1314be9Bd436092A727A70Edc6482. Scores of both team can be obtained by query with key •MLB/2019/20190716/MIA-SD/1 and the scores was encoded in first byte and second byte of the return value.`,
   ],
   label: 'sport',
-  example: `⚾️ Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If ARI (a baseball team) win first bettor will receive all ETH in the contract. If BAL (another basketball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
+  example: `⚾️ Say you have a simple smart contract for sport betting. Contract creator has deposited some amount of ETH and assigned two bettors since the contract was created. If MIA (a baseball team) win first bettor will receive all ETH in the contract. If SD (another baseball team) win second bettor will receive all ETH in the contract. If scores are equal then nobody can get ETH in this contract.👇👇👇`,
   contractName: 'SportBettingContract',
   dataFormat: {
     description: `Return value from community's contract always •bytes32 .　
       Sport Community will return score of home team and score of away team which are represented with first 2 bytes of the return value.
       For example
-        👉 You have called •q.query.value(q.queryPrice())("20190427/ARI-BAL") 　
-        👉 The return value is 0x1f3c000000000000000000000000000000000000000000000000000000000000 　
-        👉 So the score of ARI is 0x1f (base 16) which is equal to 31 (base 10) 　
-        👉 And the score of BAL is 0x3c (base 16) which is equal to 60 (base 10) 　
+        👉 You have called •q.query.value(q.queryPrice())("MLB/2019/20190716/MIA-SD/1") 　
+        👉 The return value is 0x0c07000000000000000000000000000000000000000000000000000000000000 　
+        👉 So the score of MIA is 0x0c (base 16) which is equal to 12 (base 10) 　
+        👉 And the score of SD is 0x07 (base 16) which is equal to 7 (base 10) 　
       `,
   },
   keyFormat: {
     nfl: {
       header: 'List of Available NFL Teams',
       description: `⚾️ MLB or Major League Baseball dataset group has provided keys for query matches score.
-      Format of the key is composed of Date(year,month,day)/home-away . For example •20190427/ARI-BAL which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
-      The return result from query is 32 bytes , so the score of ARI will be encoded in first byte and score of BAL will be encoded in second byte .`,
+      Format of the key is composed of Date(year,month,day)/home-away . For example •MLB/2019/20190716/MIA-SD/1 which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
+      The return result from query is 32 bytes , so the score of MIA will be encoded in first byte and score of SD will be encoded in second byte .`,
       keys: [
         [
           'ATL',
@@ -39,7 +39,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/en/f/fd/Marlins_team_logo.svg',
         ],
         [
-          'NEW',
+          'NYM',
           'New York Mets',
           'https://upload.wikimedia.org/wikipedia/en/7/7b/New_York_Mets.svg',
         ],
@@ -49,12 +49,12 @@ export default {
           'https://upload.wikimedia.org/wikipedia/en/4/47/New_Phillies_logo.png',
         ],
         [
-          'WAS',
+          'WSH',
           'Washington Nationals',
           'https://upload.wikimedia.org/wikipedia/en/a/a3/Washington_Nationals_logo.svg',
         ],
         [
-          'CHI',
+          'CHC',
           'Chicago Cubs',
           'https://upload.wikimedia.org/wikipedia/commons/8/80/Chicago_Cubs_logo.svg',
         ],
@@ -74,7 +74,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/commons/8/81/Pittsburgh_Pirates_logo_2014.svg',
         ],
         [
-          'SLC',
+          'STL',
           'St. Louis Cardinals',
           'https://upload.wikimedia.org/wikipedia/en/9/9d/St._Louis_Cardinals_logo.svg',
         ],
@@ -89,17 +89,17 @@ export default {
           'https://upload.wikimedia.org/wikipedia/commons/3/31/Colorado_Rockies_logo.svg',
         ],
         [
-          'LOS',
+          'LAD',
           'Los Angeles Dodgers',
           'https://upload.wikimedia.org/wikipedia/en/6/69/Los_Angeles_Dodgers_logo.svg',
         ],
         [
-          'SAN',
+          'SD',
           'San Diego Padres',
           'https://upload.wikimedia.org/wikipedia/commons/a/a4/SDPadres_logo.svg',
         ],
         [
-          'SAN',
+          'SF',
           'San Francisco Giants',
           'https://upload.wikimedia.org/wikipedia/en/5/58/San_Francisco_Giants_Logo.svg',
         ],
@@ -114,12 +114,12 @@ export default {
           'https://upload.wikimedia.org/wikipedia/en/6/6d/RedSoxPrimary_HangingSocks.svg',
         ],
         [
-          'NEW',
+          'NYY',
           'New York Yankees',
           'https://upload.wikimedia.org/wikipedia/en/2/25/NewYorkYankees_PrimaryLogo.svg',
         ],
         [
-          'TAM',
+          'TB',
           'Tampa Bay Rays',
           'https://upload.wikimedia.org/wikipedia/en/c/c6/Tampa_Bay_Rays.svg',
         ],
@@ -129,7 +129,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/en/b/ba/Toronto_Blue_Jays_logo.svg',
         ],
         [
-          'CHI',
+          'CWS',
           'Chicago White Sox',
           'https://upload.wikimedia.org/wikipedia/commons/c/c1/Chicago_White_Sox.svg',
         ],
@@ -144,7 +144,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/commons/e/e3/Detroit_Tigers_logo.svg',
         ],
         [
-          'KAN',
+          'KC',
           'Kansas City Royals',
           'https://upload.wikimedia.org/wikipedia/en/1/1c/Kansas_City_Royals.svg',
         ],
@@ -159,7 +159,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/commons/6/6b/Houston-Astros-Logo.svg',
         ],
         [
-          'LOS',
+          'LAA',
           'Los Angeles Angels',
           'https://upload.wikimedia.org/wikipedia/commons/8/8b/Los_Angeles_Angels_of_Anaheim.svg',
         ],
@@ -211,17 +211,17 @@ contract SportBettingContract {
 
 
 
-    // Mock ARI's scores
-    uint8 ariScore = 0;
-    // Mock BAL's scores
-    uint8 balScore = 0;
+    // Mock MIA's scores
+    uint8 miaScore = 0;
+    // Mock SD's scores
+    uint8 sdScore = 0;
     // if the scores are equal then nobody can get ETH in this contract
-    require(ariScore != balScore);
-    if (ariScore > balScore) {
-      // if ARI win then give all ETH in this contract to the first bettor
+    require(miaScore != sdScore);
+    if (miaScore > sdScore) {
+      // if MIA win then give all ETH in this contract to the first bettor
       bettor_1.transfer(address(this).balance);
     } else {
-      // if BAL win then give all ETH in this contract to the second bettor
+      // if SD win then give all ETH in this contract to the second bettor
       bettor_2.transfer(address(this).balance);
     }
   }
@@ -256,17 +256,17 @@ contract SportBettingContract {
 
 
 
-    // Mock ARI's scores
-    uint8 ariScore = 0;
-    // Mock BAL's scores
-    uint8 balScore = 0;
+    // Mock MIA's scores
+    uint8 miaScore = 0;
+    // Mock SD's scores
+    uint8 sdScore = 0;
     // if the scores are equal then nobody can get ETH in this contract
-    require(ariScore != balScore);
-    if (ariScore > balScore) {
-      // if ARI win then give all ETH in this contract to the first bettor
+    require(miaScore != sdScore);
+    if (miaScore > sdScore) {
+      // if MIA win then give all ETH in this contract to the first bettor
       bettor_1.transfer(address(this).balance);
     } else {
-      // if BAL win then give all ETH in this contract to the second bettor
+      // if SD win then give all ETH in this contract to the second bettor
       bettor_2.transfer(address(this).balance);
     }
   }
@@ -299,21 +299,21 @@ contract SportBettingContract {
   function claimReward() public payable {
     // Create a QueryInterface pointing to Sport community contract
     QueryInterface q = QueryInterface(0x7d19771a15c1314be9Bd436092A727A70Edc6482);
-    // Get the scores at date 2019 04 27
-    (bytes32 rawData,,QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("20190427/ARI-BAL");
+    // Get the scores at date 2019 07 16
+    (bytes32 rawData,,QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("MLB/2019/20190716/MIA-SD/1");
     // Query status should be OK to continue
     require(status == QueryInterface.QueryStatus.OK);
-    // Get ARI's score from the first byte and then convert from byte to uint8
-    uint8 ariScore = uint8(rawData[0]);
-    // Get BAL's score from the second byte and then convert from byte to uint8
-    uint8 balScore = uint8(rawData[1]);
+    // Get MIA's score from the first byte and then convert from byte to uint8
+    uint8 miaScore = uint8(rawData[0]);
+    // Get SD's score from the second byte and then convert from byte to uint8
+    uint8 sdScore = uint8(rawData[1]);
     // if the scores are equal then nobody can get ETH in this contract
-    require(ariScore != balScore);
-    if (ariScore > balScore) {
-      // if ARI win then give all ETH in this contract to the first bettor
+    require(miaScore != sdScore);
+    if (miaScore > sdScore) {
+      // if MIA win then give all ETH in this contract to the first bettor
       bettor_1.transfer(address(this).balance);
     } else {
-      // if BAL win then give all ETH in this contract to the second bettor
+      // if SD win then give all ETH in this contract to the second bettor
       bettor_2.transfer(address(this).balance);
     }
   }

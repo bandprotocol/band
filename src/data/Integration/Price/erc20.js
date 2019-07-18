@@ -86,8 +86,10 @@ interface ERC20 {
 }
 
 contract ExchangeContract {
-  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088); 
+  ERC20 public LINK = ERC20(~0xa36085F69e2889c224210F603D836748e7dC0088);
                             // Kovan address of ChainLink token
+  // fallback function which make this contract be able to receive Ether, so somebody can refill Ether
+  function() external payable {}
 
   function sellToken(uint256 amount) public {
     require(LINK.transferFrom(msg.sender, address(this), amount));
@@ -101,8 +103,6 @@ contract ExchangeContract {
 
 
   }
-
-  /// More code for operator to get LINK out and refill ETH omitted.
 }`,
     `
 pragma solidity ^0.5.0;
@@ -121,8 +121,10 @@ interface ERC20 {
 }
 
 contract ExchangeContract {
-  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);
+  ERC20 public LINK = ERC20(~0xa36085F69e2889c224210F603D836748e7dC0088);
                             // Kovan address of ChainLink token
+  // fallback function which make this contract be able to receive Ether, so somebody can refill Ether
+  function() external payable {}
 
   function sellToken(uint256 amount) public {
     require(LINK.transferFrom(msg.sender, address(this), amount));
@@ -136,8 +138,6 @@ contract ExchangeContract {
 
 
   }
-
-  /// More code for operator to get LINK out and refill ETH omitted.
 }`,
     `
 pragma solidity ^0.5.0;
@@ -156,8 +156,10 @@ interface ERC20 {
 }
 
 contract ExchangeContract {
-  ERC20 public LINK = ERC20(0xa36085F69e2889c224210F603D836748e7dC0088);
+  ERC20 public LINK = ERC20(~0xa36085F69e2889c224210F603D836748e7dC0088);
                             // Kovan address of ChainLink token
+  // fallback function which make this contract be able to receive Ether, so somebody can refill Ether
+  function() external payable {}
 
   function sellToken(uint256 amount) public {
     require(LINK.transferFrom(msg.sender, address(this), amount));
@@ -166,13 +168,11 @@ contract ExchangeContract {
   }
 
   function getLINKETHRate() internal returns (uint256 rate) {
-    QueryInterface q = QueryInterface(0xfdd6bEfAADa0e12790Dea808bC9011e3b24C278A);
+    QueryInterface q = QueryInterface(0x869e8e455816153A9330D59a854817231E49D9F9);
     (bytes32 rawRate,, QueryInterface.QueryStatus status) = q.query.value(q.queryPrice())("LINK/ETH");
     require(status == QueryInterface.QueryStatus.OK);
     return uint256(rawRate);
   }
-
-  /// More code for operator to get LINK out and refill ETH omitted.
 }`,
   ],
 }

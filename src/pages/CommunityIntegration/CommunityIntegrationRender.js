@@ -123,7 +123,11 @@ const replaceAllAddresses = (text, address) => {
     const j = words[i].indexOf('0x')
     const wl = words[i].length
     if (j >= 0 && wl >= 42) {
-      words[i] = words[i].slice(0, j) + address + words[i].slice(j + 42, wl)
+      if (words[i][j - 1] === '~') {
+        words[i] = words[i].slice(0, j - 1) + words[i].slice(j, wl)
+      } else {
+        words[i] = words[i].slice(0, j) + address + words[i].slice(j + 42, wl)
+      }
     }
   }
   return words.join(' ')
