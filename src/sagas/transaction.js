@@ -1,6 +1,5 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
 import { Utils } from 'band.js'
-import { channel } from 'redux-saga'
 import transit from 'transit-immutable-js'
 import BN from 'utils/bignumber'
 
@@ -28,11 +27,19 @@ import { transactionSelector, transactionHiddenSelector } from 'selectors/basic'
 
 import { IPFS } from 'band.js'
 
-const txChannel = channel()
+// function* handleTxChannel({ type, txHash, title }) {
+//   yield put(addTx(txHash, title, type))
+//   yield put(dumpTxs())
+// }
 
-function* handleTxChannel({ type, txHash, title }) {
-  yield put(addTx(txHash, title, type))
-  yield put(dumpTxs())
+function* sendTransaction({ transaction, title, type }) {
+  try {
+    const txHash = yield transaction.sendFeeless()
+    yield put(addTx(txHash, title, type))
+    yield put(dumpTxs())
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
@@ -42,9 +49,8 @@ function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
     stake,
   })
   yield put(hideModal())
-  const txHash = yield transaction.sendFeeless()
-  txChannel.put({
-    txHash,
+  yield sendTransaction({
+    transaction,
     title: `Deposit ${Utils.fromBlockchainUnit(stake)} ${
       stake.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
@@ -63,9 +69,8 @@ function* handleTcdWithdraw({
     withdrawOwnership: ownership,
   })
   yield put(hideModal())
-  const txHash = yield transaction.sendFeeless()
-  txChannel.put({
-    txHash,
+  yield sendTransaction({
+    transaction,
     title: `Withdraw ${Utils.fromBlockchainUnit(ownership)} ${
       ownership.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
@@ -74,12 +79,12 @@ function* handleTcdWithdraw({
 }
 
 function* handleBuyToken({ address, amount, priceLimit }) {
+  console.log(address, amount.toString(), priceLimit.toString())
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createBuyTransaction({ amount, priceLimit })
   yield put(hideModal())
-  const txHash = yield transaction.sendFeeless()
-  txChannel.put({
-    txHash,
+  yield sendTransaction({
+    transaction,
     title: `Buy ${Utils.fromBlockchainUnit(amount)} ${
       amount.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
@@ -91,9 +96,8 @@ function* handleSellToken({ address, amount, priceLimit }) {
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createSellTransaction({ amount, priceLimit })
   yield put(hideModal())
-  const txHash = yield transaction.sendFeeless()
-  txChannel.put({
-    txHash,
+  yield sendTransaction({
+    transaction,
     title: `Sell ${Utils.fromBlockchainUnit(amount)} ${
       amount.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
@@ -118,8 +122,11 @@ function* handleProposeProposal({ address, title, reason, changes }) {
   })
 
   yield put(hideModal())
-  const txHash = yield transaction.sendFeeless()
-  txChannel.put({ txHash, title: `Propose ${title}`, type: 'PROPOSE' })
+  yield sendTransaction({
+    transaction,
+    title: `Propose ${title}`,
+    type: 'PROPOSE',
+  })
 }
 
 function* handleVoteProposal({ address, proposalId, vote }) {
@@ -135,9 +142,8 @@ function* handleVoteProposal({ address, proposalId, vote }) {
       isAccepted: vote,
     })
 
-    const txHash = yield transaction.sendFeeless()
-    txChannel.put({
-      txHash,
+    yield sendTransaction({
+      transaction,
       title: `Vote ${vote ? 'accept' : 'reject'}`,
       type: 'VOTE',
     })
@@ -155,7 +161,7 @@ function* handleDumpTxs() {
 }
 
 export default function*() {
-  yield takeEvery(txChannel, handleTxChannel)
+  // yield takeEvery(txChannel, handleTxChannel)
   yield takeEvery(BUY_TOKEN, handleBuyToken)
   yield takeEvery(TCD_DEPOSIT, handleTcdDeposit)
   yield takeEvery(TCD_WITHDRAW, handleTcdWithdraw)
