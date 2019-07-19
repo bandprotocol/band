@@ -117,6 +117,26 @@ const renderDataPoints = (tcdAddress, lotteries) => (
   </React.Fragment>
 )
 
+const MONTH = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+]
+
+const formatDate = rawDate => {
+  const [monthIndex, year] = rawDate.split('/')
+  return `${MONTH[monthIndex - 1]} ${year}`
+}
+
 const Calendar = styled(Flex).attrs({
   justifyContent: 'center',
   alignItems: 'center',
@@ -126,7 +146,6 @@ const Calendar = styled(Flex).attrs({
   border-radius: 17.5px;
   box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(to right, #5269ff, #4890ff);
-  cursor: pointer;
 `
 
 const DateContainer = ({ value, onClick }) => (
@@ -135,16 +154,18 @@ const DateContainer = ({ value, onClick }) => (
     bg="#fff"
     alignItems="center"
     justifyContent="space-between"
+    onClick={onClick}
     style={{
       height: '35px',
       borderRadius: '17.5px',
       border: 'solid 1px #e7ecff',
+      cursor: 'pointer',
     }}
   >
     <Text pl="20px" color="#4a4a4a" fontSize="14px" fontWeight="500">
-      {value}
+      {formatDate(value)}
     </Text>
-    <Calendar onClick={onClick}>
+    <Calendar>
       <Image src={CalendarSrc} />
     </Calendar>
   </Flex>
