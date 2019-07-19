@@ -210,13 +210,15 @@ export default class LotteryPage extends React.Component {
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
                   {countFetching ? '' : `${totalCount} Keys Available`}
                 </Text>
-                <DatePicker
-                  selected={selectedDate}
-                  onChange={this.onChangeDate}
-                  dateFormat="MM/yyyy"
-                  showMonthYearPicker
-                  customInput={<DateContainer />}
-                />
+                <Box style={{ position: 'relative' }}>
+                  <DatePicker
+                    selected={selectedDate}
+                    onChange={this.onChangeDate}
+                    dateFormat="MM/yyyy"
+                    showMonthYearPicker
+                    customInput={<DateContainer />}
+                  />
+                </Box>
               </Flex>
             )}
             {...this.props}
