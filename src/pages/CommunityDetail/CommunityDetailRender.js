@@ -153,7 +153,9 @@ export default props => {
     price,
     bandPrice,
     marketCap,
+    marketCapChanged,
     totalSupply,
+    totalSupplyChanged,
     collateralEquation,
     tcr,
     // tcd,
@@ -259,6 +261,7 @@ export default props => {
         <Flex flexDirection="column" mx="6px" my="-4px">
           <MiniGraph
             title="Market Cap."
+            changed={marketCapChanged.toFixed(2)}
             value={BN.parse(marketCap)
               .bandToUSD(bandPrice)
               .shortPretty()}
@@ -267,6 +270,7 @@ export default props => {
           />
           <MiniGraph
             title={'Token Supply'}
+            changed={totalSupplyChanged.toFixed(2)}
             value={BN.parse(totalSupply).shortPretty()}
             unit={symbol}
             subValue={`${collateralEquation &&

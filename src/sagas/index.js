@@ -159,6 +159,14 @@ function* baseInitialize() {
             curveByTokenAddress {
               price
               collateralEquation
+              pricesByCurveAddress(first: 1, filter: {timestamp: {lessThan: ${Math.trunc(
+                new Date().getTime() / 1000 - 86400,
+              )}}}, orderBy: TIMESTAMP_DESC) {
+                nodes {
+                  price
+                  totalSupply
+                }
+              }
             }
             tcdsByTokenAddress {
               nodes {
@@ -214,9 +222,13 @@ function* baseInitialize() {
           parseFloat(token.totalSupply)) /
           1e18,
         parseFloat(token.curveByTokenAddress.price),
-        // token.last24Hrs,
-        0,
         new BN(token.totalSupply),
+        parseFloat(
+          token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price,
+        ),
+        new BN(
+          token.curveByTokenAddress.pricesByCurveAddress.nodes[0].totalSupply,
+        ),
         token.curveByTokenAddress.collateralEquation,
         token.tcdsByTokenAddress.nodes[0] &&
           token.tcdsByTokenAddress.nodes.reduce(

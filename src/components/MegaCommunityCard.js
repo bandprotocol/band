@@ -155,7 +155,7 @@ export default ({
     description,
     marketCap,
     price,
-    last24Hrs,
+    last24HrsPrice,
     logo,
   },
   bandPrice,
@@ -192,7 +192,10 @@ export default ({
         <PriceDetail
           marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
           price={BN.parse(price).bandToUSD(bandPrice)}
-          last24Hrs={last24Hrs.toFixed(2)}
+          last24Hrs={(
+            ((price - last24HrsPrice) / last24HrsPrice) *
+            100
+          ).toFixed(2)}
           statusBg={statusBg}
         />
         <Flex flexDirection="row" alignItems="center" mt={2}>

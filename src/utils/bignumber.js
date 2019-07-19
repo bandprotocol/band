@@ -91,5 +91,14 @@ BN.prototype.divideToFixed = function(divider, digits = 2) {
     .toFixed(digits)
 }
 
+BN.prototype.calculateChanged = function(pastValue) {
+  const currentValue = BigNumber(this.toString())
+  return currentValue
+    .minus(BigNumber(pastValue.toString()))
+    .dividedBy(BigNumber(pastValue.toString()))
+    .multipliedBy(100)
+    .toNumber()
+}
+
 window.BN = BN
 export default BN

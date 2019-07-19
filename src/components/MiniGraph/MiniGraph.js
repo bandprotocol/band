@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, Card, Text } from 'ui/common'
 
-export default ({ title, value, unit, subValue }) => (
+export default ({ title, changed, value, unit, subValue }) => (
   <Card variant="dashboard" my="4px" style={{ minWidth: 260, minHeight: 110 }}>
     <Flex flexDirection="column">
       <Text
@@ -11,7 +11,7 @@ export default ({ title, value, unit, subValue }) => (
         color="#4a4a4a"
         fontFamily="head"
       >
-        {title}
+        {title} {changed}
       </Text>
       <Text
         mt="8px"

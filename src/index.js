@@ -13,7 +13,6 @@ import rootReducer from 'reducers'
 import { BandProtocolClient } from 'band.js'
 
 const network = localStorage.getItem('network') || 'kovan'
-console.warn(network)
 switch (network) {
   case 'mainnet':
   case 'kovan':
