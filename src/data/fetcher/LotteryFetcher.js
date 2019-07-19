@@ -14,15 +14,29 @@ const compareBalls = (a, b) =>
   a.redBall === b.redBall &&
   a.mul === b.mul
 
+const isNotEqualDate = (a, b) =>
+  a.getMonth() !== b.getMonth() || a.getFullYear() !== b.getFullYear()
+
+const formatDate = date =>
+  date.getFullYear().toString() +
+  (date.getMonth() + 1).toString().padStart(2, '0')
+
 export const LotteryCountByTCDFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.tcdAddress !== this.props.tcdAddress
+      return (
+        prevProps.tcdAddress !== this.props.tcdAddress ||
+        isNotEqualDate(prevProps.selectedDate, this.props.selectedDate)
+      )
     }
 
     async fetch() {
+      const date = formatDate(this.props.selectedDate)
       const lotteriesCount = await Utils.getDataRequest(
         `/lotteries/${this.props.tcdAddress}/count`,
+        {
+          key: date,
+        },
       )
       return lotteriesCount
     }
@@ -34,20 +48,24 @@ export const LotteyByTCDAddress = withRouter(
     shouldFetch(prevProps) {
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
-        prevProps.currentPage !== this.props.currentPage
+        prevProps.currentPage !== this.props.currentPage ||
+        isNotEqualDate(prevProps.selectedDate, this.props.selectedDate)
       )
     }
     async fetch() {
-      const { tcdAddress, currentPage, nLotteryList } = this.props
+      const { tcdAddress, currentPage, nLotteryList, selectedDate } = this.props
+      const date = formatDate(selectedDate)
       const skip = (currentPage - 1) * nLotteryList
       const params =
         skip > 0
           ? {
               limit: nLotteryList,
               skip,
+              key: date,
             }
           : {
               limit: nLotteryList,
+              key: date,
             }
       const rawData = await Utils.getDataRequest(
         `/lotteries/${tcdAddress}`,
