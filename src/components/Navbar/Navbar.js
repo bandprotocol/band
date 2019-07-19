@@ -5,7 +5,7 @@ import NavbarRender from './NavbarRender'
 import { currentUserSelector } from 'selectors/current'
 import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
-import { allTxsSelector } from 'selectors/transaction'
+import { txIncludePendingSelector } from 'selectors/transaction'
 import { walletSelector } from 'selectors/wallet'
 
 class Navbar extends React.Component {
@@ -132,7 +132,7 @@ const mapStateToProps = (state, props) => {
     user: currentUserSelector(state),
     balance: bandBalanceSelector(state),
     price: bandPriceSelector(state),
-    txs: allTxsSelector(state),
+    txs: txIncludePendingSelector(state),
   }
 }
 

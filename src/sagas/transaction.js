@@ -14,6 +14,8 @@ import {
   dumpTxs,
   hideModal,
   DUMP_TXS,
+  addPendingTx,
+  removePendingTx,
 } from 'actions'
 
 import {
@@ -23,7 +25,10 @@ import {
 } from 'selectors/current'
 import { walletSelector } from 'selectors/wallet'
 
-import { transactionSelector, transactionHiddenSelector } from 'selectors/basic'
+import {
+  allTxsSelector,
+  transactionHiddenSelector,
+} from 'selectors/transaction'
 
 import { IPFS } from 'band.js'
 
@@ -33,12 +38,14 @@ import { IPFS } from 'band.js'
 // }
 
 function* sendTransaction({ transaction, title, type }) {
+  const timestamp = new Date().getTime()
   try {
+    yield put(addPendingTx(timestamp, title, type))
     const txHash = yield transaction.sendFeeless()
     yield put(addTx(txHash, title, type))
     yield put(dumpTxs())
-  } catch (err) {
-    console.log(err)
+  } finally {
+    yield put(removePendingTx(timestamp))
   }
 }
 
@@ -79,7 +86,6 @@ function* handleTcdWithdraw({
 }
 
 function* handleBuyToken({ address, amount, priceLimit }) {
-  console.log(address, amount.toString(), priceLimit.toString())
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createBuyTransaction({ amount, priceLimit })
   yield put(hideModal())
@@ -153,7 +159,7 @@ function* handleVoteProposal({ address, proposalId, vote }) {
 function* handleDumpTxs() {
   const user = yield select(currentUserSelector)
   if (user) {
-    const txs = yield select(transactionSelector)
+    const txs = yield select(allTxsSelector)
     const hiddenTxs = yield select(transactionHiddenSelector)
     localStorage.setItem(`txs-${user}`, transit.toJSON(txs))
     localStorage.setItem(`hiddenTxs-${user}`, transit.toJSON(hiddenTxs))

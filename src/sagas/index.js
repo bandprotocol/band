@@ -283,7 +283,7 @@ function* checkTransaction() {
   while (true) {
     const currentBlock = yield defaultWeb3.eth.getBlockNumber()
     if (currentBlock !== (yield select(blockNumberSelector))) {
-      const allTxs = yield select(transactionSelector)
+      const allTxs = (yield select(transactionSelector)).get('txs')
       if (allTxs) {
         const newTxs = fromJS(
           yield all(

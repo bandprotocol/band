@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { Flex, Box, Text } from 'ui/common'
 import styled from 'styled-components'
 import PendingTransaction from 'components/PendingTransaction'
-import { allTxsSelector } from 'selectors/transaction'
-import { transactionHiddenSelector } from 'selectors/basic'
+import { txIncludePendingSelector } from 'selectors/transaction'
+import { transactionHiddenSelector } from 'selectors/transaction'
 import { hideTxs } from 'actions'
 
 const Container = styled(Box)`
@@ -113,7 +113,7 @@ class TransactionPopup extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const txs = allTxsSelector(state)
+  const txs = txIncludePendingSelector(state)
   const hiddenTxs = transactionHiddenSelector(state)
   if (txs && hiddenTxs) {
     return {

@@ -92,28 +92,14 @@ const renderStatus = (status, confirm) => {
     case 'PENDING':
       return (
         <Flex pb={3} alignItems="center" pr={2}>
-          <Box
-            width="160px"
-            bg="#e7ecff"
-            style={{ height: '8px', borderRadius: '5px' }}
-            mr={3}
+          <Text
+            color="#4e3ca9"
+            fontWeight={600}
+            fontSize={14}
+            style={{ fontStyle: 'italic' }}
           >
-            <Box
-              width={`${(confirm * 100) / 4}%`}
-              bg="#4853ff"
-              style={{
-                height: '8px',
-                borderRadius: '5px',
-                transition: 'width 500ms',
-              }}
-            />
-          </Box>
-          <Flex>
-            <Text fontSize={14} color="#4e3ca9">
-              {confirm}
-            </Text>
-            <Text fontSize={14}>/4 Confirmation</Text>
-          </Flex>
+            Pending
+          </Text>
         </Flex>
       )
     case 'SENDING':
@@ -176,7 +162,9 @@ export default ({ title, type, txHash, status, confirm }) => (
     <Flex py={3}>
       <Flex flex={1} style={{ minWidth: 0 }}>
         <EllipsisText>{title}</EllipsisText>
-        <TxHashLink href={'https://kovan.etherscan.io/tx/' + txHash} />
+        {txHash && (
+          <TxHashLink href={'https://kovan.etherscan.io/tx/' + txHash} />
+        )}
       </Flex>
       <TxType type={type} />
     </Flex>

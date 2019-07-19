@@ -1,6 +1,13 @@
 import createReducer from 'reducers/creator'
 
-import { ADD_TX, SAVE_TXS, SAVE_HIDDEN_TXS, HIDE_TXS } from 'actions'
+import {
+  ADD_TX,
+  SAVE_TXS,
+  SAVE_HIDDEN_TXS,
+  HIDE_TXS,
+  ADD_PENDING_TX,
+  REMOVE_PENDING_TX,
+} from 'actions'
 import { Map, List, Set } from 'immutable'
 
 const handleAddTx = (state, { txHash, title, txType }) =>
@@ -41,9 +48,22 @@ const handleHideTxs = (state, {}) => {
   return state.set('hide', txs)
 }
 
+const handleAddPendingTx = (state, { id, title, txType }) =>
+  state.set(
+    'pending',
+    state
+      .get('pending', Map())
+      .set(id, Map({ title, type: txType, status: 'PENDING' })),
+  )
+
+const handleRemovePendingTx = (state, { id }) =>
+  state.set('pending', state.get('pending').delete(id))
+
 export default createReducer({
   [ADD_TX]: handleAddTx,
   [SAVE_TXS]: handleSaveTxs,
   [SAVE_HIDDEN_TXS]: handleSaveHiddenTxs,
   [HIDE_TXS]: handleHideTxs,
+  [ADD_PENDING_TX]: handleAddPendingTx,
+  [REMOVE_PENDING_TX]: handleRemovePendingTx,
 })
