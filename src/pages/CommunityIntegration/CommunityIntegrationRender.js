@@ -318,7 +318,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     </Flex>
                     <br />
                     <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                      📌 See{' '}
+                      {'📌 '}See{' '}
                       <span
                         onClick={() => {
                           this.setState({ tabNum: 2 })
@@ -381,7 +381,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   />
                   <br />
                   <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                    📌 See{' '}
+                    {'📌 '}See{' '}
                     <span
                       onClick={() => {
                         this.setState({ tabNum: 1 })
@@ -441,7 +441,7 @@ export default class CommunityIntegrationRender extends React.Component {
                   />
                   <br />
                   <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                    📌 See{' '}
+                    {'📌 '}See{' '}
                     <span
                       onClick={() => {
                         this.setState({ tabNum: 2 })
@@ -740,7 +740,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[0]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  How much is query fee? 💸
+                  {'How much is query fee? 💸'}
                 </Text>
                 <Text fontSize="15px" mt="30px" lineHeight="1.65">
                   To query the data, you have to pay a small fee defined by
@@ -853,7 +853,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 ref={this.specRef[2]}
               >
                 <Text fontSize="20px" fontWeight={900} mt="30px">
-                  How to parse the query result? ❓
+                  {'How to parse the query result? ❓'}
                 </Text>
                 <Text my="15px">
                   The result returned from query function consists of 3 parts.
