@@ -32,6 +32,14 @@ import MMNInactive from 'images/mmnInactive.svg'
 
 export const getTCDInfomation = prefix =>
   ({
+    'web:': {
+      imageActive: CrpytoActive,
+      imageInactive: CrpytoInactive,
+      label: 'Web Request',
+      shortLabel: 'Web',
+      order: 1,
+      type: 'web',
+    },
     'crypto:': {
       imageActive: CrpytoActive,
       imageInactive: CrpytoInactive,

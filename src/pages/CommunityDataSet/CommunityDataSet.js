@@ -8,6 +8,7 @@ import CommunityDataSetPrice from './CommunityDataSetPrice'
 import CommunityDataSetLottery from './CommunityDataSetLottery'
 import CommunityDataSetSport from './CommunityDataSetSport'
 import CommunityDataSetIdentity from './CommunityDataSetIdentity'
+import CommunityDataSetWebRequest from './CommunityDataSetWebRequest'
 
 class CommunityDataSet extends React.Component {
   render() {
@@ -20,6 +21,8 @@ class CommunityDataSet extends React.Component {
         return <CommunityDataSetSport {...this.props} />
       case 'BandIdentity':
         return <CommunityDataSetIdentity {...this.props} />
+      case 'Web Request Oracle':
+        return <CommunityDataSetWebRequest {...this.props} />
       default:
         return (
           <Flex width="100%" justifyContent="center" alignItems="center" mt={3}>
