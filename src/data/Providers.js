@@ -1,4 +1,18 @@
 const allProviders = {
+  '0xDa7A7bd990030359e4E30E41ba0e5b33f740Db47': {
+    name: 'USA_Node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
+  },
+  '0xDA7a8AFb5035045A58eeDEcC6B6F26247C8f20F5': {
+    name: 'EU_Node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
+  },
+  '0xDa7AfF0D0142eA8a6Df33bA9e6307922c7838489': {
+    name: 'SEA_Node',
+    image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
+  },
   '0xDA7A1dDCE143C2460Bd2536607ea38309D7c45Ca': {
     name: 'SPORTS_DB',
     image: 'https://i.imgur.com/GsZ6avc.png',
