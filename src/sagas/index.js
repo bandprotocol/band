@@ -148,6 +148,7 @@ function* baseInitialize() {
           tokenAddress
           name
           organization
+          description
           website
           logo
           banner
@@ -204,7 +205,6 @@ function* baseInitialize() {
   `,
   )
   for (const community of communityDetails.allBandCommunities.nodes) {
-    console.log(community)
     const token = community.tokenByTokenAddress
     yield put(
       saveCommunityInfo(
