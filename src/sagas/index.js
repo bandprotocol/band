@@ -143,7 +143,7 @@ function* baseInitialize() {
   const communityDetails = yield Utils.graphqlRequest(
     `
     {
-      allBandCommunities{
+      allBandCommunities {
         nodes {
           tokenAddress
           name
@@ -151,7 +151,6 @@ function* baseInitialize() {
           website
           logo
           banner
-          description
           tokenByTokenAddress {
             address
             symbol
@@ -205,6 +204,7 @@ function* baseInitialize() {
   `,
   )
   for (const community of communityDetails.allBandCommunities.nodes) {
+    console.log(community)
     const token = community.tokenByTokenAddress
     yield put(
       saveCommunityInfo(
@@ -224,10 +224,15 @@ function* baseInitialize() {
         parseFloat(token.curveByTokenAddress.price),
         new BN(token.totalSupply),
         parseFloat(
-          token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price,
+          token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
+            ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price
+            : 0,
         ),
         new BN(
-          token.curveByTokenAddress.pricesByCurveAddress.nodes[0].totalSupply,
+          token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
+            ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
+                .totalSupply
+            : 0,
         ),
         token.curveByTokenAddress.collateralEquation,
         token.tcdsByTokenAddress.nodes[0] &&
