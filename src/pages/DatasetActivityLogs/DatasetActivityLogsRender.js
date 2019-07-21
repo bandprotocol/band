@@ -116,7 +116,16 @@ const Report = ({
         <Text fontSize="14px" fontWeight="700" mx={2} color="#4d7dff">
           reported {getFormat(symbol).logIdentifier}
         </Text>
-        <Text fontSize="14px" fontWeight="700">
+        <Text
+          fontSize="14px"
+          fontWeight="700"
+          width="600px"
+          style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {dataKey}
         </Text>
       </Flex>
@@ -159,7 +168,16 @@ const Broadcast = ({
         <Text fontSize="14px" fontWeight="700" mx={2} color="#42c47f">
           reported {getFormat(symbol).logIdentifier}
         </Text>
-        <Text fontSize="14px" fontWeight="700">
+        <Text
+          fontSize="14px"
+          fontWeight="700"
+          width="600px"
+          style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {dataKey}
         </Text>
       </Flex>

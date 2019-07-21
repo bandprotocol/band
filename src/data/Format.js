@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import colors from 'ui/colors'
-import { Card, Text, Flex, Box } from 'ui/common'
+import { Card, Text, Flex } from 'ui/common'
 import { convertToBalls, decodeScores } from 'utils/helper'
 
 const Data = ({ children }) => (
@@ -104,6 +104,13 @@ export const getFormat = symbol => {
               {scoreHome} - {scoreAway}
             </Data>
           )
+        },
+      }
+    case 'XWB':
+      return {
+        logIdentifier: "web's requests",
+        formatValue: value => {
+          return <Data>{value}</Data>
         },
       }
   }
