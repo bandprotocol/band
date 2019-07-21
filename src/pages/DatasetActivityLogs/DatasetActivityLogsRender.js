@@ -119,7 +119,7 @@ const Report = ({
         <Text
           fontSize="14px"
           fontWeight="700"
-          width="500px"
+          flex={1}
           style={{
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -171,7 +171,7 @@ const Broadcast = ({
         <Text
           fontSize="14px"
           fontWeight="700"
-          width="500px"
+          flex={1}
           style={{
             overflow: 'hidden',
             textOverflow: 'ellipsis',

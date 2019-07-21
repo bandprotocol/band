@@ -95,18 +95,20 @@ const renderDataPoints = (tcdAddress, state, requests) => {
                 key={lastRequest.lastUpdate}
                 keyOnChain={lastRequest.key}
                 label={() => (
-                  <Flex
-                    alignItems="center"
-                    pt="3px"
-                    width="700px"
-                    style={{
-                      whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis',
-                      overflow: 'hidden',
-                    }}
-                  >
+                  <Flex alignItems="center" pt="3px">
                     <Logo src={image} />
-                    <Text fontSize="15px" fontWeight="bold" color="#393939">
+                    <Text
+                      fontSize="15px"
+                      fontWeight="bold"
+                      color="#393939"
+                      flex={1}
+                      style={{
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        minWidth: 0,
+                      }}
+                    >
                       {description}
                     </Text>
                   </Flex>
@@ -127,44 +129,40 @@ const renderDataPoints = (tcdAddress, state, requests) => {
                 updatedAt={lastRequest.lastUpdate}
               >
                 <React.Fragment>
-                  <Flex style={{ borderTop: '2px solid #f3f7ff' }}>
-                    <Flex justifyContent="space-between" width="100%">
-                      <Flex alignItems="center" pt="10px" pb="16px">
-                        <Method>{method}</Method>
-                        <Text
-                          color="#4a4a4a"
-                          fontSize="14px"
-                          fontWeight="600"
-                          ml="21px"
-                        >
-                          {url}
-                        </Text>
-                      </Flex>
-                      <Flex alignItems="center" mr="50px">
-                        <AbsoluteLink
-                          href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
-                        >
-                          <ApiSpecButton>
-                            <Flex
-                              justifyContent="space-between"
-                              alignItems="center"
-                              width="100%"
-                            >
-                              <Text
-                                fontSize="11px"
-                                color="#4a4a4a"
-                                fontWeight="bold"
-                              >
-                                API SPEC
-                              </Text>
-                              <FontAwesomeIcon
-                                icon={faDownload}
-                                color="#4a4a4a"
-                              />
-                            </Flex>
-                          </ApiSpecButton>
-                        </AbsoluteLink>
-                        <TestCallButton onClick={() => alert('Surprise me!')}>
+                  <Flex
+                    justifyContent="space-between"
+                    width="100%"
+                    style={{ borderTop: '2px solid #f3f7ff' }}
+                  >
+                    <Flex
+                      alignItems="center"
+                      pt="10px"
+                      pb="16px"
+                      flex={1}
+                      style={{ minWidth: 0 }}
+                    >
+                      <Method>{method}</Method>
+                      <Text
+                        color="#4a4a4a"
+                        fontSize="14px"
+                        fontWeight="600"
+                        ml="21px"
+                        flex={1}
+                        style={{
+                          textOverflow: 'ellipsis',
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          minWidth: 0,
+                        }}
+                      >
+                        {url}
+                      </Text>
+                    </Flex>
+                    <Flex alignItems="center" mr="50px" flex="0 auto">
+                      <AbsoluteLink
+                        href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
+                      >
+                        <ApiSpecButton>
                           <Flex
                             justifyContent="space-between"
                             alignItems="center"
@@ -172,18 +170,30 @@ const renderDataPoints = (tcdAddress, state, requests) => {
                           >
                             <Text
                               fontSize="11px"
-                              color="#fff"
+                              color="#4a4a4a"
                               fontWeight="bold"
                             >
-                              TEST CALL
+                              API SPEC
                             </Text>
                             <FontAwesomeIcon
-                              icon={faExchangeAlt}
-                              color="#fff"
+                              icon={faDownload}
+                              color="#4a4a4a"
                             />
                           </Flex>
-                        </TestCallButton>
-                      </Flex>
+                        </ApiSpecButton>
+                      </AbsoluteLink>
+                      <TestCallButton onClick={() => alert('Surprise me!')}>
+                        <Flex
+                          justifyContent="space-between"
+                          alignItems="center"
+                          width="100%"
+                        >
+                          <Text fontSize="11px" color="#fff" fontWeight="bold">
+                            TEST CALL
+                          </Text>
+                          <FontAwesomeIcon icon={faExchangeAlt} color="#fff" />
+                        </Flex>
+                      </TestCallButton>
                     </Flex>
                   </Flex>
                   <WebRequestTable mb={2} data={requests[key]} />

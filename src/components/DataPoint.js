@@ -29,6 +29,7 @@ const DataPointContainer = styled(Card).attrs(p => ({
 const ExpandableCard = styled(Card)`
   max-height: 0;
   opacity: 0;
+  max-width: calc(100vw - 290px);
 
   ${p =>
     p.expand &&
