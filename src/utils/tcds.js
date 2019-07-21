@@ -30,11 +30,15 @@ import MMNActive from 'images/mmnActive.svg'
 import PWBInactive from 'images/pwbInactive.svg'
 import MMNInactive from 'images/mmnInactive.svg'
 
+// Web Request
+import WebRequestActive from 'images/requestActive.svg'
+import WebRequestInactive from 'images/requestInactive.svg'
+
 export const getTCDInfomation = prefix =>
   ({
     'web:': {
-      imageActive: CrpytoActive,
-      imageInactive: CrpytoInactive,
+      imageActive: WebRequestActive,
+      imageInactive: WebRequestInactive,
       label: 'Web Request',
       shortLabel: 'Web',
       order: 1,

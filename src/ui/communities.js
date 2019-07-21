@@ -4,6 +4,7 @@ export const getProfileColor = symbol =>
     XLT: 'linear-gradient(to left, #ffca55, #ff7155)',
     XFN:
       'linear-gradient(69deg, rgba(190, 60, 218, 0.9), rgba(239, 62, 150, 0.9))',
+    XWB: 'linear-gradient(to left, #6b8bf5, #6bf5cd)',
   }[symbol] || '#fff')
 
 export const getGraphColor = symbol =>
@@ -21,10 +22,13 @@ export const getGraphColor = symbol =>
       areaEnd: 'rgba(255, 113, 85, 0.4)',
     },
     XFN: {
-      lineStart: 'rgba(190, 60, 218, 1)',
-      lineEnd: 'rgba(239, 62, 150, 1)',
-      areaStart: 'rgba(190, 60, 218, 1)',
-      areaEnd: 'rgba(239, 62, 150, 0.4)',
+      lineStart: 'rgba(107, 245, 205, 1)',
+      lineEnd: 'rgba(107, 139, 245, 1)',
+      areaStart: 'rgba(107, 245, 205, 1)',
+      areaEnd: 'rgba(107, 139, 245, 0.4)',
+    },
+    XWB: {
+      lineStart: '',
     },
   }[symbol] || {
     lineStart: 'rgba(0, 104, 255, 1)',
