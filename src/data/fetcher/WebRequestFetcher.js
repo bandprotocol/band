@@ -37,7 +37,7 @@ export const RequestByTCDFetcher = withRouter(
             ...data,
           })
 
-          // sort by timestamp (DESC)
+          // sorted by timestamp's parameter has called lastest.
           dataByIpfsHash[ipfsHash].sort((a, b) => {
             if (a.lastUpdate.isBefore(b.lastUpdate)) return 1
             else return -1

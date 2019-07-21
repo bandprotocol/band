@@ -15,7 +15,7 @@ export default createTable({
         <Parameters variables={d.variables} types={d.meta.variables} />
       ),
       label: 'Parameter',
-      flex: '0 0 650px',
+      flex: '0 1 650px',
       ml: '25px',
       mr: 2,
     },
