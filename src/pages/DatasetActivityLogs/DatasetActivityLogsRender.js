@@ -12,7 +12,7 @@ import AutocompletedSearch from 'components/AutocompletedSearch'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
-import { getFormat } from 'data/Format'
+import { getFormat, getFormatDataKey } from 'data/Format'
 import ActivityHeader from 'images/activity-header.svg'
 import FilterSrc from 'images/filter.svg'
 import SecureSrc from 'images/activity-secure.svg'
@@ -119,14 +119,14 @@ const Report = ({
         <Text
           fontSize="14px"
           fontWeight="700"
-          width="600px"
+          width="500px"
           style={{
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}
         >
-          {dataKey}
+          {getFormatDataKey(symbol, dataKey)}
         </Text>
       </Flex>
       <Flex mt="10px" alignItems="center">
@@ -171,14 +171,14 @@ const Broadcast = ({
         <Text
           fontSize="14px"
           fontWeight="700"
-          width="600px"
+          width="500px"
           style={{
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
           }}
         >
-          {dataKey}
+          {getFormatDataKey(symbol, dataKey)}
         </Text>
       </Flex>
       <Flex mt="10px" mb="20px" alignItems="center">

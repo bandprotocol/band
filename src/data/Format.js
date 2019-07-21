@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import colors from 'ui/colors'
-import { Card, Text, Flex } from 'ui/common'
+import { Card, Text, Flex, AbsoluteLink } from 'ui/common'
 import { convertToBalls, decodeScores } from 'utils/helper'
+import { IPFS } from 'band.js'
 
 const Data = ({ children }) => (
   <Card
@@ -113,5 +114,19 @@ export const getFormat = symbol => {
           return <Data>{value}</Data>
         },
       }
+  }
+}
+
+export const getFormatDataKey = (symbol, key) => {
+  switch (symbol) {
+    case 'XWB':
+      const ipfsPath = IPFS.toIPFSHash(key.slice(6, 70))
+      return (
+        <AbsoluteLink href={`https://ipfs.io/ipfs/${ipfsPath}`}>
+          {ipfsPath}
+        </AbsoluteLink>
+      )
+    default:
+      return key
   }
 }
