@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Flex, Box, Text, Image } from 'ui/common'
+import { Flex, Box, Text, Button, AbsoluteLink } from 'ui/common'
 import DataHeader from 'components/DataHeader'
 import styled from 'styled-components'
 import { communityDetailSelector } from 'selectors/communities'
@@ -10,6 +10,8 @@ import FlipMove from 'react-flip-move'
 import { RequestByTCDFetcher } from 'data/fetcher/WebRequestFetcher'
 import Loading from 'components/Loading'
 import WebRequestTable from 'components/table/WebRequestTable'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDownload, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 
 const Logo = styled.div`
   width: 32px;
@@ -33,6 +35,31 @@ const Method = styled(Flex).attrs({
   height: 30px;
   border-radius: 14px;
   background-color: #eeeeee;
+`
+
+const ApiSpecButton = styled(Button).attrs({
+  variant: 'outline',
+  width: '113px',
+  mx: '14px',
+})`
+  border-radius: 14px;
+  border: 0.8px solid #4a4a4a;
+  padding: 7px 14px;
+  height: 28px;
+  cursor: pointer;
+`
+
+const TestCallButton = styled(Button).attrs({
+  variant: 'outline',
+  width: '113px',
+})`
+  border-radius: 14px;
+  border: 0;
+  padding: 7px 14px;
+  height: 28px;
+  cursor: pointer;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.1);
+  background-image: linear-gradient(to right, #4a4a4a, #656565);
 `
 
 const renderDataPoints = (tcdAddress, state, requests) => {
@@ -86,7 +113,7 @@ const renderDataPoints = (tcdAddress, state, requests) => {
               >
                 <React.Fragment>
                   <Flex style={{ borderTop: '2px solid #f3f7ff' }}>
-                    <Flex justifyContent="space-between">
+                    <Flex justifyContent="space-between" width="100%">
                       <Flex alignItems="center" pt="10px" pb="16px">
                         <Method>{method}</Method>
                         <Text
@@ -97,6 +124,50 @@ const renderDataPoints = (tcdAddress, state, requests) => {
                         >
                           {url}
                         </Text>
+                      </Flex>
+                      <Flex alignItems="center" mr="50px">
+                        <AbsoluteLink
+                          href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
+                        >
+                          <ApiSpecButton>
+                            <Flex
+                              justifyContent="space-between"
+                              alignItems="center"
+                              width="100%"
+                            >
+                              <Text
+                                fontSize="11px"
+                                color="#4a4a4a"
+                                fontWeight="bold"
+                              >
+                                API SPEC
+                              </Text>
+                              <FontAwesomeIcon
+                                icon={faDownload}
+                                color="#4a4a4a"
+                              />
+                            </Flex>
+                          </ApiSpecButton>
+                        </AbsoluteLink>
+                        <TestCallButton onClick={() => alert('Surprise me!')}>
+                          <Flex
+                            justifyContent="space-between"
+                            alignItems="center"
+                            width="100%"
+                          >
+                            <Text
+                              fontSize="11px"
+                              color="#fff"
+                              fontWeight="bold"
+                            >
+                              TEST CALL
+                            </Text>
+                            <FontAwesomeIcon
+                              icon={faExchangeAlt}
+                              color="#fff"
+                            />
+                          </Flex>
+                        </TestCallButton>
                       </Flex>
                     </Flex>
                   </Flex>
@@ -111,24 +182,11 @@ const renderDataPoints = (tcdAddress, state, requests) => {
   )
 }
 
-class SportPage extends React.Component {
-  state = {
-    nSportList: 10,
-    currentPage: 1,
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.tcdAddress !== this.props.tcdAddress) {
-      this.setState({
-        currentPage: 1,
-      })
-    }
-  }
-
+class WebRequestPage extends React.Component {
   render() {
     const { tcdAddress, tcdPrefix } = this.props
     return (
-      <RequestByTCDFetcher tcdAddress={tcdAddress} {...this.state}>
+      <RequestByTCDFetcher tcdAddress={tcdAddress}>
         {({ fetching, data }) => (
           <PageStructure
             renderHeader={() => (
@@ -207,4 +265,4 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
   }
 }
 
-export default connect(mapStateToProps)(SportPage)
+export default connect(mapStateToProps)(WebRequestPage)

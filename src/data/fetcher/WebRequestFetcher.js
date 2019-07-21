@@ -25,15 +25,15 @@ export const RequestByTCDFetcher = withRouter(
 
         if (!dataByIpfsHash[ipfsHash]) dataByIpfsHash[ipfsHash] = []
         try {
-          const { data } = await axios.get(
-            `https://ipfs.io/ipfs/${IPFS.toIPFSHash(ipfsHash.slice(6))}`,
-          )
+          const ipfsPath = IPFS.toIPFSHash(ipfsHash.slice(6))
+          const { data } = await axios.get(`https://ipfs.io/ipfs/${ipfsPath}`)
           const { multiplier } = data.response
           dataByIpfsHash[ipfsHash].push({
             variables,
             value: new BN(value).divideToFixed(multiplier || 1, 2),
             lastUpdate: moment(timestamp * 1000),
             keyOnChain: key,
+            ipfsPath,
             ...data,
           })
 
