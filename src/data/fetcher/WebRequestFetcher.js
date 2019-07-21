@@ -47,7 +47,22 @@ export const RequestByTCDFetcher = withRouter(
         }
       }
 
-      return dataByIpfsHash
+      const sortedIpfsHash = Object.entries(dataByIpfsHash)
+        .map(([key, value]) => {
+          return {
+            key,
+            lastUpdate: value[0].lastUpdate,
+          }
+        })
+        .sort((a, b) => {
+          if (a.lastUpdate.isBefore(b.lastUpdate)) return 1
+          return -1
+        })
+
+      return {
+        requests: dataByIpfsHash,
+        sortedIndex: sortedIpfsHash,
+      }
     }
   },
 )

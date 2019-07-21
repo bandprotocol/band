@@ -77,13 +77,13 @@ const TestCallButton = styled(Button).attrs({
   background-image: linear-gradient(to right, #4a4a4a, #656565);
 `
 
-const renderDataPoints = (tcdAddress, state, requests) => {
+const renderDataPoints = (requests, sortedIndex) => {
   return (
     <React.Fragment>
       <Box mt={3}>
         <FlipMove>
-          {Object.keys(requests).map(key => {
-            const lastRequest = requests[key][0]
+          {Object.keys(requests).map((key, index) => {
+            const lastRequest = requests[sortedIndex[index].key][0]
             const {
               meta: {
                 info: { description, image },
@@ -209,7 +209,7 @@ const renderDataPoints = (tcdAddress, state, requests) => {
 
 class WebRequestPage extends React.Component {
   render() {
-    const { tcdAddress, tcdPrefix } = this.props
+    const { tcdAddress } = this.props
     return (
       <RequestByTCDFetcher tcdAddress={tcdAddress}>
         {({ fetching, data }) => (
@@ -263,7 +263,7 @@ class WebRequestPage extends React.Component {
               />
             ) : (
               <React.Fragment>
-                {renderDataPoints(tcdAddress, this.state, data)}
+                {renderDataPoints(data.requests, data.sortedIndex)}
               </React.Fragment>
             )}
           </PageStructure>
