@@ -127,59 +127,68 @@ export default class DataPoint extends React.Component {
         {children && (
           <ExpandableCard expand={this.state.expand}>
             {this.state.expand && children}
-            <Flex justifyContent="center" alignItems="center" bg="white">
-              <Flex
-                mt="10px"
-                style={{
-                  height: '10px',
-                  width: '450px',
-                  borderTop: 'solid 1px #e7ecff',
-                }}
-              />
-            </Flex>
-            <Flex
-              pt="10px"
-              pb="20px"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <KeyBox
-                justifyContent="center"
-                alignItems="center"
-                onClick={e => this.handleShowCopied(e, keyOnChain)}
-              >
+            {keyOnChain && (
+              <React.Fragment>
+                <Flex justifyContent="center" alignItems="center" bg="white">
+                  <Flex
+                    mt="10px"
+                    style={{
+                      height: '10px',
+                      width: '450px',
+                      borderTop: 'solid 1px #e7ecff',
+                    }}
+                  />
+                </Flex>
                 <Flex
-                  bg="#ffca55"
+                  pt="10px"
+                  pb="20px"
                   justifyContent="center"
                   alignItems="center"
-                  style={{
-                    fontWeight: 500,
-                    maxWidth: '50px',
-                    minWidth: '50px',
-                    maxHeight: '20px',
-                    minHeight: '20px',
-                    borderRadius: '10px',
-                  }}
                 >
-                  <Text color="#ffffff" fontWeight="900" fontSize="12px">
-                    KEY
-                  </Text>
+                  <KeyBox
+                    justifyContent="center"
+                    alignItems="center"
+                    onClick={e => this.handleShowCopied(e, keyOnChain)}
+                  >
+                    <Flex
+                      bg="#ffca55"
+                      justifyContent="center"
+                      alignItems="center"
+                      style={{
+                        fontWeight: 500,
+                        maxWidth: '50px',
+                        minWidth: '50px',
+                        maxHeight: '20px',
+                        minHeight: '20px',
+                        borderRadius: '10px',
+                      }}
+                    >
+                      <Text color="#ffffff" fontWeight="900" fontSize="12px">
+                        KEY
+                      </Text>
+                    </Flex>
+                    <Text
+                      fontFamily="code"
+                      fontWeight="500"
+                      color="#4a4a4a"
+                      fontSize="14px"
+                      ml="10px"
+                      mr="auto"
+                    >
+                      {keyOnChain}
+                    </Text>
+                    <Text
+                      mr={2}
+                      color="#5269ff"
+                      fontWeight={500}
+                      fontSize="13px"
+                    >
+                      {this.state.copied ? 'Copied' : 'Click to copy'}
+                    </Text>
+                  </KeyBox>
                 </Flex>
-                <Text
-                  fontFamily="code"
-                  fontWeight="500"
-                  color="#4a4a4a"
-                  fontSize="14px"
-                  ml="10px"
-                  mr="auto"
-                >
-                  {keyOnChain}
-                </Text>
-                <Text mr={2} color="#5269ff" fontWeight={500} fontSize="13px">
-                  {this.state.copied ? 'Copied' : 'Click to copy'}
-                </Text>
-              </KeyBox>
-            </Flex>
+              </React.Fragment>
+            )}
           </ExpandableCard>
         )}
       </DataPointContainer>

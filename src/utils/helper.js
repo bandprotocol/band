@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
+import { Buffer } from 'buffer'
+import parameter from 'reducers/parameter'
 
 export const isPositiveNumber = input => {
   if (input.match(/^\d*\.?\d*$/)) return parseInt(input, 10) >= 0
@@ -245,4 +247,32 @@ export const decodeScores = scores => {
     new BN(bits.slice(0, 8), 2).toNumber(),
     new BN(bits.slice(8), 2).toNumber(),
   ]
+}
+
+export const hexToParameters = (variables, types) => {
+  let buf = new Buffer(variables, 'hex')
+  let parameters = []
+  for (const type of types) {
+    switch (type) {
+      case 'string':
+        let res = ''
+        while (true) {
+          const v = buf.readUInt8(0)
+          buf = buf.slice(1)
+          if (v === 0) {
+            break
+          }
+          res += String.fromCharCode(v)
+        }
+        parameters.push(res)
+        break
+      case 'uint8':
+        const v = buf.readUInt8(0)
+        buf = buf.slice(1)
+        parameters.push(v)
+        break
+    }
+  }
+
+  return parameters
 }
