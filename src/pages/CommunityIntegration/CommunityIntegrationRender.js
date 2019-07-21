@@ -397,23 +397,13 @@ export default class CommunityIntegrationRender extends React.Component {
                       borderRadius: '8px',
                     }}
                   >
-                    <Flex p="16px" bg="#050505" color="white">
-                      <Text fontWeight={900}>
-                        JSON object for request data off-chain
-                      </Text>
+                    <Flex p="16px" bg="#4d4e68" color="white">
+                      <Text fontWeight={900}>Request data off-chain</Text>
                     </Flex>
-                    <ReactJson
-                      style={{ padding: '16px' }}
-                      iconStyle="circle"
-                      displayDataTypes={false}
-                      displayObjectSize={false}
-                      src={{
-                        key:
-                          '0x1220a39f6304fff1d0e09d093fbb52b733a1dc866\nd451cb5931d422245396e5596dd736166654c6f7700',
-                        tcd: tcdAddress,
-                        broadcast: true,
-                      }}
-                      theme="eighties"
+                    <Snippet
+                      languages="Curl"
+                      description=" "
+                      code={overviews[2]}
                     />
                   </Flex>
                   <Flex ml={3} flex={1} flexDirection="column">

@@ -2,6 +2,16 @@ export default {
   overview: [
     `You can integrate WebRequest data to your DApps in 4 steps`,
     `Pick the query key for data lookup. For instance, key 0x1220a39f6304fff1d0e09d093fbb52b733a1dc866d451cb5931\nd422245396e5596dd736166654c6f7700 for getting current  (in this case is "safeLow") gas price from ªhttps://docs.ethgasstation.info/ªgasStation . Each dataset has its own method to construct a valid key.`,
+    `
+curl -X POST \\
+  https://api.kovan.bandprotocol.com/data/request \\
+  -H 'Content-Type: application/json' \\
+  -d '{
+    "key": "0x1220a39f6304fff1d0e09d093fbb52b733a1dc866d451cb5931d422245396e5596dd736166654c6f7700",
+    "tcd": "0x7f525974d824a6C4Efd54b9E7CB268eBEFc94aD8",
+    "broadcast": true
+}'
+`,
   ],
   description: [
     `First we begin by writing a •FreeCallerContract which will manage the call schedule and pay Ether back to the caller. The •call() function allows anyone to call •target contract, with a function to get the fair gas price ( •getFairGasPrice ) left to be implemented.`,
