@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Flex, Box, Text, Button, AbsoluteLink } from 'ui/common'
+import { Flex, Box, Text, Button, AbsoluteLink, Image } from 'ui/common'
 import DataHeader from 'components/DataHeader'
 import styled from 'styled-components'
 import { communityDetailSelector } from 'selectors/communities'
@@ -12,6 +12,21 @@ import Loading from 'components/Loading'
 import WebRequestTable from 'components/table/WebRequestTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { showModal } from 'actions'
+
+import AddSymbol from 'images/add-symbol.svg'
+
+const CustomButton = styled(Button).attrs({
+  variant: 'gradientBlue',
+})`
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-block;
+  height: 34px;
+  padding: 0 18px 2px;
+  align-self: flex-end;
+  margin-bottom: 2px;
+`
 
 const Logo = styled.div`
   width: 32px;
@@ -210,6 +225,12 @@ class WebRequestPage extends React.Component {
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
                   {fetching ? '' : `${Object.keys(data).length} Keys Available`}
                 </Text>
+                <Flex ml="auto" mr="20px">
+                  <CustomButton onClick={this.props.showNewEndpoint}>
+                    <Image src={AddSymbol} height="12px" mt="-1px" mr={2} />
+                    NEW ENDPOINT
+                  </CustomButton>
+                </Flex>
               </Flex>
             )}
             {...this.props}
@@ -265,4 +286,16 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
   }
 }
 
-export default connect(mapStateToProps)(WebRequestPage)
+const mapDispatchToProps = (dispatch, { tcdAddress }) => ({
+  showNewEndpoint: () =>
+    dispatch(
+      showModal('NEW_WEB_REQUEST', {
+        tcdAddress,
+      }),
+    ),
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WebRequestPage)

@@ -9,6 +9,7 @@ import ProposeModal from 'components/ProposeModal'
 import DepositWithdrawModal from 'components/DepositWithdrawModal'
 import BecomeProviderModal from 'components/BecomeProviderModal'
 import ApplyIdentityModal from 'components/ApplyIdentityModal'
+import NewWebRequestModal from 'components/NewWebRequestModal'
 
 export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
@@ -26,6 +27,8 @@ export default ({ modalName, data, hideModal }) => (
       <BecomeProviderModal />
     ) : modalName === 'APPLYIDENTITY' ? (
       <ApplyIdentityModal />
+    ) : modalName === 'NEW_WEB_REQUEST' ? (
+      <NewWebRequestModal />
     ) : null}
   </ModalContainer>
 )

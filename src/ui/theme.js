@@ -136,6 +136,25 @@ export default {
         backgroundColor: '#ced5ff',
       },
     },
+    gradient: {
+      fontFamily: 'bio-sans',
+      fontSize: 13,
+      fontWeight: 700,
+      height: '2.7em',
+      padding: '0 1.35em 0.15em',
+      display: 'inline-block',
+      cursor: 'pointer',
+      color: 'white',
+      backgroundImage: 'linear-gradient(to right, #5269ff, #4890ff)',
+      border: `solid 0px ${colors.text.grey}`,
+      transition: 'all 250ms',
+      borderRadius: '20px',
+      boxShadow: '0 4px 5px 0 rgba(0, 0, 0, 0.1)',
+
+      '&:hover': {
+        backgroundColor: '#3c55f9',
+      },
+    },
     submit: {
       fontFamily: 'bio-sans',
       fontWeight: 400,
