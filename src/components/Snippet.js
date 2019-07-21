@@ -185,7 +185,7 @@ export default class Snippet extends React.Component {
   }
 
   render() {
-    const { codeIndex, code } = this.props
+    const { codeIndex, code, languages, description } = this.props
 
     return (
       <React.Fragment>
@@ -201,7 +201,7 @@ export default class Snippet extends React.Component {
               active={this.state.tab === 'solidity'}
               onClick={() => this.setState({ tab: 'solidity' })}
             >
-              Solidity
+              {languages || 'Solidity'}
             </TabOption>
             <Text
               ml="auto"
@@ -218,9 +218,10 @@ export default class Snippet extends React.Component {
                   fontFamily: 'inherit',
                 }}
               >
-                Provider Fee:
+                {!description && 'Provider Fee:'}
               </span>{' '}
-              {this.state.tab === 'solidity' ? '0.001 ETH/query' : 'free'}
+              {description ||
+                (this.state.tab === 'solidity' ? '0.001 ETH/query' : 'free')}
             </Text>
           </Flex>
           {Array.isArray(code)

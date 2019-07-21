@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import ReactJson from 'react-json-view'
 import { Flex, Box, Text, AbsoluteLink, Image } from 'ui/common'
+import { NavLink } from 'react-router-dom'
 import PageContainer from 'components/PageContainer'
 import PageStructure from 'components/DataSetPageStructure'
 import Snippet from 'components/Snippet'
@@ -150,6 +152,23 @@ const HighlightText = ({ text }) => {
           }
           if (word[0] === '•') {
             return <HighlightSpan>{word.slice(1)}</HighlightSpan>
+          } else if (word[0] === 'ª') {
+            const t = word.slice(1)
+            return (
+              <AbsoluteLink href={t.slice(0, t.indexOf('ª'))}>
+                {t.slice(t.indexOf('ª') + 1, t.length)}
+              </AbsoluteLink>
+            )
+          } else if (word[0] === 'º') {
+            const t = word.slice(1)
+            return (
+              <NavLink
+                to={t.slice(0, t.indexOf('º'))}
+                style={{ marginRight: '5px', fontWeight: 900 }}
+              >
+                {t.slice(t.indexOf('º') + 1, t.length)}
+              </NavLink>
+            )
           } else if (word.includes('0x') && word.length > 40) {
             return <HighlightSpan>{word}</HighlightSpan>
           }
@@ -198,7 +217,12 @@ export default class CommunityIntegrationRender extends React.Component {
   }
 
   render() {
-    let { name: communityName, tcdAddress, tcdPrefix } = this.props
+    let {
+      communityAddress,
+      name: communityName,
+      tcdAddress,
+      tcdPrefix,
+    } = this.props
     tcdAddress = tcdAddress || '0x'
     const info =
       (tcdPrefix && Integration[communityName][tcdPrefix]) ||
@@ -300,7 +324,12 @@ export default class CommunityIntegrationRender extends React.Component {
                 mx="80px"
                 style={{ borderBottom: '1px solid #e7ecff' }}
               >
-                <Flex flex={1} flexDirection="row" justifyContent="center">
+                <Flex
+                  flex={1}
+                  flexDirection="row"
+                  justifyContent="center"
+                  style={{ maxWidth: '50%' }}
+                >
                   <Box>
                     <Flex flex={1} flexDirection="row" justifyContent="center">
                       <Text
@@ -339,12 +368,96 @@ export default class CommunityIntegrationRender extends React.Component {
                     </Text>
                   </Box>
                 </Flex>
-                <Flex flex={1} pr="20px" justifyContent="flex-end" mb="30px">
+                <Flex
+                  flex={1}
+                  pr="20px"
+                  justifyContent="flex-end"
+                  mb="30px"
+                  style={{ minWidth: '50%' }}
+                >
                   <Image src={Overview1} height="100%" />
                 </Flex>
               </Flex>
-              <Flex flexDirection="row" pt="60px" pb="20px" mr="40px">
-                <Flex flex={2} mr="20px">
+              {tcdPrefix === 'web' && (
+                <Flex
+                  flexDirection="row"
+                  mt="30px"
+                  pb="30px"
+                  mx="80px"
+                  style={{ borderBottom: 'solid 1px #e7ecff' }}
+                >
+                  <Flex
+                    flex={2}
+                    mr="20px"
+                    flexDirection="column"
+                    bg="#2c2c2c"
+                    style={{
+                      maxWidth: '50%',
+                      overflow: 'hidden',
+                      borderRadius: '8px',
+                    }}
+                  >
+                    <Flex p="16px" bg="#050505" color="white">
+                      <Text fontWeight={900}>
+                        JSON object for request data off-chain
+                      </Text>
+                    </Flex>
+                    <ReactJson
+                      style={{ padding: '16px' }}
+                      iconStyle="circle"
+                      displayDataTypes={false}
+                      displayObjectSize={false}
+                      src={{
+                        key:
+                          '0x1220a39f6304fff1d0e09d093fbb52b733a1dc866\nd451cb5931d422245396e5596dd736166654c6f7700',
+                        tcd: tcdAddress,
+                        broadcast: true,
+                      }}
+                      theme="eighties"
+                    />
+                  </Flex>
+                  <Flex ml={3} flex={1} flexDirection="column">
+                    <Flex flexDirection="row" mt="10px">
+                      <Text
+                        lineHeight="20px"
+                        fontWeight={700}
+                        fontSize="16px"
+                        fontFamily="head"
+                        style={{ minWidth: '30px' }}
+                      >
+                        2.
+                      </Text>
+                      <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
+                        <HighlightText text="Ask data providers off-chain" />
+                        <br />
+                      </Text>
+                    </Flex>
+                    <TwoColumnList
+                      list={[
+                        [
+                          '🔸',
+                          `Create JSON object which consist of key (your query key), tcd address ↴ ${tcdAddress} , broadcast flag (boolean) .`,
+                        ],
+                        [
+                          '🔸',
+                          `•POST your request to ↴  ªhttps://api.kovan.bandprotocol.com/data/requestªhttps://api.kovan.bandprotocol.com/data/request .`,
+                        ],
+                        [
+                          '🔸',
+                          `Go to explore data º${`/community/${communityAddress}/${tcdAddress}/data`}ºpage to see your request show up`,
+                        ],
+                      ]}
+                    />
+                  </Flex>
+                </Flex>
+              )}
+              <Flex
+                flexDirection={tcdPrefix === 'web' ? 'row-reverse' : 'row'}
+                pt="60px"
+                pb="20px"
+                mr="40px"
+              >
+                <Flex flex={2} mr="20px" style={{ maxHeight: '250px' }}>
                   <Image src={Overview2} height="26 0px" />
                 </Flex>
                 <Flex ml={3} flex={1} flexDirection="column">
@@ -356,7 +469,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       fontFamily="head"
                       style={{ minWidth: '30px' }}
                     >
-                      2.
+                      {tcdPrefix === 'web' ? '3.' : '2.'}
                     </Text>
                     <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       <HighlightText text="Query data from the chosen key:" />
@@ -403,7 +516,7 @@ export default class CommunityIntegrationRender extends React.Component {
                 </Flex>
               </Flex>
               <Flex
-                flexDirection="row"
+                flexDirection={tcdPrefix === 'web' ? 'row-reverse' : 'row'}
                 pt="60px"
                 mt="30px"
                 mx="80px"
@@ -420,7 +533,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       fontFamily="head"
                       style={{ minWidth: '30px' }}
                     >
-                      3.
+                      {tcdPrefix === 'web' ? '4.' : '3.'}
                     </Text>
                     <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
                       <HighlightText text="The •query call returns a bundle of •output , •updatedAt , and •status ." />
@@ -461,7 +574,12 @@ export default class CommunityIntegrationRender extends React.Component {
                     to learn how to parse the output data.
                   </Text>
                 </Flex>
-                <Flex flex={1} justifyContent="flex-end">
+                <Flex
+                  flex={1}
+                  justifyContent={
+                    tcdPrefix === 'web' ? 'flex-start' : 'flex-end'
+                  }
+                >
                   <Image src={Overview3} height="300px" />
                 </Flex>
               </Flex>
@@ -787,15 +905,44 @@ export default class CommunityIntegrationRender extends React.Component {
                 <Text fontSize="20px" fontWeight={900} mt="30px">
                   {`How to construct a query key? 🔑`}
                 </Text>
-                <Text
-                  lineHeight={1.65}
-                  fontWeight={500}
-                  fontSize="15px"
-                  mt="30px"
-                  style={{ whiteSpace: 'pre-wrap' }}
-                >
-                  <HighlightText text={keyFormat.description} />
-                </Text>
+                {keyFormat.description.map(text => {
+                  if (text[0] === 'ˆ') {
+                    return <Image src={text.slice(1, text.length - 1)} />
+                  } else if (text[0] === '∆') {
+                    return (
+                      <Flex
+                        flexDirection="column"
+                        style={{
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Flex p="16px" bg="#050505" color="white">
+                          <Text fontWeight={900}>JSON Request</Text>
+                        </Flex>
+                        <ReactJson
+                          style={{ padding: '16px' }}
+                          iconStyle="circle"
+                          displayDataTypes={false}
+                          displayObjectSize={false}
+                          src={JSON.parse(text.slice(1))}
+                          theme="eighties"
+                        />
+                      </Flex>
+                    )
+                  }
+                  return (
+                    <Text
+                      lineHeight={1.65}
+                      fontWeight={500}
+                      fontSize="15px"
+                      mt="30px"
+                      style={{ whiteSpace: 'pre-wrap' }}
+                    >
+                      <HighlightText text={text} />
+                    </Text>
+                  )
+                })}
                 <Flex mt="30px" flexWrap="wrap">
                   {keyFormat.keys.map(key => (
                     <Flex

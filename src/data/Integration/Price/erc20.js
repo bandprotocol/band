@@ -17,8 +17,9 @@ export default {
   keyFormat: {
     crypto: {
       header: 'List of Available Pairs',
-      description:
+      description: [
         'The following pairs are available for ERC-20 to ETH trading data.',
+      ],
       keys: [
         [
           'BAT/ETH',

@@ -17,8 +17,9 @@ export default {
   keyFormat: {
     crypto: {
       header: 'List of Available Pairs',
-      description:
+      description: [
         'The query key is •PWB/YYYYMMDD where YYYY, MM, and DD is the year, month, and date of the lottery respectively.',
+      ],
       keys: [],
     },
   },

@@ -17,8 +17,9 @@ export default {
   keyFormat: {
     crypto: {
       header: 'List of Available Pairs',
-      description:
+      description: [
         'The following pairs are available for US Equity trading data.',
+      ],
       keys: [
         [
           'AAPL/USD',
