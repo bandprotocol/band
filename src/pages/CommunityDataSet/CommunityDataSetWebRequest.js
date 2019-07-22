@@ -239,9 +239,7 @@ class WebRequestPage extends React.Component {
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
                   {fetching
                     ? ''
-                    : `${
-                        Object.keys(data.requests).length
-                      } Endpoints Available`}
+                    : `${Object.keys(data).length} Endpoints Available`}
                 </Text>
                 <Flex ml="auto" mr="20px">
                   <CustomButton onClick={this.props.showNewEndpoint}>

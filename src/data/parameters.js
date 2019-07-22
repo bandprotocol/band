@@ -8,34 +8,38 @@ const allParametersDescription = {
       'This parameter group dictates how parameter proposals are voted by the community',
   },
   crypto: {
-    info: 'ESPN',
+    info: 'This parameter group governs how Crypto-Fiat price feed is provided',
   },
   erc20: {
-    info: 'Coinbase',
+    info: 'This parameter group governs how ERC-20 price feed is provided',
   },
   fx: {
-    info: 'Bitstamp',
+    info: 'This parameter group governs how FX price feed is provided',
   },
   useq: {
-    info: 'Bitfinex',
+    info: 'This parameter group governs how US Equities price feed is provided',
   },
   pwb: {
-    info: 'Bittrex',
+    info: 'This parameter group governs how PowerBall lottery feed is provided',
   },
   mmn: {
-    info: 'Gemini',
+    info:
+      'This parameter group governs how MegaMillion lottery feed is provided',
   },
   epl: {
-    info: 'Kraken',
+    info: 'This parameter group governs how Soccer feed is provided',
   },
   nba: {
-    info: 'CoinMarketCap',
+    info:
+      'This parameter group governs how NBA (Basketball) sport feed is provided',
   },
   mlb: {
-    info: 'CryptoCompare',
+    info:
+      'This parameter group governs how MBL (Baseball) sport feed is provided',
   },
   nfl: {
-    info: 'OpenMarketCap',
+    info:
+      'This parameter group governs how NFL (American Football) sport feed is provided',
   },
   '0xda7adB240Fb99dCD55e19a17B97ac2163d4d4509': {
     info: 'OnchainFX',

@@ -145,7 +145,7 @@ class CommunityPricePage extends React.Component {
                 pr="20px"
               >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
-                  {countFetching ? '' : `${totalCount} Keys Available`}
+                  {countFetching ? '' : `${totalCount} Pairs Available`}
                 </Text>
                 <AutocompletedSearch
                   data={getPriceKeys(tcdPrefix)}

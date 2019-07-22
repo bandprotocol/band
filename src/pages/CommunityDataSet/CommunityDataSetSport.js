@@ -192,7 +192,7 @@ class SportPage extends React.Component {
                 pl="52px"
               >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
-                  {countFetching ? '' : `${totalCount} Keys Available`}
+                  {countFetching ? '' : `${totalCount} Matches Available`}
                 </Text>
                 <Flex mr="20px" width="330px" justifyConten="space-around">
                   <SearchSelect
