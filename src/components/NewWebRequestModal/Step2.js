@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Box, Flex, Card, Text, Button, Image } from 'ui/common'
 import RightArrowSrc from 'images/icon-right-arrow.svg'
-import DualArrowSrc from 'images/dual-arrows.svg'
+import ConnectSrc from 'images/plug.svg'
 import { createLoadingButton } from 'components/BaseButton'
 import axios from 'axios'
 
@@ -41,25 +41,29 @@ const Input = styled.input`
 const CallButton = createLoadingButton(styled(Button).attrs({
   variant: 'gradient',
 })`
-  background-image: linear-gradient(90deg, #4a4a4a, #656565);
+  background-image: linear-gradient(270deg, #ffc40f 3%, #ff7155 100%);
   line-height: 24px;
   font-size: 12px;
 `)
 export default class Step2 extends React.Component {
-  state = {
-    params: ['', '', ''],
-    result: null,
-    error: null,
+  constructor(props) {
+    super(props)
+    this.state = {
+      params: Array(JSON.parse(this.props.json).meta.variables.length).fill(''),
+      result: null,
+      error: null,
+    }
   }
 
   async testcall() {
     const { params } = this.state
-    const queryJson = JSON.parse(
-      this.props.json
-        .replace('{0}', params[0])
-        .replace('{1}', params[1])
-        .replace('{2}', params[2]),
-    )
+    const { meta } = JSON.parse(this.props.json)
+
+    let json = this.props.json
+    for (let i = 0; i < meta.variables.length; i++)
+      json = json.replace(`{${i}}`, params[i])
+    const queryJson = JSON.parse(json)
+
     try {
       const { data } = await axios.post(
         'https://band-kovan.herokuapp.com/data/web_request_test',
@@ -107,7 +111,12 @@ export default class Step2 extends React.Component {
             {!result ? (
               <CallButton onClick={this.testcall.bind(this)}>
                 TEST CALL
-                <Image ml={3} height="0.8em" src={DualArrowSrc} />
+                <Image
+                  ml={3}
+                  height="20px"
+                  src={ConnectSrc}
+                  style={{ verticalAlign: 'middle' }}
+                />
               </CallButton>
             ) : (
               <Text fontSize="12px">{result}</Text>

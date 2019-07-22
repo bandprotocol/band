@@ -30,13 +30,17 @@ const InnerContainer = styled.div`
 window.buffer = Buffer
 
 class MakeNewRequest extends React.Component {
-  state = {
-    pageState: 1,
-    isLoading: [true, true, true],
-    params: ['', '', ''],
-    result: null,
-    txHash: null,
-    error: null,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      pageState: 1,
+      isLoading: [true, true, true],
+      params: Array(this.props.request.meta.variables.length).fill(''),
+      result: null,
+      txHash: null,
+      error: null,
+    }
   }
 
   setStep = step => {
@@ -65,13 +69,10 @@ class MakeNewRequest extends React.Component {
     // Serialize the params and compose query key
     const { params } = this.state
     const { meta, request, response } = this.props.request
-    const json = JSON.stringify({ meta, request, response })
-    const queryJson = JSON.parse(
-      json
-        .replace('{0}', params[0])
-        .replace('{1}', params[1])
-        .replace('{2}', params[2]),
-    )
+    let json = JSON.stringify({ meta, request, response })
+    for (let i = 0; i < meta.variables.length; i++)
+      json = json.replace(`{${i}}`, params[i])
+    const queryJson = JSON.parse(json)
     await this.setStep(0)
 
     try {
