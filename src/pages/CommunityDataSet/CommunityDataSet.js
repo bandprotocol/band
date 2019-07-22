@@ -21,7 +21,7 @@ class CommunityDataSet extends React.Component {
         return <CommunityDataSetSport {...this.props} />
       case 'BandIdentity':
         return <CommunityDataSetIdentity {...this.props} />
-      case 'Web Request Oracle':
+      case 'On-demand Web Requests':
         return <CommunityDataSetWebRequest {...this.props} />
       default:
         return (
