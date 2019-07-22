@@ -121,6 +121,7 @@ const renderDataPoints = (requests, sortedIndex) => {
                       fontWeight="600"
                       textAlign="center"
                       color="#4a4a4a"
+                      style={{ whiteSpace: 'nowrap' }}
                     >
                       {requests[key].length} Keys
                     </Text>
