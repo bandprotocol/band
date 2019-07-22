@@ -128,24 +128,24 @@ export default class DataPoint extends React.Component {
         {children && (
           <ExpandableCard expand={this.state.expand}>
             {this.state.expand && children}
-            {keyOnChain && (
-              <React.Fragment>
-                <Flex justifyContent="center" alignItems="center" bg="white">
-                  <Flex
-                    mt="10px"
-                    style={{
-                      height: '10px',
-                      width: '450px',
-                      borderTop: 'solid 1px #e7ecff',
-                    }}
-                  />
-                </Flex>
+            <React.Fragment>
+              <Flex justifyContent="center" alignItems="center" bg="white">
                 <Flex
-                  pt="10px"
-                  pb="20px"
-                  justifyContent="center"
-                  alignItems="center"
-                >
+                  mt="10px"
+                  flex={1}
+                  style={{
+                    height: '10px',
+                    borderTop: 'solid 1px #e7ecff',
+                  }}
+                />
+              </Flex>
+              <Flex
+                pt="10px"
+                pb="20px"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {keyOnChain ? (
                   <KeyBox
                     justifyContent="center"
                     alignItems="center"
@@ -187,9 +187,19 @@ export default class DataPoint extends React.Component {
                       {this.state.copied ? 'Copied' : 'Click to copy'}
                     </Text>
                   </KeyBox>
-                </Flex>
-              </React.Fragment>
-            )}
+                ) : (
+                  <Flex>
+                    <Text fontSize="14px" color="#4a4a4a" fontWeight="bold">
+                      Hint:
+                    </Text>
+                    <Text fontSize="14px" color="#4a4a4a" ml="5px">
+                      Do not find the key you're looking for? Try making a new
+                      query with your own parameters.
+                    </Text>
+                  </Flex>
+                )}
+              </Flex>
+            </React.Fragment>
           </ExpandableCard>
         )}
       </DataPointContainer>

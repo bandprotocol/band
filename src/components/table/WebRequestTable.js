@@ -63,7 +63,21 @@ export default createTable({
     {
       cell: { fontFamily: 'code' },
       data: d => <QueryKey keyOnChain={d.keyOnChain} />,
-      label: 'Query Key',
+      label: (
+        <Flex width="100%" justifyContent="center" alignItems="center">
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            color="#fff"
+            bg="#ffca55"
+            width="47px"
+            fontSize=""
+            style={{ height: '20px', borderRadius: '10px' }}
+          >
+            KEY
+          </Flex>
+        </Flex>
+      ),
       flex: '0 0 140px',
       style: { textAlign: 'center', marginRight: -20 },
     },

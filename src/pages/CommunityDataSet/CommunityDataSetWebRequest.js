@@ -11,7 +11,8 @@ import { RequestByTCDFetcher } from 'data/fetcher/WebRequestFetcher'
 import Loading from 'components/Loading'
 import WebRequestTable from 'components/table/WebRequestTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDownload, faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
+import DualArrowSrc from 'images/dual-arrows.svg'
 import { showModal } from 'actions'
 
 import AddSymbol from 'images/add-symbol.svg'
@@ -44,12 +45,13 @@ const Method = styled(Flex).attrs({
   width: '60px',
   fontSize: '14px',
   color: '#4a4a4a',
-  fontWight: 'bold',
   ml: '52px',
 })`
   height: 30px;
   border-radius: 14px;
   background-color: #eeeeee;
+  font-weight: bold;
+  font-family: bio-sans;
 `
 
 const ApiSpecButton = styled(Button).attrs({
@@ -193,7 +195,7 @@ const renderDataPoints = (requests, sortedIndex) => {
                           <Text fontSize="11px" color="#fff" fontWeight="bold">
                             TEST CALL
                           </Text>
-                          <FontAwesomeIcon icon={faExchangeAlt} color="#fff" />
+                          <Image src={DualArrowSrc} />
                         </Flex>
                       </TestCallButton>
                     </Flex>
