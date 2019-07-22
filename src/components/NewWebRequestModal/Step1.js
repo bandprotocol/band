@@ -21,7 +21,7 @@ const TextArea = styled.textarea`
   max-width: 100%;
 `
 
-export default ({ onNext, setJson }) => (
+export default ({ json, onNext, setJson }) => (
   <Container>
     <Flex>
       <Text fontSize="14px" mr="auto">
@@ -31,18 +31,7 @@ export default ({ onNext, setJson }) => (
         See specification
       </AbsoluteLink>
     </Flex>
-    <TextArea onChange={e => setJson(e.target.value)}>
-      {`{
-  "request": {
-    "url": "https://min-api.cryptocompare.com/data/price",
-    "method": "GET",
-    "params": {
-      "fsym": "{0}",
-      "tsyms": "{1}"
-    }
-  }
-}`}
-    </TextArea>
+    <TextArea value={json} onChange={e => setJson(e.target.value)} />
     <Flex mt={4} justifyContent="center">
       <Button variant="gradient" onClick={onNext}>
         NEXT

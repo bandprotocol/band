@@ -71,7 +71,7 @@ export default createTable({
             color="#fff"
             bg="#ffca55"
             width="47px"
-            fontSize=""
+            fontSize="12px"
             style={{ height: '20px', borderRadius: '10px' }}
           >
             KEY
@@ -94,13 +94,14 @@ const ParameterBox = styled(Flex).attrs({
   justifyContent: 'center',
   alignItems: 'center',
   mr: '6px',
-  fontSize: '13px',
-  fontWeight: 'bold',
   px: '7px',
 })`
   height: 18px;
   border-radius: 4px;
   background-color: ${p => p.bg};
+  font-family: 'Source Code Pro';
+  font-size: 13px;
+  font-weight: bold;
   font-color: ${p => p.color};
 `
 

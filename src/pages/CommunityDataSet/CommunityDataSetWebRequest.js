@@ -54,7 +54,7 @@ const Method = styled(Flex).attrs({
   font-family: bio-sans;
 `
 
-const ApiSpecButton = styled(Button).attrs({
+const ApiSpecBtn = styled(Button).attrs({
   variant: 'outline',
   width: '113px',
   mx: '14px',
@@ -64,11 +64,12 @@ const ApiSpecButton = styled(Button).attrs({
   padding: 7px 14px;
   height: 28px;
   cursor: pointer;
+  font-family: bio-sans;
 `
 
-const TestCallButton = styled(Button).attrs({
+const NewRequestBtn = styled(Button).attrs({
   variant: 'outline',
-  width: '113px',
+  width: '131px',
 })`
   border-radius: 14px;
   border: 0;
@@ -77,16 +78,18 @@ const TestCallButton = styled(Button).attrs({
   cursor: pointer;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(to right, #4a4a4a, #656565);
+  font-family: bio-sans;
+  font-weight: bold;
 `
 
-const renderDataPoints = (requests, sortedIndex) => {
+const renderDataPoints = (requests, showMakeNewRequest) => {
   return (
     <React.Fragment>
       <Box mt={3}>
         <FlipMove>
-          {Object.keys(requests).map((key, index) => {
-            const lastRequest = requests[sortedIndex[index].key][0]
-            const request = requests[sortedIndex[index].key]
+          {requests.map(({ key, value: request }) => {
+            const lastRequest = request[0]
+            // request is array of parameters in one endpoint
             const {
               meta: {
                 info: { description, image },
@@ -126,7 +129,7 @@ const renderDataPoints = (requests, sortedIndex) => {
                       color="#4a4a4a"
                       style={{ whiteSpace: 'nowrap' }}
                     >
-                      {requests[key].length} Keys
+                      {request.length} Keys
                     </Text>
                   </Flex>
                 )}
@@ -166,17 +169,13 @@ const renderDataPoints = (requests, sortedIndex) => {
                       <AbsoluteLink
                         href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
                       >
-                        <ApiSpecButton>
+                        <ApiSpecBtn>
                           <Flex
                             justifyContent="space-between"
                             alignItems="center"
                             width="100%"
                           >
-                            <Text
-                              fontSize="11px"
-                              color="#4a4a4a"
-                              fontWeight="bold"
-                            >
+                            <Text fontSize="11px" color="#4a4a4a">
                               API SPEC
                             </Text>
                             <FontAwesomeIcon
@@ -184,20 +183,22 @@ const renderDataPoints = (requests, sortedIndex) => {
                               color="#4a4a4a"
                             />
                           </Flex>
-                        </ApiSpecButton>
+                        </ApiSpecBtn>
                       </AbsoluteLink>
-                      <TestCallButton onClick={() => alert('Surprise me!')}>
+                      <NewRequestBtn
+                        onClick={() => showMakeNewRequest(lastRequest)}
+                      >
                         <Flex
                           justifyContent="space-between"
                           alignItems="center"
                           width="100%"
                         >
-                          <Text fontSize="11px" color="#fff" fontWeight="bold">
-                            TEST CALL
+                          <Text fontSize="11px" color="#fff">
+                            NEW REQUEST
                           </Text>
                           <Image src={DualArrowSrc} />
                         </Flex>
-                      </TestCallButton>
+                      </NewRequestBtn>
                     </Flex>
                   </Flex>
                   <WebRequestTable mb={2} data={request} />
@@ -237,9 +238,7 @@ class WebRequestPage extends React.Component {
                 pl="52px"
               >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
-                  {fetching
-                    ? ''
-                    : `${Object.keys(data).length} Endpoints Available`}
+                  {fetching ? '' : `${data.length} Endpoints Available`}
                 </Text>
                 <Flex ml="auto" mr="20px">
                   <CustomButton onClick={this.props.showNewEndpoint}>
@@ -269,7 +268,7 @@ class WebRequestPage extends React.Component {
               />
             ) : (
               <React.Fragment>
-                {renderDataPoints(data.requests, data.sortedIndex)}
+                {renderDataPoints(data, this.props.showMakeNewRequest)}
               </React.Fragment>
             )}
           </PageStructure>
@@ -306,6 +305,13 @@ const mapDispatchToProps = (dispatch, { tcdAddress }) => ({
   showNewEndpoint: () =>
     dispatch(
       showModal('NEW_WEB_REQUEST', {
+        tcdAddress,
+      }),
+    ),
+  showMakeNewRequest: request =>
+    dispatch(
+      showModal('MAKE_NEW_REQUEST', {
+        request,
         tcdAddress,
       }),
     ),

@@ -249,6 +249,7 @@ export const decodeScores = scores => {
   ]
 }
 
+// convert hex string to parameter array
 export const hexToParameters = (variables, types) => {
   let buf = new Buffer(variables, 'hex')
   let parameters = []
@@ -275,4 +276,27 @@ export const hexToParameters = (variables, types) => {
   }
 
   return parameters
+}
+
+// convert parameters array to hex string
+export const parametersToHex = (parameters, types) => {
+  let hexString = ''
+  for (let i = 0; i < types.length; i++) {
+    switch (types[i]) {
+      case 'string':
+        const param = Buffer.from(parameters[i], 'utf8').toString('hex')
+        hexString += `${param}00`
+        continue
+      case 'uint8':
+        if (parameters[i] >= 256) {
+          throw new Error('Parameter should be less than 256.')
+        }
+        const paramAsInt = parseInt(parameters[i])
+        if (isNaN(paramAsInt)) throw new Error('Param is not number')
+        const paramAsHex = paramAsInt.toString(16).padStart(2, '0')
+        hexString += paramAsHex
+        continue
+    }
+  }
+  return hexString
 }

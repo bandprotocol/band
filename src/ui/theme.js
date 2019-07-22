@@ -199,6 +199,18 @@ export default {
       backgroundColor: '#e8ebfd',
       pointerEvents: 'none',
     },
+    disGradient: {
+      fontFamily: 'bio-sans',
+      fontSize: 13,
+      fontWeight: 700,
+      height: '2.7em',
+      padding: '0 1.35em 0.15em',
+      display: 'inline-block',
+      color: '#989898',
+      background: '#fafafa',
+      border: `solid 0px ${colors.text.grey}`,
+      borderRadius: '20px',
+    },
   },
   cards: {
     primary: {

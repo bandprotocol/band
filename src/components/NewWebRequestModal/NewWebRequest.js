@@ -2,13 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'ui/common'
 import { connect } from 'react-redux'
-import { hideModal } from 'actions'
+import { showModal, hideModal } from 'actions'
 import { bandBalanceSelector } from 'selectors/balances'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentCommunityClientSelector } from 'selectors/current'
 import { communityBalanceSelector } from 'selectors/balances'
 import ApplyState from './ApplyState'
-import axios from 'axios'
+import { IPFS } from 'band.js'
 import Step1 from './Step1'
 import Step2 from './Step2'
 import Step3 from './Step3'
@@ -19,6 +19,7 @@ const Container = styled(Flex).attrs({
   justifyContent: 'flex-start',
 })`
   padding: 30px 25px 15px;
+
   width: 640px;
   background-color: white;
   border-radius: 10px;
@@ -31,8 +32,37 @@ const InnerContainer = styled.div`
 
 class NewWebRequestModal extends React.Component {
   state = {
-    json: '',
+    json: `{
+  "meta": {
+    "version": "1",
+    "info": {
+      "image": "https://abs.twimg.com/favicons/favicon.ico",
+      "description": "Twitter Follower Count"
+    },
+    "aggregation": "MEDIAN",
+    "variables": [
+      "string"
+    ]
+  },
+  "request": {
+    "url": "https://cdn.syndication.twimg.com/widgets/followbutton/info.json",
+    "method": "GET",
+    "params": {
+      "screen_names": "{0}"
+    }
+  },
+  "response": {
+    "path": [
+      0,
+      "followers_count"
+    ],
+    "type": "uint256"
+  }
+}`,
     pageState: 1,
+    isUploading: false,
+    ipfsPath: '',
+    ipfsHex: '',
   }
 
   changePage = pageState => this.setState({ pageState })
@@ -44,36 +74,31 @@ class NewWebRequestModal extends React.Component {
     })
   }
 
-  async submitLink() {
-    this.setState(
-      {
-        submit: true,
-        loading: true,
-      },
-      async () => {
-        try {
-          const { data } = await axios.post(
-            `https://ident.bandprotocol.com/apply`,
-            {
-              link: this.state.link,
-            },
-          )
-          this.setState({
-            txHash: data.txHash,
-            loading: false,
-          })
-        } catch (err) {
-          console.error(err)
-          this.setState({
-            loading: false,
-          })
-        }
-      },
-    )
+  uploadToIpfs = async () => {
+    this.setState({
+      isUploading: true,
+    })
+    const ipfsHex = await IPFS.set(JSON.parse(this.state.json))
+    this.setState({
+      isUploading: false,
+      ipfsPath: IPFS.toIPFSHash(ipfsHex),
+      ipfsHex,
+    })
+  }
+
+  makeNewRequest = () => {
+    // console.log(JSON.parse(this.state.json))
+    const newRequest = {
+      ipfsPath: this.state.ipfsPath,
+      keyOnChain: `0x1220${this.state.ipfsHex.slice(2)}`,
+      ...JSON.parse(this.state.json),
+    }
+    // console.log(newRequest)
+    this.props.showMakeNewRequest(newRequest)
   }
 
   render() {
-    const { pageState, json } = this.state
+    const { pageState, json, isUploading, ipfsPath } = this.state
     return (
       <Container>
         <Flex flexDirection="column" alignItems="center" width="100%">
@@ -94,13 +119,28 @@ class NewWebRequestModal extends React.Component {
           <InnerContainer>
             {pageState === 1 ? (
               <Step1
+                json={json}
                 onNext={() => this.changePage(2)}
                 setJson={json => this.setState({ json })}
               />
             ) : pageState === 2 ? (
-              <Step2 onNext={() => this.changePage(3)} json={json} />
+              <Step2
+                onNext={() => {
+                  this.changePage(3)
+                  this.uploadToIpfs()
+                }}
+                json={json}
+              />
             ) : pageState === 3 ? (
-              <Step3 onNext={() => this.props.hideModal()} json={json} />
+              <Step3
+                onNext={() => {
+                  this.props.hideModal()
+                  this.makeNewRequest()
+                }}
+                json={json}
+                isUploading={isUploading}
+                ipfsPath={ipfsPath}
+              />
             ) : null}
           </InnerContainer>
         </Flex>
@@ -128,8 +168,15 @@ const mapStateToProps = (state, { type, tokenAddress }) => {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, { tcdAddress }) => ({
   hideModal: () => dispatch(hideModal()),
+  showMakeNewRequest: request =>
+    dispatch(
+      showModal('MAKE_NEW_REQUEST', {
+        request,
+        tcdAddress,
+      }),
+    ),
 })
 
 export default connect(

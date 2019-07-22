@@ -42,7 +42,7 @@ export const getTCDInfomation = prefix =>
       label: 'Web Request',
       shortLabel: 'Web',
       order: 1,
-      type: 'web',
+      type: 'web_requests',
     },
     'crypto:': {
       imageActive: CrpytoActive,

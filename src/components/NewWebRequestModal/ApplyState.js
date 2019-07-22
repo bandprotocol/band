@@ -32,7 +32,7 @@ const Circle = styled.div`
     font-weight: 600;
     color: ${p => (p.active ? '#4a4a4a' : '#a9a9a9')};
     transform: translateX(-50%);
-    font-family: 'bio sans';
+    font-family: 'bio-sans';
   }
 
 
