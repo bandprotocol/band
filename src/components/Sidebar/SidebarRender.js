@@ -97,7 +97,13 @@ export default ({
           />
         </Flex>
         <Flex mb="20px">
-          <Text py={1} fontSize="18px" fontWeight={700} color="white">
+          <Text
+            py={1}
+            fontSize="18px"
+            fontWeight={700}
+            color="white"
+            textAlign="center"
+          >
             {name}
           </Text>
         </Flex>
