@@ -28,7 +28,10 @@ export const getGraphColor = symbol =>
       areaEnd: 'rgba(107, 139, 245, 0.4)',
     },
     XWB: {
-      lineStart: '',
+      lineStart: 'rgba(107, 139, 245, 1)',
+      lineEnd: 'rgba(107, 245, 205, 1)',
+      areaStart: 'rgba(107, 139, 245, 1)',
+      areaEnd: 'rgba(107, 245, 205, 0.4)',
     },
   }[symbol] || {
     lineStart: 'rgba(0, 104, 255, 1)',
