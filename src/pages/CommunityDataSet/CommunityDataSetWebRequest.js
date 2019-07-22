@@ -84,6 +84,7 @@ const renderDataPoints = (requests, sortedIndex) => {
         <FlipMove>
           {Object.keys(requests).map((key, index) => {
             const lastRequest = requests[sortedIndex[index].key][0]
+            const request = requests[sortedIndex[index].key]
             const {
               meta: {
                 info: { description, image },
@@ -197,7 +198,7 @@ const renderDataPoints = (requests, sortedIndex) => {
                       </TestCallButton>
                     </Flex>
                   </Flex>
-                  <WebRequestTable mb={2} data={requests[key]} />
+                  <WebRequestTable mb={2} data={request} />
                 </React.Fragment>
               </DataPoint>
             )
@@ -234,7 +235,11 @@ class WebRequestPage extends React.Component {
                 pl="52px"
               >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
-                  {fetching ? '' : `${Object.keys(data).length} Keys Available`}
+                  {fetching
+                    ? ''
+                    : `${
+                        Object.keys(data.requests).length
+                      } Endpoints Available`}
                 </Text>
                 <Flex ml="auto" mr="20px">
                   <CustomButton onClick={this.props.showNewEndpoint}>
