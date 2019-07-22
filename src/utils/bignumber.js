@@ -100,5 +100,14 @@ BN.prototype.calculateChanged = function(pastValue) {
     .toNumber()
 }
 
+BN.prototype.applyPercentage = function(percent) {
+  return new BN(
+    BigNumber(this.toString())
+      .multipliedBy(BigNumber(percent))
+      .dividedBy(100)
+      .toFixed(0),
+  )
+}
+
 window.BN = BN
 export default BN

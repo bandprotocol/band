@@ -14,18 +14,18 @@ class BuySellModal extends React.Component {
   state = {
     buy: {
       amount: '',
-      price: '0', // CANNOT CALCULATE PRICE, number
+      price: new BN(0), // CANNOT CALCULATE PRICE, number
       priceLimit: '',
-      priceChange: '',
+      priceChange: '5',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK', // INSUFFICIENT_BAND, OK
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
     },
     sell: {
       amount: '',
-      price: '0', // CANNOT CALCULATE PRICE, number
+      price: new BN(0), // CANNOT CALCULATE PRICE, number
       priceLimit: '',
-      priceChange: '',
+      priceChange: '5',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK',
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -39,13 +39,19 @@ class BuySellModal extends React.Component {
     this.setState({ type: this.props.type })
   }
 
-  async setType(type) {
-    this.setState(
-      {
-        type,
+  setType(type) {
+    this.setState({
+      type,
+    })
+  }
+
+  setTypeState(type, obj) {
+    this.setState({
+      [type]: {
+        ...this.state[type],
+        ...obj,
       },
-      () => this.updateAllstate(),
-    )
+    })
   }
 
   toggleAdvance() {
@@ -58,12 +64,6 @@ class BuySellModal extends React.Component {
     const { type } = this.state
     const { amount, priceLimit, price } = this.state[type]
     const { onBuy, onSell } = this.props
-    // console.log(
-    //   'Clicked',
-    //   type,
-    //   BN.parse(parseFloat(amount)).toString(),
-    //   priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
-    // )
     if (type === 'buy') {
       onBuy(
         BN.parse(parseFloat(amount)),
@@ -77,139 +77,182 @@ class BuySellModal extends React.Component {
     }
   }
 
-  async checkAmount(amount, type) {
+  async getPrice(type, amount) {
+    return type === 'buy'
+      ? await this.props.communityClient.getBuyPrice(
+          Utils.toBlockchainUnit(amount),
+        )
+      : await this.props.communityClient.getSellPrice(
+          Utils.toBlockchainUnit(amount),
+        )
+  }
+
+  async updateAmount() {
+    const { type } = this.state
+    const { amount, priceChange, priceLimit } = this.state[type]
+    const { bandBalance } = this.props
+
     if (amount === '') {
+      this.setTypeState(type, {
+        price: new BN('0'),
+        priceLimit: priceChange ? '0' : priceLimit,
+        amountStatus: null,
+        priceStatus: null,
+      })
+      return null
+    }
+
+    if (isPositiveNumber(amount)) {
+      const amountStatusChecking = Utils.toBlockchainUnit(amount).gt(
+        this.props.tokenBalance,
+      )
+      this.setTypeState(type, {
+        amountStatus:
+          type === 'sell' && amountStatusChecking ? 'INSUFFICIENT_TOKEN' : 'OK',
+      })
+
+      this.setState({ loading: true })
+      const price = await this.getPrice(type, amount)
+      this.setState({ loading: false })
+      const newPriceLimit =
+        this.calculatePriceLimit(type, price, priceChange) || priceLimit
+      this.setTypeState(type, {
+        price,
+        priceLimit: newPriceLimit,
+        priceStatus:
+          type === 'buy' && price.gt(bandBalance) ? 'INSUFFICIENT_BAND' : 'OK',
+        priceLimitStatus: this.calculatePriceLimitStatus(
+          type,
+          newPriceLimit,
+          price,
+        ),
+      })
+    } else {
       this.setState({
         [type]: {
           ...this.state[type],
           price: new BN('0'),
-          amountStatus: null,
-          priceStatus: null,
+          amountStatus: 'INVALID_AMOUNT',
         },
       })
-      return null
     }
-    let amountStatusChecking = false
-    try {
-      amountStatusChecking = Utils.toBlockchainUnit(this.state[type].amount).gt(
-        this.props.tokenBalance,
-      )
-    } catch (e) {
-      amountStatusChecking = false
-    }
-    if (isPositiveNumber(amount)) {
-      this.setState({
-        [type]: {
-          ...this.state[type],
-          amountStatus:
-            type === 'sell' && amountStatusChecking
-              ? 'INSUFFICIENT_TOKEN'
-              : 'OK',
-        },
-        loading: true,
-      })
-      await this.updatePrice()
-      return null
-    }
-
-    this.setState({
-      [type]: {
-        ...this.state[type],
-        amountStatus: 'INVALID_AMOUNT',
-      },
-      loading: false,
-    })
   }
 
-  checkPriceLimit(priceLimit, type) {
+  calculatePriceLimitStatus(type, priceLimit, price) {
+    if (priceLimit === '') return 'INVALID_PRICELIMIT'
+    if (isPositiveNumber(priceLimit)) {
+      const priceLimitBN = Utils.toBlockchainUnit(priceLimit)
+      if (type === 'buy') {
+        return price.gt(priceLimitBN) ? 'INSUFFICIENT_BUYPRICE' : 'OK'
+      } else {
+        return priceLimitBN.gt(price) ? 'INSUFFICIENT_SELLPRICE' : 'OK'
+      }
+    }
+    return 'INVALID_PRICELIMIT'
+  }
+
+  calculatePriceLimit(type, price, priceChange) {
+    if (priceChange === '') return null
+    if (type === 'buy') {
+      return Utils.fromBlockchainUnit(
+        price.applyPercentage(100 + parseFloat(priceChange)),
+      ).toFixed(2)
+    } else if (type === 'sell') {
+      return Utils.fromBlockchainUnit(
+        price.applyPercentage(100 - parseFloat(priceChange)),
+      ).toFixed(2)
+    }
+    return null
+  }
+
+  updatePriceLimit(priceLimit) {
+    const { type } = this.state
+    const { price } = this.state[type]
     if (priceLimit === '') {
-      this.setState({
-        [type]: {
-          ...this.state[type],
-          priceLimitStatus: 'OK',
-        },
+      this.setTypeState(type, {
+        priceLimit: '',
+        priceLimitStatus: 'INVALID_PRICELIMIT',
       })
-      return null
+      return
     }
 
     if (isPositiveNumber(priceLimit)) {
-      const priceLimitBN = Utils.toBlockchainUnit(priceLimit)
-      this.setState({
-        [type]: {
-          ...this.state[type],
-          priceLimitStatus:
-            type === 'buy' && this.state[type].price.gt(priceLimitBN)
-              ? 'INSUFFICIENT_BUYPRICE'
-              : type === 'sell' && priceLimitBN.gt(this.state[type].price)
-              ? 'INSUFFICIENT_SELLPRICE'
-              : 'OK',
-        },
-      })
-      return null
-    }
-
-    this.setState({
-      [type]: {
-        ...this.state[type],
-        priceLimitStatus: 'INVALID_PRICELIMIT',
-      },
-    })
-  }
-
-  async updatePrice() {
-    const { communityClient, bandBalance } = this.props
-    const { type } = this.state
-    const { amount } = this.state[type]
-
-    try {
-      const price =
-        type === 'buy'
-          ? await communityClient.getBuyPrice(BN.parse(parseFloat(amount)))
-          : await communityClient.getSellPrice(BN.parse(parseFloat(amount)))
-      this.setState({
-        [type]: {
-          ...this.state[type],
+      this.setTypeState(type, {
+        priceLimit,
+        priceLimitStatus: this.calculatePriceLimitStatus(
+          type,
+          priceLimit,
           price,
-          priceStatus:
-            type === 'buy' && price.gt(bandBalance)
-              ? 'INSUFFICIENT_BAND'
-              : 'OK',
-        },
-        loading: false,
+        ),
+        priceChange: '',
       })
-    } catch {
-      this.setState({
-        [type]: {
-          ...this.state[type],
-          amountStatus: 'INVALID_AMOUNT',
-        },
-        loading: false,
+    } else {
+      this.setTypeState(type, {
+        priceLimit,
+        priceLimitStatus: 'INVALID_PRICELIMIT',
+        priceChange: '',
       })
     }
   }
 
-  async updateAllstate() {
+  updatePriceChange(priceChange) {
     const { type } = this.state
-    const { amount, priceLimit } = this.state[type]
-    await this.checkAmount(amount, type)
-    this.checkPriceLimit(priceLimit, type)
+    const { price } = this.state[type]
+    if (priceChange === '') {
+      this.setTypeState(type, {
+        priceChange: '',
+      })
+      return
+    }
+
+    if (
+      isPositiveNumber(priceChange) &&
+      !(type === 'sell' && parseFloat(priceChange) >= 100.0)
+    ) {
+      const newPriceLimit = this.calculatePriceLimit(type, price, priceChange)
+      this.setTypeState(type, {
+        priceChange,
+        priceLimit: newPriceLimit,
+        priceLimitStatus: this.calculatePriceLimitStatus(
+          type,
+          newPriceLimit,
+          price,
+        ),
+      })
+    } else {
+      this.setTypeState(type, {
+        priceChange,
+      })
+    }
   }
 
   async handleChange(what, e) {
     const { value } = e.target
     const { type } = this.state
-    this.setState({
-      [type]: {
-        ...this.state[type],
-        [what]: value,
-      },
-    })
 
-    if (this.checker) clearTimeout(this.checker)
-    this.checker = setTimeout(() => {
-      delete this.checker
-      this.updateAllstate()
-    }, 200)
+    switch (what) {
+      case 'amount':
+        this.setState({
+          [type]: {
+            ...this.state[type],
+            amount: value,
+          },
+        })
+        if (this.checker) clearTimeout(this.checker)
+        this.checker = setTimeout(() => {
+          delete this.checker
+          this.updateAmount()
+        }, 200)
+        break
+      case 'priceLimit':
+        this.updatePriceLimit(value)
+        break
+      case 'priceChange':
+        this.updatePriceChange(value)
+        break
+      default:
+        break
+    }
   }
 
   render() {
