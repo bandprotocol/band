@@ -89,6 +89,33 @@ const TxType = ({ type }) => {
 
 const renderStatus = (status, confirm) => {
   switch (status) {
+    case 'WAIT_CONFIRM':
+      return (
+        <Flex pb={3} alignItems="center" pr={2}>
+          <Box
+            width="160px"
+            bg="#e7ecff"
+            style={{ height: '8px', borderRadius: '5px' }}
+            mr={3}
+          >
+            <Box
+              width={`${(confirm * 100) / 4}%`}
+              bg="#4853ff"
+              style={{
+                height: '8px',
+                borderRadius: '5px',
+                transition: 'width 500ms',
+              }}
+            />
+          </Box>
+          <Flex>
+            <Text fontSize={14} color="#4e3ca9">
+              {confirm}
+            </Text>
+            <Text fontSize={14}>/4 Confirmation</Text>
+          </Flex>
+        </Flex>
+      )
     case 'PENDING':
       return (
         <Flex pb={3} alignItems="center" pr={2}>

@@ -33,7 +33,7 @@ const Nav = styled.nav`
   ${p =>
     p.isDashboard
       ? `
-      background: unset; 
+      background: unset;
       box-shadow: 0 0 0 0 #000000;
       position: relative;
     `
@@ -234,7 +234,12 @@ export default ({
 }) => {
   const pending =
     (txs &&
-      txs.filter(tx => tx.status === 'SENDING' || tx.status === 'PENDING')) ||
+      txs.filter(
+        tx =>
+          tx.status === 'SENDING' ||
+          tx.status === 'PENDING' ||
+          tx.status === 'WAIT_CONFIRM',
+      )) ||
     []
 
   const isDashboard = document.location.pathname === '/'

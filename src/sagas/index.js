@@ -318,7 +318,7 @@ function* checkTransaction() {
                         return tx.set('status', 'COMPLETED')
                       else
                         return tx
-                          .set('status', 'PENDING')
+                          .set('status', 'WAIT_CONFIRM')
                           .set(
                             'confirm',
                             currentBlock - receipt.blockNumber + 1,
