@@ -64,6 +64,7 @@ export default ({
   name,
   src,
   balance,
+  lockBalance,
   usdBalance,
   symbol,
   address,
@@ -142,6 +143,11 @@ export default ({
             <Flex mt="20px">
               <Text color="white" fontSize="18px" fontWeight={500}>
                 {`${balance.pretty()} ${symbol}`}
+              </Text>
+            </Flex>
+            <Flex mt="10px">
+              <Text color="white" fontSize="14px" fontWeight={500}>
+                {`Locked: ${lockBalance.pretty()} ${symbol}`}
               </Text>
             </Flex>
             <Flex

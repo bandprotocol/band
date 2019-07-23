@@ -10,18 +10,29 @@ function* handleReloadBalance() {
       nodes {
         value
         tokenAddress
+        lockedValue
       }
     }
-    allTokens {
-      nodes {
-        address
+    allTokenLockeds(condition: {user: "${userAddress}"}){
+      nodes{
+        tokenAddress
+        locker
+        value
       }
     }
   }`)
 
   const balances = {}
-  for (const { value, tokenAddress } of query.allBalances.nodes) {
-    balances[tokenAddress] = value
+  for (const { value, tokenAddress, lockedValue } of query.allBalances.nodes) {
+    balances[tokenAddress] = {
+      value,
+      lockedValue,
+      lockers: {},
+    }
+  }
+
+  for (const { tokenAddress, locker, value } of query.allTokenLockeds.nodes) {
+    balances[tokenAddress]['lockers'][locker] = value
   }
   yield put(saveBalance(balances))
   yield put(dumpCurrent())

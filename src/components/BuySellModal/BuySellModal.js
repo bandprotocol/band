@@ -2,10 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 import BuySellModalRender from './BuySellModalRender'
 import { buyToken, sellToken } from 'actions'
-import { bandBalanceSelector } from 'selectors/balances'
 import { communityDetailSelector } from 'selectors/communities'
 import { currentCommunityClientSelector } from 'selectors/current'
-import { communityBalanceSelector } from 'selectors/balances'
+import {
+  bandUnlockBalanceSelector,
+  communityUnlockBalanceSelector,
+} from 'selectors/balances'
 import BN from 'utils/bignumber'
 import { Utils } from 'band.js'
 import { isPositiveNumber } from 'utils/helper'
@@ -293,8 +295,10 @@ const mapStateToProps = (state, { type, tokenAddress }) => {
     name: community.get('name'),
     logo: community.get('logo'),
     symbol: community.get('symbol'),
-    bandBalance: bandBalanceSelector(state),
-    tokenBalance: communityBalanceSelector(state, { address: tokenAddress }),
+    bandBalance: bandUnlockBalanceSelector(state),
+    tokenBalance: communityUnlockBalanceSelector(state, {
+      address: tokenAddress,
+    }),
     tokenNormalPrice: community.get('price'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {

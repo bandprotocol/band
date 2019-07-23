@@ -5,7 +5,10 @@ import { withRouter } from 'react-router-dom'
 import SidebarRender from 'components/Sidebar/SidebarRender'
 
 import { communityDetailSelector } from 'selectors/communities'
-import { communityBalanceSelector } from 'selectors/balances'
+import {
+  communityLockBalanceSelector,
+  communityUnlockBalanceSelector,
+} from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { currentUserSelector } from 'selectors/current'
 
@@ -26,6 +29,7 @@ class SideBar extends React.Component {
       name,
       src,
       balance,
+      lockBalance,
       symbol,
       communityPrice,
       bandPrice,
@@ -40,6 +44,7 @@ class SideBar extends React.Component {
         address={address}
         src={src}
         balance={balance}
+        lockBalance={lockBalance}
         usdBalance={
           balance &&
           balance.communityToBand(communityPrice).bandToUSD(bandPrice)
@@ -63,7 +68,10 @@ const mapStateToProps = (state, { tokenAddress }) => {
     logedin: currentUserSelector(state) !== 'NOT_SIGNIN',
     name: community.get('name'),
     src: community.get('logo'),
-    balance: communityBalanceSelector(state, { address: tokenAddress }),
+    balance: communityUnlockBalanceSelector(state, { address: tokenAddress }),
+    lockBalance: communityLockBalanceSelector(state, {
+      address: tokenAddress,
+    }),
     symbol: community.get('symbol'),
     communityPrice: community.get('price'),
     bandPrice: bandPriceSelector(state),

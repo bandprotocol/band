@@ -44,6 +44,8 @@ function* sendTransaction({ transaction, title, type }) {
     const txHash = yield transaction.sendFeeless()
     yield put(addTx(txHash, title, type))
     yield put(dumpTxs())
+  } catch (error) {
+    alert('Cannot send this transaction')
   } finally {
     yield put(removePendingTx(timestamp))
   }

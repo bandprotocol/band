@@ -25,7 +25,7 @@ import {
 import { currentSelector } from 'selectors/basic'
 
 import transit from 'transit-immutable-js'
-import { List, Set } from 'immutable'
+import { List, Set, Map } from 'immutable'
 
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
@@ -114,7 +114,13 @@ function* handleDumpCurrent() {
   // Dump balance
   const balances = current.get('balances')
   if (balances) {
-    const bj = balances.map(value => value.toString())
+    const bj = balances.map(v =>
+      Map({
+        value: v.get('value').toString(),
+        lockedValue: v.get('lockedValue').toString(),
+        lockers: v.get('lockers').map(l => l.toString()),
+      }),
+    )
     localStorage.setItem('balances', JSON.stringify(bj.toJS()))
   } else localStorage.removeItem('balances')
 }

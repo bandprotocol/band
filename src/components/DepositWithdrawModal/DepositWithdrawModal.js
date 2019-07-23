@@ -4,7 +4,10 @@ import styled from 'styled-components'
 import { hideModal, tcdDeposit, tcdWithdraw } from 'actions'
 import { Flex, Button, Text } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
-import { communityBalanceSelector } from 'selectors/balances'
+import {
+  communityBalanceSelector,
+  tokenLockByTCDSelector,
+} from 'selectors/balances'
 import BN from 'utils/bignumber'
 
 const BgCard = styled(Flex).attrs({
@@ -279,7 +282,9 @@ const mapStateToProps = (
     dataSourceAddress,
     tcdAddress,
     symbol: community.get('symbol'),
-    balance: communityBalanceSelector(state, { address: tokenAddress }),
+    balance: communityBalanceSelector(state, { address: tokenAddress }).sub(
+      tokenLockByTCDSelector(state, { address: tokenAddress, tcdAddress }),
+    ),
   }
 }
 

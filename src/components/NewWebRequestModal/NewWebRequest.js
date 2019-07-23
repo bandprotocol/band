@@ -3,10 +3,6 @@ import styled from 'styled-components'
 import { Flex, Text } from 'ui/common'
 import { connect } from 'react-redux'
 import { showModal, hideModal } from 'actions'
-import { bandBalanceSelector } from 'selectors/balances'
-import { communityDetailSelector } from 'selectors/communities'
-import { currentCommunityClientSelector } from 'selectors/current'
-import { communityBalanceSelector } from 'selectors/balances'
 import ApplyState from './ApplyState'
 import { IPFS } from 'band.js'
 import Step1 from './Step1'
@@ -149,25 +145,6 @@ class NewWebRequestModal extends React.Component {
   }
 }
 
-const mapStateToProps = (state, { type, tokenAddress }) => {
-  const community = communityDetailSelector(state, {
-    address: tokenAddress,
-  })
-  if (!community) return {}
-  return {
-    name: community.get('name'),
-    logo: community.get('logo'),
-    symbol: community.get('symbol'),
-    bandBalance: bandBalanceSelector(state),
-    tokenBalance: communityBalanceSelector(state, { address: tokenAddress }),
-    tokenNormalPrice: community.get('price'),
-    type: type,
-    communityClient: currentCommunityClientSelector(state, {
-      address: tokenAddress,
-    }),
-  }
-}
-
 const mapDispatchToProps = (dispatch, { tcdAddress }) => ({
   hideModal: () => dispatch(hideModal()),
   showMakeNewRequest: request =>
@@ -180,6 +157,6 @@ const mapDispatchToProps = (dispatch, { tcdAddress }) => ({
 })
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(NewWebRequestModal)

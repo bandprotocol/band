@@ -21,7 +21,15 @@ const handleSaveBalance = (state, { balances }) =>
   state.set(
     'balances',
     Object.entries(balances).reduce(
-      (agg, [address, value]) => agg.set(address, new BN(value)),
+      (agg, [address, m]) =>
+        agg.set(
+          address,
+          Map({
+            value: new BN(m.value),
+            lockedValue: new BN(m.lockedValue),
+            lockers: fromJS(m.lockers).map(v => new BN(v)),
+          }),
+        ),
       Map(),
     ),
   )
