@@ -32,7 +32,7 @@ const allProviders = {
   },
   '0xda7a01d6d7568868b21a6789968B06Bb3af5c191': {
     name: 'Bitstamp',
-    image: 'https://www.bitstamp.net/s/webapp/images/meta/favicon-32x32.png',
+    image: 'https://www.bitstamp.net/s/webapp/images/meta/apple-touch-icon.png',
   },
   '0xDa7A2A9C0bB0F94f9ddF54Dde3dBE2530A8269A2': {
     name: 'Bitfinex',
