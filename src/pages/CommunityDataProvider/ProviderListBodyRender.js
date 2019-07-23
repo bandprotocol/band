@@ -60,17 +60,13 @@ const ProvidersRow = ({
       minWidth: 0,
       overflow: 'hidden',
       height: '60px',
-      borderLeft: status === 'ACTIVE' ? '6px solid #718bff' : 'none',
+      borderLeft: `6px solid ${status === 'ACTIVE' ? '#718bff' : '#fff'}`,
       backgroundColor: status === 'ACTIVE' ? '#fbfcff' : '#fff',
       borderBottom: '1px solid rgba(227, 227, 227, 0.5)',
     }}
     alignItems="center"
   >
-    <Tab
-      ml="17px"
-      width={status === 'ACTIVE' ? '45px' : '60px'}
-      justifyContent="center"
-    >
+    <Tab ml="17px" width="45px" justifyContent="center">
       <Text color="#5269ff" fontWeight="900" fontSize="14px">
         {rank}
       </Text>

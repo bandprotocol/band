@@ -119,6 +119,10 @@ const allProviders = {
     image:
       'https://s3.amazonaws.com/cdn.powerball.com/drupal/files/2019-03/Powerball%20Power%20Play_7.png',
   },
+  '0xDa7ABa879e90113d6E950Cb1f7908F7b4CA52d8C': {
+    name: 'Band Reserved Provider',
+    image: 'https://app.kovan.bandprotocol.com/favicon.png',
+  },
   default: { name: 'Unknown' },
 }
 
