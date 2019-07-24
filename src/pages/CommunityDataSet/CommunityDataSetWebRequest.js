@@ -135,74 +135,71 @@ const renderDataPoints = (requests, showMakeNewRequest) => {
                 )}
                 updatedAt={lastRequest.lastUpdate}
               >
-                <React.Fragment>
+                <Flex
+                  justifyContent="space-between"
+                  width="100%"
+                  style={{
+                    borderTop: '2px solid #f3f7ff',
+                  }}
+                >
                   <Flex
-                    justifyContent="space-between"
-                    width="100%"
-                    style={{ borderTop: '2px solid #f3f7ff' }}
+                    alignItems="center"
+                    pt="10px"
+                    pb="16px"
+                    flex={1}
+                    style={{ minWidth: 0 }}
                   >
-                    <Flex
-                      alignItems="center"
-                      pt="10px"
-                      pb="16px"
+                    <Method>{method}</Method>
+                    <Text
+                      color="#4a4a4a"
+                      fontSize="14px"
+                      fontWeight="600"
+                      ml="21px"
                       flex={1}
-                      style={{ minWidth: 0 }}
+                      style={{
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
+                        minWidth: 0,
+                      }}
                     >
-                      <Method>{method}</Method>
-                      <Text
-                        color="#4a4a4a"
-                        fontSize="14px"
-                        fontWeight="600"
-                        ml="21px"
-                        flex={1}
-                        style={{
-                          textOverflow: 'ellipsis',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          minWidth: 0,
-                        }}
-                      >
-                        {url}
-                      </Text>
-                    </Flex>
-                    <Flex alignItems="center" mr="50px" flex="0 auto">
-                      <AbsoluteLink
-                        href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
-                      >
-                        <ApiSpecBtn>
-                          <Flex
-                            justifyContent="space-between"
-                            alignItems="center"
-                            width="100%"
-                          >
-                            <Text fontSize="11px" color="#4a4a4a">
-                              API SPEC
-                            </Text>
-                            <FontAwesomeIcon
-                              icon={faDownload}
-                              color="#4a4a4a"
-                            />
-                          </Flex>
-                        </ApiSpecBtn>
-                      </AbsoluteLink>
-                      <NewRequestBtn
-                        onClick={() => showMakeNewRequest(lastRequest)}
-                      >
+                      {url}
+                    </Text>
+                  </Flex>
+                  <Flex alignItems="center" mr="50px" flex="0 auto">
+                    <AbsoluteLink
+                      href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
+                    >
+                      <ApiSpecBtn>
                         <Flex
                           justifyContent="space-between"
                           alignItems="center"
                           width="100%"
                         >
-                          <Text fontSize="11px" color="#fff">
-                            NEW REQUEST
+                          <Text fontSize="11px" color="#4a4a4a">
+                            API SPEC
                           </Text>
-                          <Image src={DualArrowSrc} />
+                          <FontAwesomeIcon icon={faDownload} color="#4a4a4a" />
                         </Flex>
-                      </NewRequestBtn>
-                    </Flex>
+                      </ApiSpecBtn>
+                    </AbsoluteLink>
+                    <NewRequestBtn
+                      onClick={() => showMakeNewRequest(lastRequest)}
+                    >
+                      <Flex
+                        justifyContent="space-between"
+                        alignItems="center"
+                        width="100%"
+                      >
+                        <Text fontSize="11px" color="#fff">
+                          NEW REQUEST
+                        </Text>
+                        <Image src={DualArrowSrc} />
+                      </Flex>
+                    </NewRequestBtn>
                   </Flex>
-                  <WebRequestTable mb={2} data={request} />
-                </React.Fragment>
+                </Flex>
+                <WebRequestTable mb={2} data={request} />
               </DataPoint>
             )
           })}

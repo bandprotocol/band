@@ -146,6 +146,7 @@ class QueryKey extends React.Component {
         fontWeight={500}
         fontSize="13px"
         onClick={this.handleShowCopied.bind(this)}
+        style={{ cursor: 'pointer' }}
       >
         {this.state.copied ? 'Copied' : 'Click to copy'}
       </Text>

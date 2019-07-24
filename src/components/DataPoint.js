@@ -30,6 +30,7 @@ const ExpandableCard = styled(Card)`
   max-height: 0;
   opacity: 0;
   max-width: calc(100vw - 290px);
+  cursor: default;
 
   ${p =>
     p.expand &&
@@ -183,6 +184,7 @@ export default class DataPoint extends React.Component {
                       color="#5269ff"
                       fontWeight={500}
                       fontSize="13px"
+                      style={{ cursor: 'pointer' }}
                     >
                       {this.state.copied ? 'Copied' : 'Click to copy'}
                     </Text>
