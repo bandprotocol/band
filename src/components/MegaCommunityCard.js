@@ -20,7 +20,7 @@ const Description = styled(Text)`
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  word-break: break-all;
+  word-wrap: normal;
   -webkit-line-clamp: 2;
   height: 45px;
   line-height: 25px;
