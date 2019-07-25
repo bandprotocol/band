@@ -70,7 +70,7 @@ export default createTable({
       ),
       label: 'Winning Numbers',
       flex: '0 0 200px',
-      style: { textAlign: 'right' },
+      style: { textAlign: 'center' },
     },
   ],
 })
