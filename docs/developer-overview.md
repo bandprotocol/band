@@ -1,1 +1,0 @@
-# Band Protocol Use Cases
