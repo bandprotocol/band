@@ -1,12 +1,15 @@
 module.exports = {
+  head: [["link", { rel: "icon", href: "/assets/favicon.ico" }]],
   themeConfig: {
+    logo: "/assets/logo.svg",
+    nav: [{ text: "Home", link: "https://bandprotocol.com" }],
     sidebarDepth: 0,
     displayAllHeaders: true,
     sidebar: [
       {
         title: "Introduction",
         collapsable: false,
-        children: ["/", "home/architecture"]
+        children: ["/", "home/architecture", "home/development-status"]
       },
       {
         title: "Smart Contract Developers",

@@ -1,1 +1,1 @@
-# Soldity Reference
+# Solidity Query Interface Reference
