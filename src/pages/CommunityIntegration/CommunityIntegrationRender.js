@@ -364,7 +364,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       >
                         Specification
                       </span>{' '}
-                      to learn how query keys are constructed.
+                      to learn how a query key is constructed.
                     </Text>
                   </Box>
                 </Flex>
@@ -462,7 +462,7 @@ export default class CommunityIntegrationRender extends React.Component {
                       {tcdPrefix === 'web' ? '3.' : '2.'}
                     </Text>
                     <Text lineHeight={1.65} fontWeight={500} fontSize="15px">
-                      <HighlightText text="Query data from the chosen key:" />
+                      <HighlightText text="Query data with the chosen key:" />
                       <br />
                     </Text>
                   </Flex>
@@ -501,7 +501,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     >
                       Coding
                     </span>{' '}
-                    for code example.
+                    for an example code.
                   </Text>
                 </Flex>
               </Flex>
@@ -533,7 +533,7 @@ export default class CommunityIntegrationRender extends React.Component {
                     list={[
                       [
                         '🔸',
-                        `•output is the raw bytes32 query output. You'll need to parse it before using.`,
+                        `•output is the raw bytes32 query output. You'll need to parse it before using it.`,
                       ],
                       ['🔸', `•updatedAt is timestamp the data was update.`],
                       [
@@ -852,9 +852,9 @@ export default class CommunityIntegrationRender extends React.Component {
                 </Text>
                 <Text fontSize="15px" mt="30px" lineHeight="1.65">
                   To query the data, you have to pay a small fee defined by
-                  community through governance process. You can get fee (in ETH)
-                  by calling <HighlightSpan>queryPrice()</HighlightSpan>{' '}
-                  function.
+                  community through governance process. By calling{' '}
+                  <HighlightSpan>queryPrice()</HighlightSpan> function, it will
+                  return current query price (in ETH).
                 </Text>
                 <Flex mt="30px">
                   <Snippet code={getQueryFeeCode(tcdAddress)} />

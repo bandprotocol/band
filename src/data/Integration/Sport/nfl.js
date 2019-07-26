@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate the sport data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •NFL/2018-2019/20190203/LAR-NE for Los Angeles Rams vs New England Patriots at 2019/02/03 . Each dataset has its own method to construct a valid key.`,
+    `Pick a query key for data lookup. For instance, key •NFL/2018-2019/20190203/LAR-NE for Los Angeles Rams vs New England Patriots at 2019/02/03 . Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of smart contract for sport betting. We set the scores of both teams to 0 (just mock scores). We will replace these mock scores by real scores from Sport community later.`,

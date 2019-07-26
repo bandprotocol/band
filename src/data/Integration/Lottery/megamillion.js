@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate lottery data to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •MMN/20190716 for Mega Millions result for July 16, 2019. Each dataset has its own method to construct a valid key.`,
+    `Pick a query key for data lookup. For instance, key •MMN/20190716 for Mega Millions result for July 16, 2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of the Mega Millions rewarding contract. We mock the result of Mega Millions to bytes6(0) at first. We are going to replace the result by getting it from the Lottery community later.`,

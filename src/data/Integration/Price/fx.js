@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate fx prices to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key •JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
+    `Pick a query key for data lookup. For instance, key •JPY/CNY for Japanese Yen to Chinese Yuan conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of the smart contract. The function that is left to be implemented is •getCNYUSDRate function, which will return •CNY/ETH rate multiplied by 10^18 . Note that, we omit some functions to make this example short`,

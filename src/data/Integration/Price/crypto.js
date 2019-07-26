@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate crypto-fiat prices to your DApps in 3 steps`,
-    `Pick the query key for data lookup. For instance, key ETH/USD for Ethereum to USD conversion rate. Each dataset has its own method to construct a valid key.`,
+    `Pick a query key for data lookup. For instance, key ETH/USD for Ethereum to USD conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `First we begin by writing a simple version of ticket selling smart contract. The •buyTicket function allows anyone to buy a ticket at a fixed cost of 10 USD, with a function to get the exchange rate between ETH and USD left to be implemented.`,

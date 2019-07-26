@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate lottery data to your DApps with 3 steps`,
-    `Pick the query key for data lookup. For instance, key •PWB/20190717 for Powerball result for July 17, 2019. Each dataset has its own method to construct a valid key.`,
+    `Pick a query key for data lookup. For instance, key •PWB/20190717 for Powerball result for July 17, 2019. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `Write a simple version of the Power ball rewarding contract. We mock the result of Power ball to bytes6(0) at first. We are going to replace the result with data provided by Band Protocol later.`,

@@ -1,7 +1,7 @@
 export default {
   overview: [
     `You can integrate token prices to your DApps with 3 simple steps`,
-    `Pick the query key for data lookup. For instance, key KNC/LINK for KyberNetwork to ChainLink conversion rate. Each dataset has its own method to construct a valid key.`,
+    `Pick a query key for data lookup. For instance, key KNC/LINK for KyberNetwork to ChainLink conversion rate. Each dataset has its own method to construct a valid key.`,
   ],
   description: [
     `First we begin by writing a simple version of the contract with •sellToken function. The •getLINKETHRate function, which will return •LINK/ETH rate is left to be implemented. Note that, we omit some of the functions to make this example short`,
