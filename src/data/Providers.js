@@ -82,7 +82,7 @@ const allProviders = {
   },
   '0xdA7aa2bbA8685F9C0dDBC53aB8e19A6A32dc8b7F': {
     name: 'Free Forex API',
-    image: 'http://www.freeforexapi.com/images/logo2.png',
+    image: 'https://www.freeforexapi.com/images/logo2.png',
   },
   '0xDA7a79196DDD8AD788a996eFaFeA15bf0879c31c': {
     name: 'Alpha Vantage',
@@ -110,7 +110,7 @@ const allProviders = {
     image: 'https://www.ialottery.com/images/game-logos/megamillions-large.gif',
   },
   '0xDa7a198618105fd301958cA76548Ce9Ea5D1De42': {
-    name: 'Data NY Governance',
+    name: 'Data NY Government',
     image:
       'https://i2.wp.com/www.nysgis.net/wp-content/uploads/2016/09/nyslogo_418x200.png',
   },
