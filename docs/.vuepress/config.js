@@ -9,10 +9,20 @@ module.exports = {
       {
         title: "Introduction",
         collapsable: false,
-        children: ["/", "home/architecture", "home/development-status"]
+        children: ["/", "home/problem", "home/development-status"]
       },
       {
-        title: "Smart Contract Developers",
+        title: "Protocol Architecture",
+        collapsable: false,
+        children: [
+          "band/tokens.md",
+          "band/governance.md",
+          "band/tcd.md",
+          "band/tcr.md"
+        ]
+      },
+      {
+        title: "DApp Developer Guide",
         collapsable: false,
         children: [
           "devs/overview",
@@ -23,9 +33,14 @@ module.exports = {
         ]
       },
       {
-        title: "Token Holders",
+        title: "Token Holder Guide",
         collapsable: false,
         children: ["holders/ecosystem", "holders/get-band"]
+      },
+      {
+        title: "Data Provider Guide",
+        collapsable: false,
+        children: []
       },
       {
         title: "Available Datasets",
@@ -39,6 +54,11 @@ module.exports = {
       },
       {
         title: "Example Applications",
+        collapsable: false,
+        children: []
+      },
+      {
+        title: "Smart Contract Reference",
         collapsable: false,
         children: []
       }
