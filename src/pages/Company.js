@@ -346,7 +346,7 @@ export default () => {
             </TeamComponent>
             <TeamComponent
               faceImg={Paul}
-              name="Paul Chonpimai"
+              name="Paul Nattapatsiri"
               title="CPO and Co-Founder"
               link={'https://github.com/smiled0g'}
               type={0}
