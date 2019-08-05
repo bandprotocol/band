@@ -7,14 +7,15 @@ module.exports = {
     displayAllHeaders: true,
     sidebar: [
       {
-        title: "Introduction",
+        title: "🏡 Introduction",
         collapsable: false,
         children: ["/", "home/problem", "home/development-status"]
       },
       {
-        title: "Protocol Architecture",
+        title: "⛩ Protocol Architecture",
         collapsable: false,
         children: [
+          "band/overview.md",
           "band/tokens.md",
           "band/governance.md",
           "band/tcd.md",
@@ -22,7 +23,7 @@ module.exports = {
         ]
       },
       {
-        title: "DApp Developer Guide",
+        title: "🚀 DApp Developer Guide",
         collapsable: false,
         children: [
           "devs/overview",
@@ -33,17 +34,17 @@ module.exports = {
         ]
       },
       {
-        title: "Token Holder Guide",
+        title: "💸 Token Holder Guide",
         collapsable: false,
-        children: ["holders/ecosystem", "holders/get-band"]
+        children: ["holders/overview", "holders/ecosystem", "holders/get-band"]
       },
       {
-        title: "Data Provider Guide",
+        title: "📡 Data Provider Guide",
         collapsable: false,
-        children: []
+        children: ["providers/overview"]
       },
       {
-        title: "Available Datasets",
+        title: "📦 Available Datasets",
         collapsable: false,
         children: [
           "datasets/web-oracle",
@@ -53,12 +54,12 @@ module.exports = {
         ]
       },
       {
-        title: "Example Applications",
+        title: "🦄 Example Applications",
         collapsable: false,
         children: []
       },
       {
-        title: "Smart Contract Reference",
+        title: "📖 Smart Contract Reference",
         collapsable: false,
         children: []
       }
