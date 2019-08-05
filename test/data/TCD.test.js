@@ -15,6 +15,30 @@ const MedianAggregator = artifacts.require('MedianAggregator');
 
 require('chai').should();
 
+const nextActiveList = async (tcdAddress, key) => {
+  return web3.utils.toChecksumAddress(
+    web3.utils.padLeft(
+      await web3.eth.getStorageAt(
+        tcdAddress,
+        web3.utils.soliditySha3({ t: 'uint256', v: key }, 2),
+      ),
+      40,
+    ),
+  );
+};
+
+const nextReserveList = async (tcdAddress, key) => {
+  return web3.utils.toChecksumAddress(
+    web3.utils.padLeft(
+      await web3.eth.getStorageAt(
+        tcdAddress,
+        web3.utils.soliditySha3({ t: 'uint256', v: key }, 3),
+      ),
+      40,
+    ),
+  );
+};
+
 contract('TCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.band = await BandToken.new({ from: owner });
@@ -273,9 +297,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         30,
         { from: alice },
       );
-      (await this.tcd.activeList(alice))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000000');
+      (await nextActiveList(this.tcd.address, alice)).should.eq(
+        '0x0000000000000000000000000000000000000000',
+      );
     });
     it('should be able to unlist if owner stake < min_provider_stake', async () => {
       (await this.params.getRaw(
@@ -293,7 +317,8 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      (await this.tcd.activeList(carol)).toString().should.eq(bob);
+      (await nextActiveList(this.tcd.address, carol)).should.eq(bob);
+      // (await this.tcd.activeList(carol)).toString().should.eq(bob);
       await this.params.propose(
         '0xed468fdf3997ff072cd4fa4a58f962616c52e990e4ccd9febb59bb86b308a75d',
         [web3.utils.fromAscii('data:min_provider_stake')],
@@ -323,12 +348,18 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
 
       // Remove from both lists
-      (await this.tcd.activeList(carol))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000000');
-      (await this.tcd.reserveList(carol))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000000');
+      (await nextActiveList(this.tcd.address, carol)).should.eq(
+        '0x0000000000000000000000000000000000000000',
+      );
+      // (await this.tcd.activeList(carol))
+      //   .toString()
+      //   .should.eq('0x0000000000000000000000000000000000000000');
+      (await nextReserveList(this.tcd.address, carol)).should.eq(
+        '0x0000000000000000000000000000000000000000',
+      );
+      // (await this.tcd.reserveList(carol))
+      //   .toString()
+      //   .should.eq('0x0000000000000000000000000000000000000000');
       // not enough to unlist bob
       await this.tcd.unstake(
         bob,
@@ -339,7 +370,8 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      (await this.tcd.activeList(bob)).toString().should.eq(alice);
+      (await nextActiveList(this.tcd.address, bob)).should.eq(alice);
+      // (await this.tcd.activeList(bob)).toString().should.eq(alice);
     });
   });
   context('Vote', () => {
@@ -423,21 +455,38 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       numActiveSources.should.eq(3);
       numAllSources.should.eq(4);
       // const expectedSources = [owner, alice, bob, carol];
-      (await this.tcd.activeList('0x0000000000000000000000000000000000000001'))
-        .toString()
-        .should.eq(bob);
-      (await this.tcd.activeList(bob)).toString().should.eq(alice);
-      (await this.tcd.activeList(alice)).toString().should.eq(owner);
-      (await this.tcd.activeList(owner))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000001');
+      // (await this.tcd.activeList('0x0000000000000000000000000000000000000001'))
+      //   .toString()
+      //   .should.eq(bob);
+      // (await this.tcd.activeList(bob)).toString().should.eq(alice);
+      // (await this.tcd.activeList(alice)).toString().should.eq(owner);
+      // (await this.tcd.activeList(owner))
+      //   .toString()
+      //   .should.eq('0x0000000000000000000000000000000000000001');
 
-      (await this.tcd.reserveList('0x0000000000000000000000000000000000000002'))
-        .toString()
-        .should.eq(carol);
-      (await this.tcd.reserveList(carol))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000002');
+      (await nextActiveList(
+        this.tcd.address,
+        '0x0000000000000000000000000000000000000001',
+      )).should.eq(bob);
+      (await nextActiveList(this.tcd.address, bob)).should.eq(alice);
+      (await nextActiveList(this.tcd.address, alice)).should.eq(owner);
+      (await nextActiveList(this.tcd.address, owner)).should.eq(
+        '0x0000000000000000000000000000000000000001',
+      );
+
+      (await nextReserveList(
+        this.tcd.address,
+        '0x0000000000000000000000000000000000000002',
+      )).should.eq(carol);
+      (await nextReserveList(this.tcd.address, carol)).should.eq(
+        '0x0000000000000000000000000000000000000002',
+      );
+      // (await this.tcd.reserveList('0x0000000000000000000000000000000000000002'))
+      //   .toString()
+      //   .should.eq(carol);
+      // (await this.tcd.reserveList(carol))
+      //   .toString()
+      //   .should.eq('0x0000000000000000000000000000000000000002');
     });
     it('check dataSources after voting', async () => {
       await this.tcd.stake(
@@ -459,9 +508,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
       await this.tcd.stake(
         carol,
@@ -480,9 +532,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
       await this.tcd.stake(
         carol,
@@ -501,9 +556,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
     });
   });
@@ -653,9 +711,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
       expectedSources = [alice, bob, carol, owner];
       await this.tcd.unstake(
@@ -673,9 +734,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
 
       await this.tcd.unstake(
@@ -697,9 +761,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
       // numAllSources.should.eq(5);
       expectedSources = [carol, owner, bob];
@@ -718,9 +785,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
       await this.tcd.unstake(
         carol,
@@ -737,9 +807,12 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         '0x0000000000000000000000000000000000000001',
       ];
       for (let i = 0; i < activeListCount + 1; i++) {
-        (await this.tcd.activeList(expectedSources[i]))
-          .toString()
-          .should.eq(expectedSources[i + 1]);
+        (await nextActiveList(this.tcd.address, expectedSources[i])).should.eq(
+          expectedSources[i + 1],
+        );
+        // (await this.tcd.activeList(expectedSources[i]))
+        //   .toString()
+        //   .should.eq(expectedSources[i + 1]);
       }
     });
     it('should be able to withdraw after owner has already exited', async () => {
@@ -802,12 +875,18 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
 
       const dataSource = await this.tcd.infoMap(owner);
-      (await this.tcd.activeList(owner))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000000');
-      (await this.tcd.reserveList(owner))
-        .toString()
-        .should.eq('0x0000000000000000000000000000000000000000');
+      (await nextActiveList(this.tcd.address, owner)).should.eq(
+        '0x0000000000000000000000000000000000000000',
+      );
+      // (await this.tcd.activeList(owner))
+      //   .toString()
+      //   .should.eq('0x0000000000000000000000000000000000000000');
+      (await nextReserveList(this.tcd.address, owner)).should.eq(
+        '0x0000000000000000000000000000000000000000',
+      );
+      // (await this.tcd.reserveList(owner))
+      //   .toString()
+      //   .should.eq('0x0000000000000000000000000000000000000000');
       dataSource.totalOwnerships.toNumber().should.eq(40 + 17 + 71 + 666 - 40);
 
       await this.tcd.unstake(

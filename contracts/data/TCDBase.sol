@@ -43,8 +43,8 @@ contract TCDBase is QueryInterface {
   }
 
   mapping (address => DataSourceInfo) public infoMap;
-  mapping (address => address) public activeList;
-  mapping (address => address) public reserveList;
+  mapping (address => address) activeList;
+  mapping (address => address) reserveList;
   uint256 public activeCount;
   uint256 public reserveCount;
 

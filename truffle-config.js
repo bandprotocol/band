@@ -23,7 +23,7 @@ module.exports = {
     rinkeby: {
       provider: () =>
         new HDWalletProvider(
-          process.env.MNENOMIC,
+          process.env.MNEMONIC,
           'https://rinkeby.infura.io/v3/' + process.env.INFURA_API_KEY,
         ),
       network_id: 4,
@@ -34,11 +34,11 @@ module.exports = {
     kovan: {
       provider: () =>
         new HDWalletProvider(
-          process.env.MNENOMIC,
-          'https://kovan.infura.io/v3/' + process.env.INFURA_API_KEY,
+          process.env.MNEMONIC,
+          'https://kovan.infura.io/v3/d3301689638b40dabad8395bf00d3945',
         ),
       network_id: 42,
-      gasPrice: 5000000000,
+      gasPrice: 1000000000,
       gas: 6800000,
       skipDryRun: true,
     },
