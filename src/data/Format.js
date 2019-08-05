@@ -122,7 +122,9 @@ export const getFormatDataKey = (symbol, key) => {
     case 'XWB':
       const ipfsPath = IPFS.toIPFSHash(key.slice(6, 70))
       return (
-        <AbsoluteLink href={`https://ipfs.io/ipfs/${ipfsPath}`}>
+        <AbsoluteLink
+          href={`https://ipfs.bandprotocol.com/api/v0/cat/${ipfsPath}`}
+        >
           {ipfsPath}
         </AbsoluteLink>
       )

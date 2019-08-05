@@ -168,7 +168,9 @@ const renderDataPoints = (requests, showMakeNewRequest) => {
                   </Flex>
                   <Flex alignItems="center" mr="50px" flex="0 auto">
                     <AbsoluteLink
-                      href={`https://ipfs.io/ipfs/${lastRequest.ipfsPath}`}
+                      href={`https://ipfs.bandprotocol.com/api/v0/cat/${
+                        lastRequest.ipfsPath
+                      }`}
                     >
                       <ApiSpecBtn>
                         <Flex

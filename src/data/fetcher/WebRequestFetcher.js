@@ -35,7 +35,9 @@ export const RequestByTCDFetcher = withRouter(
         if (!dataByIpfsHash[ipfsHash]) dataByIpfsHash[ipfsHash] = []
         try {
           const ipfsPath = IPFS.toIPFSHash(ipfsHash.slice(6))
-          const { data } = await axios.get(`https://ipfs.io/ipfs/${ipfsPath}`)
+          const { data } = await axios.get(
+            `https://ipfs.bandprotocol.com/api/v0/cat/${ipfsPath}`,
+          )
           const { multiplier } = data.response
           dataByIpfsHash[ipfsHash].push({
             variables,
