@@ -29,7 +29,7 @@ curl -X POST \\
       description: [
         `A •key can be constructed by •IPFSHash concat with variables which can be in any ªhttps://solidity.readthedocs.io/en/v0.5.10/types.html#integersªuint ( •uint8 , •uint16 , •uint24 , ... , •uint256 ) and •string .
         `,
-        `ˆhttps://svgur.com/i/EBx.svgˆ`,
+        `ˆ_wkfˆ`,
         `•IPFSHash is a representation of JSON request. The JSON request has already uploaded to IPFS, so you can go IPFS and see how JSON request looks like.`,
         `For example 0x1220a39f6304fff1d0e09d093fbb52b733a1dc866d451cb5931d422245396e5596dd is an •IPFSHash , therefore to see the JSON request you have to encode the •IPFSHash using base58 which in this case is •QmZwVoRZJY1kSk2aoCN4sDmiMkJWGNiUrPt6Hy4yCtSX6B .
 
@@ -53,7 +53,7 @@ Next step is visiting ªhttps://ipfs.io/ipfs/QmZwVoRZJY1kSk2aoCN4sDmiMkJWGNiUrPt
         `,
         `So in solidity it would be easy for using •abi.encodePacked to encode all parameters at once.
         `,
-        `ˆhttps://svgur.com/i/ED4.svgˆ`,
+        `ˆ_wkeˆ`,
       ],
       keys: [],
     },

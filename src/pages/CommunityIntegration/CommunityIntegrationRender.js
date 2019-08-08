@@ -14,6 +14,10 @@ import Overview1 from 'images/overview_1.svg'
 import Overview2 from 'images/overview_2.svg'
 import Overview3 from 'images/overview_3.svg'
 import QueryResult from 'images/queryResult.svg'
+import _wke from 'images/wke.svg'
+import _wkf from 'images/wkf.svg'
+
+const images = { _wke: _wke, _wkf: _wkf }
 
 const TabButton = styled(Flex).attrs({
   flex: 1,
@@ -897,7 +901,11 @@ export default class CommunityIntegrationRender extends React.Component {
                 </Text>
                 {keyFormat.description.map(text => {
                   if (text[0] === 'ˆ') {
-                    return <Image src={text.slice(1, text.length - 1)} />
+                    const l = text.slice(1, text.length - 1)
+                    if (l[0] === '_') {
+                      return <Image src={images[l]} />
+                    }
+                    return <Image src={l} />
                   } else if (text[0] === '∆') {
                     return (
                       <Flex
