@@ -294,6 +294,7 @@ export default class TCDSelector extends React.Component {
               />
               {tcds.map((each, i) => (
                 <List
+                  key={each + i}
                   index={i}
                   handleSelect={this.handleSelect.bind(this)}
                   {...each}
