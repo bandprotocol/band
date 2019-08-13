@@ -19,11 +19,17 @@ const DWButton = styled(Button).attrs({
   flex: '0 0 auto',
 })`
   border-radius: 17.5px;
-  cursor: ${props => (props.isDisabled ? 'default' : 'pointer')};
-  background-color: ${props => (props.isDisabled ? '#e3e6ef' : props.bg)};
-  pointer-events: ${props => (props.isDisabled ? 'none' : 'auto')};
+  cursor: pointer;
+  background-color: ${props => props.bg};
+  pointer-events: auto;
   color: white;
   transition: all 0.25s;
+
+  &:disabled {
+    cursor: default;
+    background-color: #e3e6ef;
+    pointer-events: none;
+  }
 
   ${props =>
     props.user &&
@@ -169,7 +175,7 @@ const ProvidersRow = ({
       pr="30px"
     >
       <DWButton
-        isDisabled={!user ? 1 : 0}
+        disabled={!user}
         bg="#42c47f"
         color="#24bf97"
         hoverShadowColor="#a6e7c4"
@@ -203,7 +209,7 @@ const ProvidersRow = ({
       </DWButton>
       <Flex mx="10px" />
       <DWButton
-        isDisabled={!(user && !(userStake.pretty() <= 0)) ? 1 : 0}
+        disabled={!user || userStake.pretty() <= 0}
         bg="#ec6363"
         hoverShadowColor="#ffb4ac"
         activeColor="#f4e1e1"
