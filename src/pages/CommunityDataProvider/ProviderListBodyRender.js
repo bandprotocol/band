@@ -19,10 +19,17 @@ const DWButton = styled(Button).attrs({
   flex: '0 0 auto',
 })`
   border-radius: 17.5px;
-  cursor: ${props => (props.user ? 'pointer' : 'default')};
-  background-color: ${props => (props.user ? props.bg : '#e3e6ef')};
+  cursor: pointer;
+  background-color: ${props => props.bg};
+  pointer-events: auto;
   color: white;
   transition: all 0.25s;
+
+  &:disabled {
+    cursor: default;
+    background-color: #e3e6ef;
+    pointer-events: none;
+  }
 
   ${props =>
     props.user &&
@@ -168,13 +175,12 @@ const ProvidersRow = ({
       pr="30px"
     >
       <DWButton
-        user={user}
+        disabled={!user}
         bg="#42c47f"
         color="#24bf97"
         hoverShadowColor="#a6e7c4"
         activeColor="#d2efeb"
         onClick={() =>
-          user &&
           showDepositWithdraw(
             'DEPOSIT',
             tcdAddress,
@@ -203,13 +209,12 @@ const ProvidersRow = ({
       </DWButton>
       <Flex mx="10px" />
       <DWButton
-        user={user}
+        disabled={!user || userStake.pretty() <= 0}
         bg="#ec6363"
         hoverShadowColor="#ffb4ac"
         activeColor="#f4e1e1"
         color="#ec6363"
         onClick={() =>
-          user &&
           showDepositWithdraw(
             'WITHDRAW',
             tcdAddress,
