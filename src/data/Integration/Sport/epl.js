@@ -143,6 +143,21 @@ export default {
           'Wolverhampton Wanderers',
           'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
         ],
+        [
+          'NOR',
+          'Norwich City',
+          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
+        ],
+        [
+          'SHFU',
+          'Sheffield United',
+          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
+        ],
+        [
+          'AVL',
+          'Aston Villa',
+          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
+        ],
       ],
     },
   },

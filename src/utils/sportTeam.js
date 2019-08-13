@@ -52,6 +52,9 @@ const EPL_TEAM = [
   { label: 'Watford', value: 'WAT' },
   { label: 'West Ham', value: 'WHU' },
   { label: 'Wolves', value: 'WOL' },
+  { lable: 'Norwich', value: 'NOR' },
+  { lable: 'Sheffield United', value: 'SHFU' },
+  { lable: 'Aston Villa', value: 'AVL' },
 ]
 
 const MLB_TEAM = [
