@@ -58,11 +58,17 @@ export const tcdDeposit = (tcdAddress, sourceAddress, stake) => ({
   stake,
 })
 
-export const tcdWithdraw = (tcdAddress, sourceAddress, ownership) => ({
+export const tcdWithdraw = (
+  tcdAddress,
+  sourceAddress,
+  ownership,
+  withdrawAmount,
+) => ({
   type: TCD_WITHDRAW,
   tcdAddress,
   sourceAddress,
   ownership,
+  withdrawAmount,
 })
 
 export const addPendingTx = (id, title, txType) => ({

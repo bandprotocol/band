@@ -71,6 +71,7 @@ function* handleTcdWithdraw({
   tcdAddress,
   sourceAddress,
   ownership /* ownership */,
+  withdrawAmount,
 }) {
   const client = yield select(currentTCDClientSelector, { address: tcdAddress })
   const transaction = yield client.createWithdrawDataSourceTransaction({
@@ -80,8 +81,8 @@ function* handleTcdWithdraw({
   yield put(hideModal())
   yield sendTransaction({
     transaction,
-    title: `Withdraw ${Utils.fromBlockchainUnit(ownership)} ${
-      ownership.eq(BN.parse(1)) ? 'token' : 'tokens'
+    title: `Withdraw ${withdrawAmount} ${
+      withdrawAmount === 1 ? 'token' : 'tokens'
     }`,
     type: 'WITHDRAW',
   })

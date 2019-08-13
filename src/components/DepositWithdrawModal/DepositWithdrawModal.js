@@ -160,12 +160,18 @@ class DepositWithdrawModal extends React.Component {
       valueOnChain,
       totalOwnership,
       stake,
+      value,
     } = this.state
     if (this.verifyValueOnChain(valueOnChain)) {
       const withdrawOwnershipAmount = valueOnChain
         .mul(totalOwnership)
         .div(stake)
-      dispatchWithdraw(tcdAddress, dataSourceAddress, withdrawOwnershipAmount)
+      dispatchWithdraw(
+        tcdAddress,
+        dataSourceAddress,
+        withdrawOwnershipAmount,
+        value,
+      )
     }
   }
 
@@ -292,8 +298,8 @@ const mapDispatchToProps = (dispatch, props) => ({
   hideDepositWithdraw: () => dispatch(hideModal()),
   dispatchDeposit: (tcdAddress, dataSourceAddress, stake) =>
     dispatch(tcdDeposit(tcdAddress, dataSourceAddress, stake)),
-  dispatchWithdraw: (tcdAddress, dataSourceAddress, stake) =>
-    dispatch(tcdWithdraw(tcdAddress, dataSourceAddress, stake)),
+  dispatchWithdraw: (tcdAddress, dataSourceAddress, stake, withdrawAmount) =>
+    dispatch(tcdWithdraw(tcdAddress, dataSourceAddress, stake, withdrawAmount)),
 })
 
 export default connect(
