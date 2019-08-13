@@ -10,8 +10,8 @@ import { hideTxs } from 'actions'
 const Container = styled(Box)`
   position: fixed;
   bottom: 0;
-  right: 20px;
-  width: 360px;
+  right: 10px;
+  width: 330px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
