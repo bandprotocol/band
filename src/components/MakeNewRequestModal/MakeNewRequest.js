@@ -36,6 +36,7 @@ class MakeNewRequest extends React.Component {
     this.state = {
       pageState: 1,
       isLoading: [true, true, true],
+      isError: [false, false, false],
       params: Array(this.props.request.meta.variables.length).fill(''),
       result: null,
       txHash: null,
@@ -43,12 +44,15 @@ class MakeNewRequest extends React.Component {
     }
   }
 
-  setStep = step => {
+  setStep = (step, error = false) => {
     return new Promise(r =>
       this.setState(
         {
           isLoading: Object.assign([...this.state.isLoading], {
             [step]: false,
+          }),
+          isError: Object.assign([...this.state.isError], {
+            [step]: error,
           }),
         },
         r,
@@ -77,40 +81,48 @@ class MakeNewRequest extends React.Component {
 
     try {
       // Relay the request to providers
-      const {
-        data: { value: step2Value },
-      } = await axios.post(
-        'https://band-kovan.herokuapp.com/data/web_request_test',
-        queryJson,
-      )
-      await this.setStep(1)
-      this.setState({
-        result: step2Value,
-      })
+      try {
+        const {
+          data: { value: step2Value },
+        } = await axios.post(
+          'https://band-kovan.herokuapp.com/data/web_request_test',
+          queryJson,
+        )
+        await this.setStep(1)
+        this.setState({
+          result: step2Value,
+        })
+      } catch (e) {
+        await this.setStep(1, true)
+      }
 
       // Commit result to chain
-      const ipfsHex = this.props.request.keyOnChain.slice(0, 70)
-      const types = meta.variables
-      const paramsHex = parametersToHex(params.slice(0, types.length), types)
+      try {
+        const ipfsHex = this.props.request.keyOnChain.slice(0, 70)
+        const types = meta.variables
+        const paramsHex = parametersToHex(params.slice(0, types.length), types)
 
-      const {
-        data: { result: txHash },
-      } = await axios.post('https://band-kovan.herokuapp.com/data/request', {
-        tcd: this.props.tcdAddress,
-        key: `${ipfsHex}${paramsHex}`,
-        broadcast: true,
-      })
+        const {
+          data: { result: txHash },
+        } = await axios.post('https://band-kovan.herokuapp.com/data/request', {
+          tcd: this.props.tcdAddress,
+          key: `${ipfsHex}${paramsHex}`,
+          broadcast: true,
+        })
 
-      // waiting for txHash confirm
-      while (true) {
-        const trx = await this.props.web3.eth.getTransaction(txHash)
-        if (trx && trx.blockNumber) break
-        await delay(50)
+        // waiting for txHash confirm
+        while (true) {
+          const trx = await this.props.web3.eth.getTransaction(txHash)
+          if (trx && trx.blockNumber) break
+          await delay(50)
+        }
+        this.setState({
+          txHash,
+        })
+        await this.setStep(2)
+      } catch (e) {
+        await this.setStep(2, true)
       }
-      this.setState({
-        txHash,
-      })
-      await this.setStep(2)
     } catch (e) {
       console.error(e.message)
       this.setState({
@@ -120,7 +132,7 @@ class MakeNewRequest extends React.Component {
   }
 
   render() {
-    const { pageState, params, isLoading, result, txHash } = this.state
+    const { pageState, params, isLoading, isError, result, txHash } = this.state
     const { ipfsPath, request } = this.props.request
 
     return (
@@ -155,11 +167,13 @@ class MakeNewRequest extends React.Component {
                     params,
                   })
                 }
+                hideModal={this.props.hideModal}
               />
             ) : (
               <Step2
                 onNext={() => this.props.hideModal()}
                 isLoading={isLoading}
+                isError={isError}
                 result={result}
                 txHash={txHash}
               />

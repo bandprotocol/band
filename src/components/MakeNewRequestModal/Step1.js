@@ -1,6 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, AbsoluteLink, Button, Image, Card, Box } from 'ui/common'
+import {
+  Flex,
+  Text,
+  AbsoluteLink,
+  Link,
+  Button,
+  Image,
+  Card,
+  Box,
+} from 'ui/common'
 import RightArrowSrc from 'images/icon-right-arrow.svg'
 
 const Container = styled.div`
@@ -15,7 +24,7 @@ const Method = styled(Flex).attrs({
   fontSize: '14px',
   color: '#4a4a4a',
 })`
-  height: 30px;
+  height: 26px;
   border-radius: 14px;
   background-color: #eeeeee;
   font-weight: bold;
@@ -68,7 +77,14 @@ const Input = styled.input`
 
 export default class Step1 extends React.Component {
   render() {
-    const { onNext, ipfsPath, request, params, onSetParams } = this.props
+    const {
+      onNext,
+      ipfsPath,
+      request,
+      params,
+      onSetParams,
+      hideModal,
+    } = this.props
 
     return (
       <Container>
@@ -76,7 +92,7 @@ export default class Step1 extends React.Component {
           <Text fontSize="14px" mr="auto">
             Endpoint JSON
           </Text>
-          <AbsoluteLink href="https://google.com" style={{ fontSize: '14px' }}>
+          <AbsoluteLink href="./integration" style={{ fontSize: '14px' }}>
             See specification
           </AbsoluteLink>
         </Flex>

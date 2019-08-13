@@ -41,7 +41,9 @@ export const RequestByTCDFetcher = withRouter(
           const { multiplier } = data.response
           dataByIpfsHash[ipfsHash].push({
             variables,
-            value: new BN(value).divideToFixed(multiplier || 1, 2),
+            value: Number(
+              new BN(value).divideToFixed(multiplier || 1, 2),
+            ).toLocaleString('USD'),
             lastUpdate: moment(timestamp * 1000),
             keyOnChain: key,
             ipfsPath,

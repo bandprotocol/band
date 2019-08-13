@@ -47,7 +47,7 @@ const Method = styled(Flex).attrs({
   color: '#4a4a4a',
   ml: '52px',
 })`
-  height: 30px;
+  height: 26px;
   border-radius: 14px;
   background-color: #eeeeee;
   font-weight: bold;

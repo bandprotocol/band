@@ -30,44 +30,60 @@ const ResultBox = styled(Flex).attrs({
   bg: '#f6f6f6',
   fontSize: '13px',
   color: '#4a4a4a',
-  mx: '10px',
-  px: '15px',
+  px: '5px',
 })`
-  border-radius: 14px;
+  border-radius: 7px;
   height: 24px;
   font-weight: 600;
   font-family: Source Code Pro;
 `
 
-const ProcessList = ({ num, message, status, txHash }) => (
-  <Flex alignItems="center" mb="15px" style={{ maxWidth: '600px' }}>
+const ProcessList = ({ num, error, message, status, txHash }) => (
+  <Flex alignItems="flex-start" mb="15px" style={{ maxWidth: '600px' }}>
     <Number>
       <Text fontSize="15px" fontWeight="bold" color="#506eff">
         {num}
       </Text>
     </Number>
-    <Text fontSize="14px" color="#4a4a4a" flex={1} ml="17px">
+    <Text fontSize="14px" color="#4a4a4a" flex={1} ml="17px" lineHeight="28px">
       {message}
     </Text>
-    {!status ? (
-      <Text fontSize="14px" color="#42c47f" fontWeight="900">
-        {txHash ? (
-          <TxHashLink href={`https://kovan.etherscan.io/tx/${txHash}`} />
+    <Flex justifyContent="center" flex="0 0 50px">
+      {!status ? (
+        error ? (
+          <Text fontSize="14px" color="red" fontWeight="900" lineHeight="28px">
+            Error
+          </Text>
         ) : (
-          'Done'
-        )}
-      </Text>
-    ) : (
-      <CircleLoadingSpinner radius="20px" />
-    )}
+          <Text
+            fontSize="14px"
+            color="#42c47f"
+            fontWeight="900"
+            lineHeight="28px"
+          >
+            {txHash ? (
+              <span>
+                Txn{' '}
+                <TxHashLink href={`https://kovan.etherscan.io/tx/${txHash}`} />
+              </span>
+            ) : (
+              'Done'
+            )}
+          </Text>
+        )
+      ) : (
+        <CircleLoadingSpinner radius="20px" />
+      )}
+    </Flex>
   </Flex>
 )
 
 export default class Step2 extends React.Component {
   render() {
-    const { onNext, isLoading, result, txHash } = this.props
+    const { onNext, isLoading, result, txHash, isError } = this.props
     const disabled = isLoading[0] || isLoading[1] || isLoading[2]
 
+    console.log('ERR', isError)
     return (
       <Container>
         <Flex justifyContent="center" alignItems="center">
@@ -77,21 +93,24 @@ export default class Step2 extends React.Component {
           num={1}
           message={'Serialize the parameters and compose query key'}
           status={isLoading[0]}
+          error={isError[0]}
         />
         <ProcessList
           num={2}
           message={
-            <Flex alignItems="center">
+            <Box style={{ display: 'inline-block' }}>
               Relay the request to providers
               {result && <ResultBox>Result: {result}</ResultBox>}
-            </Flex>
+            </Box>
           }
           status={isLoading[1]}
+          error={isError[1]}
         />
         <ProcessList
           num={3}
           message={'Commit result and proof to Ethereum blockchain'}
           status={isLoading[2]}
+          error={isError[2]}
           txHash={txHash}
         />
 

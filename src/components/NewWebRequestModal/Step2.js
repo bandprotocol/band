@@ -41,7 +41,7 @@ const Input = styled.input`
 const CallButton = createLoadingButton(styled(Button).attrs({
   variant: 'gradient',
 })`
-  background-image: linear-gradient(270deg, #ffc40f 3%, #ff7155 100%);
+  background-image: linear-gradient(to right, #4a4a4a, #656565);
   line-height: 24px;
   font-size: 12px;
 `)
@@ -53,6 +53,14 @@ export default class Step2 extends React.Component {
       result: null,
       error: null,
     }
+  }
+
+  reset = () => {
+    this.setState({
+      params: Array(JSON.parse(this.props.json).meta.variables.length).fill(''),
+      result: null,
+      error: null,
+    })
   }
 
   async testcall() {
@@ -119,7 +127,19 @@ export default class Step2 extends React.Component {
                 />
               </CallButton>
             ) : (
-              <Text fontSize="12px">{result}</Text>
+              <Flex style={{ lineHeight: '26px' }}>
+                <Text fontSize="12px" color="#42C47F">
+                  {result}
+                </Text>
+                <Text
+                  fontSize="12px"
+                  ml={2}
+                  style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                  onClick={this.reset}
+                >
+                  clear
+                </Text>
+              </Flex>
             )}
           </Box>
         </Flex>

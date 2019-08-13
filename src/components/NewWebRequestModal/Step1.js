@@ -27,7 +27,7 @@ export default ({ json, onNext, setJson }) => (
       <Text fontSize="14px" mr="auto">
         Endpoint JSON
       </Text>
-      <AbsoluteLink href="https://google.com" style={{ fontSize: '14px' }}>
+      <AbsoluteLink href="./integration" style={{ fontSize: '14px' }}>
         See specification
       </AbsoluteLink>
     </Flex>
