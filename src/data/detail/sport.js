@@ -288,6 +288,10 @@ const allTeams = {
   Arsenal: {
     logo: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
   },
+  'Aston Villa': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg',
+  },
   Chelsea: {
     logo: 'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg',
   },
@@ -351,6 +355,13 @@ const allTeams = {
   Brighton: {
     logo:
       'https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg',
+  },
+  'Sheffield United': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/9/9c/Sheffield_United_FC_logo.svg',
+  },
+  Norwich: {
+    logo: 'https://upload.wikimedia.org/wikipedia/en/8/8c/Norwich_City.svg',
   },
   home: {
     logo: 'https://png.pngtree.com/svg/20170609/692da67c8b.svg',

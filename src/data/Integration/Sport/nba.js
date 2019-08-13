@@ -22,11 +22,13 @@ export default {
     `,
   },
   keyFormat: {
-    nfl: {
-      header: 'List of Available NFL Teams',
-      description: `🏀 NBA or National Basketball Association dataset group has provided keys for query matches score.
+    nba: {
+      header: 'List of Available NBA Teams',
+      description: [
+        `🏀 NBA or National Basketball Association dataset group has provided keys for query matches score.
     Format of the key is composed of Date(year,month,day)/home-away . For example •NBA/2018-2019/20190429/DEN-POR which mean the key for query score of Denver Nuggets(home team) and Portland Trail Blazers(away team).
     The return result from query is 32 bytes , so the score of DEN will be encoded in first byte and score of POR will be encoded in second byte .`,
+      ],
       keys: [
         [
           'ATL',

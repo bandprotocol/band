@@ -24,9 +24,11 @@ export default {
   keyFormat: {
     nfl: {
       header: 'List of Available NFL Teams',
-      description: `🇺🇸 🏈 NFL or National Football League dataset group has provided keys for query matches score.
+      description: [
+        `🇺🇸 🏈 NFL or National Football League dataset group has provided keys for query matches score.
       Format of the key is composed of Date(year,month,day)/home-away . For example •NFL/2018-2019/20190203/LAR-NE which mean the key for query score of Baltimore Ravens(home team) and Buffalo Bills(away team).
       The return result from query is 32 bytes , so the score of LAR will be encoded in first byte and score of NE will be encoded in second byte .`,
+      ],
       keys: [
         [
           'ARI',

@@ -33,6 +33,7 @@ const NBA_TEAM = [
 
 const EPL_TEAM = [
   { label: 'Arsenal', value: 'ARS' },
+  { label: 'Aston Villa', value: 'AVL' },
   { label: 'Bournemouth', value: 'BOU' },
   { label: 'Brighton', value: 'BHA' },
   { label: 'Burnley', value: 'BUR' },
@@ -47,14 +48,13 @@ const EPL_TEAM = [
   { label: 'Man City', value: 'MNC' },
   { label: 'Man United', value: 'MAN' },
   { label: 'Newcastle', value: 'NEW' },
+  { label: 'Norwich', value: 'NOR' },
+  { label: 'Sheffield United', value: 'SHFU' },
   { label: 'Southampton', value: 'SOU' },
   { label: 'Tottenham', value: 'TOT' },
   { label: 'Watford', value: 'WAT' },
   { label: 'West Ham', value: 'WHU' },
   { label: 'Wolves', value: 'WOL' },
-  { lable: 'Norwich', value: 'NOR' },
-  { lable: 'Sheffield United', value: 'SHFU' },
-  { lable: 'Aston Villa', value: 'AVL' },
 ]
 
 const MLB_TEAM = [

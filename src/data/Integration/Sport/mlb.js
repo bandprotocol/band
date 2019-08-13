@@ -22,11 +22,13 @@ export default {
       `,
   },
   keyFormat: {
-    nfl: {
-      header: 'List of Available NFL Teams',
-      description: `⚾️ MLB or Major League Baseball dataset group has provided keys for query matches score.
+    mlb: {
+      header: 'List of Available MLB Teams',
+      description: [
+        `⚾️ MLB or Major League Baseball dataset group has provided keys for query matches score.
       Format of the key is composed of Date(year,month,day)/home-away . For example •MLB/2019/20190716/MIA-SD/1 which mean the key for query score of Los Angeles Chargers(home team) and New England Patriots (away team).
       The return result from query is 32 bytes , so the score of MIA will be encoded in first byte and score of SD will be encoded in second byte .`,
+      ],
       keys: [
         [
           'ATL',

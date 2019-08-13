@@ -22,11 +22,13 @@ export default {
       `,
   },
   keyFormat: {
-    nfl: {
-      header: 'List of Available NFL Teams',
-      description: `⚽️ EPL or Premier League dataset group has provided keys for query matches score.
+    epl: {
+      header: 'List of Available EPL Teams',
+      description: [
+        `⚽️ EPL or Premier League dataset group has provided keys for query matches score.
       Format of the key is composed of Date(year,month,day)/home-away . For example •EPL/2018-2019/20190512/WAT-WHU which mean the key for query score of Arsenal(home team) and AFC Bournemouth(away team).
       The return result from query is 32 bytes , so the score of WAT will be encoded in first byte and score of AFC will be encoded in second byte .`,
+      ],
       keys: [
         [
           'AFC',
@@ -39,7 +41,7 @@ export default {
           'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
         ],
         [
-          'AST',
+          'AVL',
           'Aston Villa',
           'https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg',
         ],
@@ -141,21 +143,6 @@ export default {
         [
           'WOL',
           'Wolverhampton Wanderers',
-          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
-        ],
-        [
-          'NOR',
-          'Norwich City',
-          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
-        ],
-        [
-          'SHFU',
-          'Sheffield United',
-          'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
-        ],
-        [
-          'AVL',
-          'Aston Villa',
           'https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg',
         ],
       ],
