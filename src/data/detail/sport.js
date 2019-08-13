@@ -111,6 +111,10 @@ const allTeams = {
     logo:
       'https://upload.wikimedia.org/wikipedia/commons/0/01/Cincinnati_Reds_Logo.svg',
   },
+  'Cincinnati Bengals': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/commons/8/81/Cincinnati_Bengals_logo.svg',
+  },
   'Pittsburgh Pirates': {
     logo:
       'https://upload.wikimedia.org/wikipedia/commons/8/81/Pittsburgh_Pirates_logo_2014.svg',
@@ -237,6 +241,10 @@ const allTeams = {
     logo:
       'https://upload.wikimedia.org/wikipedia/en/8/8e/Seattle_Seahawks_logo.svg',
   },
+  'Minnesota Vikings': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/4/48/Minnesota_Vikings_logo.svg',
+  },
   'New Orleans Saints': {
     logo:
       'https://upload.wikimedia.org/wikipedia/commons/5/50/New_Orleans_Saints_logo.svg',
@@ -269,21 +277,80 @@ const allTeams = {
     logo:
       'https://upload.wikimedia.org/wikipedia/en/2/28/Houston_Texans_logo.svg',
   },
-
+  'Atlanta Falcons': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/c/c5/Atlanta_Falcons_logo.svg',
+  },
+  'Arizona Cardinals': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/7/72/Arizona_Cardinals_logo.svg',
+  },
+  'Buffalo Bills': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/7/77/Buffalo_Bills_logo.svg',
+  },
+  'Carolina Panthers': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/1/1c/Carolina_Panthers_logo.svg',
+  },
   'Dallas Cowboys': {
     logo:
       'https://upload.wikimedia.org/wikipedia/commons/1/15/Dallas_Cowboys.svg',
   },
-  'Los Angeles Rams': {
+  'Denver Broncos': {
     logo:
-      'https://upload.wikimedia.org/wikipedia/en/8/8a/Los_Angeles_Rams_logo.svg',
+      'https://upload.wikimedia.org/wikipedia/en/4/44/Denver_Broncos_logo.svg',
+  },
+  'Detroit Lions': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/7/71/Detroit_Lions_logo.svg',
+  },
+  'Green Bay Packers': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/commons/5/50/Green_Bay_Packers_logo.svg',
   },
   'Huddersfield Town': {
     logo:
       'https://upload.wikimedia.org/wikipedia/en/7/7d/Huddersfield_Town_A.F.C._logo.png',
   },
+  'Los Angeles Rams': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/8/8a/Los_Angeles_Rams_logo.svg',
+  },
+  'Miami Dolphins': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/3/37/Miami_Dolphins_logo.svg',
+  },
+  'New York Giants': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/commons/6/60/New_York_Giants_logo.svg',
+  },
+  'New York Jets': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/6/6b/New_York_Jets_logo.svg',
+  },
+  'Oakland Raiders': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/e/ec/Oakland_Raiders_logo.svg',
+  },
+  'Pittsburgh Steelers': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/commons/d/de/Pittsburgh_Steelers_logo.svg',
+  },
+  'San Francisco 49ers': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/commons/3/3a/San_Francisco_49ers_logo.svg',
+  },
   Southampton: {
     logo: 'https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg',
+  },
+  'Tampa Bay Buccaneers': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/a/a2/Tampa_Bay_Buccaneers_logo.svg',
+  },
+  'Tennessee Titans': {
+    logo:
+      'https://upload.wikimedia.org/wikipedia/en/c/c1/Tennessee_Titans_logo.svg',
   },
   Arsenal: {
     logo: 'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg',
