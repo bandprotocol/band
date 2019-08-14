@@ -8,6 +8,6 @@ export default {
   'Financial Data Feeds': Price,
   'Sport Data Feeds': Sport,
   'Lottery Data Feeds': Lottery,
-  'On-demand Web Requests': WebRequest,
+  'Web Request Oracle': WebRequest,
   BandIdentity: Identity,
 }
