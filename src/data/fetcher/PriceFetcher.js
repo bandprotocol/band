@@ -65,6 +65,7 @@ export const PricePairFetcher = withRouter(
 
       const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
         key: pair,
+        limit: 25,
       })
 
       // add another report point for prevent graph's plotting problem
