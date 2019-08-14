@@ -382,22 +382,6 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(1000);
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000);
     });
-    it('check active infoMap', async () => {
-      const dsCount = await this.mtcd.activeCount();
-      const topProviders = [
-        '0x0000000000000000000000000000000000000001',
-        alice,
-        bob,
-        carol,
-        '0x0000000000000000000000000000000000000001',
-      ];
-      dsCount.toNumber().should.eq(3);
-      for (let i = 0; i < topProviders.length - 1; i++) {
-        (await this.mtcd.activeList(topProviders[i]))
-          .toString()
-          .should.eq(topProviders[i + 1]);
-      }
-    });
     it('should be able to report and get median', async () => {
       const topProviders = [carol, bob, alice].sort((a, b) => {
         if (a < b) return -1;
