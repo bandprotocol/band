@@ -33,7 +33,7 @@
     "randomhex": "^0.1.5",
     "solium": "^1.2.4",
     "truffle": "^5.0.13",
-    "truffle-flattener": "^1.2.9",
+    "truffle-flattener": "^1.4.0",
     "truffle-hdwallet-provider": "^1.0.0-web3one.5"
   }
 }
