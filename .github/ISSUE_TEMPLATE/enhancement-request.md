@@ -1,7 +1,7 @@
 ---
 name: Enhancement Request
 about: Want to change how something in Band Protocol works? Here's the template!
-title: "[ENHANCEMENT] "
+title: ''
 labels: enhancement
 assignees: ''
 
