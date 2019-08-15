@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="121" height="103" viewBox="0 0 121 103">
+    <defs>
+        <linearGradient id="c" x1="0%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#3F4668"/>
+            <stop offset="100%" stop-color="#2B314F"/>
+        </linearGradient>
+        <ellipse id="b" cx="41.5" cy="58" rx="41.5" ry="15"/>
+        <filter id="a" width="184.3%" height="333.3%" x="-30.1%" y="-83.3%" filterUnits="objectBoundingBox">
+            <feOffset dx="10" dy="10" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="10"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0.137254902 0 0 0 0 0.152941176 0 0 0 0 0.254901961 0 0 0 0.54649257 0"/>
+        </filter>
+        <linearGradient id="d" x1="6.157%" y1="53.322%" y2="50%">
+            <stop offset="0%" stop-color="#363F6C"/>
+            <stop offset="100%" stop-color="#404A7D"/>
+        </linearGradient>
+        <linearGradient id="e" x1="19.327%" x2="79.331%" y1="54.196%" y2="43.982%">
+            <stop offset="0%" stop-color="#46538C"/>
+            <stop offset="100%" stop-color="#51598B"/>
+        </linearGradient>
+        <linearGradient id="f" x1="93.875%" x2="10.718%" y1="43.896%" y2="52.472%">
+            <stop offset="0%" stop-color="#8B93C4"/>
+            <stop offset="100%" stop-color="#5462A1"/>
+        </linearGradient>
+        <linearGradient id="g" x1="0%" x2="50%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#4C9B83"/>
+            <stop offset="100%" stop-color="#20B383"/>
+        </linearGradient>
+        <linearGradient id="h" x1="0%" y1="50%" y2="50%">
+            <stop offset="0%" stop-color="#36A883"/>
+            <stop offset="100%" stop-color="#3FF2B7"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="translate(9)">
+        <use fill="#000" filter="url(#a)" xlink:href="#b"/>
+        <use fill="url(#c)" xlink:href="#b"/>
+        <path fill="url(#d)" d="M41.5 59C64.42 59 83 52.508 83 44.5c0-3.636-3.83-6.96-10.16-9.505C65.233 31.935 54.014 30 41.5 30 18.58 30 0 36.492 0 44.5S18.58 59 41.5 59z"/>
+        <ellipse cx="41.5" cy="29.5" fill="url(#e)" rx="41.5" ry="14.5"/>
+        <ellipse cx="41.5" cy="14.5" fill="url(#f)" rx="41.5" ry="14.5"/>
+        <g fill-rule="nonzero">
+            <path fill="url(#g)" d="M41.676 34.057c-1.389 3.716-3.49 6.946-6.244 9.6-3.135 3.022-7.24 5.424-12.201 7.136a3.849 3.849 0 0 1-1.186.207H22a3.837 3.837 0 0 1-1.228-.205c-4.967-1.71-9.077-4.11-12.215-7.132C5.8 41.008 3.7 37.78 2.314 34.064-.207 27.31-.064 19.87.052 13.89l.002-.092c.023-.494.038-1.012.046-1.585C.142 9.4 2.407 7.073 5.257 6.917c5.94-.328 10.536-2.24 14.463-6.018l.034-.03a3.339 3.339 0 0 1 4.494 0l.033.03c3.927 3.778 8.523 5.69 14.464 6.018 2.849.156 5.114 2.483 5.156 5.295.008.577.023 1.094.047 1.585v.039c.116 5.99.259 13.447-2.272 20.221z" transform="translate(61 29)"/>
+            <path fill="url(#h)" d="M41.713 34.057c-1.366 3.715-3.432 6.946-6.142 9.6-3.084 3.022-7.123 5.424-12.004 7.136A3.728 3.728 0 0 1 22.4 51V0c.776.01 1.548.3 2.167.868l.033.03c3.864 3.779 8.385 5.691 14.23 6.018 2.803.157 5.031 2.484 5.073 5.296.008.576.023 1.094.045 1.585l.002.039c.113 5.99.253 13.447-2.237 20.221z" transform="translate(61 29)"/>
+            <path fill="#FFF" d="M95.4 54.5c0 7.015-5.718 12.725-12.755 12.75H82.6c-7.057 0-12.8-5.72-12.8-12.75s5.743-12.75 12.8-12.75h.045c7.037.025 12.755 5.735 12.755 12.75z"/>
+            <path fill="#FFF" d="M96.2 54.5c0 7.015-5.738 12.725-12.8 12.75v-25.5c7.062.025 12.8 5.735 12.8 12.75z"/>
+            <path fill="#0F996C" d="M88.555 52.97l-5.808 5.5-1.255 1.187c-.297.281-.686.421-1.074.421a1.56 1.56 0 0 1-1.075-.42L76.645 57.1a1.383 1.383 0 0 1 0-2.032 1.579 1.579 0 0 1 2.147 0l1.626 1.54 5.99-5.672a1.578 1.578 0 0 1 2.147 0 1.383 1.383 0 0 1 0 2.032z"/>
+            <path fill="#0D8E64" d="M88.545 52.974l-5.945 5.51V54.41l3.747-3.472a1.64 1.64 0 0 1 2.198 0 1.366 1.366 0 0 1 0 2.036z"/>
+        </g>
+    </g>
+</svg>

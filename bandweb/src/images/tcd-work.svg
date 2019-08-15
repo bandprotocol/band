@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="895" height="78" viewBox="0 0 895 78">
+    <g fill="none" fill-rule="evenodd">
+        <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(-6 -28)">
+            <tspan x="0" y="100">1</tspan>
+        </text>
+        <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(-6 -28)">
+            <tspan x="30" y="73">Community </tspan> <tspan x="30" y="100">creates a TCD</tspan>
+        </text>
+        <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(194 -28)">
+            <tspan x="0" y="100">2</tspan>
+        </text>
+        <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(194 -28)">
+            <tspan x="30" y="73">Provider submit </tspan> <tspan x="30" y="100">new data point</tspan>
+        </text>
+        <g>
+            <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(415 -28)">
+                <tspan x="0" y="100">3</tspan>
+            </text>
+            <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(415 -28)">
+                <tspan x="30" y="73">Token holders vote </tspan> <tspan x="30" y="100">for the provider</tspan>
+            </text>
+        </g>
+        <g>
+            <text fill="#E9EDFF" font-family="Avenir-Black, Avenir" font-size="100" font-weight="700" transform="translate(668 -28)">
+                <tspan x="0" y="100">4</tspan>
+            </text>
+            <text fill="#545454" font-family="Avenir-Medium, Avenir" font-size="20" font-weight="400" transform="translate(668 -28)">
+                <tspan x="30" y="73">DApps consume </tspan> <tspan x="30" y="100">data from aggregator</tspan>
+            </text>
+        </g>
+    </g>
+</svg>
