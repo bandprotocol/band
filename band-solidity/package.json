@@ -1,0 +1,17 @@
+{
+  "name": "band-solidity",
+  "version": "0.0.3",
+  "description": "Smart Contract library for Band data oracle",
+  "files": [
+    "/contracts/**/*.sol",
+    "/build/contracts/*.json"
+  ],
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "band"
+  ],
+  "license": "MIT"
+}
