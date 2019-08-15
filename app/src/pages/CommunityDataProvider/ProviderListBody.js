@@ -12,6 +12,7 @@ const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
     tcdAddress,
     dataSourceAddress,
     userOwnership,
+    userStake,
     stake,
     totalOwnership,
   ) =>
@@ -21,9 +22,18 @@ const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
         tcdAddress,
         dataSourceAddress,
         userOwnership,
+        userStake,
         stake,
         totalOwnership,
         tokenAddress,
+      }),
+    ),
+  showConvertRevenue: (tcdAddress, dataSourceAddress, userRevenue) =>
+    dispatch(
+      showModal('CONVERT_REVENUE', {
+        tcdAddress,
+        dataSourceAddress,
+        userRevenue,
       }),
     ),
 })

@@ -82,6 +82,22 @@ const ProviderListHeader = ({ symbol }) => (
         )}
       </Text>
     </Flex>
+    <Flex flex={12} justifyContent="center" px="10px">
+      <Text
+        color="#6878e2"
+        fontSize="14px"
+        lineHeight="1.4em"
+        fontWeight="bold"
+        textAlign="center"
+      >
+        {`Your Revenue`}
+        {symbol && (
+          <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
+            ({symbol})
+          </Text>
+        )}
+      </Text>
+    </Flex>
     <Flex flex="0 0 265px" justifyContent="flex-end" px="10px" />
   </Flex>
 )

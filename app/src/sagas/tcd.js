@@ -32,6 +32,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
                     nodes {
                       ownership
                       voter
+                      tokenLock
                     }
                   }
                 }
@@ -70,9 +71,13 @@ function* handleLoadTcds({ user, tokenAddress }) {
               const voterToOwnership = {}
               let userStake = new BN(0)
               let ownerStake = new BN(0)
-              for (const { voter, ownership } of voters) {
+              let revenue = new BN(0)
+              const voterToTokenLock = {}
+              for (const { voter, ownership, tokenLock } of voters) {
                 voterToOwnership[voter] = ownership
+                voterToTokenLock[voter] = tokenLock
               }
+
               if (voterToOwnership[user]) {
                 userStake = new BN(voterToOwnership[user])
                   .mul(new BN(stake))
@@ -82,6 +87,10 @@ function* handleLoadTcds({ user, tokenAddress }) {
                 ownerStake = new BN(voterToOwnership[owner])
                   .mul(new BN(stake))
                   .div(new BN(totalOwnership))
+              }
+
+              if (voterToTokenLock[user]) {
+                revenue = userStake.sub(new BN(voterToTokenLock[user]))
               }
 
               return {
@@ -95,6 +104,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
                 userOwnership: new BN(voterToOwnership[user] || '0'),
                 ownerOwnership: new BN(voterToOwnership[owner] || '0'),
                 totalOwnership: new BN(totalOwnership),
+                userRevenue: revenue,
               }
             },
           )
