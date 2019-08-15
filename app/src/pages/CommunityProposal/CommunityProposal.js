@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
 import ProposalList from 'components/ProposalList'
 import PageStructure from 'components/DataSetPageStructure'
-import { Flex, Text, H2 } from 'ui/common'
+import { Flex } from 'ui/common'
 import ProposalHeader from 'images/proposal-header.svg'
 import DataHeader from 'components/DataHeader'
 

@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
-import { Flex, Box, Text, Card, Image } from 'ui/common'
+import { Flex, Box, Text, Card } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
@@ -22,8 +22,8 @@ import { getPriceKeys } from 'data/detail/price'
 
 const pairToHeader = pair => {
   const [left, right] = pair.split('/')
-  const { image: imgl, label: labell } = getAsset(left)
-  const { image: imgr, label: labelr } = getAsset(right)
+  const { label: labell } = getAsset(left)
+  const { label: labelr } = getAsset(right)
   return labell + '/' + labelr
 }
 

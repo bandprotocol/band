@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Button, Image, H3 } from 'ui/common'
+import { Flex, Button, Image, H3 } from 'ui/common'
 import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
 import EditPropose from 'images/edit-proposal.svg'

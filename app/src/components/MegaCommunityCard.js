@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { colors } from 'ui'
 import BN from 'utils/bignumber'
-import { Flex, Text, Image, Box, Button, Link, H3 } from 'ui/common'
+import { Flex, Text, Box, Button, Link, H3 } from 'ui/common'
 
 const WrapText = styled(H3)`
   color: #4a4a4a;

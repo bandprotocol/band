@@ -1,5 +1,4 @@
 import { all, fork, put, delay, select, takeEvery } from 'redux-saga/effects'
-import { currentUserSelector } from 'selectors/current'
 import { channel } from 'redux-saga'
 import {
   updateClient,
@@ -34,8 +33,7 @@ import BandWallet from 'band-wallet'
 import { Utils } from 'band.js'
 import BN from 'utils/bignumber'
 
-import transit from 'transit-immutable-js'
-import { List, fromJS, Set, Map } from 'immutable'
+import { fromJS, Set, Map } from 'immutable'
 import { toggleFetch } from 'actions'
 
 // import web3
@@ -55,6 +53,7 @@ switch (network) {
     break
   case 'rinkeby':
   case 'local':
+  default:
     RPC_ENDPOINT = 'http://localhost:8545'
     WALLET_ENDPOINT = 'http://localhost:3000'
 }

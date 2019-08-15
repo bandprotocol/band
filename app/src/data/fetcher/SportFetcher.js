@@ -105,7 +105,7 @@ export const SportProvidersByTypeTimeTeamFetcher = withRouter(
         key: keyOnChain,
       })
 
-      const { reportedData, time } = reports[0] || {
+      const { reportedData } = reports[0] || {
         reportedData: [],
         time: Date.now(),
       }

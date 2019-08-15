@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Box, Button, Image, H2, H3, H5 } from 'ui/common'
-import colors from 'ui/colors'
+import { Flex, Text, Box, Button, Image, H3, H5 } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import Select from 'react-select'
 import { getDescription } from 'data/parameters'
@@ -49,7 +48,7 @@ const selectStyles = {
     backgroundColor: isSelected ? '#f3f7ff' : isFocused ? '#f7f9fc' : '#fff',
     padding: '8px 22px',
   }),
-  singleValue: (styles, {}) => ({
+  singleValue: styles => ({
     ...styles,
     paddingLeft: '10px',
     width: '100%',
@@ -142,7 +141,6 @@ export default ({
                 style={{
                   borderRight: 'solid 1px #999eab',
                   lineHeight: 1.45,
-                  fontWeight: 500,
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: 700,
