@@ -3,19 +3,19 @@ import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 import { Box } from 'ui/common'
 import moment from 'utils/moment'
+import delay from 'delay'
 import './style.css'
 
 const options = {
   navigator: {
-    enabled: false,
+    enabled: true,
+    height: 20,
   },
   scrollbar: { enabled: false },
   tooltip: {
     enabled: true,
     formatter: function(tooltip) {
-      return `
-      ${moment(this.x).priceDate()}<br>
-      Price: ${this.y}`
+      return `${moment(this.x).priceDate()}<br>Price: ${this.y}`
     },
   },
   xAxis: {
@@ -71,6 +71,28 @@ const options = {
 }
 
 class HighChartGraph extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.chart = React.createRef()
+  }
+
+  async componentDidMount() {
+    let chartObj = this.chart.current.chart
+
+    chartObj.showLoading()
+
+    while (true) {
+      const { data } = this.props
+      if (data && data.length !== 0) {
+        chartObj.hideLoading()
+        break
+      }
+      console.log('loading graph')
+      await delay(1000)
+    }
+  }
+
   shouldComponentUpdate(nextProps) {
     return nextProps.data !== this.props.data
   }
@@ -100,8 +122,13 @@ class HighChartGraph extends React.Component {
         <HighchartsReact
           highcharts={Highcharts}
           constructorType={'stockChart'}
+          ref={this.chart}
           options={{
             ...options,
+            loading: {
+              hideDuration: 1000,
+              showDuration: 1000,
+            },
             series: [
               {
                 data,
