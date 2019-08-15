@@ -1,13 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { hideModal, tcdDeposit, tcdWithdraw } from 'actions'
+import { hideModal, tcdRevenueToStake, tcdWithdraw } from 'actions'
 import { communityDetailSelector } from 'selectors/communities'
 import {
   communityBalanceSelector,
   tokenLockByTCDSelector,
 } from 'selectors/balances'
-import BN from 'utils/bignumber'
 import { Flex, Button, Text } from 'ui/common'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -38,11 +37,14 @@ class ConvertRevenueModal extends React.Component {
     const {
       hideConvertModal,
       dispatchWithdraw,
+      dispatchRevenueToStake,
       userRevenue,
       tcdAddress,
       dataSourceAddress,
       stake,
+      totalOwnership,
     } = this.props
+    const revenueAmount = userRevenue.mul(totalOwnership).div(stake)
     return (
       <BgCard mt="100px">
         <Flex
@@ -81,10 +83,9 @@ class ConvertRevenueModal extends React.Component {
             <Flex my="50px">
               <CustomButton
                 onClick={() =>
-                  dispatchWithdraw(
+                  dispatchRevenueToStake(
                     tcdAddress,
                     dataSourceAddress,
-                    0,
                     userRevenue.pretty(),
                   )
                 }
@@ -96,7 +97,7 @@ class ConvertRevenueModal extends React.Component {
                   dispatchWithdraw(
                     tcdAddress,
                     dataSourceAddress,
-                    userRevenue,
+                    revenueAmount,
                     userRevenue.pretty(),
                   )
                 }
@@ -144,6 +145,8 @@ const mapStateToProps = (
 
 const mapDispatchToProps = (dispatch, props) => ({
   hideConvertModal: () => dispatch(hideModal()),
+  dispatchRevenueToStake: (tcdAddress, dataSourceAddress, revenueAmount) =>
+    dispatch(tcdRevenueToStake(tcdAddress, dataSourceAddress, revenueAmount)),
   dispatchWithdraw: (tcdAddress, dataSourceAddress, stake, withdrawAmount) =>
     dispatch(tcdWithdraw(tcdAddress, dataSourceAddress, stake, withdrawAmount)),
 })

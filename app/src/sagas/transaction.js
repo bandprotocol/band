@@ -8,6 +8,7 @@ import {
   SELL_TOKEN,
   TCD_DEPOSIT,
   TCD_WITHDRAW,
+  TCD_REVENUE_TO_STAKE,
   PROPOSE_PROPOSAL,
   VOTE_PROPOSAL,
   addTx,
@@ -85,6 +86,24 @@ function* handleTcdWithdraw({
       withdrawAmount === 1 ? 'token' : 'tokens'
     }`,
     type: 'WITHDRAW',
+  })
+}
+
+function* handleTcdRevenueToStake({
+  tcdAddress,
+  sourceAddress,
+  revenueAmount,
+}) {
+  const client = yield select(currentTCDClientSelector, { address: tcdAddress })
+  const transaction = yield client.createWithdrawDataSourceTransaction({
+    dataSource: sourceAddress,
+    withdrawOwnership: 0,
+  })
+  yield put(hideModal())
+  yield sendTransaction({
+    transaction,
+    title: `Stake ${revenueAmount} ${revenueAmount === 1 ? 'token' : 'tokens'}`,
+    type: 'REVENUE_TO_STAKE',
   })
 }
 
@@ -174,6 +193,7 @@ export default function*() {
   yield takeEvery(BUY_TOKEN, handleBuyToken)
   yield takeEvery(TCD_DEPOSIT, handleTcdDeposit)
   yield takeEvery(TCD_WITHDRAW, handleTcdWithdraw)
+  yield takeEvery(TCD_REVENUE_TO_STAKE, handleTcdRevenueToStake)
   yield takeEvery(SELL_TOKEN, handleSellToken)
   yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
   yield takeEvery(VOTE_PROPOSAL, handleVoteProposal)

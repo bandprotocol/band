@@ -91,8 +91,13 @@ function* handleLoadTcds({ user, tokenAddress }) {
 
               if (voterToTokenLock[user]) {
                 revenue = userStake.sub(new BN(voterToTokenLock[user]))
+                //  < -0.01 = BN(0)
+                if (revenue.lt(new BN(-0.01))) {
+                  revenue = new BN(0)
+                } else if (revenue.lt(new BN(0)) && revenue.gte(-0.01)) {
+                  throw new Error('Revenue greater than 0.01')
+                }
               }
-
               return {
                 dataSourceAddress,
                 detail,

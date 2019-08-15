@@ -17,13 +17,21 @@ const Tab = styled(Flex).attrs(props => ({
 `
 
 const ExchangeButton = styled(FontAwesomeIcon)`
-  color: ${props => (props.isPositive ? 'green' : 'gray')};
-  cursor: ${props => (props.isPositive ? 'pointer' : 'cursor')};
-  margin-left: 5px;
+  color: gray;
+  cursor: cursor;
+  pointer-events: none;
+  opacity: 0.2;
+  margin-left: 10px;
 
   &:hover {
     transition: background-color 0.1s;
   }
+  ${props =>
+    props.haveRevenue &&
+    `color: green;
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 1;`}
 `
 
 const DWButton = styled(Button).attrs({
@@ -196,10 +204,16 @@ const ProvidersRow = ({
         {userRevenue.pretty()}
       </Text>
       <ExchangeButton
-        disabled={userRevenue.pretty() > 0}
+        haveRevenue={userRevenue.pretty() > 0 ? 1 : 0}
         icon={faExchangeAlt}
         onClick={() =>
-          showConvertRevenue(tcdAddress, dataSourceAddress, userRevenue)
+          showConvertRevenue(
+            tcdAddress,
+            dataSourceAddress,
+            userRevenue,
+            stake,
+            totalOwnership,
+          )
         }
       />
     </Tab>
