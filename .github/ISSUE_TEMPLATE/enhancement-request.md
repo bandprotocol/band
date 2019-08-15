@@ -12,9 +12,6 @@ assignees: ''
 ## Motivation
 [ Why do you think this feature matters. Give some examples! ]
 
-## Expected Behavior
-[ How you think it should look like ]
-
 ## Suggested Implementation
 [ How you think this feature should be implemented. Any idea is welcome! ]
 
