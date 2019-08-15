@@ -18,5 +18,8 @@ assignees: ''
 ## Steps to Reproduce
 [ 1, 2, 3 steps explaining how to get the bugs. Remove if obvious. ]
 
+## Suggested Solutions
+[ How you think this bug should be fixed. Any idea is welcome! ]
+
 ## Additional Context
 [ Anything else you think would be beneficial to reader? Optional. ]
