@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "javascript.validate.enable": false,
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact",
+      "css": "javascriptreact"
+    },
+    "emmet.syntaxProfiles": {
+      "javascript": "javascriptreact"
+    },
+    "files.associations": {
+      "*.css": "scss",
+      "*.js": "javascriptreact"
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/coverage": true
+    }
+  }
+}

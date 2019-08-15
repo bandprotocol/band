@@ -1,0 +1,315 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+   */
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Light.ttf');
+  font-style: normal;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir.ttf');
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Oblique.ttf');
+  font-style: italic;
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Medium.ttf');
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Bold.ttf');
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'Avenir';
+  src: url('/fonts/Avenir-Black.ttf');
+  font-style: normal;
+  font-weight: 900;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Light.ttf');
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Regular.ttf');
+  font-style: normal;
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-SemiBold.ttf');
+  font-style: normal;
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Bold.ttf');
+  font-style: normal;
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-ExtraBold.ttf');
+  font-style: normal;
+  font-weight: 900;
+}
+
+* {
+  font-family: 'Avenir';
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+a,
+a:hover,
+a:active {
+  color: #7a35d4;
+}
+a:not(:hover) {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow: hidden;
+}
+
+html,
+body {
+  height: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  font-family: 'Avenir', sans-serif;
+  background: #f3f7ff;
+  scroll-behavior: smooth;
+}
+
+*:focus {
+  outline: none;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.MathJax_Preview,
+.mjx-math:not(:first-child) {
+  display: none;
+}
+
+/* Auto Suggest */
+.react-autosuggest__container {
+  position: relative;
+}
+
+.react-autosuggest__input {
+  border-radius: 18px;
+  border: solid 1px #e7ecff;
+  padding: 0 2.8em 0 1.4em;
+  width: 400px;
+  line-height: 32px;
+  font-size: 14px;
+}
+
+.react-autosuggest__input--focused {
+  outline: none;
+}
+
+/* .react-autosuggest__input--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+} */
+
+.react-autosuggest__suggestions-container {
+  display: none;
+}
+
+.react-autosuggest__suggestions-container--open {
+  display: block;
+  position: absolute;
+  top: 45px;
+  width: 400px;
+  border-radius: 18px;
+  border: solid 1px #e7ecff;
+  background-color: #fff;
+  color: #4a4a4a;
+  font-size: 16px;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.react-autosuggest__suggestions-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.react-autosuggest__suggestion {
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.react-autosuggest__suggestion--highlighted {
+  background-color: #ddd;
+}

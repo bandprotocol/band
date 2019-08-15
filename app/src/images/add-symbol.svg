@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Color</title>
+    <desc>Created with Sketch.</desc>
+    <g id="on-demand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="web-request-explore" transform="translate(-1226.000000, -330.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group-18" transform="translate(260.000000, 314.000000)">
+                <g id="Group-7" transform="translate(944.000000, 6.000000)">
+                    <g id="Group-5" transform="translate(22.000000, 10.000000)">
+                        <path d="M8.88888889,7.11111111 L15.1111111,7.11111111 C15.6020309,7.11111111 16,7.50908022 16,8 C16,8.49091978 15.6020309,8.88888889 15.1111111,8.88888889 L8.88888889,8.88888889 L8.88888889,15.1111111 C8.88888889,15.6020309 8.49091978,16 8,16 C7.50908022,16 7.11111111,15.6020309 7.11111111,15.1111111 L7.11111111,8.88888889 L0.888888889,8.88888889 C0.397969111,8.88888889 0,8.49091978 0,8 C0,7.50908022 0.397969111,7.11111111 0.888888889,7.11111111 L7.11111111,7.11111111 L7.11111111,0.888888889 C7.11111111,0.397969111 7.50908022,0 8,0 C8.49091978,0 8.88888889,0.397969111 8.88888889,0.888888889 L8.88888889,7.11111111 Z" id="Color"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

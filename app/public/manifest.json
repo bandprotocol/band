@@ -1,0 +1,15 @@
+{
+  "short_name": "Band Protocol",
+  "name": "Band Protocol - Unleashing Tokenized Economy",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "390x390",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#8868ff",
+  "background_color": "#ffffff"
+}
