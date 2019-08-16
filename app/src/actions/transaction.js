@@ -7,6 +7,7 @@ export const BUY_TOKEN = 'BUY_TOKEN'
 export const SELL_TOKEN = 'SELL_TOKEN'
 export const TCD_DEPOSIT = 'TCD_DEPOSIT'
 export const TCD_WITHDRAW = 'TCD_WITHDRAW'
+export const TCD_REVENUE_TO_STAKE = 'TCD_REVENUE_TO_STAKE'
 export const ADD_PENDING_TX = 'ADD_PENDING_TX'
 export const REMOVE_PENDING_TX = 'REMOVE_PENDING_TX'
 
@@ -69,6 +70,17 @@ export const tcdWithdraw = (
   sourceAddress,
   ownership,
   withdrawAmount,
+})
+
+export const tcdRevenueToStake = (
+  tcdAddress,
+  sourceAddress,
+  revenueAmount,
+) => ({
+  type: TCD_REVENUE_TO_STAKE,
+  tcdAddress,
+  sourceAddress,
+  revenueAmount,
 })
 
 export const addPendingTx = (id, title, txType) => ({

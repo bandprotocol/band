@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { colors } from 'ui'
 import { Flex, Box, Text, Button, Image, AbsoluteLink } from 'ui/common'
 import { getProvider } from 'data/Providers'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 import OutImg from 'images/out.svg'
 import ArrowUp from 'images/arrowUp.svg'
 import ArrowDown from 'images/arrowDown.svg'
@@ -12,6 +14,24 @@ const Tab = styled(Flex).attrs(props => ({
   px: '10px',
 }))`
   min-width: 0;
+`
+
+const ExchangeButton = styled(FontAwesomeIcon)`
+  color: gray;
+  cursor: cursor;
+  pointer-events: none;
+  opacity: 0.2;
+  margin-left: 10px;
+
+  &:hover {
+    transition: background-color 0.1s;
+  }
+  ${props =>
+    props.haveRevenue &&
+    `color: green;
+    cursor: pointer;
+    pointer-events: auto;
+    opacity: 1;`}
 `
 
 const DWButton = styled(Button).attrs({
@@ -59,7 +79,9 @@ const ProvidersRow = ({
   stake,
   status,
   showDepositWithdraw,
+  showConvertRevenue,
   txLink,
+  userRevenue,
 }) => (
   <Flex
     flexDirection="row"
@@ -168,6 +190,33 @@ const ProvidersRow = ({
         {userStake.pretty()}
       </Text>
     </Tab>
+    <Tab flex={12} justifyContent="center">
+      <Text
+        color={colors.text}
+        fontSize="14px"
+        fontFamily="code"
+        style={{
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+        }}
+      >
+        {userRevenue.pretty()}
+      </Text>
+      <ExchangeButton
+        haveRevenue={userRevenue.pretty() > 0 ? 1 : 0}
+        icon={faExchangeAlt}
+        onClick={() =>
+          showConvertRevenue(
+            tcdAddress,
+            dataSourceAddress,
+            userRevenue,
+            stake,
+            totalOwnership,
+          )
+        }
+      />
+    </Tab>
     <Flex
       flex="0 0 265px"
       flexDirection="row"
@@ -220,6 +269,7 @@ const ProvidersRow = ({
             tcdAddress,
             dataSourceAddress,
             userOwnership,
+            userStake,
             stake,
             totalOwnership,
           )
@@ -245,7 +295,7 @@ const ProvidersRow = ({
   </Flex>
 )
 
-export default ({ user, items, showDepositWithdraw }) => {
+export default ({ user, items, showDepositWithdraw, showConvertRevenue }) => {
   return (
     <React.Fragment>
       {items.map((item, i) => {
@@ -262,6 +312,7 @@ export default ({ user, items, showDepositWithdraw }) => {
           totalOwnership,
           userOwnership,
           status,
+          userRevenue,
         } = item
         return (
           <ProvidersRow
@@ -279,7 +330,9 @@ export default ({ user, items, showDepositWithdraw }) => {
             status={status}
             totalOwnership={totalOwnership}
             showDepositWithdraw={showDepositWithdraw}
+            showConvertRevenue={showConvertRevenue}
             txLink={`https://kovan.etherscan.io/address/${dataSourceAddress}`}
+            userRevenue={userRevenue}
           />
         )
       })}
