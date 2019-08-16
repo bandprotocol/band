@@ -4,9 +4,7 @@ import styled from 'styled-components'
 import { hideModal } from 'actions'
 import { communityDetailSelector } from 'selectors/communities'
 import {
-  communityUnlockBalanceSelector,
   communityLockBalanceSelector,
-  communityBalanceSelector,
   tokenLockByTCDSelector,
 } from 'selectors/balances'
 import { Flex, Button, Text } from 'ui/common'
@@ -20,17 +18,6 @@ const BgCard = styled(Flex).attrs({
   height: 381px;
   border-radius: 6px;
   box-shadow: 0 12px 23px 0 rgba(0, 0, 0, 0.13);
-`
-const CustomButton = styled(Button).attrs({
-  fontSize: '16px',
-  fontWeight: 500,
-  width: '120px',
-})`
-  margin: 0px 25px;
-  border-radius: 6px;
-  transition: 0.5s all;
-  cursor: pointer;
-  background-color: '#7c84a6';
 `
 
 class LockedBalanceModal extends React.Component {
