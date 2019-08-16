@@ -1,4 +1,9 @@
-<img src="branding/logo.png" width="250px" >
+<div align="center">
+  <img src="branding/logo.png" width="250px" >
+  <p>
+    <strong>Decentralized Data Governance Protocol</strong>
+  </p>
+</div>
 
 ---
 
