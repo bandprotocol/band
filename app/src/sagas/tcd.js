@@ -95,7 +95,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
                 if (revenue.lt(new BN(-0.01))) {
                   revenue = new BN(0)
                 } else if (revenue.lt(new BN(0)) && revenue.gte(-0.01)) {
-                  throw new Error('Revenue greater than 0.01')
+                  throw new Error('Revenue greater than -0.01')
                 }
               }
               return {

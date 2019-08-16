@@ -2,11 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { hideModal, tcdRevenueToStake, tcdWithdraw } from 'actions'
-import { communityDetailSelector } from 'selectors/communities'
-import {
-  communityBalanceSelector,
-  tokenLockByTCDSelector,
-} from 'selectors/balances'
 import { Flex, Button, Text } from 'ui/common'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -119,27 +114,17 @@ const mapStateToProps = (
     tokenAddress,
     dataSourceAddress,
     tcdAddress,
-    userOwnership,
     stake,
     totalOwnership,
   },
 ) => {
-  const community = communityDetailSelector(state, {
-    address: tokenAddress,
-  })
-  if (!community) return {}
   return {
-    userRevenue,
-    userOwnership,
     stake,
+    userRevenue,
     totalOwnership,
     tokenAddress,
     dataSourceAddress,
     tcdAddress,
-    symbol: community.get('symbol'),
-    balance: communityBalanceSelector(state, { address: tokenAddress }).sub(
-      tokenLockByTCDSelector(state, { address: tokenAddress, tcdAddress }),
-    ),
   }
 }
 
