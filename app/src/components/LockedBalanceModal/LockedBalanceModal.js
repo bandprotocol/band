@@ -110,12 +110,13 @@ class LockedBalanceModal extends React.Component {
           {headRender}
           {bodyRender}
           <Flex>
-            <Text>Staked: </Text>
-            <Text>Staked in tcd</Text>
+            <Text>Staked is amount of lock stake in each TCDS </Text>
           </Flex>
           <Flex>
-            <Text>Unstake: </Text>
-            <Text>Locked - Stake</Text>
+            <Text>
+              Unstake is difference between maximum lock token in dataset and
+              stake in current TCD{' '}
+            </Text>
           </Flex>
         </Flex>
       </BgCard>
