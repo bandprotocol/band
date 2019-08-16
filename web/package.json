@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.8.1",
+    "react": "^16.9.0",
     "react-dom": "^16.8.1",
     "react-mailchimp-subscribe": "^2.1.0",
     "react-router-dom": "^4.3.1",
