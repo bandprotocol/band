@@ -1,6 +1,8 @@
 # Development Status
 
-Band Protocol is an open-source project in its active development phrase.
+TODO
+
+<!-- Band Protocol is an open-source project in its active development phrase.
 
 ## Big Timeline
 
@@ -18,4 +20,4 @@ Band Protocol is blockchain-agnostic
 
 ### Efficient Signature Aggregation
 
-Band Protocol relies
+Band Protocol relies -->

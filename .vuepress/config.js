@@ -9,7 +9,11 @@ module.exports = {
       {
         title: "🏡 Introduction",
         collapsable: false,
-        children: ["/", "home/problem", "home/development-status"]
+        children: [
+          "/"
+          // "home/problem",
+          // "home/development-status"
+        ]
       },
       {
         title: "⛩ Protocol Architecture",

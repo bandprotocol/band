@@ -11,7 +11,7 @@ _**Note**: For those interested in reading about Band Protocol in a more academi
   <figcaption>[Band Protocol as a bridge of data from outside to inside via data providers]</figcaption>
 </figure>
 
-Band Protocol is a protocol for decentralized data governance on public blockchains. The protocol incentivizes multiple independent parties to work cooperatively to provide trusted data. Curated information is available on-chain, ready to be consumed by other blockchain protocols or decentralized applications. **Band Protocol serves as the data layer of the [Web3](http://wiki.web3.foundation/en/latest/tech_stack/tech_stack_overview/) ecosystem, bridging real world and/or subjective information to smart contracts.**
+Band Protocol is a protocol for decentralized data governance on public blockchains. The protocol incentivizes multiple independent parties to work cooperatively to provide trusted data. Curated information is available on-chain, ready to be consumed by other blockchain protocols or decentralized applications. While initially Band Protocol is built on [Ethereum](https://ethereum.org), the protocol itself is blockchain agnostic and can scale to support multiple different blockchains in upcoming iterations. **Band Protocol serves as the data layer of the [Web3](http://wiki.web3.foundation/en/latest/tech_stack/tech_stack_overview/) ecosystem, bridging real world and/or subjective information to smart contracts.**
 
 ## How Many Parties are Involved?
 
@@ -36,5 +36,6 @@ Ready to dive 🏊‍ in? Continue to the next page to learn more about the prob
 
 - Go to [Protocol Architecture](/band/overview.md) to learn high-level concepts of Band Protocol.
 - Go to [DApp Developer Guide](/devs/overview.md) to learn how to integrate your dapps with Band's public datasets.
-- Go to [Token Holder Guide](/holders/overview.md) to learn how to participate on protocol governance and earn rewads.
+  <!-- - Go to [Token Holder Guide](/holders/overview.md) to learn how to participate on protocol governance and earn rewads. -->
 - Go to [Data Provider Guide](/providers/overview.md) to learn how to become a data provider and earn revenue share.
+- Go to [Available Datasets](TODO) to explore datasets current available on Band Protocol.

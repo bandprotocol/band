@@ -2,19 +2,21 @@
 
 <figure>
   <img src='/assets/placeholder.png'>
-  <figcaption>[Choose one one of three Pokemon style]</figcaption>
+  <figcaption>[Some random image]</figcaption>
 </figure>
 
-In a layman's term, Band Protocol is a decentralized network the connects data providers with data consumers through token economics. What that means
+In a layman's term, Band Protocol is a decentralized network the connects data providers with data consumers through token economics. The goal is to make [smart contracts](https://en.wikipedia.org/wiki/Smart_contract) smarter through the consumption of real world data. Imagine how useful a decentralized insurance contract will be if it can magically know if it should payout the issurance without needing a trusted middleman to supply the information.
 
-## Let's Make it More Understandable with Infographics
+## 🤔 Let's Try with Infographics
 
-Sure,
+[TODO]
 
 <!--
 Band Protocol’s main functionality is to bridge the gap between decentralized applications and real-world data while also ensure that data is accurate and trustworthy through economic incentives. Band Protocol will initially be built on the Ethereum network, but the protocol itself is not restricted to Ethereum infrastructure. As the protocol gets more widespread adoption, it will support all leading smart contract platforms and power the new generation of decentralized applications. -->
 
-## Intuitive Data Layer for Decentralized Applications
+## Design Goals
+
+### Intuitive Data Layer for Decentralized Applications
 
 One of the most important design goals of Band Protocol is developer experience. Existing data provider networks, such as [ChainLink](https://chain.link) or [Provable](http://provable.xyz), require [asynchronous](<https://en.wikipedia.org/wiki/Asynchrony_(computer_programming)>) interactions between smart contracts and data layers. Not only does this method complicates smart contract implementations, it also introduces a significant delay as two blockchain transactions need to be executed and confirmed sequentially.
 
