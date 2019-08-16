@@ -1,6 +1,4 @@
-matrix:
-  include:
-  - language: node_js
-  - node_js: "10"
-  - script:
-    - cd bandweb && yarn && yarn test
+language: node_js
+node_js: 10.16.0
+script:
+ - cd bandweb && yarn && yarn test
