@@ -23,7 +23,7 @@ const BgCard = styled(Flex).attrs({
 class LockedBalanceModal extends React.Component {
   render() {
     const {
-      hideLockedBalanchModal,
+      hideLockedBalanceModal,
       stakePerTcds,
       unstakePerTcds,
       tcds,
@@ -95,7 +95,7 @@ class LockedBalanceModal extends React.Component {
             justifyContent="flex-end"
             pr="30px"
             style={{ cursor: 'pointer' }}
-            onClick={() => hideLockedBalanchModal()}
+            onClick={() => hideLockedBalanceModal()}
           >
             <i className="fas fa-times" />
           </Flex>
@@ -167,7 +167,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, props) => ({
-  hideLockedBalanchModal: () => dispatch(hideModal()),
+  hideLockedBalanceModal: () => dispatch(hideModal()),
 })
 
 export default connect(

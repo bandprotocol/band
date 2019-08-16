@@ -36,7 +36,7 @@ class SideBar extends React.Component {
       bandPrice,
       address,
       tcds,
-      showLockedBalanchModal,
+      showLockedBalanceModal,
     } = this.props
 
     return (
@@ -55,7 +55,7 @@ class SideBar extends React.Component {
         symbol={symbol}
         isSymbol={this.state.isSymbol}
         toggleBalance={this.toggleBalance.bind(this)}
-        showLockedBalanchModal={showLockedBalanchModal}
+        showLockedBalanceModal={showLockedBalanceModal}
       />
     )
   }
@@ -89,7 +89,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
-  showLockedBalanchModal: tokenAddress =>
+  showLockedBalanceModal: tokenAddress =>
     dispatch(showModal('LOCKED_BALANCH', { tokenAddress })),
 })
 

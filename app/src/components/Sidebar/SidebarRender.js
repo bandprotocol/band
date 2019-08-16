@@ -82,7 +82,7 @@ const Sidebar = props => {
     symbol,
     address,
     tcds,
-    showLockedBalanchModal,
+    showLockedBalanceModal,
   } = props
 
   return (
@@ -175,7 +175,7 @@ const Sidebar = props => {
                   py={1}
                   px={2}
                   bg={colors.background.lighter}
-                  onClick={() => showLockedBalanchModal(address)}
+                  onClick={() => showLockedBalanceModal(address)}
                 >
                   <FontAwesomeIcon size="xs" icon={faInfo} />
                 </FontAwesomeContainer>
