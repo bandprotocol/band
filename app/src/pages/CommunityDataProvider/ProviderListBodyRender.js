@@ -82,6 +82,7 @@ const ProvidersRow = ({
   showConvertRevenue,
   txLink,
   userRevenue,
+  remainingToken,
 }) => (
   <Flex
     flexDirection="row"
@@ -224,7 +225,7 @@ const ProvidersRow = ({
       pr="30px"
     >
       <DWButton
-        disabled={!user}
+        disabled={!user || !(Number(remainingToken.pretty()) > 0)}
         bg="#42c47f"
         color="#24bf97"
         hoverShadowColor="#a6e7c4"
@@ -296,7 +297,7 @@ const ProvidersRow = ({
   </Flex>
 )
 
-export default ({ user, items, showDepositWithdraw, showConvertRevenue }) => {
+export default ({ user, items, remainingToken, showDepositWithdraw, showConvertRevenue }) => {
   return (
     <React.Fragment>
       {items.map((item, i) => {
@@ -332,6 +333,7 @@ export default ({ user, items, showDepositWithdraw, showConvertRevenue }) => {
             totalOwnership={totalOwnership}
             showDepositWithdraw={showDepositWithdraw}
             showConvertRevenue={showConvertRevenue}
+            remainingToken={remainingToken}
             txLink={`https://kovan.etherscan.io/address/${dataSourceAddress}`}
             userRevenue={userRevenue}
           />
