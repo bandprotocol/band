@@ -33,6 +33,6 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "babel-plugin-macros": "^2.5.1"
+    "babel-plugin-macros": "^2.6.1"
   }
 }
