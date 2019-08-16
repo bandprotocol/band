@@ -11,6 +11,7 @@ import BecomeProviderModal from 'components/BecomeProviderModal'
 import ApplyIdentityModal from 'components/ApplyIdentityModal'
 import NewWebRequestModal from 'components/NewWebRequestModal'
 import MakeNewRequestModal from 'components/MakeNewRequestModal'
+import LockedBalanchModal from 'components/LockedBalanceModal'
 
 export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
@@ -35,6 +36,8 @@ export default ({ modalName, data, hideModal }) => (
         request={data.request}
         tcdAddress={data.tcdAddress}
       />
+    ) : modalName === 'LOCKED_BALANCH' ? (
+      <LockedBalanchModal {...data} />
     ) : null}
   </ModalContainer>
 )

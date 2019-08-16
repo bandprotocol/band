@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
+import { showModal } from 'actions'
 import SidebarRender from 'components/Sidebar/SidebarRender'
 
 import { communityDetailSelector } from 'selectors/communities'
@@ -35,6 +36,7 @@ class SideBar extends React.Component {
       bandPrice,
       address,
       tcds,
+      showLockedBalanchModal,
     } = this.props
 
     return (
@@ -53,6 +55,7 @@ class SideBar extends React.Component {
         symbol={symbol}
         isSymbol={this.state.isSymbol}
         toggleBalance={this.toggleBalance.bind(this)}
+        showLockedBalanchModal={showLockedBalanchModal}
       />
     )
   }
@@ -85,4 +88,14 @@ const mapStateToProps = (state, { tokenAddress }) => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(SideBar))
+const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
+  showLockedBalanchModal: tokenAddress =>
+    dispatch(showModal('LOCKED_BALANCH', { tokenAddress })),
+})
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(SideBar),
+)
