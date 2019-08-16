@@ -235,6 +235,7 @@ const ProvidersRow = ({
             tcdAddress,
             dataSourceAddress,
             userOwnership,
+            userStake,
             stake,
             totalOwnership,
           )

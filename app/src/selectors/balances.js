@@ -49,3 +49,11 @@ export const tokenLockByTCDSelector = createSelector(
   (balances, address, tcdAddress) =>
     balances.getIn([address, 'lockers', tcdAddress], new BN(0)),
 )
+
+export const remainingTokenByTCDSelector = createSelector(
+  [balancesSelector, addressSelector, tcdAddressSelector],
+  (balances, address, tcdAddress) =>
+    balances
+      .getIn([address, 'value'], new BN(0))
+      .sub(balances.getIn([address, 'lockers', tcdAddress], new BN(0))),
+)
