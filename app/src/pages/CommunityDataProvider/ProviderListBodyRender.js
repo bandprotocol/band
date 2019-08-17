@@ -73,7 +73,6 @@ const ProvidersRow = ({
   dataSourceAddress,
   tcdAddress,
   ownerStake,
-  userStake,
   userOwnership,
   totalOwnership,
   stake,
@@ -187,7 +186,7 @@ const ProvidersRow = ({
           overflow: 'hidden',
         }}
       >
-        {userStake.pretty()}
+        {userOwnership.pretty()}
       </Text>
     </Tab>
     <Tab flex={12} justifyContent="center">
@@ -235,7 +234,6 @@ const ProvidersRow = ({
             tcdAddress,
             dataSourceAddress,
             userOwnership,
-            userStake,
             stake,
             totalOwnership,
           )
@@ -259,7 +257,7 @@ const ProvidersRow = ({
       </DWButton>
       <Flex mx="10px" />
       <DWButton
-        disabled={!user || userStake.pretty() <= 0}
+        disabled={!user || userOwnership.pretty() <= 0}
         bg="#ec6363"
         hoverShadowColor="#ffb4ac"
         activeColor="#f4e1e1"
@@ -270,7 +268,6 @@ const ProvidersRow = ({
             tcdAddress,
             dataSourceAddress,
             userOwnership,
-            userStake,
             stake,
             totalOwnership,
           )
@@ -309,7 +306,6 @@ export default ({ user, items, showDepositWithdraw, showConvertRevenue }) => {
           dataSourceAddress,
           ownerStake,
           stake,
-          userStake,
           totalOwnership,
           userOwnership,
           status,
@@ -325,7 +321,6 @@ export default ({ user, items, showDepositWithdraw, showConvertRevenue }) => {
             dataSourceAddress={dataSourceAddress}
             tcdAddress={tcdAddress}
             ownerStake={ownerStake}
-            userStake={userStake}
             userOwnership={userOwnership}
             stake={stake}
             status={status}

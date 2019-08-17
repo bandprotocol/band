@@ -7,13 +7,14 @@ const MILLION = BigNumber(10).pow(6)
 const BILLION = BigNumber(10).pow(9)
 
 BN.prototype.pretty = function() {
-  return BigNumber(this.toString())
+  const result = BigNumber(this.toString())
     .div(DIVISOR)
-    .toNumber()
-    .toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
+    .toFixed(18)
+  return result.slice(0, result.length - 16)
+  // .toLocaleString('en-US', {
+  //   minimumFractionDigits: 2,
+  //   maximumFractionDigits: 2,
+  // })
 }
 
 BN.prototype.shortPretty = function() {

@@ -125,8 +125,6 @@ class DepositWithdrawModal extends React.Component {
         return false
       }
       if (valueOnChain.gt(remainingToken)) {
-        console.log('value on chain', valueOnChain.toString())
-        console.log('remaining token pretty', remainingToken.toString())
         this.setState({
           errorMessage:
             'deposit amount should be equal or less than your token balance',
@@ -141,13 +139,9 @@ class DepositWithdrawModal extends React.Component {
         })
         return false
       }
-      const withdrawOwnershipAmount = 0
-
-      if (valueOnChain == userOwnership.pretty()) {
-        withdrawOwnershipAmount = userOwnership
-      } else {
-        withdrawOwnershipAmount = valueOnChain.mul(totalOwnership).div(stake)
-      }
+      const withdrawOwnershipAmount = valueOnChain
+        .mul(totalOwnership)
+        .div(stake)
 
       if (
         !BN.isBN(userOwnership) ||
@@ -203,12 +197,9 @@ class DepositWithdrawModal extends React.Component {
       symbol,
       actionType,
       hideDepositWithdraw,
-      userStake,
       userOwnership,
       remainingToken,
     } = this.props
-    console.log('max', userOwnership.pretty())
-    console.log('remainingToken', remainingToken.pretty())
     return (
       <BgCard mt="100px">
         <Flex
@@ -267,9 +258,9 @@ class DepositWithdrawModal extends React.Component {
                 <MaxButton
                   isMax={
                     this.state.value &&
-                    Number(this.state.value) === Number(userStake.pretty())
+                    Number(this.state.value) === Number(userOwnership.pretty())
                   }
-                  onClick={() => this.updateValue(userStake.pretty())}
+                  onClick={() => this.updateValue(userOwnership.pretty())}
                 >
                   Max
                 </MaxButton>
@@ -331,7 +322,6 @@ const mapStateToProps = (
     dataSourceAddress,
     tcdAddress,
     userOwnership,
-    userStake,
     stake,
     totalOwnership,
   },
@@ -348,7 +338,6 @@ const mapStateToProps = (
   return {
     actionType,
     userOwnership,
-    userStake,
     stake,
     totalOwnership,
     tokenAddress,
