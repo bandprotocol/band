@@ -21,7 +21,7 @@ After you create a new vault, you will face the screen that shows your address a
 ## Request Kovan Testnet Ether
 
 ::: tip
-If you already own Kovan testnet Ether (KETH), skip to the [next section](#request-kovan-testnet-ether).
+If you already own Kovan testnet Ether (KETH), skip to the [next section](#write-your-first-smart-contract).
 :::
 
 Now that you have MetaMask installed and connected to Kovan test network, the next step is to request testnet ETH to interact with the Ethereum network. Head over to [https://faucet.kovan.network](https://faucet.kovan.network) to enter Kovan faucet.

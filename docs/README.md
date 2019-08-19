@@ -4,23 +4,13 @@ Welcome to [Band Protocol](https://bandprotocol.com)'s open knowledge base. Here
 
 _**Note**: For those interested in reading about Band Protocol in a more academia-like format, we recommend going through our [whitepaper](https://whitepaper.bandprotocol.com) as the first place to start._
 
-## What is Band Protocol?
-
-<!-- <figure>
-  <img src='/assets/placeholder.png'>
-  <figcaption>[Band Protocol as a bridge of data from outside to inside via data providers]</figcaption>
-</figure> -->
+## What Is Band Protocol?
 
 Band Protocol is a protocol for decentralized data governance on public blockchains. The protocol incentivizes multiple independent parties to work cooperatively to provide trusted data. Curated information is available on-chain, ready to be consumed by other blockchain protocols or decentralized applications. While initially Band Protocol is built on [Ethereum](https://ethereum.org), the protocol itself is blockchain agnostic and can scale to support multiple different blockchains in upcoming iterations. **Band Protocol serves as the data layer of the [Web3](http://wiki.web3.foundation/en/latest/tech_stack/tech_stack_overview/) ecosystem, bridging real world and/or subjective information to smart contracts.**
 
-## How Many Parties are Involved?
+## How Many Parties Are Involved?
 
 Band Protocol's ecosystem primarily consists of three groups of participants. Note that it is possible that one individual takes multiple roles in the ecosystem.
-
-<!-- <figure>
-  <img src='/assets/placeholder.png'>
-  <figcaption>[Choose one one of the three Pokemons style]</figcaption>
-</figure> -->
 
 - **Token Holders** collectively share the ownership stake of Band Protocol. They are responsible for maintaining data quality. In exchange, they receive token price appreciation and revenue shares.
 

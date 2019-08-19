@@ -63,12 +63,12 @@ module.exports = {
         title: "🦄 Example Applications",
         collapsable: false,
         children: []
-      },
-      {
-        title: "📖 Smart Contract Reference",
-        collapsable: false,
-        children: []
       }
+      // {
+      //   title: "📖 Smart Contract Reference",
+      //   collapsable: false,
+      //   children: []
+      // }
     ]
   }
 };
