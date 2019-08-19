@@ -7,6 +7,7 @@
     "test": "yarn truffle test",
     "deploy": "yarn truffle migrate --network kovan"
   },
+  "license": "MIT",
   "dependencies": {
     "band-solidity": "^0.0.3",
     "solc": "^0.5.11",
