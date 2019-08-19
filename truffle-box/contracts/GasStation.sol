@@ -1,6 +1,6 @@
 pragma solidity 0.5.10;
 
-import {BandLib, usingBandProtocol, Oracle} from "band-solidity/contracts/data/BandLib.sol";
+import {usingBandProtocol, Oracle} from "band-solidity/contracts/data/BandLib.sol";
 
 contract GasStation is usingBandProtocol {
 
