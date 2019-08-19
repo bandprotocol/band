@@ -17,6 +17,10 @@ import {
   Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
+import DualTokenSrc from 'images/featured/dual-token.png'
+import DataSetTokenSrc from 'images/featured/dataset-token.png'
+import DataSetTokenSrc2 from 'images/featured/dataset-token-2.png'
+import BondingCurveSrc from 'images/featured/bonding-curve.png'
 
 const FilledButton = styled(Button)`
   font-family: Avenir;
@@ -71,13 +75,11 @@ const OutlineButton = styled(Button)`
 const OvalNumber = styled(Flex).attrs({
   alignItems: 'center',
   justifyContent: 'center',
-  bg: 'black',
   color: 'white',
 })`
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-left: -60px;
+  width: 43.2px;
+  height: 43.2px;
 `
 
 export default () => {
@@ -102,11 +104,11 @@ export default () => {
             flexDirection="column"
           >
             <Text
-              lineHeight={1.6}
+              lineHeight="80px"
               fletterSpacing="1px"
-              fontWeight={600}
-              fontSize={['32px', '48px']}
-              color="#4a4a4a"
+              fontSize={['32px', '60px']}
+              fontWeight="bold"
+              color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
             >
@@ -114,193 +116,172 @@ export default () => {
               <br />
               Dual-Token Economics
             </Text>
-            <Text textAlign="center" mt="20px" style={{ lineHeight: '2' }}>
+            <Text
+              textAlign="center"
+              mt="20px"
+              lineHeight="36px"
+              fontSize={['18px']}
+              color="#323232"
+              style={{ lineHeight: '2' }}
+            >
               Band Protocol functions on two types of tokens: Dataset Tokens and
               BAND Token. Here's how we use the two tokens to create economic
               incentives that allow users to support the creation of reliable
               and accessible datasets.
             </Text>
+            <Image src={DualTokenSrc} />
           </Flex>
         </PageContainer>
       </Box>
 
-      <Flex justifyContent="center">
-        <Box bg="pink" width="1200px" style={{ height: '315px' }} />
-      </Flex>
-
       {/* Section 2: Dataset Tokens */}
       <Box bg="#f0f0f0" mt="50px">
         <PageContainer>
-          <Text
-            lineHeight={1.6}
-            fletterSpacing="1px"
-            fontWeight={600}
-            fontSize={['32px', '28px']}
-            color="#4a4a4a"
-            textAlign={['center', 'left']}
-          >
-            Dataset Tokens
-          </Text>
-
-          {/* Part 1 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Decentralized Finance (DeFi)
-              </Text>
+          <Flex flexDirection="row" alignItems="center">
+            <OvalNumber bg="#5569de" mr="20px">
               <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
+                lineHeight="80px"
+                fontWeight="bold"
+                fontSize="23px"
+                color="#ffffff"
               >
-                The majority of existing decentralized finance (DeFi)
-                applications share one critical source of risk: Price Feed
-                Oracle. Reputable projects such as MakerDAO, Compound, Dharma,
-                dYdX, or SET Protocol, rely on only a relatively small number of
-                trusted developers to provide off-chain price information to the
-                protocol. Band Protocol fills this need, providing critical
-                information securely allowing projects to focus on what they do
-                best. This also extends to future decentralized financial
-                application such as derivative trading of real-world asset which
-                requires knowledge of real-world data such as interest rate,
-                foreign exchange rate, price of securities such as stocks, bonds
-                and commodities.
+                1
+              </Text>
+            </OvalNumber>
+            <Flex>
+              <Text
+                lineHeight="80px"
+                fontWeight="bold"
+                fontSize={['32px', '28px']}
+                color="#3b426b"
+                textAlign={['center', 'left']}
+              >
+                Dataset Tokens
               </Text>
             </Flex>
+          </Flex>
+          <Text fontSize="18px" lineHeight={2} color="#323232">
+            A dataset token is a token that anyone can buy into that grants the
+            holder the right to participate in the activities that the community
+            issuing the token conduct. There are two jobs for the dataset token
+            holders: they can either <br />
+            1) become a "data provider" who is responsible for curating
+            high-quality data and feed it to smart contracts or <br />
+            2) participate in the community (as a user of the data from that
+            dataset) and vote for data providers they trust to do the hard work
+            for them. With only the top provider gaining the right to contribute
+            data to the dataset.
+          </Text>
+          {/* Part 1 */}
+          <Flex mt="45px" justifyContent="space-between" alignItems="center">
+            <Box flex={1} pr="82.7px">
+              <Image src={DataSetTokenSrc} />
+            </Box>
+            <Flex pt="12px" flex={1} ml="82.7px">
+              <Text fontSize="18px" lineHeight="36px" color="#323232">
+                The primary source of incentive in the system is from selling
+                the data to smart contracts. Every time the data is sold, the
+                rewards get distributed to each data provider and subsequently
+                all the community users who have voted/staked for them. The
+                better providers the community select, the more trustworthy the
+                data becomes in a long run, driving up the potential revenue and
+                hence value for every token holder.
+              </Text>
+            </Flex>
+          </Flex>
+
+          <Flex justifyContent="space-between" mt="40px" alignItems="center">
+            <Flex flex={1}>
+              <Text fontSize="18px" lineHeight="36px" color="#323232">
+                This mechanism ensures that everyone involved in the process of
+                building a dataset has an aligned economic incentive.
+                Competition from multiple datasets in the same vertical further
+                drives the quality of each dataset. Eventually the real
+                beneficiaries here are all the users who benefit from the more
+                secure smart contract design.
+              </Text>
+            </Flex>
+            <Box pl="98.7" flex={1}>
+              <Image src={DataSetTokenSrc2} />
+            </Box>
           </Flex>
 
           {/* Part 2 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Payments for Decentralized Commerce
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
-              >
-                Many decentralized applications utilize tokens as a mean of
-                payment, which requires them to price their products and
-                services in token term. However, this is difficult because these
-                applications usually price their offers in stable fiat value
-                whereas these tokens have high price volatility. Hence, they
-                need a mechanic to continuously convert their fiat value to
-                token value which requires a reliable, constant feed of
-                crypto-fiat price.
-              </Text>
+          <Flex flexDirection="column" mt="40px">
+            <Flex flexDirection="row" alignItems="center">
+              <OvalNumber bg="#5569de">
+                <Text
+                  lineHeight="80px"
+                  fontWeight="bold"
+                  fontSize="23px"
+                  color="#ffffff"
+                >
+                  2
+                </Text>
+              </OvalNumber>
+              <Flex ml="25px" mb="25px">
+                <Text
+                  lineHeight="80px"
+                  fontWeight="bold"
+                  fontSize={['32px', '28px']}
+                  color="#3b426b"
+                  textAlign={['center', 'left']}
+                >
+                  Band Tokens
+                </Text>
+              </Flex>
             </Flex>
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
-          </Flex>
-
-          {/* Part 3 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Gaming, Gambling, and Prediction Markets
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
-              >
-                Gaming and gambling have been one of biggest sectors in the
-                blockchain ecosystem. By utilizing Band Protocol, dApps can
-                access trusted real-world information that is not controlled by
-                a single source of truth.
-              </Text>
+            <Flex flexDirection="row">
+              <Box pr="110px">
+                <Image src={BondingCurveSrc} />
+              </Box>
+              <Flex flexDirection="column">
+                <Text
+                  fontSize="18px"
+                  lineHeight="36px"
+                  color="#323232"
+                  mb="24px"
+                >
+                  BAND token functions as collateral for dataset tokens. Dataset
+                  tokens are issued and redeemed through a Bonding Curve
+                  mechanism, guaranteeing instant liquidity and sufficient value
+                  for correct dataset incentives to function properly.
+                </Text>
+                <Button
+                  style={{
+                    width: '233px',
+                    height: '39.8px',
+                    backgroundImage:
+                      'linear-gradient(to bottom, #00a4ff, #5569de)',
+                  }}
+                >
+                  Get Band Airdrop ->
+                </Button>
+              </Flex>
             </Flex>
-          </Flex>
-
-          {/* Part 4 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Supply Chain Tracking
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
-              >
-                Buying and selling real-world products in a fully trustless way
-                using cryptocurrency is near impossible with current technology.
-                Band Protocol allows supply-chain related data such as item
-                shipments or non-blockchain payments. Smart contracts can verify
-                such information on-chain and perform financial logic
-                accordingly.
-              </Text>
-            </Flex>
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
-          </Flex>
-
-          {/* Part 5 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Identity Layer
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
-              >
-                Many decentralized applications struggle to deal with fake
-                accounts and Sybil attacks. As founder of Ethereum, Vitalik
-                Buterin suggests, identity layer is one of the most crucial
-                parts for building collusion-resistant tokenomic system. Band
-                Protocol can serve as a platform for different identity services
-                to together curate identity information, ready to be consumed by
-                applications via a simple query interface.
-              </Text>
-            </Flex>
-          </Flex>
-
-          {/* Part 6 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Open Internet API connection
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
-              >
-                Smart contracts are currently limited because they cannot bridge
-                between the Web 2.0 and 3.0 infrastucture. Band Protocol
-                supports real-world API connection so smart contracts are fully
-                aware of real-world event and also able to supply input to the
-                API to trigger specific event. For example, one can connect bank
-                API so that smart contract knows exactly when there is an
-                off-chain transaction or smart contract may automatically
-                trigger off-chain transaction by itself.
-              </Text>
-            </Flex>
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
           </Flex>
 
           {/* Explore more feature button */}
           <Flex justifyContent="center" maxWidth="500px" my="50px">
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              bg="#4a4a4a"
-              p="16px 15px"
-              width="100%"
-              style={{ maxWidth: '500px', borderRadius: '4px' }}
+            <Button
+              style={{
+                width: '514.7px',
+                height: '59.7px',
+                backgroundImage: 'linear-gradient(to bottom, #2a3a7f, #1c2764)',
+              }}
             >
-              <Text color="white" fontSize="16px">
-                Next: Dual-token Economics
+              <Text
+                fontSize="21.5px"
+                fontWeight={600}
+                fontFamily="BisoSans"
+                color="#ffffff"
+                style={{
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                Next: Visualizing How Data are Curated ->
               </Text>
-              {/* TODO: change it into actual symbol */}
-              <Text color="white" fontSize="16px">
-                ->
-              </Text>
-            </Flex>
+            </Button>
           </Flex>
         </PageContainer>
       </Box>
