@@ -2,11 +2,12 @@ import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import LandingShowcase from 'components/LandingShowcase'
-import { colors } from 'ui'
+import LinkWithArrow from 'components/LinkWithArrow'
+import Subscribe from 'components/Subscribe'
 import {
   Flex,
   Text,
-  BackgroundCard,
+  Highlight,
   H1,
   Button,
   Card,
@@ -22,6 +23,12 @@ import { isMobile } from 'ui/media'
 
 import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
+
+import LandingHero from 'images/landing-hero-background.svg'
+import LandingRealworld from 'images/landing-connect-realworld.svg'
+import LandingOpenAPI from 'images/landing-connect-openapi.svg'
+import LandingMassAdoption from 'images/landing-massadoption.svg'
+import LandingFeature from 'images/landing-features.png'
 
 import HeroSrc from 'images/hero.png'
 import BandInTheMiddle from 'images/band-overview.png'
@@ -50,14 +57,15 @@ const FilledButton = styled(Button)`
   font-family: Avenir;
   color: white;
   font-size: 16px;
+  padding: 13px 34px;
   font-weight: 500;
   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
   height: 46px;
   border-radius: 2px;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #4a4a4a;
+  background-image: linear-gradient(to bottom, #2a3a7f, #131b48);
   cursor: pointer;
+  font-family: bio-sans;
 
   transition: all 0.2s;
 
@@ -72,14 +80,15 @@ const FilledButton = styled(Button)`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
-  color: #4a4a4a;
+  color: #122069;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   background-color: white;
   width: ${props => (props.isMobile ? '196px' : '182px')};
   height: 46px;
   border-radius: 2px;
   cursor: pointer;
+  font-family: bio-sans;
 
   transition: all 0.2s;
 
@@ -115,256 +124,322 @@ export default () => {
           backgroundImage: 'linear-gradient(to bottom, #5a7ffd, #495fd6)',
         }}
       >
-        <PageContainer>
-          <Flex
-            pt={['50px', '300px']}
-            pb={['50px', '60px']}
-            flexDirection={['column', 'row']}
-          >
-            {_isMobile && (
-              <Flex
-                flex={1}
-                style={{ minWidth: 'calc(100vw - 40px)' }}
-                justifyContent="flex-end"
-                alignItems="center"
-              >
-                <Image src={HeroSrc} />
-              </Flex>
-            )}
-            <Box flex={1}>
-              <Text
-                lineHeight={1.6}
-                fletterSpacing="1px"
-                fontWeight={600}
-                fontSize={['32px', '40px']}
-                color="white"
-                textAlign={['center', 'left']}
-                mt={['30px', '0px']}
-              >
-                Data Governance Framework
-                <br />
-                for Web 3.0 Applications
-              </Text>
-              <Flex mt="25px" style={{ maxWidth: ['320px', '390px'] }}>
-                <Text
-                  color="white"
-                  fontSize={['20px', '24px']}
-                  lineHeight={1.54}
-                  fontWeight={300}
-                  textAlign={['center', 'left']}
-                >
-                  Band Protocol connects smart contracts with trusted off-chain
-                  information,
-                  <br />
-                  provided through community-curated data providers.
-                </Text>
-              </Flex>
-              <Flex
-                mt={['40px', '50px']}
-                alignItems={['center', 'flex-start']}
-                flexDirection={['column', 'row']}
-              >
-                <AbsoluteLink href="https://developer.bandprotocol.com/">
-                  <FilledButton isMobile={_isMobile}>
-                    Developer Doc
-                  </FilledButton>
-                </AbsoluteLink>
-                <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-                <AbsoluteLink href="/whitepaper-3.0.0.pdf">
-                  <OutlineButton isMobile={_isMobile}>
-                    Whitepaper v3.1
-                  </OutlineButton>
-                </AbsoluteLink>
-              </Flex>
-              {/* Join us */}
-              <Flex
-                mr="60px"
-                mt="50px"
-                width={1}
-                flexDirection={['column', 'row']}
-                alignItems="center"
-              >
-                <Box
-                  width="67px"
-                  bg="white"
-                  mr="15px"
-                  style={{ height: '1px' }}
-                />
-                <Text
-                  fontSize="18px"
-                  fontWeight={500}
-                  color="white"
-                  mr={['0px', '30px']}
-                  mb={['20px', '0px']}
-                  mt={['30px', '0px']}
-                  textAlign={['center', 'left']}
-                >
-                  Join us {!_isMobile && ':'}
-                </Text>
+        <Box
+          style={{
+            backgroundImage: `url(${LandingHero})`,
+            backgroundPosition: 'bottom',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
+          <PageContainer>
+            <Flex
+              pt={['50px', '150px']}
+              pb={['50px', '140px']}
+              flexDirection={['column', 'row']}
+            >
+              {_isMobile && (
                 <Flex
                   flex={1}
-                  justifyContent={['center', 'left']}
+                  style={{ minWidth: 'calc(100vw - 40px)' }}
+                  justifyContent="flex-end"
                   alignItems="center"
                 >
-                  <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
-                    <Flex
-                      mr="20px"
-                      alignItems="center"
-                      color="white"
-                      css={{
-                        '&:hover': {
-                          filter:
-                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                        },
-                      }}
-                    >
-                      <Image src={Telegram} width="20px" />
-                    </Flex>
+                  <Image src={HeroSrc} />
+                </Flex>
+              )}
+              <Box flex={1}>
+                <Text
+                  lineHeight={1.6}
+                  fletterSpacing="1px"
+                  fontWeight={600}
+                  fontSize={['32px', '56px']}
+                  color="white"
+                  textAlign={['center', 'left']}
+                  mt={['30px', '0px']}
+                  fontFamily="bio-sans"
+                >
+                  Data Governance Framework
+                  <br />
+                  for Web 3.0 Applications
+                </Text>
+                <Flex mt="25px" style={{ maxWidth: ['320px', '390px'] }}>
+                  <Text
+                    color="white"
+                    fontSize={['20px', '22px']}
+                    lineHeight={1.54}
+                    fontWeight={300}
+                    textAlign={['center', 'left']}
+                  >
+                    Band Protocol connects smart contracts with trusted
+                    off-chain
+                    <br />
+                    information, provided through community-curated data
+                    providers.
+                  </Text>
+                </Flex>
+                <Flex
+                  mt={['40px', '50px']}
+                  alignItems={['center', 'flex-start']}
+                  flexDirection={['column', 'row']}
+                >
+                  <AbsoluteLink href="https://developer.bandprotocol.com/">
+                    <FilledButton isMobile={_isMobile}>
+                      Developer Documentation
+                    </FilledButton>
                   </AbsoluteLink>
-                  <AbsoluteLink href="https://medium.com/bandprotocol">
-                    <Flex
-                      mr="20px"
-                      alignItems="center"
-                      color="white"
-                      css={{
-                        '&:hover': {
-                          filter:
-                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                        },
-                      }}
-                    >
-                      <Image src={Medium} width="20px" />
-                    </Flex>
-                  </AbsoluteLink>
-                  <AbsoluteLink href="https://twitter.com/bandprotocol">
-                    <Flex
-                      mr="20px"
-                      alignItems="center"
-                      color="white"
-                      css={{
-                        '&:hover': {
-                          filter:
-                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                        },
-                      }}
-                    >
-                      <Image src={Twitter} width="20px" />
-                    </Flex>
-                  </AbsoluteLink>
-                  <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
-                    <Flex
-                      mr="20px"
-                      alignItems="center"
-                      color="white"
-                      css={{
-                        '&:hover': {
-                          filter:
-                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                        },
-                      }}
-                    >
-                      <Image src={Reddit} width="20px" />
-                    </Flex>
-                  </AbsoluteLink>
-                  <AbsoluteLink href="https://github.com/bandprotocol">
-                    <Flex
-                      mr="20px"
-                      alignItems="center"
-                      color="white"
-                      css={{
-                        '&:hover': {
-                          filter:
-                            'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                        },
-                      }}
-                    >
-                      <Image src={Github} width="20px" />
-                    </Flex>
+                  <Flex mx={['0px', '10px']} my={['10px', '0px']} />
+                  <AbsoluteLink href="/whitepaper-3.0.0.pdf">
+                    <OutlineButton isMobile={_isMobile}>
+                      Whitepaper v3.1
+                    </OutlineButton>
                   </AbsoluteLink>
                 </Flex>
-              </Flex>
-            </Box>
-            {/* {!_isMobile && (
+                {/* Join us */}
+                <Flex
+                  mr="60px"
+                  mt="50px"
+                  width={1}
+                  flexDirection={['column', 'row']}
+                  alignItems="center"
+                >
+                  <Box
+                    width="67px"
+                    bg="white"
+                    mx="15px"
+                    style={{ height: '1px' }}
+                  />
+                  <Text
+                    fontSize="18px"
+                    fontWeight={500}
+                    color="white"
+                    mr={['0px', '30px']}
+                    mb={['20px', '0px']}
+                    mt={['30px', '0px']}
+                    textAlign={['center', 'left']}
+                    fontFamily="bio-sans"
+                  >
+                    Join us {!_isMobile && ':'}
+                  </Text>
+                  <Flex
+                    flex={1}
+                    justifyContent={['center', 'left']}
+                    alignItems="center"
+                  >
+                    <AbsoluteLink href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ">
+                      <Flex
+                        mr="20px"
+                        alignItems="center"
+                        color="white"
+                        css={{
+                          '&:hover': {
+                            filter:
+                              'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                          },
+                        }}
+                      >
+                        <Image src={Telegram} width="20px" />
+                      </Flex>
+                    </AbsoluteLink>
+                    <AbsoluteLink href="https://medium.com/bandprotocol">
+                      <Flex
+                        mr="20px"
+                        alignItems="center"
+                        color="white"
+                        css={{
+                          '&:hover': {
+                            filter:
+                              'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                          },
+                        }}
+                      >
+                        <Image src={Medium} width="20px" />
+                      </Flex>
+                    </AbsoluteLink>
+                    <AbsoluteLink href="https://twitter.com/bandprotocol">
+                      <Flex
+                        mr="20px"
+                        alignItems="center"
+                        color="white"
+                        css={{
+                          '&:hover': {
+                            filter:
+                              'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                          },
+                        }}
+                      >
+                        <Image src={Twitter} width="20px" />
+                      </Flex>
+                    </AbsoluteLink>
+                    <AbsoluteLink href="https://www.reddit.com/r/bandprotocol">
+                      <Flex
+                        mr="20px"
+                        alignItems="center"
+                        color="white"
+                        css={{
+                          '&:hover': {
+                            filter:
+                              'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                          },
+                        }}
+                      >
+                        <Image src={Reddit} width="20px" />
+                      </Flex>
+                    </AbsoluteLink>
+                    <AbsoluteLink href="https://github.com/bandprotocol">
+                      <Flex
+                        mr="20px"
+                        alignItems="center"
+                        color="white"
+                        css={{
+                          '&:hover': {
+                            filter:
+                              'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
+                          },
+                        }}
+                      >
+                        <Image src={Github} width="20px" />
+                      </Flex>
+                    </AbsoluteLink>
+                  </Flex>
+                </Flex>
+              </Box>
+              {/* {!_isMobile && (
               <Flex flex={1} justifyContent="flex-end" alignItems="center">
                 <Image src={HeroSrc} width="50vw" />
               </Flex>
             )} */}
-          </Flex>
-        </PageContainer>
+            </Flex>
+          </PageContainer>
+        </Box>
       </Box>
 
       {/* Testnet live bar */}
       <Flex
-        bg="#e0e0e0"
+        bg="#dce1ff"
         justifyContent="center"
         mx={['calc(50vw - 400px)', 'calc(480px - 50vw)']}
         alignItems="center"
-        style={{ height: '50px' }}
+        color="#404fac"
+        fontWeight="900"
+        style={{ height: '65px', fontFamily: 'bio-sans' }}
       >
-        Kovan Testnet is LIVE! Check out the new Data Governance Portal and
-        Developer Doc.
+        Kovan Testnet is LIVE! Check out the
+        <Text color="#5569de" mx="5px">
+          new Data Governance Portal
+        </Text>
+        and
+        <Text color="#5569de" mx="5px">
+          Developer Doc.
+        </Text>
       </Flex>
 
       {/* Section 2: Connecting to ... */}
-      <Box bg="white">
+      <Box
+        style={{
+          backgroundImage: 'linear-gradient(to bottom, #ffffff, #d8dfff)',
+        }}
+      >
         <PageContainer>
-          <Flex pt={['20px', '180px']} pb="300px">
-            <Flex flexDirection="column" pr="74px">
-              <Box width="253px" bg="#f2f2f2" style={{ height: '243px' }} />
-              <Text
-                color="#323232"
+          <Flex pt={['20px', '100px']} pb="150px">
+            {/* Connect to Real-World Information */}
+            <Flex
+              flexDirection="column"
+              alignItems="flex-start"
+              pr="74px"
+              mt="50px"
+            >
+              <Image src={LandingRealworld} />
+              <Flex
+                flexDirection="row"
+                alignItems="center"
                 fontSize="24px"
-                fontWeight="bold"
                 mt="35px"
                 mb="10px"
+                style={{
+                  lineHeight: '2.25',
+                  fontWeight: 'bold',
+                  fontFamily: 'bio-sans',
+                }}
               >
-                Connect to Real-World Information
-              </Text>
-              <Text>
+                <Text color="#323232">Connect to</Text>
+                <Text color="#5569de" ml="5px">
+                  Real-World Information
+                </Text>
+              </Flex>
+
+              <Text
+                fontSize="16px"
+                fontWeight="300"
+                style={{ lineHeight: '2' }}
+              >
                 Without access to external data, the use cases for dApps are
                 limited. Prediction markets are too illiquid to be practical.
                 Band Protocol provides community-curated on-chain data feeds,
                 backed by strong economic incentives which ensure the data stays
                 accurate.
               </Text>
-              <Flex mt="36px">
-                {/* TODO: add link */}
-                <Text color="#323232">Explore Data</Text>
-                <Text color="#323232" ml="74px">
-                  How it works
-                </Text>
+              <Flex
+                mt="15px"
+                style={{ fontFamily: 'bio-sans', fontWeight: 'bold' }}
+              >
+                <LinkWithArrow text="Explore Data" />
+                <LinkWithArrow text="How it works" ml="76px" />
               </Flex>
             </Flex>
-            <Flex flexDirection="column">
-              <Box width="253px" bg="#f2f2f2" style={{ height: '243px' }} />
-              <Text
-                color="#323232"
+
+            {/* Separator line */}
+            <Box
+              width="1px"
+              bg="#c8d2ff"
+              style={{ height: '300px' }}
+              mx="55px"
+            />
+
+            {/* Connect to Any Open API */}
+            <Flex flexDirection="column" alignItems="flex-start" pr="74px">
+              <Image src={LandingOpenAPI} />
+              <Flex
+                flexDirection="row"
+                alignItems="center"
                 fontSize="24px"
-                fontWeight="bold"
                 mt="35px"
                 mb="10px"
+                style={{
+                  lineHeight: '2.25',
+                  fontWeight: 'bold',
+                  fontFamily: 'bio-sans',
+                }}
               >
-                Connect to Real-World Information
-              </Text>
-              <Text>
+                <Text color="#323232">Connect to</Text>
+                <Text color="#5569de" ml="5px">
+                  Any Open API
+                </Text>
+              </Flex>
+              <Text
+                fontSize="16px"
+                fontWeight="300"
+                style={{ lineHeight: '2' }}
+              >
                 Band Protocol provides an infrastucture for blockchain
                 applications to connect with any open API without relying on a
                 centralized party. This allows dApps to leverage existing data
                 on the internet without compromising security, bridging the use
                 cases between Web 2.0 and 3.0.
               </Text>
-              <Flex mt="36px">
-                {/* TODO: add link */}
-                <Text color="#323232">Explore Data</Text>
-                <Text color="#323232" ml="74px">
-                  How it works
-                </Text>
+              <Flex
+                mt="15px"
+                style={{ fontFamily: 'bio-sans', fontWeight: 'bold' }}
+              >
+                <LinkWithArrow text="Explore Endpoints" />
+                <LinkWithArrow text="Learn more" ml="76px" />
               </Flex>
             </Flex>
           </Flex>
+        </PageContainer>
 
-          {/* Back holders */}
-          {/* <Flex
+        {/* Back holders */}
+        {/* <Flex
             mx={['-20px', 'calc(50vw - 400px)', 'calc(480px - 50vw)']}
             bg="#252a48"
             justifyContent="center"
@@ -427,124 +502,176 @@ export default () => {
               </Flex>
             </Flex>
           </Flex> */}
-        </PageContainer>
-      </Box>
 
-      {/* Section 3: The floating card */}
-      <Flex
-        bg="#d8d8d8"
-        mx="10%"
-        mt="-120px"
-        py="40px"
-        px={['20px', '80px']}
-        justifyContent="space-between"
-        style={{
-          width: ['calc(100vw - 40px)', '729px'],
-          height: ['290px', '370px'],
-          boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
-          borderRadius: '10px',
-        }}
-      >
-        {/* Left */}
+        {/* Section 3: The floating card */}
         <Flex
-          style={{ maxWidth: '550px' }}
-          my={['20px', '0px']}
-          flexDirection="column"
+          mb="20px"
+          mt="-120px"
+          py="40px"
+          px={['20px', '80px']}
+          justifyContent="space-between"
+          style={{
+            // width: ['calc(100vw - 40px)', '1200px'],
+            maxWidth: '1400px',
+            height: ['290px', '370px'],
+            boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
+            borderRadius: '10px',
+            boxShadow: '0 2px 20px 0 #d3dbff',
+            backgroundColor: '#ffffff',
+            margin: '0 auto',
+          }}
         >
-          <Text fontSize="24px" fontWeight="bold">
-            Bring Blockchain Closer to Mass Adoption
-          </Text>
-          <Text
-            fontSize={['14px', '20px']}
-            fontWeight={300}
-            lineHeight={1.65}
-            mt="15px"
+          {/* Left */}
+          <Flex
+            style={{ maxWidth: '700px' }}
+            my={['20px', '0px']}
+            flexDirection="column"
           >
-            Band is a protocol for managing and governing data in the Web3
-            technology stack. DApps consume data via BAND public smart contract
-            datasets rather than through external oracles.
-          </Text>
-          <Flex flexDirection="column">
-            <Flex alignItems="center" mt={['10px', '60px']}>
-              <Box
-                width="67px"
-                bg="#232323"
-                mr="15px"
-                style={{ height: '2px' }}
-              />
-              <Text
-                fontSize="18px"
-                fontWeight="bold"
-                color="#4a4a4a"
-                mr={['0px', '30px']}
-                mb={['20px', '0px']}
-                mt={['30px', '0px']}
-                textAlign={['center', 'left']}
-              >
-                What Band solves :
-              </Text>
-            </Flex>
-            <Flex mt="30px" justifyContent="space-between">
-              {/* Sub-Column left */}
-              <Flex flexDirection="column">
+            <Text
+              fontSize="36px"
+              fontWeight="bold"
+              color="#3b426b"
+              style={{ fontFamily: 'bio-sans' }}
+            >
+              Bring Blockchain Closer to Mass Adoption
+            </Text>
+            <Text
+              fontSize={['14px', '14px']}
+              fontWeight={300}
+              lineHeight={2}
+              mt="25px"
+            >
+              Data availability and reliability in decentralized platforms has
+              restricted adoption since the inception of smart contracts. Band
+              Protocol provides a standard framework for the decentralized
+              management of data, serving as a fundamental query layer for
+              applications that requires access to off-chain information. This
+              eliminates the critical centralizing trust and points of failure
+              that the oracle problem typically introduces to decentralized
+              applications with other designs.
+            </Text>
+            <Flex flexDirection="column">
+              <Flex alignItems="center" mt={['10px', '60px']}>
+                <Box
+                  width="67px"
+                  bg="#232323"
+                  mr="15px"
+                  style={{ height: '2px' }}
+                />
                 <Flex alignItems="center">
-                  <Box
-                    width="40px"
-                    bg="#4a4a4a"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
-                  <Text ml="10px" fontSize="16px" color="#4a4a4a">
-                    Data Availability
+                  <Text
+                    fontSize="18px"
+                    fontWeight="bold"
+                    color="#4a4a4a"
+                    mb={['20px', '0px']}
+                    mt={['30px', '0px']}
+                    textAlign={['center', 'left']}
+                    style={{ fontFamily: 'bio-sans' }}
+                  >
+                    What
                   </Text>
-                </Flex>
-                <Flex alignItems="center" mt="5px">
-                  <Box
-                    width="40px"
-                    bg="#4a4a4a"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
-                  <Text ml="10px" fontSize="16px" color="#4a4a4a">
-                    Aligned Economic Incentives
+                  <Text
+                    fontSize="18px"
+                    fontWeight="bold"
+                    mx="5px"
+                    color="#5569de"
+                    style={{ fontFamily: 'bio-sans' }}
+                  >
+                    Band solves
+                  </Text>
+                  <Text
+                    fontSize="18px"
+                    fontWeight="bold"
+                    color="#4a4a4a"
+                    style={{ fontFamily: 'bio-sans' }}
+                  >
+                    :
                   </Text>
                 </Flex>
               </Flex>
-              {/* Sub-Column right */}
-              <Flex flexDirection="column">
-                <Flex alignItems="center">
-                  <Box
-                    width="40px"
-                    bg="#4a4a4a"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
-                  <Text ml="10px" fontSize="16px" color="#4a4a4a">
-                    Data Reliability
-                  </Text>
+              <Flex
+                mt="30px"
+                justifyContent="space-between"
+                style={{ maxWidth: '650px' }}
+              >
+                {/* Sub-Column left */}
+                <Flex flexDirection="column">
+                  <Flex alignItems="center">
+                    <Box
+                      width="40px"
+                      bg="#3b426b"
+                      style={{ height: '40px', borderRadius: '50%' }}
+                    />
+                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
+                      Data Availability
+                    </Text>
+                  </Flex>
+                  <Flex alignItems="center" mt="15px">
+                    <Box
+                      width="40px"
+                      bg="#3b426b"
+                      style={{ height: '40px', borderRadius: '50%' }}
+                    />
+                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
+                      Aligned Economic Incentives
+                    </Text>
+                  </Flex>
                 </Flex>
-                <Flex alignItems="center" mt="5px">
-                  <Box
-                    width="40px"
-                    bg="#4a4a4a"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
-                  <Text ml="10px" fontSize="16px" color="#4a4a4a">
-                    Decentralizing Trust Point
-                  </Text>
+                {/* Sub-Column right */}
+                <Flex flexDirection="column">
+                  <Flex alignItems="center">
+                    <Box
+                      width="40px"
+                      bg="#3b426b"
+                      style={{ height: '40px', borderRadius: '50%' }}
+                    />
+                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
+                      Data Reliability
+                    </Text>
+                  </Flex>
+                  <Flex alignItems="center" mt="15px">
+                    <Box
+                      width="40px"
+                      bg="#3b426b"
+                      style={{ height: '40px', borderRadius: '50%' }}
+                    />
+                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
+                      Decentralizing Trust Point
+                    </Text>
+                  </Flex>
                 </Flex>
               </Flex>
             </Flex>
           </Flex>
+          {/* Right */}
+          <Flex alignItems="center">
+            <Box>
+              <Image src={LandingMassAdoption} />
+            </Box>
+          </Flex>
         </Flex>
-        {/* Right */}
-        <Box width="293px" bg="#f2f2f2" style={{ height: '295px' }} />
-      </Flex>
 
-      {/* Section 4 */}
-      <Box bg="#f0f0f0">
-        <PageContainer>
-          {/* Part 1: Band Feeds Data On-Chain Right When You Need */}
-          <Flex pt={['20px', '100px']} justifyContent="space-between">
-            <Flex flexDirection="column" pr="74px" justifyContent="center">
-              <Text fontSize="18px" fontWeight="300" color="#6b6b6b">
+        {/* Section 4 */}
+        <Box
+          style={{
+            margin: '100px auto 0px',
+            height: '1650px',
+            backgroundImage: `url(${LandingFeature})`,
+            backgroundSize: '1200px',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'top center',
+            zIndex: 0,
+          }}
+        >
+          <PageContainer style={{ position: 'relative ' }}>
+            {/* Part 1: Band Feeds Data On-Chain Right When You Need */}
+            <Flex
+              flexDirection="column"
+              pr="74px"
+              justifyContent="center"
+              style={{ position: 'absolute', top: 0, left: 0 }}
+            >
+              <Text fontSize="20px" fontWeight="300" color="#546ee5">
                 Data Availability
               </Text>
               <Text
@@ -567,21 +694,18 @@ export default () => {
                 and kept on-chain on a regular basis. DApps can request and use
                 the data with just one simple function call.
               </Text>
-              <Flex mt="36px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
-                  Explore Datasets Available
-                </Text>
+              <Flex mt="20px">
+                <LinkWithArrow text="Explore Datasets Available" />
               </Flex>
             </Flex>
-            <Box width="420px" bg="white" style={{ height: '420px' }} />
-          </Flex>
 
-          {/* Part 2: Band Aggregates Data from Multiple Providers */}
-          <Flex pt={['20px', '100px']} justifyContent="space-between">
-            <Box width="410px" bg="white" style={{ height: '420px' }} />
-            <Flex flexDirection="column" pl="74px" justifyContent="center">
-              <Text fontSize="18px" fontWeight="300" color="#6b6b6b">
+            {/* Part 2: Band Aggregates Data from Multiple Providers */}
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              style={{ position: 'absolute', top: '450px', right: 0 }}
+            >
+              <Text fontSize="20px" fontWeight="300" color="#546ee5">
                 Data Reliability
               </Text>
               <Text
@@ -598,25 +722,25 @@ export default () => {
               </Text>
               <Text
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '460px' }}
+                style={{ lineHeight: '2', maxWidth: '550px' }}
               >
                 Band enforces strict requirements before serving each query.
                 Each data point requires more than ⅔ of qualified providers to
                 serve the data, which guarantees high tolerance for collusion.
               </Text>
-              <Flex mt="36px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
-                  Learn How Data Curation Works
-                </Text>
+              <Flex mt="20px">
+                <LinkWithArrow text="Learn How Data Curation Works" />
               </Flex>
             </Flex>
-          </Flex>
 
-          {/* Part 3: Dataset Tokens on Bonding Curves */}
-          <Flex pt={['20px', '100px']} justifyContent="space-between">
-            <Flex flexDirection="column" pr="74px" justifyContent="center">
-              <Text fontSize="18px" fontWeight="300" color="#6b6b6b">
+            {/* Part 3: Dataset Tokens on Bonding Curves */}
+            <Flex
+              flexDirection="column"
+              pr="74px"
+              justifyContent="center"
+              style={{ position: 'absolute', top: '900px', left: 0 }}
+            >
+              <Text fontSize="20px" fontWeight="300" color="#546ee5">
                 Aligned Economic Incentives
               </Text>
               <Text
@@ -633,32 +757,26 @@ export default () => {
               </Text>
               <Text
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '460px' }}
+                style={{ lineHeight: '2', maxWidth: '550px' }}
               >
                 Each dataset has its own token for governing how the dataset
                 functions. It incentivizes token holders and data providers to
                 curate high-quality data, which in-turn drives greater security
                 for dApps.
               </Text>
-              <Flex mt="36px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
-                  Learn How Dual-Token Economics Works
-                </Text>
+              <Flex mt="20px">
+                <LinkWithArrow text="Learn How Dual-Token Economics Works" />
               </Flex>
             </Flex>
-            <Box width="410px" bg="white" style={{ height: '420px' }} />
-          </Flex>
 
-          {/* Part 4: Community Runs Datasets and Grows Together */}
-          <Flex
-            pt={['20px', '100px']}
-            justifyContent="space-between"
-            pb="100px"
-          >
-            <Box width="410px" bg="white" style={{ height: '420px' }} />
-            <Flex flexDirection="column" pl="74px" justifyContent="center">
-              <Text fontSize="18px" fontWeight="300" color="#6b6b6b">
+            {/* Part 4: Community Runs Datasets and Grows Together */}
+            <Flex
+              flexDirection="column"
+              pl="74px"
+              justifyContent="center"
+              style={{ position: 'absolute', top: '1320px', right: 0 }}
+            >
+              <Text fontSize="20px" fontWeight="300" color="#546ee5">
                 Decentralizing Trust Point
               </Text>
               <Text
@@ -681,57 +799,75 @@ export default () => {
                 community to curate reliable data. No single identity has
                 authority to bypass governance and take control of the data.
               </Text>
-              <Flex mt="36px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
-                  Learn How to Participate in Curation
+              <Flex mt="20px">
+                <LinkWithArrow text="Learn How to Participate in Curation" />
+              </Flex>
+            </Flex>
+          </PageContainer>
+        </Box>
+
+        <Box>
+          <PageContainer>
+            <Flex flexDirection="column" alignItems="center">
+              {/* Explore more feature button */}
+              <Flex justifyContent="center" mt="120px">
+                <FilledButton width="500px">
+                  <Flex
+                    justifyContent="space-between"
+                    alignItems="center"
+                    width="100%"
+                  >
+                    <Text color="white" fontSize="16px">
+                      Explore Band Protocol Features
+                    </Text>
+                    {/* TODO: change it into actual symbol */}
+                    <Text color="white" fontSize="16px">
+                      ->
+                    </Text>
+                  </Flex>
+                </FilledButton>
+              </Flex>
+
+              {/* Stay update */}
+              <Flex
+                mt="130px"
+                bg="#0c154c"
+                flexDirection="column"
+                alignItems="center"
+                py="50px"
+                color="white"
+                fontSize="20px"
+                style={{
+                  position: 'relative',
+                  zIndex: 1,
+                  fontFamily: 'bio-sans',
+                  width: '1000px',
+                }}
+              >
+                <Text
+                  textAlign="center"
+                  style={{ maxWidth: '550px', lineHeight: '1.71' }}
+                >
+                  <Highlight>Stay up to date on</Highlight> the latest news{' '}
+                  <Highlight>about how</Highlight> Band Protocol
+                  <Highlight>brings more use cases to</Highlight> smart
+                  contracts
+                </Text>
+                <Text textAlign="center" mt="30px">
+                  <Subscribe />
                 </Text>
               </Flex>
             </Flex>
-          </Flex>
-
-          {/* Explore more feature button */}
-          <Flex justifyContent="center" maxWidth="500px">
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              bg="#4a4a4a"
-              p="16px 15px"
-              width="100%"
-              style={{ maxWidth: '500px', borderRadius: '4px' }}
-            >
-              <Text color="white" fontSize="16px">
-                Explore Band Protocol Features
-              </Text>
-              {/* TODO: change it into actual symbol */}
-              <Text color="white" fontSize="16px">
-                ->
-              </Text>
-            </Flex>
-          </Flex>
-
-          {/* Stay update */}
-          <Flex
-            bg="#d8d8d8"
-            mt="90px"
-            mb="60px"
-            flexDirection="column"
-            alignItems="center"
-            py="70px"
-          >
-            <Text
-              textAlign="center"
-              style={{ maxWidth: '500px', lineHeight: '1.71' }}
-            >
-              Stay up to date on the latest news about how Band Protocol brings
-              more use cases to smart contracts
-            </Text>
-            <Text textAlign="center" mt="20px">
-              **** ADD SUBSCRIBE ****
-            </Text>
-          </Flex>
-        </PageContainer>
+          </PageContainer>
+        </Box>
       </Box>
+
+      <Box
+        bg="#344498"
+        width="100%"
+        mt="-125px"
+        style={{ height: '130px', zIndex: 0, position: 'relative' }}
+      />
 
       {/* <LandingShowcase
         background="#21253f"

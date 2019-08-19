@@ -225,7 +225,7 @@ export default () => {
         </PageContainer>
       </Box>
 
-      {/* Section 4 */}
+      {/* Section 2 */}
       <Box bg="#f0f0f0" mt="50px">
         <PageContainer>
           <Text

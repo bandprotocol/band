@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Text, Button } from 'ui/common'
-import { colors } from 'ui'
 import MailchimpSubscribe from 'react-mailchimp-subscribe'
 
 const Input = styled.input`
@@ -23,7 +22,7 @@ const Input = styled.input`
 
 const Container = styled.div`
   display: flex;
-  background: #ffffff;
+  background-image: transparent;
   border-radius: 3px;
   max-width: calc(100vw - 40px);
 `
@@ -70,17 +69,20 @@ export default class Subscribe extends React.Component {
                       subscribe({ EMAIL: this.state.value })
                   }}
                   placeholder="email@example.com"
+                  mr="10px"
+                  style={{ borderRadius: 0 }}
                 />
 
                 <Button
                   variant="primary"
+                  ml="10px"
                   style={{
-                    fontSize: 11,
-                    borderBottomLeftRadius: 0,
-                    borderTopLeftRadius: 0,
+                    fontSize: 14,
+                    borderRadius: 0,
                     padding: '1em 2em',
                     fontWeight: 500,
-                    marginLeft: 'auto',
+                    fontFamily: 'bio-sans',
+                    background: '#2e3a7c',
                   }}
                   onClick={() => subscribe({ EMAIL: this.state.value })}
                 >

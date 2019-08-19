@@ -13,7 +13,7 @@ import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 
 const Container = styled(Box)`
-  background: #17192e;
+  background: #344498;
   color: #ffffff;
 
   a {
@@ -47,7 +47,6 @@ export default () => {
     <Container>
       <PageContainer>
         <Flex
-          mb="45px"
           pt={['20px', '50px']}
           flexWrap="wrap"
           flexDirection={['column', 'row']}
@@ -119,7 +118,7 @@ export default () => {
           </Flex>
         </Flex>
       </PageContainer>
-      <PageContainer>
+      {/* <PageContainer>
         <Flex
           alignItems={['left', 'center']}
           style={{ borderTop: 'solid 1px #8d94bf' }}
@@ -163,7 +162,7 @@ export default () => {
             />
           </Flex>
         </Flex>
-      </PageContainer>
+      </PageContainer> */}
     </Container>
   )
 }

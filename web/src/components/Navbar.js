@@ -696,6 +696,7 @@ const Navbar = props => {
         transition: 'all 350ms',
         position: 'fixed',
         transform: `translateY(${!showNav && !showMenu ? '-70px' : '0px'})`,
+        zIndex: 3,
       }}
     >
       <Flex
@@ -718,7 +719,7 @@ const Navbar = props => {
         style={{
           margin: '0 auto',
           height: '100%',
-          width: '1000px',
+          width: '1200px',
           transition: 'all 0.5s',
           position: 'relative',
         }}
