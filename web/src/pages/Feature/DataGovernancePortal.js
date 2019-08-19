@@ -17,6 +17,12 @@ import {
   Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
+import BandappSrc from 'images/featured/bandapp.png'
+import SetupBandSrcHome from 'images/featured/setupband-home.png'
+import SetupBandSrcLogin from 'images/featured/setupband-login.png'
+import StakeBand from 'images/featured/stakeband.png'
+import BandVoting from 'images/featured/bandvoting.png'
+// import SetupBandSrcLogin form 'images/featured/setupband-login.png'
 
 const FilledButton = styled(Button)`
   font-family: Avenir;
@@ -68,6 +74,8 @@ const OutlineButton = styled(Button)`
   }
 `
 
+// const
+
 export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
@@ -84,8 +92,8 @@ export default () => {
       <Box pt="60px" bg="f2f2f2">
         <PageContainer>
           <Flex
-            pt={['50px', '100px']}
-            pb={['50px', '10px']}
+            mt={['89px']}
+            mb={['40px']}
             justifyContent="center"
             flexDirection="column"
           >
@@ -93,7 +101,7 @@ export default () => {
               lineHeight={1.6}
               fletterSpacing="1px"
               fontWeight={600}
-              fontSize={['32px', '48px']}
+              fontSize={['60px']}
               color="#4a4a4a"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
@@ -109,49 +117,145 @@ export default () => {
       {/* Section 3 */}
       <Box bg="#f0f0f0" mt="10px">
         <PageContainer>
-          <Flex justifyContent="center">
-            <Flex bg="pink" width="100%" style={{ height: '400px' }} />
+          <Image src={BandappSrc} width="100%" style={{ zIndex: 0 }} />
+          <Flex
+            m="-15px 6px"
+            py="8px"
+            bg="#edefff"
+            justifyContent="center"
+            style={{
+              height: '64px',
+              borderBottomLeftRadius: '8px',
+              borderBottomRightRadius: '8px',
+              boxShadow: '0 3px 3px 0 rgba(0,0,0,0.25)',
+              zIndex: 1,
+              position: 'relative',
+            }}
+          >
+            <Button
+              style={{
+                width: '328px',
+                height: '47.7',
+                backgroundImage: 'linear-gradient(to bottom, #6179e1, #455ad3)',
+              }}
+            >
+              Access Data Governance{' '}
+            </Button>
           </Flex>
+        </PageContainer>
 
-          {/* Part 1: Setup Band Wallet & Get Dataset Tokens */}
-          <Flex justifyContent="space-between" mt="50px" alignItems="left">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                {'Setup Band Wallet & Get Dataset Tokens'}
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '400px' }}
-                mt="10px"
-              >
-                Data Governance Portal uses Band Wallet, a multi-signature,
-                non-custodial Web3 wallet optimized for holding Band and Dataset
-                tokens. It works just like any Ethereum wallet but integrates
-                seemlessly within the webpage itself. Once setup, you can
-                transfer Band tokens acquired from exchange (or faucet on
-                Testnet) and buy into the dataset tokens you desire.
-              </Text>
-              <Flex mt="20px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
-                  Tutorial
+        {/* Part 1: Setup Band Wallet & Get Dataset Tokens */}
+        <PageContainer>
+          <Flex
+            justifyContent="space-between"
+            flexDirection="row"
+            mt="175px"
+            alignItems="left"
+          >
+            <Flex pr="74px" flex={2}>
+              <Flex flexDirection="column">
+                <Flex flexDirection={['column', 'row']}>
+                  <Text
+                    fontSize="28px"
+                    lineHeight="32px"
+                    color="#5569de"
+                    fontWeight="bold"
+                    mr="6px"
+                    style={{
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Setup Band Wallet
+                  </Text>
+                  <Text
+                    fontSize="28px"
+                    lineHeight="32px"
+                    color="#3b426b"
+                    fontWeight="bold"
+                    style={{
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {' & Get Dataset Tokens'}
+                  </Text>
+                </Flex>
+                <Text
+                  fontSize="18px"
+                  lineHeight="36px"
+                  color="#323232"
+                  style={{ lineHeight: '2', maxWidth: '400px' }}
+                  mt="10px"
+                >
+                  Data Governance Portal uses Band Wallet, a multi-signature,
+                  non-custodial Web3 wallet optimized for holding Band and
+                  Dataset tokens. It works just like any Ethereum wallet but
+                  integrates seemlessly within the webpage itself. Once setup,
+                  you can transfer Band tokens acquired from exchange (or faucet
+                  on Testnet) and buy into the dataset tokens you desire.
+                </Text>
+                <Text
+                  color="#323232"
+                  fontWeight="bold"
+                  fontSize="20px"
+                  lineHeight="24px"
+                  mt="24px"
+                >
+                  Tutorial ->
                 </Text>
               </Flex>
             </Flex>
-            <Box width="400px" bg="black" style={{ height: '300px' }} />
+            <Box mt="20px" flex={1}>
+              <Image src={SetupBandSrcHome} />
+            </Box>
+            <Box mt="20px" flex={1}>
+              <Image src={SetupBandSrcLogin} />
+            </Box>
           </Flex>
+        </PageContainer>
 
-          {/* Part 2: Stake Dataset Tokens for Qualified Providers */}
-          <Flex justifyContent="space-between" mt="50px" alignItems="left">
-            <Box width="400px" bg="black" style={{ height: '300px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Stake Dataset Tokens for Qualified Providers
-              </Text>
+        {/* Part 2: Stake Dataset Tokens for Qualified Providers */}
+        <PageContainer>
+          <Flex
+            justifyContent="space-between"
+            mt="122px"
+            alignItems="left"
+            flexDirection="row"
+          >
+            <Box flex={1} alignItems="center">
+              <Image src={StakeBand} width="100%" />
+            </Box>
+            <Flex flexDirection="column" pl="74px" pt="30px" flex={1}>
+              <Flex>
+                <Text
+                  fontSize="28px"
+                  color="#5569de"
+                  fontWeight="bold"
+                  mr="5px"
+                  style={{
+                    lineHeight: '32px',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Stake Dataset Tokens
+                </Text>
+                <Text
+                  fontSize="28px"
+                  color="#3b426v"
+                  fontWeight="bold"
+                  lineHeight="32px"
+                  style={{
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  for Qualified Providers
+                </Text>
+              </Flex>
               <Text
-                fontWeight="300"
+                fontSize="18px"
+                lineHeight="36px"
+                color="#323232"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
-                mt="10px"
+                my="19px"
               >
                 Band Protocol uses delegated-proof-of-stake style consensus for
                 picking who get to provide data for the dataset. There can be
@@ -160,62 +264,95 @@ export default () => {
                 providers and token stakers based on a fee set by governance
                 parameters.
               </Text>
-              <Flex mt="20px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
-                  Tutorial
-                </Text>
-              </Flex>
+              <Text
+                fontSize="20px"
+                color="#323232"
+                fontWeight="bold"
+                lineHeight="24px"
+              >
+                Tutorial ->
+              </Text>
             </Flex>
           </Flex>
+        </PageContainer>
 
-          {/* Part 3: Participate in Votings */}
-          <Flex justifyContent="space-between" mt="50px" alignItems="left">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
-                Participate in Votings
-              </Text>
-              <Text
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '400px' }}
-                mt="10px"
-              >
-                Governance parameters dictate how the dataset smart contract
-                perform its logics. Any dataset token holder can propose for a
-                change; for example, anyone can propose to increase the data
-                query fee from 0.001 ETH to 0.005 ETH. For the change to be
-                applied though, a large enough portion of token holders must
-                vote in agreement, which typically requires a community-wide
-                coordination.
-              </Text>
-              <Flex mt="20px">
-                {/* TODO: add link */}
-                <Text color="#323232" fontWeight="bold">
+        {/* Part 3: Participate in Votings */}
+        <PageContainer>
+          <Flex justifyContent="space-between" mt="125.5px" alignItems="left">
+            <Flex flexDirection="row">
+              <Flex flexDirection="column" flex={1}>
+                <Flex>
+                  <Text
+                    fontSize="28px"
+                    mr="6px"
+                    lineHeight="32px"
+                    color="#4a4a4a"
+                    fontWeight="bold"
+                    style={{
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Participate in
+                  </Text>
+                  <Text
+                    fontSize="28px"
+                    lineHeight="32px"
+                    color="#5569de"
+                    fontWeight="bold"
+                    style={{
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    Votings
+                  </Text>
+                </Flex>
+                <Text
+                  fontSize="18px"
+                  lineHeight="36px"
+                  style={{ lineHeight: '2', maxWidth: '400px' }}
+                  my="19px"
+                >
+                  Governance parameters dictate how the dataset smart contract
+                  perform its logics. Any dataset token holder can propose for a
+                  change; for example, anyone can propose to increase the data
+                  query fee from 0.001 ETH to 0.005 ETH. For the change to be
+                  applied though, a large enough portion of token holders must
+                  vote in agreement, which typically requires a community-wide
+                  coordination.
+                </Text>
+                <Text
+                  color="#323232"
+                  lineHeight="24px"
+                  fontSize="20px"
+                  fontWeight="bold"
+                >
                   Learn How
                 </Text>
               </Flex>
+              <Box mt="20px" flex={1}>
+                <Image src={BandVoting} />
+              </Box>
             </Flex>
-            <Box width="400px" bg="black" style={{ height: '300px' }} />
           </Flex>
-
-          {/* Explore more feature button */}
+        </PageContainer>
+        {/* Explore more feature button */}
+        <PageContainer>
           <Flex justifyContent="center" maxWidth="500px" my="100px">
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              bg="#4a4a4a"
-              p="16px 15px"
-              width="100%"
-              style={{ maxWidth: '500px', borderRadius: '4px' }}
+            <Button
+              color="white"
+              fontSize="16px"
+              pt="16.6px"
+              px="27.6px"
+              style={{
+                backgroundImage: 'linear-gradient(to bottom, #2a3a7f, #1c2764)',
+                width: '435px',
+                height: '59.6px',
+              }}
             >
-              <Text color="white" fontSize="16px">
-                Access Data Governance Portal
+              <Text fontSize="21.5px" fontWeight="600">
+                Access Data Governance Portal ->
               </Text>
-              {/* TODO: change it into actual symbol */}
-              <Text color="white" fontSize="16px">
-                ->
-              </Text>
-            </Flex>
+            </Button>
           </Flex>
         </PageContainer>
       </Box>
