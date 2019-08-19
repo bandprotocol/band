@@ -80,6 +80,13 @@ class BuySellModal extends React.Component {
   }
 
   async getPrice(type, amount) {
+    // waiting for community is not undefined
+    // setInterval(() => {
+
+    // }, 500);
+
+    // await new Promise(r => )
+
     return type === 'buy'
       ? await this.props.communityClient.getBuyPrice(
           Utils.toBlockchainUnit(amount),
@@ -258,7 +265,7 @@ class BuySellModal extends React.Component {
   }
 
   render() {
-    const { name, logo, symbol, tokenNormalPrice } = this.props
+    const { name, logo, symbol, tokenNormalPrice, communityClient } = this.props
     const { type, showAdvance, loading } = this.state
     const currentType = this.state[type]
     return (
@@ -281,6 +288,7 @@ class BuySellModal extends React.Component {
         showAdvance={showAdvance}
         toggleAdvance={this.toggleAdvance.bind(this)}
         onButtonClick={this.onButtonClick.bind(this)}
+        communityClient={communityClient}
       />
     )
   }
