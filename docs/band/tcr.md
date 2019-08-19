@@ -1,7 +1,7 @@
 # Token-Curated Registry
 
 ::: warning DEPRECATED
-Token-Curated Registry is a concept from Band Protocol's previous iteration. The current version focuses primarily on Token-Curated Datasources mechanic.
+Token-Curated Registry is a concept from Band Protocol's previous iteration. Current protocol's design focuses primarily on Token-Curated Datasources mechanic.
 :::
 
 [Token Curated Registry (TCR)](https://medium.com/@ilovebagels/token-curated-registries-1-0-61a232f8dac7) is a method for a community to collectively curate a list of data directly. It is suitable for curating a more relatively subjective information in the form of list that requires community-wide opinion.

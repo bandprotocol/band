@@ -15,33 +15,33 @@ module.exports = {
           // "home/development-status"
         ]
       },
-      {
-        title: "⛩ Protocol Architecture",
-        collapsable: false,
-        children: [
-          "band/overview.md",
-          "band/tokens.md",
-          "band/governance.md",
-          "band/tcd.md",
-          "band/tcr.md"
-        ]
-      },
+      // {
+      //   title: "⛩ Protocol Architecture",
+      //   collapsable: false,
+      //   children: [
+      //     // "band/overview.md",
+      //     "band/tokens.md",
+      //     "band/governance.md",
+      //     "band/tcd.md",
+      //     "band/tcr.md"
+      //   ]
+      // },
       {
         title: "🚀 DApp Developer Guide",
         collapsable: false,
         children: [
           "devs/overview",
           "devs/connect-with-band",
-          "devs/npm-integration",
+          "devs/data-query",
           "devs/reference",
           "devs/walkthrough"
         ]
       },
-      {
-        title: "💸 Token Holder Guide",
-        collapsable: false,
-        children: ["holders/overview", "holders/ecosystem", "holders/get-band"]
-      },
+      // {
+      //   title: "💸 Token Holder Guide",
+      //   collapsable: false,
+      //   children: ["holders/overview", "holders/ecosystem", "holders/get-band"]
+      // },
       {
         title: "📡 Data Provider Guide",
         collapsable: false,
@@ -51,6 +51,7 @@ module.exports = {
         title: "📦 Available Datasets",
         collapsable: false,
         children: [
+          "datasets/overview",
           "datasets/web-oracle",
           "datasets/financial-kovan",
           "datasets/sport-kovan",

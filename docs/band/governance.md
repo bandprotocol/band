@@ -9,3 +9,7 @@ Each dataset governance group maintains a singleton "Parameters" smart contract,
 ## List of Governance Parameters
 
 Below is the list of governance parameters
+
+| sdf  | sdff |
+| ---- | ---- |
+| TODO | -    |

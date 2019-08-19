@@ -1,13 +1,13 @@
 # Band Protocol Overview
 
-<figure>
+<!-- <figure>
   <img src='/assets/placeholder.png'>
   <figcaption>[Some random image]</figcaption>
-</figure>
+</figure> -->
 
-In a layman's term, Band Protocol is a decentralized network the connects data providers with data consumers through token economics. The goal is to make [smart contracts](https://en.wikipedia.org/wiki/Smart_contract) smarter through the consumption of real world data. Imagine how useful a decentralized insurance contract will be if it can magically know if it should payout the issurance without needing a trusted middleman to supply the information.
+In a layman's term, Band Protocol is a decentralized network the connects data providers with data consumers through token economics. The goal is to make [smart contracts](https://en.wikipedia.org/wiki/Smart_contract) smarter through the consumption of real world data. Just imagine how useful a decentralized insurance contract will be if it can magically know if it should payout the issurance without needing a trusted middleman to supply the information. Band is the step towards that reality!
 
-## 🤔 Let's Try with Infographics
+## How does it Work?
 
 [TODO]
 
@@ -15,6 +15,8 @@ In a layman's term, Band Protocol is a decentralized network the connects data p
 Band Protocol’s main functionality is to bridge the gap between decentralized applications and real-world data while also ensure that data is accurate and trustworthy through economic incentives. Band Protocol will initially be built on the Ethereum network, but the protocol itself is not restricted to Ethereum infrastructure. As the protocol gets more widespread adoption, it will support all leading smart contract platforms and power the new generation of decentralized applications. -->
 
 ## Design Goals
+
+We put a lo
 
 ### Intuitive Data Layer for Decentralized Applications
 

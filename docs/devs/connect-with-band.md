@@ -1,6 +1,55 @@
 # Connect with Band Protocol
 
-Now that you are onboard with us. Let's continue on to the actual implementation. In this section, we will explain how you can change your smart contracts to retrieve data from Band Protocol. We believe you will be impressed by how simple and short it is!
+Now that you are onboard with us. Let's get started on to the actual implementation. In this section, we will go over the way you can set up your project to connect with Band Protocol. Depending on your project's state, there are three primary ways you can add Band Protocol connection to your project.
+
+## Create a Band-Powered Project
+
+If you are building a new project, by using [Truffle](https://www.trufflesuite.com/), you can bootstrap a new Ethereum-based project from a prepared boilerplate. Run the command below to unbox a new Band-powered project into your current directory.
+
+```sh
+truffle unbox bandprotocol/create-band-app
+```
+
+## Add Band to Your Existing Project
+
+If you already have a project setup, you can install `band-solidity` library as its dependency to gain access to Band Protocol. Simply install the library with [NPM](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/).
+
+**NPM:**
+
+```sh
+npm install band-solidity --save
+```
+
+**Yarn:**
+
+```sh
+yarn add band-solidity
+```
+
+## Import Band's Oracle Interface to Your Contract
+
+If you prefer to develop your project without a thrid-party dependency, you can simply add Band Protocol's `Oracle` interface to the top of your smart contract files.
+
+```ts
+interface Oracle {
+  enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
+
+  function query(bytes calldata input)
+    external payable returns (bytes output, uint256 updatedAt, QueryStatus status);
+
+  function queryPrice() external view returns (uint256);
+}
+```
+
+Note that by using this approach, you will not have access to `band-solidity`'s utility functions.
+
+<!-- # Connect with Band Protocol
+
+Now that you are onboard with us. Let's continue on to the actual implementation. In this section, we will explain how you can write your smart contracts to retrieve data from Band Protocol. We believe you will be impressed by how simple and short it is!
+
+## Add Band to Your Existing Project
+
+If you
 
 ## Find Data Sources of your Interest
 
@@ -54,4 +103,4 @@ In this example, `BandClientExample` smart contract has one function `getETHUSDR
 
 ## (Optional) Request Data Update with BandApp
 
-On [Band Data Explorer](https://app.kovan.bandprotocol.com), you will see
+On [Band Data Explorer](https://app.kovan.bandprotocol.com), you will see -->

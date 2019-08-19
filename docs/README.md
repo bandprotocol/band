@@ -6,10 +6,10 @@ _**Note**: For those interested in reading about Band Protocol in a more academi
 
 ## What is Band Protocol?
 
-<figure>
+<!-- <figure>
   <img src='/assets/placeholder.png'>
   <figcaption>[Band Protocol as a bridge of data from outside to inside via data providers]</figcaption>
-</figure>
+</figure> -->
 
 Band Protocol is a protocol for decentralized data governance on public blockchains. The protocol incentivizes multiple independent parties to work cooperatively to provide trusted data. Curated information is available on-chain, ready to be consumed by other blockchain protocols or decentralized applications. While initially Band Protocol is built on [Ethereum](https://ethereum.org), the protocol itself is blockchain agnostic and can scale to support multiple different blockchains in upcoming iterations. **Band Protocol serves as the data layer of the [Web3](http://wiki.web3.foundation/en/latest/tech_stack/tech_stack_overview/) ecosystem, bridging real world and/or subjective information to smart contracts.**
 
@@ -17,10 +17,10 @@ Band Protocol is a protocol for decentralized data governance on public blockcha
 
 Band Protocol's ecosystem primarily consists of three groups of participants. Note that it is possible that one individual takes multiple roles in the ecosystem.
 
-<figure>
+<!-- <figure>
   <img src='/assets/placeholder.png'>
   <figcaption>[Choose one one of the three Pokemons style]</figcaption>
-</figure>
+</figure> -->
 
 - **Token Holders** collectively share the ownership stake of Band Protocol. They are responsible for maintaining data quality. In exchange, they receive token price appreciation and revenue shares.
 
@@ -34,7 +34,7 @@ With that said, however, Band Protocol is more complex than just these three par
 
 Ready to dive 🏊‍ in? Continue to the next page to learn more about the problems Band Protocol is solving. You can also go to one of the following pages if you already have a specific goal ⛳️ in mind.
 
-- Go to [Protocol Architecture](/band/overview.md) to learn high-level concepts of Band Protocol.
+- Go to [Protocol Architecture](/band/tokens.md) to learn high-level concepts of Band Protocol.
 - Go to [DApp Developer Guide](/devs/overview.md) to learn how to integrate your dapps with Band's public datasets.
   <!-- - Go to [Token Holder Guide](/holders/overview.md) to learn how to participate on protocol governance and earn rewads. -->
 - Go to [Data Provider Guide](/providers/overview.md) to learn how to become a data provider and earn revenue share.
