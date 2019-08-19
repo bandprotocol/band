@@ -24,7 +24,8 @@ With that said, however, Band Protocol is more complex than just these three par
 
 Ready to dive 🏊‍ in? Continue to the next page to learn more about the problems Band Protocol is solving. You can also go to one of the following pages if you already have a specific goal ⛳️ in mind.
 
-- Go to [Protocol Architecture](/band/tokens.md) to learn high-level concepts of Band Protocol.
+<!-- - Go to [Protocol Architecture](/band/tokens.md) to learn high-level concepts of Band Protocol. -->
+
 - Go to [DApp Developer Guide](/devs/overview.md) to learn how to integrate your dapps with Band's public datasets.
   <!-- - Go to [Token Holder Guide](/holders/overview.md) to learn how to participate on protocol governance and earn rewads. -->
 - Go to [Data Provider Guide](/providers/overview.md) to learn how to become a data provider and earn revenue share.
