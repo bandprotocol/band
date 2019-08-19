@@ -28,15 +28,13 @@ import MenuWallet from 'images/menu_wallet.svg'
 import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.png'
 
-import { colors } from 'ui'
-
 const Nav = styled.nav`
   display: flex;
   height: 70px;
   align-items: center;
   position: sticky;
   top: 0;
-  background: ${colors.background.dark};
+  backgroundImage: linear-gradient(to bottom, #5a7ffd,#0473bf)
   z-index: 999;
 
   ${media.mobile} {
@@ -92,21 +90,20 @@ const NavMenu = ({ isSelected, title, tabs }) => {
   const [currentTab, setCurrentTab] = useState(-1)
   return (
     <Flex
+      flexDirection="column"
       style={{
-        width: '1000px',
-        maxWidth: '100vw',
-        height: isSelected ? '405px' : '0px',
+        width: '100vw',
+        height: isSelected ? '350px' : '0px',
         position: 'absolute',
         left: '0',
         top: '70px',
         transition: 'all 0.25s',
         opacity: isSelected ? 1 : 0,
         pointerEvents: isSelected ? 'all' : 'none',
+        backgroundImage: 'linear-gradient(to bottom, #5a7ffd, #495fd6)',
       }}
-      bg="#202541"
-      flexDirection="column"
     >
-      <Flex
+      {/* <Flex
         style={{ height: '70px', borderBottom: '1px solid #7c84a6' }}
         px="30px"
         alignItems="center"
@@ -115,7 +112,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
         <Text color="#7c84a6" fontSize="20px">
           {title}
         </Text>
-      </Flex>
+      </Flex> */}
       <Flex flexDirection="row" style={{ height: '100%' }}>
         {tabs.map((tab, i) => {
           const LinkComponent = tab.link ? Link : AbsoluteLink
@@ -514,13 +511,36 @@ const Navbar = props => {
     // const { pathname } = props.location
     return (
       <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
+        {/* Tab 1: Airdrop */}
         <Box ml={['20px', '20px', '40px']}>
-          <Link to="/why-band">
+          <AbsoluteLink
+            style={{
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+            target="_blank"
+            to="http://band-airdrop.surge.sh/tokenholder"
+          >
             <MainMenuText style={{ whiteSpace: 'nowrap' }}>
-              Why Band?
+              Airdrop
             </MainMenuText>
-          </Link>
+            <Flex
+              bg="#ff5b84"
+              color="white"
+              p="3px 8px"
+              fontSize="12px"
+              justifyContent="center"
+              alignItems="center"
+              ml="5px"
+              style={{ borderRadius: '10px' }}
+            >
+              Live
+            </Flex>
+          </AbsoluteLink>
         </Box>
+
+        {/* Tab 2: Features */}
         <Flex
           alignItems="center"
           style={{ height: '100%' }}
@@ -531,53 +551,57 @@ const Navbar = props => {
           }}
         >
           <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
-            <MainMenuText>Products</MainMenuText>
-            <Text ml={2} pt="2px" color="#6b8bf5" fontSize="12px">
+            <MainMenuText>Features</MainMenuText>
+            <Text ml={2} pt="2px" color="#4a4a4a" fontSize="12px">
               <i className="fas fa-chevron-down" />
             </Text>
           </Flex>
           <NavMenu
             isSelected={selectedTab === 0}
-            title="Products"
+            title="Features"
             tabs={[
               {
-                title: 'Data Tokenization',
-                link: '/products/data-tokenization',
+                title: 'Overview',
+                link: '/features/overview',
                 imgIndex: 0,
                 imgHeight: '46px',
                 content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
               {
-                title: 'Token-Curated DataSources',
-                link: '/products/tcd',
+                title: 'Dual-Token Economics',
+                link: '/features/dual-token',
                 imgIndex: 1,
                 imgHeight: '67px',
                 content: `Build robust, decentralized data feed from a network of data providers`,
               },
               {
-                title: 'Token-Curated Registry',
-                link: '/products/tcr',
+                title: 'Token-Curated DataSources',
+                link: '/features/tcd',
                 imgIndex: 2,
                 imgHeight: '28px',
                 content: `Build reliable, more transparent crowd-source information through crypto-incentized data curation`,
               },
               {
-                title: 'Band Web3 Wallet',
-                link: '/products/wallet',
+                title: 'Data Governance Portal',
+                link: '/features/data-governance-portal',
                 imgIndex: 3,
                 imgHeight: '49px',
                 content: `An all-in-one, UX optimized Web3 wallet for Ethereum DApps`,
               },
-              {
-                title: 'Private Data Sharing',
-                link: '/products/private-sharing',
-                imgIndex: 4,
-                imgHeight: '47px',
-                content: `Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`,
-              },
             ]}
           />
         </Flex>
+
+        {/* Tab 3: For developer */}
+        <Box ml={['20px', '20px', '40px']}>
+          <Link to="/developer">
+            <MainMenuText style={{ whiteSpace: 'nowrap' }}>
+              For Developer
+            </MainMenuText>
+          </Link>
+        </Box>
+
+        {/* Tab 4: Company */}
         <Flex
           alignItems="center"
           style={{ height: '100%' }}
@@ -588,25 +612,26 @@ const Navbar = props => {
           }}
         >
           <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
-            <MainMenuText>Explorers</MainMenuText>
-            <Text ml={2} pt="2px" color="#6b8bf5" fontSize="12px">
+            <MainMenuText>Company</MainMenuText>
+            <Text ml={2} pt="2px" color="#4a4a4a" fontSize="12px">
               <i className="fas fa-chevron-down" />
             </Text>
           </Flex>
           <NavMenu
             isSelected={selectedTab === 1}
-            title="Explorers"
+            title="Company"
             tabs={[
               {
-                title: 'Governance Portal',
-                href: 'https://app.bandprotocol.com',
+                title: 'Overview',
+                link: '/company/overview',
                 imgIndex: 5,
-                imgHeight: '50px',
-                content: `Join data governance community, stake tokens on data providers and vote on governance parameters`,
+                imgHeight: '46px',
+                content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
               },
               {
-                title: 'Dataset Explorer',
-                href: 'https://data.bandprotocol.com',
+                title: 'Career',
+                link: '/company/career',
+                // href: 'https://data.bandprotocol.com',
                 imgIndex: 6,
                 imgHeight: '46px',
                 content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
@@ -614,20 +639,50 @@ const Navbar = props => {
             ]}
           />
         </Flex>
-        <Box ml={['20px', '20px', '40px']}>
-          <Link to="/company">
-            <MainMenuText>Company</MainMenuText>
-          </Link>
-        </Box>
-        <Box ml={['20px', '20px', '40px']}>
-          <AbsoluteLink
-            style={{ textDecoration: 'none' }}
-            target="_blank"
-            to="https://medium.com/bandprotocol"
-          >
-            <MainMenuText>Blog</MainMenuText>
-          </AbsoluteLink>
-        </Box>
+
+        {/* Tab 5: Join Community */}
+        <Flex
+          alignItems="center"
+          style={{ height: '100%' }}
+          ml={['20px', '20px', '40px']}
+          onMouseOver={e => {
+            e.stopPropagation()
+            selectTab(2)
+          }}
+        >
+          <Flex flexDirection="row" color="white" style={{ cursor: 'pointer' }}>
+            <MainMenuText>Join Community</MainMenuText>
+            <Text ml={2} pt="2px" color="#4a4a4a" fontSize="12px">
+              <i className="fas fa-chevron-down" />
+            </Text>
+          </Flex>
+          <NavMenu
+            isSelected={selectedTab === 2}
+            title="Join Community"
+            tabs={[
+              {
+                title: 'Developer Forum',
+                href: 'https://forum.bandprotocol.com',
+                imgIndex: 7,
+                imgHeight: '46px',
+                content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
+              },
+              {
+                title: 'Blog',
+                href: 'https://medium.com/bandprotocol',
+                imgIndex: 8,
+                imgHeight: '46px',
+                content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
+              },
+              {
+                title: 'Social Media',
+                imgIndex: 9,
+                imgHeight: '46px',
+                content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
+              },
+            ]}
+          />
+        </Flex>
       </Flex>
     )
   }
@@ -635,6 +690,7 @@ const Navbar = props => {
   return (
     <Nav
       style={{
+        backgroundImage: 'linear-gradient(to bottom, #5a7ffd, #547bff)',
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
@@ -642,7 +698,7 @@ const Navbar = props => {
       }}
     >
       <Flex
-        bg="#2a304e"
+        bg="#5a7ffd"
         m={['-20px', '0px']}
         style={{
           position: 'absolute',
@@ -657,7 +713,7 @@ const Navbar = props => {
         onMouseOver={() => selectTab(-1)}
       />
       <Flex
-        bg={showMenu ? '#252b4a' : 'rgba(0,0,0,0)'}
+        bg={showMenu ? '#5a7ffd' : 'rgba(0,0,0,0)'}
         style={{
           margin: '0 auto',
           height: '100%',
