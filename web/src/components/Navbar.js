@@ -92,7 +92,8 @@ const NavMenu = ({ isSelected, title, tabs }) => {
     <Flex
       flexDirection="column"
       style={{
-        width: '100vw',
+        width: '1000px',
+        maxWidth: '100vw',
         height: isSelected ? '350px' : '0px',
         position: 'absolute',
         left: '0',
