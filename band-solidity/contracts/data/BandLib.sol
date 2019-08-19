@@ -9,7 +9,9 @@ interface Oracle {
   function queryPrice() external view returns (uint256);
 }
 
-contract usingBand {
+contract usingBandProtocol {
+  using BandLib for Oracle;
+
   Oracle internal constant CRYPTO = Oracle(0x07416E24085889082d767AF4CA09c37180A3853c);
   Oracle internal constant ERC20 = Oracle(0x869e8e455816153A9330D59a854817231E49D9F9);
   Oracle internal constant FOREX = Oracle(0x61Ab2054381206d7660000821176F2A798F031de);
@@ -24,16 +26,16 @@ contract usingBand {
 }
 
 library BandLib {
-  function queryUint256(Oracle oracle, bytes memory key) internal returns(uint256) {
+  function querySpotPrice(Oracle oracle, bytes memory key) internal returns(uint256) {
     (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
     require(status == Oracle.QueryStatus.OK);
     return uint256(output);
   }
 
-  function queryUint256WithTimeLimit(Oracle oracle, bytes memory key, uint256 notOldThan) internal returns (uint256) {
+  function querySpotPriceWithExpiry(Oracle oracle, bytes memory key, uint256 timeLimit) internal returns (uint256) {
     (bytes32 output, uint256 lastUpdated, Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
     require(status == Oracle.QueryStatus.OK);
-    require(lastUpdated >= notOldThan);
+    require(now - lastUpdated <= timeLimit);
     return uint256(output);
   }
 
@@ -73,6 +75,15 @@ library BandLib {
       result[i] = uint8(output[i]);
     }
     return result;
+  }
+
+  /*
+    Using for gas station contract for now
+  */
+  function queryUint256(Oracle oracle, bytes memory key) internal returns(uint256) {
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
+    require(status == Oracle.QueryStatus.OK);
+    return uint256(output);
   }
 
   function queryRaw(Oracle oracle, bytes memory key) internal returns(bytes32, uint256, Oracle.QueryStatus) {
