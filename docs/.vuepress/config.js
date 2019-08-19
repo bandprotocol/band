@@ -10,7 +10,8 @@ module.exports = {
         title: "🏡 Introduction",
         collapsable: false,
         children: [
-          "/"
+          "/",
+          "home/comparison"
           // "home/problem",
           // "home/development-status"
         ]

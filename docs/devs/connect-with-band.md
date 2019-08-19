@@ -35,7 +35,7 @@ interface Oracle {
   enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
 
   function query(bytes calldata input)
-    external payable returns (bytes output, uint256 updatedAt, QueryStatus status);
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
 
   function queryPrice() external view returns (uint256);
 }
