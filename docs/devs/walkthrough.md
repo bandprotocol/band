@@ -28,7 +28,7 @@ Now that you have MetaMask installed and connected to Kovan test network, the ne
 
 <div align="center">
   <figure>
-  <img src='/assets/kovan-faucet-home.png'>
+    <img src='/assets/kovan-faucet-home.png'>
   </figure>
 </div>
 
@@ -36,7 +36,7 @@ After logging in with [Github](https://github.com), you will be able to enter yo
 
 <div align="center">
   <figure>
-  <img src='/assets/kovan-faucet-login.png'>
+    <img src='/assets/kovan-faucet-login.png'>
   </figure>
 </div>
 
@@ -52,7 +52,7 @@ pragma solidity ^0.5.0;
 interface Oracle {
   enum QueryStatus { INVALID, OK, NOT_AVAILABLE, DISAGREEMENT }
   function query(bytes calldata input)
-    external payable returns (bytes output, uint256 updatedAt, QueryStatus status);
+    external payable returns (bytes32 output, uint256 updatedAt, QueryStatus status);
   function queryPrice() external view returns (uint256);
 }
 
@@ -60,7 +60,7 @@ contract ExampleContract {
   uint256 public ethusd;
 
   function update() public payable {
-    Oracle oracle = Oracle(0x07416E24085889082d767AF4CA09c37180A3853c)
+    Oracle oracle = Oracle(0x07416E24085889082d767AF4CA09c37180A3853c);
     (bytes32 raw,,) = oracle.query.value(oracle.queryPrice())("ETH/USD");
     ethusd = uint256(raw);
   }
@@ -69,4 +69,26 @@ contract ExampleContract {
 
 ## Deploy and Test the Contract
 
-TODO
+Once the contract is implemented, go to "Deploy and Run Transaction" tab and click `Deploy` to deploy the smart contract. Note that the environment must be `Injected Web3` to deploy via MetaMask. Another reminder that MetaMask network must be set to Kovan.
+
+<div align="center">
+  <figure>
+    <img src='/assets/remix-deploy.png'>
+  </figure>
+</div>
+
+After the contract is deployed successfully, click on `update` button on the button left to send a transaction to invoke `update` function. To call this function successfully, the caller must pass `0.001 ETH` as a query fee. You can specify that under `Value` tab.
+
+<div align="center">
+  <figure>
+    <img src='/assets/remix-click-update.png'>
+  </figure>
+</div>
+
+Once the transaction is confirmed, click on `ethusd` button to query for the value of contract state variable `ethusd`. You will see that it changes from zero to whatever the current price of ETH in USD is, multiplied by 10<sup>18</sup>. In this example, the current Ethereum price is approximately 200.55 US Dollar.
+
+<div align="center">
+  <figure>
+    <img src='/assets/remix-get-ethusd.png'>
+  </figure>
+</div>
