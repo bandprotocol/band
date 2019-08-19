@@ -76,7 +76,7 @@ Additionally, for developers that use `band-solidity` library, inheriting from `
 uint256 ethusd = oracle.querySpotPrice("ETH/USD");
 
 /// Get the most-up-to-date ETH/USD rate. Must not be older than 10 mins.
-uint256 ethusd = oracle.querySpotPriceWithExpiration("ETH/USD", 10 minutes);
+uint256 ethusd = oracle.querySpotPriceWithExpiry("ETH/USD", 10 minutes);
 ```
 
 ## Request Data Update

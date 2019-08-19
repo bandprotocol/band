@@ -7,7 +7,9 @@ Now that you are onboard with us. Let's get started on to the actual implementat
 If you are building a new project, by using [Truffle](https://www.trufflesuite.com/), you can bootstrap a new Ethereum-based project from a prepared boilerplate. Run the command below to unbox a new Band-powered project into your current directory.
 
 ```sh
-truffle unbox bandprotocol/create-band-app
+mkdir my_project
+cd my_project
+npx truffle unbox bandprotocol/band
 ```
 
 ## Add Band to Your Existing Project
