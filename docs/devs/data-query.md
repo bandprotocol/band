@@ -100,11 +100,11 @@ curl -X POST \
 }'
 ```
 
-The example above shows a a request to update key `ETH/USD` of the fincnai
+The example above shows a a request to update spot price of `ETH/USD` pair on Kovan's financial dataset. Notice that the POST request takes a JSON parameter with four inputs.
 
 - `network_id`: Ethereum network ID (e.g. 1 for mainnet, 42 for Kovan)
 - `dataset`: Unique address of the dataset to update data
 - `key`: Hex-formatted key for data to update. See specification on the dataset page for details.
 - `broadcast`: A boolean indicating whether the data update transaction should be automatically broadcast. If **true**, Band Foundation will broadcast the transaction. If **false**, this HTTP request will return an Ethereum transaction data.
 
-Note that, this feature is especially necessary for the Web Oracle dataset. You can read more about it [here](../datasets/web-oracle.html).
+This feature is especially necessary for the Web Oracle dataset. You can read more about it [here](../datasets/web-oracle.html).
