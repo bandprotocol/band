@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import LandingShowcase from 'components/LandingShowcase'
 import { colors } from 'ui'
 import {
   Flex,
@@ -23,41 +22,29 @@ import { isMobile } from 'ui/media'
 import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
 
-import HeroSrc from 'images/hero.png'
-import BandInTheMiddle from 'images/band-overview.png'
-import Sequoia from 'images/sequoia.svg'
-import Dunamu from 'images/dunamu.svg'
-import Seax from 'images/seax.png'
-import Reddit from 'images/reddit.svg'
-import Telegram from 'images/telegram.svg'
-import Medium from 'images/medium.svg'
-import Twitter from 'images/twitter.svg'
-import Github from 'images/githubWhite.svg'
-import AppCHT from 'images/appCoinhatcher.png'
-import AppDS from 'images/appDataSource.png'
-import LandingBandDB from 'images/landing-band-database.png'
-import LandingDataGov from 'images/landing-data-governance.png'
-
-import SSExample1 from 'images/chtssLeft.png'
-import SSExample2 from 'images/chtssMid.png'
-import SSExample3 from 'images/chtssRight.png'
-
-import SSExample4 from 'images/dsssLeft.png'
-import SSExample5 from 'images/dsssMid.png'
-import SSExample6 from 'images/dsssRight.png'
+import SimpleIntegration from 'images/simple-integration.svg'
+import SecureDecentralized from 'images/secure-decentrailized.svg'
+import EconomicallySound from 'images/economically-sound.svg'
+import Usecase1 from 'images/usecase1.jpg'
+import Usecase2 from 'images/usecase2.jpg'
+import Usecase3 from 'images/usecase3.jpg'
+import Usecase4 from 'images/usecase4.jpg'
+import Usecase5 from 'images/usecase5.jpg'
+import Usecase6 from 'images/usecase6.jpg'
 
 const FilledButton = styled(Button)`
   font-family: Avenir;
   color: white;
   font-size: 16px;
+  padding: 13px 34px;
   font-weight: 500;
   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
   height: 46px;
   border-radius: 2px;
   box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #4a4a4a;
+  background-image: linear-gradient(to bottom, #2a3a7f, #131b48);
   cursor: pointer;
+  font-family: bio-sans;
 
   transition: all 0.2s;
 
@@ -117,13 +104,14 @@ export default () => {
             justifyContent="center"
           >
             <Text
-              lineHeight={1.6}
+              lineHeight={1.3}
               fletterSpacing="1px"
               fontWeight={600}
               fontSize={['32px', '48px']}
               color="#4a4a4a"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
+              style={{ fontFamily: 'bio-sans' }}
             >
               A One-Stop Framework for
               <br />
@@ -131,9 +119,11 @@ export default () => {
             </Text>
           </Flex>
 
-          <Flex width="100%" justifyContent="space-between">
+          <Flex width="100%" justifyContent="space-between" mt="50px">
             <Flex flexDirection="column" alignItems="center">
-              <Box width="300px" bg="red" style={{ height: '300px' }} />
+              <Box style={{ height: '110px' }}>
+                <Image src={SimpleIntegration} />
+              </Box>
               <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
                 Simple Integration
               </Text>
@@ -141,7 +131,7 @@ export default () => {
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
-                style={{ maxWidth: '300px', lineHeight: '2' }}
+                style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Integrate existing data feeds to a dApp takes less than 10 lines
                 of code.
@@ -151,7 +141,9 @@ export default () => {
               </Text>
             </Flex>
             <Flex flexDirection="column" alignItems="center">
-              <Box width="300px" bg="red" style={{ height: '300px' }} />
+              <Box style={{ height: '110px' }}>
+                <Image src={SecureDecentralized} />
+              </Box>
               <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
                 {'Secure & Decentralized'}
               </Text>
@@ -159,7 +151,7 @@ export default () => {
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
-                style={{ maxWidth: '300px', lineHeight: '2' }}
+                style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Leverage built-in delegated consensus to distribute risk of
                 collusion in the decentralized platform.
@@ -169,7 +161,9 @@ export default () => {
               </Text>
             </Flex>
             <Flex flexDirection="column" alignItems="center">
-              <Box width="300px" bg="red" style={{ height: '300px' }} />
+              <Box style={{ height: '110px' }}>
+                <Image src={EconomicallySound} />
+              </Box>
               <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
                 Economically Sound
               </Text>
@@ -177,7 +171,7 @@ export default () => {
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
-                style={{ maxWidth: '300px', lineHeight: '2' }}
+                style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Incentives encourage competitions to drive unit data costs down
                 without compromising security.
@@ -203,7 +197,7 @@ export default () => {
               fletterSpacing="1px"
               fontWeight={300}
               fontSize={['32px', '32px']}
-              color="#4a4a4a"
+              color="#5569de"
               textAlign={['center', 'center']}
             >
               Comparing to Other Frameworks
@@ -216,6 +210,7 @@ export default () => {
               fontSize={['32px', '48px']}
               color="#4a4a4a"
               textAlign={['center', 'center']}
+              fontFamily="bio-sans"
             >
               What Band Protocol Offers
             </Text>
@@ -233,7 +228,7 @@ export default () => {
             fletterSpacing="1px"
             fontWeight={300}
             fontSize={['32px', '32px']}
-            color="#4a4a4a"
+            color="#5569de"
             textAlign={['center', 'center']}
           >
             Leveraging Band Data Infrastructure
@@ -252,7 +247,7 @@ export default () => {
 
           {/* Part 1 */}
           <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
+            <Image src={Usecase1} style={{ maxWidth: '500px' }} />
             <Flex flexDirection="column" pl="74px">
               <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
                 Decentralized Finance (DeFi)
@@ -299,12 +294,12 @@ export default () => {
                 crypto-fiat price.
               </Text>
             </Flex>
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
+            <Image src={Usecase2} style={{ maxWidth: '500px' }} />
           </Flex>
 
           {/* Part 3 */}
           <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
+            <Image src={Usecase3} style={{ maxWidth: '500px' }} />
             <Flex flexDirection="column" pl="74px">
               <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
                 Gaming, Gambling, and Prediction Markets
@@ -341,12 +336,12 @@ export default () => {
                 accordingly.
               </Text>
             </Flex>
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
+            <Image src={Usecase4} style={{ maxWidth: '500px' }} />
           </Flex>
 
           {/* Part 5 */}
           <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
+            <Image src={Usecase5} style={{ maxWidth: '500px' }} />
             <Flex flexDirection="column" pl="74px">
               <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
                 Identity Layer
@@ -388,27 +383,26 @@ export default () => {
                 trigger off-chain transaction by itself.
               </Text>
             </Flex>
-            <Box width="200px" bg="black" style={{ height: '200px' }} />
+            <Image src={Usecase6} style={{ maxWidth: '500px' }} />
           </Flex>
 
-          {/* Explore more feature button */}
-          <Flex justifyContent="center" maxWidth="500px" my="50px">
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              bg="#4a4a4a"
-              p="16px 15px"
-              width="100%"
-              style={{ maxWidth: '500px', borderRadius: '4px' }}
-            >
-              <Text color="white" fontSize="16px">
-                Next: Dual-token Economics
-              </Text>
-              {/* TODO: change it into actual symbol */}
-              <Text color="white" fontSize="16px">
-                ->
-              </Text>
-            </Flex>
+          {/* Next: Dual-toiken Econimics */}
+          <Flex justifyContent="center" my="120px">
+            <FilledButton width="400px">
+              <Flex
+                justifyContent="space-between"
+                alignItems="center"
+                width="100%"
+              >
+                <Text color="white" fontSize="16px">
+                  Next: Dual-token Economics
+                </Text>
+                {/* TODO: change it into actual symbol */}
+                <Text color="white" fontSize="16px">
+                  ->
+                </Text>
+              </Flex>
+            </FilledButton>
           </Flex>
         </PageContainer>
       </Box>
