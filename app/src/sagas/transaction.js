@@ -1,4 +1,5 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
+import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
 import transit from 'transit-immutable-js'
 import BN from 'utils/bignumber'
@@ -58,12 +59,22 @@ function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
     dataSource: sourceAddress,
     stake,
   })
+  const dataProviderName = getProvider(sourceAddress).name
+  const title = `Deposit ${Utils.fromBlockchainUnit(stake)} ${
+    stake.eq(BN.parse(1)) ? 'token' : 'tokens'
+  }`
+  const wallet = yield select(walletSelector)
+  wallet.setDetail({
+    type: 'DEPOSIT',
+    title: `Deposit to ${dataProviderName}`,
+    balance: `${Utils.fromBlockchainUnit(stake)} ${
+      stake.eq(BN.parse(1)) ? 'token' : 'tokens'
+    }`,
+  })
   yield put(hideModal())
   yield sendTransaction({
     transaction,
-    title: `Deposit ${Utils.fromBlockchainUnit(stake)} ${
-      stake.eq(BN.parse(1)) ? 'token' : 'tokens'
-    }`,
+    title: title,
     type: 'DEPOSIT',
   })
 }
@@ -79,12 +90,20 @@ function* handleTcdWithdraw({
     dataSource: sourceAddress,
     withdrawOwnership: ownership,
   })
+  const dataProviderName = getProvider(sourceAddress).name
+  const title = `Withdraw ${withdrawAmount} ${
+    withdrawAmount === 1 ? 'token' : 'tokens'
+  }`
   yield put(hideModal())
+  const wallet = yield select(walletSelector)
+  wallet.setDetail({
+    type: 'WITHDRAW',
+    title: `Withdraw from ${dataProviderName}`,
+    balance: `${withdrawAmount} ${withdrawAmount === 1 ? 'token' : 'tokens'}`,
+  })
   yield sendTransaction({
     transaction,
-    title: `Withdraw ${withdrawAmount} ${
-      withdrawAmount === 1 ? 'token' : 'tokens'
-    }`,
+    title: title,
     type: 'WITHDRAW',
   })
 }
@@ -99,36 +118,65 @@ function* handleTcdRevenueToStake({
     dataSource: sourceAddress,
     withdrawOwnership: 0,
   })
+  const dataProviderName = getProvider(sourceAddress).name
+  const title = `Stake ${revenueAmount} ${
+    revenueAmount === 1 ? 'token' : 'tokens'
+  }`
+  const wallet = yield select(walletSelector)
+  wallet.setDetail({
+    type: 'DEPOSIT',
+    title: `Deposit to ${dataProviderName}`,
+    balance: `${revenueAmount} ${revenueAmount === 1 ? 'token' : 'tokens'}`,
+  })
   yield put(hideModal())
+
   yield sendTransaction({
     transaction,
-    title: `Stake ${revenueAmount} ${revenueAmount === 1 ? 'token' : 'tokens'}`,
+    title: title,
     type: 'REVENUE_TO_STAKE',
   })
 }
 
-function* handleBuyToken({ address, amount, priceLimit }) {
+function* handleBuyToken({ address, amount, priceLimit, tokenName }) {
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createBuyTransaction({ amount, priceLimit })
+  const title = `Buy ${Utils.fromBlockchainUnit(amount)} ${
+    amount.eq(BN.parse(1)) ? 'token' : 'tokens'
+  }`
   yield put(hideModal())
-  yield sendTransaction({
-    transaction,
-    title: `Buy ${Utils.fromBlockchainUnit(amount)} ${
+  const wallet = yield select(walletSelector)
+  wallet.setDetail({
+    type: 'BUY',
+    title: `Buy ${tokenName}`,
+    balance: `${Utils.fromBlockchainUnit(amount)} ${
       amount.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
+  })
+  yield sendTransaction({
+    transaction,
+    title: title,
     type: 'BUY',
   })
 }
 
-function* handleSellToken({ address, amount, priceLimit }) {
+function* handleSellToken({ address, amount, priceLimit, tokenName }) {
   const client = yield select(currentCommunityClientSelector, { address })
   const transaction = yield client.createSellTransaction({ amount, priceLimit })
+  const title = `Sell ${Utils.fromBlockchainUnit(amount)} ${
+    amount.eq(BN.parse(1)) ? 'token' : 'tokens'
+  }`
   yield put(hideModal())
-  yield sendTransaction({
-    transaction,
-    title: `Sell ${Utils.fromBlockchainUnit(amount)} ${
+  const wallet = yield select(walletSelector)
+  wallet.setDetail({
+    type: 'SELL',
+    title: `Sell ${tokenName}`,
+    balance: `${Utils.fromBlockchainUnit(amount)} ${
       amount.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
+  })
+  yield sendTransaction({
+    transaction,
+    title: title,
     type: 'SELL',
   })
 }
@@ -142,7 +190,11 @@ function* handleProposeProposal({ address, title, reason, changes }) {
   )
 
   const client = yield select(currentCommunityClientSelector, { address })
-
+  const wallet = yield select(walletSelector)
+  wallet.setDetail({
+    type: `PROPOSE`,
+    title: `Propose ${title}`,
+  })
   const transaction = yield client.createProposeTransaction({
     reasonHash,
     keys: Object.keys(changes),
@@ -169,7 +221,11 @@ function* handleVoteProposal({ address, proposalId, vote }) {
       proposalId,
       isAccepted: vote,
     })
-
+    const wallet = yield select(walletSelector)
+    wallet.setDetail({
+      type: 'VOTE',
+      title: `vote`,
+    })
     yield sendTransaction({
       transaction,
       title: `Vote ${vote ? 'accept' : 'reject'}`,

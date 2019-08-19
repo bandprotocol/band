@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Flex, Text } from 'ui/common'
+import { Flex } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
 import { tcdsSelector } from 'selectors/tcd'
 import { getTCDInfomation } from 'utils/tcds'
