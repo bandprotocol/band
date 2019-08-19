@@ -1,0 +1,24 @@
+{
+  "ignore": [
+    ".github",
+    ".vscode",
+    "app",
+    "band-solidity",
+    "branding",
+    "contracts",
+    "docs",
+    "web",
+    ".gitignore",
+    ".travis.yml",
+    "CODE_OF_CONDUCT.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "commands": {
+    "Compile contracts": "yarn compile",
+    "Deploy contract on kovan testnet": "yarn deploy"
+  },
+  "hooks": {
+    "post-unpack": "bash unbox.sh && rm unbox.sh && yarn"
+  }
+}
