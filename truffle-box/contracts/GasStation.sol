@@ -1,9 +1,8 @@
 pragma solidity 0.5.10;
 
-import {BandLib, usingBand, Oracle} from "band-solidity/contracts/data/BandLib.sol";
+import {BandLib, usingBandProtocol, Oracle} from "band-solidity/contracts/data/BandLib.sol";
 
-contract GasStation is usingBand {
-  using BandLib for Oracle;
+contract GasStation is usingBandProtocol {
 
   mapping (string => uint256) public prices;
 
