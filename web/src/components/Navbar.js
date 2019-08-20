@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styled from 'styled-components'
-import PageContainer from 'components/PageContainer'
 import {
   Link,
-  Bold,
   Image,
   Flex,
   Box,
@@ -18,15 +16,21 @@ import { withRouter } from 'react-router-dom'
 import LogoSrc from 'images/logo.png'
 import MenuBurgerSrc from 'images/menu-burger.svg'
 import MenuCloseSrc from 'images/menu-close.svg'
+import Subscribe from 'components/Subscribe'
 
 import MenuDT from 'images/menu_dt.svg'
 import MenuPDS from 'images/menu_pds.svg'
-import MenuTCD from 'images/menu_tcd.svg'
-import MenuTCR from 'images/menu-tcr.svg'
-import MenuWallet from 'images/menu_wallet.svg'
+import MenuPO from 'images/menu-product-overview.svg'
+import MenuCO from 'images/menu-com-overview.svg'
+import MenuTCD from 'images/menu-tcd.svg'
+import MenuCareer from 'images/menu-career.svg'
+import MenuBlog from 'images/menu-blog.svg'
+import MenuDevForum from 'images/menu-dev-forum.svg'
+import MenuSocialMedia from 'images/menu-social-media.svg'
 
 import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.png'
+import { callbackify } from 'util'
 
 const Nav = styled.nav`
   display: flex;
@@ -53,14 +57,14 @@ const Nav = styled.nav`
 
 const SubMenu = styled(Flex).attrs({
   px: '20px',
-  pt: [3, 3, 4],
+  pt: [3, 3, 3],
   flexDirection: 'column',
 })`
   height: 100%;
   transition: all 0.25s;
   cursor: pointer;
   &:hover {
-    background-color: #6b8bf5;
+    background-color: #4d63d1;
   }
 `
 
@@ -75,14 +79,33 @@ const MainMenuText = styled(Text).attrs({
   }
 `
 
+const Input = styled.input`
+  width: 100%;
+  min-height: 40px;
+  border-radius: 4px;
+  border: 0px;
+  padding: 10px;
+  color: white;
+  font-size: 13px;
+  background-color: #384cb3;
+  ::placeholder {
+    color: white;
+    opacity: 0.5;
+  }
+`
+
 const getImg = id =>
   [
+    MenuPO,
     MenuDT,
     MenuTCD,
-    MenuTCR,
-    MenuWallet,
-    MenuPDS,
     GovernancePortalImg,
+    MenuPDS,
+    MenuCO,
+    MenuCareer,
+    MenuDevForum,
+    MenuBlog,
+    MenuSocialMedia,
     DatasetExplorerImg,
   ][id]
 
@@ -91,35 +114,29 @@ const NavMenu = ({ isSelected, title, tabs }) => {
   return (
     <Flex
       flexDirection="column"
+      alignItems="center"
       style={{
-        width: '1000px',
-        maxWidth: '100vw',
-        height: isSelected ? '350px' : '0px',
-        position: 'absolute',
+        width: '100vw',
+        height: isSelected ? '215px' : '0px',
+        position: 'fixed',
         left: '0',
         top: '70px',
         transition: 'all 0.25s',
         opacity: isSelected ? 1 : 0,
         pointerEvents: isSelected ? 'all' : 'none',
-        backgroundImage: 'linear-gradient(to bottom, #5a7ffd, #495fd6)',
+        background: '#495ecd',
       }}
     >
-      {/* <Flex
-        style={{ height: '70px', borderBottom: '1px solid #7c84a6' }}
-        px="30px"
-        alignItems="center"
-        py="10px"
+      <Flex
+        flexDirection="row"
+        style={{ height: '100%', width: '1200px', maxWidth: '1200px' }}
       >
-        <Text color="#7c84a6" fontSize="20px">
-          {title}
-        </Text>
-      </Flex> */}
-      <Flex flexDirection="row" style={{ height: '100%' }}>
         {tabs.map((tab, i) => {
           const LinkComponent = tab.link ? Link : AbsoluteLink
           const imgIndex = Array.isArray(tab.imgIndex)
             ? tab.imgIndex[currentTab === i && tab.imgIndex.length > 0 ? 1 : 0]
             : tab.imgIndex
+          console.log(tab)
           return (
             <LinkComponent
               to={tab.link}
@@ -129,11 +146,17 @@ const NavMenu = ({ isSelected, title, tabs }) => {
               onMouseOver={() => setCurrentTab(i)}
               onMouseLeave={() => setCurrentTab(-1)}
             >
-              <SubMenu>
-                <Flex style={{ minHeight: '70px' }} alignItems="center">
-                  <Image src={getImg(imgIndex)} height={tab.imgHeight} />
+              <SubMenu style={{ minWidth: '100%' }}>
+                <Flex style={{ minHeight: '60px' }} alignItems="center">
+                  {tab.hasInputBox ? (
+                    <Flex style={{ minWidth: '100%' }}>
+                      <Subscribe />
+                    </Flex>
+                  ) : (
+                    <Image src={getImg(imgIndex)} height={tab.imgHeight} />
+                  )}
                 </Flex>
-                <Flex mt={['30px', '30px', '70px']} style={{ height: '60px' }}>
+                <Flex mt={['30px', '30px', '40px']}>
                   <Text
                     color="white"
                     fontWeight={500}
@@ -562,31 +585,31 @@ const Navbar = props => {
             title="Features"
             tabs={[
               {
-                title: 'Overview',
+                title: 'Product Overview',
                 link: '/features/overview',
                 imgIndex: 0,
-                imgHeight: '46px',
-                content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
+                imgHeight: '30px',
+                content: `Learn about Band Protocol and potential use cases of off-chain data on blockchain`,
               },
               {
                 title: 'Dual-Token Economics',
                 link: '/features/dual-token',
                 imgIndex: 1,
-                imgHeight: '67px',
+                imgHeight: '50px',
                 content: `Build robust, decentralized data feed from a network of data providers`,
               },
               {
                 title: 'Token-Curated DataSources',
                 link: '/features/tcd',
                 imgIndex: 2,
-                imgHeight: '28px',
+                imgHeight: '60px',
                 content: `Build reliable, more transparent crowd-source information through crypto-incentized data curation`,
               },
               {
                 title: 'Data Governance Portal',
                 link: '/features/data-governance-portal',
                 imgIndex: 3,
-                imgHeight: '49px',
+                imgHeight: '50px',
                 content: `An all-in-one, UX optimized Web3 wallet for Ethereum DApps`,
               },
             ]}
@@ -626,16 +649,16 @@ const Navbar = props => {
                 title: 'Overview',
                 link: '/company/about-us',
                 imgIndex: 5,
-                imgHeight: '46px',
-                content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
+                imgHeight: '50px',
+                content: `Get to know our team and values`,
               },
               {
-                title: 'Career',
+                title: 'Career with Band',
                 link: '/company/career',
                 // href: 'https://data.bandprotocol.com',
                 imgIndex: 6,
-                imgHeight: '46px',
-                content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
+                imgHeight: '50px',
+                content: `Excited about decentralization? Join our team on the mission to bring trusted data to blockchain`,
               },
             ]}
           />
@@ -665,21 +688,26 @@ const Navbar = props => {
                 title: 'Developer Forum',
                 href: 'https://forum.bandprotocol.com',
                 imgIndex: 7,
-                imgHeight: '46px',
-                content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
+                imgHeight: '60px',
+                content: `Discuss protocol improvements, troubleshoot integrations, and much more`,
               },
               {
                 title: 'Blog',
                 href: 'https://medium.com/bandprotocol',
                 imgIndex: 8,
-                imgHeight: '46px',
-                content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
+                imgHeight: '50px',
+                content: `Learn more in-depth about Band Protocol use cases,  economics, and technical discussions`,
               },
               {
                 title: 'Social Media',
                 imgIndex: 9,
-                imgHeight: '46px',
-                content: `Explore dataset made available by Band Protocol and learn how to integrate them with your dApps`,
+                imgHeight: '35px',
+                content: `Follow all our social media channels to get the most up-to-date information on Band Protocol`,
+              },
+              {
+                title: 'Subscribe for Updates ',
+                hasInputBox: true,
+                content: `Don't miss any update on Band Protocol including tech progress, campaigns, local events and more`,
               },
             ]}
           />
@@ -707,7 +735,7 @@ const Navbar = props => {
           width: '100%',
           height: '100vh',
           top: '70px',
-          opacity: showMenu ? 0.5 : 0,
+          opacity: 0,
           pointerEvents: showMenu ? 'all' : 'none',
           transition: 'all 0.5s',
         }}
@@ -715,7 +743,6 @@ const Navbar = props => {
         onMouseOver={() => selectTab(-1)}
       />
       <Flex
-        bg={showMenu ? '#5a7ffd' : 'rgba(0,0,0,0)'}
         style={{
           margin: '0 auto',
           height: '100%',
