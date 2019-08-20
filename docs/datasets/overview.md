@@ -1,11 +1,8 @@
 # Dataset Overview
 
-In this part We
+Band Protocol is ready to be used on supported Ethereum networks. Listed below is the datasets currently available for data consumption.
 
-- [Web API Oracle (Kovan)](web-oracle.md): TODO
-
-- [Financial Data Feeds (Kovan)](financial-kovan.md): TODO
-
-- [Sport Events (Kovan)](sport-kovan.md): TODO
-
-- [Lottery Results (Kovan)](lottery-kovan.md): TODO
+- [Financial Data Feeds (Kovan)](financial-kovan.md): contains financial data across multiple asset classes.
+- [Web API Oracle (Kovan)](web-oracle.md): supports query to any JSON-based public Web 2.0 API.
+- [Sport Events (Kovan)](sport-kovan.md): contains sport results from major professional leagues in the world.
+- [Lottery Results (Kovan)](lottery-kovan.md): contains lottery results from worldwide public lottery authorities.

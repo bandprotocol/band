@@ -53,17 +53,17 @@ module.exports = {
         collapsable: false,
         children: [
           "datasets/overview",
-          "datasets/web-oracle",
           "datasets/financial-kovan",
+          "datasets/web-oracle",
           "datasets/sport-kovan",
           "datasets/lottery-kovan"
         ]
-      },
-      {
-        title: "🦄 Example Applications",
-        collapsable: false,
-        children: []
       }
+      // {
+      //   title: "🦄 Example Applications",
+      //   collapsable: false,
+      //   children: []
+      // }
       // {
       //   title: "📖 Smart Contract Reference",
       //   collapsable: false,
