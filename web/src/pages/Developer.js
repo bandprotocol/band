@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import FilledButton from 'components/FilledButton'
@@ -7,18 +7,11 @@ import LinkWithArrow from 'components/LinkWithArrow'
 import {
   Flex,
   Text,
-  BackgroundCard,
-  H1,
   Button,
-  Card,
   Image,
   Box,
-  H2,
-  H3,
   AbsoluteLink,
-  Link,
   Highlight,
-  Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
@@ -26,6 +19,7 @@ import PriceHero from 'images/price-hero.png'
 import SportHero from 'images/sport-hero.png'
 import LotteryHero from 'images/lottery-hero.png'
 import DataRequest from 'images/data-requests.png'
+import { is } from 'css-select'
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -33,7 +27,7 @@ const OutlineButton = styled(Button)`
   font-size: 16px;
   font-weight: 500;
   background-color: transparent;
-  width: ${props => (props.isMobile ? '196px' : '227px')};
+  width: ${props => (props.isMobile ? '227px' : '196px')};
   height: 46px;
   border-radius: 2px;
   cursor: pointer;
@@ -50,47 +44,64 @@ const OutlineButton = styled(Button)`
   }
 `
 
-const Dataset = ({ image, title, address, detail }) => (
-  <Flex flexDirection="column" alignItems="center" justifyContent="flex-end">
-    <Image
-      src={image}
-      width="263px"
-      ml="100px"
-      style={{ maxHeight: '250px' }}
-    />
-    <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
-      {title}
-    </Text>
-    <Text
-      color="#5569de"
-      fontWeight="400"
-      bg="#e9edff"
-      fontSize="14px"
-      p="6px 8px"
-      textAlign="center"
-      fontFamily="Source Code Pro"
-      mt="10px"
-      style={{ maxWidth: '300px' }}
+const Dataset = ({ image, title, address, detail }) => {
+  const _isMobile = isMobile()
+  return (
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="flex-end"
+      mb="30px"
     >
-      {address}
-    </Text>
-    <Text
-      textAlign="center"
-      fontWeight="300"
-      fontSize="14px"
-      style={{ maxWidth: '300px', lineHeight: '2' }}
-    >
-      {detail}
-    </Text>
-    <Flex justifyContent="center" alignItems="center">
-      <LinkWithArrow text="Integration" />
+      <Image
+        src={image}
+        width="263px"
+        ml="100px"
+        style={{ maxHeight: '250px' }}
+      />
+      <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
+        {title}
+      </Text>
+      <Text
+        color="#5569de"
+        fontWeight="400"
+        bg="#e9edff"
+        fontSize="14px"
+        lineHeight={1.5}
+        p="6px 8px"
+        textAlign="center"
+        fontFamily="Source Code Pro"
+        mt="10px"
+        style={{
+          maxWidth: _isMobile ? '300px' : '100vw',
+          wordBreak: 'break-all',
+        }}
+      >
+        {address}
+      </Text>
+      <Text
+        textAlign="center"
+        fontWeight="300"
+        fontSize="14px"
+        style={{ maxWidth: '300px', lineHeight: '2' }}
+      >
+        {detail}
+      </Text>
+      <Flex justifyContent="center" alignItems="center">
+        <LinkWithArrow text="Integration" />
+      </Flex>
     </Flex>
-  </Flex>
-)
+  )
+}
 
 export default () => {
-  const exRef = useRef(null)
   const _isMobile = isMobile()
+  const [videoWidth, setVideoWidth] = useState(1200)
+  let video = useRef()
+
+  useEffect(() => {
+    setVideoWidth(video.current.offsetWidth || 1200)
+  }, [])
   return (
     <Box
       style={{
@@ -188,6 +199,7 @@ export default () => {
             mt="80px"
             flex="auto"
           >
+<<<<<<< HEAD
             <iframe
               title="video"
               frameBorder="0"
@@ -201,6 +213,21 @@ export default () => {
               allowFullScreen
               src={'https://www.youtube.com/embed/O5KpoWT4Gpw?enablejsapi=1'}
             />
+=======
+            <Flex style={{ width: '100%', maxWidth: 1200 }}>
+              <iframe
+                title="video"
+                frameBorder="0"
+                allowFullScreen
+                ref={video}
+                style={{
+                  width: '100%',
+                  height: Math.floor(videoWidth / 1.7777) + 'px',
+                }}
+                src={'https://www.youtube.com/embed/O5KpoWT4Gpw?enablejsapi=1'}
+              />
+            </Flex>
+>>>>>>> fix dev page mobile
             <Flex
               py="20px"
               px="20px"
@@ -276,7 +303,7 @@ export default () => {
 
           {/* Section 3 : Data Requests on Any Open API */}
           <Flex
-            pt={['50px', '70px']}
+            pt={['30px', '50px']}
             pb={['50px', '20px']}
             alignItems="center"
             flexDirection="column"
@@ -306,14 +333,25 @@ export default () => {
 
             <Image src={DataRequest} width="100%" mt="50px" />
 
-            <Flex mt="60px" justifyContent="space-evenly" width="80%">
+            <Flex
+              mt="60px"
+              flexDirection={['column', 'row']}
+              justifyContent="space-evenly"
+              width="80%"
+            >
               <LinkWithArrow text="Explore Existing Endpoints" />
+              {_isMobile && (
+                <Flex>
+                  <br />
+                  <br />
+                </Flex>
+              )}
               <LinkWithArrow text="How to Add a New Endpoint" />
             </Flex>
           </Flex>
 
           {/* Section 4: Tutorial on data integrations */}
-          <Flex flexDirection="column" alignItems="center" mt={['0px', '50px']}>
+          {/*<Flex flexDirection="column" alignItems="center" mt={['0px', '50px']}>
             <Text
               lineHeight={1.6}
               fletterSpacing="1px"
@@ -396,14 +434,15 @@ export default () => {
                 </Text>
               </Flex>
             </Flex>
-          </Flex>
+                </Flex> */}
 
           {/* Learn More in Developer Doc */}
-          <Flex justifyContent="center" my="50px">
+          <Flex justifyContent="center" mt={['0px', '50px']} mb="50px">
             <FilledButton
+              width={_isMobile ? '300px' : '500px'}
+              fontSize={_isMobile ? '14px' : '16px'}
               message="Learn More in Developer Doc"
               arrow
-              width="520px"
             />
           </Flex>
         </PageContainer>
