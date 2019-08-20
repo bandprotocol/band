@@ -149,7 +149,7 @@ export default () => {
             mt={['80px', '122px']}
             flexDirection={['column-reverse', 'row']}
           >
-            <Box flex={1} alignItems="center">
+            <Box flex={1} pr={['0px', '80px']} alignItems="center">
               <Image src={StakeBand} />
             </Box>
             <Flex

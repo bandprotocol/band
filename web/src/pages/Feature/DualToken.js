@@ -84,7 +84,7 @@ export default () => {
             </Text>
             <Image
               src={DualTokenSrc}
-              style={{ maxWidth: '970px' }}
+              style={{ maxWidth: _isMobile ? '' : '970px' }}
               mt={['0px', '30px']}
             />
           </Flex>
@@ -162,7 +162,7 @@ export default () => {
             justifyContent={['center', 'space-between']}
             alignItems="center"
           >
-            <Box flex={1} px={['0px', '30px']}>
+            <Box flex={1} pr={['0px', '80px']}>
               <Image src={DataSetTokenSrc} />
             </Box>
             <Flex pt="12px" flex={1}>
