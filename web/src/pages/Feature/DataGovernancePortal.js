@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import PageContainer from 'components/PageContainer'
-import { Flex, Text, Button, Image, Box } from 'ui/common'
+import { Flex, Text, Button, Image, Box, Highlight } from 'ui/common'
 import { isMobile } from 'ui/media'
 import BandappSrc from 'images/featured/bandapp.png'
 import SetupBandSrcHome from 'images/featured/setupband-home.png'
@@ -26,15 +26,15 @@ export default () => {
       <Box pt="60px" bg="white">
         <PageContainer>
           <Flex
-            mt={['89px']}
-            mb={['40px']}
+            mt={['20px', '90px']}
+            mb={['0px', '40px']}
             justifyContent="center"
             flexDirection="column"
           >
             <Text
-              lineHeight={1.6}
-              fletterSpacing="1px"
-              fontWeight={600}
+              lineHeight={['40px', '80px']}
+              fontFamily="bio-sans"
+              fontWeight="bold"
               fontSize={['24px', '48px']}
               color="#3b426b"
               textAlign={['center', 'center']}
@@ -84,40 +84,35 @@ export default () => {
           {/* Part 1: Setup Band Wallet & Get Dataset Tokens */}
 
           <Flex
-            justifyContent="space-between"
-            flexDirection="row"
-            mt="175px"
+            justifyContent={['center', 'space-between']}
+            flexDirection={['column', 'row']}
+            mt={['70px', '175px']}
             alignItems="left"
           >
             <Flex pr="74px" flex={2}>
-              <Flex flexDirection="column">
-                <Flex flexDirection={['column', 'row']}>
-                  <Text
-                    fontSize="28px"
-                    lineHeight="32px"
-                    color="#5569de"
-                    fontWeight="bold"
-                    mr="6px"
+              <Flex flexDirection={['column']}>
+                <Text
+                  fontSize={['22px', '28px']}
+                  lineHeight="32px"
+                  color="#3b426b"
+                  fontFamily="bio-sans"
+                  fontWeight="bold"
+                >
+                  <Highlight
                     style={{
-                      whiteSpace: 'nowrap',
+                      lineHeight: '32px',
+                      color: '#5569de',
+                      fontWeight: 'bold',
+                      marginRight: '6px',
                     }}
                   >
                     Setup Band Wallet
-                  </Text>
-                  <Text
-                    fontSize="28px"
-                    lineHeight="32px"
-                    color="#3b426b"
-                    fontWeight="bold"
-                    style={{
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {' & Get Dataset Tokens'}
-                  </Text>
-                </Flex>
+                  </Highlight>
+                  & Get Dataset Tokens
+                </Text>
+
                 <Text
-                  fontSize="18px"
+                  fontSize={['14px', '18px']}
                   lineHeight="36px"
                   color="#323232"
                   style={{ lineHeight: '2', maxWidth: '400px' }}
@@ -151,59 +146,57 @@ export default () => {
 
           <Flex
             justifyContent="space-between"
-            mt="122px"
-            alignItems="left"
-            flexDirection="row"
+            mt={['80px', '122px']}
+            flexDirection={['column-reverse', 'row']}
           >
             <Box flex={1} alignItems="center">
-              <Image src={StakeBand} width="100%" />
+              <Image src={StakeBand} />
             </Box>
-            <Flex flexDirection="column" pl="74px" pt="30px" flex={1}>
-              <Flex>
+            <Flex
+              flexDirection="column"
+              justifyContent={['center', 'space-between']}
+              flex={1}
+            >
+              <Flex pl={['0px', '25px']} flexDirection="column">
                 <Text
-                  fontSize="28px"
-                  color="#5569de"
-                  fontWeight="bold"
-                  mr="5px"
-                  style={{
-                    lineHeight: '32px',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  Stake Dataset Tokens
-                </Text>
-                <Text
-                  fontSize="28px"
+                  fontSize={['22px', '28px']}
                   color="#3b426v"
                   fontWeight="bold"
                   lineHeight="32px"
-                  style={{
-                    whiteSpace: 'nowrap',
-                  }}
+                  fontFamily="bio-sans"
                 >
+                  <Highlight
+                    color="#5569de"
+                    fontWeight="bold"
+                    style={{
+                      marginRight: '5px',
+                    }}
+                  >
+                    Stake Dataset Tokens
+                  </Highlight>
                   for Qualified Providers
                 </Text>
-              </Flex>
-              <Text
-                fontSize="18px"
-                lineHeight="36px"
-                color="#323232"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
-                my="19px"
-              >
-                Band Protocol uses delegated-proof-of-stake style consensus for
-                picking who get to provide data for the dataset. There can be
-                multiple provider candidates, but only top-k providers with most
-                stakes are selected. Query fees get split among the the data
-                providers and token stakers based on a fee set by governance
-                parameters.
-              </Text>
-              <Flex mt="24px">
-                <LinkWithArrow
-                  style={{ fontSize: '20px', width: '100px' }}
-                  text="Tutorial"
-                  href="https://app.kovan.bandprotocol.com/"
-                />
+                <Text
+                  fontSize={['16px', '18px']}
+                  lineHeight="36px"
+                  color="#323232"
+                  style={{ lineHeight: '2', maxWidth: '500px' }}
+                  my="19px"
+                >
+                  Band Protocol uses delegated-proof-of-stake style consensus
+                  for picking who get to provide data for the dataset. There can
+                  be multiple provider candidates, but only top-k providers with
+                  most stakes are selected. Query fees get split among the the
+                  data providers and token stakers based on a fee set by
+                  governance parameters.
+                </Text>
+                <Flex my="24px">
+                  <LinkWithArrow
+                    style={{ fontSize: '20px', width: '100px' }}
+                    text="Tutorial"
+                    href="https://app.kovan.bandprotocol.com/"
+                  />
+                </Flex>
               </Flex>
             </Flex>
           </Flex>
@@ -211,38 +204,27 @@ export default () => {
           {/* Part 3: Participate in Votings */}
 
           <Flex justifyContent="space-between" mt="125.5px" alignItems="left">
-            <Flex flexDirection="row">
+            <Flex flexDirection={['column', 'row']}>
               <Flex flexDirection="column" flex={1}>
-                <Flex>
-                  <Text
-                    fontSize="28px"
-                    mr="6px"
-                    lineHeight="32px"
-                    color="#4a4a4a"
-                    fontWeight="bold"
-                    style={{
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    Participate in
-                  </Text>
-                  <Text
-                    fontSize="28px"
-                    lineHeight="32px"
-                    color="#5569de"
-                    fontWeight="bold"
-                    style={{
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    Votings
-                  </Text>
-                </Flex>
                 <Text
-                  fontSize="18px"
+                  fontSize={['22px', '28px']}
+                  fontFamily="bio-sans"
+                  mr="6px"
+                  lineHeight="32px"
+                  color="#4a4a4a"
+                  fontWeight="bold"
+                >
+                  Participate in
+                  <Highlight color="#5569de" style={{ marginLeft: '6px' }}>
+                    Votings
+                  </Highlight>
+                </Text>
+
+                <Text
+                  fontSize={['16px', '18px']}
                   lineHeight="36px"
                   style={{ lineHeight: '2', maxWidth: '400px' }}
-                  my="19px"
+                  my={['19px']}
                 >
                   Governance parameters dictate how the dataset smart contract
                   perform its logics. Any dataset token holder can propose for a
@@ -252,7 +234,7 @@ export default () => {
                   vote in agreement, which typically requires a community-wide
                   coordination.
                 </Text>
-                <Flex mt="24px">
+                <Flex mx="18px" mt="24px">
                   <LinkWithArrow
                     style={{ fontSize: '20px', width: '100px' }}
                     text="Learn How"
@@ -270,7 +252,7 @@ export default () => {
 
           <Flex justifyContent="center" maxWidth="500px" my="100px">
             <FilledButton
-              width="400px"
+              width={['330px', '400px']}
               message="Access Data Governance Portal"
               arrow
               href="https://app.kovan.bandprotocol.com/"

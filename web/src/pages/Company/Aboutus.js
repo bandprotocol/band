@@ -136,7 +136,7 @@ export default () => {
               <Text
                 textAlign="center"
                 fontFamily="bio-sans"
-                fontSize={['23px', '60px']}
+                fontSize={['23px', '48px']}
                 mb={['12px', '20px']}
                 lineHeight={['27px', '80px']}
                 fontWeight={900}
@@ -180,10 +180,10 @@ export default () => {
             flexDirection="column"
             py={['30px', '50px']}
             mb={['30px', '70px']}
-            border={['none', 'solid 1px #e3e3e3']}
             style={{
               minHeight: '160px',
               zIndex: '1',
+              border: _isMobile ? 'none' : 'solid 1px #e3e3e3',
             }}
           >
             <Text fontSize={['20px', '20px']} fontWeight={600} color="#5569de">
@@ -469,13 +469,6 @@ export default () => {
               title="Developer"
               link={'https://github.com/evilpeach'}
               type={0}
-            />
-            <TeamComponent
-              faceImg={Ming}
-              name="Subongkoch Maneerat"
-              title="UX/UI Designer"
-              link={'https://www.behance.net/minggnim'}
-              type={2}
             />
             <TeamComponent
               faceImg={Q}
