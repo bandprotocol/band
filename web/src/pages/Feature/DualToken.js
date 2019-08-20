@@ -7,6 +7,7 @@ import {
   Text,
   BackgroundCard,
   H1,
+  Highlight,
   Button,
   Card,
   Image,
@@ -75,19 +76,20 @@ export default () => {
       <Box pt="60px" bg="f2f2f2">
         <PageContainer>
           <Flex
-            pt={['50px', '100px']}
-            pb={['50px', '60px']}
+            pt={['20px', '100px']}
+            pb={['30px', '60px']}
             justifyContent="center"
             flexDirection="column"
           >
             <Text
-              lineHeight="80px"
+              lineHeight={['45px', '80px']}
               fletterSpacing="1px"
-              fontSize={['32px', '60px']}
+              fontSize={['30px', '60px']}
               fontWeight="bold"
               color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
+              fontFamily="bio-sans"
             >
               Incentivising Adoptions through
               <br />
@@ -95,11 +97,10 @@ export default () => {
             </Text>
             <Text
               textAlign="center"
-              mt="20px"
-              lineHeight="36px"
-              fontSize={['18px']}
+              my="20px"
+              lineHeight={['20px', '36px']}
+              fontSize={['14px', '18px']}
               color="#323232"
-              style={{ lineHeight: '2' }}
             >
               Band Protocol functions on two types of tokens: Dataset Tokens and
               BAND Token. Here's how we use the two tokens to create economic
@@ -129,33 +130,68 @@ export default () => {
               <Text
                 lineHeight="80px"
                 fontWeight="bold"
-                fontSize={['32px', '28px']}
+                fontSize={['28px', '32px']}
                 color="#3b426b"
                 textAlign={['center', 'left']}
+                fontFamily="bio-sans"
               >
                 Dataset Tokens
               </Text>
             </Flex>
           </Flex>
-          <Text fontSize="18px" lineHeight={2} color="#323232">
+          <Text
+            fontSize={['14px', '18px']}
+            lineHeight={['20px', '36px']}
+            color="#323232"
+          >
             A dataset token is a token that anyone can buy into that grants the
             holder the right to participate in the activities that the community
             issuing the token conduct. There are two jobs for the dataset token
             holders: they can either <br />
-            1) become a "data provider" who is responsible for curating
+            <Highlight
+              style={{
+                fontWeight: 'bold',
+                marginRight: '5px',
+                marginLeft: '15px',
+              }}
+              color="#323232"
+            >
+              1)
+            </Highlight>
+            become a "data provider" who is responsible for curating
             high-quality data and feed it to smart contracts or <br />
-            2) participate in the community (as a user of the data from that
+            <Highlight
+              style={{
+                fontWeight: 'bold',
+                marginRight: '5px',
+                marginLeft: '15px',
+              }}
+              color="#323232"
+            >
+              2)
+            </Highlight>{' '}
+            participate in the community (as a user of the data from that
             dataset) and vote for data providers they trust to do the hard work
             for them. With only the top provider gaining the right to contribute
             data to the dataset.
           </Text>
           {/* Part 1 */}
-          <Flex mt="45px" justifyContent="space-between" alignItems="center">
-            <Box flex={1} pr="82.7px">
+          <Flex
+            mt="45px"
+            flexDirection={['column', 'row']}
+            justifyContent={['center', 'space-between']}
+            alignItems="center"
+          >
+            <Box flex={1} px={['0px', '30px']}>
               <Image src={DataSetTokenSrc} />
             </Box>
-            <Flex pt="12px" flex={1} ml="82.7px">
-              <Text fontSize="18px" lineHeight="36px" color="#323232">
+            <Flex pt="12px" flex={1}>
+              <Text
+                fontSize={['14px', '18px']}
+                lineHeight={['20px', '36px']}
+                my={'10px'}
+                color="#323232"
+              >
                 The primary source of incentive in the system is from selling
                 the data to smart contracts. Every time the data is sold, the
                 rewards get distributed to each data provider and subsequently
@@ -167,9 +203,19 @@ export default () => {
             </Flex>
           </Flex>
 
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
+          <Flex
+            flexDirection={['column-reverse', 'row']}
+            justifyContent={['center', 'space-between']}
+            mt="40px"
+            alignItems="center"
+          >
             <Flex flex={1}>
-              <Text fontSize="18px" lineHeight="36px" color="#323232">
+              <Text
+                fontSize={['14px', '18px']}
+                lineHeight={['20px', '36px']}
+                my={'10px'}
+                color="#323232"
+              >
                 This mechanism ensures that everyone involved in the process of
                 building a dataset has an aligned economic incentive.
                 Competition from multiple datasets in the same vertical further
@@ -186,7 +232,7 @@ export default () => {
           {/* Part 2 */}
           <Flex flexDirection="column" mt="40px">
             <Flex flexDirection="row" alignItems="center">
-              <OvalNumber bg="#5569de">
+              <OvalNumber bg="#5569de" mr="20px">
                 <Text
                   lineHeight="80px"
                   fontWeight="bold"
@@ -196,11 +242,13 @@ export default () => {
                   2
                 </Text>
               </OvalNumber>
-              <Flex ml="25px" mb="25px">
+              <Flex>
                 <Text
                   lineHeight="80px"
                   fontWeight="bold"
-                  fontSize={['32px', '28px']}
+                  fontSize={['28px', '32px']}
+                  mb="20px"
+                  fontFamily="bio-sans"
                   color="#3b426b"
                   textAlign={['center', 'left']}
                 >
@@ -208,16 +256,19 @@ export default () => {
                 </Text>
               </Flex>
             </Flex>
-            <Flex flexDirection="row">
-              <Box pr="110px">
+            <Flex
+              flexDirection={['column', 'row']}
+              justifyContent={['space-between']}
+            >
+              <Box>
                 <Image src={BondingCurveSrc} />
               </Box>
               <Flex flexDirection="column">
                 <Text
-                  fontSize="18px"
-                  lineHeight="36px"
+                  fontSize={['14px', '18px']}
+                  lineHeight={['20px', '36px']}
+                  my={['20px']}
                   color="#323232"
-                  mb="24px"
                 >
                   BAND token functions as collateral for dataset tokens. Dataset
                   tokens are issued and redeemed through a Bonding Curve
@@ -237,11 +288,21 @@ export default () => {
           </Flex>
 
           {/* Visualizing How Data are Curated button */}
-          <Flex justifyContent="center" alignItems="center" my="50px">
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            mt="100px"
+            mb="40px"
+          >
             <FilledButton
-              message="Next: Visualizing How Data are Curated"
+              message={
+                _isMobile
+                  ? 'Visualizing Curated Data'
+                  : 'Next: Visualizing How Data are Curated'
+              }
               arrow
-              width="500px"
+              fontSize={_isMobile ? '14px' : '16px'}
+              width={['300px', '500px']}
               to="/features/tcd"
             />
           </Flex>
