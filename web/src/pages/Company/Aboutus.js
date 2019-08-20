@@ -38,7 +38,6 @@ import JumpstartSrc from 'images/featured/jumpstart.png'
 import Linkedin from 'images/linkedin.svg'
 import Git from 'images/github-logo.svg'
 import Behance from 'images/behance-logo.svg'
-import WeRHiring from 'images/we-re-hiring.svg'
 
 import Man from 'images/team/man.png'
 import Swit from 'images/team/swit.png'
@@ -64,27 +63,9 @@ const Featured = styled.a.attrs({
   }
 `
 
-const ApplyButton = styled(Button)`
-  width: 135px;
-  height: 45px;
-  border-radius: 22.5px;
-  border: solid 1px #6b8bf5;
-  box-shadow: ${props =>
-    props.isSelected ? '0 8px 17px 0 rgba(191, 191, 191, 0.5)' : 'none'};
-  background-color: ${props => (props.isSelected ? '#6b8bf5' : '#ffffff')};
-  color: ${props => (props.isSelected ? 'white' : '#4a4a4a')};
-  font-size: 18px;
-  font-weight: 300;
-  transition: all 0.5s;
-  cursor: pointer;
-  &:focus {
-    outline: none;
-  }
-`
-
 const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
   <Flex
-    width="330px"
+    width={['auto', '330px']}
     mt="15px"
     mb="35px"
     flexDirection="column"
@@ -99,7 +80,7 @@ const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
       />
     )}
     <Flex my="10px" flexDirection="row">
-      <Text fontWeight={600} fontSize="20px" color="#2a304e">
+      <Text fontWeight={600} fontSize={['16px', '20px']} color="#2a304e">
         {name}
       </Text>
       <Flex mx="5px" />
@@ -119,7 +100,7 @@ const TeamComponent = ({ faceImg, name, title, children, type, link }) => (
       color="#4a4a4a"
       fontWeight={500}
       style={{ whiteSpace: 'nowrap' }}
-      fontSize="16px"
+      fontSize={['12px', '16px']}
     >
       {title}
     </Text>
@@ -150,12 +131,14 @@ export default () => {
               alignItems="center"
               justifyContent="center"
               maxWidth="1180px"
-              py="90px"
+              py={['30px', '90px']}
             >
               <Text
                 textAlign="center"
-                fontSize={['24px', '60px']}
-                lineHeight="80px"
+                fontFamily="bio-sans"
+                fontSize={['23px', '60px']}
+                mb={['12px', '20px']}
+                lineHeight={['27px', '80px']}
                 fontWeight={900}
                 color="#3b426b"
               >
@@ -164,8 +147,8 @@ export default () => {
 
               <Text
                 textAlign="center"
-                fontSize="18px"
-                lineHeight="36px"
+                fontSize={['14px', '18px']}
+                lineHeight={['20px', '36px']}
                 color="#323232"
                 mb="28px"
               >
@@ -188,7 +171,7 @@ export default () => {
           </PageContainer>
         </Box>
       </Box>
-      <Box mt="-40px">
+      <Box mt={['20px', '-40px']}>
         <PageContainer>
           <Flex
             bg="#ffffff"
@@ -197,9 +180,9 @@ export default () => {
             flexDirection="column"
             py={['30px', '50px']}
             mb={['30px', '70px']}
+            border={['none', 'solid 1px #e3e3e3']}
             style={{
-              height: '160px',
-              border: 'solid 1px #e3e3e3',
+              minHeight: '160px',
               zIndex: '1',
             }}
           >
@@ -207,7 +190,7 @@ export default () => {
               In Partnership With
             </Text>
             <Flex
-              mt={['30px', '30px']}
+              mt={['20px', '30px']}
               alignItems="center"
               flexDirection={['column', 'row']}
               style={{ width: 'calc(100vw - 40px)', maxWidth: '800px' }}
@@ -215,6 +198,7 @@ export default () => {
               <Flex
                 flex={1}
                 justifyContent="center"
+                my={['20px', '0px']}
                 css={{
                   '&:hover': {
                     filter:
@@ -251,6 +235,7 @@ export default () => {
               </Flex>
               <Flex
                 flex={1}
+                my={['20px', '0px']}
                 justifyContent="center"
                 css={{
                   '&:hover': {
@@ -272,18 +257,19 @@ export default () => {
         </PageContainer>
       </Box>
       <PageContainer>
-        <Flex>
+        <Flex flexDirection={['column', 'row']}>
           <Flex
-            flexDirection="column"
+            flexDirection={'column'}
             alignItems="center"
             justifyContent="center"
-            mr="36px"
+            mr={['0px', '36px']}
             flex={1}
           >
             <Flex>
               <Text
-                fontSize="34px"
-                lineHeight="80px"
+                fontSize={['25px', '34px']}
+                fontFamily="bio-sans"
+                lineHeight={['80px']}
                 fontWeight="bold"
                 color="#3b426b"
               >
@@ -291,7 +277,11 @@ export default () => {
               </Text>
             </Flex>
             <Flex bg="#f6f8ff" py="30px" px="25px">
-              <Text fontSize="18px" lineHeight="36px" color="#323232">
+              <Text
+                fontSize={['14px', '18px']}
+                lineHeight={['20px', '36px']}
+                color="#323232"
+              >
                 Band is a protocol for decentralized data governance. We provide
                 an open-source standard and framework for the decentralized
                 management of data in the Web3 technology stack. Band Protocol
@@ -311,10 +301,12 @@ export default () => {
             alignItems="center"
             justifyContent="center"
             flex={1}
+            my={['10px', '0px']}
           >
             <Text
-              fontSize="34px"
-              lineHeight="80px"
+              fontSize={['25px', '34px']}
+              fontFamily="bio-sans"
+              lineHeight={['80px']}
               fontWeight="bold"
               color="#3b426b"
             >
@@ -322,11 +314,12 @@ export default () => {
             </Text>
 
             <Flex
+              mx={['20px']}
               flex={1}
               flexDirection="column"
               bg="#f6f8ff"
-              py="30px"
-              px="25px"
+              py={['15px', '30px']}
+              px={['7px', '20px']}
             >
               <Flex
                 flex={1}
@@ -358,6 +351,7 @@ export default () => {
                 <Button
                   width="100%"
                   style={{
+                    fontFamily: 'bio-sans',
                     backgroundImage:
                       'linear-gradient(to bottom, #8199ff, #6073de)',
                   }}
@@ -373,12 +367,12 @@ export default () => {
           </Flex>
         </Flex>
       </PageContainer>
-      <Box mt="95px">
+      <Box mt={['40px', '95px']}>
         <PageContainer>
           <Flex justifyContent="center" alignItems="center">
             <Text
               color="#3b426b"
-              fontFamily="BioSans"
+              fontFamily="bio-sans"
               fontWeight="bold"
               fontSize={['24px', '48px']}
               lineHeight={[1, 1.67]}
@@ -403,9 +397,9 @@ export default () => {
             >
               <Text
                 mt="10px"
-                fontSize="14px"
+                fontSize={['12px', '14px']}
                 textAlign="center"
-                lineHeight={1.57}
+                lineHeight={[1.3, 1.57]}
                 fontWeight={300}
               >
                 M.S. in MS&E, B.S. in CS <br />
@@ -422,9 +416,9 @@ export default () => {
             >
               <Text
                 mt="10px"
-                fontSize="14px"
+                fontSize={['12px', '14px']}
                 textAlign="center"
-                lineHeight={1.57}
+                lineHeight={[1.3, 1.57]}
                 fontWeight={300}
               >
                 M.Eng./S.B. in EECS
@@ -443,9 +437,9 @@ export default () => {
             >
               <Text
                 mt="10px"
-                fontSize="14px"
+                fontSize={['12px', '14px']}
                 textAlign="center"
-                lineHeight={1.57}
+                lineHeight={[1.3, 1.57]}
                 fontWeight={300}
               >
                 Creator of Crypto Gaming Apps
@@ -491,15 +485,14 @@ export default () => {
               link={'https://www.linkedin.com/in/atchanata-klunrit-05b3a9131/'}
               type={1}
             />
-            <Flex flex="0 0 300px" />
           </Flex>
         </PageContainer>
       </Box>
-      <Box mt="60px" pb="60px">
+      <Box mt={['20px', '60px']} pb="60px">
         <Flex justifyContent="center">
           <FilledButton
             message="See Opening Positions"
-            width="435px"
+            width={['348px', '435px']}
             arrow
             to="/company/career"
           />
