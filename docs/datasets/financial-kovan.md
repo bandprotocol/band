@@ -90,7 +90,7 @@ Financial dataset split asset symbols into several _asset classes_. Each asset c
 | GOOG   | Alphabet  |
 | MSFT   | Microsoft |
 | NFLX   | Netflix   |
-| OCRL   | Oracle    |
+| ORCL   | Oracle    |
 
 ### Commodity
 
