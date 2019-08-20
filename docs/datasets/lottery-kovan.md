@@ -10,7 +10,7 @@ This dataset provides up-to-date lottery results from worldwide lottery authorit
 
 ## Key-Value Format
 
-Similar to other datasets on Band Protocol, data consumers query for financial data by providing an _input key_ in return for an _output value_. We cover the specification in this subsection.
+Similar to other datasets on Band Protocol, data consumers query for lottery data by providing an _input key_ in return for an _output value_. We cover the specification in this subsection.
 
 ### Input Key
 
