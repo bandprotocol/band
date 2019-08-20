@@ -51,6 +51,8 @@ export default () => {
           pb={['20px', '70px']}
           flexWrap="wrap"
           flexDirection={['column', 'row']}
+          style={{ maxWidth: 1200 }}
+          m="0 auto"
         >
           <Box width="270px">
             <Flex alignItems="center" mb={['20px', 4]}>

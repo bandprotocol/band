@@ -25,7 +25,7 @@ import { faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons'
 import Sequoia from 'images/sequoia.svg'
 import Dunamu from 'images/dunamu.svg'
 import Seax from 'images/seax.png'
-import BackgroundCompanySrc from 'images/background-company.png'
+import BackgroundCompanySrc from 'images/background-company.svg'
 import media, { isMobile } from 'ui/media'
 
 import CoinDeskSrc from 'images/featured/coindesk.png'
@@ -120,8 +120,8 @@ export default () => {
         <Box
           style={{
             backgroundImage: `url(${BackgroundCompanySrc})`,
-            backgroundPosition: 'bottom',
-            backgroundSize: 'contain',
+            backgroundPosition: 'center 108%',
+            backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
           }}
         >
@@ -136,11 +136,12 @@ export default () => {
               <Text
                 textAlign="center"
                 fontFamily="bio-sans"
-                fontSize={['23px', '48px']}
-                mb={['12px', '20px']}
+                fontSize={['23px', '60px']}
+                mb={['12px', 0]}
                 lineHeight={['27px', '80px']}
                 fontWeight={900}
                 color="#3b426b"
+                style={{ maxWidth: 900 }}
               >
                 We Build Bridges between Blockchains and the Real World
               </Text>
@@ -150,7 +151,9 @@ export default () => {
                 fontSize={['14px', '18px']}
                 lineHeight={['20px', '36px']}
                 color="#323232"
-                mb="28px"
+                mb="32px"
+                mt={20}
+                style={{ maxWidth: 640 }}
               >
                 Band sets out to solve the issues plauging current generation of
                 decentralized technologies. By establishing a standard framework
@@ -178,12 +181,14 @@ export default () => {
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
-            py={['30px', '50px']}
+            py={['30px', '20px']}
             mb={['30px', '70px']}
             style={{
               minHeight: '160px',
               zIndex: '1',
-              border: _isMobile ? 'none' : 'solid 1px #e3e3e3',
+              maxWidth: 800,
+              margin: '0 auto',
+              border: _isMobile ? '0' : 'solid 1px #e3e3e3',
             }}
           >
             <Text fontSize={['20px', '20px']} fontWeight={600} color="#5569de">

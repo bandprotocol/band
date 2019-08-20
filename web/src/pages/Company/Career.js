@@ -24,7 +24,7 @@ import {
 import TeamworkSrc from 'images/teamwork.svg'
 import OpensourceSrc from 'images/open-source.svg'
 import BlockchainSrc from 'images/blockchain.svg'
-import BackgroundCompanySrc from 'images/background-company.png'
+import BackgroundCompanySrc from 'images/background-company.svg'
 import media, { isMobile } from 'ui/media'
 
 const PositionButton = styled(Button)`
@@ -99,8 +99,8 @@ export default () => {
         <Box
           style={{
             backgroundImage: `url(${BackgroundCompanySrc})`,
-            backgroundPosition: 'bottom',
-            backgroundSize: 'contain',
+            backgroundPosition: 'center 108%',
+            backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
           }}
         >
@@ -115,10 +115,11 @@ export default () => {
               <Text
                 textAlign="center"
                 fontFamily="bio-sans"
-                fontSize={['24px', '48px']}
+                fontSize={['24px', '60px']}
                 lineHeight={['32px', '80px']}
                 fontWeight={900}
                 color="#3b426b"
+                style={{ maxWidth: 900 }}
               >
                 Join Our Team's Mission to Democretize Data
               </Text>
@@ -128,7 +129,9 @@ export default () => {
                 fontSize={['14px', '18px']}
                 lineHeight={['20px', '36px']}
                 color="#323232"
-                mb="28px"
+                mb="32px"
+                mt={20}
+                style={{ maxWidth: 640 }}
               >
                 We are a team of builders who believe in potential of
                 decentralized systems. If you're excited about deep tech and
