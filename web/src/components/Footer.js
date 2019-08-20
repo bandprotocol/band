@@ -48,7 +48,7 @@ export default () => {
       <PageContainer>
         <Flex
           pt={['20px', '50px']}
-          pb={['0px', '70px']}
+          pb={['20px', '70px']}
           flexWrap="wrap"
           flexDirection={['column', 'row']}
         >
@@ -118,8 +118,8 @@ export default () => {
               </H4>
               <Flex
                 ml={['-5px', '-5px']}
-                mt={['30px', '0px']}
-                mb={['10px', '21px']}
+                mt={['10px', '0px']}
+                mb={['20px', '21px']}
                 justifyContent={['center', 'flex-start']}
               >
                 <SmallIcon

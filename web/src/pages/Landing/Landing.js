@@ -21,8 +21,6 @@ import LandingOpenAPI from 'images/landing-connect-openapi.svg'
 import LandingMassAdoption from 'images/landing-massadoption.svg'
 import LandingFeature from 'images/landing-features.png'
 
-import HeroSrc from 'images/hero.png'
-
 import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
@@ -74,8 +72,8 @@ export default () => {
         <Box
           style={{
             backgroundImage: `url(${LandingHero})`,
-            backgroundPosition: 'bottom',
-            backgroundSize: 'contain',
+            backgroundPosition: `${_isMobile ? '-890px 340px' : 'bottom'}`,
+            backgroundSize: `${_isMobile ? 'cover' : 'contain'}`,
             backgroundRepeat: 'no-repeat',
           }}
         >
@@ -85,22 +83,22 @@ export default () => {
               pb={['50px', '140px']}
               flexDirection={['column', 'row']}
             >
-              {_isMobile && (
+              {/* {_isMobile && (
                 <Flex
                   flex={1}
                   style={{ minWidth: 'calc(100vw - 40px)' }}
                   justifyContent="flex-end"
                   alignItems="center"
                 >
-                  <Image src={HeroSrc} />
+                  <Image src={LandingHero} />
                 </Flex>
-              )}
+              )} */}
               <Box flex={1}>
                 <Text
                   lineHeight={1.6}
                   fletterSpacing="1px"
                   fontWeight={600}
-                  fontSize={['32px', '56px']}
+                  fontSize={['24px', '56px']}
                   color="white"
                   textAlign={['center', 'left']}
                   mt={['30px', '0px']}
@@ -113,14 +111,14 @@ export default () => {
                 <Flex mt="25px" style={{ maxWidth: ['320px', '390px'] }}>
                   <Text
                     color="white"
-                    fontSize={['20px', '22px']}
+                    fontSize={['16px', '22px']}
                     lineHeight={1.54}
                     fontWeight={300}
                     textAlign={['center', 'left']}
                   >
                     Band Protocol connects smart contracts with trusted
                     off-chain
-                    <br />
+                    {_isMobile ? null : <br />}
                     information, provided through community-curated data
                     providers.
                   </Text>
@@ -270,28 +268,31 @@ export default () => {
         alignItems="center"
         color="#404fac"
         fontWeight="900"
+        flexDirection={['column', 'row']}
         style={{ height: '65px', fontFamily: 'bio-sans' }}
       >
         Kovan Testnet is LIVE! Check out the{' '}
-        <a
-          href="https://app.kovan.bandprotocol.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Text color="#5569de" mx="5px">
-            new Data Governance Portal
-          </Text>
-        </a>
-        and
-        <a
-          href="https://developer.bandprotocol.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Text color="#5569de" mx="5px">
-            Developer Doc.
-          </Text>
-        </a>
+        <Flex mt={['5px', '0px']}>
+          <a
+            href="https://app.kovan.bandprotocol.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text color="#5569de" mx="5px">
+              new Data Governance Portal
+            </Text>
+          </a>
+          and
+          <a
+            href="https://developer.bandprotocol.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text color="#5569de" mx="5px">
+              Developer Doc.
+            </Text>
+          </a>
+        </Flex>
       </Flex>
 
       {/* Section 2: Connecting to ... */}
@@ -301,19 +302,18 @@ export default () => {
         }}
       >
         <PageContainer>
-          <Flex pt={['20px', '100px']} pb="150px">
+          <Flex
+            pt={['20px', '100px']}
+            pb={['50px', '150px']}
+            flexDirection={['column', 'row']}
+          >
             {/* Connect to Real-World Information */}
-            <Flex
-              flexDirection="column"
-              alignItems="flex-start"
-              pr="74px"
-              mt="50px"
-            >
+            <Flex flexDirection="column" alignItems="flex-start" mt="50px">
               <Image src={LandingRealworld} />
               <Flex
-                flexDirection="row"
-                alignItems="center"
-                fontSize="24px"
+                flexDirection={['column', 'row']}
+                alignItems={['flex-start', 'center']}
+                fontSize={['18px', '24px']}
                 mt="35px"
                 mb="10px"
                 style={{
@@ -323,13 +323,13 @@ export default () => {
                 }}
               >
                 <Text color="#323232">Connect to</Text>
-                <Text color="#5569de" ml="5px">
+                <Text color="#5569de" ml={['0px', '5px']}>
                   Real-World Information
                 </Text>
               </Flex>
 
               <Text
-                fontSize="16px"
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2' }}
               >
@@ -349,27 +349,34 @@ export default () => {
                 />
                 <LinkWithArrow
                   text="How it works"
-                  ml="76px"
+                  ml={['40px', '76px']}
                   to="/features/tcd"
                 />
               </Flex>
             </Flex>
 
             {/* Separator line */}
-            <Box
-              width="1px"
-              bg="#c8d2ff"
-              style={{ height: '300px' }}
-              mx="55px"
-            />
+            {_isMobile ? null : (
+              <Box
+                width="3px"
+                bg="#c8d2ff"
+                style={{ height: '260px', alignSelf: 'flex-end' }}
+                mx="55px"
+              />
+            )}
 
             {/* Connect to Any Open API */}
-            <Flex flexDirection="column" alignItems="flex-start" pr="74px">
+            <Flex
+              flexDirection="column"
+              alignItems="flex-start"
+              pr={['0px', '74px']}
+              mt={['40px', '0px']}
+            >
               <Image src={LandingOpenAPI} />
               <Flex
                 flexDirection="row"
-                alignItems="center"
-                fontSize="24px"
+                alignItems={['flex-start', 'center']}
+                fontSize={['18px', '24px']}
                 mt="35px"
                 mb="10px"
                 style={{
@@ -384,7 +391,7 @@ export default () => {
                 </Text>
               </Flex>
               <Text
-                fontSize="16px"
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2' }}
               >
@@ -404,15 +411,13 @@ export default () => {
                 />
                 <LinkWithArrow
                   text="Learn more"
-                  ml="76px"
+                  ml={['40px', '76px']}
                   href="https://developer.bandprotocol.com/"
                 />
               </Flex>
             </Flex>
           </Flex>
         </PageContainer>
-
-        {/* Back holders */}
 
         {/* Section 3: The floating card */}
         <Flex
@@ -439,15 +444,16 @@ export default () => {
             flexDirection="column"
           >
             <Text
-              fontSize="36px"
+              fontSize={['24px', '36px']}
               fontWeight="bold"
               color="#3b426b"
+              lineHeight={['1.3', '1']}
               style={{ fontFamily: 'bio-sans' }}
             >
               Bring Blockchain Closer to Mass Adoption
             </Text>
             <Text
-              fontSize={['14px', '14px']}
+              fontSize={['14px', '16px']}
               fontWeight={300}
               lineHeight={2}
               mt="25px"
@@ -462,7 +468,7 @@ export default () => {
               applications with other designs.
             </Text>
             <Flex flexDirection="column">
-              <Flex alignItems="center" mt={['10px', '60px']}>
+              <Flex alignItems="center" mt={['30px', '60px']}>
                 <Box
                   width="67px"
                   bg="#232323"
@@ -474,8 +480,6 @@ export default () => {
                     fontSize="18px"
                     fontWeight="bold"
                     color="#4a4a4a"
-                    mb={['20px', '0px']}
-                    mt={['30px', '0px']}
                     textAlign={['center', 'left']}
                     style={{ fontFamily: 'bio-sans' }}
                   >
@@ -503,91 +507,110 @@ export default () => {
               <Flex
                 mt="30px"
                 justifyContent="space-between"
+                flexWrap={['wrap', 'wrap']}
                 style={{ maxWidth: '650px' }}
               >
-                {/* Sub-Column left */}
-                <Flex flexDirection="column">
-                  <Flex alignItems="center">
-                    <Box
-                      width="40px"
-                      bg="#3b426b"
-                      style={{ height: '40px', borderRadius: '50%' }}
-                    />
-                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
-                      Data Availability
-                    </Text>
-                  </Flex>
-                  <Flex alignItems="center" mt="15px">
-                    <Box
-                      width="40px"
-                      bg="#3b426b"
-                      style={{ height: '40px', borderRadius: '50%' }}
-                    />
-                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
-                      Aligned Economic Incentives
-                    </Text>
-                  </Flex>
+                {/* 1 */}
+                <Flex alignItems="center">
+                  <Box
+                    width="40px"
+                    bg="#3b426b"
+                    style={{ height: '40px', borderRadius: '50%' }}
+                  />
+                  <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
+                    Data Availability
+                  </Text>
                 </Flex>
-                {/* Sub-Column right */}
-                <Flex flexDirection="column">
-                  <Flex alignItems="center">
-                    <Box
-                      width="40px"
-                      bg="#3b426b"
-                      style={{ height: '40px', borderRadius: '50%' }}
-                    />
-                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
-                      Data Reliability
-                    </Text>
-                  </Flex>
-                  <Flex alignItems="center" mt="15px">
-                    <Box
-                      width="40px"
-                      bg="#3b426b"
-                      style={{ height: '40px', borderRadius: '50%' }}
-                    />
-                    <Text ml="20px" fontSize="16px" color="#4a4a4a">
-                      Decentralizing Trust Point
-                    </Text>
-                  </Flex>
+
+                {/* 2 */}
+                <Flex
+                  alignItems="center"
+                  mt={['15px', '0px']}
+                  ml={['0px', '40px']}
+                >
+                  <Box
+                    width="40px"
+                    bg="#3b426b"
+                    style={{ height: '40px', borderRadius: '50%' }}
+                  />
+                  <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
+                    Aligned Economic Incentives
+                  </Text>
+                </Flex>
+
+                {/* 3 */}
+                <Flex alignItems="center" mt={['15px', '15px']}>
+                  <Box
+                    width="40px"
+                    bg="#3b426b"
+                    style={{ height: '40px', borderRadius: '50%' }}
+                  />
+                  <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
+                    Data Reliability
+                  </Text>
+                </Flex>
+
+                {/* 4 */}
+                <Flex
+                  alignItems="center"
+                  mt={['15px', '15px']}
+                  mr={['0px', '18px']}
+                >
+                  <Box
+                    width="40px"
+                    bg="#3b426b"
+                    style={{ height: '40px', borderRadius: '50%' }}
+                  />
+                  <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
+                    Decentralizing Trust Point
+                  </Text>
                 </Flex>
               </Flex>
             </Flex>
           </Flex>
           {/* Right */}
-          <Flex alignItems="center">
-            <Box>
-              <Image src={LandingMassAdoption} />
-            </Box>
-          </Flex>
+          {_isMobile ? null : (
+            <Flex alignItems="center">
+              <Box>
+                <Image src={LandingMassAdoption} />
+              </Box>
+            </Flex>
+          )}
         </Flex>
 
         {/* Section 4 */}
         <Box
+          mt={['40px', '100px']}
+          mx="auto"
+          mb={['0px', '0px']}
           style={{
-            margin: '100px auto 0px',
-            height: '1650px',
-            backgroundImage: `url(${LandingFeature})`,
+            height: _isMobile ? '1200px' : '1650px',
+            backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
             backgroundSize: '1200px',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'top center',
             zIndex: 0,
           }}
         >
-          <PageContainer style={{ position: 'relative ' }}>
+          <PageContainer style={{ position: 'relative' }}>
             {/* Part 1: Band Feeds Data On-Chain Right When You Need */}
             <Flex
               flexDirection="column"
-              pr="74px"
+              pl={['20px', '0px']}
+              pr={['30px', '74px']}
               justifyContent="center"
               style={{ position: 'absolute', top: 0, left: 0 }}
             >
-              <Text fontSize="20px" fontWeight="300" color="#546ee5">
+              <Text
+                fontSize={['16px', '20px']}
+                fontWeight="300"
+                color="#546ee5"
+              >
                 Data Availability
               </Text>
               <Text
                 color="#323232"
-                fontSize="36px"
+                fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
@@ -598,6 +621,7 @@ export default () => {
                 Right When You Need
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '460px' }}
               >
@@ -605,7 +629,7 @@ export default () => {
                 and kept on-chain on a regular basis. DApps can request and use
                 the data with just one simple function call.
               </Text>
-              <Flex mt="20px">
+              <Flex mt={['15px', '20px']}>
                 <LinkWithArrow
                   text="Explore Datasets Available"
                   href="https://app.kovan.bandprotocol.com/"
@@ -617,14 +641,24 @@ export default () => {
             <Flex
               flexDirection="column"
               justifyContent="center"
-              style={{ position: 'absolute', top: '450px', right: 0 }}
+              pl={['20px', '0px']}
+              pr={['30px', '0px']}
+              style={{
+                position: 'absolute',
+                top: _isMobile ? '300px' : '450px',
+                right: 0,
+              }}
             >
-              <Text fontSize="20px" fontWeight="300" color="#546ee5">
+              <Text
+                fontSize={['16px', '20px']}
+                fontWeight="300"
+                color="#546ee5"
+              >
                 Data Reliability
               </Text>
               <Text
                 color="#323232"
-                fontSize="36px"
+                fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
@@ -635,6 +669,7 @@ export default () => {
                 from Multiple Providers
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '550px' }}
               >
@@ -642,7 +677,7 @@ export default () => {
                 Each data point requires more than ⅔ of qualified providers to
                 serve the data, which guarantees high tolerance for collusion.
               </Text>
-              <Flex mt="20px">
+              <Flex mt={['15px', '20px']}>
                 <LinkWithArrow
                   text="Learn How Data Curation Works"
                   to="/features/tcd"
@@ -653,16 +688,25 @@ export default () => {
             {/* Part 3: Dataset Tokens on Bonding Curves */}
             <Flex
               flexDirection="column"
-              pr="74px"
+              pl={['20px', '0px']}
+              pr={['30px', '74px']}
               justifyContent="center"
-              style={{ position: 'absolute', top: '900px', left: 0 }}
+              style={{
+                position: 'absolute',
+                top: _isMobile ? '600px' : '900px',
+                left: 0,
+              }}
             >
-              <Text fontSize="20px" fontWeight="300" color="#546ee5">
+              <Text
+                fontSize={['16px', '20px']}
+                fontWeight="300"
+                color="#546ee5"
+              >
                 Aligned Economic Incentives
               </Text>
               <Text
                 color="#323232"
-                fontSize="36px"
+                fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
@@ -673,6 +717,7 @@ export default () => {
                 Bonding Curves
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '550px' }}
               >
@@ -681,7 +726,7 @@ export default () => {
                 curate high-quality data, which in-turn drives greater security
                 for dApps.
               </Text>
-              <Flex mt="20px">
+              <Flex mt={['15px', '20px']}>
                 <LinkWithArrow
                   text="Learn How Dual-Token Economics Works"
                   to="/features/dual-token"
@@ -692,16 +737,25 @@ export default () => {
             {/* Part 4: Community Runs Datasets and Grows Together */}
             <Flex
               flexDirection="column"
-              pl="74px"
+              pl={['20px', '74px']}
+              pr={['30px', '0px']}
               justifyContent="center"
-              style={{ position: 'absolute', top: '1320px', right: 0 }}
+              style={{
+                position: 'absolute',
+                top: _isMobile ? '900px' : '1320px',
+                right: 0,
+              }}
             >
-              <Text fontSize="20px" fontWeight="300" color="#546ee5">
+              <Text
+                fontSize={['16px', '20px']}
+                fontWeight="300"
+                color="#546ee5"
+              >
                 Decentralizing Trust Point
               </Text>
               <Text
                 color="#323232"
-                fontSize="36px"
+                fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
@@ -712,6 +766,7 @@ export default () => {
                 Datasets and Grows Together
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '460px' }}
               >
@@ -719,7 +774,7 @@ export default () => {
                 community to curate reliable data. No single identity has
                 authority to bypass governance and take control of the data.
               </Text>
-              <Flex mt="20px">
+              <Flex mt={['15px', '20px']}>
                 <LinkWithArrow
                   text="Learn How to Participate in Curation"
                   to="/features/data-governance-portal"
@@ -728,22 +783,25 @@ export default () => {
             </Flex>
           </PageContainer>
         </Box>
+
+        {/* Section 5 */}
         <Box>
           <PageContainer>
             <Flex flexDirection="column" alignItems="center">
               {/* Explore more feature button */}
-              <Flex justifyContent="center" mt="120px">
+              <Flex justifyContent="center" mt={['50px', '120px']}>
                 <FilledButton
-                  width="500px"
+                  width={_isMobile ? '300px' : '500px'}
                   message="Explore Band Protocol Features"
                   arrow
+                  fontSize={_isMobile ? '14px' : '16px'}
                   to="/features/overview"
                 />
               </Flex>
 
               {/* Stay update */}
               <Flex
-                mt="130px"
+                mt={['50px', '130px']}
                 bg="#0c154c"
                 flexDirection="column"
                 alignItems="center"
@@ -757,18 +815,29 @@ export default () => {
                   width: '1000px',
                 }}
               >
-                <Text
-                  textAlign="center"
-                  style={{ maxWidth: '550px', lineHeight: '1.71' }}
-                >
-                  <Highlight>Stay up to date on</Highlight> the latest news{' '}
-                  <Highlight>about how</Highlight> Band Protocol
-                  <Highlight>brings more use cases to</Highlight> smart
-                  contracts
-                </Text>
-                <Text textAlign="center" mt="30px">
-                  <Subscribe />
-                </Text>
+                {_isMobile ? (
+                  <React.Fragment>
+                    <Text textAlign="center" mb="30px">
+                      Stay up to date by subscribe us
+                    </Text>
+                    <Subscribe />
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <Text
+                      textAlign="center"
+                      style={{ maxWidth: '550px', lineHeight: '1.71' }}
+                    >
+                      <Highlight>Stay up to date on</Highlight> the latest news{' '}
+                      <Highlight>about how</Highlight> Band Protocol
+                      <Highlight>brings more use cases to</Highlight> smart
+                      contracts
+                    </Text>
+                    <Text textAlign="center" mt="30px">
+                      <Subscribe />
+                    </Text>
+                  </React.Fragment>
+                )}
               </Flex>
             </Flex>
           </PageContainer>
