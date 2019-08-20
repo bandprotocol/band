@@ -2,6 +2,8 @@ import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import FilledButton from 'components/FilledButton'
+import ArrowRight from 'components/ArrowRight'
+import LinkWithArrow from 'components/LinkWithArrow'
 import {
   Flex,
   Text,
@@ -15,26 +17,29 @@ import {
   H3,
   AbsoluteLink,
   Link,
+  Highlight,
   Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 
+import PriceHero from 'images/price-hero.png'
+import SportHero from 'images/sport-hero.png'
+import LotteryHero from 'images/lottery-hero.png'
+import DataRequest from 'images/data-requests.png'
+
 const OutlineButton = styled(Button)`
   font-family: Avenir;
-  color: #4a4a4a;
+  color: #3b426b;
   font-size: 16px;
   font-weight: 500;
-  background-color: white;
-  width: ${props => (props.isMobile ? '196px' : '182px')};
+  background-color: transparent;
+  width: ${props => (props.isMobile ? '196px' : '227px')};
   height: 46px;
   border-radius: 2px;
   cursor: pointer;
+  border: solid 0.7px #3b426b;
 
   transition: all 0.2s;
-
-  &:hover {
-    background-color: #6b7df5;
-  }
 
   &:active {
     background-color: #5269ff;
@@ -45,20 +50,56 @@ const OutlineButton = styled(Button)`
   }
 `
 
+const Dataset = ({ image, title, address, detail }) => (
+  <Flex flexDirection="column" alignItems="center" justifyContent="flex-end">
+    <Image
+      src={image}
+      width="263px"
+      ml="100px"
+      style={{ maxHeight: '250px' }}
+    />
+    <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
+      {title}
+    </Text>
+    <Text
+      color="#5569de"
+      fontWeight="400"
+      bg="#e9edff"
+      fontSize="14px"
+      p="6px 8px"
+      textAlign="center"
+      fontFamily="Source Code Pro"
+      mt="10px"
+    >
+      {address}
+    </Text>
+    <Text
+      textAlign="center"
+      fontWeight="300"
+      fontSize="14px"
+      style={{ maxWidth: '300px', lineHeight: '2' }}
+    >
+      {detail}
+    </Text>
+    <Flex justifyContent="center" alignItems="center">
+      <LinkWithArrow text="Integration" />
+    </Flex>
+  </Flex>
+)
+
 export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
   return (
     <Box
       style={{
-        background: '#f0f0f0',
         color: '#323232',
         overflow: 'hidden',
       }}
       mt="-80px"
     >
       {/* Section 1 */}
-      <Box pt="60px" bg="f2f2f2">
+      <Box pt="60px" bg="white">
         <PageContainer>
           <Flex
             pt={['50px', '100px']}
@@ -126,18 +167,53 @@ export default () => {
           >
             <AbsoluteLink href="https://developer.bandprotocol.com/">
               <OutlineButton isMobile={_isMobile}>
-                Developer Forum
+                <Flex width="100%" justifyContent="space-between">
+                  Developer Forum
+                  <ArrowRight color="#3b426b" />
+                </Flex>
               </OutlineButton>
             </AbsoluteLink>
             <Flex mx={['0px', '10px']} my={['10px', '0px']} />
             <AbsoluteLink href="/whitepaper-3.0.0.pdf">
-              <FilledButton isMobile={_isMobile}>Developer Doc</FilledButton>
+              <FilledButton message="Developer Doc" arrow width="227px" />
             </AbsoluteLink>
           </Flex>
 
-          {/* Section2: Real-time DataSources */}
+          {/* Section2: Embedded Video */}
           <Flex
-            pt={['50px', '20px']}
+            justifyContent="center"
+            flexDirection="column"
+            mt="80px"
+            flex="auto"
+            style={{ maxHeight: '600px' }}
+          >
+            <iframe
+              // key={1}
+              // id={'iframe-' + link}
+              title="video"
+              frameBorder="0"
+              width="100%"
+              height="600px"
+              allowFullScreen
+              src={'https://www.youtube.com/embed/O5KpoWT4Gpw?enablejsapi=1'}
+            />
+            <Flex
+              py="20px"
+              justifyContent="center"
+              alignItems="center"
+              bg="#edf0ff"
+              color="#404fac"
+            >
+              <Text fontFamily="bio-sans" fontSize="16px">
+                Check out more vidoe tutorials at our{' '}
+                <Highlight color="#5569de">Youtube channel</Highlight>
+              </Text>
+            </Flex>
+          </Flex>
+
+          {/* Section3: Real-time DataSources */}
+          <Flex
+            pt={['50px', '40px']}
             pb={['50px', '20px']}
             justifyContent="center"
           >
@@ -145,104 +221,44 @@ export default () => {
               lineHeight={1.6}
               fletterSpacing="1px"
               fontWeight={600}
-              fontSize={['32px', '30px']}
-              color="#4a4a4a"
+              fontSize={['32px', '40px']}
+              color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
+              mb="40px"
             >
               Real-time Datasets
             </Text>
           </Flex>
 
           <Flex width="100%" justifyContent="space-between">
-            <Flex flexDirection="column" alignItems="center">
-              <Box width="300px" bg="red" style={{ height: '300px' }} />
-              <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
-                Price Feeds
-              </Text>
-              <Text
-                color="#323232"
-                fontWeight="300"
-                bg="#c7c5c5"
-                fontSize="16px"
-                p="6px 8px"
-                textAlign="center"
-              >
-                0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d
-              </Text>
-              <Text
-                textAlign="center"
-                fontWeight="300"
-                fontSize="14px"
-                style={{ maxWidth: '300px', lineHeight: '2' }}
-              >
-                Current prices of popular trading cryptocurrency, FX, and US
-                equity pairs
-              </Text>
-              <Text fontWeight="bold" fontSize="16px" my="30px">
-                Integration
-              </Text>
-            </Flex>
-            <Flex flexDirection="column" alignItems="center">
-              <Box width="300px" bg="red" style={{ height: '300px' }} />
-              <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
-                Sport Events
-              </Text>
-              <Text
-                color="#323232"
-                fontWeight="300"
-                bg="#c7c5c5"
-                fontSize="16px"
-                p="6px 8px"
-                textAlign="center"
-              >
-                0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d
-              </Text>
-              <Text
-                textAlign="center"
-                fontWeight="300"
-                fontSize="14px"
-                style={{ maxWidth: '300px', lineHeight: '2' }}
-              >
-                Accurate live scores from soccer, basketball, American football
-                and baseball
-              </Text>
-              <Text fontWeight="bold" fontSize="16px" my="30px">
-                Integration
-              </Text>
-            </Flex>
-            <Flex flexDirection="column" alignItems="center">
-              <Box width="300px" bg="red" style={{ height: '300px' }} />
-              <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
-                Lottery Results
-              </Text>
-              <Text
-                color="#323232"
-                fontWeight="300"
-                bg="#c7c5c5"
-                fontSize="16px"
-                p="6px 8px"
-                textAlign="center"
-              >
-                0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d
-              </Text>
-              <Text
-                textAlign="center"
-                fontWeight="300"
-                fontSize="14px"
-                style={{ maxWidth: '300px', lineHeight: '2' }}
-              >
-                Winning numbers of lotteries all around the world
-              </Text>
-              <Text fontWeight="bold" fontSize="16px" my="30px">
-                Integration
-              </Text>
-            </Flex>
+            {/* Price Feeds */}
+            <Dataset
+              title="Price Feeds"
+              image={PriceHero}
+              address="0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+              detail="Current prices of popular trading cryptocurrency, FX, and US equity pairs"
+            />
+            {/* Sport Event */}
+            <Dataset
+              title="Sport Events"
+              image={SportHero}
+              address="0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+              detail="Accurate live scores from soccer, basketball, American football
+              and baseball"
+            />
+            {/* Lottery Result */}
+            <Dataset
+              title="Lottery Results"
+              image={LotteryHero}
+              address="0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+              detail="  Winning numbers of lotteries all around the world"
+            />
           </Flex>
 
           {/* Section 3 : Data Requests on Any Open API */}
           <Flex
-            pt={['50px', '20px']}
+            pt={['50px', '70px']}
             pb={['50px', '20px']}
             alignItems="center"
             flexDirection="column"
@@ -252,7 +268,7 @@ export default () => {
               fletterSpacing="1px"
               fontWeight={600}
               fontSize={['32px', '30px']}
-              color="#4a4a4a"
+              color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
             >
@@ -270,11 +286,101 @@ export default () => {
               internet without compromising on security and decentralization.
             </Text>
 
-            <Box width="100%" my="60px" bg="blue" style={{ height: '500px' }} />
+            <Image src={DataRequest} width="100%" mt="50px" />
+
+            <Flex mt="60px" justifyContent="space-evenly" width="80%">
+              <LinkWithArrow text="Explore Existing Endpoints" />
+              <LinkWithArrow text="How to Add a New Endpoint" />
+            </Flex>
+          </Flex>
+
+          {/* Section 4: Tutorial on data integrations */}
+          <Flex flexDirection="column" alignItems="center" mt={['0px', '50px']}>
+            <Text
+              lineHeight={1.6}
+              fletterSpacing="1px"
+              fontWeight={600}
+              fontSize={['32px', '30px']}
+              color="#3b426b"
+              textAlign={['center', 'center']}
+              mt={['30px', '0px']}
+            >
+              Tutorial on Data Integrations
+            </Text>
+            <Flex flexWrap="wrap" mt="30px" width="90%" justifyContent="center">
+              <Flex
+                flexDirection="column"
+                alignItems="center"
+                width="410px"
+                mx="30px"
+              >
+                <Box width="100%" bg="pink" style={{ height: '200px' }} />
+                <Text
+                  color="#4a4a4a"
+                  fontSize="16px"
+                  fontFamily="bio-sans"
+                  mt="15px"
+                  fontWeight="800"
+                  lineHeight={1.5}
+                >
+                  How to Integrate Off-Chain Data to Your Smart Contracts
+                </Text>
+              </Flex>
+              <Flex flexDirection="column" alignItems="center" width="410px">
+                <Box width="100%" bg="pink" style={{ height: '200px' }} />
+                <Text
+                  color="#4a4a4a"
+                  fontSize="16px"
+                  fontFamily="bio-sans"
+                  mt="15px"
+                  fontWeight="800"
+                  lineHeight={1.5}
+                >
+                  Writing a Global Stock Market with Decentralized Price
+                  Reference
+                </Text>
+              </Flex>
+              <Flex
+                flexDirection="column"
+                alignItems="center"
+                width="410px"
+                m="30px"
+              >
+                <Box width="100%" bg="pink" style={{ height: '200px' }} />
+                <Text
+                  color="#4a4a4a"
+                  fontSize="16px"
+                  fontFamily="bio-sans"
+                  mt="15px"
+                  fontWeight="800"
+                  lineHeight={1.5}
+                >
+                  Using Band Protocol to Trade BNB on Binance Chain with ETH
+                  through Ethereum Smart Contract
+                </Text>
+              </Flex>
+              <Flex
+                flexDirection="column"
+                alignItems="center"
+                width="410px"
+                mt="30px"
+              >
+                <Box width="100%" bg="pink" style={{ height: '200px' }} />
+                <Text
+                  color="#4a4a4a"
+                  fontSize="16px"
+                  fontFamily="bio-sans"
+                  mt="15px"
+                  fontWeight="800"
+                  lineHeight={1.5}
+                >
+                  Writing a Decentralized Prediction Market with Band Dataset
+                </Text>
+              </Flex>
+            </Flex>
           </Flex>
 
           {/* Learn More in Developer Doc */}
-
           <Flex justifyContent="center" my="50px">
             <FilledButton
               message="Learn More in Developer Doc"
