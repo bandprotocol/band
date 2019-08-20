@@ -70,6 +70,7 @@ const Dataset = ({ image, title, address, detail }) => (
       textAlign="center"
       fontFamily="Source Code Pro"
       mt="10px"
+      style={{ maxWidth: '300px' }}
     >
       {address}
     </Text>
@@ -207,7 +208,7 @@ export default () => {
               alignItems="center"
               bg="#edf0ff"
               color="#404fac"
-              width="calc(100% + 40px)"
+              width="100%"
             >
               <Text
                 fontFamily="bio-sans"
