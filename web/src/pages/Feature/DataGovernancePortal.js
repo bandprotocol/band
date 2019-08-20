@@ -1,27 +1,14 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import {
-  Flex,
-  Text,
-  BackgroundCard,
-  H1,
-  Button,
-  Card,
-  Image,
-  Box,
-  H2,
-  H3,
-  AbsoluteLink,
-  Link,
-  Bold,
-} from 'ui/common'
+import { Flex, Text, Button, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
 import BandappSrc from 'images/featured/bandapp.png'
 import SetupBandSrcHome from 'images/featured/setupband-home.png'
 import SetupBandSrcLogin from 'images/featured/setupband-login.png'
 import StakeBand from 'images/featured/stakeband.png'
 import BandVoting from 'images/featured/bandvoting.png'
+import LinkWithArrow from 'components/LinkWithArrow'
 // import SetupBandSrcLogin form 'images/featured/setupband-login.png'
 
 const FilledButton = styled(Button)`
@@ -139,7 +126,11 @@ export default () => {
                 backgroundImage: 'linear-gradient(to bottom, #6179e1, #455ad3)',
               }}
             >
-              Access Data Governance{' '}
+              <LinkWithArrow
+                textColor="white"
+                text="Access Data Governance"
+                href="https://app.kovan.bandprotocol.com/"
+              />
             </Button>
           </Flex>
 

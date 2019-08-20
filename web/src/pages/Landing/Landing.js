@@ -131,7 +131,10 @@ export default () => {
                   flexDirection={['column', 'row']}
                 >
                   <AbsoluteLink href="https://developer.bandprotocol.com/">
-                    <FilledButton message="Developer Documentation" />
+                    <FilledButton
+                      message="Developer Documentation"
+                      href="https://developer.bandprotocol.com/"
+                    />
                   </AbsoluteLink>
                   <Flex mx={['0px', '10px']} my={['10px', '0px']} />
                   <AbsoluteLink href="/whitepaper-3.0.0.pdf">

@@ -3,23 +3,31 @@ import { Flex, Text, Image, Box } from 'ui/common'
 import ArrowRight from 'components/ArrowRight'
 import { Link } from 'react-router-dom'
 
-export default ({ text, ml = '0px', padding = '16px', href, to = '' }) => {
+export default ({
+  text,
+  textColor = '#323232',
+  ml = '0px',
+  padding = '16px',
+  href,
+  to = '',
+}) => {
   const Child = () => (
     <Flex
       flexDirection="row"
       alignItems="center"
+      justifyContent="center"
       ml={ml}
       style={{ height: '35px' }}
     >
       <Text
         fontWeight="bold"
-        color="#323232"
+        color={textColor}
         style={{ fontFamily: 'bio-sans', whiteSpace: 'nowrap' }}
       >
         {text}
       </Text>
       <Box ml={padding}>
-        <ArrowRight />
+        <ArrowRight color={textColor} />
       </Box>
     </Flex>
   )

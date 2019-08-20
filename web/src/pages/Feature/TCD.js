@@ -108,6 +108,7 @@ export default () => {
               message="Next: Participating in Data Curation"
               arrow
               width="520px"
+              to="/features/data-governance-portal"
             />
           </Flex>
         </PageContainer>
