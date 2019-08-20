@@ -122,7 +122,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
           const imgIndex = Array.isArray(tab.imgIndex)
             ? tab.imgIndex[currentTab === i && tab.imgIndex.length > 0 ? 1 : 0]
             : tab.imgIndex
-          console.log(tab)
+          // console.log(tab)
           return (
             <LinkComponent
               to={tab.link}
