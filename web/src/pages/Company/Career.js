@@ -42,7 +42,10 @@ const JobPositionComponent = ({ title, to }) => {
   return (
     <AbsoluteLink to={to}>
       <PositionButton width={['300px', '900px']} color="#323232">
-        {title}
+        <Text fontWeight={600} fontFamily="bio-sans">
+          {title}
+        </Text>
+
         <FontAwesomeIcon icon={faChevronRight} />
       </PositionButton>
     </AbsoluteLink>
@@ -65,6 +68,7 @@ const CultureComponent = ({ title, description, imgSrc }) => {
         <Image src={imgSrc} />
       </Box>
       <Text
+        fontFamily="bio-sans"
         fontSize={['16px', '28px']}
         lineHeight={['24px', '72px']}
         fontWeight="bold"
@@ -74,7 +78,7 @@ const CultureComponent = ({ title, description, imgSrc }) => {
       <Text
         textAlign="center"
         fontSize={['10px', '18px']}
-        lineHeight={['12px', '36px']}
+        lineHeight={['20px', '36px']}
         color="#323232"
       >
         {description}
@@ -110,6 +114,7 @@ export default () => {
             >
               <Text
                 textAlign="center"
+                fontFamily="bio-sans"
                 fontSize={['24px', '48px']}
                 lineHeight={['32px', '80px']}
                 fontWeight={900}
@@ -157,6 +162,7 @@ export default () => {
             lineHeight={[1, 1.67]}
             fontSize={['24px', '48px']}
             fontWeight="bold"
+            fontFamily="bio-sans"
           >
             Our Culture
           </Text>
@@ -197,6 +203,7 @@ export default () => {
             fontWeight="bold"
             lineHeight="80px"
             color="#3b426b"
+            fontFamily="bio-sans"
           >
             Open Positions
           </Text>
