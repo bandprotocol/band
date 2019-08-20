@@ -8,7 +8,7 @@ To start consuming data from Band Protocol, the following two conditions must be
 
 - **Your smart contract must be funded with Ether**, the native currency of Ethereum. Querying data requires payment in Ether. You can request free ETH on testnets from available faucets ([Kovan faucet](https://faucet.kovan.network/)).
 
-- **You need dataset's unique identifier (address)** associated with the dataset you want. Visit [Available Datasets](../datasets/overview) section to see what's available at the moment.
+- **You need dataset's unique identifier (address)** associated with the dataset you want. Visit [Available Datasets](../datasets/overview.md) section to see what's available at the moment.
 
 ## Perform Data Query
 

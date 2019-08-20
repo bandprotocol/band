@@ -21,7 +21,7 @@ Curious readers may wonder about the differences between Band Protocol and other
   <div><img src="/assets/ovals/oval-dark.svg" style="margin-bottom:-7px" width="20"> Not applicable</div>
 </div>
 
-- **Decentralized Oracle**: Whether the protocol is decentralized and permissionless. Anyone can participate in data provision through a transparant rule and there is an open market for data providers driven by token economics.
+- **Decentralized Oracle**: Whether the protocol is decentralized and permissionless. An open protocol must allow Anyone to participate in data provision through a transparant rule and there must be an open market for data providers driven by token economics.
 
 - **Intuitive and Instance Query Processing**: Whether a data query to the protocol is intuitive and instant. Querying data should be as simple as a cross-contract function call that returns data within the same transaction. Several protocols use callback approach, which is both complicated to interact and adds delay that hurts user experience.
 

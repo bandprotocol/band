@@ -28,7 +28,7 @@ npm install band-solidity --save
 yarn add band-solidity
 ```
 
-## Import Band's Oracle Interface to Your Contract
+## Directly Import Band's Oracle Interface
 
 If you prefer to develop your project without a thrid-party dependency, you can simply add Band Protocol's `Oracle` interface to the top of your smart contract files.
 
