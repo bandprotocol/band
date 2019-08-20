@@ -22,6 +22,7 @@ const Input = styled.input`
 
 const Container = styled.div`
   display: flex;
+  flex-direction: ${p => p.flexDirection};
   background-image: transparent;
   border-radius: 3px;
   max-width: calc(100vw - 40px);
@@ -39,7 +40,7 @@ export default class Subscribe extends React.Component {
     const subscriptionUrl =
       'https://innocation.us18.list-manage.com/subscribe/post?u=05df05446d3afe5957d513703&amp;id=809c988381'
 
-    const { large } = this.props
+    const { large, column } = this.props
 
     return (
       <MailchimpSubscribe
@@ -57,7 +58,7 @@ export default class Subscribe extends React.Component {
 
           return (
             <React.Fragment>
-              <Container>
+              <Container flexDirection={column ? 'column' : 'row'}>
                 <Input
                   large={large}
                   onFocus={() => this.setState({ focusing: true })}
@@ -69,13 +70,16 @@ export default class Subscribe extends React.Component {
                       subscribe({ EMAIL: this.state.value })
                   }}
                   placeholder="email@example.com"
-                  mr="10px"
-                  style={{ borderRadius: 0 }}
+                  mr={column ? '0px' : '10px'}
+                  style={{
+                    borderRadius: 0,
+                    padding: column ? '1em 2em' : '0.5em 1em',
+                  }}
                 />
-
                 <Button
                   variant="primary"
-                  ml="10px"
+                  mt={column ? '10px' : '0px'}
+                  ml={column ? '0px' : '10px'}
                   style={{
                     fontSize: 14,
                     borderRadius: 0,

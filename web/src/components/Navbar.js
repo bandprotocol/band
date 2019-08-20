@@ -32,6 +32,8 @@ import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.png'
 import { callbackify } from 'util'
 
+const airdropLink = 'http://band-airdrop.surge.sh/tokenholder'
+
 const Nav = styled.nav`
   display: flex;
   height: 70px;
@@ -64,7 +66,7 @@ const SubMenu = styled(Flex).attrs({
   transition: all 0.25s;
   cursor: pointer;
   &:hover {
-    background-color: #4d63d1;
+    background-color: #6277e3;
   }
 `
 
@@ -122,7 +124,6 @@ const NavMenu = ({ isSelected, title, tabs }) => {
           const imgIndex = Array.isArray(tab.imgIndex)
             ? tab.imgIndex[currentTab === i && tab.imgIndex.length > 0 ? 1 : 0]
             : tab.imgIndex
-          // console.log(tab)
           return (
             <LinkComponent
               to={tab.link}
@@ -177,41 +178,36 @@ const SubMenuMobile = ({
   imgHeight,
   title,
   description,
+  children,
 }) => {
-  return isAbsolute ? (
-    <AbsoluteLink to={link} onClick={closeMenu}>
-      <Flex
-        flexDirection="column"
-        alignItems="flex-start"
-        style={{ maxWidth: '220px' }}
-        mb="50px"
-      >
-        <Image src={getImg(imgIndex)} height={imgHeight} />
-        <SemiBold color="#fff" fontSize="14px" mt="30px">
-          {title}
-        </SemiBold>
-        <Text mt="20px" fontSize="13px" lineHeight={1.69}>
-          {description}
-        </Text>
-      </Flex>
-    </AbsoluteLink>
+  const Child = () => (
+    <Flex
+      flexDirection="column"
+      alignItems="flex-start"
+      style={{ maxWidth: '220px' }}
+      mb="50px"
+    >
+      {children || <Image src={getImg(imgIndex)} height={imgHeight} />}
+      <SemiBold color="#fff" fontSize="14px" mt="30px">
+        {title}
+      </SemiBold>
+      <Text mt="20px" color="#fff" fontSize="13px" lineHeight={1.69}>
+        {description}
+      </Text>
+    </Flex>
+  )
+  return link ? (
+    isAbsolute ? (
+      <AbsoluteLink to={link} onClick={closeMenu || (() => false)}>
+        <Child />
+      </AbsoluteLink>
+    ) : (
+      <Link to={link} onClick={closeMenu || (() => false)}>
+        <Child />
+      </Link>
+    )
   ) : (
-    <Link to={link} onClick={closeMenu}>
-      <Flex
-        flexDirection="column"
-        alignItems="flex-start"
-        style={{ maxWidth: '220px' }}
-        mb="50px"
-      >
-        <Image src={getImg(imgIndex)} height={imgHeight} />
-        <SemiBold color="#fff" fontSize="14px" mt="30px">
-          {title}
-        </SemiBold>
-        <Text mt="20px" fontSize="13px" lineHeight={1.69}>
-          {description}
-        </Text>
-      </Flex>
-    </Link>
+    <Child />
   )
 }
 
@@ -319,11 +315,25 @@ const Navbar = props => {
               />
             </Flex>
             <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/why-band" onClick={closeMenu}>
-                <SemiBold color="#fff" fontSize="18px">
-                  Why Band?
-                </SemiBold>
-              </Link>
+              <AbsoluteLink href={airdropLink} onClick={closeMenu}>
+                <Flex flexDirection="row">
+                  <SemiBold color="#fff" fontSize="18px">
+                    Airdrop
+                  </SemiBold>
+                  <Flex
+                    bg="#ff5b84"
+                    color="white"
+                    p="3px 8px"
+                    fontSize="12px"
+                    justifyContent="center"
+                    alignItems="center"
+                    ml="5px"
+                    style={{ borderRadius: '10px' }}
+                  >
+                    Live
+                  </Flex>
+                </Flex>
+              </AbsoluteLink>
             </Flex>
             <Flex
               flex="0 0 60px"
@@ -333,9 +343,18 @@ const Navbar = props => {
               onClick={() => setShowTier2Index(1)}
             >
               <SemiBold color="#fff" fontSize="18px">
-                Products
+                Features
               </SemiBold>
             </Flex>
+
+            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+              <Link to="/developer" onClick={closeMenu}>
+                <SemiBold color="#fff" fontSize="18px">
+                  For Developers
+                </SemiBold>
+              </Link>
+            </Flex>
+
             <Flex
               flex="0 0 60px"
               pr="26px"
@@ -344,25 +363,19 @@ const Navbar = props => {
               onClick={() => setShowTier2Index(2)}
             >
               <SemiBold color="#fff" fontSize="18px">
-                Explorers
+                Company
               </SemiBold>
             </Flex>
-            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <Link to="/company" onClick={closeMenu}>
-                <SemiBold color="#fff" fontSize="18px">
-                  Company
-                </SemiBold>
-              </Link>
-            </Flex>
-            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <AbsoluteLink
-                href="https://medium.com/bandprotocol"
-                onClick={closeMenu}
-              >
-                <SemiBold color="#fff" fontSize="18px">
-                  Blog
-                </SemiBold>
-              </AbsoluteLink>
+            <Flex
+              flex="0 0 60px"
+              pr="26px"
+              alignItems="center"
+              pl={5}
+              onClick={() => setShowTier2Index(3)}
+            >
+              <SemiBold color="#fff" fontSize="18px">
+                Join Community
+              </SemiBold>
             </Flex>
           </Flex>
           {/* product menu */}
@@ -397,57 +410,47 @@ const Navbar = props => {
                   <i className="fas fa-chevron-left" />
                 </Text>
                 <Text fontSize="20px" color="white" ml="20px">
-                  Product
+                  Features
                 </Text>
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="/products/data-tokenization"
+                  link="/features/overview"
                   imgIndex={0}
-                  imgHeight="46px"
-                  title="Data Tokenization"
-                  description={`Standard tokenization frameworks and incentive stuctures for data in Web 3.0`}
+                  imgHeight="40px"
+                  title="Product Overview"
+                  description={`Learn about Band Protocol and potential use cases of off-chain data on blockchain`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="/products/tcd"
+                  link="/features/dual-token"
                   imgIndex={1}
-                  imgHeight="67px"
-                  title="Token-Curated DataSources"
+                  imgHeight="60px"
+                  title="Dual-Token Economics"
                   description={`Build robust, decentralized data feed from a network of data providers`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="/products/tcr"
+                  link="/features/tcd"
                   imgIndex={2}
-                  imgHeight="28px"
-                  title="Token-Curated Registry"
-                  description={`Build reliable, more transparent crowdsourced information through token-incentivized data curation`}
+                  imgHeight="60px"
+                  title="Token-Curated DataSources"
+                  description={`Build reliable, more transparent crowd-source information through crypto-incentized data curation`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="/products/wallet"
+                  link="/features/data-governance-portal"
                   imgIndex={3}
-                  imgHeight="49px"
-                  title="Band Web3 Wallet"
+                  imgHeight="50px"
+                  title="Data Governance Portal"
                   description={`An all-in-one, UX optimized Web3 wallet for Ethereum DApps`}
-                />
-              </Flex>
-              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-                <SubMenuMobile
-                  closeMenu={closeMenu}
-                  link="/products/private-sharing"
-                  imgIndex={4}
-                  imgHeight="47px"
-                  title="Private Data Sharing"
-                  description={`Platform for businesses to share and monetize data off-chain with on-chain cryptographic verification`}
                 />
               </Flex>
             </Box>
@@ -482,30 +485,109 @@ const Navbar = props => {
                   <i className="fas fa-chevron-left" />
                 </Text>
                 <Text fontSize="20px" color="white" ml="20px">
-                  Explorers
+                  Company
                 </Text>
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="https://app.bandprotocol.com"
-                  isAbsolute={true}
+                  link="/company/about-us"
+                  isAbsolute={false}
                   imgIndex={5}
                   imgHeight="50px"
-                  title="Governance Portal"
-                  description={`Join data curation community, stake tokens on data prodicers and vote on governance parameters`}
+                  title="Overview"
+                  description={`Get to know our team and values`}
                 />
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="https://data.bandprotocol.com"
-                  isAbsolute={true}
+                  link="/company/career"
+                  isAbsolute={false}
                   imgIndex={6}
                   imgHeight="46px"
-                  title="Dataset Explorer"
-                  description={`Explore dataset availables by Band Protocol and learn how to integrate with the DApps`}
+                  title="Career with Band"
+                  description={`Excited about decentralization? Join our team on the mission to bring trusted data to blockchain`}
                 />
+              </Flex>
+            </Box>
+          </Card>
+          {/* Join Community menu */}
+          <Card
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              height: '100%',
+              width: 'calc(100vw)',
+              transition: 'all 400ms',
+              overflow: 'auto',
+              background: '#495ecd',
+              transform: showTier2Index === 3 ? '' : 'translateX(100%)',
+            }}
+          >
+            <Box flexDirection="column" style={{ minHeight: '0px' }}>
+              <Flex
+                flex="0 0 60px"
+                pr="26px"
+                mt="20px"
+                mb={4}
+                alignItems="center"
+                flexDirection="row"
+                style={{ cursor: 'pointer' }}
+                pl="30px"
+                onClick={back}
+              >
+                <Text fontSize="20px" color="white">
+                  <i className="fas fa-chevron-left" />
+                </Text>
+                <Text fontSize="20px" color="white" ml="20px">
+                  Join Community
+                </Text>
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/company/about-us"
+                  isAbsolute={false}
+                  imgIndex={7}
+                  imgHeight="50px"
+                  title="Developer Forum"
+                  description={`Discuss protocol improvements, troubleshoot integrations, and much more`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/company/career"
+                  isAbsolute={false}
+                  imgIndex={8}
+                  imgHeight="46px"
+                  title="Blog"
+                  description={`Learn more in-depth about Band Protocol use cases,  economics, and technical discussions`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  closeMenu={closeMenu}
+                  link="/company/career"
+                  isAbsolute={false}
+                  imgIndex={9}
+                  imgHeight="46px"
+                  title="Social Media"
+                  description={`Follow all our social media channels to get the most up-to-date information on Band Protocol`}
+                />
+              </Flex>
+              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+                <SubMenuMobile
+                  isAbsolute={false}
+                  imgIndex={9}
+                  imgHeight="46px"
+                  title="Subscribe for updates"
+                  description={`Don't miss any update on Band Protocol including tech progress, campaigns, local events and more`}
+                >
+                  <Subscribe column="true" />
+                </SubMenuMobile>
               </Flex>
             </Box>
           </Card>
@@ -527,7 +609,7 @@ const Navbar = props => {
               alignItems: 'center',
             }}
             target="_blank"
-            to="http://band-airdrop.surge.sh/tokenholder"
+            to={airdropLink}
           >
             <MainMenuText style={{ whiteSpace: 'nowrap' }}>
               Airdrop
@@ -687,7 +769,7 @@ const Navbar = props => {
                 content: `Follow all our social media channels to get the most up-to-date information on Band Protocol`,
               },
               {
-                title: 'Subscribe for Updates ',
+                title: 'Subscribe for updates',
                 hasInputBox: true,
                 content: `Don't miss any update on Band Protocol including tech progress, campaigns, local events and more`,
               },
