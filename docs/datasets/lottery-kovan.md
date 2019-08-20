@@ -16,7 +16,7 @@ Similar to other datasets on Band Protocol, data consumers query for lottery dat
 
 An input key consists of two parts, concatnated with `/` as the delimiter.
 
-- The second part, [Lottery Type](#supported-lottery-types), is a unique identifier that identifies lottery type.
+- The first part, [Lottery Type](#supported-lottery-types), is a unique identifier that identifies lottery type.
 - The remaining part will depend on lottery type.
 
 ### Output Value
