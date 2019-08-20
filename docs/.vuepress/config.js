@@ -43,11 +43,11 @@ module.exports = {
       //   collapsable: false,
       //   children: ["holders/overview", "holders/ecosystem", "holders/get-band"]
       // },
-      {
-        title: "📡 Data Provider Guide",
-        collapsable: false,
-        children: ["providers/overview"]
-      },
+      // {
+      //   title: "📡 Data Provider Guide",
+      //   collapsable: false,
+      //   children: ["providers/overview"]
+      // },
       {
         title: "📦 Available Datasets",
         collapsable: false,
