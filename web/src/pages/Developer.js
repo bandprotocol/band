@@ -182,29 +182,39 @@ export default () => {
           {/* Section2: Embedded Video */}
           <Flex
             justifyContent="center"
+            alignItems="center"
             flexDirection="column"
             mt="80px"
             flex="auto"
-            style={{ maxHeight: '600px' }}
           >
             <iframe
-              // key={1}
-              // id={'iframe-' + link}
               title="video"
               frameBorder="0"
-              width="100%"
-              height="600px"
+              style={{
+                width: window.innerWidth < 1200 ? window.innerWidth - 40 : 1200,
+                height: Math.floor(
+                  (window.innerWidth < 1200 ? window.innerWidth - 40 : 1200) /
+                    1.777777,
+                ),
+              }}
               allowFullScreen
               src={'https://www.youtube.com/embed/O5KpoWT4Gpw?enablejsapi=1'}
             />
             <Flex
               py="20px"
+              px="20px"
               justifyContent="center"
               alignItems="center"
               bg="#edf0ff"
               color="#404fac"
+              width="calc(100% + 40px)"
             >
-              <Text fontFamily="bio-sans" fontSize="16px">
+              <Text
+                fontFamily="bio-sans"
+                fontSize="16px"
+                textAlign="center"
+                lineHeight={1.5}
+              >
                 Check out more vidoe tutorials at our{' '}
                 <Highlight color="#5569de">Youtube channel</Highlight>
               </Text>
@@ -231,7 +241,7 @@ export default () => {
             </Text>
           </Flex>
 
-          <Flex width="100%" justifyContent="space-between">
+          <Flex width="100%" justifyContent="space-between" flexWrap="wrap">
             {/* Price Feeds */}
             <Dataset
               title="Price Feeds"
