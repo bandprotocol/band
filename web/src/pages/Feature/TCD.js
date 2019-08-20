@@ -51,7 +51,7 @@ export default () => {
   return (
     <Box
       style={{
-        background: '#f0f0f0',
+        background: 'white',
         color: '#323232',
         overflow: 'hidden',
       }}
@@ -97,7 +97,7 @@ export default () => {
       </Box>
 
       {/* Section 3 */}
-      <Box bg="#f0f0f0" mt="10px">
+      <Box bg="white" mt="10px">
         <PageContainer>
           <Flex justifyContent="center">
             <Flex bg="pink" width="100%" style={{ height: '400px' }} />

@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import { Flex, Text, Button, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
@@ -9,59 +8,7 @@ import SetupBandSrcLogin from 'images/featured/setupband-login.png'
 import StakeBand from 'images/featured/stakeband.png'
 import BandVoting from 'images/featured/bandvoting.png'
 import LinkWithArrow from 'components/LinkWithArrow'
-// import SetupBandSrcLogin form 'images/featured/setupband-login.png'
-
-const FilledButton = styled(Button)`
-  font-family: Avenir;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
-  height: 46px;
-  border-radius: 2px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #4a4a4a;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
-
-const OutlineButton = styled(Button)`
-  font-family: Avenir;
-  color: #4a4a4a;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: white;
-  width: ${props => (props.isMobile ? '196px' : '182px')};
-  height: 46px;
-  border-radius: 2px;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #6b7df5;
-  }
-
-  &:active {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
-
-// const
+import FilledButton from 'components/FilledButton'
 
 export default () => {
   const exRef = useRef(null)
@@ -69,7 +16,7 @@ export default () => {
   return (
     <Box
       style={{
-        background: '#f0f0f0',
+        background: 'white',
         color: '#323232',
         overflow: 'hidden',
       }}
@@ -102,7 +49,7 @@ export default () => {
       </Box>
 
       {/* Section 3 */}
-      <Box bg="#f0f0f0" mt="10px">
+      <Box bg="white" mt="10px">
         <PageContainer>
           <Image src={BandappSrc} width="100%" style={{ zIndex: 0 }} />
           <Flex
@@ -183,15 +130,13 @@ export default () => {
                   you can transfer Band tokens acquired from exchange (or faucet
                   on Testnet) and buy into the dataset tokens you desire.
                 </Text>
-                <Text
-                  color="#323232"
-                  fontWeight="bold"
-                  fontSize="20px"
-                  lineHeight="24px"
-                  mt="24px"
-                >
-                  Tutorial ->
-                </Text>
+                <Flex mt="24px">
+                  <LinkWithArrow
+                    style={{ fontSize: '20px', width: '100px' }}
+                    text="Tutorial"
+                    href="https://app.kovan.bandprotocol.com/"
+                  />
+                </Flex>
               </Flex>
             </Flex>
             <Box mt="20px" flex={1}>
@@ -253,14 +198,13 @@ export default () => {
                 providers and token stakers based on a fee set by governance
                 parameters.
               </Text>
-              <Text
-                fontSize="20px"
-                color="#323232"
-                fontWeight="bold"
-                lineHeight="24px"
-              >
-                Tutorial ->
-              </Text>
+              <Flex mt="24px">
+                <LinkWithArrow
+                  style={{ fontSize: '20px', width: '100px' }}
+                  text="Tutorial"
+                  href="https://app.kovan.bandprotocol.com/"
+                />
+              </Flex>
             </Flex>
           </Flex>
 
@@ -308,14 +252,13 @@ export default () => {
                   vote in agreement, which typically requires a community-wide
                   coordination.
                 </Text>
-                <Text
-                  color="#323232"
-                  lineHeight="24px"
-                  fontSize="20px"
-                  fontWeight="bold"
-                >
-                  Learn How
-                </Text>
+                <Flex mt="24px">
+                  <LinkWithArrow
+                    style={{ fontSize: '20px', width: '100px' }}
+                    text="Learn How"
+                    href="https://app.kovan.bandprotocol.com/"
+                  />
+                </Flex>
               </Flex>
               <Box mt="20px" flex={1}>
                 <Image src={BandVoting} />
@@ -326,21 +269,12 @@ export default () => {
           {/* Explore more feature button */}
 
           <Flex justifyContent="center" maxWidth="500px" my="100px">
-            <Button
-              color="white"
-              fontSize="16px"
-              pt="16.6px"
-              px="27.6px"
-              style={{
-                backgroundImage: 'linear-gradient(to bottom, #2a3a7f, #1c2764)',
-                width: '435px',
-                height: '59.6px',
-              }}
-            >
-              <Text fontSize="21.5px" fontWeight="600">
-                Access Data Governance Portal ->
-              </Text>
-            </Button>
+            <FilledButton
+              width="400px"
+              message="Access Data Governance Portal"
+              arrow
+              href="https://app.kovan.bandprotocol.com/"
+            />
           </Flex>
         </PageContainer>
       </Box>

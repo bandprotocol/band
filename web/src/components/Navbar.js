@@ -638,7 +638,6 @@ const Navbar = props => {
               {
                 title: 'Career with Band',
                 link: '/company/career',
-                // href: 'https://data.bandprotocol.com',
                 imgIndex: 6,
                 imgHeight: '50px',
                 content: `Excited about decentralization? Join our team on the mission to bring trusted data to blockchain`,

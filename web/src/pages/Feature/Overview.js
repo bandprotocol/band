@@ -23,7 +23,7 @@ export default () => {
   return (
     <Box
       style={{
-        background: '#f0f0f0',
+        background: 'white',
         color: '#323232',
         overflow: 'hidden',
       }}
@@ -159,7 +159,7 @@ export default () => {
       </Box>
 
       {/* Section 2 */}
-      <Box bg="#f0f0f0" mt="50px">
+      <Box bg="white" mt="50px">
         <PageContainer>
           <Text
             lineHeight={1.6}

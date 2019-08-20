@@ -10,6 +10,7 @@ export default ({
   padding = '16px',
   href,
   to = '',
+  style,
 }) => {
   const Child = () => (
     <Flex
@@ -17,12 +18,12 @@ export default ({
       alignItems="center"
       justifyContent="center"
       ml={ml}
-      style={{ height: '35px' }}
+      style={{ height: '35px', ...style }}
     >
       <Text
         fontWeight="bold"
         color={textColor}
-        style={{ fontFamily: 'bio-sans', whiteSpace: 'nowrap' }}
+        style={{ fontFamily: 'bio-sans', whiteSpace: 'nowrap', ...style }}
       >
         {text}
       </Text>

@@ -58,7 +58,7 @@ export default () => {
   return (
     <Box
       style={{
-        background: '#f0f0f0',
+        background: 'white',
         color: '#323232',
         overflow: 'hidden',
       }}
