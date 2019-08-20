@@ -311,10 +311,7 @@ export default () => {
           >
             {/* Connect to Real-World Information */}
             <Flex flexDirection="column" alignItems="flex-start" mt="50px">
-              <Image
-                src={LandingRealworld}
-                style={{ maxWidth: 400, width: '100%' }}
-              />
+              <Image src={LandingRealworld} />
               <Flex
                 flexDirection={['column', 'row']}
                 alignItems={['flex-start', 'center']}
@@ -374,20 +371,9 @@ export default () => {
             <Flex
               flexDirection="column"
               alignItems="flex-start"
-              pr={['0px', '74px']}
               mt={['40px', '0px']}
             >
-              <Image
-                src={LandingOpenAPI}
-                style={{ maxWidth: 400, width: '100%' }}
-              />
-              <Flex
-                flexDirection="row"
-                alignItems={['flex-start', 'center']}
-                fontSize={['18px', '24px']}
-                mt="35px"
                 mb="10px"
-                style={{
                   lineHeight: '2.25',
                   fontWeight: 'bold',
                   fontFamily: 'bio-sans',
@@ -592,7 +578,7 @@ export default () => {
           mx="auto"
           mb={['0px', '0px']}
           style={{
-            height: _isMobile ? '1400px' : '1650px',
+            height: _isMobile ? '1200px' : '1950px',
             backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
             backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
@@ -653,8 +639,8 @@ export default () => {
               pr={['30px', '0px']}
               style={{
                 position: 'absolute',
-                top: _isMobile ? '300px' : '450px',
-                right: 0,
+                top: _isMobile ? '300px' : '540px',
+                right: _isMobile ? 0 : '30px',
               }}
             >
               <Text
@@ -701,7 +687,7 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '600px' : '900px',
+                top: _isMobile ? '600px' : '1070px',
                 left: 0,
               }}
             >
@@ -750,8 +736,8 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '900px' : '1320px',
-                right: 0,
+                top: _isMobile ? '900px' : '1580px',
+                right: _isMobile ? 0 : '30px',
               }}
             >
               <Text
@@ -799,7 +785,7 @@ export default () => {
               {/* Explore more feature button */}
               <Flex justifyContent="center" mt={['50px', '120px']}>
                 <FilledButton
-                  width={_isMobile ? '300px' : '500px'}
+                  width={_isMobile ? '320px' : '500px'}
                   message="Explore Band Protocol Features"
                   arrow
                   fontSize={_isMobile ? '14px' : '16px'}
