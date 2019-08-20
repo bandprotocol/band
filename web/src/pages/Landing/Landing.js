@@ -95,7 +95,7 @@ export default () => {
               )} */}
               <Box flex={1}>
                 <Text
-                  lineHeight={1.6}
+                  lineHeight={1.4}
                   fletterSpacing="1px"
                   fontWeight={600}
                   fontSize={['24px', '56px']}
@@ -108,23 +108,25 @@ export default () => {
                   <br />
                   for Web 3.0 Applications
                 </Text>
-                <Flex mt="25px" style={{ maxWidth: ['320px', '390px'] }}>
+                <Flex mt="35px" style={{ maxWidth: ['320px', '390px'] }}>
                   <Text
                     color="white"
                     fontSize={['16px', '22px']}
-                    lineHeight={1.54}
+                    lineHeight={1.8}
                     fontWeight={300}
                     textAlign={['center', 'left']}
                   >
-                    Band Protocol connects smart contracts with trusted
-                    off-chain
+                    Band Protocol connects{' '}
+                    <span style={{ color: '#BBDEFF' }}>smart contracts</span>{' '}
+                    with trusted
+                    <span style={{ color: '#BBDEFF' }}>off-chain</span>
                     {_isMobile ? null : <br />}
-                    information, provided through community-curated data
-                    providers.
+                    <span style={{ color: '#BBDEFF' }}>information</span>,
+                    provided through community-curated data providers.
                   </Text>
                 </Flex>
                 <Flex
-                  mt={['40px', '50px']}
+                  mt={['40px', '60px']}
                   alignItems={['center', 'flex-start']}
                   flexDirection={['column', 'row']}
                 >
