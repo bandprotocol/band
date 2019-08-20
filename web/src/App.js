@@ -18,14 +18,6 @@ import Footer from 'components/Footer'
 import LandingPage from 'pages/Landing'
 import CompanyAboutusPage from 'pages/Company/Aboutus'
 import CompanyCareerPage from 'pages/Company/Career'
-import WhyBand from './pages/WhyBand'
-// import TCDPage from 'pages/products/TCD'
-import TCRPage from 'pages/products/TCR'
-import WalletPage from 'pages/products/Wallet'
-import PrivateDataSharing from 'pages/products/PrivateDataSharing'
-import DataTokenization from 'pages/products/DataTokenization'
-
-// new design
 import OverviewPage from 'pages/Feature/Overview'
 import DualTokenPage from 'pages/Feature/DualToken'
 import DataGovernancePortalPage from 'pages/Feature/DataGovernancePortal'
@@ -57,22 +49,6 @@ export default () => (
             component={CompanyAboutusPage}
           />
           <Route exact path="/company/career" component={CompanyCareerPage} />
-
-          {/* <Route exact path="/products/tcd" component={TCDPage} /> */}
-          {/* <Route exact path="/products/tcr" component={TCRPage} />
-          <Route exact path="/products/wallet" component={WalletPage} />
-          <Route
-            exact
-            path="/products/data-tokenization"
-            component={DataTokenization}
-          />
-          <Route
-            exact
-            path="/products/private-sharing"
-            component={PrivateDataSharing}
-          />
-          <Route exact path="/company" component={CompanyAboutusPage} />
-          <Route exact path="/why-band" component={WhyBand} /> */}
           <Route path="/" component={NotFoundPage} />
         </Switch>
         <Footer />
