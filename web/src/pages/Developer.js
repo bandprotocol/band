@@ -311,7 +311,7 @@ export default () => {
               <Flex
                 flexDirection="column"
                 alignItems="center"
-                width="410px"
+                width="380px"
                 mx="30px"
               >
                 <Box width="100%" bg="pink" style={{ height: '200px' }} />
@@ -326,7 +326,7 @@ export default () => {
                   How to Integrate Off-Chain Data to Your Smart Contracts
                 </Text>
               </Flex>
-              <Flex flexDirection="column" alignItems="center" width="410px">
+              <Flex flexDirection="column" alignItems="center" width="380px">
                 <Box width="100%" bg="pink" style={{ height: '200px' }} />
                 <Text
                   color="#4a4a4a"
@@ -343,7 +343,7 @@ export default () => {
               <Flex
                 flexDirection="column"
                 alignItems="center"
-                width="410px"
+                width="380px"
                 m="30px"
               >
                 <Box width="100%" bg="pink" style={{ height: '200px' }} />
@@ -362,7 +362,7 @@ export default () => {
               <Flex
                 flexDirection="column"
                 alignItems="center"
-                width="410px"
+                width="380px"
                 mt="30px"
               >
                 <Box width="100%" bg="pink" style={{ height: '200px' }} />
