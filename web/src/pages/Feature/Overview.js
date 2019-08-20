@@ -41,9 +41,9 @@ export default () => {
               lineHeight={1.3}
               fletterSpacing="1px"
               fontWeight={600}
-              fontSize={['32px', '48px']}
-              color="#4a4a4a"
-              textAlign={['center', 'center']}
+              fontSize={['24px', '48px']}
+              color="#3b426b"
+              textAlign="center"
               mt={['30px', '0px']}
               style={{ fontFamily: 'bio-sans' }}
             >
@@ -53,19 +53,35 @@ export default () => {
             </Text>
           </Flex>
 
-          <Flex width="100%" justifyContent="space-between" mt="50px">
-            <Flex flexDirection="column" alignItems="center">
+          {/* Simple Integration */}
+          <Flex
+            width="100%"
+            flexDirection={['column', 'row']}
+            justifyContent="space-between"
+            mt={['0px', '50px']}
+          >
+            <Flex
+              flexDirection="column"
+              alignItems="center"
+              mb={['50px', '0px']}
+            >
               <Box style={{ height: '110px' }}>
                 <Image src={SimpleIntegration} />
               </Box>
-              <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
+              <Text
+                fontWeight="bold"
+                color="#3b426b"
+                fontSize={['20px', '24px']}
+                mt="25px"
+                mb="20px"
+              >
                 Simple Integration
               </Text>
               <Text
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
-                mb="20px"
+                mb={['0px', '20px']}
                 style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Integrate existing data feeds to a dApp takes less than 10 lines
@@ -76,11 +92,23 @@ export default () => {
                 href="https://developer.bandprotocol.com/"
               />
             </Flex>
-            <Flex flexDirection="column" alignItems="center">
+
+            {/* Secure & Decentralized */}
+            <Flex
+              flexDirection="column"
+              alignItems="center"
+              mb={['50px', '0px']}
+            >
               <Box style={{ height: '110px' }}>
                 <Image src={SecureDecentralized} />
               </Box>
-              <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
+              <Text
+                fontWeight="bold"
+                color="#3b426b"
+                fontSize={['20px', '24px']}
+                mt="25px"
+                mb="20px"
+              >
                 {'Secure & Decentralized'}
               </Text>
               <Text
@@ -102,7 +130,13 @@ export default () => {
               <Box style={{ height: '110px' }}>
                 <Image src={EconomicallySound} />
               </Box>
-              <Text fontWeight="bold" fontSize="24px" mt="25px" mb="20px">
+              <Text
+                fontWeight="bold"
+                color="#3b426b"
+                fontSize={['20px', '24px']}
+                mt="25px"
+                mb="20px"
+              >
                 Economically Sound
               </Text>
               <Text
@@ -120,6 +154,8 @@ export default () => {
           </Flex>
         </PageContainer>
       </Box>
+
+      {/* Section 2 : Comparing to other Frameworks */}
       <Box>
         <PageContainer>
           <Flex
@@ -132,9 +168,9 @@ export default () => {
               lineHeight={1.6}
               fletterSpacing="1px"
               fontWeight={300}
-              fontSize={['32px', '32px']}
+              fontSize={['18px', '32px']}
               color="#5569de"
-              textAlign={['center', 'center']}
+              textAlign="center"
             >
               Comparing to Other Frameworks
             </Text>
@@ -143,31 +179,39 @@ export default () => {
               lineHeight={1.6}
               fletterSpacing="1px"
               fontWeight={600}
-              fontSize={['32px', '48px']}
-              color="#4a4a4a"
-              textAlign={['center', 'center']}
+              fontSize={['24px', '48px']}
+              color="#3b426b"
+              textAlign="center"
               fontFamily="bio-sans"
             >
               What Band Protocol Offers
             </Text>
 
-            <Box width="100%" mt="30px">
-              <Image src={BandOffering} height="480px" />
-            </Box>
+            <Box
+              width="100%"
+              mt={['10px', '30px']}
+              style={{
+                height: _isMobile ? '150px' : '480px',
+                backgroundImage: `url(${BandOffering})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
           </Flex>
         </PageContainer>
       </Box>
 
-      {/* Section 2 */}
-      <Box bg="white" mt="50px">
+      {/* Section 3: Use cases */}
+      <Box bg="white" mt={['0px', '50px']} mb={['50px', '90px']}>
         <PageContainer>
           <Text
             lineHeight={1.6}
             fletterSpacing="1px"
             fontWeight={300}
-            fontSize={['32px', '32px']}
+            fontSize={['18px', '32px']}
             color="#5569de"
-            textAlign={['center', 'center']}
+            textAlign="center"
           >
             Leveraging Band Data Infrastructure
           </Text>
@@ -176,21 +220,39 @@ export default () => {
             lineHeight={1.6}
             fletterSpacing="1px"
             fontWeight={600}
-            fontSize={['32px', '48px']}
-            color="#4a4a4a"
-            textAlign={['center', 'center']}
+            fontSize={['24px', '48px']}
+            color="#3b426b"
+            textAlign="center"
           >
             Use Cases of Datasets
           </Text>
 
           {/* Part 1 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Image src={Usecase1} style={{ maxWidth: '500px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
+          <Flex
+            justifyContent="space-between"
+            mt={['25px', '40px']}
+            alignItems="center"
+            flexDirection={['column', 'row']}
+          >
+            <Image
+              src={Usecase1}
+              style={{ maxWidth: _isMobile ? '300px' : '500px' }}
+            />
+            <Flex
+              flexDirection="column"
+              pl={['10px', '74px']}
+              mt={['20px', '0px']}
+              pr={['10px', '0px']}
+            >
+              <Text
+                fontSize={['18px', '18px']}
+                color="#3b426b"
+                fontWeight="bold"
+              >
                 Decentralized Finance (DeFi)
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
                 mt="10px"
@@ -212,12 +274,29 @@ export default () => {
           </Flex>
 
           {/* Part 2 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
+          <Flex
+            justifyContent="space-between"
+            mt={['40px', '40px']}
+            alignItems="center"
+            flexDirection={['column', 'row']}
+          >
+            {_isMobile ? (
+              <Image
+                src={Usecase2}
+                style={{ maxWidth: _isMobile ? '300px' : '500px' }}
+              />
+            ) : null}
+            <Flex
+              flexDirection="column"
+              pl={['10px', '0px']}
+              mt={['20px', '0px']}
+              pr={['10px', '74px']}
+            >
+              <Text fontSize="18px" color="#3b426b" fontWeight="bold">
                 Payments for Decentralized Commerce
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
                 mt="10px"
@@ -232,17 +311,33 @@ export default () => {
                 crypto-fiat price.
               </Text>
             </Flex>
-            <Image src={Usecase2} style={{ maxWidth: '500px' }} />
+            {_isMobile ? null : (
+              <Image src={Usecase2} style={{ maxWidth: '500px' }} />
+            )}
           </Flex>
 
           {/* Part 3 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Image src={Usecase3} style={{ maxWidth: '500px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
+          <Flex
+            justifyContent="space-between"
+            mt={['40px', '40px']}
+            alignItems="center"
+            flexDirection={['column', 'row']}
+          >
+            <Image
+              src={Usecase3}
+              style={{ maxWidth: _isMobile ? '300px' : '500px' }}
+            />
+            <Flex
+              flexDirection="column"
+              pl={['10px', '74px']}
+              mt={['20px', '0px']}
+              pr={['10px', '0px']}
+            >
+              <Text fontSize="18px" color="#3b426b" fontWeight="bold">
                 Gaming, Gambling, and Prediction Markets
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
                 mt="10px"
@@ -256,12 +351,29 @@ export default () => {
           </Flex>
 
           {/* Part 4 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
+          <Flex
+            justifyContent="space-between"
+            mt={['40px', '40px']}
+            alignItems="center"
+            flexDirection={['column', 'row']}
+          >
+            {_isMobile ? (
+              <Image
+                src={Usecase4}
+                style={{ maxWidth: _isMobile ? '300px' : '500px' }}
+              />
+            ) : null}
+            <Flex
+              flexDirection="column"
+              pl={['10px', '0px']}
+              mt={['20px', '0px']}
+              pr={['10px', '74px']}
+            >
+              <Text fontSize="18px" color="#3b426b" fontWeight="bold">
                 Supply Chain Tracking
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
                 mt="10px"
@@ -274,17 +386,33 @@ export default () => {
                 accordingly.
               </Text>
             </Flex>
-            <Image src={Usecase4} style={{ maxWidth: '500px' }} />
+            {_isMobile ? null : (
+              <Image src={Usecase4} style={{ maxWidth: '500px' }} />
+            )}
           </Flex>
 
           {/* Part 5 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Image src={Usecase5} style={{ maxWidth: '500px' }} />
-            <Flex flexDirection="column" pl="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
+          <Flex
+            justifyContent="space-between"
+            mt={['40px', '40px']}
+            alignItems="center"
+            flexDirection={['column', 'row']}
+          >
+            <Image
+              src={Usecase5}
+              style={{ maxWidth: _isMobile ? '300px' : '500px' }}
+            />
+            <Flex
+              flexDirection="column"
+              pl={['10px', '74px']}
+              mt={['20px', '0px']}
+              pr={['10px', '0px']}
+            >
+              <Text fontSize="18px" color="#3b426b" fontWeight="bold">
                 Identity Layer
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
                 mt="10px"
@@ -301,12 +429,29 @@ export default () => {
           </Flex>
 
           {/* Part 6 */}
-          <Flex justifyContent="space-between" mt="40px" alignItems="center">
-            <Flex flexDirection="column" pr="74px">
-              <Text fontSize="18px" color="#4a4a4a" fontWeight="bold">
+          <Flex
+            justifyContent="space-between"
+            mt={['40px', '40px']}
+            alignItems="center"
+            flexDirection={['column', 'row']}
+          >
+            {_isMobile ? (
+              <Image
+                src={Usecase6}
+                style={{ maxWidth: _isMobile ? '300px' : '500px' }}
+              />
+            ) : null}
+            <Flex
+              flexDirection="column"
+              pl={['10px', '0px']}
+              mt={['20px', '0px']}
+              pr={['10px', '74px']}
+            >
+              <Text fontSize="18px" color="#3b426b" fontWeight="bold">
                 Open Internet API connection
               </Text>
               <Text
+                fontSize={['14px', '16px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '500px' }}
                 mt="10px"
@@ -321,15 +466,18 @@ export default () => {
                 trigger off-chain transaction by itself.
               </Text>
             </Flex>
-            <Image src={Usecase6} style={{ maxWidth: '500px' }} />
+            {_isMobile ? null : (
+              <Image src={Usecase6} style={{ maxWidth: '500px' }} />
+            )}
           </Flex>
 
           {/* Next: Dual-toiken Econimics */}
-          <Flex justifyContent="center" my="120px">
+          <Flex justifyContent="center" mt={['50px', '120px']}>
             <FilledButton
-              width="400px"
+              width={_isMobile ? '300px' : '400px'}
               message="Next: Dual-token Economics"
               arrow
+              fontSize={_isMobile ? '14px' : '16px'}
               to="/features/dual-token"
             />
           </Flex>
