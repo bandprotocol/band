@@ -199,21 +199,6 @@ export default () => {
             mt="80px"
             flex="auto"
           >
-<<<<<<< HEAD
-            <iframe
-              title="video"
-              frameBorder="0"
-              style={{
-                width: window.innerWidth < 1400 ? window.innerWidth - 40 : 1400,
-                height: Math.floor(
-                  (window.innerWidth < 1400 ? window.innerWidth - 40 : 1400) /
-                    1.777777,
-                ),
-              }}
-              allowFullScreen
-              src={'https://www.youtube.com/embed/O5KpoWT4Gpw?enablejsapi=1'}
-            />
-=======
             <Flex style={{ width: '100%', maxWidth: 1200 }}>
               <iframe
                 title="video"
@@ -227,7 +212,6 @@ export default () => {
                 src={'https://www.youtube.com/embed/O5KpoWT4Gpw?enablejsapi=1'}
               />
             </Flex>
->>>>>>> fix dev page mobile
             <Flex
               py="20px"
               px="20px"
