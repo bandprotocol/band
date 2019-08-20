@@ -14,16 +14,17 @@ Similar to other datasets on Band Protocol, data consumers query for financial d
 
 ### Input Key
 
-An input key consists of three parts. All three parts are concatnated without a delimiter. Examples are provided as follows.
+An input key consists of two parts, concatnated with `/` as the delimiter.
 
-- The first part is one byte version number. The current version is `0x01`.
-- The second part, [Query Type](#supported-query-types), is a 4-byte unique identifier that identifies query type.
-- The third part is a variable length parameter as required from corresponding query type.
+- The first part, [Query Type](#supported-query-types), is a unique identifier that identifies query type.
+- The second part is a variable length parameter as required from corresponding query type.
 
-| Key (hex)                  | Key (ascii)    | Explanation                  |
-| -------------------------- | -------------- | ---------------------------- |
-| `0180dec7374642`           | `.....FB`      | Spot price of Facebook stock |
-| `0180dec7374554482f555344` | `.....ETH/USD` | Spot price of ETH/USD pair   |
+Examples are provided as follows.
+
+| Key (hex)                      | Key (ascii)      | Explanation                  |
+| ------------------------------ | ---------------- | ---------------------------- |
+| `53504f5450582f4642`           | `SPOTPX/FB`      | Spot price of Facebook stock |
+| `53504f5450582f4554482d555344` | `SPOTPX/ETH-USD` | Spot price of ETH/USD pair   |
 
 ### Output Value
 
@@ -31,17 +32,13 @@ An output value is a 256-bit unsigned integer that represents the output result.
 
 ## Query Types
 
-Below is the list of query types currently supported in Financial Data Feeds. Each query type comes with its unique _keyword_ and 4-byte unique identifier defined as the first 4 bytes of [keccak256](https://emn178.github.io/online-tools/keccak_256.html) of the keyword.
+Below is the list of query types currently supported in Financial Data Feeds. Each query type comes with its unique _keyword_ to use as the first part of query keys.
 
-### Asset Spot Price
-
-| Keyword            | Hex ID     | Asset classes |
-| ------------------ | ---------- | ------------- |
-| `asset_spot_price` | `80dec737` | All           |
+### Asset Spot Price - `SPOTPX`
 
 This query returns the _current_ fair price of the given asset. Different providers may have different interpretation of what a fair price is (mid price between spread, last traded price, etc).
 
-- **parameter**: For currency pairs, the parameter is two currency symbols separated by `/` (e.g. `ETH/USD` for `ETH` price in terms of `USD`). For other assets, the parameter is the asset symbol (e.g. `FB` for Facebook price in terms of its quote currency, `USD`).
+- **parameter**: For currency pairs, the parameter is two currency symbols separated by `-` (e.g. `ETH-USD` for `ETH` price in terms of `USD`). For other assets, the parameter is the asset symbol (e.g. `FB` for Facebook price in terms of its quote currency, `USD`).
 
 - **output**: The final result of this dataset is the _median_ value across all data providers. The final result is multiplied by 10<sup>18</sup>.
 
@@ -58,8 +55,8 @@ Financial dataset split asset symbols into several _asset classes_. Each asset c
 | `CNY`  | Renminbi (Chinese) Yuan |
 | `JPY`  | Japanese Yen            |
 | `GBP`  | Pound Sterling          |
-| `USD`  | United States Dollar    |
 | `THB`  | Thai Baht               |
+| `USD`  | United States Dollar    |
 
 **Cryptocurrencies**
 

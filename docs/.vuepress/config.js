@@ -54,9 +54,9 @@ module.exports = {
         children: [
           "datasets/overview",
           "datasets/financial-kovan",
-          "datasets/web-oracle",
           "datasets/sport-kovan",
-          "datasets/lottery-kovan"
+          "datasets/lottery-kovan",
+          "datasets/web-oracle"
         ]
       }
       // {
