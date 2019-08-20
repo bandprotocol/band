@@ -397,8 +397,11 @@ export default () => {
             flexWrap="wrap"
             flexDirection={['column', 'row']}
             mt={['20px', '40px']}
-            justifyContent="center"
+            justifyContent="flex-start"
             px={['calc(50vw - 170px)', '0px']}
+            ml="auto"
+            mr="auto"
+            style={{ maxWidth: 990 }}
           >
             <TeamComponent
               faceImg={Man}
