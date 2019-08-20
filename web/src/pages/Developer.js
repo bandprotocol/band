@@ -191,9 +191,9 @@ export default () => {
               title="video"
               frameBorder="0"
               style={{
-                width: window.innerWidth < 1200 ? window.innerWidth - 40 : 1200,
+                width: window.innerWidth < 1400 ? window.innerWidth - 40 : 1400,
                 height: Math.floor(
-                  (window.innerWidth < 1200 ? window.innerWidth - 40 : 1200) /
+                  (window.innerWidth < 1400 ? window.innerWidth - 40 : 1400) /
                     1.777777,
                 ),
               }}

@@ -117,7 +117,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
     >
       <Flex
         flexDirection="row"
-        style={{ height: '100%', width: '1200px', maxWidth: '1200px' }}
+        style={{ height: '100%', width: '1400px', maxWidth: '1400px' }}
       >
         {tabs.map((tab, i) => {
           const LinkComponent = tab.link ? Link : AbsoluteLink
@@ -810,7 +810,7 @@ const Navbar = props => {
         style={{
           margin: '0 auto',
           height: '100%',
-          width: '1200px',
+          width: '1400px',
           transition: 'all 0.5s',
           position: 'relative',
         }}

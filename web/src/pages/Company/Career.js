@@ -109,7 +109,7 @@ export default () => {
               flexDirection="column"
               alignItems="center"
               justifyContent="center"
-              maxWidth="1180px"
+              maxWidth="1380px"
               py="90px"
             >
               <Text

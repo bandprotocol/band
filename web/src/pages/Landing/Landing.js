@@ -586,9 +586,9 @@ export default () => {
           mx="auto"
           mb={['0px', '0px']}
           style={{
-            height: _isMobile ? '1200px' : '1650px',
+            height: _isMobile ? '1400px' : '1650px',
             backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
-            backgroundSize: '1200px',
+            backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'top center',
             zIndex: 0,
