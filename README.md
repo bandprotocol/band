@@ -25,4 +25,4 @@ This repository is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) containi
 
 ## Contributing
 
-We highly encourage participation from the community to help with Band Protocol development. If you are interested in developing with Band Protocol or have suggestion for protocol improvement, please open an issue, submit a pull request, or [drop as a line](connect@bandprotocol.com).
+We highly encourage participation from the community to help with Band Protocol development. If you are interested in developing with Band Protocol or have suggestion for protocol improvement, please open an issue, submit a pull request, or [drop as a line](mailto:connect@bandprotocol.com).
