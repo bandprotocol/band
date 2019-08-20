@@ -41,21 +41,21 @@ Additionally, since these functions are `internal`, the caller does not need to 
 
 Helper method for [Financial Data Feeds](../datasets/financial-kovan.html) dataset to get asset spot price.
 
-- **param - symbol**: The asset's symbol (such as `ETH/USD` or `AAPL`).
+- **param - symbol**: The asset's symbol (such as `ETH-USD` or `AAPL`).
 - **return**: The most-up-to-date asset spot price (multiplied by 10<sup>18</sup>).
 
 ```ts
-uint256 price = oracle.querySpotPrice("ETH/USD");
+uint256 price = oracle.querySpotPrice("ETH-USD");
 ```
 
 ### `querySpotPriceWithExpiry`: Get Asset Spot Price with Expiry
 
 Similar to `querySpotPrice`, but with another argument to specify how long to tolerate old data. If data is available, but is older than the specify time, the transaction reverts.
 
-- **param - symbol**: The asset's symbol (such as `ETH/USD` or `AAPL`).
+- **param - symbol**: The asset's symbol (such as `ETH-USD` or `AAPL`).
 - **param - timeLimit**: The amount of time (in seconds) to tolerate old data.
 - **return**: The most-up-to-date asset spot price (multiplied by 10<sup>18</sup>).
 
 ```ts
-uint256 price = oracle.querySpotPriceWithExpiry("ETH/USD", 10 minutes);
+uint256 price = oracle.querySpotPriceWithExpiry("ETH-USD", 10 minutes);
 ```
