@@ -348,20 +348,27 @@ export default () => {
                 </Featured>
               </Flex>
               <Flex>
-                <Button
-                  width="100%"
-                  style={{
-                    fontFamily: 'bio-sans',
-                    backgroundImage:
-                      'linear-gradient(to bottom, #8199ff, #6073de)',
-                  }}
+                <a
+                  style={{ display: 'block', margin: '0 auto' }}
+                  target="_blank"
+                  href="/media.zip"
                 >
-                  Download Media Kit
-                  <FontAwesomeIcon
-                    style={{ marginLeft: '10px' }}
-                    icon={faCloudDownloadAlt}
-                  />
-                </Button>
+                  <Button
+                    width="100%"
+                    style={{
+                      fontFamily: 'bio-sans',
+                      fontWeight: 500,
+                      backgroundImage:
+                        'linear-gradient(to bottom, #8199ff, #6073de)',
+                    }}
+                  >
+                    Download Media Kit
+                    <FontAwesomeIcon
+                      style={{ marginLeft: '10px' }}
+                      icon={faCloudDownloadAlt}
+                    />
+                  </Button>
+                </a>
               </Flex>
             </Flex>
           </Flex>

@@ -40,7 +40,9 @@ export default ({
   const Child = () => (
     <FilledButton width={width} bg={bg}>
       <Flex justifyContent="space-between" alignItems="center" width="100%">
-        <Text fontSize={fontSize || '16px'}>{message}</Text>
+        <Text fontSize={fontSize || '16px'} mr={arrow ? 3 : 0}>
+          {message}
+        </Text>
         {arrow && <ArrowRight color="white" />}
       </Flex>
     </FilledButton>

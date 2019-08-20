@@ -360,28 +360,39 @@ export default () => {
                   'linear-gradient(180deg, #F6F8FF 0%, #E9ECFF 100%)',
                 borderRadius: '8px 8px 0 0',
                 position: 'relative',
+                overflow: 'hidden',
               }}
               px={3}
             >
-              <Box
-                style={{
-                  background: '#5569DE',
-                  position: 'absolute',
-                  height: 3,
-                  bottom: 0,
-                  width: `${100 / animatorSteps.length}%`,
-                  left: `${(step * 100) / animatorSteps.length}%`,
-                  transition: 'all 200ms',
-                }}
-              />
+              {!_isMobile && (
+                <Box
+                  style={{
+                    background: '#5569DE',
+                    position: 'absolute',
+                    height: 3,
+                    bottom: 0,
+                    width: `${100 / animatorSteps.length}%`,
+                    left: `${(step * 100) / animatorSteps.length}%`,
+                    transition: 'all 200ms',
+                  }}
+                />
+              )}
               {animatorSteps.map(({ header1, header2 }, i) => (
                 <Flex
-                  flex={1}
+                  flex={['0 0 100%', 1]}
                   alignItems="center"
                   px={3}
                   py={3}
                   onClick={() => setStep(i)}
-                  style={{ cursor: 'pointer' }}
+                  style={{
+                    cursor: 'pointer',
+                    transform: _isMobile
+                      ? `translateX(${
+                          i < step ? -100 * (i + 1) : i > step ? 0 : -100 * i
+                        }%)`
+                      : '',
+                    transition: 'all 350ms',
+                  }}
                 >
                   <Text
                     fontWeight="bold"
@@ -416,10 +427,11 @@ export default () => {
                 style={{
                   position: 'relative',
                   pointerEvents: 'none',
-                  transform: 'scale(1.35)',
+                  transform: `scale(${_isMobile ? '0.65' : '1.35'})`,
                 }}
                 justifyContent="center"
                 py={3}
+                mt={['-150px', '0px']}
               >
                 <Animator
                   title="How TCDs work"
@@ -430,10 +442,10 @@ export default () => {
               </Flex>
             </Flex>
             <Text
-              mt="-80px"
-              px={5}
+              mt={['-150px', '-80px']}
+              px={[4, 5]}
               lineHeight="1.8"
-              fontSize={17}
+              fontSize={[14, 17]}
               color="#3B426B"
               style={{ minHeight: '3.6em' }}
             >
@@ -464,9 +476,9 @@ export default () => {
 
           <Flex justifyContent="center" my="50px">
             <FilledButton
-              message="Next: Participating in Data Curation"
+              message="Next: Participating in Data Curation "
               arrow
-              width="520px"
+              width={_isMobile ? 'auto' : '520px'}
               to="/features/data-governance-portal"
             />
           </Flex>
