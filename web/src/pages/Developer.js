@@ -215,11 +215,11 @@ export default () => {
             <Flex
               py="20px"
               px="20px"
+              style={{ width: '100%', maxWidth: '1200px' }}
               justifyContent="center"
               alignItems="center"
               bg="#edf0ff"
               color="#404fac"
-              width="100%"
             >
               <Text
                 fontFamily="bio-sans"
