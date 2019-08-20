@@ -311,7 +311,10 @@ export default () => {
           >
             {/* Connect to Real-World Information */}
             <Flex flexDirection="column" alignItems="flex-start" mt="50px">
-              <Image src={LandingRealworld} style={{ maxWidth: 400 }} />
+              <Image
+                src={LandingRealworld}
+                style={{ maxWidth: 400, width: '100%' }}
+              />
               <Flex
                 flexDirection={['column', 'row']}
                 alignItems={['flex-start', 'center']}
@@ -374,7 +377,10 @@ export default () => {
               pr={['0px', '74px']}
               mt={['40px', '0px']}
             >
-              <Image src={LandingOpenAPI} style={{ maxWidth: 400 }} />
+              <Image
+                src={LandingOpenAPI}
+                style={{ maxWidth: 400, width: '100%' }}
+              />
               <Flex
                 flexDirection="row"
                 alignItems={['flex-start', 'center']}
