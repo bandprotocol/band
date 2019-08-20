@@ -20,6 +20,7 @@ import {
   Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
+import FilledButton from 'components/FilledButton'
 
 import FeatureCard from 'components/FeatureCard'
 import StartBuilding from 'components/StartBuilding'
@@ -52,31 +53,6 @@ import SSExample3 from 'images/chtssRight.png'
 import SSExample4 from 'images/dsssLeft.png'
 import SSExample5 from 'images/dsssMid.png'
 import SSExample6 from 'images/dsssRight.png'
-
-const FilledButton = styled(Button)`
-  font-family: Avenir;
-  color: white;
-  font-size: 16px;
-  padding: 13px 34px;
-  font-weight: 500;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  height: 46px;
-  border-radius: 2px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-image: linear-gradient(to bottom, #2a3a7f, #131b48);
-  cursor: pointer;
-  font-family: bio-sans;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -184,9 +160,7 @@ export default () => {
                   flexDirection={['column', 'row']}
                 >
                   <AbsoluteLink href="https://developer.bandprotocol.com/">
-                    <FilledButton isMobile={_isMobile}>
-                      Developer Documentation
-                    </FilledButton>
+                    <FilledButton message="Developer Documentation" />
                   </AbsoluteLink>
                   <Flex mx={['0px', '10px']} my={['10px', '0px']} />
                   <AbsoluteLink href="/whitepaper-3.0.0.pdf">
@@ -811,21 +785,11 @@ export default () => {
             <Flex flexDirection="column" alignItems="center">
               {/* Explore more feature button */}
               <Flex justifyContent="center" mt="120px">
-                <FilledButton width="500px">
-                  <Flex
-                    justifyContent="space-between"
-                    alignItems="center"
-                    width="100%"
-                  >
-                    <Text color="white" fontSize="16px">
-                      Explore Band Protocol Features
-                    </Text>
-                    {/* TODO: change it into actual symbol */}
-                    <Text color="white" fontSize="16px">
-                      ->
-                    </Text>
-                  </Flex>
-                </FilledButton>
+                <FilledButton
+                  width="500px"
+                  message="Explore Band Protocol Features"
+                  arrow
+                />
               </Flex>
 
               {/* Stay update */}

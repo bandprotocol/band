@@ -85,7 +85,7 @@ export default () => {
         <PageContainer>
           <Flex
             pt={['50px', '100px']}
-            pb={['50px', '60px']}
+            pb={['50px', '40px']}
             alignItems="center"
             flexDirection="column"
           >
@@ -94,7 +94,7 @@ export default () => {
               fletterSpacing="1px"
               fontWeight={600}
               fontSize={['32px', '48px']}
-              color="#4a4a4a"
+              color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
             >
@@ -105,6 +105,8 @@ export default () => {
             <Text
               textAlign="center"
               mt="20px"
+              color="#323232"
+              fontWeight="400"
               style={{ lineHeight: '2', maxWidth: '600px' }}
             >
               Band is a middleware layer protocol that connects dApps with
@@ -112,6 +114,48 @@ export default () => {
               the datasets present unmatched reliability and availability
               previously unavailable on blockchain.
             </Text>
+          </Flex>
+
+          <Flex justifyContent="center" alignItems="center">
+            <Flex
+              bg="#e9edff"
+              alignItems="center"
+              justifyContent="center"
+              width="500px"
+            >
+              <Box
+                bg="#33cf41"
+                width="10px"
+                mr="15px"
+                style={{ borderRadius: '50%', height: '10px' }}
+              />
+              <Text
+                fontFamily="bio-sans"
+                fontSize="16px"
+                fontWeight="bold"
+                color="#5569de"
+                lineHeight={2.6}
+              >
+                Live on Kovan Testnet
+              </Text>
+            </Flex>
+          </Flex>
+
+          <Flex
+            mt={['40px', '50px']}
+            justifyContent="center"
+            alignItems={['center', 'flex-start']}
+            flexDirection={['column', 'row']}
+          >
+            <AbsoluteLink href="https://developer.bandprotocol.com/">
+              <OutlineButton isMobile={_isMobile}>
+                Developer Forum
+              </OutlineButton>
+            </AbsoluteLink>
+            <Flex mx={['0px', '10px']} my={['10px', '0px']} />
+            <AbsoluteLink href="/whitepaper-3.0.0.pdf">
+              <FilledButton isMobile={_isMobile}>Developer Doc</FilledButton>
+            </AbsoluteLink>
           </Flex>
 
           {/* Section2: Real-time DataSources */}
