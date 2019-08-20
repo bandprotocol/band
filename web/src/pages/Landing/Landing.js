@@ -585,7 +585,7 @@ export default () => {
           mx="auto"
           mb={['0px', '0px']}
           style={{
-            height: _isMobile ? '1200px' : '1950px',
+            height: _isMobile ? '1350px' : '1950px',
             backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
             backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
@@ -622,7 +622,7 @@ export default () => {
                 Right When You Need
               </Text>
               <Text
-                fontSize={['14px', '16px']}
+                fontSize={['16px', '18px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '460px' }}
               >
@@ -646,7 +646,7 @@ export default () => {
               pr={['30px', '0px']}
               style={{
                 position: 'absolute',
-                top: _isMobile ? '300px' : '540px',
+                top: _isMobile ? '340px' : '540px',
                 right: _isMobile ? 0 : '30px',
               }}
             >
@@ -670,7 +670,7 @@ export default () => {
                 from Multiple Providers
               </Text>
               <Text
-                fontSize={['14px', '16px']}
+                fontSize={['16px', '18px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '550px' }}
               >
@@ -694,7 +694,7 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '600px' : '1070px',
+                top: _isMobile ? '680px' : '1070px',
                 left: 0,
               }}
             >
@@ -718,7 +718,7 @@ export default () => {
                 Bonding Curves
               </Text>
               <Text
-                fontSize={['14px', '16px']}
+                fontSize={['16px', '18px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '550px' }}
               >
@@ -743,7 +743,7 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '900px' : '1580px',
+                top: _isMobile ? '1020px' : '1580px',
                 right: _isMobile ? 0 : '30px',
               }}
             >
@@ -767,7 +767,7 @@ export default () => {
                 Datasets and Grows Together
               </Text>
               <Text
-                fontSize={['14px', '16px']}
+                fontSize={['16px', '18px']}
                 fontWeight="300"
                 style={{ lineHeight: '2', maxWidth: '460px' }}
               >
