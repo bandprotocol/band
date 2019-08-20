@@ -373,42 +373,49 @@ export default () => {
               alignItems="flex-start"
               mt={['40px', '0px']}
             >
+              <Image src={LandingOpenAPI} />
+              <Flex
+                flexDirection={['column', 'row']}
+                alignItems={['flex-start', 'center']}
+                fontSize={['18px', '24px']}
+                mt="35px"
                 mb="10px"
+                style={{
                   lineHeight: '2.25',
                   fontWeight: 'bold',
                   fontFamily: 'bio-sans',
                 }}
               >
                 <Text color="#3b426b">Connect to</Text>
-                <Text color="#5569de" ml="5px">
+                <Text color="#5569de" ml={['0px', '5px']}>
                   Any Open API
                 </Text>
               </Flex>
-              <Text
-                fontSize={['14px', '16px']}
-                fontWeight="300"
-                style={{ lineHeight: '2' }}
-              >
-                Band Protocol provides an infrastucture for blockchain
-                applications to connect with any open API without relying on a
-                centralized party. This allows dApps to leverage existing data
-                on the internet without compromising security, bridging the use
-                cases between Web 2.0 and 3.0.
-              </Text>
-              <Flex
-                mt="15px"
-                style={{ fontFamily: 'bio-sans', fontWeight: 'bold' }}
-              >
-                <LinkWithArrow
-                  text="Explore Endpoints"
-                  href="https://app.kovan.bandprotocol.com/"
-                />
-                <LinkWithArrow
-                  text="Learn more"
-                  ml={['40px', '76px']}
-                  href="https://developer.bandprotocol.com/"
-                />
-              </Flex>
+            </Flex>
+            <Text
+              fontSize={['14px', '16px']}
+              fontWeight="300"
+              style={{ lineHeight: '2' }}
+            >
+              Band Protocol provides an infrastucture for blockchain
+              applications to connect with any open API without relying on a
+              centralized party. This allows dApps to leverage existing data on
+              the internet without compromising security, bridging the use cases
+              between Web 2.0 and 3.0.
+            </Text>
+            <Flex
+              mt="15px"
+              style={{ fontFamily: 'bio-sans', fontWeight: 'bold' }}
+            >
+              <LinkWithArrow
+                text="Explore Endpoints"
+                href="https://app.kovan.bandprotocol.com/"
+              />
+              <LinkWithArrow
+                text="Learn more"
+                ml={['40px', '76px']}
+                href="https://developer.bandprotocol.com/"
+              />
             </Flex>
           </Flex>
         </PageContainer>
