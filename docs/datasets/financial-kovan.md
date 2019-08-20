@@ -22,7 +22,7 @@ An input key consists of three parts. All three parts are concatnated without a 
 
 | Key (hex)                  | Key (ascii)    | Explanation                  |
 | -------------------------- | -------------- | ---------------------------- |
-| `0180dec7374441492f455448` | `.....FB`      | Spot price of Facebook stock |
+| `0180dec7374642`           | `.....FB`      | Spot price of Facebook stock |
 | `0180dec7374554482f555344` | `.....ETH/USD` | Spot price of ETH/USD pair   |
 
 ### Output Value
