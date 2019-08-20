@@ -21,18 +21,11 @@ import {
   Bold,
 } from 'ui/common'
 
+import TeamworkSrc from 'images/teamwork.svg'
+import OpensourceSrc from 'images/open-source.svg'
+import BlockchainSrc from 'images/blockchain.svg'
 import BackgroundCompanySrc from 'images/background-company.png'
 import media, { isMobile } from 'ui/media'
-
-const OvalBox = styled(Flex).attrs({
-  alignItems: 'center',
-  justifyContent: 'center',
-})`
-  background-color: #f2f2f2;
-  border-radius: 50%;
-  width: 132px;
-  height: 132px;
-`
 
 const PositionButton = styled(Button)`
   display: flex;
@@ -41,49 +34,14 @@ const PositionButton = styled(Button)`
   margin-top: 20px;
   font-weight: 600;
   height: 60px;
-  width: 100%;
-
-  min-width: 300px;
   background: #e9edff;
   cursor: pointer;
 `
 
-const Featured = styled.a.attrs({
-  target: '_blank',
-})`
-  padding: 0 10px 30px;
-  display: block;
-  transition: all 250ms;
-
-  ${media.mobile} {
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`
-
-const ApplyButton = styled(Button)`
-  width: 135px;
-  height: 45px;
-  border-radius: 22.5px;
-  border: solid 1px #6b8bf5;
-  box-shadow: ${props =>
-    props.isSelected ? '0 8px 17px 0 rgba(191, 191, 191, 0.5)' : 'none'};
-  background-color: ${props => (props.isSelected ? '#6b8bf5' : '#ffffff')};
-  color: ${props => (props.isSelected ? 'white' : '#4a4a4a')};
-  font-size: 18px;
-  font-weight: 300;
-  transition: all 0.5s;
-  cursor: pointer;
-  &:focus {
-    outline: none;
-  }
-`
 const JobPositionComponent = ({ title, to }) => {
   return (
-    <AbsoluteLink to={to} style={{ width: '100%' }}>
-      <PositionButton color="#323232">
+    <AbsoluteLink to={to}>
+      <PositionButton width={['300px', '900px']} color="#323232">
         {title}
         <FontAwesomeIcon icon={faChevronRight} />
       </PositionButton>
@@ -91,7 +49,7 @@ const JobPositionComponent = ({ title, to }) => {
   )
 }
 
-const CultureComponent = ({ title, description }) => {
+const CultureComponent = ({ title, description, imgSrc }) => {
   return (
     <Flex
       flex="1"
@@ -103,7 +61,9 @@ const CultureComponent = ({ title, description }) => {
       my="20px"
       style={{ maxWidth: '400px', minWidth: '300px' }}
     >
-      <OvalBox> 1</OvalBox>
+      <Box>
+        <Image src={imgSrc} />
+      </Box>
       <Text
         fontSize={['16px', '28px']}
         lineHeight={['24px', '72px']}
@@ -150,7 +110,7 @@ export default () => {
             >
               <Text
                 textAlign="center"
-                fontSize={['24px', '60px']}
+                fontSize={['24px', '48px']}
                 lineHeight={['32px', '80px']}
                 fontWeight={900}
                 color="#3b426b"
@@ -201,20 +161,28 @@ export default () => {
             Our Culture
           </Text>
         </Flex>
-        <Flex flexDirection="row" flexWrap="wrap" mb="50px">
+        <Flex
+          flexDirection="row"
+          alignItems="baseline"
+          flexWrap="wrap"
+          mb="50px"
+        >
           <CultureComponent
             title="Decentralization First"
             description="We believe that great products must "
+            imgSrc={BlockchainSrc}
           />
           <CultureComponent
             title="Community Driven"
             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
                 felis eros, ultricies et mi at."
+            imgSrc={TeamworkSrc}
           />
           <CultureComponent
             title="Open Source by Default"
             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
                 felis eros, ultricies et mi at."
+            imgSrc={OpensourceSrc}
           />
         </Flex>
       </Flex>
@@ -249,7 +217,11 @@ export default () => {
       <Box mt="60px" pb="60px" px="20px">
         <Flex justifyContent="center">
           <AbsoluteLink to="https://angel.co/company/bandprotocol/jobs/">
-            <FilledButton message="Apply Now" width="435px" arrow />
+            <FilledButton
+              message="Apply Now"
+              width={['300px', '435px']}
+              arrow
+            />
           </AbsoluteLink>
         </Flex>
       </Box>
