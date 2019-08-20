@@ -497,7 +497,12 @@ export default () => {
       </Box>
       <Box mt="60px" pb="60px">
         <Flex justifyContent="center">
-          <FilledButton message="See Opening Positions" width="435px" arrow />
+          <FilledButton
+            message="See Opening Positions"
+            width="435px"
+            arrow
+            to="/company/career"
+          />
         </Flex>
       </Box>
     </Box>
