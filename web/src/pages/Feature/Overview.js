@@ -2,25 +2,9 @@ import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import FilledButton from 'components/FilledButton'
-import {
-  Flex,
-  Text,
-  BackgroundCard,
-  H1,
-  Button,
-  Card,
-  Image,
-  Box,
-  H2,
-  H3,
-  AbsoluteLink,
-  Link,
-  Bold,
-} from 'ui/common'
+import LinkWithArrow from 'components/LinkWithArrow'
+import { Flex, Text, Button, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
-
-import FeatureCard from 'components/FeatureCard'
-import StartBuilding from 'components/StartBuilding'
 
 import SimpleIntegration from 'images/simple-integration.svg'
 import SecureDecentralized from 'images/secure-decentrailized.svg'
@@ -31,32 +15,7 @@ import Usecase3 from 'images/usecase3.jpg'
 import Usecase4 from 'images/usecase4.jpg'
 import Usecase5 from 'images/usecase5.jpg'
 import Usecase6 from 'images/usecase6.jpg'
-
-const OutlineButton = styled(Button)`
-  font-family: Avenir;
-  color: #4a4a4a;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: white;
-  width: ${props => (props.isMobile ? '196px' : '182px')};
-  height: 46px;
-  border-radius: 2px;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #6b7df5;
-  }
-
-  &:active {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
+import BandOffering from 'images/band-offering.png'
 
 export default () => {
   const exRef = useRef(null)
@@ -106,14 +65,16 @@ export default () => {
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
+                mb="20px"
                 style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Integrate existing data feeds to a dApp takes less than 10 lines
                 of code.
               </Text>
-              <Text fontWeight="bold" fontSize="16px" my="30px">
-                Developer Doc
-              </Text>
+              <LinkWithArrow
+                text="Developer Doc"
+                href="https://developer.bandprotocol.com/"
+              />
             </Flex>
             <Flex flexDirection="column" alignItems="center">
               <Box style={{ height: '110px' }}>
@@ -126,14 +87,16 @@ export default () => {
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
+                mb="20px"
                 style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Leverage built-in delegated consensus to distribute risk of
                 collusion in the decentralized platform.
               </Text>
-              <Text fontWeight="bold" fontSize="16px" my="30px">
-                Whitepaper v3.0
-              </Text>
+              <LinkWithArrow
+                text="Whitepaper v3.0"
+                href="https://bandprotocol.com/whitepaper-3.0.0.pdf"
+              />
             </Flex>
             <Flex flexDirection="column" alignItems="center">
               <Box style={{ height: '110px' }}>
@@ -146,14 +109,13 @@ export default () => {
                 textAlign="center"
                 fontWeight="300"
                 fontSize="14px"
+                mb="20px"
                 style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
               >
                 Incentives encourage competitions to drive unit data costs down
                 without compromising security.
               </Text>
-              <Text fontWeight="bold" fontSize="16px" my="30px">
-                Learn more
-              </Text>
+              <LinkWithArrow text="Learn more" to="/features/dual-token" />
             </Flex>
           </Flex>
         </PageContainer>
@@ -190,7 +152,9 @@ export default () => {
               What Band Protocol Offers
             </Text>
 
-            <Box width="100%" bg="blue" style={{ height: '600px' }} mt="30px" />
+            <Box width="100%" mt="30px">
+              <Image src={BandOffering} height="480px" />
+            </Box>
           </Flex>
         </PageContainer>
       </Box>
@@ -367,6 +331,7 @@ export default () => {
               width="400px"
               message="Next: Dual-token Economics"
               arrow
+              to="/features/dual-token"
             />
           </Flex>
         </PageContainer>

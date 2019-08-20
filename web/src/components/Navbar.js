@@ -38,7 +38,7 @@ const Nav = styled.nav`
   align-items: center;
   position: sticky;
   top: 0;
-  backgroundImage: linear-gradient(to bottom, #5a7ffd,#0473bf)
+  background-color: linear-gradient(to bottom, #5a7ffd, #0473bf);
   z-index: 999;
 
   ${media.mobile} {
@@ -50,7 +50,7 @@ const Nav = styled.nav`
     color: #ffffff;
 
     &:hover {
-      color: #bfcdff;
+      color: #495ecd;
     }
   }
 `
@@ -76,21 +76,6 @@ const MainMenuText = styled(Text).attrs({
   transition: all 0.25s;
   &:hover {
     color: #bfcdff;
-  }
-`
-
-const Input = styled.input`
-  width: 100%;
-  min-height: 40px;
-  border-radius: 4px;
-  border: 0px;
-  padding: 10px;
-  color: white;
-  font-size: 13px;
-  background-color: #384cb3;
-  ::placeholder {
-    color: white;
-    opacity: 0.5;
   }
 `
 
@@ -122,6 +107,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
         left: '0',
         top: '70px',
         transition: 'all 0.25s',
+        fontFamily: 'bio-sans',
         opacity: isSelected ? 1 : 0,
         pointerEvents: isSelected ? 'all' : 'none',
         background: '#495ecd',
@@ -156,11 +142,11 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                     <Image src={getImg(imgIndex)} height={tab.imgHeight} />
                   )}
                 </Flex>
-                <Flex mt={['30px', '30px', '40px']}>
+                <Flex mt={['20px', '20px', '30px']}>
                   <Text
                     color="white"
-                    fontWeight={500}
-                    fontSize="14px"
+                    fontWeight={700}
+                    fontSize="18px"
                     lineHeight={1.5}
                   >
                     {tab.title}
@@ -238,35 +224,32 @@ const Navbar = props => {
   const scrollHistory = useRef()
   const prevLocation = useRef()
 
-  const handleScroll = useCallback(
-    e => {
-      if (e.target.documentElement.scrollTop < 80) return
-      const newST = Math.floor(e.target.documentElement.scrollTop)
-      if (!scrollHistory.current || scrollHistory.current.length === 0) {
-        scrollHistory.current = [0]
-      }
-      if (scrollHistory.current.length === 1) {
+  const handleScroll = useCallback(e => {
+    if (e.target.documentElement.scrollTop < 80) return
+    const newST = Math.floor(e.target.documentElement.scrollTop)
+    if (!scrollHistory.current || scrollHistory.current.length === 0) {
+      scrollHistory.current = [0]
+    }
+    if (scrollHistory.current.length === 1) {
+      setShowNav(false)
+    } else {
+      if (
+        scrollHistory.current[0] < scrollHistory.current[1] &&
+        scrollHistory.current[1] > newST
+      ) {
+        setShowNav(true)
+      } else if (
+        scrollHistory.current[0] > scrollHistory.current[1] &&
+        scrollHistory.current[1] < newST
+      ) {
         setShowNav(false)
-      } else {
-        if (
-          scrollHistory.current[0] < scrollHistory.current[1] &&
-          scrollHistory.current[1] > newST
-        ) {
-          setShowNav(true)
-        } else if (
-          scrollHistory.current[0] > scrollHistory.current[1] &&
-          scrollHistory.current[1] < newST
-        ) {
-          setShowNav(false)
-        }
       }
-      scrollHistory.current = [
-        scrollHistory.current[scrollHistory.current.length - 1],
-        newST,
-      ]
-    },
-    [],
-  )
+    }
+    scrollHistory.current = [
+      scrollHistory.current[scrollHistory.current.length - 1],
+      newST,
+    ]
+  }, [])
 
   useEffect(() => {
     if (props.location !== prevLocation.current) {
@@ -314,7 +297,7 @@ const Navbar = props => {
             width: showMenu ? 'calc(100vw)' : '0px',
             transition: 'all 400ms',
             overflow: 'hidden',
-            background: '#202541',
+            background: '#495ecd',
             transform: showMenu ? '' : 'translateX(100%)',
             boxShadow: showMenu ? '-20px 0 50px 0 rgba(0, 0, 0, 0.25)' : 'none',
             minHeight: '0px',
@@ -392,7 +375,7 @@ const Navbar = props => {
               width: 'calc(100vw)',
               transition: 'all 400ms',
               overflow: 'auto',
-              background: '#202541',
+              background: '#495ecd',
               transform: showTier2Index === 1 ? '' : 'translateX(100%)',
               minHeight: '0px',
               paddingBottom: '50px',
@@ -479,7 +462,7 @@ const Navbar = props => {
               width: 'calc(100vw)',
               transition: 'all 400ms',
               overflow: 'auto',
-              background: '#202541',
+              background: '#495ecd',
               transform: showTier2Index === 2 ? '' : 'translateX(100%)',
             }}
           >

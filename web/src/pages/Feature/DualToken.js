@@ -230,6 +230,7 @@ export default () => {
                   arrow
                   width="233px"
                   fontSize="14px"
+                  href="http://airdrop.bandprotocol.com/"
                 />
               </Flex>
             </Flex>
@@ -241,6 +242,7 @@ export default () => {
               message="Next: Visualizing How Data are Curated"
               arrow
               width="500px"
+              to="/features/tcd"
             />
           </Flex>
         </PageContainer>

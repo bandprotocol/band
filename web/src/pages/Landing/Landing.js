@@ -1,29 +1,19 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import LandingShowcase from 'components/LandingShowcase'
 import LinkWithArrow from 'components/LinkWithArrow'
 import Subscribe from 'components/Subscribe'
 import {
   Flex,
   Text,
   Highlight,
-  H1,
   Button,
-  Card,
   Image,
   Box,
-  H2,
-  H3,
   AbsoluteLink,
-  Link,
-  Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
-
-import FeatureCard from 'components/FeatureCard'
-import StartBuilding from 'components/StartBuilding'
 
 import LandingHero from 'images/landing-hero-background.svg'
 import LandingRealworld from 'images/landing-connect-realworld.svg'
@@ -38,18 +28,6 @@ import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
-import AppCHT from 'images/appCoinhatcher.png'
-import AppDS from 'images/appDataSource.png'
-import LandingBandDB from 'images/landing-band-database.png'
-import LandingDataGov from 'images/landing-data-governance.png'
-
-import SSExample1 from 'images/chtssLeft.png'
-import SSExample2 from 'images/chtssMid.png'
-import SSExample3 from 'images/chtssRight.png'
-
-import SSExample4 from 'images/dsssLeft.png'
-import SSExample5 from 'images/dsssMid.png'
-import SSExample6 from 'images/dsssRight.png'
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -291,14 +269,26 @@ export default () => {
         fontWeight="900"
         style={{ height: '65px', fontFamily: 'bio-sans' }}
       >
-        Kovan Testnet is LIVE! Check out the
-        <Text color="#5569de" mx="5px">
-          new Data Governance Portal
-        </Text>
+        Kovan Testnet is LIVE! Check out the{' '}
+        <a
+          href="https://app.kovan.bandprotocol.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Text color="#5569de" mx="5px">
+            new Data Governance Portal
+          </Text>
+        </a>
         and
-        <Text color="#5569de" mx="5px">
-          Developer Doc.
-        </Text>
+        <a
+          href="https://developer.bandprotocol.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Text color="#5569de" mx="5px">
+            Developer Doc.
+          </Text>
+        </a>
       </Flex>
 
       {/* Section 2: Connecting to ... */}
@@ -350,8 +340,15 @@ export default () => {
                 mt="15px"
                 style={{ fontFamily: 'bio-sans', fontWeight: 'bold' }}
               >
-                <LinkWithArrow text="Explore Data" />
-                <LinkWithArrow text="How it works" ml="76px" />
+                <LinkWithArrow
+                  text="Explore Data"
+                  href="https://app.kovan.bandprotocol.com/"
+                />
+                <LinkWithArrow
+                  text="How it works"
+                  ml="76px"
+                  to="/features/tcd"
+                />
               </Flex>
             </Flex>
 
@@ -398,8 +395,15 @@ export default () => {
                 mt="15px"
                 style={{ fontFamily: 'bio-sans', fontWeight: 'bold' }}
               >
-                <LinkWithArrow text="Explore Endpoints" />
-                <LinkWithArrow text="Learn more" ml="76px" />
+                <LinkWithArrow
+                  text="Explore Endpoints"
+                  href="https://app.kovan.bandprotocol.com/"
+                />
+                <LinkWithArrow
+                  text="Learn more"
+                  ml="76px"
+                  href="https://developer.bandprotocol.com/"
+                />
               </Flex>
             </Flex>
           </Flex>
@@ -599,7 +603,10 @@ export default () => {
                 the data with just one simple function call.
               </Text>
               <Flex mt="20px">
-                <LinkWithArrow text="Explore Datasets Available" />
+                <LinkWithArrow
+                  text="Explore Datasets Available"
+                  href="https://app.kovan.bandprotocol.com/"
+                />
               </Flex>
             </Flex>
 
@@ -633,7 +640,10 @@ export default () => {
                 serve the data, which guarantees high tolerance for collusion.
               </Text>
               <Flex mt="20px">
-                <LinkWithArrow text="Learn How Data Curation Works" />
+                <LinkWithArrow
+                  text="Learn How Data Curation Works"
+                  to="/features/tcd"
+                />
               </Flex>
             </Flex>
 
@@ -669,7 +679,10 @@ export default () => {
                 for dApps.
               </Text>
               <Flex mt="20px">
-                <LinkWithArrow text="Learn How Dual-Token Economics Works" />
+                <LinkWithArrow
+                  text="Learn How Dual-Token Economics Works"
+                  to="/features/dual-token"
+                />
               </Flex>
             </Flex>
 
@@ -704,12 +717,14 @@ export default () => {
                 authority to bypass governance and take control of the data.
               </Text>
               <Flex mt="20px">
-                <LinkWithArrow text="Learn How to Participate in Curation" />
+                <LinkWithArrow
+                  text="Learn How to Participate in Curation"
+                  to="/features/data-governance-portal"
+                />
               </Flex>
             </Flex>
           </PageContainer>
         </Box>
-
         <Box>
           <PageContainer>
             <Flex flexDirection="column" alignItems="center">
@@ -719,6 +734,7 @@ export default () => {
                   width="500px"
                   message="Explore Band Protocol Features"
                   arrow
+                  to="/features/overview"
                 />
               </Flex>
 
@@ -755,55 +771,12 @@ export default () => {
           </PageContainer>
         </Box>
       </Box>
-
       <Box
         bg="#344498"
         width="100%"
         mt="-125px"
         style={{ height: '130px', zIndex: 0, position: 'relative' }}
       />
-
-      {/* <LandingShowcase
-        background="#21253f"
-        title="Community Curated Data Feed for DApps"
-        description={`is designed as a community governed and managed price
-          feed for decentralized applications. New possibilities will be opened for decentralized applications that rely on external real-world information such as price feed`}
-        link1="data.bandprotocol.com"
-        link2="Token-Curated DataSources"
-        Logo={AppDS}
-        logoHeight={['80px', '125px']}
-        Img1={SSExample4}
-        Img2={SSExample5}
-        Img3={SSExample6}
-      >
-        <Text
-          ref={exRef}
-          textAlign={['center', 'center']}
-          fontWeight="600"
-          fontSize={['24px', '32px']}
-          lineHeight={[1.6, 1]}
-        >
-          Applications Developed {_isMobile && <br />} with Band Protocol
-        </Text>
-      </LandingShowcase>
-      <LandingShowcase
-        background="#242944"
-        title="The Bloomberg of Crypto"
-        description={`Coinhatcher is decentralized crypto insight portal.
-         Building on top of token-curated registry, its purpose is to curate
-          trusted and reliable information for the blockchain industry including
-           daily news, general market data, and crypto project information`}
-        link1="CoinHatcher.com"
-        link2="Token-Curated Registry"
-        Logo={AppCHT}
-        logoHeight={['120px', '160px']}
-        Img1={SSExample1}
-        Img2={SSExample2}
-        Img3={SSExample3}
-      />
-      <Box py={5} style={{ background: '#17192e' }}>
-        <StartBuilding />
-      </Box> */}
     </Box>
   )
 }

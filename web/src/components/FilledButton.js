@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Button } from 'ui/common'
 import ArrowRight from 'components/ArrowRight'
+import { Link } from 'react-router-dom'
 
 const FilledButton = styled(Button)`
   font-family: bio-sans;
@@ -33,11 +34,24 @@ export default ({
   width,
   bg = 'linear-gradient(to bottom, #2a3a7f, #131b48)',
   fontSize,
-}) => (
-  <FilledButton width={width} bg={bg}>
-    <Flex justifyContent="space-between" alignItems="center" width="100%">
-      <Text fontSize={fontSize || '16px'}>{message}</Text>
-      {arrow && <ArrowRight color="white" />}
-    </Flex>
-  </FilledButton>
-)
+  href,
+  to = '',
+}) => {
+  const Child = () => (
+    <FilledButton width={width} bg={bg}>
+      <Flex justifyContent="space-between" alignItems="center" width="100%">
+        <Text fontSize={fontSize || '16px'}>{message}</Text>
+        {arrow && <ArrowRight color="white" />}
+      </Flex>
+    </FilledButton>
+  )
+  return href ? (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      <Child />
+    </a>
+  ) : (
+    <Link to={to}>
+      <Child />
+    </Link>
+  )
+}
