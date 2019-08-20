@@ -32,10 +32,7 @@ import LandingMassAdoption from 'images/landing-massadoption.svg'
 import LandingFeature from 'images/landing-features.png'
 
 import HeroSrc from 'images/hero.png'
-import BandInTheMiddle from 'images/band-overview.png'
-import Sequoia from 'images/sequoia.svg'
-import Dunamu from 'images/dunamu.svg'
-import Seax from 'images/seax.png'
+
 import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
@@ -409,69 +406,6 @@ export default () => {
         </PageContainer>
 
         {/* Back holders */}
-        {/* <Flex
-            mx={['-20px', 'calc(50vw - 400px)', 'calc(480px - 50vw)']}
-            bg="#252a48"
-            justifyContent="center"
-            alignItems="center"
-            flexDirection="column"
-            py={['30px', '50px']}
-            mb={['30px', '70px']}
-          >
-            <Text fontSize={['20px', '20px']} fontWeight={600} color="#8d94bf">
-              Backed by
-            </Text>
-            <Flex
-              mt={['30px', '30px']}
-              alignItems="center"
-              flexDirection={['column', 'row']}
-              style={{ width: 'calc(100vw - 40px)', maxWidth: '800px' }}
-            >
-              <Flex
-                flex={1}
-                justifyContent="center"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                  },
-                }}
-              >
-                <AbsoluteLink href="https://www.sequoiacap.com/">
-                  <Image src={Sequoia} height="20px" />
-                </AbsoluteLink>
-              </Flex>
-              <Flex
-                flex={1}
-                justifyContent="center"
-                my={['20px', '0px']}
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia(1) brightness(0.9) saturate(10) hue-rotate(176deg)',
-                  },
-                }}
-              >
-                <AbsoluteLink href="http://www.dunamupartners.com/">
-                  <Image src={Dunamu} height="20px" />
-                </AbsoluteLink>
-              </Flex>
-              <Flex
-                flex={1}
-                justifyContent="center"
-                css={{
-                  '&:hover': {
-                    filter:
-                      'sepia() brightness(0.9) saturate(10) hue-rotate(176deg)',
-                  },
-                }}
-              >
-                <AbsoluteLink href="https://www.linkedin.com/company/seax-ventures/">
-                  <Image src={Seax} width="105px" />
-                </AbsoluteLink>
-              </Flex>
-            </Flex>
-          </Flex> */}
 
         {/* Section 3: The floating card */}
         <Flex

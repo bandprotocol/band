@@ -16,7 +16,8 @@ import Navbar from 'components/Navbar'
 import Footer from 'components/Footer'
 
 import LandingPage from 'pages/Landing'
-import CompanyPage from 'pages/Company'
+import CompanyAboutusPage from 'pages/Company/Aboutus'
+import CompanyCareerPage from 'pages/Company/Career'
 import WhyBand from './pages/WhyBand'
 // import TCDPage from 'pages/products/TCD'
 import TCRPage from 'pages/products/TCR'
@@ -50,11 +51,15 @@ export default () => (
             component={DataGovernancePortalPage}
           />
           <Route exact path="/developer" component={DeveloperPage} />
-          <Route exact path="/company/about-us" component={CompanyPage} />
-          <Route exact path="/company/career" component={CompanyPage} />
+          <Route
+            exact
+            path="/company/about-us"
+            component={CompanyAboutusPage}
+          />
+          <Route exact path="/company/career" component={CompanyCareerPage} />
 
           {/* <Route exact path="/products/tcd" component={TCDPage} /> */}
-          <Route exact path="/products/tcr" component={TCRPage} />
+          {/* <Route exact path="/products/tcr" component={TCRPage} />
           <Route exact path="/products/wallet" component={WalletPage} />
           <Route
             exact
@@ -66,8 +71,8 @@ export default () => (
             path="/products/private-sharing"
             component={PrivateDataSharing}
           />
-          <Route exact path="/company" component={CompanyPage} />
-          <Route exact path="/why-band" component={WhyBand} />
+          <Route exact path="/company" component={CompanyAboutusPage} />
+          <Route exact path="/why-band" component={WhyBand} /> */}
           <Route path="/" component={NotFoundPage} />
         </Switch>
         <Footer />

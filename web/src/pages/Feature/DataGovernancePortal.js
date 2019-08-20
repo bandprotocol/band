@@ -142,10 +142,9 @@ export default () => {
               Access Data Governance{' '}
             </Button>
           </Flex>
-        </PageContainer>
 
-        {/* Part 1: Setup Band Wallet & Get Dataset Tokens */}
-        <PageContainer>
+          {/* Part 1: Setup Band Wallet & Get Dataset Tokens */}
+
           <Flex
             justifyContent="space-between"
             flexDirection="row"
@@ -211,10 +210,9 @@ export default () => {
               <Image src={SetupBandSrcLogin} />
             </Box>
           </Flex>
-        </PageContainer>
 
-        {/* Part 2: Stake Dataset Tokens for Qualified Providers */}
-        <PageContainer>
+          {/* Part 2: Stake Dataset Tokens for Qualified Providers */}
+
           <Flex
             justifyContent="space-between"
             mt="122px"
@@ -274,10 +272,9 @@ export default () => {
               </Text>
             </Flex>
           </Flex>
-        </PageContainer>
 
-        {/* Part 3: Participate in Votings */}
-        <PageContainer>
+          {/* Part 3: Participate in Votings */}
+
           <Flex justifyContent="space-between" mt="125.5px" alignItems="left">
             <Flex flexDirection="row">
               <Flex flexDirection="column" flex={1}>
@@ -334,9 +331,9 @@ export default () => {
               </Box>
             </Flex>
           </Flex>
-        </PageContainer>
-        {/* Explore more feature button */}
-        <PageContainer>
+
+          {/* Explore more feature button */}
+
           <Flex justifyContent="center" maxWidth="500px" my="100px">
             <Button
               color="white"

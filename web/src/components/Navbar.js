@@ -242,7 +242,7 @@ const Navbar = props => {
         newST,
       ]
     },
-    [showNav],
+    [],
   )
 
   useEffect(() => {
@@ -251,12 +251,12 @@ const Navbar = props => {
       setSelectedTab(-1)
     }
     prevLocation.current = props.location
-  })
+  }, [props.location])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [handleScroll])
 
   const selectTab = tabId => {
     setSelectedTab(tabId)
@@ -624,7 +624,7 @@ const Navbar = props => {
             tabs={[
               {
                 title: 'Overview',
-                link: '/company/overview',
+                link: '/company/about-us',
                 imgIndex: 5,
                 imgHeight: '46px',
                 content: `Standard tokenization frameworks and incentive stuctures for data in Web 3.0`,
