@@ -19,14 +19,14 @@ import {
   Link,
   Bold,
 } from 'ui/common'
-import BandInTheMiddle from 'images/band-overview.png'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons'
+
 import Sequoia from 'images/sequoia.svg'
 import Dunamu from 'images/dunamu.svg'
 import Seax from 'images/seax.png'
 import BackgroundCompanySrc from 'images/background-company.png'
 import media, { isMobile } from 'ui/media'
-
-import StartBuilding from 'components/StartBuilding'
 
 import CoinDeskSrc from 'images/featured/coindesk.png'
 import YahooNewsSrc from 'images/featured/yahoo-news.png'
@@ -48,7 +48,6 @@ import Peach from 'images/team/peach.png'
 import Ming from 'images/team/ming.png'
 import Q from 'images/team/q.png'
 import Meen from 'images/team/meen.png'
-import { hidden } from 'ansi-colors'
 
 const Featured = styled.a.attrs({
   target: '_blank',
@@ -363,7 +362,11 @@ export default () => {
                       'linear-gradient(to bottom, #8199ff, #6073de)',
                   }}
                 >
-                  <Text>Download Media Kit</Text>
+                  Download Media Kit
+                  <FontAwesomeIcon
+                    style={{ marginLeft: '10px' }}
+                    icon={faCloudDownloadAlt}
+                  />
                 </Button>
               </Flex>
             </Flex>
