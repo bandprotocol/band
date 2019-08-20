@@ -80,9 +80,9 @@ export default () => {
               <Text
                 textAlign="center"
                 fontWeight="300"
-                fontSize="14px"
+                fontSize={['14px', '16px']}
                 mb={['0px', '20px']}
-                style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
+                style={{ maxWidth: '300px', lineHeight: '2', height: '100px' }}
               >
                 Integrate existing data feeds to a dApp takes less than 10 lines
                 of code.
@@ -114,9 +114,9 @@ export default () => {
               <Text
                 textAlign="center"
                 fontWeight="300"
-                fontSize="14px"
+                fontSize={['14px', '16px']}
                 mb="20px"
-                style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
+                style={{ maxWidth: '300px', lineHeight: '2', height: '100px' }}
               >
                 Leverage built-in delegated consensus to distribute risk of
                 collusion in the decentralized platform.
@@ -142,9 +142,9 @@ export default () => {
               <Text
                 textAlign="center"
                 fontWeight="300"
-                fontSize="14px"
+                fontSize={['14px', '16px']}
                 mb="20px"
-                style={{ maxWidth: '300px', lineHeight: '2', height: '75px' }}
+                style={{ maxWidth: '300px', lineHeight: '2', height: '100px' }}
               >
                 Incentives encourage competitions to drive unit data costs down
                 without compromising security.
@@ -203,7 +203,7 @@ export default () => {
       </Box>
 
       {/* Section 3: Use cases */}
-      <Box bg="white" mt={['0px', '50px']} mb={['50px', '90px']}>
+      <Box bg="white" mt={['0px', '50px']} mb={['50px', '100px']}>
         <PageContainer>
           <Text
             lineHeight={1.6}

@@ -44,32 +44,6 @@ import Animate11Src from 'images/animate-tcd/animate-11.png'
 import Animate12ASrc from 'images/animate-tcd/animate-12a.png'
 import Animate12BSrc from 'images/animate-tcd/animate-12b.png'
 
-const OutlineButton = styled(Button)`
-  font-family: Avenir;
-  color: #4a4a4a;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: white;
-  width: ${props => (props.isMobile ? '196px' : '182px')};
-  height: 46px;
-  border-radius: 2px;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #6b7df5;
-  }
-
-  &:active {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
-
 const animatorSteps = [
   {
     src: Step1Src,
@@ -325,7 +299,7 @@ export default () => {
               fletterSpacing="1px"
               fontWeight={600}
               fontSize={['32px', '48px']}
-              color="#4a4a4a"
+              color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
             >

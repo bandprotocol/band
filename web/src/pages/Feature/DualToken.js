@@ -24,32 +24,6 @@ import DataSetTokenSrc from 'images/featured/dataset-token.png'
 import DataSetTokenSrc2 from 'images/featured/dataset-token-2.png'
 import BondingCurveSrc from 'images/featured/bonding-curve.png'
 
-const OutlineButton = styled(Button)`
-  font-family: Avenir;
-  color: #4a4a4a;
-  font-size: 16px;
-  font-weight: 500;
-  background-color: white;
-  width: ${props => (props.isMobile ? '196px' : '182px')};
-  height: 46px;
-  border-radius: 2px;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #6b7df5;
-  }
-
-  &:active {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
-
 const OvalNumber = styled(Flex).attrs({
   alignItems: 'center',
   justifyContent: 'center',
@@ -73,18 +47,18 @@ export default () => {
       mt="-80px"
     >
       {/* Section 1 */}
-      <Box pt="60px" bg="f2f2f2">
+      <Box pt="60px" bg="white">
         <PageContainer>
           <Flex
             pt={['20px', '100px']}
             pb={['30px', '60px']}
-            justifyContent="center"
+            alignItems="center"
             flexDirection="column"
           >
             <Text
               lineHeight={['45px', '80px']}
               fletterSpacing="1px"
-              fontSize={['30px', '60px']}
+              fontSize={['24px', '48px']}
               fontWeight="bold"
               color="#3b426b"
               textAlign={['center', 'center']}
@@ -101,13 +75,18 @@ export default () => {
               lineHeight={['20px', '36px']}
               fontSize={['14px', '18px']}
               color="#323232"
+              style={{ maxWidth: '970px' }}
             >
               Band Protocol functions on two types of tokens: Dataset Tokens and
               BAND Token. Here's how we use the two tokens to create economic
               incentives that allow users to support the creation of reliable
               and accessible datasets.
             </Text>
-            <Image src={DualTokenSrc} />
+            <Image
+              src={DualTokenSrc}
+              style={{ maxWidth: '970px' }}
+              mt={['0px', '30px']}
+            />
           </Flex>
         </PageContainer>
       </Box>
@@ -142,6 +121,7 @@ export default () => {
           <Text
             fontSize={['14px', '18px']}
             lineHeight={['20px', '36px']}
+            fontWeight="300"
             color="#323232"
           >
             A dataset token is a token that anyone can buy into that grants the
@@ -169,7 +149,7 @@ export default () => {
               color="#323232"
             >
               2)
-            </Highlight>{' '}
+            </Highlight>
             participate in the community (as a user of the data from that
             dataset) and vote for data providers they trust to do the hard work
             for them. With only the top provider gaining the right to contribute
@@ -191,6 +171,7 @@ export default () => {
                 lineHeight={['20px', '36px']}
                 my={'10px'}
                 color="#323232"
+                fontWeight="300"
               >
                 The primary source of incentive in the system is from selling
                 the data to smart contracts. Every time the data is sold, the
@@ -214,6 +195,7 @@ export default () => {
                 fontSize={['14px', '18px']}
                 lineHeight={['20px', '36px']}
                 my={'10px'}
+                fontWeight="300"
                 color="#323232"
               >
                 This mechanism ensures that everyone involved in the process of
@@ -261,13 +243,14 @@ export default () => {
               justifyContent={['space-between']}
             >
               <Box>
-                <Image src={BondingCurveSrc} />
+                <Image src={BondingCurveSrc} style={{ maxWidth: '340px' }} />
               </Box>
-              <Flex flexDirection="column">
+              <Flex flexDirection="column" style={{ maxWidth: '700px' }}>
                 <Text
                   fontSize={['14px', '18px']}
                   lineHeight={['20px', '36px']}
                   my={['20px']}
+                  fontWeight="300"
                   color="#323232"
                 >
                   BAND token functions as collateral for dataset tokens. Dataset

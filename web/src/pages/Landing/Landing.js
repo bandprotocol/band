@@ -57,7 +57,7 @@ export default () => {
     <Box
       style={{
         background: 'white',
-        color: '#323232',
+        color: '#3b426b',
         overflow: 'hidden',
       }}
       mt="-80px"
@@ -322,7 +322,7 @@ export default () => {
                   fontFamily: 'bio-sans',
                 }}
               >
-                <Text color="#323232">Connect to</Text>
+                <Text color="#3b426b">Connect to</Text>
                 <Text color="#5569de" ml={['0px', '5px']}>
                   Real-World Information
                 </Text>
@@ -385,7 +385,7 @@ export default () => {
                   fontFamily: 'bio-sans',
                 }}
               >
-                <Text color="#323232">Connect to</Text>
+                <Text color="#3b426b">Connect to</Text>
                 <Text color="#5569de" ml="5px">
                   Any Open API
                 </Text>
@@ -609,7 +609,7 @@ export default () => {
                 Data Availability
               </Text>
               <Text
-                color="#323232"
+                color="#3b426b"
                 fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
@@ -657,7 +657,7 @@ export default () => {
                 Data Reliability
               </Text>
               <Text
-                color="#323232"
+                color="#3b426b"
                 fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
@@ -705,7 +705,7 @@ export default () => {
                 Aligned Economic Incentives
               </Text>
               <Text
-                color="#323232"
+                color="#3b426b"
                 fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"
@@ -754,7 +754,7 @@ export default () => {
                 Decentralizing Trust Point
               </Text>
               <Text
-                color="#323232"
+                color="#3b426b"
                 fontSize={['24px', '36px']}
                 fontWeight="bold"
                 mb="10px"

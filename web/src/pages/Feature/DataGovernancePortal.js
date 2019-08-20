@@ -23,7 +23,7 @@ export default () => {
       mt="-80px"
     >
       {/* Section 1 */}
-      <Box pt="60px" bg="f2f2f2">
+      <Box pt="60px" bg="white">
         <PageContainer>
           <Flex
             mt={['89px']}
@@ -35,8 +35,8 @@ export default () => {
               lineHeight={1.6}
               fletterSpacing="1px"
               fontWeight={600}
-              fontSize={['60px']}
-              color="#4a4a4a"
+              fontSize={['24px', '48px']}
+              color="#3b426b"
               textAlign={['center', 'center']}
               mt={['30px', '0px']}
             >
@@ -48,7 +48,7 @@ export default () => {
         </PageContainer>
       </Box>
 
-      {/* Section 3 */}
+      {/* Section 2 */}
       <Box bg="white" mt="10px">
         <PageContainer>
           <Image src={BandappSrc} width="100%" style={{ zIndex: 0 }} />
