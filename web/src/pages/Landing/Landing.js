@@ -66,14 +66,14 @@ export default () => {
       <Box
         pt="60px"
         style={{
-          backgroundImage: 'linear-gradient(to bottom, #5a7ffd, #495fd6)',
+          backgroundImage: 'linear-gradient(to bottom, #5A7FFD 5%, #354392)',
         }}
       >
         <Box
           style={{
             backgroundImage: `url(${LandingHero})`,
             backgroundPosition: `${_isMobile ? '-890px 340px' : 'bottom'}`,
-            backgroundSize: `${_isMobile ? 'cover' : 'contain'}`,
+            backgroundSize: `${_isMobile ? 'cover' : '1700px 550px'}`,
             backgroundRepeat: 'no-repeat',
           }}
         >
@@ -309,7 +309,7 @@ export default () => {
           >
             {/* Connect to Real-World Information */}
             <Flex flexDirection="column" alignItems="flex-start" mt="50px">
-              <Image src={LandingRealworld} />
+              <Image src={LandingRealworld} style={{ maxWidth: 400 }} />
               <Flex
                 flexDirection={['column', 'row']}
                 alignItems={['flex-start', 'center']}
@@ -372,7 +372,7 @@ export default () => {
               pr={['0px', '74px']}
               mt={['40px', '0px']}
             >
-              <Image src={LandingOpenAPI} />
+              <Image src={LandingOpenAPI} style={{ maxWidth: 400 }} />
               <Flex
                 flexDirection="row"
                 alignItems={['flex-start', 'center']}
