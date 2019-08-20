@@ -216,7 +216,14 @@ export default () => {
                 lineHeight={1.5}
               >
                 Check out more vidoe tutorials at our{' '}
-                <Highlight color="#5569de">Youtube channel</Highlight>
+                <AbsoluteLink
+                  href={
+                    'https://www.youtube.com/channel/UCmmNlun2aMmOaIEQ3H-htuw'
+                  }
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Highlight color="#5569de">Youtube channel</Highlight>
+                </AbsoluteLink>
               </Text>
             </Flex>
           </Flex>
