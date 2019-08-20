@@ -254,7 +254,7 @@ export default () => {
               <Text
                 fontSize={['14px', '16px']}
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
+                style={{ lineHeight: '2', maxWidth: '700px' }}
                 mt="10px"
               >
                 The majority of existing decentralized finance (DeFi)
@@ -298,7 +298,7 @@ export default () => {
               <Text
                 fontSize={['14px', '16px']}
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
+                style={{ lineHeight: '2', maxWidth: '700px' }}
                 mt="10px"
               >
                 Many decentralized applications utilize tokens as a mean of
@@ -339,7 +339,7 @@ export default () => {
               <Text
                 fontSize={['14px', '16px']}
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
+                style={{ lineHeight: '2', maxWidth: '700px' }}
                 mt="10px"
               >
                 Gaming and gambling have been one of biggest sectors in the
@@ -375,7 +375,7 @@ export default () => {
               <Text
                 fontSize={['14px', '16px']}
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
+                style={{ lineHeight: '2', maxWidth: '700px' }}
                 mt="10px"
               >
                 Buying and selling real-world products in a fully trustless way
@@ -414,7 +414,7 @@ export default () => {
               <Text
                 fontSize={['14px', '16px']}
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
+                style={{ lineHeight: '2', maxWidth: '700px' }}
                 mt="10px"
               >
                 Many decentralized applications struggle to deal with fake
@@ -453,7 +453,7 @@ export default () => {
               <Text
                 fontSize={['14px', '16px']}
                 fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '500px' }}
+                style={{ lineHeight: '2', maxWidth: '700px' }}
                 mt="10px"
               >
                 Smart contracts are currently limited because they cannot bridge
