@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
-import { colors } from 'ui'
+import FilledButton from 'components/FilledButton'
 import {
   Flex,
   Text,
@@ -31,31 +31,6 @@ import Usecase3 from 'images/usecase3.jpg'
 import Usecase4 from 'images/usecase4.jpg'
 import Usecase5 from 'images/usecase5.jpg'
 import Usecase6 from 'images/usecase6.jpg'
-
-const FilledButton = styled(Button)`
-  font-family: Avenir;
-  color: white;
-  font-size: 16px;
-  padding: 13px 34px;
-  font-weight: 500;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  height: 46px;
-  border-radius: 2px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-image: linear-gradient(to bottom, #2a3a7f, #131b48);
-  cursor: pointer;
-  font-family: bio-sans;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -388,21 +363,11 @@ export default () => {
 
           {/* Next: Dual-toiken Econimics */}
           <Flex justifyContent="center" my="120px">
-            <FilledButton width="400px">
-              <Flex
-                justifyContent="space-between"
-                alignItems="center"
-                width="100%"
-              >
-                <Text color="white" fontSize="16px">
-                  Next: Dual-token Economics
-                </Text>
-                {/* TODO: change it into actual symbol */}
-                <Text color="white" fontSize="16px">
-                  ->
-                </Text>
-              </Flex>
-            </FilledButton>
+            <FilledButton
+              width="400px"
+              message="Next: Dual-token Economics"
+              arrow
+            />
           </Flex>
         </PageContainer>
       </Box>

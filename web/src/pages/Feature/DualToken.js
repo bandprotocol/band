@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
+import FilledButton from 'components/FilledButton'
 import {
   Flex,
   Text,
@@ -21,30 +22,6 @@ import DualTokenSrc from 'images/featured/dual-token.png'
 import DataSetTokenSrc from 'images/featured/dataset-token.png'
 import DataSetTokenSrc2 from 'images/featured/dataset-token-2.png'
 import BondingCurveSrc from 'images/featured/bonding-curve.png'
-
-const FilledButton = styled(Button)`
-  font-family: Avenir;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
-  height: 46px;
-  border-radius: 2px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #4a4a4a;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -247,41 +224,24 @@ export default () => {
                   mechanism, guaranteeing instant liquidity and sufficient value
                   for correct dataset incentives to function properly.
                 </Text>
-                <Button
-                  style={{
-                    width: '233px',
-                    height: '39.8px',
-                    backgroundImage:
-                      'linear-gradient(to bottom, #00a4ff, #5569de)',
-                  }}
-                >
-                  Get Band Airdrop ->
-                </Button>
+                <FilledButton
+                  message="Get Band Airdrop"
+                  bg="linear-gradient(to bottom, #00a4ff, #5569de)"
+                  arrow
+                  width="233px"
+                  fontSize="14px"
+                />
               </Flex>
             </Flex>
           </Flex>
 
-          {/* Explore more feature button */}
-          <Flex justifyContent="center" maxWidth="500px" my="50px">
-            <Button
-              style={{
-                width: '514.7px',
-                height: '59.7px',
-                backgroundImage: 'linear-gradient(to bottom, #2a3a7f, #1c2764)',
-              }}
-            >
-              <Text
-                fontSize="21.5px"
-                fontWeight={600}
-                fontFamily="BisoSans"
-                color="#ffffff"
-                style={{
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Next: Visualizing How Data are Curated ->
-              </Text>
-            </Button>
+          {/* Visualizing How Data are Curated button */}
+          <Flex justifyContent="center" alignItems="center" my="50px">
+            <FilledButton
+              message="Next: Visualizing How Data are Curated"
+              arrow
+              width="500px"
+            />
           </Flex>
         </PageContainer>
       </Box>

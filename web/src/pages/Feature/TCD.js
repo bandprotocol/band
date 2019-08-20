@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
+import FilledButton from 'components/FilledButton'
 import {
   Flex,
   Text,
@@ -17,30 +18,6 @@ import {
   Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
-
-const FilledButton = styled(Button)`
-  font-family: Avenir;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
-  height: 46px;
-  border-radius: 2px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #4a4a4a;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -87,6 +64,7 @@ export default () => {
             pt={['50px', '100px']}
             pb={['50px', '60px']}
             justifyContent="center"
+            alignItems="center"
             flexDirection="column"
           >
             <Text
@@ -102,7 +80,11 @@ export default () => {
               <br />
               Token-Curated DataSource
             </Text>
-            <Text textAlign="center" mt="20px" style={{ lineHeight: '2' }}>
+            <Text
+              textAlign="center"
+              mt="20px"
+              style={{ lineHeight: '2', maxWidth: '1000px' }}
+            >
               Token-Curated DataSource (TCD) is a standard for community to
               collectively curate data. Similarly to Delegated Proof of Stake
               (dPoS) concensus, Dataset token holders collectively elect data
@@ -120,24 +102,13 @@ export default () => {
           <Flex justifyContent="center">
             <Flex bg="pink" width="100%" style={{ height: '400px' }} />
           </Flex>
-          {/* Explore more feature button */}
-          <Flex justifyContent="center" maxWidth="500px" my="50px">
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              bg="#4a4a4a"
-              p="16px 15px"
-              width="100%"
-              style={{ maxWidth: '500px', borderRadius: '4px' }}
-            >
-              <Text color="white" fontSize="16px">
-                Next: Participating in Data Curation
-              </Text>
-              {/* TODO: change it into actual symbol */}
-              <Text color="white" fontSize="16px">
-                ->
-              </Text>
-            </Flex>
+
+          <Flex justifyContent="center" my="50px">
+            <FilledButton
+              message="Next: Participating in Data Curation"
+              arrow
+              width="520px"
+            />
           </Flex>
         </PageContainer>
       </Box>

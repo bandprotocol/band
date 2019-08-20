@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
+import FilledButton from 'components/FilledButton'
 import {
   Flex,
   Text,
@@ -17,30 +18,6 @@ import {
   Bold,
 } from 'ui/common'
 import { isMobile } from 'ui/media'
-
-const FilledButton = styled(Button)`
-  font-family: Avenir;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-  width: 196px;
-  height: 46px;
-  border-radius: 2px;
-  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.15);
-  background-color: #4a4a4a;
-  cursor: pointer;
-
-  transition: all 0.2s;
-
-  &:hover {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -297,23 +274,13 @@ export default () => {
           </Flex>
 
           {/* Learn More in Developer Doc */}
-          <Flex justifyContent="center" maxWidth="500px" my="50px">
-            <Flex
-              justifyContent="space-between"
-              alignItems="center"
-              bg="#4a4a4a"
-              p="16px 15px"
-              width="100%"
-              style={{ maxWidth: '500px', borderRadius: '4px' }}
-            >
-              <Text color="white" fontSize="16px">
-                Learn More in Developer Doc
-              </Text>
-              {/* TODO: change it into actual symbol */}
-              <Text color="white" fontSize="16px">
-                ->
-              </Text>
-            </Flex>
+
+          <Flex justifyContent="center" my="50px">
+            <FilledButton
+              message="Learn More in Developer Doc"
+              arrow
+              width="520px"
+            />
           </Flex>
         </PageContainer>
       </Box>

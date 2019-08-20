@@ -68,10 +68,6 @@ const OutlineButton = styled(Button)`
 
   transition: all 0.2s;
 
-  &:hover {
-    background-color: #6b7df5;
-  }
-
   &:active {
     background-color: #5269ff;
   }
