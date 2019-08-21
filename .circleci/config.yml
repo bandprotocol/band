@@ -1,0 +1,47 @@
+version: 2
+
+jobs:
+  build_web:
+    docker:
+      - image: circleci/node:10.16.2
+    working_directory: ~/repo/web
+    steps:
+      - checkout
+      - run:
+          name: build web
+          command: |
+            cd web
+            yarn 
+            yarn test
+  build_app:
+    docker:
+      - image: circleci/node:10.16.2
+    working_directort: ~/repo/app
+    steps:
+      - checkout
+      - run:
+          name: build app
+          command: |
+            cd app
+            yarn
+            yarn test
+
+  build_contracts:
+    docker:
+      - image: circleci/node:10.16.2
+    working_directort: ~/repo/contracts
+    steps:
+      - checkout
+      - run:
+          name: build contracts
+          command: |
+            cd contracts
+            yarn
+            yarn truffle test
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_web
+      - build_app
+      - build_contracts
