@@ -12,6 +12,7 @@ import {
 } from 'ui/common'
 import media, { isMobile } from 'ui/media'
 import { withRouter } from 'react-router-dom'
+import Socialbar from 'components/Socialbar'
 
 import LogoSrc from 'images/logo.png'
 import MenuBurgerSrc from 'images/menu-burger.svg'
@@ -147,6 +148,8 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                     <Flex style={{ minWidth: '100%' }}>
                       <Subscribe navbar />
                     </Flex>
+                  ) : tab.hasSocialLink ? (
+                    <Socialbar />
                   ) : (
                     <Image src={getImg(imgIndex)} height={tab.imgHeight} />
                   )}
@@ -579,13 +582,14 @@ const Navbar = props => {
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
-                  link="/company/career"
                   isAbsolute={false}
                   imgIndex={9}
                   imgHeight="46px"
                   title="Social Media"
                   description={`Follow all our social media channels to get the most up-to-date information on Band Protocol`}
-                />
+                >
+                  <Socialbar />
+                </SubMenuMobile>
               </Flex>
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
@@ -776,6 +780,7 @@ const Navbar = props => {
                 title: 'Social Media',
                 imgIndex: 9,
                 imgHeight: '35px',
+                hasSocialLink: true,
                 content: `Follow all our social media channels to get the most up-to-date information on Band Protocol`,
               },
               {
