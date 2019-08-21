@@ -123,6 +123,48 @@ const allProviders = {
     name: 'Band Reserved Provider',
     image: 'https://app.kovan.bandprotocol.com/favicon.png',
   },
+  '0xDa7AFDeE902A41769479349373EF24D19368a9f1': {
+    name: 'USA node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
+  },
+  '0xDA7afa8f087AA2571276b17dBe45A4097C380eff': {
+    name: 'EU node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
+  },
+  '0xdA7Af7Ce7baD1454bdB96507Fb73b7478A345e3b': {
+    name: 'SEA node',
+    image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
+  },
+  '0xDa7a1eD9Df0cC9dFF132d9C3FFC6d76807C14E4b': {
+    name: 'USA node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
+  },
+  '0xDa7A1277D77ffE97628474dce34A903c97822cbb': {
+    name: 'EU node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
+  },
+  '0xda7a1331BD1d0283bac9Bb06a2BE0714901c22b0': {
+    name: 'SEA node',
+    image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
+  },
+  '0xdA7A5879fd7956f3869eCD21B6f58b2aFDD1a1bc': {
+    name: 'USA node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
+  },
+  '0xDa7a5d4F189CcB60CA5c9243348D7086e9EaD434': {
+    name: 'EU node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
+  },
+  '0xDA7A51d45A6fA2C9ed66EB568b9F8aB34f011001': {
+    name: 'SEA node',
+    image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
+  },
   default: { name: 'Unknown' },
 }
 

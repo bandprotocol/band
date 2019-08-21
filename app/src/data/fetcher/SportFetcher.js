@@ -43,14 +43,7 @@ export const SportByTCDFetcher = withRouter(
     }
 
     async fetch() {
-      const {
-        tcdAddress,
-        tcdPrefix,
-        currentPage,
-        nSportList,
-        home,
-        away,
-      } = this.props
+      const { tcdAddress, currentPage, nSportList, home, away } = this.props
       const skip = (currentPage - 1) * nSportList
       let params =
         skip > 0
@@ -77,8 +70,8 @@ export const SportByTCDFetcher = withRouter(
           keyOnChain: sport.key,
           home,
           away,
-          homeFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), home).label,
-          awayFullName: getSportTeamByCode(tcdPrefix.toUpperCase(), away).label,
+          homeFullName: getSportTeamByCode(sport.league, home).label,
+          awayFullName: getSportTeamByCode(sport.league, away).label,
           scoreAway: scoreAway,
           scoreHome: scoreHome,
         }
