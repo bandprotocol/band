@@ -15,7 +15,6 @@ jobs:
             yarn test
   build_app:
     docker:
-      - image: circleci/python:2.7.16
       - image: circleci/node:10.16.2
     working_directort: ~/repo/app
     steps:
