@@ -289,7 +289,6 @@ export default () => {
         justifyContent="center"
         mx={['calc(50vw - 400px)', 'calc(480px - 50vw)']}
         alignItems="center"
-        color="#404fac"
         fontWeight="900"
         flexDirection={['column', 'row']}
         style={{

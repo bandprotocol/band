@@ -15,7 +15,7 @@ import Usecase3 from 'images/usecase3.jpg'
 import Usecase4 from 'images/usecase4.jpg'
 import Usecase5 from 'images/usecase5.jpg'
 import Usecase6 from 'images/usecase6.jpg'
-import BandOffering from 'images/band-offering.png'
+import BandOffering from 'images/comparison-table.webp'
 
 export default () => {
   const exRef = useRef(null)
@@ -206,7 +206,7 @@ export default () => {
               width="100%"
               mt={['10px', '30px']}
               style={{
-                height: _isMobile ? '150px' : '480px',
+                height: _isMobile ? '150px' : '540px',
                 backgroundImage: `url(${BandOffering})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'contain',
