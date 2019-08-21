@@ -27,6 +27,6 @@ Ready to dive 🏊‍ in? Continue to the next page to learn more about the prob
 <!-- - Go to [Protocol Architecture](/band/tokens.md) to learn high-level concepts of Band Protocol. -->
 
 - Go to [DApp Developer Guide](/devs/overview.md) to learn how to integrate your dapps with Band's public datasets.
-  <!-- - Go to [Token Holder Guide](/holders/overview.md) to learn how to participate on protocol governance and earn rewads. -->
-- Go to [Data Provider Guide](/providers/overview.md) to learn how to become a data provider and earn revenue share.
+    <!-- - Go to [Token Holder Guide](/holders/overview.md) to learn how to participate on protocol governance and earn rewads. -->
+  <!-- - Go to [Data Provider Guide](/providers/overview.md) to learn how to become a data provider and earn revenue share. -->
 - Go to [Available Datasets](TODO) to explore datasets current available on Band Protocol.

@@ -6,3 +6,5 @@ Band Protocol is ready to be used on supported Ethereum networks. Listed below i
 - [Web API Oracle (Kovan)](web-oracle.md): supports query to any JSON-based public Web 2.0 API.
 - [Sport Events (Kovan)](sport-kovan.md): contains sport results from major professional leagues in the world.
 - [Lottery Results (Kovan)](lottery-kovan.md): contains lottery results from worldwide public lottery authorities.
+
+If your applications have specific needs beyond what currently exists, please reach out to us at [connect@bandprotocol.com](mailto:connect@bandprotocol.com).

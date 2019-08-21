@@ -14,12 +14,17 @@ Similar to other datasets on Band Protocol, data consumers query for financial d
 
 ### Input Key
 
-An input key consists of two parts. The first part, [Query Type](#supported-query-types), is a 4-byte unique identifier that specifies the type of financial data query. The second part, [Asset Symbol](#asset-symbols), is a variable length string that uniquely identifies the asset to query. Both parts are concatnated without a delimiter. Examples are provided as follows.
+An input key consists of two parts, concatnated with `/` as the delimiter.
 
-| Key (hex)                | Key (ascii)   | Explanation                |
-| ------------------------ | ------------- | -------------------------- |
-| `80dec7374554482f555344` | `....ETH/USD` | Spot price of ETH/USD pair |
-| `80dec7374441492f455448` | `....DAI/ETH` | Spot price of DAI/ETH pair |
+- The first part, [Query Type](#supported-query-types), is a unique identifier that identifies query type.
+- The second part is a variable length parameter as required from corresponding query type.
+
+Examples are provided as follows.
+
+| Key (hex)                      | Key (ascii)      | Explanation                  |
+| ------------------------------ | ---------------- | ---------------------------- |
+| `53504f5450582f4642`           | `SPOTPX/FB`      | Spot price of Facebook stock |
+| `53504f5450582f4554482d555344` | `SPOTPX/ETH-USD` | Spot price of ETH/USD pair   |
 
 ### Output Value
 
@@ -27,32 +32,68 @@ An output value is a 256-bit unsigned integer that represents the output result.
 
 ## Query Types
 
-Below is the list of query types currently supported in Financial Data Feeds. Each query type comes with its unique _keyword_ and 4-byte unique identifier defined as the first 4 bytes of [keccak256](https://emn178.github.io/online-tools/keccak_256.html) of the keyword.
+Below is the list of query types currently supported in Financial Data Feeds. Each query type comes with its unique _keyword_ to use as the first part of query keys.
 
-### Asset Spot Price
+### Asset Spot Price - `SPOTPX`
 
-| Keyword            | Hex ID     | Asset Classes |
-| ------------------ | ---------- | ------------- |
-| `asset_spot_price` | `80dec737` | TODO          |
+This query returns the _current_ fair price of the given asset. Different providers may have different interpretation of what a fair price is (mid price between spread, last traded price, etc).
 
-This query returns the _current_ fair trade price of the given asset. Different providers may have different interpretation of what a fair price is (the current mid price between spread, the last traded price, etc). The final result of this dataset is the _median_ value across all data providers. The final result is multiplied by 10<sup>18</sup>.
+- **parameter**: For currency pairs, the parameter is two currency symbols separated by `-` (e.g. `ETH-USD` for `ETH` price in terms of `USD`). For other assets, the parameter is the asset symbol (e.g. `FB` for Facebook price in terms of its quote currency, `USD`).
+
+- **output**: The final result of this dataset is the _median_ value across all data providers. The final result is multiplied by 10<sup>18</sup>.
 
 ## Asset Symbols
 
-Financial dataset split asset symbols into several _asset classes_. Each asset class has their own method of naming ticker symbol. It is also important to note that some query types only support certain asset classes.
+Financial dataset split asset symbols into several _asset classes_. Each asset class has its own method to name ticker symbols. Note that some query types only support certain asset classes.
 
-### Crypto-Fiat
+### Currency
 
-TODO
+**Fiat currencies**
 
-### US Equity
+| Symbol | Description             |
+| ------ | ----------------------- |
+| `CNY`  | Renminbi (Chinese) Yuan |
+| `JPY`  | Japanese Yen            |
+| `GBP`  | Pound Sterling          |
+| `THB`  | Thai Baht               |
+| `USD`  | United States Dollar    |
 
-TODO
+**Cryptocurrencies**
 
-### Foreign Exchange
+| Symbol | Description           |
+| ------ | --------------------- |
+| `BTC`  | Bitcoin               |
+| `ETH`  | Ethereum              |
+| `XRP`  | XRP                   |
+| `LTC`  | Litecoin              |
+| `BCH`  | Bitcoin Cash          |
+| `BAT`  | Basic Attention Token |
+| `DAI`  | Dai                   |
+| `OMG`  | OmiseGo               |
+| `REP`  | Augur                 |
+| `KNC`  | Kyber Network         |
+| `USDC` | USD Coin              |
+| `ZRX`  | 0x                    |
 
-TODO
+### US Equity 🇺🇸
+
+**Quote currency**: `USD`
+
+| Symbol | Company   |
+| ------ | --------- |
+| AAPL   | Apple     |
+| AMZN   | Amazon    |
+| FB     | Facebook  |
+| GOOG   | Alphabet  |
+| MSFT   | Microsoft |
+| NFLX   | Netflix   |
+| ORCL   | Oracle    |
 
 ### Commodity
 
-TODO
+**Quote currency**: `USD`
+
+| Symbol | Description | Unit  |
+| ------ | ----------- | ----- |
+| XAU    | Gold        | Ounce |
+| XAG    | Silver      | Ounce |

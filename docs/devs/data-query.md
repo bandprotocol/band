@@ -64,38 +64,38 @@ The final step is to call `query` function to get for data from the dataset cont
 on [dataset pages](../datasets/overview.md).
 
 ```ts
-/// Make a query for key hex"80dec7374554482f555344" (ETH/USD spot price)
+/// Make a query for key "SPOTPX/ETH-USD" (ETH/USD spot price)
 (bytes32 output, uint256 updatedAt, Oracle.Querystatus status) =
-  oracle.query.value(queryPrice)(abi.encodePacked(hex"80dec737", "ETH/USD"));
+  oracle.query.value(queryPrice)("SPOTPX/ETH-USD");
 ```
 
 Additionally, for developers that use `band-solidity` library, inheriting from `usingBandProtocol` class allows the smart contract to call additional helper methods on `Oracle` object. Full reference is also available in [Reference](reference.md). Some of the examples are provided below.
 
 ```ts
 /// Get the most-up-to-date ETH/USD rate
-uint256 ethusd = oracle.querySpotPrice("ETH/USD");
+uint256 ethusd = oracle.querySpotPrice("ETH-USD");
 
 /// Get the most-up-to-date ETH/USD rate. Must not be older than 10 mins.
-uint256 ethusd = oracle.querySpotPriceWithExpiry("ETH/USD", 10 minutes);
+uint256 ethusd = oracle.querySpotPriceWithExpiry("ETH-USD", 10 minutes);
 ```
 
 ## Request Data Update
 
 ::: warning Notice
-In this initial release, Band Foundation is responsible for facilitating data request updates. We are developing a decentralized peer-to-peer network to replace this. See [Data Provider](../providers/overview) for more details.
+In this initial release, Band Foundation is responsible for facilitating data request updates. We are developing a decentralized peer-to-peer network to replace this. See [Data Provider](../providers/overview.md) for more details.
 :::
 
 Although data providers strive to continously supply data to on-chain dataset contracts, it is possible that some data may not be up-to-date the at the moment you need. As a dapp developer, you can request data providers to supply data for a given **key** of a given **dataset** instantly by [POSTing](<https://en.wikipedia.org/wiki/POST_(HTTP)>) a [HTTP](https://en.wikipedia.org/wiki/HTTP) request to [https://data-request.bandprotocol.com](https://data-request.bandprotocol.com). An example is provided below.
 
 ```sh
-# Request a data update request for key hex"80dec7374554482f555344"
+# Request a data update request for key hex"53504f5450582f4554482d555344"
 curl -X POST \
   https://data-request.bandprotocol.com \
   -H 'Content-Type: application/json' \
   -d '{
     "network_id": 42,
     "dataset": "0x07416E24085889082d767AF4CA09c37180A3853c",
-    "key": "0x80dec7374554482f555344",
+    "key": "0x53504f5450582f4554482d555344",
     "broadcast": true
 }'
 ```
@@ -104,7 +104,7 @@ The example above shows a a request to update spot price of `ETH/USD` pair on Ko
 
 - `network_id`: Ethereum network ID (e.g. 1 for mainnet, 42 for Kovan)
 - `dataset`: Unique address of the dataset to update data
-- `key`: Hex-formatted key for data to update. See specification on the dataset page for details.
+- `key`: Hex-formatted key for data to update. See specification on the dataset pages for details.
 - `broadcast`: A boolean indicating whether the data update transaction should be automatically broadcast. If **true**, Band Foundation will broadcast the transaction. If **false**, this HTTP request will return an Ethereum transaction data.
 
 This feature is especially necessary for the Web Oracle dataset. You can read more about it [here](../datasets/web-oracle.html).
