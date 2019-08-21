@@ -10,9 +10,8 @@ jobs:
           name: build web
           command: |
             cd web
-            yarn
+            yarn 
             yarn test
-            cd ..
   build_app:
     docker:
       - image: circleci/python:2.7.16
@@ -26,7 +25,6 @@ jobs:
           cd app
           yarn install 
           yarn test
-          cd ..
 
   build_contracts:
     docker:
@@ -36,7 +34,7 @@ jobs:
       - checkout
       - run: 
           name: build contracts
-          command: 
+          command: |
             cd contracts
             yarn install
             yarn test
