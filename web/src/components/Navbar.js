@@ -44,7 +44,7 @@ const LinesText = styled(Text)`
 
 const Nav = styled.nav`
   display: flex;
-  height: 70px;
+  height: 60px;
   align-items: center;
   position: sticky;
   top: 0;
@@ -115,7 +115,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
         height: isSelected ? '215px' : '0px',
         position: 'fixed',
         left: '0',
-        top: '70px',
+        top: '60px',
         transition: 'all 0.25s',
         fontFamily: 'bio-sans',
         opacity: isSelected ? 1 : 0,
@@ -795,7 +795,7 @@ const Navbar = props => {
         width: '100vw',
         transition: 'all 350ms',
         position: 'fixed',
-        transform: `translateY(${!showNav && !showMenu ? '-70px' : '0px'})`,
+        transform: `translateY(${!showNav && !showMenu ? '-60px' : '0px'})`,
         zIndex: 3,
       }}
     >
@@ -806,7 +806,7 @@ const Navbar = props => {
           position: 'absolute',
           width: '100%',
           height: '100vh',
-          top: '70px',
+          top: '60px',
           opacity: 0,
           pointerEvents: showMenu ? 'all' : 'none',
           transition: 'all 0.5s',

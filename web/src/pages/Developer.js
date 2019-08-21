@@ -13,12 +13,13 @@ import {
   AbsoluteLink,
   Highlight,
 } from 'ui/common'
-import { isMobile } from 'ui/media'
+import Media, { isMobile } from 'ui/media'
 
 import PriceHero from 'images/price-hero.png'
 import SportHero from 'images/sport-hero.png'
 import LotteryHero from 'images/lottery-hero.png'
 import DataRequest from 'images/data-requests.png'
+import Audit from 'images/audit.svg'
 import { is } from 'css-select'
 
 const OutlineButton = styled(Button)`
@@ -41,6 +42,30 @@ const OutlineButton = styled(Button)`
 
   &:focus {
     outline: none;
+  }
+`
+
+const Report = styled.a`
+  display: flex;
+  line-height: 1.6;
+  align-items: center;
+
+  img {
+    transition: all 350ms;
+  }
+
+  &:hover > img {
+    transform: scale(1.3);
+  }
+
+  ${Media.mobile} {
+    text-align: center;
+    flex-direction: column;
+
+    img {
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
   }
 `
 
@@ -151,7 +176,7 @@ export default () => {
               bg="#e9edff"
               alignItems="center"
               justifyContent="center"
-              width="500px"
+              width="520px"
             >
               <Box
                 bg="#33cf41"
@@ -161,14 +186,24 @@ export default () => {
               />
               <Text
                 fontFamily="bio-sans"
-                fontSize="16px"
+                fontSize="18px"
                 fontWeight="bold"
                 color="#5569de"
-                lineHeight={2.6}
+                lineHeight={3.2}
+                style={{ letterSpacing: '0.3px' }}
               >
                 Live on Kovan Testnet
               </Text>
             </Flex>
+          </Flex>
+
+          <Flex mt="24px" justifyContent="center" alignItems="center">
+            <Report target="_blank" href="/audit-report.pdf">
+              <Image src={Audit} width={24} />
+              <Text ml={3} fontWeight={600} fontSize={16} color="#3B426B">
+                View security audit report on Band Protocol by CertiK
+              </Text>
+            </Report>
           </Flex>
 
           <Flex
@@ -196,7 +231,7 @@ export default () => {
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
-            mt="80px"
+            mt="100px"
             flex="auto"
           >
             <Flex style={{ width: '100%', maxWidth: 1200 }}>
