@@ -236,7 +236,7 @@ export default class CommunityIntegrationRender extends React.Component {
     const overviews = info.overview
     const dataFormat = info.dataFormat
 
-    const tcdInfo = getTCDInfomation(tcdPrefix + ':')
+    const tcdInfo = getTCDInfomation(tcdPrefix + ':',communityName)
 
     return (
       <PageStructure

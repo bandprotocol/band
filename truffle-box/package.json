@@ -1,0 +1,17 @@
+{
+  "name": "band-box",
+  "version": "0.0.1",
+  "description": "A BAND example in a Truffle block",
+  "scripts": {
+    "compile": "yarn truffle compile",
+    "test": "yarn truffle test",
+    "deploy": "yarn truffle migrate --network kovan"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "band-solidity": "^0.0.5",
+    "solc": "^0.5.11",
+    "truffle": "^5.0.32",
+    "truffle-hdwallet-provider": "^1.0.16"
+  }
+}

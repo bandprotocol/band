@@ -43,32 +43,32 @@ module.exports = {
       //   collapsable: false,
       //   children: ["holders/overview", "holders/ecosystem", "holders/get-band"]
       // },
-      {
-        title: "📡 Data Provider Guide",
-        collapsable: false,
-        children: ["providers/overview"]
-      },
+      // {
+      //   title: "📡 Data Provider Guide",
+      //   collapsable: false,
+      //   children: ["providers/overview"]
+      // },
       {
         title: "📦 Available Datasets",
         collapsable: false,
         children: [
           "datasets/overview",
-          "datasets/web-oracle",
           "datasets/financial-kovan",
           "datasets/sport-kovan",
-          "datasets/lottery-kovan"
+          "datasets/lottery-kovan",
+          "datasets/web-oracle"
         ]
-      },
-      {
-        title: "🦄 Example Applications",
-        collapsable: false,
-        children: []
-      },
-      {
-        title: "📖 Smart Contract Reference",
-        collapsable: false,
-        children: []
       }
+      // {
+      //   title: "🦄 Example Applications",
+      //   collapsable: false,
+      //   children: []
+      // }
+      // {
+      //   title: "📖 Smart Contract Reference",
+      //   collapsable: false,
+      //   children: []
+      // }
     ]
   }
 };

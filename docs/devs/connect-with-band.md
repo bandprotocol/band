@@ -4,10 +4,12 @@ Now that you are onboard with us. Let's get started on to the actual implementat
 
 ## Create a Band-Powered Project
 
-If you are building a new project, by using [Truffle](https://www.trufflesuite.com/), you can bootstrap a new Ethereum-based project from a prepared boilerplate. Run the command below to unbox a new Band-powered project into your current directory.
+If you are building a new project, by using [Truffle](https://www.trufflesuite.com/), you can bootstrap a new Ethereum-based project from a prepared boilerplate. Run the commands below to create a new project under a new folder named `my_project` with Band Protocol connection pre-installed.
 
 ```sh
-truffle unbox bandprotocol/create-band-app
+mkdir my_project
+cd my_project
+npx truffle unbox bandprotocol/band
 ```
 
 ## Add Band to Your Existing Project
@@ -26,7 +28,7 @@ npm install band-solidity --save
 yarn add band-solidity
 ```
 
-## Import Band's Oracle Interface to Your Contract
+## Directly Import Band's Oracle Interface
 
 If you prefer to develop your project without a thrid-party dependency, you can simply add Band Protocol's `Oracle` interface to the top of your smart contract files.
 

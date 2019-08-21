@@ -35,12 +35,13 @@ const Ball = styled(Text).attrs(p => ({
   text-align: center;
 `
 
-const renderDataPoints = (tcdAddress, lotteries) => (
+const renderDataPoints = (tcdAddress, tcdPrefix, lotteries) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
         {lotteries.map(
           ({
+            lotteryType,
             time,
             lastUpdate,
             redBall,
@@ -54,7 +55,10 @@ const renderDataPoints = (tcdAddress, lotteries) => (
           }) => (
             <DataPoint
               key={time.valueOf()}
-              label={time.format('ddd, MMMM DD YYYY')}
+              label={
+                (tcdPrefix === 'tcd' ? lotteryType + ': ' : '') +
+                time.format('ddd, MMMM DD YYYY')
+              }
               keyOnChain={keyOnChain}
               k={time}
               v={() => (
@@ -199,7 +203,7 @@ export default class LotteryPage extends React.Component {
   }
 
   render() {
-    const { tcdAddress } = this.props
+    const { tcdAddress, tcdPrefix } = this.props
     const { currentPage, nLotteryList, selectedDate } = this.state
 
     return (
@@ -266,7 +270,7 @@ export default class LotteryPage extends React.Component {
                   )
                 } else {
                   this.currentLotteryLength = data.length
-                  return renderDataPoints(tcdAddress, data)
+                  return renderDataPoints(tcdAddress, tcdPrefix, data)
                 }
               }}
             </LotteyByTCDAddress>

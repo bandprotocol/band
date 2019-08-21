@@ -1,41 +1,47 @@
 version: 2
+
 jobs:
   build_web:
     docker:
       - image: circleci/node:10.16.2
-
+    working_directory: ~/repo/web
     steps:
       - checkout
-
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run: cd web && yarn install && yarn test
+      - run:
+          name: build web
+          command: |
+            cd web
+            yarn 
+            yarn test
   build_app:
     docker:
-      - image: circleci/python:2.7.16
       - image: circleci/node:10.16.2
-    
+    working_directort: ~/repo/app
     steps:
       - checkout
+      - run:
+          name: build app
+          command: |
+            cd app
+            yarn
+            yarn test
 
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run: cd app && yarn install && yarn test
-  build_conracts:
+  build_contracts:
     docker:
       - image: circleci/node:10.16.2
-      steps:
+    working_directort: ~/repo/contracts
+    steps:
       - checkout
-
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-      - run: cd contracts && yarn install && yarn test
+      - run:
+          name: build contracts
+          command: |
+            cd contracts
+            yarn
+            yarn truffle test
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_web
+      - build_app
+      - build_contracts
