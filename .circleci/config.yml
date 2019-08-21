@@ -3,7 +3,7 @@ jobs:
   build_web:
     docker:
       - image: circleci/node:10.16.2
-    working_directory: ~/repo
+    working_directory: ~/repo/web
     steps:
       - checkout
       - run: cd web && yarn install && yarn test
@@ -11,14 +11,14 @@ jobs:
     docker:
       - image: circleci/python:2.7.16
       - image: circleci/node:10.16.2
-
+    working_directort: ~/repo/app
     steps:
       - checkout
       - run: cd app && yarn install && yarn test
   build_contracts:
     docker:
       - image: circleci/node:10.16.2
-
+    working_directort: ~/repo/contracts
     steps:
       - checkout
       - run: cd contracts && yarn install && yarn test
