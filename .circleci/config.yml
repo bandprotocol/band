@@ -23,7 +23,7 @@ jobs:
           name: build app
           command: |
             cd app
-            yarn install 
+            yarn
             yarn test
 
   build_contracts:
@@ -36,8 +36,8 @@ jobs:
           name: build contracts
           command: |
             cd contracts
-            yarn install
-
+            yarn
+            yarn truffle test
 workflows:
   version: 2
   build:
