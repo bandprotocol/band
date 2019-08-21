@@ -1,4 +1,5 @@
 version: 2
+
 jobs:
   build_web:
     docker:
@@ -37,7 +38,7 @@ jobs:
           command: |
             cd contracts
             yarn install
-            yarn test
+
 workflows:
   version: 2
   build:
