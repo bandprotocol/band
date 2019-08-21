@@ -13,7 +13,7 @@ import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 
 const Container = styled(Box)`
-  background: #17192e;
+  background: #344498;
   color: #ffffff;
 
   a {
@@ -35,7 +35,7 @@ const SmallIcon = ({ ml, href, src }) => (
         },
       }}
     >
-      <Box mx={2}>
+      <Box mx={1}>
         <Image src={src} width="26px" />
       </Box>
     </AbsoluteLink>
@@ -47,10 +47,12 @@ export default () => {
     <Container>
       <PageContainer>
         <Flex
-          mb="45px"
           pt={['20px', '50px']}
+          pb={['20px', '70px']}
           flexWrap="wrap"
           flexDirection={['column', 'row']}
+          style={{ maxWidth: 1200 }}
+          m="0 auto"
         >
           <Box width="270px">
             <Flex alignItems="center" mb={['20px', 4]}>
@@ -65,31 +67,31 @@ export default () => {
           <Flex flex={[1, '0 0 200px']} ml={['0px', 'auto']}>
             <Box>
               <H4 mb={['10px', '30px']} py={['30px', 1]}>
-                Products
+                Features
               </H4>
               <Box mb={[3, '20px']}>
-                <Link to="/products/data-tokenization">
-                  <Text fontSize="14px">Data Tokenization</Text>
+                <Link to="/features/overview">
+                  <Text fontSize="14px">Product Overview</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/products/tcd">
+                <Link to="/features/dual-token">
+                  <Text fontSize="14px">Dual-Token Economics</Text>
+                </Link>
+              </Box>
+              <Box mb={[3, '20px']}>
+                <Link to="/features/tcd">
                   <Text fontSize="14px">Token-Curated DataSources</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/products/tcr">
-                  <Text fontSize="14px">Token-Curated Registry</Text>
+                <Link to="/features/data-governance-portal">
+                  <Text fontSize="14px">Data Governance Portal</Text>
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
-                <Link to="/products/wallet">
-                  <Text fontSize="14px">Band Web3 Wallet</Text>
-                </Link>
-              </Box>
-              <Box mb={[3, '20px']}>
-                <Link to="/products/private-sharing">
-                  <Text fontSize="14px">Private Data Sharing</Text>
+                <Link to="/developer">
+                  <Text fontSize="14px">For Developers</Text>
                 </Link>
               </Box>
             </Box>
@@ -97,29 +99,77 @@ export default () => {
           <Flex flex={[1, '0 0 150px']} ml={['0px', '64px']}>
             <Box>
               <H4 mb={['10px', '30px']} py={['30px', 1]}>
-                Explores
+                Company
+              </H4>
+              <Box mb={[3, '20px']}>
+                <Link to="/company/about-us">
+                  <Text fontSize="14px">Overview</Text>
+                </Link>
+              </Box>
+              <Box mb={[3, '20px']}>
+                <Link to="/company/career">
+                  <Text fontSize="14px">Career with Band</Text>
+                </Link>
+              </Box>
+            </Box>
+          </Flex>
+          <Flex flex={[1, '0 0 150px']} ml={['0px', '64px']}>
+            <Box>
+              <H4 mb={['10px', '30px']} py={['30px', 1]}>
+                Join Community
               </H4>
               <Box mb={[3, '20px']}>
                 <AbsoluteLink
                   target="_blank"
-                  href="https://app.bandprotocol.com"
+                  href="https://forum.bandprotocol.com"
                 >
-                  <Text fontSize="14px">Governance Portal</Text>
+                  <Text fontSize="14px">Developer Forum</Text>
                 </AbsoluteLink>
               </Box>
               <Box mb={[3, '20px']}>
                 <AbsoluteLink
                   target="_blank"
-                  href="https://data.bandprotocol.com"
+                  href="https://medium.com/bandprotocol"
                 >
-                  <Text fontSize="14px">Dataset Explorer</Text>
+                  <Text fontSize="14px">Blog</Text>
                 </AbsoluteLink>
               </Box>
+              <Flex
+                ml={['-5px', '-5px']}
+                mt={['10px', '20px']}
+                mb={['20px', '21px']}
+                justifyContent={['center', 'flex-start']}
+              >
+                <SmallIcon
+                  href="https://www.reddit.com/r/bandprotocol"
+                  src={Reddit}
+                  bg
+                />
+                <SmallIcon
+                  href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ"
+                  src={Telegram}
+                  ml="12px"
+                  bg
+                />
+                <SmallIcon
+                  href="https://medium.com/bandprotocol"
+                  src={Medium}
+                  ml="12px"
+                  bg
+                />
+
+                <SmallIcon
+                  href="https://twitter.com/bandprotocol"
+                  src={Twitter}
+                  ml="12px"
+                  bg
+                />
+              </Flex>
             </Box>
           </Flex>
         </Flex>
       </PageContainer>
-      <PageContainer>
+      {/* <PageContainer>
         <Flex
           alignItems={['left', 'center']}
           style={{ borderTop: 'solid 1px #8d94bf' }}
@@ -163,7 +213,7 @@ export default () => {
             />
           </Flex>
         </Flex>
-      </PageContainer>
+      </PageContainer> */}
     </Container>
   )
 }

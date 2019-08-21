@@ -13,6 +13,7 @@ export default {
   },
   space: [0, 4, 8, 16, 32, 64, 128, 256],
   fonts: {
+    head: 'bio-sans',
     sans: 'Montserrat, sans-serif',
   },
   shadows: {
@@ -21,7 +22,7 @@ export default {
   },
   buttons: {
     primary: {
-      fontFamily: 'Avenir, sans-serif',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',
@@ -34,7 +35,7 @@ export default {
       },
     },
     outline: {
-      fontFamily: 'Avenir, sans-serif',
+      fontFamily: 'bio-sans',
       fontWeight: 400,
       fontSize: '0.85em',
       padding: '0.9em 3em',

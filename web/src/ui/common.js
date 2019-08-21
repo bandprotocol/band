@@ -36,7 +36,7 @@ export const SemiBold = styled(Text).attrs({
 `
 
 export const Highlight = styled.span`
-  color: ${colors.purple.normal};
+  color: ${p => p.color || '#bbdeff'};
   ${p => p.large && 'font-size: 1.15em;'}
   ${p => p.bold && 'font-weight: bold;'}
   ${p => p.underline && 'text-decoration: underline;'}
