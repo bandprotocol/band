@@ -118,7 +118,7 @@ export default () => {
                   >
                     Band Protocol connects{' '}
                     <span style={{ color: '#BBDEFF' }}>smart contracts</span>{' '}
-                    with trusted
+                    with trusted{' '}
                     <span style={{ color: '#BBDEFF' }}>off-chain</span>
                     {_isMobile ? null : <br />}
                     <span style={{ color: '#BBDEFF' }}>information</span>,
@@ -271,7 +271,11 @@ export default () => {
         color="#404fac"
         fontWeight="900"
         flexDirection={['column', 'row']}
-        style={{ height: '65px', fontFamily: 'bio-sans' }}
+        style={{
+          height: '65px',
+          fontFamily: 'bio-sans',
+          fontSize: _isMobile ? 14 : 16,
+        }}
       >
         Kovan Testnet is LIVE! Check out the{' '}
         <Flex mt={['5px', '0px']}>
