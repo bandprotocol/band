@@ -58,7 +58,9 @@ export default () => {
             width="100%"
             flexDirection={['column', 'row']}
             justifyContent="space-between"
-            mt={['0px', '50px']}
+            mt={['0px', '30px']}
+            style={{ maxWidth: 1080 }}
+            mx="auto"
           >
             <Flex
               flexDirection="column"
@@ -71,7 +73,7 @@ export default () => {
               <Text
                 fontWeight="bold"
                 color="#3b426b"
-                fontSize={['20px', '24px']}
+                fontSize={['20px', '22px']}
                 mt="25px"
                 mb="20px"
               >
@@ -82,7 +84,11 @@ export default () => {
                 fontWeight="300"
                 fontSize={['14px', '16px']}
                 mb={['0px', '20px']}
-                style={{ maxWidth: '300px', lineHeight: '2', height: '100px' }}
+                style={{
+                  maxWidth: '300px',
+                  lineHeight: '1.8',
+                  height: '100px',
+                }}
               >
                 Integrate existing data feeds to a dApp takes less than 10 lines
                 of code.
@@ -105,7 +111,7 @@ export default () => {
               <Text
                 fontWeight="bold"
                 color="#3b426b"
-                fontSize={['20px', '24px']}
+                fontSize={['20px', '22px']}
                 mt="25px"
                 mb="20px"
               >
@@ -116,7 +122,11 @@ export default () => {
                 fontWeight="300"
                 fontSize={['14px', '16px']}
                 mb="20px"
-                style={{ maxWidth: '300px', lineHeight: '2', height: '100px' }}
+                style={{
+                  maxWidth: '300px',
+                  lineHeight: '1.8',
+                  height: '100px',
+                }}
               >
                 Leverage built-in delegated consensus to distribute risk of
                 collusion in the decentralized platform.
@@ -133,7 +143,7 @@ export default () => {
               <Text
                 fontWeight="bold"
                 color="#3b426b"
-                fontSize={['20px', '24px']}
+                fontSize={['20px', '22px']}
                 mt="25px"
                 mb="20px"
               >
@@ -144,7 +154,11 @@ export default () => {
                 fontWeight="300"
                 fontSize={['14px', '16px']}
                 mb="20px"
-                style={{ maxWidth: '300px', lineHeight: '2', height: '100px' }}
+                style={{
+                  maxWidth: '300px',
+                  lineHeight: '1.8',
+                  height: '100px',
+                }}
               >
                 Incentives encourage competitions to drive unit data costs down
                 without compromising security.
@@ -159,6 +173,7 @@ export default () => {
       <Box>
         <PageContainer>
           <Flex
+            mt={6}
             pt={['50px', '50px']}
             pb={['50px', '60px']}
             justifyContent="center"
@@ -168,7 +183,7 @@ export default () => {
               lineHeight={1.6}
               fletterSpacing="1px"
               fontWeight={300}
-              fontSize={['18px', '32px']}
+              fontSize={['18px', '28px']}
               color="#5569de"
               textAlign="center"
             >
@@ -203,13 +218,19 @@ export default () => {
       </Box>
 
       {/* Section 3: Use cases */}
-      <Box bg="white" mt={['0px', '50px']} mb={['50px', '100px']}>
+      <Box
+        bg="white"
+        mt={['0px', '100px']}
+        mb={['50px', '100px']}
+        style={{ maxWidth: 1080 }}
+        mx="auto"
+      >
         <PageContainer>
           <Text
             lineHeight={1.6}
             fletterSpacing="1px"
             fontWeight={300}
-            fontSize={['18px', '32px']}
+            fontSize={['18px', '28px']}
             color="#5569de"
             textAlign="center"
           >
@@ -230,7 +251,7 @@ export default () => {
           {/* Part 1 */}
           <Flex
             justifyContent="space-between"
-            mt={['25px', '40px']}
+            mt={['25px', '50px']}
             alignItems="center"
             flexDirection={['column', 'row']}
           >
@@ -276,7 +297,7 @@ export default () => {
           {/* Part 2 */}
           <Flex
             justifyContent="space-between"
-            mt={['40px', '40px']}
+            mt={['40px', '50px']}
             alignItems="center"
             flexDirection={['column', 'row']}
           >
@@ -319,7 +340,7 @@ export default () => {
           {/* Part 3 */}
           <Flex
             justifyContent="space-between"
-            mt={['40px', '40px']}
+            mt={['40px', '50px']}
             alignItems="center"
             flexDirection={['column', 'row']}
           >
@@ -353,7 +374,7 @@ export default () => {
           {/* Part 4 */}
           <Flex
             justifyContent="space-between"
-            mt={['40px', '40px']}
+            mt={['40px', '50px']}
             alignItems="center"
             flexDirection={['column', 'row']}
           >
@@ -394,7 +415,7 @@ export default () => {
           {/* Part 5 */}
           <Flex
             justifyContent="space-between"
-            mt={['40px', '40px']}
+            mt={['40px', '50px']}
             alignItems="center"
             flexDirection={['column', 'row']}
           >
@@ -431,7 +452,7 @@ export default () => {
           {/* Part 6 */}
           <Flex
             justifyContent="space-between"
-            mt={['40px', '40px']}
+            mt={['40px', '50px']}
             alignItems="center"
             flexDirection={['column', 'row']}
           >
