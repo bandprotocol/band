@@ -6,7 +6,7 @@ jobs:
     working_directory: ~/repo/web
     steps:
       - checkout
-      - run: 
+      - run:
           name: build web
           command: |
             cd web
@@ -19,12 +19,12 @@ jobs:
     working_directort: ~/repo/app
     steps:
       - checkout
-      - run: 
+      - run:
           name: build app
           command: |
-          cd app
-          yarn install 
-          yarn test
+            cd app
+            yarn install 
+            yarn test
 
   build_contracts:
     docker:
@@ -32,7 +32,7 @@ jobs:
     working_directort: ~/repo/contracts
     steps:
       - checkout
-      - run: 
+      - run:
           name: build contracts
           command: |
             cd contracts
