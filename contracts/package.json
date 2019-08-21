@@ -21,7 +21,7 @@
     "chai": "^4.2.0",
     "chai-bignumber": "^3.0.0",
     "decimal.js": "^10.2.0",
-    "eslint": "^6.1.0",
+    "eslint": "^6.2.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-node": "^9.1.0",
