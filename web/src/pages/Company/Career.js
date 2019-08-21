@@ -140,6 +140,7 @@ export default () => {
               </Text>
 
               <FilledButton
+                href="mailto:connect@bandprotocol.com"
                 message="Connect with Our Team"
                 arrow
                 width="348px"

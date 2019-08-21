@@ -71,12 +71,17 @@ export default () => {
                 width: '328px',
                 height: '47.7',
                 backgroundImage: 'linear-gradient(to bottom, #6179e1, #455ad3)',
+                padding: '0 20px',
               }}
             >
               <LinkWithArrow
                 textColor="white"
-                text="Access Data Governance"
+                text="Access Data Governance Portal"
                 href="https://app.kovan.bandprotocol.com/"
+                style={{
+                  lineHeight: '1.6em',
+                  fontWeight: 400,
+                }}
               />
             </Button>
           </Flex>
@@ -86,7 +91,7 @@ export default () => {
           <Flex
             justifyContent={['center', 'space-between']}
             flexDirection={['column', 'row']}
-            mt={['70px', '175px']}
+            mt={['70px', '250px']}
             alignItems="left"
           >
             <Flex pr="74px" flex={2}>
@@ -115,7 +120,7 @@ export default () => {
                   fontSize={['14px', '18px']}
                   lineHeight="36px"
                   color="#323232"
-                  style={{ lineHeight: '2', maxWidth: '400px' }}
+                  style={{ lineHeight: '2', maxWidth: '650px' }}
                   mt="10px"
                 >
                   Data Governance Portal uses Band Wallet, a multi-signature,
@@ -125,19 +130,19 @@ export default () => {
                   you can transfer Band tokens acquired from exchange (or faucet
                   on Testnet) and buy into the dataset tokens you desire.
                 </Text>
-                <Flex mt="24px">
+                {/* <Flex mt="24px">
                   <LinkWithArrow
                     style={{ fontSize: '20px', width: '100px' }}
                     text="Tutorial"
                     href="https://app.kovan.bandprotocol.com/"
                   />
-                </Flex>
+                </Flex> */}
               </Flex>
             </Flex>
-            <Box mt="20px" flex={1}>
+            <Box mt="-40px" flex={1}>
               <Image src={SetupBandSrcHome} />
             </Box>
-            <Box mt="20px" flex={1}>
+            <Box mt="-40px" flex={1}>
               <Image src={SetupBandSrcLogin} />
             </Box>
           </Flex>
@@ -180,7 +185,7 @@ export default () => {
                   fontSize={['16px', '18px']}
                   lineHeight="36px"
                   color="#323232"
-                  style={{ lineHeight: '2', maxWidth: '500px' }}
+                  style={{ lineHeight: '2', maxWidth: '650px' }}
                   my="19px"
                 >
                   Band Protocol uses delegated-proof-of-stake style consensus
@@ -190,13 +195,13 @@ export default () => {
                   data providers and token stakers based on a fee set by
                   governance parameters.
                 </Text>
-                <Flex my="24px">
+                {/* <Flex my="24px">
                   <LinkWithArrow
                     style={{ fontSize: '20px', width: '100px' }}
                     text="Tutorial"
                     href="https://app.kovan.bandprotocol.com/"
                   />
-                </Flex>
+                </Flex> */}
               </Flex>
             </Flex>
           </Flex>
@@ -223,7 +228,7 @@ export default () => {
                 <Text
                   fontSize={['16px', '18px']}
                   lineHeight="36px"
-                  style={{ lineHeight: '2', maxWidth: '400px' }}
+                  style={{ lineHeight: '2', maxWidth: '650px' }}
                   my={['19px']}
                 >
                   Governance parameters dictate how the dataset smart contract
@@ -234,13 +239,13 @@ export default () => {
                   vote in agreement, which typically requires a community-wide
                   coordination.
                 </Text>
-                <Flex mx="18px" mt="24px">
+                {/* <Flex mx="18px" mt="24px">
                   <LinkWithArrow
                     style={{ fontSize: '20px', width: '100px' }}
-                    text="Learn How"
+                    text="Tutorial"
                     href="https://app.kovan.bandprotocol.com/"
                   />
-                </Flex>
+                </Flex> */}
               </Flex>
               <Box mt="20px" flex={1}>
                 <Image src={BandVoting} />

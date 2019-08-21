@@ -34,6 +34,14 @@ import { callbackify } from 'util'
 
 const airdropLink = 'http://band-airdrop.surge.sh/tokenholder'
 
+const LinesText = styled(Text)`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`
+
 const Nav = styled.nav`
   display: flex;
   height: 70px;
@@ -59,7 +67,7 @@ const Nav = styled.nav`
 
 const SubMenu = styled(Flex).attrs({
   px: '20px',
-  pt: [3, 3, 3],
+  pt: [3, '36px', '36px'],
   flexDirection: 'column',
 })`
   height: 100%;
@@ -117,7 +125,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
     >
       <Flex
         flexDirection="row"
-        style={{ height: '100%', width: '1400px', maxWidth: '1400px' }}
+        style={{ height: '100%', width: '100%', maxWidth: '1400px' }}
       >
         {tabs.map((tab, i) => {
           const LinkComponent = tab.link ? Link : AbsoluteLink
@@ -153,14 +161,14 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                     {tab.title}
                   </Text>
                 </Flex>
-                <Text
+                <LinesText
                   color="white"
                   fontWeight={300}
                   fontSize="13px"
                   lineHeight={1.69}
                 >
                   {tab.content}
-                </Text>
+                </LinesText>
               </SubMenu>
             </LinkComponent>
           )
@@ -450,7 +458,7 @@ const Navbar = props => {
                   imgIndex={3}
                   imgHeight="50px"
                   title="Data Governance Portal"
-                  description={`An all-in-one, UX optimized Web3 wallet for Ethereum DApps`}
+                  description={`Join data governance community, stake tokens on data providers and secure network together`}
                 />
               </Flex>
             </Box>
@@ -675,7 +683,7 @@ const Navbar = props => {
                 link: '/features/data-governance-portal',
                 imgIndex: 3,
                 imgHeight: '50px',
-                content: `An all-in-one, UX optimized Web3 wallet for Ethereum DApps`,
+                content: `Join data governance community, stake tokens on data providers and secure network together`,
               },
             ]}
           />

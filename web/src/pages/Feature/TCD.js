@@ -403,6 +403,7 @@ export default () => {
                   position: 'relative',
                   pointerEvents: 'none',
                   transform: `scale(${_isMobile ? '0.65' : '1.35'})`,
+                  filter: 'brightness(0.98) saturate(2) contrast(1.03)',
                 }}
                 justifyContent="center"
                 py={3}
@@ -422,6 +423,7 @@ export default () => {
               lineHeight="1.8"
               fontSize={[14, 17]}
               color="#3B426B"
+              textAlign="center"
               style={{ minHeight: '3.6em' }}
             >
               {animatorSteps[step].renderText()}

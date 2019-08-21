@@ -304,7 +304,7 @@ export default () => {
       {/* Section 2: Connecting to ... */}
       <Box
         style={{
-          backgroundImage: 'linear-gradient(to bottom, #ffffff, #d8dfff)',
+          backgroundImage: 'linear-gradient(to bottom, #ffffff 30%, #d8dfff)',
         }}
       >
         <PageContainer>
@@ -336,7 +336,7 @@ export default () => {
 
               <Text
                 fontSize={['14px', '16px']}
-                fontWeight="300"
+                color="text"
                 style={{ lineHeight: '2' }}
               >
                 Without access to external data, the use cases for dApps are
@@ -397,7 +397,7 @@ export default () => {
               </Flex>
               <Text
                 fontSize={['14px', '16px']}
-                fontWeight="300"
+                color="text"
                 style={{ lineHeight: '2' }}
               >
                 Band Protocol provides an infrastucture for blockchain
@@ -428,23 +428,23 @@ export default () => {
         <Flex
           mb="20px"
           mt="-120px"
-          py="40px"
+          py="60px"
           px={['20px', '80px']}
           justifyContent="space-between"
           style={{
             // width: ['calc(100vw - 40px)', '1200px'],
-            maxWidth: '1400px',
+            maxWidth: '1520px',
             height: ['290px', '370px'],
             boxShadow: '0 5px 20px rgba(0, 0, 0, 0.15)',
             borderRadius: '10px',
             boxShadow: '0 2px 20px 0 #d3dbff',
             backgroundColor: '#ffffff',
-            margin: '0 auto',
+            margin: '40px auto',
           }}
         >
           {/* Left */}
           <Flex
-            style={{ maxWidth: '700px' }}
+            style={{ maxWidth: '800px' }}
             my={['20px', '0px']}
             flexDirection="column"
           >
@@ -459,9 +459,9 @@ export default () => {
             </Text>
             <Text
               fontSize={['14px', '16px']}
-              fontWeight={300}
               lineHeight={2}
-              mt="25px"
+              color="text"
+              mt="32px"
             >
               Data availability and reliability in decentralized platforms has
               restricted adoption since the inception of smart contracts. Band
@@ -497,7 +497,7 @@ export default () => {
                     color="#5569de"
                     style={{ fontFamily: 'bio-sans' }}
                   >
-                    Band solves
+                    Band Solves
                   </Text>
                   <Text
                     fontSize="18px"
@@ -575,7 +575,7 @@ export default () => {
           </Flex>
           {/* Right */}
           {_isMobile ? null : (
-            <Flex alignItems="center">
+            <Flex alignItems="center" justifyContent="center" flex={1}>
               <Box>
                 <Image src={LandingMassAdoption} />
               </Box>
@@ -585,11 +585,11 @@ export default () => {
 
         {/* Section 4 */}
         <Box
-          mt={['40px', '100px']}
+          mt={['40px', '200px']}
           mx="auto"
           mb={['0px', '0px']}
           style={{
-            height: _isMobile ? '1350px' : '1950px',
+            height: _isMobile ? '1350px' : '2000px',
             backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
             backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
@@ -602,33 +602,36 @@ export default () => {
             <Flex
               flexDirection="column"
               pl={['20px', '0px']}
-              pr={['30px', '74px']}
+              pr={['30px', '0px']}
               justifyContent="center"
-              style={{ position: 'absolute', top: 0, left: 0 }}
+              style={{ position: 'absolute', top: 30, left: 0 }}
             >
               <Text
                 fontSize={['16px', '20px']}
-                fontWeight="300"
+                fontWeight="400"
                 color="#546ee5"
               >
                 Data Availability
               </Text>
               <Text
                 color="#3b426b"
-                fontSize={['24px', '36px']}
+                fontFamily="bio-sans"
+                fontSize={['24px', '40px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
-                style={{ lineHeight: '1.38' }}
+                style={{ lineHeight: '1.5' }}
               >
                 Band Feeds Data On-Chain
                 <br />
                 Right When You Need
               </Text>
               <Text
+                mt={2}
                 fontSize={['16px', '18px']}
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '460px' }}
+                fontWeight="400"
+                color="text"
+                style={{ lineHeight: '2', maxWidth: '600px' }}
               >
                 For high-demand data such as ETH/USD price, the data are updated
                 and kept on-chain on a regular basis. DApps can request and use
@@ -656,27 +659,30 @@ export default () => {
             >
               <Text
                 fontSize={['16px', '20px']}
-                fontWeight="300"
+                fontWeight="400"
                 color="#546ee5"
               >
                 Data Reliability
               </Text>
               <Text
                 color="#3b426b"
-                fontSize={['24px', '36px']}
+                fontFamily="bio-sans"
+                fontSize={['24px', '40px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
-                style={{ lineHeight: '1.38' }}
+                style={{ lineHeight: '1.5' }}
               >
                 Band Aggregates Data
                 <br />
                 from Multiple Providers
               </Text>
               <Text
+                mt={2}
                 fontSize={['16px', '18px']}
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '550px' }}
+                fontWeight="400"
+                color="text"
+                style={{ lineHeight: '2', maxWidth: '600px' }}
               >
                 Band enforces strict requirements before serving each query.
                 Each data point requires more than ⅔ of qualified providers to
@@ -694,37 +700,40 @@ export default () => {
             <Flex
               flexDirection="column"
               pl={['20px', '0px']}
-              pr={['30px', '74px']}
+              pr={['30px', '0px']}
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '680px' : '1070px',
+                top: _isMobile ? '680px' : '1020px',
                 left: 0,
               }}
             >
               <Text
                 fontSize={['16px', '20px']}
-                fontWeight="300"
+                fontWeight="400"
                 color="#546ee5"
               >
                 Aligned Economic Incentives
               </Text>
               <Text
                 color="#3b426b"
-                fontSize={['24px', '36px']}
+                fontFamily="bio-sans"
+                fontSize={['24px', '40px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
-                style={{ lineHeight: '1.38' }}
+                style={{ lineHeight: '1.5' }}
               >
                 Dataset Tokens on
                 <br />
                 Bonding Curves
               </Text>
               <Text
+                mt={2}
                 fontSize={['16px', '18px']}
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '550px' }}
+                fontWeight="400"
+                color="text"
+                style={{ lineHeight: '2', maxWidth: '600px' }}
               >
                 Each dataset has its own token for governing how the dataset
                 functions. It incentivizes token holders and data providers to
@@ -742,7 +751,7 @@ export default () => {
             {/* Part 4: Community Runs Datasets and Grows Together */}
             <Flex
               flexDirection="column"
-              pl={['20px', '74px']}
+              pl={['20px', '0px']}
               pr={['30px', '0px']}
               justifyContent="center"
               style={{
@@ -753,27 +762,30 @@ export default () => {
             >
               <Text
                 fontSize={['16px', '20px']}
-                fontWeight="300"
+                fontWeight="400"
                 color="#546ee5"
               >
                 Decentralizing Trust Point
               </Text>
               <Text
                 color="#3b426b"
-                fontSize={['24px', '36px']}
+                fontFamily="bio-sans"
+                fontSize={['24px', '40px']}
                 fontWeight="bold"
                 mb="10px"
                 mt="10px"
-                style={{ lineHeight: '1.38' }}
+                style={{ lineHeight: '1.5' }}
               >
                 Community Runs
                 <br />
                 Datasets and Grows Together
               </Text>
               <Text
+                mt={2}
                 fontSize={['16px', '18px']}
-                fontWeight="300"
-                style={{ lineHeight: '2', maxWidth: '460px' }}
+                fontWeight="400"
+                color="text"
+                style={{ lineHeight: '2', maxWidth: '600px' }}
               >
                 Band provides a decentralized, unstoppable platform for
                 community to curate reliable data. No single identity has
@@ -794,7 +806,7 @@ export default () => {
           <PageContainer>
             <Flex flexDirection="column" alignItems="center">
               {/* Explore more feature button */}
-              <Flex justifyContent="center" mt={['50px', '120px']}>
+              <Flex justifyContent="center" mt={['50px', '50px']}>
                 <FilledButton
                   width={_isMobile ? '320px' : '500px'}
                   message="Explore Band Protocol Features"
@@ -806,7 +818,7 @@ export default () => {
 
               {/* Stay update */}
               <Flex
-                mt={['50px', '130px']}
+                mt={['50px', '80px']}
                 bg="#0c154c"
                 flexDirection="column"
                 alignItems="center"
@@ -834,7 +846,7 @@ export default () => {
                       style={{ maxWidth: '550px', lineHeight: '1.71' }}
                     >
                       <Highlight>Stay up to date on</Highlight> the latest news{' '}
-                      <Highlight>about how</Highlight> Band Protocol
+                      <Highlight>about how</Highlight> Band Protocol{' '}
                       <Highlight>brings more use cases to</Highlight> smart
                       contracts
                     </Text>

@@ -1,7 +1,25 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Flex, Text, Image, Box } from 'ui/common'
 import ArrowRight from 'components/ArrowRight'
 import { Link } from 'react-router-dom'
+
+const Container = styled(Flex).attrs({
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+})`
+  font-size: 18px;
+  line-height: 2em;
+
+  .arrow {
+    transition: all 350ms;
+  }
+
+  &:hover .arrow {
+    transform: translateX(50%);
+  }
+`
 
 export default ({
   text,
@@ -13,13 +31,7 @@ export default ({
   style,
 }) => {
   const Child = () => (
-    <Flex
-      flexDirection="row"
-      alignItems="center"
-      justifyContent="center"
-      ml={ml}
-      style={{ height: '35px', ...style }}
-    >
+    <Container ml={ml} style={style}>
       <Text
         fontWeight="bold"
         color={textColor}
@@ -27,10 +39,10 @@ export default ({
       >
         {text}
       </Text>
-      <Box ml={padding}>
+      <Box className="arrow" ml={padding}>
         <ArrowRight color={textColor} />
       </Box>
-    </Flex>
+    </Container>
   )
   return href ? (
     <a href={href} target="_blank" rel="noopener noreferrer">

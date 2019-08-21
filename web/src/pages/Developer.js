@@ -177,7 +177,7 @@ export default () => {
             alignItems={['center', 'flex-start']}
             flexDirection={['column', 'row']}
           >
-            <AbsoluteLink href="https://developer.bandprotocol.com/">
+            <AbsoluteLink href="https://forum.bandprotocol.com/">
               <OutlineButton isMobile={_isMobile}>
                 <Flex width="100%" justifyContent="space-between">
                   Developer Forum
@@ -186,7 +186,7 @@ export default () => {
               </OutlineButton>
             </AbsoluteLink>
             <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-            <AbsoluteLink href="/whitepaper-3.0.0.pdf">
+            <AbsoluteLink href="https://developer.bandprotocol.com/">
               <FilledButton message="Developer Doc" arrow width="227px" />
             </AbsoluteLink>
           </Flex>

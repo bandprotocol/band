@@ -118,9 +118,25 @@ export default () => {
               <H4 mb={['10px', '30px']} py={['30px', 1]}>
                 Join Community
               </H4>
+              <Box mb={[3, '20px']}>
+                <AbsoluteLink
+                  target="_blank"
+                  href="https://forum.bandprotocol.com"
+                >
+                  <Text fontSize="14px">Developer Forum</Text>
+                </AbsoluteLink>
+              </Box>
+              <Box mb={[3, '20px']}>
+                <AbsoluteLink
+                  target="_blank"
+                  href="https://medium.com/bandprotocol"
+                >
+                  <Text fontSize="14px">Blog</Text>
+                </AbsoluteLink>
+              </Box>
               <Flex
                 ml={['-5px', '-5px']}
-                mt={['10px', '0px']}
+                mt={['10px', '20px']}
                 mb={['20px', '21px']}
                 justifyContent={['center', 'flex-start']}
               >
@@ -149,22 +165,6 @@ export default () => {
                   bg
                 />
               </Flex>
-              <Box mb={[3, '20px']}>
-                <AbsoluteLink
-                  target="_blank"
-                  href="https://forum.bandprotocol.com"
-                >
-                  <Text fontSize="14px">Developer Forum</Text>
-                </AbsoluteLink>
-              </Box>
-              <Box mb={[3, '20px']}>
-                <AbsoluteLink
-                  target="_blank"
-                  href="https://medium.com/bandprotocol"
-                >
-                  <Text fontSize="14px">Blog</Text>
-                </AbsoluteLink>
-              </Box>
             </Box>
           </Flex>
         </Flex>
