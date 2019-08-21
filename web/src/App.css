@@ -190,3 +190,9 @@ body {
   font-family: 'Open sans';
   background: white;
 }
+
+@media only screen and (max-width: 640px) {
+  body {
+    padding: 60px 0px 0px 0px;
+  }
+}

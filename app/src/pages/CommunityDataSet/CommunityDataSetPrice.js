@@ -8,6 +8,7 @@ import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { getAsset } from 'utils/assetData'
+
 import {
   CurrentPriceFetcher,
   PriceCountByTCDFetcher,

@@ -162,7 +162,10 @@ export default () => {
               alignItems="center"
             >
               <Flex justifyContent="center" flex={1} pr={['0px', '80px']}>
-                <Image src={DataSetTokenSrc} style={{ maxWidth: 500 }} />
+                <Image
+                  src={DataSetTokenSrc}
+                  style={{ maxWidth: _isMobile ? '' : 500 }}
+                />
               </Flex>
               <Flex pt="12px" flex={1}>
                 <Text
@@ -206,7 +209,10 @@ export default () => {
                 </Text>
               </Flex>
               <Flex justifyContent="center" pl="98.7" flex={1}>
-                <Image src={DataSetTokenSrc2} style={{ maxWidth: 460 }} />
+                <Image
+                  src={DataSetTokenSrc2}
+                  style={{ maxWidth: _isMobile ? '' : 460 }}
+                />
               </Flex>
             </Flex>
 

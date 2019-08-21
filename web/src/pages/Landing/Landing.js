@@ -15,6 +15,7 @@ import {
 import { isMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 
+import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
 import LandingRealworld from 'images/landing-connect-realworld.svg'
 import LandingOpenAPI from 'images/landing-connect-openapi.svg'
@@ -49,6 +50,26 @@ const OutlineButton = styled(Button)`
     outline: none;
   }
 `
+
+const CircleLink = () => (
+  <Flex
+    width="40px"
+    bg="#3b426b"
+    justifyContent="center"
+    alignItems="center"
+    style={{
+      height: '40px',
+      borderRadius: '50%',
+    }}
+  >
+    <Image
+      src={AngleArrow}
+      width="15px"
+      height="15px"
+      css={{ filter: 'invert(100%)' }}
+    />
+  </Flex>
+)
 
 export default () => {
   const exRef = useRef(null)
@@ -516,12 +537,20 @@ export default () => {
                 style={{ maxWidth: '650px' }}
               >
                 {/* 1 */}
-                <Flex alignItems="center">
-                  <Box
-                    width="40px"
-                    bg="#3b426b"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
+                <Flex
+                  alignItems="center"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() =>
+                    window.setTimeout(
+                      () =>
+                        _isMobile
+                          ? window.scroll(0, 2700)
+                          : window.scroll(0, 2300),
+                      10,
+                    )
+                  }
+                >
+                  <CircleLink />
                   <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
                     Data Availability
                   </Text>
@@ -532,24 +561,39 @@ export default () => {
                   alignItems="center"
                   mt={['15px', '0px']}
                   ml={['0px', '40px']}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() =>
+                    window.setTimeout(
+                      () =>
+                        _isMobile
+                          ? window.scroll(0, 3430)
+                          : window.scroll(0, 3300),
+                      10,
+                    )
+                  }
                 >
-                  <Box
-                    width="40px"
-                    bg="#3b426b"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
+                  <CircleLink />
                   <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
                     Aligned Economic Incentives
                   </Text>
                 </Flex>
 
                 {/* 3 */}
-                <Flex alignItems="center" mt={['15px', '15px']}>
-                  <Box
-                    width="40px"
-                    bg="#3b426b"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
+                <Flex
+                  alignItems="center"
+                  mt={['15px', '15px']}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() =>
+                    window.setTimeout(
+                      () =>
+                        _isMobile
+                          ? window.scroll(0, 3060)
+                          : window.scroll(0, 2820),
+                      10,
+                    )
+                  }
+                >
+                  <CircleLink />
                   <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
                     Data Reliability
                   </Text>
@@ -560,12 +604,18 @@ export default () => {
                   alignItems="center"
                   mt={['15px', '15px']}
                   mr={['0px', '18px']}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() =>
+                    window.setTimeout(
+                      () =>
+                        _isMobile
+                          ? window.scroll(0, 3830)
+                          : window.scroll(0, 3800),
+                      10,
+                    )
+                  }
                 >
-                  <Box
-                    width="40px"
-                    bg="#3b426b"
-                    style={{ height: '40px', borderRadius: '50%' }}
-                  />
+                  <CircleLink />
                   <Text ml="20px" fontSize={['14px', '16px']} color="#4a4a4a">
                     Decentralizing Trust Point
                   </Text>
@@ -589,7 +639,7 @@ export default () => {
           mx="auto"
           mb={['0px', '0px']}
           style={{
-            height: _isMobile ? '1350px' : '2000px',
+            height: _isMobile ? '1490px' : '2000px',
             backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
             backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
@@ -653,7 +703,7 @@ export default () => {
               pr={['30px', '0px']}
               style={{
                 position: 'absolute',
-                top: _isMobile ? '340px' : '540px',
+                top: _isMobile ? '400px' : '540px',
                 right: _isMobile ? 0 : '30px',
               }}
             >
@@ -704,7 +754,7 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '680px' : '1020px',
+                top: _isMobile ? '770px' : '1020px',
                 left: 0,
               }}
             >
@@ -741,10 +791,22 @@ export default () => {
                 for dApps.
               </Text>
               <Flex mt={['15px', '20px']}>
-                <LinkWithArrow
-                  text="Learn How Dual-Token Economics Works"
-                  to="/features/dual-token"
-                />
+                {_isMobile ? (
+                  <LinkWithArrow
+                    text={
+                      <Flex flexDirection="column" alignItems="flex-start">
+                        <Text>Learn How Dual-Token</Text>
+                        <Text>Economics Works</Text>
+                      </Flex>
+                    }
+                    to="/features/dual-token"
+                  />
+                ) : (
+                  <LinkWithArrow
+                    text="Learn How Dual-Token Economics Works"
+                    to="/features/dual-token"
+                  />
+                )}
               </Flex>
             </Flex>
 
@@ -756,8 +818,8 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '1020px' : '1580px',
-                right: _isMobile ? 0 : '30px',
+                top: _isMobile ? '1170px' : '1580px',
+                right: _isMobile ? '-10px' : '30px',
               }}
             >
               <Text
