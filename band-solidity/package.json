@@ -1,6 +1,6 @@
 {
   "name": "band-solidity",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Smart Contract library for Band data oracle",
   "files": [
     "/contracts/**/*.sol",
