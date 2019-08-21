@@ -330,27 +330,31 @@ export default () => {
               <Flex
                 flex={1}
                 flexWrap="wrap"
+                flexDirection={['column', 'row']}
                 width={['calc(100vw - 40px)', 'auto']}
                 justifyContent="center"
+                alignItems="center"
+                py={['10px', '0px']}
+                px={['0px', '30px']}
                 mb={['0px', '40px']}
               >
                 <Featured href="https://www.coindesk.com/sequoia-india-leads-3-million-round-for-token-startup-tackling-fake-news">
-                  <Image height={['18px', '31px']} src={CoinDeskSrc} />
+                  <Image height={['28px', '31px']} src={CoinDeskSrc} />
                 </Featured>
                 <Featured href="https://sg.news.yahoo.com/blockchain-based-information-curation-startup-band-protocol-secures-010013124.html">
-                  <Image height={['26px', '32px']} src={YahooNewsSrc} />
+                  <Image height={['30px', '40px']} src={YahooNewsSrc} />
                 </Featured>
                 <Featured href="https://e27.co/blockchain-based-information-curation-startup-band-protocol-secures-us3m-seed-funding-20190217/">
-                  <Image height={['29px', '48px']} src={E27Src} />
+                  <Image height={['33px', '48px']} src={E27Src} />
                 </Featured>
                 <Featured href="https://www.dealstreetasia.com/stories/sequoia-india-band-protocol-121721/">
-                  <Image src={DealSrc} />
+                  <Image src={DealSrc} height={['50px', '75px']} />
                 </Featured>
                 <Featured href="https://www.techinasia.com/band-protocol-nets-3m-seed-funding-sequoia-india">
-                  <Image height={['19px', '32px']} src={TechInAsiaSrc} />
+                  <Image height={['24px', '32px']} src={TechInAsiaSrc} />
                 </Featured>
                 <Featured href="https://jumpstartmag.com/blog/band-protocol-raises-us3-million-seed-funding-led-by-sequoia-india-to-give-power-back-to-internet">
-                  <Image height={['24px', '40px']} src={JumpstartSrc} />
+                  <Image height={['28px', '40px']} src={JumpstartSrc} />
                 </Featured>
               </Flex>
               <Flex>
