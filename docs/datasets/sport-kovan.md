@@ -2,11 +2,11 @@
 
 This dataset provides up-to-date final sport results from major sport leagues.
 
-| Contract              | Address                                    |
-| --------------------- | ------------------------------------------ |
-| Dataset Token         | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Dataset Oracle        | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Governance Parameters | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
+| Contract              | Address                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Dataset Token         | [0x799107D5a6d31533Cf2bc18C58EBdA89FeDe9908](https://kovan.etherscan.io/address/0x799107D5a6d31533Cf2bc18C58EBdA89FeDe9908) |
+| Dataset Oracle        | [0xF904Db9817E4303c77e1Df49722509a0d7266934](https://kovan.etherscan.io/address/0xF904Db9817E4303c77e1Df49722509a0d7266934) |
+| Governance Parameters | [0x96C1a83bdb74e3116Af2CF63463008202a2c4857](https://kovan.etherscan.io/address/0x96C1a83bdb74e3116Af2CF63463008202a2c4857) |
 
 ## Key-Value Format
 

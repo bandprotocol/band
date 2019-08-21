@@ -2,11 +2,11 @@
 
 With Web API Oracle dataset, decentralized applications can request ask Band Protocol's data providers to supply query results from any arbitrary web 2.0 endpoints.
 
-| Contract              | Address                                    |
-| --------------------- | ------------------------------------------ |
-| Dataset Token         | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Dataset Oracle        | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Governance Parameters | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
+| Contract              | Address                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Dataset Token         | [0x3DEb207E098F882C3F351C494b26B26548a33f5B](https://kovan.etherscan.io/address/0x3DEb207E098F882C3F351C494b26B26548a33f5B) |
+| Dataset Oracle        | [0x7f525974d824a6C4Efd54b9E7CB268eBEFc94aD8](https://kovan.etherscan.io/address/0x7f525974d824a6C4Efd54b9E7CB268eBEFc94aD8) |
+| Governance Parameters | [0x4D356d9e3bBB7191836fF431840B818f190117ac](https://kovan.etherscan.io/address/0x4D356d9e3bBB7191836fF431840B818f190117ac) |
 
 ## Key-Value Format
 

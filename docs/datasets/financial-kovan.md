@@ -2,11 +2,11 @@
 
 This dataset provides near real-time update financial data across multiple asset classes. You can utilize financial data feeds to power your DeFi appplications. Below is the addresses of smart contrats associated with Financial Data Feeds (Kovan).
 
-| Contract              | Address                                    |
-| --------------------- | ------------------------------------------ |
-| Dataset Token         | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Dataset Oracle        | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Governance Parameters | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
+| Contract              | Address                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Dataset Token         | [0x6566bE6fb21CA90F85b3D22D5D94FEece78B9909](https://kovan.etherscan.io/address/0x6566bE6fb21CA90F85b3D22D5D94FEece78B9909) |
+| Dataset Oracle        | [0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e](https://kovan.etherscan.io/address/0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e) |
+| Governance Parameters | [0x8eE1b01666bCe3889321B12D2b3cD30EaE627efE](https://kovan.etherscan.io/address/0x8eE1b01666bCe3889321B12D2b3cD30EaE627efE) |
 
 ## Key-Value Format
 
