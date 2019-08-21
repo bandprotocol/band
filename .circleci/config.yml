@@ -27,7 +27,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
       - run: cd app && yarn install && yarn test
-  build_conracts:
+  build_contracts:
     docker:
       - image: circleci/node:10.16.2
 
@@ -40,3 +40,10 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
       - run: cd contracts && yarn install && yarn test
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build_web
+      - build_app
+      - build_contracts
