@@ -883,7 +883,8 @@ export default () => {
                 bg="#0c154c"
                 flexDirection="column"
                 alignItems="center"
-                py="50px"
+                pt="50px"
+                pb="70px"
                 color="white"
                 fontSize="20px"
                 style={{
@@ -898,7 +899,7 @@ export default () => {
                     <Text textAlign="center" mb="30px">
                       Stay up to date by subscribe us
                     </Text>
-                    <Subscribe />
+                    <Subscribe column />
                   </React.Fragment>
                 ) : (
                   <React.Fragment>

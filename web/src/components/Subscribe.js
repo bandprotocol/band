@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Text, Button } from 'ui/common'
+import { Text, Button, Flex } from 'ui/common'
+import { isMobile } from 'ui/media'
 import MailchimpSubscribe from 'react-mailchimp-subscribe'
 
 const Input = styled.input`
@@ -40,8 +41,8 @@ export default class Subscribe extends React.Component {
     const subscriptionUrl =
       'https://innocation.us18.list-manage.com/subscribe/post?u=05df05446d3afe5957d513703&amp;id=809c988381'
 
-    const { large, column } = this.props
-
+    const { large, column, navbar } = this.props
+    const _isMobile = isMobile()
     return (
       <MailchimpSubscribe
         url={subscriptionUrl}
@@ -57,9 +58,10 @@ export default class Subscribe extends React.Component {
           }
 
           return (
-            <React.Fragment>
+            <Flex flexDirection="column" style={{ position: 'relative' }}>
               <Container flexDirection={column ? 'column' : 'row'}>
                 <Input
+                  name="email"
                   large={large}
                   onFocus={() => this.setState({ focusing: true })}
                   onBlur={() => this.setState({ focusing: false })}
@@ -99,10 +101,11 @@ export default class Subscribe extends React.Component {
                   style={{
                     display: 'block',
                     lineHeight: 1.2,
-                    marginTop: '10px',
+                    position: 'absolute',
+                    top: _isMobile ? '105px' : '50px',
                   }}
                   fontSize={large ? 16 : 12}
-                  textAlign={['center', 'right']}
+                  textAlign={['center', 'left']}
                   color="#ffd368"
                 >
                   Beaming to server
@@ -113,21 +116,19 @@ export default class Subscribe extends React.Component {
                   style={{
                     display: 'block',
                     lineHeight: 1.2,
-                    marginTop: '10px',
                     marginLeft: 'auto',
-                    maxWidth: 400,
+                    maxWidth: _isMobile ? 250 : 380,
+                    position: 'absolute',
+                    top: _isMobile ? '105px' : '50px',
                   }}
                   fontSize={large ? 16 : 12}
-                  textAlign={['center', 'right']}
+                  textAlign={['center', 'left']}
                   color="#ff6868"
                 >
-                  <span
-                    style={{ marginLeft: 5 }}
-                    dangerouslySetInnerHTML={{ __html: message.slice(3) }}
-                  />
+                  <span dangerouslySetInnerHTML={{ __html: message }} />
                 </Text>
               )}
-            </React.Fragment>
+            </Flex>
           )
         }}
       />

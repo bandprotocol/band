@@ -145,7 +145,7 @@ const NavMenu = ({ isSelected, title, tabs }) => {
                 <Flex style={{ minHeight: '60px' }} alignItems="center">
                   {tab.hasInputBox ? (
                     <Flex style={{ minWidth: '100%' }}>
-                      <Subscribe />
+                      <Subscribe navbar />
                     </Flex>
                   ) : (
                     <Image src={getImg(imgIndex)} height={tab.imgHeight} />
@@ -184,6 +184,7 @@ const SubMenuMobile = ({
   isAbsolute,
   imgIndex,
   imgHeight,
+  titleMT = '30px',
   title,
   description,
   children,
@@ -196,7 +197,7 @@ const SubMenuMobile = ({
       mb="50px"
     >
       {children || <Image src={getImg(imgIndex)} height={imgHeight} />}
-      <SemiBold color="#fff" fontSize="14px" mt="30px">
+      <SemiBold color="#fff" fontSize="14px" mt={titleMT}>
         {title}
       </SemiBold>
       <Text mt="20px" color="#fff" fontSize="13px" lineHeight={1.69}>
@@ -592,6 +593,7 @@ const Navbar = props => {
                   imgIndex={9}
                   imgHeight="46px"
                   title="Subscribe for updates"
+                  titleMT="50px"
                   description={`Don't miss any update on Band Protocol including tech progress, campaigns, local events and more`}
                 >
                   <Subscribe column="true" />
