@@ -6,12 +6,6 @@ jobs:
 
     steps:
       - checkout
-
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
       - run: cd web && yarn install && yarn test
   build_app:
     docker:
@@ -20,12 +14,6 @@ jobs:
 
     steps:
       - checkout
-
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
       - run: cd app && yarn install && yarn test
   build_contracts:
     docker:
@@ -33,12 +21,6 @@ jobs:
 
     steps:
       - checkout
-
-      - restore_cache:
-        keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
       - run: cd contracts && yarn install && yarn test
 workflows:
   version: 2
