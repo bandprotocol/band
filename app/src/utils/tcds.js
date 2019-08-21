@@ -34,7 +34,15 @@ import MMNInactive from 'images/mmnInactive.svg'
 import WebRequestActive from 'images/requestActive.svg'
 import WebRequestInactive from 'images/requestInactive.svg'
 
-export const getTCDInfomation = prefix =>
+const getTCDType = communityName =>
+  ({
+    'Financial Data Feeds': 'prices',
+    'Sport Data Feeds': 'sports',
+    'Lottery Data Feeds': 'lotteries',
+    'Web Request Oracle': 'web_requests',
+  }[communityName])
+
+export const getTCDInfomation = (prefix, communityName) =>
   ({
     'web:': {
       imageActive: WebRequestActive,
@@ -127,5 +135,7 @@ export const getTCDInfomation = prefix =>
   }[prefix] || {
     imageActive: FiatActive,
     imageInactive: FiatInactive,
-    label: 'Unknown',
+    shortLabel: communityName,
+    label: communityName,
+    type: getTCDType(communityName),
   })

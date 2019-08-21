@@ -20,13 +20,14 @@ export const CurrentPriceFetcher = withRouter(
       })
 
       return prices
-        .map(({ key, value, timestamp }) => ({
-          pair: key,
+        .map(({ key, pair, value, timestamp }) => ({
+          key,
+          pair,
           value: parseInt(value) / 1e18,
           lastUpdate: moment(timestamp * 1000),
         }))
         .sort((a, b) => {
-          if (a.pair > b.pair) return 1
+          if (a.key > b.key) return 1
           return -1
         })
     }
@@ -57,14 +58,14 @@ export const PriceCountByTCDFetcher = withRouter(
 export const PricePairFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.pair !== this.props.pair
+      return prevProps.keyOnChain !== this.props.keyOnChain
     }
 
     async fetch() {
-      const { pair, tcdAddress } = this.props
+      const { keyOnChain, tcdAddress } = this.props
 
       const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
-        key: pair,
+        key: keyOnChain,
         limit: 25,
       })
 
