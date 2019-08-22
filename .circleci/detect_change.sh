@@ -18,7 +18,7 @@
             echo -e "---"
             echo -e `git branch`
             echo -e "---"
-            # echo -e `git fetch`
+            git fetch
             echo -e `git merge-base --fork-point origin/master`
             echo -e "---"
 
