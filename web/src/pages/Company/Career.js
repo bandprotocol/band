@@ -69,6 +69,7 @@ const CultureComponent = ({ title, description, imgSrc }) => {
       </Box>
       <Text
         fontFamily="bio-sans"
+        textAlign="center"
         fontSize={['16px', '28px']}
         lineHeight={['24px', '72px']}
         fontWeight="bold"
@@ -178,20 +179,18 @@ export default () => {
           mb="50px"
         >
           <CultureComponent
-            title="Decentralization First"
-            description="We believe that great products must "
+            title="Decentralization"
+            description=""
             imgSrc={BlockchainSrc}
           />
           <CultureComponent
             title="Community Driven"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                felis eros, ultricies et mi at."
+            description=""
             imgSrc={TeamworkSrc}
           />
           <CultureComponent
-            title="Open Source by Default"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-                felis eros, ultricies et mi at."
+            title="Open Source"
+            description=""
             imgSrc={OpensourceSrc}
           />
         </Flex>
