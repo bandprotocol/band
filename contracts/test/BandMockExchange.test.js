@@ -4,7 +4,7 @@ const BandToken = artifacts.require('BandToken');
 const BandMockExchange = artifacts.require('BandMockExchange');
 
 require('chai').should();
-
+//
 contract('BandMockExchange', ([owner, alice]) => {
   beforeEach(async () => {
     this.band = await BandToken.new({ from: owner });
