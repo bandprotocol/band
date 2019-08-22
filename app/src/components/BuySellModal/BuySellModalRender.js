@@ -114,8 +114,7 @@ const Amount = ({
             type="text"
             name="amount"
             value={amount}
-            disabled={disabled}
-            placeholder={true ? '' : 'ex. 100'}
+            placeholder={'ex. 100'}
             onChange={e => handleChange(e)}
           />
           <SymbolType>{symbol || 'Token'}</SymbolType>
