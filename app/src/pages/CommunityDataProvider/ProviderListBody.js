@@ -12,6 +12,7 @@ const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
     tcdAddress,
     dataSourceAddress,
     userOwnership,
+    userStake,
     stake,
     totalOwnership,
   ) =>
@@ -21,6 +22,7 @@ const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
         tcdAddress,
         dataSourceAddress,
         userOwnership,
+        userStake,
         stake,
         totalOwnership,
         tokenAddress,
