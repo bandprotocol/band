@@ -38,8 +38,6 @@
 
             git diff --name-only $(git merge-base -a HEAD origin/master) | cut -d/ -f1 | sort -u > projects
 
-
-
             # echo git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
 
             # git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
