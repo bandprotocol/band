@@ -33,7 +33,7 @@ import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.png'
 import { callbackify } from 'util'
 
-const airdropLink = 'http://band-airdrop.surge.sh/tokenholder'
+const airdropLink = 'https://airdrop.bandprotocol.com/tokenholder'
 
 const LinesText = styled(Text)`
   overflow: hidden;
@@ -629,16 +629,23 @@ const Navbar = props => {
               Airdrop
             </MainMenuText>
             <Flex
-              bg="#ff5b84"
+              bg="#C0C0C0"
               color="white"
+              // bg="#ff5b84"
+              // color="white"
               p="3px 8px"
               fontSize="12px"
               justifyContent="center"
               alignItems="center"
               ml="5px"
-              style={{ borderRadius: '10px' }}
+              style={{ borderRadius: '10px', opacity: 0.8 }}
+              css={{
+                '&:hover': {
+                  color: 'white',
+                },
+              }}
             >
-              Live
+              Soon
             </Flex>
           </AbsoluteLink>
         </Box>
