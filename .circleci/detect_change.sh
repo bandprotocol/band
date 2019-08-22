@@ -6,11 +6,9 @@
             build=1
             if [[ ${CIRCLE_BRANCH} == "master" ]]; then
               build=0
-              echo "CURRENT BRANCH is ${CIRCLE_BRANCH}"
+              echo "CURRENT BRANCH is ${CIRCLE_BRANCH} not build"
+              exit 0
             fi 
-
-            
-              
 
             #first commit in a branch
             if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
