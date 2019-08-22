@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-func TestCurrencyConverterSuccess(t *testing.T) {
-	resolver := &CurrencyConverter{}
+func TestAlphaVantageForexSuccess(t *testing.T) {
+	resolver := &AlphaVantageForex{}
 	price, err := resolver.QuerySpotPrice("EUR-USD")
 	if err != nil {
 		t.Errorf("Query EUR-USD error: %s", err)
@@ -15,8 +15,9 @@ func TestCurrencyConverterSuccess(t *testing.T) {
 		t.Errorf("QueryEUR-USD price is way off: %f", price)
 	}
 }
-func TestCurrencyConverterGoldSuccess(t *testing.T) {
-	resolver := &CurrencyConverter{}
+
+func TestAlphaVantageForexGoldSuccess(t *testing.T) {
+	resolver := &AlphaVantageForex{}
 	price, err := resolver.QuerySpotPrice("XAU")
 	if err != nil {
 		t.Errorf("Query XAU error: %s", err)
@@ -26,16 +27,17 @@ func TestCurrencyConverterGoldSuccess(t *testing.T) {
 		t.Errorf("Query XAU price is way off: %f", price)
 	}
 }
-func TestCurrencyConverterInvalidSymbolFormat(t *testing.T) {
-	resolver := &CurrencyConverter{}
+
+func TestAlphaVantageForexInvalidSymbolFormat(t *testing.T) {
+	resolver := &AlphaVantageForex{}
 	_, err := resolver.QuerySpotPrice("USD")
 	if err == nil {
 		t.Errorf("Query USD must contain error. See nothing")
 	}
 }
 
-func TestCurrencyConverterUnknownSymbol(t *testing.T) {
-	resolver := &CurrencyConverter{}
+func TestAlphaVantageForexUnknownSymbol(t *testing.T) {
+	resolver := &AlphaVantageForex{}
 	_, err := resolver.QuerySpotPrice("BTH-USD")
 	if err == nil {
 		t.Errorf("Query BTH-USD must contain error. See nothing")
