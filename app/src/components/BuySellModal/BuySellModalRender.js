@@ -115,10 +115,10 @@ const Amount = ({
             name="amount"
             value={amount}
             disabled={disabled}
-            placeholder={true ? '' : 'ex.100'}
+            placeholder={true ? '' : 'ex. 100'}
             onChange={e => handleChange(e)}
           />
-          <SymbolType>{symbol ? symbol : 'Token'}</SymbolType>
+          <SymbolType>{symbol || 'Token'}</SymbolType>
         </Flex>
       )}
     </AmountBoxStyled>
