@@ -7,15 +7,17 @@
             if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
               COMMITS="origin/master"
             else
-              # COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
+              COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
               # COMMITS="master..${LAST_SUCCESSFUL_COMMIT}"
-              COMMITS="origin/master"
+              # COMMITS="origin/master"
             fi
 
             echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
             
-            git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
+            git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u
+            
+            # git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
             echo -e "Modified directories:\n`cat projects`\n"
            
             # If modified directories contain Gopkg/vendor directores, build all projects and exit
