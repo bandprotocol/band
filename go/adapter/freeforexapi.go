@@ -13,10 +13,18 @@ type FreeForexApi struct{}
 
 func (*FreeForexApi) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")
-	if len(pairs) != 2 {
+	var from, to string
+	if len(pairs) == 1 && (pairs[0] == "XAU" || pairs[0] == "XAG") {
+		from = "USD"
+		to = pairs[0]
+	} else if len(pairs) == 2 {
+		from = pairs[1]
+		to = pairs[0]
+	} else {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
-	key := pairs[0] + pairs[1]
+	key := from + to
+	println(key)
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://www.freeforexapi.com/api/live", nil)
 	if err != nil {
@@ -41,5 +49,5 @@ func (*FreeForexApi) QuerySpotPrice(symbol string) (float64, error) {
 	if !value.Exists() {
 		return 0, fmt.Errorf("Key doesn't existed")
 	}
-	return value.Float(), nil
+	return 1 / value.Float(), nil
 }

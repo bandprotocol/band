@@ -17,6 +17,18 @@ func TestFreeForexApiSuccess(t *testing.T) {
 	}
 }
 
+func TestCurrencyConverterGoldSuccess(t *testing.T) {
+	resolver := &FreeForexApi{}
+	price, err := resolver.QuerySpotPrice("XAU")
+	if err != nil {
+		t.Errorf("Query XAU error: %s", err)
+	}
+
+	if price <= 1000 || price > 10000 {
+		t.Errorf("Query XAU price is way off: %f", price)
+	}
+}
+
 func TestFreeForexApiInvalidSymbolFormat(t *testing.T) {
 	resolver := &FreeForexApi{}
 	_, err := resolver.QuerySpotPrice("USD")
