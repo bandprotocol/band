@@ -10,7 +10,7 @@
               exit 0
             fi 
 
-            cat git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u 
+            echo $(git diff --name-only $(git merge-base --fork-point master))
             #first commit in a branch
             # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
             #   COMMITS="origin/master"
