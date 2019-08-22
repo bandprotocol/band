@@ -9,7 +9,6 @@
             else
               COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
               # COMMITS="master..${LAST_SUCCESSFUL_COMMIT}"
-              # COMMITS="origin/master"
             fi
 
             echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
