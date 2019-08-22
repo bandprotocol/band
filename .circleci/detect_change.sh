@@ -15,10 +15,10 @@
             echo -e `git branch`
             echo -e "---"
             # echo -e `git fetch`
-            echo -e `git merge-base --fork-point master`
+            echo -e `git merge-base --fork-point origin/master`
             echo -e "---"
 
-            echo -e `git diff --name-only $(git merge-base --fork-point master)`
+            echo -e `git diff --name-only $(git merge-base --fork-point origin/master)`
             echo -e "---"
             
             #first commit in a branch
