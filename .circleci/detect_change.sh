@@ -10,12 +10,12 @@
               exit 0
             fi 
 
-            # git log | head -1
-            git branch
-            git fetch
-            git merge-base --fork-point origin/master
+            echo -e `git log | head -1`
+            echo -e `git branch`
+            echo -e `git fetch`
+            echo -e `git merge-base --fork-point master`
 
-            git diff --name-only $(git merge-base --fork-point origin/master)
+            echo -e `git diff --name-only $(git merge-base --fork-point master)`
             
             #first commit in a branch
             # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
