@@ -8,7 +8,7 @@ import ToolTip from 'components/ToolTip'
 
 const AmountInput = styled.input`
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 15px;
   border: 0px;
   letter-spacing: -0.2px;
   font-size: 12px;
@@ -91,7 +91,6 @@ const Amount = ({
   symbol,
   amount,
   handleChange,
-  loading,
   disabled,
 }) => (
   <Box pb={3}>
@@ -105,8 +104,8 @@ const Amount = ({
     </Text>
     <AmountBoxStyled bg="#ffffff" mt={3} disabled={disabled}>
       {disabled ? (
-        <Flex alignItems="center" style={{ height: '40px' }}>
-          <DotLoading color="#b1b8e7" size="6px" pd="12px 20px" />
+        <Flex alignItems="center" style={{ height: '40px' }} pl="5px">
+          <DotLoading color="#b1b8e7" size="6px" />
         </Flex>
       ) : (
         <Flex flexDirection="row" alignItems="center" justifyContent="center">
@@ -409,8 +408,6 @@ const BuySellButton = ({ type, amount, symbol, disabled, onClick }) => (
 )
 
 export default ({
-  name,
-  logo,
   symbol,
   type,
   amount,
