@@ -10,20 +10,25 @@
               exit 0
             fi 
 
+            cat git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u 
             #first commit in a branch
-            if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
-              COMMITS="origin/master"
-            else
-              COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
-            fi
+            # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
+            #   COMMITS="origin/master"
+            # else
+            #   COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
+            # fi
 
-            echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
-            echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
-            echo -e "Diff $COMMITS"
+            # echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
+            # echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
+            # echo -e "Diff $COMMITS"
             
-            # git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
-            # git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
-            git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
+            git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
+
+            
+
+            # echo git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
+
+            # git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
             echo -e "Modified directories:\n`cat projects`\n"
            
             # If modified directories contain Gopkg/vendor directores, build all projects and exit
