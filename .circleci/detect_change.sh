@@ -10,8 +10,8 @@
               exit 0
             fi 
 
-            diff = git diff --name-only $(git merge-base --fork-point master)
-            echo -e ${diff}
+            GIT_DIFF=git diff --name-only $(git merge-base --fork-point master)
+            echo -e ${GIT_DIFF}
             #first commit in a branch
             # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
             #   COMMITS="origin/master"
