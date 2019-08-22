@@ -10,7 +10,7 @@
               exit 0
             fi 
 
-            git log | head -1
+            # git log | head -1
             git branch
             git fetch
             git merge-base --fork-point origin/master
