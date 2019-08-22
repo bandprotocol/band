@@ -11,7 +11,6 @@ import Routes from 'Routes'
 import FullLoadingPage from 'pages/FullLoading'
 import { fetchSelector } from 'selectors/basic'
 
-//ff
 class App extends Component {
   render() {
     return (
