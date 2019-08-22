@@ -3,6 +3,15 @@
             LAST_SUCCESSFUL_BUILD_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH?filter=completed&limit=1"
             LAST_SUCCESSFUL_COMMIT=`curl -Ss -u "$CIRCLE_TOKEN:" $LAST_SUCCESSFUL_BUILD_URL | jq -r '.[0]["vcs_revision"]'`
 
+            build=1
+            if [[ ${CIRCLE_BRANCH} == "master" ]]; then
+              build=0
+              echo "CURRENT BRANCH is ${CIRCLE_BRANCH}"
+            fi 
+
+            
+              
+
             #first commit in a branch
             if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
               COMMITS="origin/master"
@@ -14,7 +23,7 @@
             echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
             
-            git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u
+            git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
             
             # git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
             echo -e "Modified directories:\n`cat projects`\n"
