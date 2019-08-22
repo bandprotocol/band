@@ -10,6 +10,10 @@
               exit 0
             fi 
 
+            git log | head -1
+            git merge-base --fork-point master
+            git branch
+            
             git diff --name-only $(git merge-base --fork-point master)
             
             #first commit in a branch
