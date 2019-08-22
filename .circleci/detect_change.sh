@@ -1,4 +1,4 @@
-            
+
             # Identify modified directories
             LAST_SUCCESSFUL_BUILD_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH?filter=completed&limit=1"
             LAST_SUCCESSFUL_COMMIT=`curl -Ss -u "$CIRCLE_TOKEN:" $LAST_SUCCESSFUL_BUILD_URL | jq -r '.[0]["vcs_revision"]'`
@@ -8,7 +8,7 @@
               build=0
               echo "CURRENT BRANCH is ${CIRCLE_BRANCH} not build"
               exit 0
-            fi 
+            fi
 
             echo -e `git log | head -100`
             echo -e "---"
@@ -19,12 +19,12 @@
             echo -e `git branch`
             echo -e "---"
             git fetch
-            echo -e `git merge-base --fork-point origin/master`
+            echo -e `git merge-base -a HEAD origin/master`
             echo -e "---"
 
             echo -e `git diff --name-only $(git merge-base --fork-point origin/master)`
             echo -e "---"
-            
+
             #first commit in a branch
             # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
             #   COMMITS="origin/master"
@@ -35,16 +35,16 @@
             echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
             echo -e "Diff $COMMITS"
-            
+
             git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
 
-            
+
 
             # echo git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
 
             # git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
             echo -e "Modified directories:\n`cat projects`\n"
-           
+
             # If modified directories contain Gopkg/vendor directores, build all projects and exit
             # buildall=0
             # for project in `cat projects`; do
