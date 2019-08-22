@@ -36,7 +36,7 @@
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
             echo -e "Diff $COMMITS"
 
-            git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
+            git diff --name-only $(git merge-base -a HEAD origin/master) | cut -d/ -f1 | sort -u > projects
 
 
 
