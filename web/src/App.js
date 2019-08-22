@@ -26,7 +26,6 @@ import DeveloperPage from 'pages/Developer'
 
 import NotFoundPage from 'pages/404'
 
-//
 export default () => (
   <ThemeProvider theme={theme}>
     <Router>
