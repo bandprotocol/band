@@ -1,4 +1,4 @@
-package resolver
+package adapter
 
 import (
 	"encoding/json"
