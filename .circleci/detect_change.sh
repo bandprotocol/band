@@ -11,10 +11,10 @@
             fi 
 
             git log | head -1
-            git merge-base --fork-point master
+            git merge-base --fork-point origin/master
             git branch
-            
-            git diff --name-only $(git merge-base --fork-point master)
+
+            git diff --name-only $(git merge-base --fork-point origin/master)
             
             #first commit in a branch
             # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
