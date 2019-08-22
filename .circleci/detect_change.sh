@@ -10,7 +10,7 @@
               exit 0
             fi 
 
-            echo -e `git log | head -1`
+            echo -e `git log | head -100`
             echo -e "---"
             echo -e `git log master | head -1`
             echo -e "---"
