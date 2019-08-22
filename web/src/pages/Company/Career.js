@@ -72,13 +72,14 @@ const CultureComponent = ({ title, description, imgSrc }) => {
         textAlign="center"
         fontSize={['16px', '28px']}
         lineHeight={['24px', '72px']}
+        py={[3, 0]}
         fontWeight="bold"
       >
         {title}
       </Text>
       <Text
         textAlign="center"
-        fontSize={['10px', '18px']}
+        fontSize={['14px', '18px']}
         lineHeight={['20px', '36px']}
         color="#323232"
       >
@@ -179,18 +180,18 @@ export default () => {
           mb="50px"
         >
           <CultureComponent
-            title="Decentralization"
-            description=""
+            title="Decentralization First"
+            description="We believe that data should be managed by community, not centralized parties"
             imgSrc={BlockchainSrc}
           />
           <CultureComponent
             title="Community Driven"
-            description=""
+            description="By putting community first, we are able to build things people actually want"
             imgSrc={TeamworkSrc}
           />
           <CultureComponent
-            title="Open Source"
-            description=""
+            title="Open Source by Default"
+            description="Great softwares should be transparent and available for everyone"
             imgSrc={OpensourceSrc}
           />
         </Flex>
