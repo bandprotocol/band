@@ -22,8 +22,8 @@
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
             
             # git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
-            git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
-            # git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
+            # git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
+            git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
             echo -e "Modified directories:\n`cat projects`\n"
            
             # If modified directories contain Gopkg/vendor directores, build all projects and exit
