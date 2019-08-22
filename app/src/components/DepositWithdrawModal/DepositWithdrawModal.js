@@ -22,9 +22,11 @@ const BgCard = styled(Flex).attrs({
 `
 
 const MaxButton = styled(Button).attrs({
-  width: '40px',
-  fontSize: '14px',
+  width: '35px',
 })`
+  font-size: 12px;
+
+  font-family: Avenir-Medium;
   height: 20px;
   align-items: center;
   margin: 0 10px;
@@ -290,7 +292,7 @@ class DepositWithdrawModal extends React.Component {
             />
           </Flex>
           <Flex style={{ position: 'absolute', bottom: '45px' }}>
-            <Text color="red" fontSize="12px">
+            <Text color="red" fontSize="11px">
               {this.state.errorMessage}
             </Text>
           </Flex>

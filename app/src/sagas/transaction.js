@@ -224,7 +224,7 @@ function* handleVoteProposal({ address, proposalId, vote }) {
     const wallet = yield select(walletSelector)
     wallet.setDetail({
       type: 'VOTE',
-      title: `vote`,
+      title: `Vote`,
     })
     yield sendTransaction({
       transaction,
