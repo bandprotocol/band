@@ -1,6 +1,15 @@
 version: 2
 
 jobs:
+  detect_build:
+    docker:
+      - image: circleci/node:10.16.2
+    steps:
+      - checkout
+      - run:
+          name: detect change and req build
+          command: |
+            source .circleci/detect_change.sh
   build_web:
     docker:
       - image: circleci/node:10.16.2
@@ -37,11 +46,9 @@ jobs:
             cd contracts
             yarn
             yarn truffle test
+
 workflows:
   version: 2
   build:
     jobs:
-      - build_web
-      - build_app
-      - build_contracts
-
+      - detect_build
