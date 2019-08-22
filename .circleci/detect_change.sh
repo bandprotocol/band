@@ -57,7 +57,7 @@
               if grep -Fxq $project project-dirs; then
                 printf "\nTriggerring build for project: "$project
                 curl -s -u ${CIRCLE_TOKEN}: \
-                  -d build_parameters[CIRCLE_JOB]=${project} \
+                  -d build_parameters[CIRCLE_JOB]=build${project} \
                   --data revision=$CIRCLE_SHA1 \
                   https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH
               fi
