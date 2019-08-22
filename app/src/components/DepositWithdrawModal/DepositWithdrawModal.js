@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { hideModal, tcdDeposit, tcdWithdraw } from 'actions'
 import { Flex, Button, Text } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
+import { remainingTokenByTCDSelector } from 'selectors/balances'
 import {
   communityBalanceSelector,
   tokenLockByTCDSelector,
@@ -18,6 +19,23 @@ const BgCard = styled(Flex).attrs({
   height: 281px;
   border-radius: 6px;
   box-shadow: 0 12px 23px 0 rgba(0, 0, 0, 0.13);
+`
+
+const MaxButton = styled(Button).attrs({
+  width: '35px',
+})`
+  font-size: 12px;
+
+  font-family: Avenir-Medium;
+  height: 20px;
+  align-items: center;
+  margin: 0 10px;
+  padding: 0 0;
+  border-radius: 6px;
+  transition: 0.5s all;
+  cursor: ${props => (props.isMax ? 'default' : 'pointer')};
+  background-color: ${props => (props.isMax ? '#7c84a6' : '#5973e7')};
+  opacity: ${props => (props.isMax ? 0.2 : 1)};
 `
 
 const CustomButton = styled(Button).attrs({
@@ -101,14 +119,14 @@ class DepositWithdrawModal extends React.Component {
       return false
     }
     if (actionType === 'DEPOSIT') {
-      const { balance } = this.state
+      const { balance, remainingToken } = this.state
       if (!BN.isBN(balance)) {
         this.setState({
           errorMessage: "token's balance is invalid",
         })
         return false
       }
-      if (valueOnChain.gt(balance)) {
+      if (valueOnChain.gt(remainingToken)) {
         this.setState({
           errorMessage:
             'deposit amount should be equal or less than your token balance',
@@ -126,6 +144,7 @@ class DepositWithdrawModal extends React.Component {
       const withdrawOwnershipAmount = valueOnChain
         .mul(totalOwnership)
         .div(stake)
+
       if (
         !BN.isBN(userOwnership) ||
         withdrawOwnershipAmount.gt(userOwnership)
@@ -176,7 +195,13 @@ class DepositWithdrawModal extends React.Component {
   }
 
   render() {
-    const { symbol, actionType, hideDepositWithdraw } = this.props
+    const {
+      symbol,
+      actionType,
+      hideDepositWithdraw,
+      userOwnership,
+      remainingToken,
+    } = this.props
     return (
       <BgCard mt="100px">
         <Flex
@@ -224,7 +249,35 @@ class DepositWithdrawModal extends React.Component {
             )}
           </Text>
           <Flex my="30px">
-            <Flex style={{ position: 'absolute', right: '50px' }}>
+            <Flex
+              style={{
+                position: 'absolute',
+                right: '50px',
+                alignItems: 'center',
+              }}
+            >
+              {actionType === 'WITHDRAW' ? (
+                <MaxButton
+                  isMax={
+                    this.state.value &&
+                    Number(this.state.value) === Number(userOwnership.pretty())
+                  }
+                  onClick={() => this.updateValue(userOwnership.pretty())}
+                >
+                  Max
+                </MaxButton>
+              ) : (
+                <MaxButton
+                  isMax={
+                    this.state.value &&
+                    Number(this.state.value) === Number(remainingToken.pretty())
+                  }
+                  onClick={() => this.updateValue(remainingToken.pretty())}
+                >
+                  Max
+                </MaxButton>
+              )}
+
               <Text
                 lineHeight="35px"
                 color="#cbcfe3"
@@ -239,7 +292,7 @@ class DepositWithdrawModal extends React.Component {
             />
           </Flex>
           <Flex style={{ position: 'absolute', bottom: '45px' }}>
-            <Text color="red" fontSize="12px">
+            <Text color="red" fontSize="11px">
               {this.state.errorMessage}
             </Text>
           </Flex>
@@ -278,7 +331,12 @@ const mapStateToProps = (
   const community = communityDetailSelector(state, {
     address: tokenAddress,
   })
+
   if (!community) return {}
+  const remainingToken = remainingTokenByTCDSelector(state, {
+    address: tokenAddress,
+    tcdAddress,
+  })
   return {
     actionType,
     userOwnership,
@@ -287,6 +345,7 @@ const mapStateToProps = (
     tokenAddress,
     dataSourceAddress,
     tcdAddress,
+    remainingToken,
     symbol: community.get('symbol'),
     balance: communityBalanceSelector(state, { address: tokenAddress }).sub(
       tokenLockByTCDSelector(state, { address: tokenAddress, tcdAddress }),

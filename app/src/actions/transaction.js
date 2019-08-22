@@ -38,18 +38,20 @@ export const hideTxs = () => ({
   type: HIDE_TXS,
 })
 
-export const buyToken = (address, amount, priceLimit) => ({
+export const buyToken = (address, amount, priceLimit, tokenName) => ({
   type: BUY_TOKEN,
   address,
   amount,
   priceLimit,
+  tokenName,
 })
 
-export const sellToken = (address, amount, priceLimit) => ({
+export const sellToken = (address, amount, priceLimit, tokenName) => ({
   type: SELL_TOKEN,
   address,
   amount,
   priceLimit,
+  tokenName,
 })
 
 export const tcdDeposit = (tcdAddress, sourceAddress, stake) => ({

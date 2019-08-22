@@ -65,16 +65,18 @@ class BuySellModal extends React.Component {
   onButtonClick() {
     const { type } = this.state
     const { amount, priceLimit, price } = this.state[type]
-    const { onBuy, onSell } = this.props
+    const { onBuy, onSell, symbol } = this.props
     if (type === 'buy') {
       onBuy(
         BN.parse(parseFloat(amount)),
         priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+        symbol,
       )
     } else {
       onSell(
         BN.parse(parseFloat(amount)),
         priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+        symbol,
       )
     }
   }
@@ -309,10 +311,10 @@ const mapStateToProps = (state, { type, tokenAddress }) => {
 }
 
 const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
-  onBuy: (amount, priceLimit) =>
-    dispatch(buyToken(tokenAddress, amount, priceLimit)),
-  onSell: (amount, priceLimit) =>
-    dispatch(sellToken(tokenAddress, amount, priceLimit)),
+  onBuy: (amount, priceLimit, tokenName) =>
+    dispatch(buyToken(tokenAddress, amount, priceLimit, tokenName)),
+  onSell: (amount, priceLimit, tokenName) =>
+    dispatch(sellToken(tokenAddress, amount, priceLimit, tokenName)),
 })
 
 export default connect(

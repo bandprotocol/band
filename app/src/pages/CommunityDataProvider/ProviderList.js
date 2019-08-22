@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Button, Text, H3 } from 'ui/common'
+import { Flex, Button, H3 } from 'ui/common'
 import styled from 'styled-components'
 import ProviderListRender from './ProviderListRender'
 import { communityDetailSelector } from 'selectors/communities'

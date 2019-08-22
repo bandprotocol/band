@@ -16,15 +16,17 @@ const BgCard = styled(Flex).attrs({
   box-shadow: 0 12px 23px 0 rgba(0, 0, 0, 0.13);
 `
 const CustomButton = styled(Button).attrs({
-  fontSize: '16px',
+  fontSize: '14px',
   fontWeight: 500,
   width: '120px',
+  mx: '10px',
 })`
-  margin: 0px 25px;
+  line-height: 1.3;
   border-radius: 6px;
-  transition: 0.5s all;
   cursor: pointer;
-  background-color: '#7c84a6';
+  background-color: ${props => props.bg};
+  pointer-events: auto;
+  color: white;
 `
 
 class ConvertRevenueModal extends React.Component {
@@ -75,8 +77,9 @@ class ConvertRevenueModal extends React.Component {
             width={1}
             justifyContent="center"
           >
-            <Flex my="50px">
+            <Flex mt="35px" mb="20px">
               <CustomButton
+                bg="#42c47f"
                 onClick={() =>
                   dispatchRevenueToStake(
                     tcdAddress,
@@ -88,6 +91,7 @@ class ConvertRevenueModal extends React.Component {
                 Stake Revenue
               </CustomButton>
               <CustomButton
+                bg="#ec6363"
                 onClick={() =>
                   dispatchWithdraw(
                     tcdAddress,
@@ -101,6 +105,12 @@ class ConvertRevenueModal extends React.Component {
               </CustomButton>
             </Flex>
           </Flex>
+          <Text color="#4a4a4a" fontSize="12px" lineHeight={1.43}>
+            * Stake Revenue is action to deposit your revenue for staking.
+          </Text>
+          <Text color="#4a4a4a" fontSize="12px" lineHeight={1.43}>
+            * Withdraw Revenue is action to withdraw your revenue.
+          </Text>
         </Flex>
       </BgCard>
     )
