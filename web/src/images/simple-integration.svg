@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="102" height="89" viewBox="0 0 102 89">
+    <defs>
+        <linearGradient id="a" x1="50%" x2="50%" y1="0%" y2="100%">
+            <stop offset="0%" stop-color="#DDE2FF" stop-opacity=".378"/>
+            <stop offset="100%" stop-color="#B8C2FF" stop-opacity=".378"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="nonzero" transform="translate(.5)">
+        <path fill="#2955FC" d="M0 18.451h100.939v61.195a8.8 8.8 0 0 1-8.8 8.8H8.8a8.8 8.8 0 0 1-8.8-8.8V18.451z"/>
+        <path fill="#FFF" d="M50.103 43.074c1.68-3.772 5.389-7.257 9.852-7.257 6.009 0 10.336 4.874 10.88 10.683 0 0 .295 1.442-.351 4.037-.88 3.535-2.948 6.676-5.739 9.073L50.103 72.1l-14.64-12.49c-2.791-2.397-4.859-5.538-5.74-9.073-.646-2.595-.351-4.037-.351-4.037.542-5.809 4.87-10.683 10.88-10.683 4.462 0 8.171 3.485 9.85 7.257z"/>
+        <path fill="url(#a)" d="M6.4 0h88.139a6.4 6.4 0 0 1 6.4 6.4v12.605H0V6.4A6.4 6.4 0 0 1 6.4 0z"/>
+        <circle cx="10.311" cy="9.226" r="3.799" fill="#FA625B"/>
+        <circle cx="22.25" cy="9.226" r="3.799" fill="#FCBD2E"/>
+        <circle cx="34.189" cy="9.226" r="3.799" fill="#32CA42"/>
+    </g>
+</svg>

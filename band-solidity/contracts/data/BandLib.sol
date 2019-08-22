@@ -9,37 +9,32 @@ interface Oracle {
   function queryPrice() external view returns (uint256);
 }
 
-contract usingBand {
-  Oracle internal constant CRYPTO = Oracle(0x07416E24085889082d767AF4CA09c37180A3853c);
-  Oracle internal constant ERC20 = Oracle(0x869e8e455816153A9330D59a854817231E49D9F9);
-  Oracle internal constant FOREX = Oracle(0x61Ab2054381206d7660000821176F2A798F031de);
-  Oracle internal constant STOCK = Oracle(0x7D3196e2876a62cE3EB5778643c6B909788265d4);
-  Oracle internal constant NBA = Oracle(0x7264DE0c942Cd9E00f73f59406Dc7d6eCB3956be);
-  Oracle internal constant MLB = Oracle(0x1e604e7963471d644BDAA84A9ff367098ae0742C);
-  Oracle internal constant NFL = Oracle(0x022d38e9b53d5F28A5EFA58BA2239865AF987956);
-  Oracle internal constant EPL = Oracle(0xf268f91689a728153f0D9f0b5dA4aB912Fce80D1);
-  Oracle internal constant PWB = Oracle(0x9cd0E16C9b950971fa6c0BA37b9d358117F582aE);
-  Oracle internal constant MMN = Oracle(0xa7197Fbf939d51c9e4E2160394b70a431CcCEc51);
+contract usingBandProtocol {
+  using BandLib for Oracle;
+
+  Oracle internal constant FINANCIAL = Oracle(0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e);
+  Oracle internal constant LOTTERY = Oracle(0x7b09c1255b27fCcFf18ecC0B357ac5fFf5f5cb31);
+  Oracle internal constant SPORT = Oracle(0xF904Db9817E4303c77e1Df49722509a0d7266934);
   Oracle internal constant API = Oracle(0x7f525974d824a6C4Efd54b9E7CB268eBEFc94aD8);
 }
 
 library BandLib {
-  function queryUint256(Oracle oracle, bytes memory key) internal returns(uint256) {
-    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
-    require(status == Oracle.QueryStatus.OK);
+  function querySpotPrice(Oracle oracle, bytes memory key) internal returns(uint256) {
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked('SPOTPX/',key));
+    require(status == Oracle.QueryStatus.OK, 'DATA_UNAVAILABLE');
     return uint256(output);
   }
 
-  function queryUint256WithTimeLimit(Oracle oracle, bytes memory key, uint256 notOldThan) internal returns (uint256) {
-    (bytes32 output, uint256 lastUpdated, Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
-    require(status == Oracle.QueryStatus.OK);
-    require(lastUpdated >= notOldThan);
+  function querySpotPriceWithExpiry(Oracle oracle, bytes memory key, uint256 timeLimit) internal returns (uint256) {
+    (bytes32 output, uint256 lastUpdated, Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked('SPOTPX/',key));
+    require(status == Oracle.QueryStatus.OK, 'DATA_UNAVAILABLE');
+    require(now - lastUpdated <= timeLimit, 'DATA_OUTDATED');
     return uint256(output);
   }
 
   function queryScore(Oracle oracle, bytes memory key) internal returns (uint8, uint8) {
     (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
-    require(status == Oracle.QueryStatus.OK);
+    require(status == Oracle.QueryStatus.OK, 'DATA_NOT_READY');
     return (uint8(output[0]), uint8(output[1]));
   }
 
@@ -52,7 +47,7 @@ library BandLib {
 
   function queryLottery(Oracle oracle, bytes memory key) internal returns(uint8[7] memory) {
     (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
-    require(status == Oracle.QueryStatus.OK);
+    require(status == Oracle.QueryStatus.OK, 'DATA_NOT_READY');
     return getLotteryResult(output);
   }
 
@@ -73,6 +68,15 @@ library BandLib {
       result[i] = uint8(output[i]);
     }
     return result;
+  }
+
+  /*
+    Using for gas station contract for now
+  */
+  function queryUint256(Oracle oracle, bytes memory key) internal returns(uint256) {
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
+    require(status == Oracle.QueryStatus.OK, 'DATA_UNAVAILABLE');
+    return uint256(output);
   }
 
   function queryRaw(Oracle oracle, bytes memory key) internal returns(bytes32, uint256, Oracle.QueryStatus) {

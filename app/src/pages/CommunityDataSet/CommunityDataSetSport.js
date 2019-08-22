@@ -136,7 +136,7 @@ const renderDataPoints = (tcdAddress, state, matches) => {
   )
 }
 
-class SportPage extends React.Component {
+export default class SportPage extends React.Component {
   state = {
     nSportList: 10,
     currentPage: 1,
@@ -254,28 +254,3 @@ class SportPage extends React.Component {
     )
   }
 }
-
-const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
-  const community = communityDetailSelector(state, {
-    address: communityAddress,
-  })
-
-  if (!community) return {}
-
-  let tcdPrefix = null
-  try {
-    tcdPrefix = community
-      .get('tcds')
-      .get(tcdAddress)
-      .get('prefix')
-  } catch (e) {}
-
-  return {
-    name: community.get('name'),
-    address: community.get('address'),
-    tcdAddress: tcdAddress,
-    tcdPrefix: tcdPrefix.slice(0, -1),
-  }
-}
-
-export default connect(mapStateToProps)(SportPage)

@@ -11,7 +11,7 @@ const PageContainer = styled(Box)`
     !p.fullWidth &&
     `
     padding: 0 18px;
-    max-width: 996px;
+    max-width: 1380px;
   `};
 `
 

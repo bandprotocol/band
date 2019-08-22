@@ -56,7 +56,7 @@ export default class NetworkSelect extends React.Component {
     this.setState({
       currentOption: newOption,
     })
-    this.debounce(newOption ? newOption.value : null)
+    this.debounce(newOption ? newOption.value[0] : null)
   }
 
   render() {

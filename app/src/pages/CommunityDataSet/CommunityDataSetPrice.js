@@ -8,6 +8,7 @@ import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { getAsset } from 'utils/assetData'
+
 import {
   CurrentPriceFetcher,
   PriceCountByTCDFetcher,
@@ -31,19 +32,22 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
-        {pairs.map(({ pair, value, lastUpdate }) => {
+        {pairs.map(({ pair, key, value, lastUpdate }) => {
           let numDigits = 2
-          if (tcdPrefix.includes('erc')) {
-            numDigits = 6
-          } else if (tcdPrefix.includes('fx')) {
-            numDigits = 4
-          }
+          // if (tcdPrefix.includes('erc')) {
+          //   numDigits = 6
+          // } else if (tcdPrefix.includes('fx')) {
+          //   numDigits = 4
+          // }
+          if (value > 1) numDigits = 2
+          else if (value > 0.001) numDigits = 4
+          else numDigits = 6
           return (
             <DataPoint
-              key={pair}
-              keyOnChain={pair}
-              label={pairToHeader(pair)}
-              k={pair}
+              key={key}
+              keyOnChain={key}
+              label={pair}
+              k={key}
               v={() => (
                 <Card
                   flex="0 0 auto"
@@ -70,7 +74,7 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
               updatedAt={lastUpdate}
             >
               <PricePairFetcher
-                pair={pair}
+                keyOnChain={key}
                 tcdAddress={tcdAddress}
                 from={moment(1556150400000)}
               >
@@ -110,7 +114,7 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   </React.Fragment>
 )
 
-class CommunityPricePage extends React.Component {
+export default class CommunityPricePage extends React.Component {
   state = { query: '' }
 
   onQuery = val => {
@@ -183,28 +187,3 @@ class CommunityPricePage extends React.Component {
     )
   }
 }
-
-const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
-  const community = communityDetailSelector(state, {
-    address: communityAddress,
-  })
-
-  if (!community) return {}
-
-  let tcdPrefix = null
-  try {
-    tcdPrefix = community
-      .get('tcds')
-      .get(tcdAddress)
-      .get('prefix')
-      .slice(0, -1)
-  } catch (e) {}
-
-  return {
-    name: community.get('name'),
-    address: community.get('address'),
-    tcdPrefix: tcdPrefix,
-  }
-}
-
-export default connect(mapStateToProps)(CommunityPricePage)

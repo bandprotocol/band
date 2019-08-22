@@ -71,8 +71,9 @@ export const LotteyByTCDAddress = withRouter(
         `/lotteries/${tcdAddress}`,
         params,
       )
-      return rawData.map(({ date, key, timestamp, value }) => {
+      return rawData.map(({ type, date, key, timestamp, value }) => {
         return {
+          lotteryType: type,
           time: moment(date),
           lastUpdate: moment(timestamp * 1000),
           keyOnChain: key,

@@ -1,47 +1,32 @@
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
 @font-face {
-  font-family: 'Avenir';
-  src: url('/fonts/Avenir.ttf');
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Light.ttf');
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Regular.ttf');
   font-style: normal;
   font-weight: 400;
 }
-
 @font-face {
-  font-family: 'Avenir';
-  src: url('/fonts/Avenir-Oblique.ttf');
-  font-style: italic;
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Avenir';
-  src: url('/fonts/Avenir-Medium.ttf');
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-SemiBold.ttf');
   font-style: normal;
   font-weight: 500;
 }
-
 @font-face {
-  font-family: 'Avenir';
-  src: url('/fonts/Avenir-Bold.ttf');
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-Bold.ttf');
   font-style: normal;
   font-weight: 700;
 }
-
 @font-face {
-  font-family: 'Avenir';
-  src: url('/fonts/Avenir-Black.ttf');
+  font-family: 'Open Sans';
+  src: url('/fonts/OpenSans-ExtraBold.ttf');
   font-style: normal;
   font-weight: 900;
-}
-
-@font-face {
-  font-family: 'Avenir';
-  src: url('/fonts/Avenir-Light.ttf');
-  font-style: normal;
-  font-weight: 300;
 }
 
 html,
@@ -175,8 +160,6 @@ a,
 a:hover,
 a:active {
   color: #7a35d4;
-}
-a:not(:hover) {
   text-decoration: none;
 }
 
@@ -199,11 +182,17 @@ body {
 
 body {
   margin: 0px 0px 0px 0px;
-  padding: 80px 0px 0px 0px;
+  padding: 60px 0px 0px 0px;
   color: #555;
   display: flex;
   flex-direction: column;
   overflow: auto;
-  font-family: 'Avenir', sans-serif;
+  font-family: 'Open sans';
   background: white;
+}
+
+@media only screen and (max-width: 640px) {
+  body {
+    padding: 60px 0px 0px 0px;
+  }
 }

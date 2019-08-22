@@ -16,7 +16,10 @@ const mapStateToProps = (state, { communityAddress }) => {
   return {
     tcds: Object.keys(tcds)
       .map(key => {
-        const tcdInfo = getTCDInfomation(tcds[key].prefix)
+        const tcdInfo = getTCDInfomation(
+          tcds[key].prefix,
+          community.get('name'),
+        )
         return {
           tcdAddress: key,
           path: `/community/${communityAddress}/${key}/dataset`,

@@ -89,7 +89,8 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
     name: community.get('name'),
     address: community.get('address'),
     symbol: community.get('symbol'),
-    tcdName: tcd && getTCDInfomation(tcd.toJS().prefix).label,
+    tcdName:
+      tcd && getTCDInfomation(tcd.toJS().prefix, community.get('name')).label,
     providers:
       tcd &&
       tcd.toJS().providers.map(address => {
