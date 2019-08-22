@@ -2,3 +2,4 @@
 /.vuepress/dist/
 /node_modules/
 *.swp
+/.firebase/
