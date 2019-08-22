@@ -88,7 +88,6 @@ class HighChartGraph extends React.Component {
         chartObj.hideLoading()
         break
       }
-      console.log('loading graph')
       await delay(1000)
     }
   }

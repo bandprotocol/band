@@ -258,7 +258,7 @@ class BuySellModal extends React.Component {
   }
 
   render() {
-    const { name, logo, symbol, tokenNormalPrice } = this.props
+    const { name, logo, symbol, tokenNormalPrice, communityClient } = this.props
     const { type, showAdvance, loading } = this.state
     const currentType = this.state[type]
     return (
@@ -281,6 +281,7 @@ class BuySellModal extends React.Component {
         showAdvance={showAdvance}
         toggleAdvance={this.toggleAdvance.bind(this)}
         onButtonClick={this.onButtonClick.bind(this)}
+        communityClient={communityClient}
       />
     )
   }

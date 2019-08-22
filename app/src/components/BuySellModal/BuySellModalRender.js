@@ -8,10 +8,11 @@ import ToolTip from 'components/ToolTip'
 
 const AmountInput = styled.input`
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 15px;
   border: 0px;
   letter-spacing: -0.2px;
   font-size: 12px;
+  background: transparent;
 `
 const SymbolType = styled(Box)`
   -webkit-appearance: none !important;
@@ -23,12 +24,12 @@ const SymbolType = styled(Box)`
   margin: auto;
 `
 
-const BoxStyle = {
-  height: '45px',
-  border: '1px solid #cbcfe3',
-  overflow: 'hidden',
-  borderRadius: '2px',
-}
+const AmountBoxStyled = styled(Box)`
+  overflow: hidden;
+  border-radius: 2px;
+  background: ${props => (props.disabled ? '#e8ebfd' : 'transparent')};
+  border: ${props => (props.disabled ? 'none' : '1px solid #cbcfe3')};
+`
 
 const BuySellHeader = ({ type, setType }) => (
   <Flex
@@ -84,7 +85,14 @@ const BuySellHeader = ({ type, setType }) => (
   </Flex>
 )
 
-const Amount = ({ type, amountStatus, symbol, amount, handleChange }) => (
+const Amount = ({
+  type,
+  amountStatus,
+  symbol,
+  amount,
+  handleChange,
+  disabled,
+}) => (
   <Box pb={3}>
     <Text
       fontSize="14px"
@@ -94,18 +102,24 @@ const Amount = ({ type, amountStatus, symbol, amount, handleChange }) => (
     >
       {type === 'buy' ? 'Buying' : 'Paying'}
     </Text>
-    <Box bg="#ffffff" mt={3} style={BoxStyle}>
-      <Flex flexDirection="row" alignItems="center" justifyContent="center">
-        <AmountInput
-          type="text"
-          name="amount"
-          value={amount}
-          placeholder="ex.100"
-          onChange={e => handleChange(e)}
-        />
-        <SymbolType>{symbol ? symbol : 'Token'}</SymbolType>
-      </Flex>
-    </Box>
+    <AmountBoxStyled bg="#ffffff" mt={3} disabled={disabled}>
+      {disabled ? (
+        <Flex alignItems="center" style={{ height: '40px' }} pl="5px">
+          <DotLoading color="#b1b8e7" size="6px" />
+        </Flex>
+      ) : (
+        <Flex flexDirection="row" alignItems="center" justifyContent="center">
+          <AmountInput
+            type="text"
+            name="amount"
+            value={amount}
+            placeholder={'ex. 100'}
+            onChange={e => handleChange(e)}
+          />
+          <SymbolType>{symbol || 'Token'}</SymbolType>
+        </Flex>
+      )}
+    </AmountBoxStyled>
     {/* Error message */}
     <Text
       fontSize="10px"
@@ -394,8 +408,6 @@ const BuySellButton = ({ type, amount, symbol, disabled, onClick }) => (
 )
 
 export default ({
-  name,
-  logo,
   symbol,
   type,
   amount,
@@ -412,6 +424,7 @@ export default ({
   showAdvance,
   toggleAdvance,
   onButtonClick,
+  communityClient,
 }) => {
   const ratio = (() => {
     try {
@@ -464,6 +477,7 @@ export default ({
         <Amount
           type={type}
           loading={loading}
+          disabled={!communityClient}
           symbol={symbol}
           amount={amount}
           amountStatus={amountStatus}

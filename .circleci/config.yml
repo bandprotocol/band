@@ -25,7 +25,6 @@ jobs:
             cd app
             yarn
             yarn test
-
   build_contracts:
     docker:
       - image: circleci/node:10.16.2
@@ -45,3 +44,4 @@ workflows:
       - build_web
       - build_app
       - build_contracts
+
