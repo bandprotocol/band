@@ -11,11 +11,15 @@
             fi 
 
             echo -e `git log | head -1`
+            echo -e "---"
             echo -e `git branch`
-            echo -e `git fetch`
+            echo -e "---"
+            # echo -e `git fetch`
             echo -e `git merge-base --fork-point master`
+            echo -e "---"
 
             echo -e `git diff --name-only $(git merge-base --fork-point master)`
+            echo -e "---"
             
             #first commit in a branch
             # if [[ ${LAST_SUCCESSFUL_COMMIT} == "null" ]]; then
