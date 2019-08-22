@@ -46,7 +46,7 @@ Next, you can instantiate an `Oracle` instance with the dataset address. This ob
 
 ```ts
 /// Instante an oracle instance for a given dataset address
-Oracle oracle = Oracle(0x07416E24085889082d767AF4CA09c37180A3853c)
+Oracle oracle = Oracle(0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e)
 ```
 
 ### Check for Query Price
@@ -88,14 +88,28 @@ In this initial release, Band Foundation is responsible for facilitating data re
 Although data providers strive to continously supply data to on-chain dataset contracts, it is possible that some data may not be up-to-date the at the moment you need. As a dapp developer, you can request data providers to supply data for a given **key** of a given **dataset** instantly by [POSTing](<https://en.wikipedia.org/wiki/POST_(HTTP)>) a [HTTP](https://en.wikipedia.org/wiki/HTTP) request to [https://data-request.bandprotocol.com](https://data-request.bandprotocol.com). An example is provided below.
 
 ```sh
-# Request a data update request for key hex"53504f5450582f4554482d555344"
+# Request a data update request for key SPOTPX/ETH-USD
 curl -X POST \
   https://data-request.bandprotocol.com \
   -H 'Content-Type: application/json' \
   -d '{
     "network_id": 42,
-    "dataset": "0x07416E24085889082d767AF4CA09c37180A3853c",
-    "key": "0x53504f5450582f4554482d555344",
+    "dataset": "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e",
+    "key": "SPOTPX/ETH-USD",
+    "broadcast": true
+}'
+```
+
+Or
+
+```sh
+curl -X POST \
+  https://data-request.bandprotocol.com \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "network_id": 42,
+    "dataset": "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e",
+    "key": "0x53504f5450582f414d5a4e",
     "broadcast": true
 }'
 ```
@@ -104,7 +118,7 @@ The example above shows a a request to update spot price of `ETH/USD` pair on Ko
 
 - `network_id`: Ethereum network ID (e.g. 1 for mainnet, 42 for Kovan)
 - `dataset`: Unique address of the dataset to update data
-- `key`: Hex-formatted key for data to update. See specification on the dataset pages for details.
+- `key`: Hex-formatted or ASCII-formatted key for data to update. See specification on the dataset pages for details.
 - `broadcast`: A boolean indicating whether the data update transaction should be automatically broadcast. If **true**, Band Foundation will broadcast the transaction. If **false**, this HTTP request will return an Ethereum transaction data.
 
 This feature is especially necessary for the Web Oracle dataset. You can read more about it [here](../datasets/web-oracle.html).

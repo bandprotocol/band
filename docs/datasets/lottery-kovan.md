@@ -2,11 +2,11 @@
 
 This dataset provides up-to-date lottery results from worldwide lottery authorities. Decentralized applications can consume this data to help with their decision. Example applications include, decentralized betting, shared lottery pools, insurance, etc.
 
-| Contract              | Address                                    |
-| --------------------- | ------------------------------------------ |
-| Dataset Token         | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Dataset Oracle        | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
-| Governance Parameters | 0x79febf6b9f76853edbcbc913e6aae8232cfb9de9 |
+| Contract              | Address                                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Dataset Token         | [0x815CcAEa74C689E980E78eCc95A88CeD77CB0DBd](https://kovan.etherscan.io/address/0x815CcAEa74C689E980E78eCc95A88CeD77CB0DBd) |
+| Dataset Oracle        | [0x7b09c1255b27fCcFf18ecC0B357ac5fFf5f5cb31](https://kovan.etherscan.io/address/0x7b09c1255b27fCcFf18ecC0B357ac5fFf5f5cb31) |
+| Governance Parameters | [0x88be588852474e3a194deb44D30150a58a627d2b](https://kovan.etherscan.io/address/0x88be588852474e3a194deb44D30150a58a627d2b) |
 
 ## Key-Value Format
 
