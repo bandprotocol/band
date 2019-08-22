@@ -14,14 +14,7 @@
 
             echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
-            echo -e "Commits $COMMITS"
-            echo -e "$CIRCLE_TOKEN"
-
-            # DIFF=`git diff --no-commit-id --name-only master | cut -d/ -f1 | sort -u`
-
-            # echo -e "git diff file $DIFF"
-
-            # git diff --no-commit-id --name-only master | cut -d/ -f1 | sort -u > projects
+            
             git diff --name-only $COMMITS | cut -d/ -f1 | sort -u > projects
             echo -e "Modified directories:\n`cat projects`\n"
            
