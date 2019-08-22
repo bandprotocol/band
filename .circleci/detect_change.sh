@@ -12,6 +12,10 @@
 
             echo -e `git log | head -1`
             echo -e "---"
+            echo -e `git log master | head -1`
+            echo -e "---"
+            echo -e `git log origin/master | head -1`
+            echo -e "---"
             echo -e `git branch`
             echo -e "---"
             # echo -e `git fetch`
