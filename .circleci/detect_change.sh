@@ -15,11 +15,11 @@
               COMMITS="origin/master"
             else
               COMMITS="${CIRCLE_SHA1}..${LAST_SUCCESSFUL_COMMIT}"
-              # COMMITS="master..${LAST_SUCCESSFUL_COMMIT}"
             fi
 
             echo -e "LAST_SUCCESSFUL_BUILD_URL $LAST_SUCCESSFUL_BUILD_URL"
             echo -e "LAST_SUCCESSFUL_COMMIT $LAST_SUCCESSFUL_COMMIT"
+            echo -e "Diff $COMMITS"
             
             # git diff --name-only $(git merge-base --fork-point master) | cut -d/ -f1 | sort -u > projects
             # git diff --name-only master...${CIRCLE_BRANCH} | cut -d/ -f1| sort -u > projects
