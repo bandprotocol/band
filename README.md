@@ -20,6 +20,7 @@ This repository is a [monorepo](https://en.wikipedia.org/wiki/Monorepo) containi
 | [`branding`](branding)           | 🎨 Public branding assets                                        | `png`, `svg`          |
 | [`contracts`](contracts)         | 🤝 Core smart contracts                                          | `solidity`            |
 | [`docs`](docs)                   | 📖 Developer documentation                                       | `markdown`, `vue`     |
+| [`go`](go)                       | 🐀 Go packages                                                   | `golang`              |
 | [`truffle-box`](truffle-box)     | 🎁 [Truffle Box](https://www.trufflesuite.com/boxes) boilerplate | `solidity`            |
 | [`web`](web)                     | 🌏 Implementation of https://bandprotocol.com                    | `javascript`, `react` |
 
