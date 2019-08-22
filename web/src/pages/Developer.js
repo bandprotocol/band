@@ -69,7 +69,7 @@ const Report = styled.a`
   }
 `
 
-const Dataset = ({ image, title, address, detail }) => {
+const Dataset = ({ image, title, address, detail, href }) => {
   const _isMobile = isMobile()
   return (
     <Flex
@@ -113,7 +113,7 @@ const Dataset = ({ image, title, address, detail }) => {
         {detail}
       </Text>
       <Flex justifyContent="center" alignItems="center">
-        <LinkWithArrow text="Integration" />
+        <LinkWithArrow text="Integration" href={href} />
       </Flex>
     </Flex>
   )
@@ -221,9 +221,12 @@ export default () => {
               </OutlineButton>
             </AbsoluteLink>
             <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-            <AbsoluteLink href="https://developer.bandprotocol.com/">
-              <FilledButton message="Developer Doc" arrow width="227px" />
-            </AbsoluteLink>
+            <FilledButton
+              message="Developer Doc"
+              arrow
+              width="227px"
+              href="https://developer.bandprotocol.com/devs/connect-with-band.html"
+            />
           </Flex>
 
           {/* Section2: Embedded Video */}
@@ -300,23 +303,26 @@ export default () => {
             <Dataset
               title="Price Feeds"
               image={PriceHero}
-              address="0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+              address="0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e"
               detail="Current prices of popular trading cryptocurrency, FX, and US equity pairs"
+              href="https://developer.bandprotocol.com/datasets/financial-kovan.html"
             />
             {/* Sport Event */}
             <Dataset
               title="Sport Events"
               image={SportHero}
-              address="0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+              address="0xF904Db9817E4303c77e1Df49722509a0d7266934"
               detail="Accurate live scores from soccer, basketball, American football
               and baseball"
+              href="https://developer.bandprotocol.com/datasets/sport-kovan.html"
             />
             {/* Lottery Result */}
             <Dataset
               title="Lottery Results"
               image={LotteryHero}
-              address="0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d"
+              address="0x7b09c1255b27fCcFf18ecC0B357ac5fFf5f5cb31"
               detail="  Winning numbers of lotteries all around the world"
+              href="https://developer.bandprotocol.com/datasets/lottery-kovan.html"
             />
           </Flex>
 
@@ -358,14 +364,20 @@ export default () => {
               justifyContent="space-evenly"
               width="80%"
             >
-              <LinkWithArrow text="Explore Existing Endpoints" />
+              <LinkWithArrow
+                text="Explore Existing Endpoints"
+                href="https://app.kovan.bandprotocol.com/community/0x3DEb207E098F882C3F351C494b26B26548a33f5B/0x7f525974d824a6C4Efd54b9E7CB268eBEFc94aD8/dataset"
+              />
               {_isMobile && (
                 <Flex>
                   <br />
                   <br />
                 </Flex>
               )}
-              <LinkWithArrow text="How to Add a New Endpoint" />
+              <LinkWithArrow
+                text="How to Add a New Endpoint"
+                href="https://developer.bandprotocol.com/devs/data-query.html#request-data-update"
+              />
             </Flex>
           </Flex>
 
@@ -462,6 +474,7 @@ export default () => {
               fontSize={_isMobile ? '14px' : '16px'}
               message="Learn More in Developer Doc"
               arrow
+              href="https://developer.bandprotocol.com/datasets/web-oracle.html"
             />
           </Flex>
         </PageContainer>
