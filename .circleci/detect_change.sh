@@ -11,8 +11,9 @@
             fi 
 
             git log | head -1
-            git merge-base --fork-point origin/master
             git branch
+            git fetch
+            git merge-base --fork-point origin/master
 
             git diff --name-only $(git merge-base --fork-point origin/master)
             
