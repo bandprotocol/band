@@ -629,12 +629,12 @@ const Navbar = props => {
               Airdrop
             </MainMenuText>
             <Flex
-              bg="#C0C0C0"
+              bg="#373c53"
               color="white"
               // bg="#ff5b84"
               // color="white"
               p="3px 8px"
-              fontSize="12px"
+              fontSize="11px"
               justifyContent="center"
               alignItems="center"
               ml="5px"
