@@ -27,7 +27,7 @@ for project in ${projects_inc_dep[@]}; do
         printf "\nTriggerring build for project: "$project
         curl -s -u ${CIRCLE_TOKEN}: \
         -d build_parameters[CIRCLE_JOB]=build_${project} \
-        --data revision=$CIRCLE_SHA1 \
+        --data revi>sion=$CIRCLE_SHA1 \
         https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/tree/$CIRCLE_BRANCH
     fi
 done
