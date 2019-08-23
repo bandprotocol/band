@@ -1,7 +1,7 @@
 
 
             build=1
-            if [[ ${CIRCLE_BRANCH} == "test-ci" ]]; then
+            if [[ ${CIRCLE_BRANCH} == "monorepo-circle-ci" ]]; then
               build=0
               echo "CURRENT BRANCH is ${CIRCLE_BRANCH} not build"
               exit 0
