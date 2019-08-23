@@ -43,3 +43,23 @@ func TestAlphaVantageForexUnknownSymbol(t *testing.T) {
 		t.Errorf("Query BTH-USD must contain error. See nothing")
 	}
 }
+
+func TestAlphaVantageForexQueryToQuerySpotPrice(t *testing.T) {
+	resolver := &AlphaVantageForex{}
+	price, err := resolver.Query([]byte("SPOTPX/EUR-USD"))
+	if err != nil {
+		t.Errorf("Query EUR-USD error: %s", err)
+	}
+	priceBig := price.Big()
+	if priceBig.Cmp(PriceToBigInt(1)) == -1 || priceBig.Cmp(PriceToBigInt(2)) == 1 {
+		t.Errorf("Query EUR-USD price is way off: %s", priceBig.String())
+	}
+}
+
+func TestAlphaVantageForexQueryInvalidFunction(t *testing.T) {
+	resolver := &AlphaVantageForex{}
+	_, err := resolver.Query([]byte("REALPRICE/EUR-USD"))
+	if err == nil {
+		t.Errorf("Query REALPRICE/EUR-USD must contain error. See nothing")
+	}
+}

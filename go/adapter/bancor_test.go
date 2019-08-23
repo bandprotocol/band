@@ -6,12 +6,12 @@ import (
 
 func TestSuccess_Bancor(t *testing.T) {
 	resolver := &Bancor{}
-	price, err := resolver.QuerySpotPrice("ETH-USD")
+	price, err := resolver.QuerySpotPrice("DAI-ETH")
 	if err != nil {
-		t.Errorf("Query ETH-USD error: %s", err)
+		t.Errorf("Query DAI-ETH error: %s", err)
 	}
-	if price < 50 || price > 1000 {
-		t.Errorf("Query ETH-USD price is way off: %f", price)
+	if price < 0 || price > 0.01 {
+		t.Errorf("Query DAI-ETH price is way off: %f", price)
 	}
 }
 
@@ -25,8 +25,28 @@ func TestInvalidSymbolFormat_Bancor(t *testing.T) {
 
 func TestUnknownSymbol_Bancor(t *testing.T) {
 	resolver := &Bancor{}
-	_, err := resolver.QuerySpotPrice("ETH-XYZ")
+	_, err := resolver.QuerySpotPrice("DAI-ETG")
 	if err == nil {
-		t.Errorf("Query ETH-XYZ must contain error. See nothing")
+		t.Errorf("Query DAI-ETG must contain error. See nothing")
+	}
+}
+
+func TestQueryToQuerySpotPrice_Bancor(t *testing.T) {
+	resolver := &Bancor{}
+	price, err := resolver.Query([]byte("SPOTPX/DAI-ETH"))
+	if err != nil {
+		t.Errorf("Query DAI-ETH error: %s", err)
+	}
+	priceBig := price.Big()
+	if priceBig.Cmp(PriceToBigInt(0)) == -1 || priceBig.Cmp(PriceToBigInt(0.01)) == 1 {
+		t.Errorf("Query DAI-ETH price is way off: %s", priceBig.String())
+	}
+}
+
+func TestQueryInvalidFunction_Bancor(t *testing.T) {
+	resolver := &Bancor{}
+	_, err := resolver.Query([]byte("REALPRICE/DAI-ETH"))
+	if err == nil {
+		t.Errorf("Query REALPRICE/DAI-ETH must contain error. See nothing")
 	}
 }

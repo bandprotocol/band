@@ -31,3 +31,23 @@ func TestWorldTradingDataUnknownSymbol(t *testing.T) {
 		t.Errorf("Query FD must contain error. See nothing")
 	}
 }
+
+func TestWorldTradingDataQueryToQuerySpotPrice(t *testing.T) {
+	resolver := &WorldTradingData{}
+	price, err := resolver.Query([]byte("SPOTPX/GOOG"))
+	if err != nil {
+		t.Errorf("Query GOOG error: %s", err)
+	}
+	priceBig := price.Big()
+	if priceBig.Cmp(PriceToBigInt(500)) == -1 || priceBig.Cmp(PriceToBigInt(2000)) == 1 {
+		t.Errorf("Query GOOG price is way off: %s", priceBig.String())
+	}
+}
+
+func TestWorldTradingDataQueryInvalidFunction(t *testing.T) {
+	resolver := &WorldTradingData{}
+	_, err := resolver.Query([]byte("REALPRICE/GOOG"))
+	if err == nil {
+		t.Errorf("Query REALPRICE/GOOG must contain error. See nothing")
+	}
+}

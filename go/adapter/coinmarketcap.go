@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/tidwall/gjson"
 )
 
@@ -51,4 +52,19 @@ func (*CoinMarketcap) QuerySpotPrice(symbol string) (float64, error) {
 	}
 
 	return result[0].Float(), nil
+}
+
+func (a *CoinMarketcap) Query(key []byte) (common.Hash, error) {
+	keys := strings.Split(string(key), "/")
+	if len(keys) != 2 {
+		return common.HexToHash("0"), fmt.Errorf("Invalid key format")
+	}
+	if keys[0] == "SPOTPX" {
+		value, err := a.QuerySpotPrice(keys[1])
+		if err != nil {
+			return common.HexToHash("0"), err
+		}
+		return common.BigToHash(PriceToBigInt(value)), nil
+	}
+	return common.HexToHash("0"), fmt.Errorf("Doesn't supported %s query", keys[0])
 }

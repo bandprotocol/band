@@ -31,3 +31,23 @@ func TestFinancialModelPrepUnknownSymbol(t *testing.T) {
 		t.Errorf("Query BTH-USD must contain error. See nothing")
 	}
 }
+
+func TestFinancialModelPrepQueryToQuerySpotPrice(t *testing.T) {
+	resolver := &FinancialModelPrep{}
+	price, err := resolver.Query([]byte("SPOTPX/GOOG"))
+	if err != nil {
+		t.Errorf("Query GOOG error: %s", err)
+	}
+	priceBig := price.Big()
+	if priceBig.Cmp(PriceToBigInt(500)) == -1 || priceBig.Cmp(PriceToBigInt(2000)) == 1 {
+		t.Errorf("Query GOOG price is way off: %s", priceBig.String())
+	}
+}
+
+func TestFinancialModelPrepQueryInvalidFunction(t *testing.T) {
+	resolver := &FinancialModelPrep{}
+	_, err := resolver.Query([]byte("REALPRICE/GOOG"))
+	if err == nil {
+		t.Errorf("Query REALPRICE/GOOG must contain error. See nothing")
+	}
+}

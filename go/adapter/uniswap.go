@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/tidwall/gjson"
 )
 
@@ -15,7 +16,7 @@ type Uniswap struct{}
 
 func (*Uniswap) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")
-	if len(pairs) != 2 {
+	if len(pairs) != 2 || pairs[1] != "ETH" {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
 
@@ -61,5 +62,20 @@ func (*Uniswap) QuerySpotPrice(symbol string) (float64, error) {
 		return 0, fmt.Errorf("key does not exist")
 	}
 
-	return price.Float(), nil
+	return 1 / price.Float(), nil
+}
+
+func (a *Uniswap) Query(key []byte) (common.Hash, error) {
+	keys := strings.Split(string(key), "/")
+	if len(keys) != 2 {
+		return common.HexToHash("0"), fmt.Errorf("Invalid key format")
+	}
+	if keys[0] == "SPOTPX" {
+		value, err := a.QuerySpotPrice(keys[1])
+		if err != nil {
+			return common.HexToHash("0"), err
+		}
+		return common.BigToHash(PriceToBigInt(value)), nil
+	}
+	return common.HexToHash("0"), fmt.Errorf("Doesn't supported %s query", keys[0])
 }
