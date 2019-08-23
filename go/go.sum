@@ -3,6 +3,7 @@ github.com/bandprotocol/band v0.0.0-20190821110749-ad6f5b27e1f4 h1:0DR6TKEAG02NQ
 github.com/bandprotocol/band v0.0.0-20190821142058-1a7171f9aab9 h1:WXzyDfXWPS1l2ySKHnY6qQFTdX9GTmfNnwFSSUrmURU=
 github.com/ethereum/go-ethereum v1.9.2 h1:RMIHDO/diqXEgORSVzYx8xW9x2+S32PoAX5lQwya0Lw=
 github.com/ethereum/go-ethereum v1.9.2/go.mod h1:PwpWDrCLZrV+tfrhqqF6kPknbISMHaJv9Ln3kPCZLwY=
+github.com/bandprotocol/band v0.0.0-20190822031650-f8701fb3ba6a h1:aAE/VUusm6NNpDHrp5TqeZktNDObVMbPpRMequYPkxA=
 github.com/tidwall/gjson v1.3.2 h1:+7p3qQFaH3fOMXAJSrdZwGKcOO/lYdGS0HqGhPqDdTI=
 github.com/tidwall/gjson v1.3.2/go.mod h1:P256ACg0Mn+j1RXIDXoss50DeIABTYK1PULOJHhxOls=
 github.com/tidwall/match v1.0.1 h1:PnKP62LPNxHKTwvHHZZzdOAOCtsJTjo6dZLCwpKm5xc=

@@ -1,12 +1,13 @@
 package adapter
 
 import (
-	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/tidwall/gjson"
 )
 
 type CryptoCompare struct{}
@@ -32,13 +33,19 @@ func (*CryptoCompare) QuerySpotPrice(symbol string) (float64, error) {
 		return 0, err
 	}
 	defer res.Body.Close()
-	var result map[string]interface{}
-	json.NewDecoder(res.Body).Decode(&result)
-	price, ok := result[pairs[1]].(float64)
-	if !ok {
-		return 0, fmt.Errorf("spotpx: invalid response from remote %s", result[pairs[1]])
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return 0, err
 	}
-	return price, nil
+	price := gjson.GetBytes(body, pairs[1])
+
+	if !price.Exists() {
+		return 0, fmt.Errorf("key does not exist")
+	}
+
+	return price.Float(), nil
+
 }
 
 func (a *CryptoCompare) Query(key []byte) (common.Hash, error) {
