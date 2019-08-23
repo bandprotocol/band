@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/ecdsa"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,14 +11,14 @@ import (
 )
 
 type Signature struct {
-	V int8   `json:"v"`
-	R string `json:"r"`
-	S string `json:"s"`
+	V int8        `json:"v"`
+	R common.Hash `json:"r"`
+	S common.Hash `json:"s"`
 }
 
 type DataRequestInput struct {
-	Dataset string `json:"dataset"`
-	Key     string `json:"key"`
+	Dataset common.Address `json:"dataset"`
+	Key     string         `json:"key"`
 }
 
 type DataRequestOutput struct {
@@ -28,7 +29,7 @@ type DataRequestOutput struct {
 }
 
 type DataSignInput struct {
-	Dataset    string              `json:"dataset"`
+	Dataset    common.Address      `json:"dataset"`
 	Key        string              `json:"key"`
 	Datapoints []DataRequestOutput `json:"datapoints"`
 }
@@ -37,13 +38,19 @@ type DataSignOutput struct {
 	Status    string      `json:"status"`
 	Value     common.Hash `json:"value"`
 	Timestamp int64       `json:"timestamp"`
-	Sig       string      `json:"signature"`
+	Sig       Signature   `json:"signature"`
 }
 
 var adpt adapter.Adapter = &adapter.MockAdapter{}
 
-func sign(dataset, key string, value []byte, timestamp int64) Signature {
-	// TODO
+func sign(
+	dataset common.Address,
+	key string,
+	value common.Hash,
+	timestamp int64,
+	pk *ecdsa.PrivateKey,
+) Signature {
+	// TODO(prin-r)
 	return Signature{}
 }
 
@@ -64,11 +71,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		Provider:  common.BytesToAddress([]byte{}),
 		Value:     output,
 		Timestamp: 0,
-		Sig: Signature{
-			V: 0,
-			R: "",
-			S: "",
-		},
+		Sig:       Signature{},
 	})
 }
 
