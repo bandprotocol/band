@@ -10,7 +10,7 @@ import ModalEntry from 'components/ModalEntry'
 import Routes from 'Routes'
 import FullLoadingPage from 'pages/FullLoading'
 import { fetchSelector } from 'selectors/basic'
-
+//
 class App extends Component {
   render() {
     return (
