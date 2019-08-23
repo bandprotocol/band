@@ -156,9 +156,8 @@ export default () => {
                 style={{ maxWidth: 640 }}
               >
                 Band sets out to solve the issues plauging current generation of
-                decentralized technologies. By establishing a standard framework
-                for community to collectively curate data in trustless manner,
-                we open up
+                decentralized technologies by establishing a standard framework
+                for community to collectively curate data in trustless manner.
               </Text>
 
               <FilledButton
