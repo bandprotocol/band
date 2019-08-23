@@ -10,7 +10,10 @@ import (
 )
 
 func Test_sign(t *testing.T) {
-	pk, _ := crypto.HexToECDSA("FA930EE26652DF7198B479E357AF92B3B0E3367F5601913D3DBADBE5C8D13689")
+	pk, err := crypto.HexToECDSA("FA930EE26652DF7198B479E357AF92B3B0E3367F5601913D3DBADBE5C8D13689")
+	if err != nil {
+		t.Errorf(err.Error())
+	}
 	addr := crypto.PubkeyToAddress(pk.PublicKey)
 	// 1 ETH = 190.07961 USD
 	key := "ETH-USD"
@@ -35,12 +38,15 @@ func Test_sign(t *testing.T) {
 	sigBuff = append(sigBuff, sig.S.Bytes()...)
 	sigBuff = append(sigBuff, sig.V-27)
 
-	pub, _ := crypto.SigToPub(crypto.Keccak256(buff), sigBuff)
+	pub, err := crypto.SigToPub(crypto.Keccak256(buff), sigBuff)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
 
 	validX := pub.X.String() == pk.PublicKey.X.String()
 	validY := pub.Y.String() == pk.PublicKey.Y.String()
 
 	if !(validX && validY) {
-		t.Errorf("verification fail")
+		t.Errorf("signature verification fail")
 	}
 }
