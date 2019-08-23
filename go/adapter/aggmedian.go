@@ -12,8 +12,22 @@ type AggMedian struct {
 	children []Adapter
 }
 
-func (agg *AggMedian) Initialize() {
-	agg.children = append(agg.children, &MockAdapter{})
+func (agg *AggMedian) Initialize(adapters []Adapter) {
+	for _, ad := range adapters {
+		agg.children = append(agg.children, ad)
+	}
+}
+
+func Median(values []*big.Int) *big.Int {
+	sort.Slice(values, func(i, j int) bool {
+		return values[i].Cmp(values[j]) <= 0
+	})
+	if len(values)%2 == 0 {
+		result := big.NewInt(0)
+		return result.Add(values[len(values)/2-1], values[len(values)/2]).Div(result, big.NewInt(2))
+	} else {
+		return values[len(values)/2]
+	}
 }
 
 func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
@@ -27,15 +41,6 @@ func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
 	if len(values) == 0 {
 		return common.Hash{}, errors.New("aggmedian: all children return error")
 	}
-	sort.Slice(values, func(i, j int) bool {
-		return values[i].Cmp(values[j]) <= 0
-	})
-	if len(values)%2 == 0 {
-		sum := big.NewInt(0)
-		sum = sum.Add(sum, values[len(values)/2-1])
-		sum = sum.Add(sum, values[len(values)/2])
-		return common.BigToHash(sum.Div(sum, big.NewInt(2))), nil
-	} else {
-		return common.BigToHash(values[len(values)/2]), nil
-	}
+
+	return common.BigToHash(Median(values)), nil
 }
