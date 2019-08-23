@@ -61,7 +61,6 @@ const mapStateToProps = (
     pageSize,
     tcdAddress,
   })
-  console.log(remainingToken.pretty())
   /*
     while (items.length < pageSize) {
       items.push(null)

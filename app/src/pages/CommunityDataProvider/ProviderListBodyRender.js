@@ -225,7 +225,7 @@ const ProvidersRow = ({
       pr="30px"
     >
       <DWButton
-        disabled={!user || !(Number(remainingToken.pretty()) > 0)}
+        disabled={!user || Number(remainingToken.pretty()) <= 0}
         bg="#42c47f"
         color="#24bf97"
         hoverShadowColor="#a6e7c4"
@@ -297,7 +297,13 @@ const ProvidersRow = ({
   </Flex>
 )
 
-export default ({ user, items, remainingToken, showDepositWithdraw, showConvertRevenue }) => {
+export default ({
+  user,
+  items,
+  remainingToken,
+  showDepositWithdraw,
+  showConvertRevenue,
+}) => {
   return (
     <React.Fragment>
       {items.map((item, i) => {
