@@ -5,6 +5,7 @@ import { showModal } from 'actions'
 import ProviderListBodyRender from './ProviderListBodyRender'
 
 import { dataProvidersSelector } from 'selectors/dataProvider'
+import { remainingTokenByTCDSelector } from 'selectors/balances'
 
 const mapDispatchToProps = (dispatch, { tokenAddress }) => ({
   showDepositWithdraw: (
@@ -50,6 +51,10 @@ const mapStateToProps = (
   state,
   { tokenAddress, currentPage, pageSize, user, tcdAddress },
 ) => {
+  const remainingToken = remainingTokenByTCDSelector(state, {
+    address: tokenAddress,
+    tcdAddress,
+  })
   const items = dataProvidersSelector(state, {
     address: tokenAddress,
     page: currentPage,
@@ -61,7 +66,7 @@ const mapStateToProps = (
       items.push(null)
     }
   */
-  return { user, items }
+  return { user, items, remainingToken }
 }
 
 export default withRouter(
