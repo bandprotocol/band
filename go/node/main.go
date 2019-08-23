@@ -67,10 +67,10 @@ func sign(
 	buff = append(buff, []byte(key)...)
 	buff = append(buff, value.Bytes()...)
 
-	bts := make([]byte, 8)
-	binary.BigEndian.PutUint64(bts, timestamp)
+	bytesTimeStamp := make([]byte, 8)
+	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)
 
-	buff = append(buff, bts...)
+	buff = append(buff, bytesTimeStamp...)
 
 	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
 
