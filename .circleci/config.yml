@@ -1,47 +1,65 @@
 version: 2
 
 jobs:
-  build_web:
+  detect_build:
     docker:
       - image: circleci/node:10.16.2
-    working_directory: ~/repo/web
     steps:
       - checkout
       - run:
-          name: build web
+          name: detect change and req build
+          command: |
+            source .circleci/detect_change.sh
+  build_web:
+    docker:
+      - image: circleci/node:10.16.2
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: install web dependency
           command: |
             cd web
-            yarn 
+            yarn
+      - run:
+          name: test web
+          command: |
+            cd web
             yarn test
   build_app:
     docker:
       - image: circleci/node:10.16.2
-    working_directort: ~/repo/app
+    working_directory: ~/repo
     steps:
       - checkout
       - run:
-          name: build app
+          name: install app dependency
           command: |
             cd app
             yarn
+      - run:
+          name: test app
+          command: |
+            cd app
             yarn test
   build_contracts:
     docker:
       - image: circleci/node:10.16.2
-    working_directort: ~/repo/contracts
+    working_directory: ~/repo/contracts
     steps:
       - checkout
       - run:
-          name: build contracts
+          name: install contracts dependency
           command: |
             cd contracts
             yarn
+      - run:
+          name: test contracts
+          command: |
+            cd contracts
             yarn truffle test
 workflows:
   version: 2
   build:
     jobs:
-      - build_web
-      - build_app
-      - build_contracts
-
+      - detect_build
