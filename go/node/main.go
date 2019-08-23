@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/ecdsa"
+	"encoding/binary"
 	"encoding/hex"
 	"encoding/json"
 	"log"
@@ -10,10 +11,11 @@ import (
 
 	"github.com/bandprotocol/band/go/adapter"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type Signature struct {
-	V int8        `json:"v"`
+	V uint8       `json:"v"`
 	R common.Hash `json:"r"`
 	S common.Hash `json:"s"`
 }
@@ -26,7 +28,7 @@ type DataRequestInput struct {
 type DataRequestOutput struct {
 	Provider  common.Address `json:"provider"`
 	Value     common.Hash    `json:"value"`
-	Timestamp int64          `json:"timestamp"`
+	Timestamp uint64         `json:"timestamp"`
 	Sig       Signature      `json:"signature"`
 }
 
@@ -38,7 +40,7 @@ type DataSignInput struct {
 type DataSignOutput struct {
 	Status    string      `json:"status"`
 	Value     common.Hash `json:"value"`
-	Timestamp int64       `json:"timestamp"`
+	Timestamp uint64      `json:"timestamp"`
 	Sig       Signature   `json:"signature"`
 }
 
@@ -57,11 +59,26 @@ func sign(
 	dataset common.Address,
 	key string,
 	value common.Hash,
-	timestamp int64,
+	timestamp uint64,
 	pk *ecdsa.PrivateKey,
 ) Signature {
-	// TODO(prin-r)
-	return Signature{}
+	var buff []byte
+	buff = append(buff, dataset.Bytes()...)
+	buff = append(buff, []byte(key)...)
+	buff = append(buff, value.Bytes()...)
+
+	bts := make([]byte, 8)
+	binary.BigEndian.PutUint64(bts, timestamp)
+
+	buff = append(buff, bts...)
+
+	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
+
+	return Signature{
+		uint8(int(signature[64])) + 27,
+		common.BytesToHash(signature[0:32]),
+		common.BytesToHash(signature[32:64]),
+	}
 }
 
 func handleDataRequest(w http.ResponseWriter, r *http.Request) {
