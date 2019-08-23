@@ -3151,10 +3151,10 @@ chartjs-color@^2.1.0:
     chartjs-color-string "^0.6.0"
     color-convert "^0.5.3"
 
-chartjs-plugin-downsample@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/chartjs-plugin-downsample/-/chartjs-plugin-downsample-1.0.2.tgz#beb8ecbf9e0525b87d8cb38c1809d92ea2460790"
-  integrity sha1-vrjsv54FJbh9jLOMGAnZLqJGB5A=
+chartjs-plugin-downsample@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/chartjs-plugin-downsample/-/chartjs-plugin-downsample-1.1.0.tgz#ab475629e1b688cc17c7016a7b39fc21ce280762"
+  integrity sha512-wU5oonm4zyH50nLWt41+k1PNmzJOZonGVH20PqsiOqmtoC7Ms/QJXsGIeHeICjTCp9K9MEiQGLn4R8bOYY/oFQ==
   dependencies:
     chart.js "^2.5.0"
 
