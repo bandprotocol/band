@@ -58,34 +58,6 @@ jobs:
           command: |
             cd contracts
             yarn truffle test
-  build_test_go:
-    docker:
-      - image: circleci/golang:1.12
-    working_directory: ~/repo/go
-
-    environment:
-      TEST_RESULTS: /tmp/test-results-go
-    steps:
-      - checkout
-      - run:
-          name: create the test results directory
-          command: |
-            mkdir -p $TEST_RESULTS
-      - restore_cache: # restores saved cache if no changes are detected since last run
-          keys:
-            - go-mod-v4-{{ checksum "go.sum" }}
-      - run:
-          name: go test
-          command: gotestsum --junitfile ${TEST_RESULTS}/gotestsum-report.xml
-      - save_cache:
-          key: go-mod-v4-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
-      - store_artifacts: # upload test summary for display in Artifacts
-          path: /tmp/test-results
-          destination: raw-test-output
-      - store_test_results: # upload test results for display in Test Summary
-          path: /tmp/test-results
 workflows:
   version: 2
   build:
