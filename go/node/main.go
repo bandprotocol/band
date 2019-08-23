@@ -2,9 +2,11 @@ package main
 
 import (
 	"crypto/ecdsa"
+	"encoding/hex"
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/bandprotocol/band/go/adapter"
 	"github.com/ethereum/go-ethereum/common"
@@ -29,8 +31,7 @@ type DataRequestOutput struct {
 }
 
 type DataSignInput struct {
-	Dataset    common.Address      `json:"dataset"`
-	Key        string              `json:"key"`
+	DataRequestInput
 	Datapoints []DataRequestOutput `json:"datapoints"`
 }
 
@@ -39,6 +40,15 @@ type DataSignOutput struct {
 	Value     common.Hash `json:"value"`
 	Timestamp int64       `json:"timestamp"`
 	Sig       Signature   `json:"signature"`
+}
+
+func (input *DataRequestInput) normalizeKey() {
+	if strings.HasPrefix(input.Key, "0x") {
+		decoded, err := hex.DecodeString(input.Key[2:])
+		if err == nil {
+			input.Key = string(decoded)
+		}
+	}
 }
 
 var adpt adapter.Adapter = &adapter.MockAdapter{}
@@ -61,6 +71,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+	arg.normalizeKey()
 	output, err := adpt.Query([]byte(arg.Key))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -76,6 +87,13 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleSignRequest(w http.ResponseWriter, r *http.Request) {
+	var arg DataSignInput
+	err := json.NewDecoder(r.Body).Decode(&arg)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	arg.normalizeKey()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(DataSignOutput{})
 }
