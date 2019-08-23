@@ -9,15 +9,15 @@ import (
 	"time"
 )
 
-var apikey = os.Getenv("CurrencyConverterApikey")
-var caches = make(map[string]float64)
+var currencyConverterapikey = os.Getenv("CurrencyConverterApikey")
+var currencyConverterCaches = make(map[string]float64)
 var lastUpdated int64
 
 type CurrencyConverter struct{}
 
 func updateCache() error {
 	symbols := ""
-	for k := range caches {
+	for k := range currencyConverterCaches {
 		symbols += k + ","
 	}
 	symbols = symbols[:len(symbols)-1]
@@ -30,7 +30,7 @@ func updateCache() error {
 	q := req.URL.Query()
 	q.Add("q", symbols)
 	q.Add("compact", "ultra")
-	q.Add("apiKey", apikey)
+	q.Add("apiKey", currencyConverterapikey)
 	req.URL.RawQuery = q.Encode()
 	req.Header.Add("Accept", "application/json")
 	res, err := client.Do(req)
@@ -41,11 +41,11 @@ func updateCache() error {
 	var result map[string]interface{}
 	json.NewDecoder(res.Body).Decode(&result)
 
-	for k := range caches {
+	for k := range currencyConverterCaches {
 		if val, ok := result[k]; ok {
-			caches[k] = val.(float64)
+			currencyConverterCaches[k] = val.(float64)
 		} else {
-			delete(caches, k)
+			delete(currencyConverterCaches, k)
 		}
 	}
 	lastUpdated = time.Now().Unix()
@@ -53,25 +53,32 @@ func updateCache() error {
 }
 
 func (*CurrencyConverter) QuerySpotPrice(symbol string) (float64, error) {
-	splitKey := strings.Split(symbol, "-")
-	if len(splitKey) != 2 {
+	pairs := strings.Split(symbol, "-")
+	var from, to string
+	if len(pairs) == 1 && (pairs[0] == "XAU" || pairs[0] == "XAG") {
+		from = pairs[0]
+		to = "USD"
+	} else if len(pairs) == 2 {
+		from = pairs[0]
+		to = pairs[1]
+	} else {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
-	key := splitKey[1] + "_" + splitKey[0]
+	key := from + "_" + to
 	var err error
-	if _, ok := caches[key]; ok {
+	if _, ok := currencyConverterCaches[key]; ok {
 		if lastUpdated == 0 || time.Now().Unix()-lastUpdated > 60 {
 			err = updateCache()
 		}
 	} else {
-		caches[key] = 0
+		currencyConverterCaches[key] = 0
 		err = updateCache()
 	}
 	if err != nil {
 		return 0, err
 	}
-	if _, ok := caches[key]; ok {
-		return caches[key], nil
+	if _, ok := currencyConverterCaches[key]; ok {
+		return currencyConverterCaches[key], nil
 	}
 	return 0, fmt.Errorf("Invalid key")
 
