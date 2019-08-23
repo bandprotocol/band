@@ -132,6 +132,13 @@ export const getTCDInfomation = (prefix, communityName) =>
       order: 2,
       type: 'lotteries',
     },
+    'tcd:': {
+      imageInactive: WebRequestInactive,
+      imageActive: WebRequestActive,
+      label: communityName,
+      shortLabel: communityName,
+      type: getTCDType(communityName),
+    },
   }[prefix] || {
     imageActive: FiatActive,
     imageInactive: FiatInactive,

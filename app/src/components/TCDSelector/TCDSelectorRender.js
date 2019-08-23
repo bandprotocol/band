@@ -155,9 +155,11 @@ const List = ({
         <Text fontSize="14px" fontWeight="900" color="#3b57d1">
           {label}
         </Text>
-        <Text my={1} fontSize="10px" color="#a4b0e4" fontWeight="900">
-          {datapoints} datapoints
-        </Text>
+        {datapoints && (
+          <Text my={1} fontSize="10px" color="#a4b0e4" fontWeight="900">
+            {datapoints} datapoints
+          </Text>
+        )}
       </Flex>
     </SelectionList>
   </NavLink>

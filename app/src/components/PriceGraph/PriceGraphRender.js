@@ -8,7 +8,7 @@ import './style.css'
 
 const options = {
   navigator: {
-    enabled: true,
+    enabled: false,
     height: 20,
   },
   scrollbar: { enabled: false },
