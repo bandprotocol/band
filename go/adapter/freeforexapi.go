@@ -24,7 +24,6 @@ func (*FreeForexApi) QuerySpotPrice(symbol string) (float64, error) {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
 	key := from + to
-	println(key)
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://www.freeforexapi.com/api/live", nil)
 	if err != nil {

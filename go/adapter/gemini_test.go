@@ -30,3 +30,23 @@ func TestUnknownSymbol_Gemini(t *testing.T) {
 		t.Errorf("Query ETH-XYZ must contain error. See nothing")
 	}
 }
+
+func TestQueryToQuerySpotPrice_Gemini(t *testing.T) {
+	resolver := &Gemini{}
+	price, err := resolver.Query([]byte("SPOTPX/ETH-USD"))
+	if err != nil {
+		t.Errorf("Query ETH-USD error: %s", err)
+	}
+	priceBig := price.Big()
+	if priceBig.Cmp(PriceToBigInt(50)) == -1 || priceBig.Cmp(PriceToBigInt(1000)) == 1 {
+		t.Errorf("Query ETH-USD price is way off: %s", priceBig.String())
+	}
+}
+
+func TestQueryInvalidFunction_Gemini(t *testing.T) {
+	resolver := &Gemini{}
+	_, err := resolver.Query([]byte("REALPRICE/ETH-USD"))
+	if err == nil {
+		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")
+	}
+}

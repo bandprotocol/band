@@ -17,7 +17,7 @@ func TestFreeForexApiSuccess(t *testing.T) {
 	}
 }
 
-func TestCurrencyConverterGoldSuccess(t *testing.T) {
+func TestFreeForexApiGoldSuccess(t *testing.T) {
 	resolver := &FreeForexApi{}
 	price, err := resolver.QuerySpotPrice("XAU")
 	if err != nil {

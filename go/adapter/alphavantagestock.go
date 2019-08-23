@@ -8,20 +8,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/tidwall/gjson"
 )
-
-type ValueWithLastUpdated struct {
-	value       float64
-	lastUpdated int64
-}
 
 var alphaVantageStockApikey = os.Getenv("AlphaVantageStockApikey")
 var alphaVantageStockCaches = make(map[string]ValueWithLastUpdated)
 
 type AlphaVantageStock struct{}
 
-func queryValue(from string) error {
+func queryStockValue(from string) error {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", "https://www.alphavantage.co/query", nil)
 	if err != nil {
@@ -66,10 +62,10 @@ func (*AlphaVantageStock) QuerySpotPrice(symbol string) (float64, error) {
 	var err error
 	if _, ok := alphaVantageStockCaches[symbol]; ok {
 		if lastUpdated == 0 || time.Now().Unix()-alphaVantageStockCaches[symbol].lastUpdated > 1200 {
-			err = queryValue(symbol)
+			err = queryStockValue(symbol)
 		}
 	} else {
-		err = queryValue(symbol)
+		err = queryStockValue(symbol)
 	}
 
 	if err != nil {
@@ -79,4 +75,19 @@ func (*AlphaVantageStock) QuerySpotPrice(symbol string) (float64, error) {
 		return alphaVantageStockCaches[symbol].value, nil
 	}
 	return 0, fmt.Errorf("Invalid key")
+}
+
+func (a *AlphaVantageStock) Query(key []byte) (common.Hash, error) {
+	keys := strings.Split(string(key), "/")
+	if len(keys) != 2 {
+		return common.HexToHash("0"), fmt.Errorf("Invalid key format")
+	}
+	if keys[0] == "SPOTPX" {
+		value, err := a.QuerySpotPrice(keys[1])
+		if err != nil {
+			return common.HexToHash("0"), err
+		}
+		return common.BigToHash(PriceToBigInt(value)), nil
+	}
+	return common.HexToHash("0"), fmt.Errorf("Doesn't supported %s query", keys[0])
 }
