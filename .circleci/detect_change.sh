@@ -1,26 +1,9 @@
-
-
             build=1
             if [[ ${CIRCLE_BRANCH} == "master" ]]; then
               build=0
               echo "CURRENT BRANCH is ${CIRCLE_BRANCH} not build"
               exit 0
             fi
-
-            # echo -e `git log | head -100`
-            # echo -e "---"
-            # echo -e `git log master | head -1`
-            # echo -e "---"
-            # echo -e `git log origin/master | head -1`
-            # echo -e "---"
-            # echo -e `git branch`
-            # echo -e "---"
-            # git fetch
-            # echo -e `git merge-base -a HEAD origin/master`
-            # echo -e "---"
-
-            # echo -e `git diff --name-only $(git merge-base -a HEAD origin/master)`
-            # echo -e "---"
 
             git diff --name-only $(git merge-base -a HEAD origin/master) | cut -d/ -f1 | sort -u > projects
 
