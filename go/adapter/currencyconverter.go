@@ -88,14 +88,14 @@ func (*CurrencyConverter) QuerySpotPrice(symbol string) (float64, error) {
 func (a *CurrencyConverter) Query(key []byte) (common.Hash, error) {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return common.HexToHash("0"), fmt.Errorf("Invalid key format")
+		return common.Hash{}, fmt.Errorf("Invalid key format")
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return common.HexToHash("0"), err
+			return common.Hash{}, err
 		}
 		return common.BigToHash(PriceToBigInt(value)), nil
 	}
-	return common.HexToHash("0"), fmt.Errorf("Doesn't supported %s query", keys[0])
+	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
 }

@@ -14,15 +14,10 @@ import (
 	"time"
 
 	"github.com/bandprotocol/band/go/adapter"
+	"github.com/bandprotocol/band/go/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 )
-
-type Signature struct {
-	V uint8       `json:"v"`
-	R common.Hash `json:"r"`
-	S common.Hash `json:"s"`
-}
 
 type DataRequestInput struct {
 	Dataset common.Address `json:"dataset"`
@@ -33,7 +28,7 @@ type DataRequestOutput struct {
 	Provider  common.Address `json:"provider"`
 	Value     common.Hash    `json:"value"`
 	Timestamp uint64         `json:"timestamp"`
-	Sig       Signature      `json:"signature"`
+	Sig       eth.Signature  `json:"signature"`
 }
 
 type DataSignInput struct {
@@ -45,7 +40,7 @@ type DataSignOutput struct {
 	Provider  common.Address `json:"provider"`
 	Value     common.Hash    `json:"value"`
 	Timestamp uint64         `json:"timestamp"`
-	Sig       Signature      `json:"signature"`
+	Sig       eth.Signature  `json:"signature"`
 	Status    string         `json:"status"`
 }
 
@@ -90,7 +85,7 @@ func sign(
 	value common.Hash,
 	timestamp uint64,
 	pk *ecdsa.PrivateKey,
-) Signature {
+) eth.Signature {
 	bytesTimeStamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)
 
@@ -129,7 +124,7 @@ func signAggregator(
 
 	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
 
-	return Signature{
+	return eth.Signature{
 		uint8(int(signature[64])) + 27,
 		common.BytesToHash(signature[0:32]),
 		common.BytesToHash(signature[32:64]),
