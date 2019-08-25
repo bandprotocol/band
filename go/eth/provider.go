@@ -15,3 +15,9 @@ func IsActiveProvider(dataset, provider common.Address) (bool, error) {
 	// TODO(bunoi): Implement this
 	panic("IsActiveProvider: not implemented")
 }
+
+// IsValidDataset returns true if the given dataset address is valid, and false otherwise
+func IsValidDataset(dataset common.Address) (bool, error) {
+	// TODO(bunoi): Implement this
+	panic("IsValidDataset: not implemented")
+}
