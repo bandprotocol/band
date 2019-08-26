@@ -6,15 +6,17 @@ import (
 	"sort"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 )
 
 type AggMedian struct {
 	children []Adapter
 }
 
-func (agg *AggMedian) Initialize(adapters []Adapter) {
-	for _, ad := range adapters {
-		agg.children = append(agg.children, ad)
+func (adpt *AggMedian) Configure(config *viper.Viper) {
+	children := config.GetStringMap("children")
+	for name, _ := range children {
+		adpt.children = append(adpt.children, FromConfigIndividual(config.Sub("children."+name)))
 	}
 }
 

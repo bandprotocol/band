@@ -17,6 +17,7 @@ import (
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/spf13/viper"
 )
 
 type DataRequestInput struct {
@@ -54,31 +55,33 @@ func (input *DataRequestInput) normalizeKey() {
 }
 
 // var adpt adapter.Adapter = &adapter.MockAdapter{}
-var adpt *adapter.AggMedian = &adapter.AggMedian{}
+// var adpt *adapter.AggMedian = &adapter.AggMedian{}
+var adapters map[common.Address]adapter.Adapter
 
-func init() {
-	adpt.Initialize([]adapter.Adapter{
-		&adapter.CoinMarketcap{},
-		&adapter.CoinBase{},
-		&adapter.CryptoCompare{},
-		&adapter.OpenMarketCap{},
-		&adapter.Gemini{},
-		&adapter.Bitfinex{},
-		&adapter.Bitstamp{},
-		&adapter.Bittrex{},
-		&adapter.Kraken{},
-		&adapter.Bancor{},
-		&adapter.Uniswap{},
-		&adapter.Kyber{},
-		&adapter.Ratesapi{},
-		&adapter.CurrencyConverter{},
-		&adapter.AlphaVantageForex{},
-		&adapter.FreeForexApi{},
-		&adapter.AlphaVantageStock{},
-		&adapter.WorldTradingData{},
-		&adapter.FinancialModelPrep{},
-	})
-}
+// func init() {
+// 	adpt.Initialize([]adapter.Adapter{
+// 		&adapter.CoinMarketcap{},
+// 		&adapter.CoinBase{},
+// 		&adapter.CryptoCompare{},
+// 		&adapter.OpenMarketCap{},
+// 		&adapter.Gemini{},
+// 		&adapter.Bitfinex{},
+// 		&adapter.Bitstamp{},
+// 		&adapter.Bittrex{},
+// 		&adapter.Kraken{},
+// 		&adapter.Bancor{},
+// 		&adapter.Uniswap{},
+// 		&adapter.Kyber{},
+// 		&adapter.Ratesapi{},
+// 		&adapter.CurrencyConverter{},
+// 		&adapter.AlphaVantageForex{},
+// 		&adapter.FreeForexApi{},
+// 		&adapter.AlphaVantageStock{},
+// 		&adapter.WorldTradingData{},
+// 		&adapter.FinancialModelPrep{},
+// 	})
+// }
+
 func sign(
 	dataset common.Address,
 	key string,
@@ -97,10 +100,10 @@ func sign(
 
 	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
 
-	return Signature{
-		uint8(int(signature[64])) + 27,
-		common.BytesToHash(signature[0:32]),
-		common.BytesToHash(signature[32:64]),
+	return eth.Signature{
+		V: uint8(int(signature[64])) + 27,
+		R: common.BytesToHash(signature[0:32]),
+		S: common.BytesToHash(signature[32:64]),
 	}
 }
 
@@ -111,7 +114,7 @@ func signAggregator(
 	timestamp uint64,
 	status uint8,
 	pk *ecdsa.PrivateKey,
-) Signature {
+) eth.Signature {
 	bytesTimeStamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)
 
@@ -125,9 +128,9 @@ func signAggregator(
 	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
 
 	return eth.Signature{
-		uint8(int(signature[64])) + 27,
-		common.BytesToHash(signature[0:32]),
-		common.BytesToHash(signature[32:64]),
+		V: uint8(int(signature[64])) + 27,
+		R: common.BytesToHash(signature[0:32]),
+		S: common.BytesToHash(signature[32:64]),
 	}
 }
 
@@ -137,7 +140,7 @@ func verifySignature(
 	value common.Hash,
 	timestamp uint64,
 	provider common.Address,
-	signature Signature,
+	signature eth.Signature,
 ) bool {
 	// TODO: verify signature
 	return true
@@ -167,7 +170,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	arg.normalizeKey()
-	output, err := adpt.Query([]byte(arg.Key))
+	output, err := adapters[arg.Dataset].Query([]byte(arg.Key))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -232,6 +235,13 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	config := viper.New()
+	config.SetConfigName("node")
+	config.AddConfigPath(".")
+	if err := config.ReadInConfig(); err != nil {
+		log.Fatal("main: unable to read configuration file")
+	}
+	adapters = adapter.FromConfig(config)
 	http.HandleFunc("/data", handleDataRequest)
 	http.HandleFunc("/sign", handleSignRequest)
 	log.Fatal(http.ListenAndServe(":8000", nil))
