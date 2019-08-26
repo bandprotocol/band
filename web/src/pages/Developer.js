@@ -20,7 +20,6 @@ import SportHero from 'images/sport-hero.png'
 import LotteryHero from 'images/lottery-hero.png'
 import DataRequest from 'images/data-requests.png'
 import Audit from 'images/audit.svg'
-import { is } from 'css-select'
 
 const blinking = keyframes`
   from {
