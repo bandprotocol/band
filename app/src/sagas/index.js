@@ -198,6 +198,9 @@ function* baseInitialize() {
                 }
               }
             }
+            parameterByTokenAddress {
+              address
+            }
           }
         }
       }
@@ -265,6 +268,7 @@ function* baseInitialize() {
           rejected:
             token.tcrsByTokenAddress.nodes[0].rejectedEntries.totalCount,
         },
+        token.parameterByTokenAddress.address,
       ),
     )
   }

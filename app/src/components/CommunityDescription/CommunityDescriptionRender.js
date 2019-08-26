@@ -29,13 +29,12 @@ const Address = styled(Text).attrs(() => ({
 `
 
 export default ({
-  name,
   banner,
-  link,
   organization,
   description,
-  address,
+  parameterAddr,
   tokenAddr,
+  tcdAddr,
 }) => (
   <Card variant="dashboard">
     <Flex>
@@ -56,21 +55,30 @@ export default ({
           {link && new URL(link).hostname}
           <TxHashLink href={link} pl="5px" />
         </Field> */}
-        <Field label="Organization">{organization}</Field>
-        {/* <Field label="Core Contract">
+        {/* <Field label="Organization">{organization}</Field> */}
+        <Field label="Dataset">
           <Flex flexDirection="row" alignItems="center">
-            <Address>{address}</Address>
+            <Address>{tcdAddr}</Address>
             <TxHashLink
-              href={`https://kovan.etherscan.io/address/${address}`}
+              href={`https://kovan.etherscan.io/address/${tcdAddr}`}
               pl="5px"
             />
           </Flex>
-        </Field> */}
+        </Field>
         <Field label="ERC-20">
           <Flex flexDirection="row" alignItems="center">
             <Address>{tokenAddr}</Address>
             <TxHashLink
               href={`https://kovan.etherscan.io/address/${tokenAddr}`}
+              pl="5px"
+            />
+          </Flex>
+        </Field>
+        <Field label="Governance">
+          <Flex flexDirection="row" alignItems="center">
+            <Address>{parameterAddr}</Address>
+            <TxHashLink
+              href={`https://kovan.etherscan.io/address/${parameterAddr}`}
               pl="5px"
             />
           </Flex>
