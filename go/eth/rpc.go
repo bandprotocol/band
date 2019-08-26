@@ -27,13 +27,14 @@ var pk *ecdsa.PrivateKey
 func init() {
 	// TODO(prin-r): Initialize a connection to Ethereum
 	var err error
-	ethRPC := os.Getenv("ETH_RPC")
-	client, err = ethclient.Dial(ethRPC)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	pk, err = crypto.HexToECDSA(os.Getenv("PK"))
+	if err != nil {
+		log.Println("no private key found, connect to localnode")
+	}
+
+	eth_rpc := os.Getenv("ETH_RPC")
+	client, err = ethclient.Dial(eth_rpc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +58,7 @@ func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, e
 	}
 	result, err := client.StorageAt(context.Background(), contract, location, nil)
 	if err != nil {
-		return common.Hash{}, errors.New("no private key found")
+		return common.Hash{}, err
 	}
 	return common.BytesToHash(result), nil
 }
@@ -82,7 +83,7 @@ func SignMessage(message []byte) (Signature, error) {
 	}, nil
 }
 
-func ethCall(to common.Address, data []byte) ([]byte, error) {
+func CallContract(to common.Address, data []byte) ([]byte, error) {
 	sender, _ := GetAddress()
 	return client.CallContract(context.Background(), ethereum.CallMsg{
 		sender,
