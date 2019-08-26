@@ -1,9 +1,9 @@
-package adapter
+package eth
 
 import (
 	"testing"
 )
 
-func TestInit(t *testing.T) {
-
+func TestGetAddress(t *testing.T) {
+	// TODO: prin-r
 }

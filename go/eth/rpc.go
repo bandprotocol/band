@@ -25,7 +25,6 @@ var client *ethclient.Client
 var pk *ecdsa.PrivateKey
 
 func init() {
-	// TODO(prin-r): Initialize a connection to Ethereum
 	var err error
 
 	pk, err = crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
@@ -44,7 +43,7 @@ func init() {
 func GetAddress() (common.Address, error) {
 	// TODO(prin-r): local node will be implemented
 	if pk == nil {
-		return common.Address{}, errors.New("no private key found")
+		return common.Address{}, errors.New("GetAddress: no private key found")
 	}
 	return crypto.PubkeyToAddress(pk.PublicKey), nil
 }
@@ -53,7 +52,7 @@ func GetAddress() (common.Address, error) {
 // contract address.
 func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, error) {
 	if client == nil {
-		return common.Hash{}, errors.New("Initialization is required")
+		return common.Hash{}, errors.New("GetStorageAt: Initialization is required")
 	}
 	result, err := client.StorageAt(context.Background(), contract, location, nil)
 	if err != nil {
@@ -67,10 +66,10 @@ func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, e
 func SignMessage(message []byte) (Signature, error) {
 	// TODO(prin-r): local node will be implemented
 	if client == nil {
-		return Signature{}, errors.New("Initialization is required")
+		return Signature{}, errors.New("SignMessage: Initialization is required")
 	}
 	if pk == nil {
-		return Signature{}, errors.New("no private key found")
+		return Signature{}, errors.New("SignMessage: no private key found")
 	}
 
 	signature, _ := crypto.Sign(crypto.Keccak256(message), pk)
