@@ -18,6 +18,7 @@ export const saveCommunityInfo = (
   collateralEquation,
   tcds,
   tcr,
+  parameterAddress,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
@@ -36,6 +37,7 @@ export const saveCommunityInfo = (
   collateralEquation,
   tcds,
   tcr,
+  parameterAddress,
 })
 
 export const saveCommunityClient = (address, client) => ({

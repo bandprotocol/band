@@ -22,6 +22,7 @@ const handleSaveCommunityInfo = (
     collateralEquation,
     tcds,
     tcr,
+    parameterAddress,
   },
 ) =>
   state.set(
@@ -43,6 +44,7 @@ const handleSaveCommunityInfo = (
       collateralEquation,
       tcds,
       tcr,
+      parameterAddress,
     }),
   )
 
