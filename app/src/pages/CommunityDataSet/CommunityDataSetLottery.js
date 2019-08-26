@@ -180,6 +180,7 @@ export default class LotteryPage extends React.Component {
     nLotteryList: 10,
     currentPage: 1,
     selectedDate: new Date(),
+    type: 'MMN'
   }
 
   componentDidUpdate(prevProps) {

@@ -212,7 +212,7 @@ export default ({
             </Bold>
 
             <Tab
-              link={`/community/${address}/${tcds.address}/dataset`}
+              link={`/community/${address}/dataset`}
               imgSrcActive={DataSetInactive}
               imgSrcInactive={DataSetInactive}
             >
@@ -220,14 +220,14 @@ export default ({
             </Tab>
 
             <Tab
-              link={`/community/${address}/${tcds.address}/governance`}
+              link={`/community/${address}/governance`}
               imgSrcActive={GovernanceSrc}
               imgSrcInactive={GovernanceSrc}
             >
               Governance
             </Tab>
             <Tab
-              link={`/community/${address}/${tcds.address}/logs`}
+              link={`/community/${address}/logs`}
               imgSrcActive={DataLogInactive}
               imgSrcInactive={DataLogInactive}
             >

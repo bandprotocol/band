@@ -34,21 +34,6 @@ import MMNInactive from 'images/mmnInactive.svg'
 import WebRequestActive from 'images/requestActive.svg'
 import WebRequestInactive from 'images/requestInactive.svg'
 
-// {
-//   switch (communityName) {
-//     case 'Financial Data Feeds':
-//       return 'https://developer.bandprotocol.com/datasets/financial-kovan.html'
-//     case 'Sport Data Feeds':
-//       return 'https://developer.bandprotocol.com/datasets/sport-kovan.html'
-//     case 'Lottery Data Feeds':
-//       return 'https://developer.bandprotocol.com/datasets/lottery-kovan.html'
-//     case 'Web Request Oracle':
-//       return 'https://developer.bandprotocol.com/datasets/web-oracle.html'
-//     default:
-//       return 'https://developer.bandprotocol.com/datasets/overview.html'
-//   }
-// }
-
 const getTCDType = communityName =>
   ({
     'Financial Data Feeds': 'prices',
