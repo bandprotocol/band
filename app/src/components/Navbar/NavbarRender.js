@@ -83,20 +83,23 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
           BND
         </TextClickable>
       )}
-      <Text px={1} color={colors.text.graph} fontSize="15px">
-        |
-      </Text>
+      <Box
+        width="1px"
+        bg={colors.text.graph}
+        mx={1}
+        style={{ height: '20px' }}
+      ></Box>
       {isBND ? (
         <TextClickable
           onClick={toggle}
           color="#b8c1dd"
           fontWeight={500}
-          fontSize="16px"
+          fontSize="15px"
         >
           USD
         </TextClickable>
       ) : (
-        <Text mr={0} color="#4a4a4a" fontSize="16px" fontWeight={500}>
+        <Text mr={0} color="#4a4a4a" fontSize="15px" fontWeight={500}>
           USD
         </Text>
       )}
