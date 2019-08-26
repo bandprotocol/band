@@ -42,7 +42,7 @@ func init() {
 
 // GetAddress returns the address of the
 func GetAddress() (common.Address, error) {
-	// TODO(prin-r): Implement this
+	// TODO(prin-r): local node will be implemented
 	if pk == nil {
 		return common.Address{}, errors.New("no private key found")
 	}
@@ -52,7 +52,6 @@ func GetAddress() (common.Address, error) {
 // GetStorageAt returns the value at the given storage location of the given Ethereum
 // contract address.
 func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, error) {
-	// TODO(prin-r): Implement this
 	if client == nil {
 		return common.Hash{}, errors.New("Initialization is required")
 	}
@@ -66,7 +65,7 @@ func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, e
 // SignMessage returns the signature of signing the given message using Ethereum's message
 // signing scheme.
 func SignMessage(message []byte) (Signature, error) {
-	// TODO(prin-r): Implement this
+	// TODO(prin-r): local node will be implemented
 	if client == nil {
 		return Signature{}, errors.New("Initialization is required")
 	}
@@ -103,4 +102,5 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 func SendTransaction() (common.Hash, error) {
 	// TODO(prin-r): Implement this
 	// client.SendTransaction()
+	panic("not implemented yet")
 }
