@@ -4,10 +4,11 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"errors"
-	"fmt"
 	"log"
+	"math/big"
 	"os"
 
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
@@ -36,9 +37,6 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println(client)
-	fmt.Println(pk)
 }
 
 // GetAddress returns the address of the
@@ -52,16 +50,16 @@ func GetAddress() (common.Address, error) {
 
 // GetStorageAt returns the value at the given storage location of the given Ethereum
 // contract address.
-func GetStorageAt(contract common.Address, location common.Hash) ([]byte, error) {
+func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, error) {
 	// TODO(prin-r): Implement this
 	if client == nil {
-		return []byte{}, errors.New("Initialization is required")
+		return common.Hash{}, errors.New("Initialization is required")
 	}
 	result, err := client.StorageAt(context.Background(), contract, location, nil)
 	if err != nil {
-		return []byte{}, errors.New("no private key found")
+		return common.Hash{}, errors.New("no private key found")
 	}
-	return result, nil
+	return common.BytesToHash(result), nil
 }
 
 // SignMessage returns the signature of signing the given message using Ethereum's message
@@ -82,6 +80,18 @@ func SignMessage(message []byte) (Signature, error) {
 		common.BytesToHash(signature[0:32]),
 		common.BytesToHash(signature[32:64]),
 	}, nil
+}
+
+func ethCall(to common.Address, data []byte) ([]byte, error) {
+	sender, _ := GetAddress()
+	return client.CallContract(context.Background(), ethereum.CallMsg{
+		sender,
+		&to,
+		uint64(0),
+		big.NewInt(0),
+		big.NewInt(0),
+		data,
+	}, nil)
 }
 
 // SendTransaction broadcasts the given message to the Ethereum network. This function also
