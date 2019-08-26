@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Image, Flex, Text, Bold, HighlightNavLink, Box } from 'ui/common'
 import { getProfileColor } from 'ui/communities'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
@@ -36,37 +38,65 @@ const Left = styled.div`
   box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.05);
 `
 
-const Tab = ({ link, imgSrcActive, imgSrcInactive, children }) => (
-  <HighlightNavLink to={link} activeClassName="is-active">
-    <Flex py={1} px={3} style={{ height: 52 }}>
-      <Flex
-        flex={1}
-        flexDirection="row"
-        alignItems="center"
-        className="tab"
-        pl={4}
-      >
-        <Image
-          className="img-active"
-          src={imgSrcActive}
-          width="20px"
-          height="20px"
-        />
-        <Image
-          className="img-inactive"
-          src={imgSrcInactive}
-          width="20px"
-          height="20px"
-        />
-        <Text px={3}>{children}</Text>
+const Tab = ({ link, imgSrcActive, imgSrcInactive, children, handleClick }) =>
+  link ? (
+    <HighlightNavLink to={link} activeClassName="is-active">
+      <Flex py={1} px={3} style={{ height: 52 }}>
+        <Flex
+          flex={1}
+          flexDirection="row"
+          alignItems="center"
+          className="tab"
+          pl={4}
+        >
+          <Image
+            className="img-active"
+            src={imgSrcActive}
+            width="20px"
+            height="20px"
+          />
+          <Image
+            className="img-inactive"
+            src={imgSrcInactive}
+            width="20px"
+            height="20px"
+          />
+          <Text px={3}>{children}</Text>
+        </Flex>
       </Flex>
-    </Flex>
-  </HighlightNavLink>
-)
+    </HighlightNavLink>
+  ) : (
+    <HighlightNavLink to={window.location.pathname} onClick={handleClick}>
+      <Flex py={1} px={3} style={{ height: 52 }}>
+        <Flex
+          flex={1}
+          flexDirection="row"
+          alignItems="center"
+          className="tab"
+          pl={4}
+        >
+          <Image
+            className="img-active"
+            src={imgSrcActive}
+            width="20px"
+            height="20px"
+          />
+          <Image
+            className="img-inactive"
+            src={imgSrcInactive}
+            width="20px"
+            height="20px"
+          />
+          <Text px={3}>{children}</Text>
+        </Flex>
+      </Flex>
+    </HighlightNavLink>
+  )
 
 export default ({
   logedin,
   name,
+  integrationURL,
   src,
   balance,
   lockBalance,
@@ -188,13 +218,7 @@ export default ({
             >
               Explore Data
             </Tab>
-            <Tab
-              link={`/community/${address}/${tcds.address}/integration`}
-              imgSrcActive={IntegrationInactive}
-              imgSrcInactive={IntegrationInactive}
-            >
-              Integration
-            </Tab>
+
             <Tab
               link={`/community/${address}/${tcds.address}/governance`}
               imgSrcActive={GovernanceSrc}
@@ -209,15 +233,18 @@ export default ({
             >
               Activity Logs
             </Tab>
-            {/* TCD */}
-            {/* {tcds && (
-              <React.Fragment>
-                <Bold pl="44px" pt={3} pb={3} fontSize="12px" color="#a6c1ff">
-                  AVAILABLE DATA
-                </Bold>
-                <TCDSelector communityAddress={address} />
-              </React.Fragment>
-            )} */}
+
+            <Tab
+              imgSrcActive={IntegrationInactive}
+              imgSrcInactive={IntegrationInactive}
+              handleClick={() => window.open(integrationURL, '_blank')}
+            >
+              Integration
+              <FontAwesomeIcon
+                style={{ marginLeft: '10px' }}
+                icon={faExternalLinkAlt}
+              ></FontAwesomeIcon>
+            </Tab>
             <Bold pl="44px" pt={4} pb={3} fontSize="12px" color="#a6c1ff">
               CONFIGURATIONS
             </Bold>

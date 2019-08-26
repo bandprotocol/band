@@ -34,6 +34,21 @@ import MMNInactive from 'images/mmnInactive.svg'
 import WebRequestActive from 'images/requestActive.svg'
 import WebRequestInactive from 'images/requestInactive.svg'
 
+// {
+//   switch (communityName) {
+//     case 'Financial Data Feeds':
+//       return 'https://developer.bandprotocol.com/datasets/financial-kovan.html'
+//     case 'Sport Data Feeds':
+//       return 'https://developer.bandprotocol.com/datasets/sport-kovan.html'
+//     case 'Lottery Data Feeds':
+//       return 'https://developer.bandprotocol.com/datasets/lottery-kovan.html'
+//     case 'Web Request Oracle':
+//       return 'https://developer.bandprotocol.com/datasets/web-oracle.html'
+//     default:
+//       return 'https://developer.bandprotocol.com/datasets/overview.html'
+//   }
+// }
+
 const getTCDType = communityName =>
   ({
     'Financial Data Feeds': 'prices',
@@ -41,6 +56,19 @@ const getTCDType = communityName =>
     'Lottery Data Feeds': 'lotteries',
     'Web Request Oracle': 'web_requests',
   }[communityName])
+
+export const getTCDIntegrationURLbyName = communityName =>
+  ({
+    'Financial Data Feeds':
+      'https://developer.bandprotocol.com/datasets/financial-kovan.html',
+    'Sport Data Feeds':
+      'https://developer.bandprotocol.com/datasets/sport-kovan.html',
+    'Lottery Data Feeds':
+      'https://developer.bandprotocol.com/datasets/lottery-kovan.html',
+    'Web Request Oracle':
+      'https://developer.bandprotocol.com/datasets/web-oracle.html',
+  }[communityName] ||
+  'https://developer.bandprotocol.com/datasets/overview.html')
 
 export const getTCDInfomation = (prefix, communityName) =>
   ({

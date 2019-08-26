@@ -11,6 +11,7 @@ import {
 } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { currentUserSelector } from 'selectors/current'
+import { getTCDIntegrationURLbyName } from 'utils/tcds'
 
 class SideBar extends React.Component {
   state = {
@@ -27,6 +28,7 @@ class SideBar extends React.Component {
     const {
       logedin,
       name,
+      integrationURL,
       src,
       balance,
       lockBalance,
@@ -41,6 +43,7 @@ class SideBar extends React.Component {
       <SidebarRender
         logedin={logedin}
         name={name}
+        integrationURL={integrationURL}
         address={address}
         src={src}
         balance={balance}
@@ -67,6 +70,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
   return {
     logedin: currentUserSelector(state) !== 'NOT_SIGNIN',
     name: community.get('name'),
+    integrationURL: getTCDIntegrationURLbyName(community.get('name')),
     src: community.get('logo'),
     balance: communityUnlockBalanceSelector(state, { address: tokenAddress }),
     lockBalance: communityLockBalanceSelector(state, {
