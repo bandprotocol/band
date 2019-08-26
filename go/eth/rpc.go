@@ -84,7 +84,7 @@ func SignMessage(message []byte) (Signature, error) {
 func CallContract(to common.Address, data []byte) ([]byte, error) {
 	sender, err := GetAddress()
 	if err != nil {
-		return []byte{}, err
+		sender = common.Address{}
 	}
 	return client.CallContract(context.Background(), ethereum.CallMsg{
 		sender,

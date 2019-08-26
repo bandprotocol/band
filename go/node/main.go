@@ -177,7 +177,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	currentTimestamp := uint64(time.Now().Unix())
-	pk, err := crypto.HexToECDSA(os.Getenv("PROVIDER_PRIVATEKEY"))
+	pk, err := crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -218,7 +218,7 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	pk, err := crypto.HexToECDSA(os.Getenv("PROVIDER_PRIVATEKEY"))
+	pk, err := crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

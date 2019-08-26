@@ -1,6 +1,7 @@
 package eth
 
 import (
+	"encoding/binary"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -12,10 +13,20 @@ var activeProviderSlot = 2
 // of the given dataset address.
 func GetActiveProviders(dataset common.Address) ([]common.Address, error) {
 	guard := common.HexToAddress("0x1")
-	activeCount := CallContract(dataset, Get4BytesFunctionSignature("activeCount()"))
+	rawOutput, err := CallContract(dataset, Get4BytesFunctionSignature("activeCount()"))
+	if err != nil {
+		return []common.Address{}, err
+	}
+
+	if len(rawOutput) < 32 {
+		return []common.Address{}, fmt.Errorf("GetActiveProviders: Cannot find activeCount")
+	}
+
+	activeCount := binary.BigEndian.Uint16(rawOutput[30:])
 	currentAddress := guard
 	var activeProviders []common.Address
-	for i := 0; i < activeCount; i++ {
+
+	for i := uint16(0); i < activeCount; i++ {
 		output, err := GetStorageAt(dataset, GetMappingLocation(activeProviderSlot, currentAddress))
 		if err != nil {
 			return []common.Address{}, err
