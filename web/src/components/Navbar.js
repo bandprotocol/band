@@ -326,7 +326,7 @@ const Navbar = props => {
                 onClick={closeMenu}
               />
             </Flex>
-            <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+            {/* <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
               <AbsoluteLink href={airdropLink} onClick={closeMenu}>
                 <Flex flexDirection="row">
                   <SemiBold color="#fff" fontSize="18px">
@@ -346,7 +346,7 @@ const Navbar = props => {
                   </Flex>
                 </Flex>
               </AbsoluteLink>
-            </Flex>
+            </Flex> */}
             <Flex
               flex="0 0 60px"
               pr="26px"
@@ -615,7 +615,7 @@ const Navbar = props => {
     return (
       <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
         {/* Tab 1: Airdrop */}
-        <Box ml={['20px', '20px', '40px']}>
+        {/* <Box ml={['20px', '20px', '40px']}>
           <AbsoluteLink
             style={{
               textDecoration: 'none',
@@ -648,7 +648,7 @@ const Navbar = props => {
               Soon
             </Flex>
           </AbsoluteLink>
-        </Box>
+        </Box> */}
 
         {/* Tab 2: Features */}
         <Flex
