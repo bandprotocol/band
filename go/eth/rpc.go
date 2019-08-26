@@ -100,6 +100,7 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 // SendTransaction broadcasts the given message to the Ethereum network. This function also
 // handles transaction signing.
 func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
+	// TODO : send transaction with local node
 	sender, err := GetAddress()
 	if err != nil {
 		return common.Hash{}, err
