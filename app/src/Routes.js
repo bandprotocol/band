@@ -73,9 +73,7 @@ export default ({ match, location }) => (
                     path="/community/:community/:tcd"
                     render={({ match }) => (
                       <Redirect
-                        to={`/community/${match.params.community}/${
-                          match.params.tcd
-                        }/dataset`}
+                        to={`/community/${match.params.community}/${match.params.tcd}/dataset`}
                       />
                     )}
                   />

@@ -22,12 +22,15 @@ const TCDRoutes = ({ path, communityAddress, tcdAddress, redirect }) => {
         />
       )
     case 'integration':
-      return (
-        <CommunityIntegrationPage
-          communityAddress={communityAddress}
-          tcdAddress={tcdAddress}
-        />
-      )
+      window.open('https://developer.bandprotocol.com/', '_blank')
+      return null
+
+    // return (
+    //   <CommunityIntegrationPage
+    //     communityAddress={communityAddress}
+    //     tcdAddress={tcdAddress}
+    //   />
+    // )
     case 'governance':
       return (
         <CommunityDataProviderPage

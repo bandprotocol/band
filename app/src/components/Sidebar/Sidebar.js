@@ -76,12 +76,16 @@ const mapStateToProps = (state, { tokenAddress }) => {
     communityPrice: community.get('price'),
     bandPrice: bandPriceSelector(state),
     address: tokenAddress,
-    tcds: Object.keys(tcds).map(key => {
-      return {
-        address: key,
-        prefix: tcds[key].prefix,
-      }
-    }),
+    tcds: Object.keys(tcds)
+      .map(key => {
+        return {
+          address: key,
+          prefix: tcds[key].prefix,
+        }
+      })
+      .filter(tcd => {
+        return tcd.prefix === 'tcd:'
+      })[0],
   }
 }
 
