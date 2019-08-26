@@ -100,6 +100,5 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 // handles transaction signing.
 func SendTransaction() (common.Hash, error) {
 	// TODO(prin-r): Implement this
-	// client.SendTransaction()
 	panic("not implemented yet")
 }

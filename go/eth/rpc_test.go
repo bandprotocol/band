@@ -18,12 +18,15 @@ func TestGetAddress(t *testing.T) {
 
 func TestGetStorageAt(t *testing.T) {
 	location := make([]byte, 32)
-	_, err := GetStorageAt(
-		common.HexToAddress("0x820b586c8c28125366c998641b09dcbe7d4cbf06"),
+	result, err := GetStorageAt(
+		common.HexToAddress("0xd1f755bcdb97f4f3ee0787b93aea28c71558d017"),
 		common.BytesToHash(location),
 	)
 	if err != nil {
 		t.Errorf(err.Error())
+	}
+	if result.Big().String() != "1566825020" {
+		t.Errorf("TestGetStorageAt: got wrong result %s", result.Big().String())
 	}
 }
 
