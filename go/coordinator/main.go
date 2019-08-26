@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/bandprotocol/band/go/eth"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
@@ -28,7 +31,23 @@ func getProviderUrl(provider common.Address) (string, error) {
 }
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
-	// TODO(bunoi)
+	var arg RequestObject
+	err := json.NewDecoder(r.Body).Decode(&arg)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if !eth.IsValidDataset(arg.Dataset) {
+		http.Error(w, "Dataset is not valid", http.StatusBadRequest)
+		return
+	}
+
+	providers, err := eth.GetActiveProviders(arg.Dataset)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 func main() {
