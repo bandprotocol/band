@@ -26,7 +26,7 @@ func GetAddress() (common.Address, error) {
 
 // GetStorageAt returns the value at the given storage location of the given Ethereum
 // contract address.
-func GetStorageAt(contract, location common.Address) (common.Hash, error) {
+func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, error) {
 	// TODO(prin-r): Implement this
 	panic("GetStorageAt: not implemented")
 }
