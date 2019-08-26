@@ -15,12 +15,12 @@ func VerifyMessage(message []byte, sig Signature) bool {
 	panic("SignMessage: not implemented")
 }
 
-// GetHashOfMapping find hash of key in mapping
-func GetHashOfMapping(slot int, key common.Address) (common.Hash, error) {
+// GetMappingLocation find hash of key in mapping
+func GetMappingLocation(slot int, key common.Address) common.Hash {
 	location := key.Hash().Hex() + fmt.Sprintf("%064x", slot)
 	exp, err := hex.DecodeString(location[2:])
 	if err != nil {
-		return common.Hash{}, err
+		panic(err)
 	}
-	return crypto.Keccak256Hash(exp), nil
+	return crypto.Keccak256Hash(exp)
 }
