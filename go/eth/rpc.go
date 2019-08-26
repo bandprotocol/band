@@ -28,13 +28,13 @@ func init() {
 	// TODO(prin-r): Initialize a connection to Ethereum
 	var err error
 
-	pk, err = crypto.HexToECDSA(os.Getenv("PK"))
+	pk, err = crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
 	if err != nil {
 		log.Println("no private key found, connect to localnode")
 	}
 
-	eth_rpc := os.Getenv("ETH_RPC")
-	client, err = ethclient.Dial(eth_rpc)
+	ethRpc := os.Getenv("ETH_RPC")
+	client, err = ethclient.Dial(ethRpc)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,7 +84,10 @@ func SignMessage(message []byte) (Signature, error) {
 }
 
 func CallContract(to common.Address, data []byte) ([]byte, error) {
-	sender, _ := GetAddress()
+	sender, err := GetAddress()
+	if err != nil {
+		return []byte{}, err
+	}
 	return client.CallContract(context.Background(), ethereum.CallMsg{
 		sender,
 		&to,
@@ -99,5 +102,5 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 // handles transaction signing.
 func SendTransaction() (common.Hash, error) {
 	// TODO(prin-r): Implement this
-	panic("SendTransaction: not implemented")
+	// client.SendTransaction()
 }
