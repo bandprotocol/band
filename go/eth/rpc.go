@@ -27,8 +27,8 @@ var pk *ecdsa.PrivateKey
 func init() {
 	// TODO(prin-r): Initialize a connection to Ethereum
 	var err error
-	eth_rpc := os.Getenv("ETH_RPC")
-	client, err = ethclient.Dial(eth_rpc)
+	ethRPC := os.Getenv("ETH_RPC")
+	client, err = ethclient.Dial(ethRPC)
 	if err != nil {
 		log.Fatal(err)
 	}
