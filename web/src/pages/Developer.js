@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { keyframes } from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import FilledButton from 'components/FilledButton'
 import ArrowRight from 'components/ArrowRight'
@@ -20,7 +20,25 @@ import SportHero from 'images/sport-hero.png'
 import LotteryHero from 'images/lottery-hero.png'
 import DataRequest from 'images/data-requests.png'
 import Audit from 'images/audit.svg'
-import { is } from 'css-select'
+
+const blinking = keyframes`
+  from {
+    opacity: 1;
+  }
+  to { 
+    opacity: 0;
+  }
+`
+
+const CircleBlink = styled(Box).attrs({
+  bg: '#33cf41',
+  width: '10px',
+  mr: '15px',
+})`
+  height: 10px;
+  border-radius: 50%;
+  animation: ${blinking} 0.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
+`
 
 const OutlineButton = styled(Button)`
   font-family: Avenir;
@@ -178,12 +196,7 @@ export default () => {
               justifyContent="center"
               width="520px"
             >
-              <Box
-                bg="#33cf41"
-                width="10px"
-                mr="15px"
-                style={{ borderRadius: '50%', height: '10px' }}
-              />
+              <CircleBlink></CircleBlink>
               <Text
                 fontFamily="bio-sans"
                 fontSize="18px"
