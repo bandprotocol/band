@@ -23,3 +23,8 @@ func GetMappingLocation(slot int, key common.Address) common.Hash {
 	}
 	return crypto.Keccak256Hash(exp)
 }
+
+// Get4BytesFunctionSignature return 4 bytes of function signature hash
+func Get4BytesFunctionSignature(sig string) []byte {
+	return crypto.Keccak256([]byte(sig))[:4]
+}
