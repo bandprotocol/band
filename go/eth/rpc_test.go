@@ -66,3 +66,14 @@ func TestCallContract(t *testing.T) {
 		t.Errorf(fmt.Sprintf("TestCallContract: wrong result 0x%x", result))
 	}
 }
+
+func TestSendTransaction(t *testing.T) {
+	data, _ := hex.DecodeString("e8927fbc")
+	txHash, err := SendTransaction(common.HexToAddress("0x76f1d7ceCfaCbD6Dfed3A403E57805c1664BA56B"), data)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	if len(txHash.String()) != 66 {
+		t.Errorf("TestSendTransaction: wrong tx hash length")
+	}
+}

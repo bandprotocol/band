@@ -10,6 +10,7 @@ import (
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
@@ -98,7 +99,37 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 
 // SendTransaction broadcasts the given message to the Ethereum network. This function also
 // handles transaction signing.
-func SendTransaction() (common.Hash, error) {
-	// TODO(prin-r): Implement this
-	panic("not implemented yet")
+func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
+	sender, err := GetAddress()
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	nonce, err := client.NonceAt(context.Background(), sender, nil)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	tx := types.NewTransaction(
+		nonce,
+		to,
+		big.NewInt(0),
+		1e6,
+		big.NewInt(1e10),
+		data,
+	)
+
+	signer := types.NewEIP155Signer(big.NewInt(42)) // kovan chainId
+
+	signedTx, err := types.SignTx(tx, signer, pk)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	err = client.SendTransaction(context.Background(), signedTx)
+	if err != nil {
+		return common.Hash{}, err
+	}
+
+	return signedTx.Hash(), nil
 }
