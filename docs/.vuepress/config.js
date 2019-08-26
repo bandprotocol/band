@@ -1,7 +1,7 @@
 module.exports = {
   head: [["link", { rel: "icon", href: "/assets/favicon.ico" }]],
   themeConfig: {
-    logo: "/assets/logo.svg",
+    logo: "/assets/logo.png",
     nav: [{ text: "Home", link: "https://bandprotocol.com" }],
     sidebarDepth: 0,
     displayAllHeaders: true,
