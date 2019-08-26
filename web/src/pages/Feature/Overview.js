@@ -15,7 +15,7 @@ import Usecase3 from 'images/usecase3.jpg'
 import Usecase4 from 'images/usecase4.jpg'
 import Usecase5 from 'images/usecase5.jpg'
 import Usecase6 from 'images/usecase6.jpg'
-import BandOffering from 'images/comparison-table.webp'
+import BandOffering from 'images/comparison-table.jpg'
 
 export default () => {
   const exRef = useRef(null)
