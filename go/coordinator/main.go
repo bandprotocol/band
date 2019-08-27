@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/bandprotocol/band/go/eth"
+	"github.com/bandprotocol/band/go/reqmsg"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
@@ -24,18 +25,6 @@ type ResponseObject struct {
 	TxHash common.Hash `json:"txhash"`
 }
 
-type DataRequestInput struct {
-	Dataset common.Address `json:"dataset"`
-	Key     string         `json:"key"`
-}
-
-type DataRequestOutput struct {
-	Provider  common.Address `json:"provider"`
-	Value     common.Hash    `json:"value"`
-	Timestamp uint64         `json:"timestamp"`
-	Sig       eth.Signature  `json:"signature"`
-}
-
 func getProviderUrl(provider common.Address) (string, error) {
 	key := "providers." + provider.Hex()
 	if !viper.IsSet(key) {
@@ -44,28 +33,28 @@ func getProviderUrl(provider common.Address) (string, error) {
 	return viper.GetString(key), nil
 }
 
-func sendDataRequest(dataset common.Address, key string, provider common.Address) (DataRequestOutput, error) {
+func sendDataRequest(dataset common.Address, key string, provider common.Address) (reqmsg.DataResponse, error) {
 	url, err := getProviderUrl(provider)
 	if err != nil {
-		return DataRequestOutput{}, err
+		return reqmsg.DataResponse{}, err
 	}
-	jsonValue, _ := json.Marshal(DataRequestInput{
+	jsonValue, _ := json.Marshal(reqmsg.DataRequest{
 		Dataset: dataset,
 		Key:     key,
 	})
 
 	res, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
-		return DataRequestOutput{}, err
+		return reqmsg.DataResponse{}, err
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return DataRequestOutput{}, err
+		return reqmsg.DataResponse{}, err
 	}
 
-	var result DataRequestOutput
+	var result reqmsg.DataResponse
 	json.Unmarshal(body, &result)
 
 	return result, nil
@@ -89,7 +78,9 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	var responses []*DataRequestOutput
+
+	// Send request to each node
+	var responses []*reqmsg.DataResponse
 	for _, provider := range providers {
 		data, err := sendDataRequest(arg.Dataset, arg.Key, provider)
 		if err != nil {
@@ -97,6 +88,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			println(data.Provider.Hex())
 		}
 	}
+
+	// TODO: Verify signature and aggregate signature
 }
 
 func main() {
