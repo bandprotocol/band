@@ -1,7 +1,6 @@
 import React from 'react'
 import { Flex } from 'ui/common'
 import Select from 'react-select'
-import _ from 'lodash'
 
 const selectStyles = (width = '100px') => ({
   control: (styles, { isDisabled }) => ({
