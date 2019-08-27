@@ -241,7 +241,10 @@ func main() {
 	if err := config.ReadInConfig(); err != nil {
 		log.Fatal("main: unable to read configuration file")
 	}
-	os.Setenv("ETH_PRIVATE_KEY", config.GetString("privateKey"))
+	privateKeyFromConfig := config.GetString("privateKey")
+	if privateKeyFromConfig != "" {
+		os.Setenv("ETH_PRIVATE_KEY", privateKeyFromConfig)
+	}
 	adapters = adapter.FromConfig(config)
 	http.HandleFunc("/data", handleDataRequest)
 	http.HandleFunc("/sign", handleSignRequest)
