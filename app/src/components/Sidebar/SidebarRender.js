@@ -4,7 +4,7 @@ import { Image, Flex, Text, Bold, HighlightNavLink, Box } from 'ui/common'
 import { getProfileColor } from 'ui/communities'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
-import TCDSelector from 'components/TCDSelector'
+// import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
 import BalanceWallet from 'images/balanceWallet.svg'
@@ -22,7 +22,6 @@ import ProposalActiveSrc from 'images/voteActive.svg'
 import DataLogInactive from 'images/dataLogInactive.svg'
 import DataSetInactive from 'images/datasetInactive.svg'
 import IntegrationInactive from 'images/integrationInactive.svg'
-// import GovernanceSrc from 'images/govInactive.svg'
 
 const Left = styled.div`
   align-self: stretch;
