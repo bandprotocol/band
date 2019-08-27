@@ -246,7 +246,7 @@ export default ({
 
             <Tab
               link={`/community/${address}/governance`}
-              imgSrcActive={GovernanceSrc}
+              imgSrcActive={GovernanceActiveSrc}
               imgSrcInactive={GovernanceSrc}
             >
               Governance
