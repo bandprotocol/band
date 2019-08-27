@@ -47,6 +47,9 @@ const allParametersDescription = {
   '0xdA7A3C7309Bd2De2e89a554191b2d7c71125186c': {
     info: 'Bancor Protocol',
   },
+  tcd: {
+    info: 'This parameter group governs how dataset feed is provided.',
+  },
   default: { info: 'Unknown' },
 }
 
