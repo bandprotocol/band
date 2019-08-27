@@ -20,12 +20,77 @@ import Loading from 'components/Loading'
 import DataHeader from 'components/DataHeader'
 import AutocompletedSearch from 'components/AutocompletedSearch'
 import { getPriceKeys } from 'data/detail/price'
+import PeriodSelect from 'components/PeriodSelect'
 
 const pairToHeader = pair => {
   const [left, right] = pair.split('/')
   const { image: imgl, label: labell } = getAsset(left)
   const { image: imgr, label: labelr } = getAsset(right)
   return labell + '/' + labelr
+}
+
+class GraphAndLists extends React.Component {
+  state = {
+    start: moment().subtract(1, 'day'),
+    end: moment(),
+    limit: 30,
+  }
+
+  handleSelect = value => {
+    this.setState({
+      start: moment().subtract(value.amount, value.unit),
+      end: moment(),
+      limit: value.limit,
+    })
+  }
+
+  render() {
+    const { keyOnChain, tcdAddress, numDigits } = this.props
+    const { start, end, limit } = this.state
+    return (
+      <React.Fragment>
+        {/* Time Selector */}
+        <Flex my="20px" justifyContent="flex-end" pr="35px">
+          <PeriodSelect onSelect={this.handleSelect} />
+        </Flex>
+        <PricePairFetcher
+          keyOnChain={keyOnChain}
+          tcdAddress={tcdAddress}
+          start={start.unix()}
+          end={end.unix()}
+          limit={limit}
+        >
+          {({ fetching, data }) =>
+            fetching ? (
+              <Loading
+                height={514}
+                width={922}
+                rects={[
+                  [24, 24, 922 - 48, 300 - 48],
+                  [24, 300, 922 - 48, 36, 8],
+                  [24, 300 + 36 + 8 + 4, 922 - 48, 32 - 8, 8],
+                  [24, 300 + 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
+                  [24, 300 + 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
+                  [24, 300 + 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
+                  [24, 300 + 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
+                ]}
+              />
+            ) : (
+              <React.Fragment>
+                <Box px={4} pb={4}>
+                  <DataSetPriceGraph
+                    data={formatPricePairsForGraph(data)}
+                    numberOfProvider={data.length}
+                  />
+                </Box>
+                <PriceTable mb={2} data={data} numDigits={numDigits} />
+              </React.Fragment>
+            )
+          }
+        </PricePairFetcher>
+      </React.Fragment>
+    )
+  }
 }
 
 const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
@@ -73,39 +138,11 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
               )}
               updatedAt={lastUpdate}
             >
-              <PricePairFetcher
+              <GraphAndLists
                 keyOnChain={key}
                 tcdAddress={tcdAddress}
-                from={moment(1556150400000)}
-              >
-                {({ fetching, data }) =>
-                  fetching ? (
-                    <Loading
-                      height={514}
-                      width={922}
-                      rects={[
-                        [24, 24, 922 - 48, 300 - 48],
-                        [24, 300, 922 - 48, 36, 8],
-                        [24, 300 + 36 + 8 + 4, 922 - 48, 32 - 8, 8],
-                        [24, 300 + 36 + 8 + 4 + 32, 922 - 48, 32 - 8, 8],
-                        [24, 300 + 36 + 8 + 4 + 32 * 2, 922 - 48, 32 - 8, 8],
-                        [24, 300 + 36 + 8 + 4 + 32 * 3, 922 - 48, 32 - 8, 8],
-                        [24, 300 + 36 + 8 + 4 + 32 * 4, 922 - 48, 32 - 8, 8],
-                      ]}
-                    />
-                  ) : (
-                    <React.Fragment>
-                      <Box px={4} pb={4}>
-                        <DataSetPriceGraph
-                          data={formatPricePairsForGraph(data)}
-                          numberOfProvider={data.length}
-                        />
-                      </Box>
-                      <PriceTable mb={2} data={data} numDigits={numDigits} />
-                    </React.Fragment>
-                  )
-                }
-              </PricePairFetcher>
+                numDigits={numDigits}
+              />
             </DataPoint>
           )
         })}

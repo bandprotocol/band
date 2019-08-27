@@ -58,15 +58,19 @@ export const PriceCountByTCDFetcher = withRouter(
 export const PricePairFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
-      return prevProps.keyOnChain !== this.props.keyOnChain
+      return (
+        prevProps.keyOnChain !== this.props.keyOnChain ||
+        prevProps.start !== this.props.start
+      )
     }
 
     async fetch() {
-      const { keyOnChain, tcdAddress } = this.props
-
+      const { keyOnChain, tcdAddress, start, end, limit } = this.props
       const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
         key: keyOnChain,
-        limit: 25,
+        start,
+        end,
+        limit,
       })
 
       // add another report point for prevent graph's plotting problem
