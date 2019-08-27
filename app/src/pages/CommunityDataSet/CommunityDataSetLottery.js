@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image,Button } from 'ui/common'
+import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
 import DatePicker from 'react-datepicker'
 import 'DatePicker.css'
 import PageStructure from 'components/DataSetPageStructure'
@@ -17,7 +17,11 @@ import {
 import LotteryTable from 'components/table/LotteryTable'
 import Loading from 'components/Loading'
 import PaginationRender from 'components/Pagination/PaginationRender'
+import DatasetTab from 'components/DatasetTab'
 import CalendarSrc from 'images/calendar.svg'
+
+import MmnSrc from 'images/dataset-megamillions.png'
+import PwbSrc from 'images/dataset-powerball.png'
 
 const pad = n => `0${n}`.slice(-2)
 
@@ -250,10 +254,22 @@ export default class LotteryPage extends React.Component {
             )}
             {...this.props}
           >
-          <Flex>
-            <Button onClick={() => this.setState({type: 'MMN'})}>MMN</Button>
-            <Button onClick={() => this.setState({type: 'PWB'})}>PWB</Button>
-          </Flex>
+            <Flex>
+              <DatasetTab
+                mx="8px"
+                title="Megamillions"
+                src={MmnSrc}
+                active={this.state.type === 'MMN'}
+                onClick={() => this.setState({ type: 'MMN' })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="Powerball"
+                src={PwbSrc}
+                active={this.state.type === 'PWB'}
+                onClick={() => this.setState({ type: 'PWB' })}
+              />
+            </Flex>
             <LotteyByTCDAddress tcdAddress={tcdAddress} {...this.state}>
               {({ fetching, data }) => {
                 if (fetching || countFetching) {
