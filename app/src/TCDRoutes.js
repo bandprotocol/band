@@ -63,14 +63,16 @@ const mapStateToProps = (state, { communityAddress, path }) => {
     .get('tcds')
     .toJS()
 
-  const tcdAddress = Object.keys(tcds).filter(
-    tcdAddr => tcds[tcdAddr].prefix === 'tcd:',
-  )[0]
+  const tcdAddress = Object.keys(tcds).filter(tcdAddr => {
+    if (tcds[tcdAddr].prefix === 'web:') {
+      return true
+    }
+    return tcds[tcdAddr].prefix === 'tcd:'
+  })[0]
   const tcd = tcdsSelector(state, {
     address: communityAddress,
     tcdAddress,
   })
-
   return {
     communityAddress,
     tcdAddress,
