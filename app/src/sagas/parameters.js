@@ -16,12 +16,15 @@ function* handleLoadParameters({ address }) {
   }`)).tokenByAddress.parameterByTokenAddress
 
   const params = {}
+  const listInParams = ['bonding', 'params', 'tcd']
   for (const [key, value] of Object.entries(currentParameters)) {
     const [prefix, name] = key.split(':')
-    if (!(prefix in params)) {
-      params[prefix] = []
+    if (listInParams.includes(prefix)) {
+      if (!(prefix in params)) {
+        params[prefix] = []
+      }
+      params[prefix].push({ name, value: new BN(value) })
     }
-    params[prefix].push({ name, value: new BN(value) })
   }
   yield put(saveParameters(address, params))
 }
