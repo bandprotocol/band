@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"os"
 	"testing"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func Test_sign(t *testing.T) {
-	pk, err := crypto.HexToECDSA("FA930EE26652DF7198B479E357AF92B3B0E3367F5601913D3DBADBE5C8D13689")
+	pk, err := crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
 	if err != nil {
 		t.Errorf(err.Error())
 	}
@@ -24,29 +25,27 @@ func Test_sign(t *testing.T) {
 
 	// validate
 
-	var buff []byte
-	buff = append(buff, (crypto.PubkeyToAddress(pk.PublicKey)).Bytes()...)
-	buff = append(buff, []byte(key)...)
-	buff = append(buff, val.Bytes()...)
-
 	bytesTimeStamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytesTimeStamp, time)
+	bytesTimeStamp = append(make([]byte, 24), bytesTimeStamp...)
 
+	var buff []byte
+	buff = append(buff, []byte(key)...)
+	buff = append(buff, val.Bytes()...)
 	buff = append(buff, bytesTimeStamp...)
+	buff = append(buff, (crypto.PubkeyToAddress(pk.PublicKey)).Bytes()...)
 
 	sigBuff := sig.R.Bytes()
 	sigBuff = append(sigBuff, sig.S.Bytes()...)
 	sigBuff = append(sigBuff, sig.V-27)
 
-	pub, err := crypto.SigToPub(crypto.Keccak256(buff), sigBuff)
+	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(buff)...)
+	pub, err := crypto.SigToPub(crypto.Keccak256(withPrefix), sigBuff)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
 
-	validX := pub.X.String() == pk.PublicKey.X.String()
-	validY := pub.Y.String() == pk.PublicKey.Y.String()
-
-	if !(validX && validY) {
+	if crypto.PubkeyToAddress(*pub).String() != crypto.PubkeyToAddress(pk.PublicKey).String() {
 		t.Errorf("signature verification fail")
 	}
 }

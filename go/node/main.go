@@ -56,6 +56,7 @@ func sign(
 ) eth.Signature {
 	bytesTimeStamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)
+	bytesTimeStamp = append(make([]byte, 24), bytesTimeStamp...)
 
 	var buff []byte
 	buff = append(buff, []byte(key)...)
@@ -63,10 +64,12 @@ func sign(
 	buff = append(buff, bytesTimeStamp...)
 	buff = append(buff, dataset.Bytes()...)
 
-	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
+	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(buff)...)
+	signature, _ := crypto.Sign(crypto.Keccak256(withPrefix), pk)
+	signature[len(signature)-1] += 27
 
 	return eth.Signature{
-		V: uint8(int(signature[64])) + 27,
+		V: uint8(int(signature[64])),
 		R: common.BytesToHash(signature[0:32]),
 		S: common.BytesToHash(signature[32:64]),
 	}
