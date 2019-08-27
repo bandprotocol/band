@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image } from 'ui/common'
+import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
 import DatePicker from 'react-datepicker'
 import 'DatePicker.css'
 import PageStructure from 'components/DataSetPageStructure'
@@ -9,6 +9,7 @@ import DataHeader from 'components/DataHeader'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import {
+  LotteryCountByTypeFetcher,
   LotteryCountByTCDFetcher,
   LotteyByTCDAddress,
   LotteryProvidersByTCDAddressTimeFetcher,
@@ -16,7 +17,11 @@ import {
 import LotteryTable from 'components/table/LotteryTable'
 import Loading from 'components/Loading'
 import PaginationRender from 'components/Pagination/PaginationRender'
+import DatasetTab from 'components/DatasetTab'
 import CalendarSrc from 'images/calendar.svg'
+
+import MmnSrc from 'images/dataset-megamillions.png'
+import PwbSrc from 'images/dataset-powerball.png'
 
 const pad = n => `0${n}`.slice(-2)
 
@@ -180,6 +185,7 @@ export default class LotteryPage extends React.Component {
     nLotteryList: 10,
     currentPage: 1,
     selectedDate: new Date(),
+    type: 'MMN',
   }
 
   componentDidUpdate(prevProps) {
@@ -204,10 +210,11 @@ export default class LotteryPage extends React.Component {
 
   render() {
     const { tcdAddress, tcdPrefix } = this.props
-    const { currentPage, nLotteryList, selectedDate } = this.state
+    const { currentPage, nLotteryList, selectedDate, type } = this.state
 
     return (
       <LotteryCountByTCDFetcher
+        type={type}
         tcdAddress={tcdAddress}
         selectedDate={selectedDate}
       >
@@ -248,6 +255,22 @@ export default class LotteryPage extends React.Component {
             )}
             {...this.props}
           >
+            <Flex justifyContent="center">
+              <DatasetTab
+                mx="8px"
+                title="Megamillions"
+                src={MmnSrc}
+                active={this.state.type === 'MMN'}
+                onClick={() => this.setState({ type: 'MMN' })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="Powerball"
+                src={PwbSrc}
+                active={this.state.type === 'PWB'}
+                onClick={() => this.setState({ type: 'PWB' })}
+              />
+            </Flex>
             <LotteyByTCDAddress tcdAddress={tcdAddress} {...this.state}>
               {({ fetching, data }) => {
                 if (fetching || countFetching) {
@@ -256,7 +279,6 @@ export default class LotteryPage extends React.Component {
                       height={700}
                       width={1141}
                       rects={[
-                        [0, 0, 1141, 60],
                         [0, 80, 1141, 60],
                         [0, 80 * 2, 1141, 60],
                         [0, 80 * 3, 1141, 60],

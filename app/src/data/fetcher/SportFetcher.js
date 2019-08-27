@@ -12,12 +12,14 @@ export const SportCountByTCDFetcher = withRouter(
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
         prevProps.home !== this.props.home ||
-        prevProps.away !== this.props.away
+        prevProps.away !== this.props.away ||
+        prevProps.type !== this.props.type
       )
     }
 
     async fetch() {
-      let params = {}
+      const { type } = this.props
+      let params = { key: type }
       const { home, away } = this.props
       params = home ? { ...params, home } : { ...params }
       params = away ? { ...params, away } : { ...params }
@@ -38,21 +40,31 @@ export const SportByTCDFetcher = withRouter(
         prevProps.tcdAddress !== this.props.tcdAddress ||
         prevProps.currentPage !== this.props.currentPage ||
         prevProps.home !== this.props.home ||
-        prevProps.away !== this.props.away
+        prevProps.away !== this.props.away ||
+        prevProps.type !== this.props.type
       )
     }
 
     async fetch() {
-      const { tcdAddress, currentPage, nSportList, home, away } = this.props
+      const {
+        tcdAddress,
+        currentPage,
+        nSportList,
+        home,
+        away,
+        type,
+      } = this.props
       const skip = (currentPage - 1) * nSportList
       let params =
         skip > 0
           ? {
               limit: nSportList,
               skip,
+              key: type,
             }
           : {
               limit: nSportList,
+              key: type,
             }
       params = home ? { ...params, home } : { ...params }
       params = away ? { ...params, away } : { ...params }

@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Flex, Box, Text, Card } from 'ui/common'
+import { Flex, Box, Text, Card, Button } from 'ui/common'
 import DataHeader from 'components/DataHeader'
 import styled from 'styled-components'
 import { communityDetailSelector } from 'selectors/communities'
 import PageStructure from 'components/DataSetPageStructure'
+import DatasetTab from 'components/DatasetTab'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { getDetail } from 'data/detail/sport'
@@ -18,6 +19,11 @@ import Loading from 'components/Loading'
 import SearchSelect from 'components/SearchSelect'
 import { getOptionsByPrefix } from 'utils/sportTeam'
 import PaginationRender from 'components/Pagination/PaginationRender'
+
+import SoccerSrc from 'images/dataset-soccer.png'
+import BasketballSrc from 'images/dataset-basketball.png'
+import AmericanFootballSrc from 'images/dataset-americanfootball.png'
+import BaseballSrc from 'images/dataset-baseball.png'
 
 const LogoTeam = styled(Flex).attrs({
   mx: '5px',
@@ -144,6 +150,7 @@ export default class SportPage extends React.Component {
     // search
     home: null,
     away: null,
+    type: 'EPL',
   }
 
   componentDidUpdate(prevProps) {
@@ -210,6 +217,36 @@ export default class SportPage extends React.Component {
             )}
             {...this.props}
           >
+            <Flex justifyContent="center">
+              <DatasetTab
+                mx="8px"
+                title="Soccer"
+                src={SoccerSrc}
+                active={this.state.type === 'EPL'}
+                onClick={() => this.setState({ type: 'EPL' })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="Basket Ball"
+                src={BasketballSrc}
+                active={this.state.type === 'NBA'}
+                onClick={() => this.setState({ type: 'NBA' })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="American Football"
+                src={AmericanFootballSrc}
+                active={this.state.type === 'NFL'}
+                onClick={() => this.setState({ type: 'NFL' })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="Baseball"
+                src={BaseballSrc}
+                active={this.state.type === 'MLB'}
+                onClick={() => this.setState({ type: 'MLB' })}
+              />
+            </Flex>
             <SportByTCDFetcher
               tcdAddress={tcdAddress}
               tcdPrefix={tcdPrefix}
@@ -222,7 +259,6 @@ export default class SportPage extends React.Component {
                       height={700}
                       width={1141}
                       rects={[
-                        [0, 0, 1141, 60],
                         [0, 80, 1141, 60],
                         [0, 80 * 2, 1141, 60],
                         [0, 80 * 3, 1141, 60],

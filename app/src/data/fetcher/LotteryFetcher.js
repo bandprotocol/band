@@ -26,16 +26,18 @@ export const LotteryCountByTCDFetcher = withRouter(
     shouldFetch(prevProps) {
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.type !== this.props.type ||
         isNotEqualDate(prevProps.selectedDate, this.props.selectedDate)
       )
     }
 
     async fetch() {
+      const { type } = this.props
       const date = formatDate(this.props.selectedDate)
       const lotteriesCount = await Utils.getDataRequest(
         `/lotteries/${this.props.tcdAddress}/count`,
         {
-          key: date,
+          key: `${type}/${date}`,
         },
       )
       return lotteriesCount
@@ -49,11 +51,18 @@ export const LotteyByTCDAddress = withRouter(
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
         prevProps.currentPage !== this.props.currentPage ||
+        prevProps.type !== this.props.type ||
         isNotEqualDate(prevProps.selectedDate, this.props.selectedDate)
       )
     }
     async fetch() {
-      const { tcdAddress, currentPage, nLotteryList, selectedDate } = this.props
+      const {
+        tcdAddress,
+        currentPage,
+        nLotteryList,
+        selectedDate,
+        type,
+      } = this.props
       const date = formatDate(selectedDate)
       const skip = (currentPage - 1) * nLotteryList
       const params =
@@ -61,16 +70,18 @@ export const LotteyByTCDAddress = withRouter(
           ? {
               limit: nLotteryList,
               skip,
-              key: date,
+              key: `${type}/${date}`,
             }
           : {
               limit: nLotteryList,
-              key: date,
+              key: `${type}/${date}`,
             }
+
       const rawData = await Utils.getDataRequest(
         `/lotteries/${tcdAddress}`,
         params,
       )
+
       return rawData.map(({ type, date, key, timestamp, value }) => {
         return {
           lotteryType: type,

@@ -1,3 +1,8 @@
+export const CRYPTO_TYPE = 'CRYPTO'
+export const FX_TYPE = 'FX'
+export const USEQUITY_TYPE = 'USEQUITY'
+export const ERC20_TYPE = 'ERC20'
+
 const allPrices = {
   crypto: [
     { name: 'BCH/USD' },
@@ -42,3 +47,27 @@ const allPrices = {
 }
 
 export const getPriceKeys = prefix => allPrices[prefix] || allPrices.default
+
+const allPricesLabel = {
+  [CRYPTO_TYPE]: ['BCH-USD', 'BTC-USD', 'ETH-USD', 'LTC-USD', 'XRP-USD'],
+  [FX_TYPE]: ['CNY', 'EUR', 'GBP', 'JPY', 'THB', 'XAG', 'XAU'],
+  [ERC20_TYPE]: [
+    'BAT-ETH',
+    'DAI-ETH',
+    'KNC-ETH',
+    'LINK-ETH',
+    'MKR-ETH',
+    'OMG-ETH',
+    'REP-ETH',
+    'USDC-ETH',
+    'ZRX-ETH',
+  ],
+  [USEQUITY_TYPE]: ['AAPL', 'AMZN', 'FB', 'GOOG', 'MSFT', 'NFLX', 'ORCL'],
+}
+
+export const getAllPriceLabelFromType = type =>
+  allPricesLabel[type] ||
+  Object.keys(allPricesLabel).reduce(
+    (acc, key) => acc.concat(allPricesLabel[key]),
+    [],
+  )
