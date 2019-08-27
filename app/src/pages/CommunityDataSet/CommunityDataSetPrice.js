@@ -139,7 +139,11 @@ export default class CommunityPricePage extends React.Component {
   render() {
     const { tcdAddress, tcdPrefix } = this.props
     return (
-      <PriceCountByTCDFetcher tcdAddress={tcdAddress} query={this.state.query}>
+      <PriceCountByTCDFetcher
+        tcdAddress={tcdAddress}
+        type={this.state.type}
+        query={this.state.query}
+      >
         {({ fetching: countFetching, data: totalCount }) => (
           <PageStructure
             renderHeader={() => (

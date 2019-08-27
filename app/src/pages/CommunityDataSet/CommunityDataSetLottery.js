@@ -210,10 +210,11 @@ export default class LotteryPage extends React.Component {
 
   render() {
     const { tcdAddress, tcdPrefix } = this.props
-    const { currentPage, nLotteryList, selectedDate } = this.state
+    const { currentPage, nLotteryList, selectedDate, type } = this.state
 
     return (
       <LotteryCountByTCDFetcher
+        type={type}
         tcdAddress={tcdAddress}
         selectedDate={selectedDate}
       >

@@ -12,12 +12,14 @@ export const SportCountByTCDFetcher = withRouter(
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
         prevProps.home !== this.props.home ||
-        prevProps.away !== this.props.away
+        prevProps.away !== this.props.away ||
+        prevProps.type !== this.props.type
       )
     }
 
     async fetch() {
-      let params = {}
+      const { type } = this.props
+      let params = { key: type }
       const { home, away } = this.props
       params = home ? { ...params, home } : { ...params }
       params = away ? { ...params, away } : { ...params }

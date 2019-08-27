@@ -26,16 +26,18 @@ export const LotteryCountByTCDFetcher = withRouter(
     shouldFetch(prevProps) {
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.type !== this.props.type ||
         isNotEqualDate(prevProps.selectedDate, this.props.selectedDate)
       )
     }
 
     async fetch() {
+      const { type } = this.props
       const date = formatDate(this.props.selectedDate)
       const lotteriesCount = await Utils.getDataRequest(
         `/lotteries/${this.props.tcdAddress}/count`,
         {
-          key: date,
+          key: `${type}/${date}`,
         },
       )
       return lotteriesCount
