@@ -2,12 +2,18 @@ import React from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { communityDetailSelector } from 'selectors/communities'
-import { Flex, Box, Text, Card, Image } from 'ui/common'
+import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { getAsset } from 'utils/assetData'
+import {
+  CRYPTO_TYPE,
+  FX_TYPE,
+  USEQUITY_TYPE,
+  ERC20_TYPE,
+} from 'data/detail/price'
 
 import {
   CurrentPriceFetcher,
@@ -115,7 +121,7 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
 )
 
 export default class CommunityPricePage extends React.Component {
-  state = { query: '' }
+  state = { query: '', type: '' }
 
   onQuery = val => {
     this.setState({
@@ -159,9 +165,25 @@ export default class CommunityPricePage extends React.Component {
             )}
             {...this.props}
           >
+            <Flex>
+              <Button onClick={() => this.setState({ type: CRYPTO_TYPE })}>
+                Crypto-Fiat Conversion
+              </Button>
+              <Button onClick={() => this.setState({ type: FX_TYPE })}>
+                Foreign Exchange
+              </Button>
+              <Button onClick={() => this.setState({ type: ERC20_TYPE })}>
+                ERC-20 Pairs
+              </Button>
+              <Button onClick={() => this.setState({ type: USEQUITY_TYPE })}>
+                US Equities
+              </Button>
+              <Button onClick={() => this.setState({ type: '' })}>ALL</Button>
+            </Flex>
             <CurrentPriceFetcher
               tcdAddress={tcdAddress}
               query={this.state.query}
+              type={this.state.type}
             >
               {({ fetching, data }) =>
                 fetching ? (

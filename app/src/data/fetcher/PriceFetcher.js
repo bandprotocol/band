@@ -3,22 +3,24 @@ import { withRouter } from 'react-router-dom'
 import moment from 'moment'
 import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
+import { getAllPriceLabelFromType } from 'data/detail/price'
 
 export const CurrentPriceFetcher = withRouter(
   class extends BaseFetcher {
     shouldFetch(prevProps) {
       return (
         prevProps.tcdAddress !== this.props.tcdAddress ||
+        prevProps.type !== this.props.type ||
         prevProps.query !== this.props.query
       )
     }
 
     async fetch() {
-      const { tcdAddress } = this.props
+      const { tcdAddress, type } = this.props
       const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
         key: this.props.query,
       })
-
+      const priceLabel = getAllPriceLabelFromType(type)
       return prices
         .map(({ key, pair, value, timestamp }) => ({
           key,
@@ -26,6 +28,7 @@ export const CurrentPriceFetcher = withRouter(
           value: parseInt(value) / 1e18,
           lastUpdate: moment(timestamp * 1000),
         }))
+        .filter(data => (type ? priceLabel.includes(data.pair) : true))
         .sort((a, b) => {
           if (a.key > b.key) return 1
           return -1
