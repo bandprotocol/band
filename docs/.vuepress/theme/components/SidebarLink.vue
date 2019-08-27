@@ -93,6 +93,8 @@ function renderExternal (h, to, text) {
 </script>
 
 <style lang="stylus">
+$accentColor = #1242ea;
+
 .sidebar .sidebar-sub-headers
   padding-left 1rem
   font-size 0.95em
