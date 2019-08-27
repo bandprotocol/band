@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 
@@ -22,12 +24,51 @@ type ResponseObject struct {
 	TxHash common.Hash `json:"txhash"`
 }
 
+type DataRequestInput struct {
+	Dataset common.Address `json:"dataset"`
+	Key     string         `json:"key"`
+}
+
+type DataRequestOutput struct {
+	Provider  common.Address `json:"provider"`
+	Value     common.Hash    `json:"value"`
+	Timestamp uint64         `json:"timestamp"`
+	Sig       eth.Signature  `json:"signature"`
+}
+
 func getProviderUrl(provider common.Address) (string, error) {
 	key := "providers." + provider.Hex()
 	if !viper.IsSet(key) {
 		return "", fmt.Errorf("getProviderUrl: unknown provider url for %s", provider.Hex())
 	}
 	return viper.GetString(key), nil
+}
+
+func sendDataRequest(dataset common.Address, key string, provider common.Address) (DataRequestOutput, error) {
+	url, err := getProviderUrl(provider)
+	if err != nil {
+		return DataRequestOutput{}, err
+	}
+	jsonValue, _ := json.Marshal(DataRequestInput{
+		Dataset: dataset,
+		Key:     key,
+	})
+
+	res, err := http.Post(url, "application/json", bytes.NewBuffer(jsonValue))
+	if err != nil {
+		return DataRequestOutput{}, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return DataRequestOutput{}, err
+	}
+
+	var result DataRequestOutput
+	json.Unmarshal(body, &result)
+
+	return result, nil
 }
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
@@ -47,6 +88,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	}
+	var responses []*DataRequestOutput
+	for _, provider := range providers {
+		data, err := sendDataRequest(arg.Dataset, arg.Key, provider)
+		if err != nil {
+			responses = append(responses, &data)
+			println(data.Provider.Hex())
+		}
 	}
 }
 
