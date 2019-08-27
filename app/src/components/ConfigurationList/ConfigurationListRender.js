@@ -34,7 +34,7 @@ export default ({ params, communityAddress }) => (
       <Flex width={1} justifyContent="flex-end">
         <CustomButton>
           <NavLink
-            to={`/community/${communityAddress}/parameters`}
+            to={`/community/${communityAddress}/parameters?prefix=tcd`}
             style={{
               textDecoration: 'none',
               color: 'white',

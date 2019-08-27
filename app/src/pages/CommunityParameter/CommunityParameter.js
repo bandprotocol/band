@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import queryString from 'query-string'
 import { communityDetailSelector } from 'selectors/communities'
 import { loadParameters, showModal } from 'actions'
 import { walletSelector } from 'selectors/wallet'
@@ -16,6 +17,15 @@ class CommunityParameter extends React.Component {
 
   componentDidMount() {
     this.props.loadParameters()
+    const values = queryString.parse(this.props.qs)
+    if (values.prefix === 'tcd') {
+      this.setState({
+        prefix: {
+          value: 'tcd',
+          label: 'tcd',
+        },
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
