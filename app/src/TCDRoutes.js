@@ -2,6 +2,10 @@ import React from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { tcdsSelector } from 'selectors/tcd'
+import {
+  communityDetailSelector,
+  communityDefaultTCDSelector,
+} from 'selectors/communities'
 
 import CommunityDataSetPage from 'pages/CommunityDataSet'
 import CommunityIntegrationPage from 'pages/CommunityIntegration'
@@ -52,11 +56,21 @@ const TCDRoutes = ({ path, communityAddress, tcdAddress, redirect }) => {
   }
 }
 
-const mapStateToProps = (state, { communityAddress, tcdAddress, path }) => {
+const mapStateToProps = (state, { communityAddress, path }) => {
+  const tcds = communityDetailSelector(state, {
+    address: communityAddress,
+  })
+    .get('tcds')
+    .toJS()
+
+  const tcdAddress = Object.keys(tcds).filter(
+    tcdAddr => tcds[tcdAddr].prefix === 'tcd:',
+  )[0]
   const tcd = tcdsSelector(state, {
     address: communityAddress,
     tcdAddress,
   })
+
   return {
     communityAddress,
     tcdAddress,

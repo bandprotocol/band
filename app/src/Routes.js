@@ -19,7 +19,7 @@ export default ({ match, location }) => (
     <Switch location={location}>
       <BackdropProvider>
         <Route
-          path="/community/:community/:tcd?"
+          path="/community/:community/"
           render={({ match, history, location }) => (
             <React.Fragment>
               <Flex
@@ -56,29 +56,27 @@ export default ({ match, location }) => (
                       />
                     )}
                   />
+
                   {/* TCD Routes */}
                   <Route
-                    path="/community/:community/:tcd/:path"
+                    path="/community/:community/:path"
                     render={({ match }) => (
                       <TCDRoutes
                         communityAddress={match.params.community}
-                        tcdAddress={match.params.tcd}
                         path={match.params.path}
                       />
                     )}
                   />
 
                   {/* Default TCD Route */}
-                  <Route
-                    path="/community/:community/:tcd"
+                  {/* <Route
+                    path="/community/:community/"
                     render={({ match }) => (
                       <Redirect
-                        to={`/community/${match.params.community}/${
-                          match.params.tcd
-                        }/dataset`}
+                        to={`/community/${match.params.community}/${match.params.tcd}/dataset`}
                       />
                     )}
-                  />
+                  /> */}
                   {/* Default Global Route */}
                   <Route
                     path="/community/:community"

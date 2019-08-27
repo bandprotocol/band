@@ -42,6 +42,19 @@ const getTCDType = communityName =>
     'Web Request Oracle': 'web_requests',
   }[communityName])
 
+export const getTCDIntegrationURLbyName = communityName =>
+  ({
+    'Financial Data Feeds':
+      'https://developer.bandprotocol.com/datasets/financial-kovan.html',
+    'Sport Data Feeds':
+      'https://developer.bandprotocol.com/datasets/sport-kovan.html',
+    'Lottery Data Feeds':
+      'https://developer.bandprotocol.com/datasets/lottery-kovan.html',
+    'Web Request Oracle':
+      'https://developer.bandprotocol.com/datasets/web-oracle.html',
+  }[communityName] ||
+  'https://developer.bandprotocol.com/datasets/overview.html')
+
 export const getTCDInfomation = (prefix, communityName) =>
   ({
     'web:': {

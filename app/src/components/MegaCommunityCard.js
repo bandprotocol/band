@@ -165,78 +165,80 @@ export default ({
   statusBg,
   defaultTcd,
   isTcd,
-}) => (
-  <StyledCard
-    flex={['', '0 0 500px']}
-    p="14px"
-    my={3}
-    mx="16px"
-    style={{
-      height: '290px',
-      borderRadius: '10px',
-      padding: '0px',
-      overflow: 'hidden',
-      backgroundColor: '#FAFCFF',
-      position: 'relative',
-    }}
-    onClick={onClick}
-  >
-    <MagicPattern color={borderColor} />
-    <Flex p="16px 24px" color="#4a4a4a">
-      <DisplayIcon src={logo} bgColor={borderColor} />
-      <Flex flexDirection="column" ml="28px">
-        <WrapText fontWeight="600" lineHeight={1.2} mt={1} mb="0.5em">
-          {name}
-        </WrapText>
-        <Description mb={2}>{description}</Description>
-        <PriceDetail
-          marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
-          price={BN.parse(price).bandToUSD(bandPrice)}
-          last24Hrs={(
-            ((price - last24HrsPrice) / last24HrsPrice) *
-            100
-          ).toFixed(2)}
-          statusBg={statusBg}
-        />
-        <Flex flexDirection="row" alignItems="center" mt={2}>
-          <Link
-            to={`/community/${tokenAddress}/overview`}
-            onClick={e => e.stopPropagation()}
-          >
-            <Button
-              variant="blue"
-              style={{
-                padding: '10px 25px 14px',
-                minWidth: '120px',
-                maxWidth: '120px',
-                fontWeight: '900',
-                fontSize: '15px',
-              }}
+}) => {
+  return (
+    <StyledCard
+      flex={['', '0 0 500px']}
+      p="14px"
+      my={3}
+      mx="16px"
+      style={{
+        height: '290px',
+        borderRadius: '10px',
+        padding: '0px',
+        overflow: 'hidden',
+        backgroundColor: '#FAFCFF',
+        position: 'relative',
+      }}
+      onClick={onClick}
+    >
+      <MagicPattern color={borderColor} />
+      <Flex p="16px 24px" color="#4a4a4a">
+        <DisplayIcon src={logo} bgColor={borderColor} />
+        <Flex flexDirection="column" ml="28px">
+          <WrapText fontWeight="600" lineHeight={1.2} mt={1} mb="0.5em">
+            {name}
+          </WrapText>
+          <Description mb={2}>{description}</Description>
+          <PriceDetail
+            marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
+            price={BN.parse(price).bandToUSD(bandPrice)}
+            last24Hrs={(
+              ((price - last24HrsPrice) / last24HrsPrice) *
+              100
+            ).toFixed(2)}
+            statusBg={statusBg}
+          />
+          <Flex flexDirection="row" alignItems="center" mt={2}>
+            <Link
+              to={`/community/${tokenAddress}/overview`}
+              onClick={e => e.stopPropagation()}
             >
-              Overview
-            </Button>
-          </Link>
-          <Link
-            to={`/community/${tokenAddress}/${defaultTcd}/dataset`}
-            onClick={e => e.stopPropagation()}
-          >
-            <Button
-              variant="lightblue"
-              ml={3}
-              style={{
-                padding: '10px 25px 14px',
-                minWidth: '140px',
-                maxWidth: '140px',
-                whiteSpace: 'noWrap',
-                fontWeight: '900',
-                fontSize: '15px',
-              }}
+              <Button
+                variant="blue"
+                style={{
+                  padding: '10px 25px 14px',
+                  minWidth: '120px',
+                  maxWidth: '120px',
+                  fontWeight: '900',
+                  fontSize: '15px',
+                }}
+              >
+                Overview
+              </Button>
+            </Link>
+            <Link
+              to={`/community/${tokenAddress}/dataset`}
+              onClick={e => e.stopPropagation()}
             >
-              {isTcd ? 'Explore Data' : 'Visit Website'}
-            </Button>
-          </Link>
+              <Button
+                variant="lightblue"
+                ml={3}
+                style={{
+                  padding: '10px 25px 14px',
+                  minWidth: '140px',
+                  maxWidth: '140px',
+                  whiteSpace: 'noWrap',
+                  fontWeight: '900',
+                  fontSize: '15px',
+                }}
+              >
+                {isTcd ? 'Explore Data' : 'Visit Website'}
+              </Button>
+            </Link>
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
-  </StyledCard>
-)
+    </StyledCard>
+  )
+}
