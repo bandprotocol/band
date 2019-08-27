@@ -74,7 +74,7 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children, handleClick }) =>
     </HighlightNavLink>
   ) : (
     <IntegrationButton onClick={handleClick}>
-      <Flex py={1} px={3} style={{ height: 52 }}>
+      <Flex py={1} px={3} width="100%" style={{ height: 52 }}>
         <Flex
           flex={1}
           flexDirection="row"
