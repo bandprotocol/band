@@ -10,28 +10,31 @@ import (
 )
 
 func TestGetAddress(t *testing.T) {
-	_, err := GetAddress()
+	addr, err := GetAddress()
 	if err != nil {
 		t.Errorf(err.Error())
+	}
+	if len(addr.String()) != 42 {
+		t.Errorf(fmt.Sprintf("wrong address format %s", addr.String()))
 	}
 }
 
 func TestGetStorageAt(t *testing.T) {
 	location := make([]byte, 32)
 	result, err := GetStorageAt(
-		common.HexToAddress("0xd1f755bcdb97f4f3ee0787b93aea28c71558d017"),
+		common.HexToAddress("0xa782e64c2588b5da97ac6d2ed2cb548538c1cbd1"),
 		common.BytesToHash(location),
 	)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	if result.Big().String() != "1566825020" {
+	if result.Big().String() != "1566901413" {
 		t.Errorf("TestGetStorageAt: got wrong result %s", result.Big().String())
 	}
 }
 
 func TestSignMessage(t *testing.T) {
-	data := []byte("hello")
+	data := []byte("hell0")
 	sig, err := SignMessage(data)
 	if err != nil {
 		t.Errorf(err.Error())
@@ -41,7 +44,8 @@ func TestSignMessage(t *testing.T) {
 	sigBuff = append(sigBuff, sig.S.Bytes()...)
 	sigBuff = append(sigBuff, sig.V-27)
 
-	pub, err := crypto.SigToPub(crypto.Keccak256(data), sigBuff)
+	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(data)...)
+	pub, err := crypto.SigToPub(crypto.Keccak256(withPrefix), sigBuff)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
@@ -54,6 +58,7 @@ func TestCallContract(t *testing.T) {
 	data, err := hex.DecodeString("65ba36c1000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047465737400000000000000000000000000000000000000000000000000000000")
 	if err != nil {
 		t.Errorf(err.Error())
+		fmt.Println("aaa")
 	}
 	result, err := CallContract(
 		common.HexToAddress("0x820b586c8c28125366c998641b09dcbe7d4cbf06"),
@@ -67,9 +72,19 @@ func TestCallContract(t *testing.T) {
 	}
 }
 
+func TestGetNonce(t *testing.T) {
+	nonce, err := GetNonce()
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+	if nonce < 1 || nonce > 1000000 {
+		t.Errorf(fmt.Sprintf("invalid nonce %d", nonce))
+	}
+}
+
 func TestSendTransaction(t *testing.T) {
 	data, _ := hex.DecodeString("e8927fbc")
-	txHash, err := SendTransaction(common.HexToAddress("0x76f1d7ceCfaCbD6Dfed3A403E57805c1664BA56B"), data)
+	txHash, err := SendTransaction(common.HexToAddress("0x92Dce2A99586859713D4f220C0EA9f102D779731"), data)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
