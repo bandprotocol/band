@@ -1,6 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Text, Bold, HighlightNavLink, Box } from 'ui/common'
+import {
+  Image,
+  Flex,
+  Text,
+  Bold,
+  HighlightNavLink,
+  Box,
+  Button,
+} from 'ui/common'
 import { getProfileColor } from 'ui/communities'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
@@ -65,7 +73,7 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children, handleClick }) =>
       </Flex>
     </HighlightNavLink>
   ) : (
-    <HighlightNavLink to={window.location.pathname} onClick={handleClick}>
+    <IntegrationButton onClick={handleClick}>
       <Flex py={1} px={3} style={{ height: 52 }}>
         <Flex
           flex={1}
@@ -80,17 +88,35 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children, handleClick }) =>
             width="20px"
             height="20px"
           />
-          <Image
-            className="img-inactive"
-            src={imgSrcInactive}
-            width="20px"
-            height="20px"
-          />
           <Text px={3}>{children}</Text>
         </Flex>
       </Flex>
-    </HighlightNavLink>
+    </IntegrationButton>
   )
+
+const IntegrationButton = styled(Flex)`
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+
+  & .tab {
+    color: #ffffff;
+    border-radius: 24px;
+  }
+
+  &:hover {
+    cursor: pointer;
+    :not(.is-active) {
+      & .tab {
+        background-image: linear-gradient(
+          257deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.2) 100%
+        );
+      }
+    }
+  }
+`
 
 export default ({
   logedin,
