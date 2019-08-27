@@ -10,8 +10,8 @@ import {
   Button,
 } from 'ui/common'
 import { getProfileColor } from 'ui/communities'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import OutIcon from 'images/out-white.svg'
+
 // import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
@@ -265,10 +265,7 @@ export default ({
               handleClick={() => window.open(integrationURL, '_blank')}
             >
               Integration
-              <FontAwesomeIcon
-                style={{ marginLeft: '10px' }}
-                icon={faExternalLinkAlt}
-              ></FontAwesomeIcon>
+              <Image src={OutIcon} ml="10px" />
             </Tab>
             <Bold pl="44px" pt={4} pb={3} fontSize="12px" color="#a6c1ff">
               CONFIGURATIONS
