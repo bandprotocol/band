@@ -3,56 +3,21 @@ package main
 import (
 	"crypto/ecdsa"
 	"encoding/binary"
-	"encoding/hex"
 	"encoding/json"
 	"log"
 	"math/big"
 	"net/http"
 	"os"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/bandprotocol/band/go/adapter"
 	"github.com/bandprotocol/band/go/eth"
+	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/viper"
 )
-
-type DataRequestInput struct {
-	Dataset common.Address `json:"dataset"`
-	Key     string         `json:"key"`
-}
-
-type DataRequestOutput struct {
-	Provider  common.Address `json:"provider"`
-	Value     common.Hash    `json:"value"`
-	Timestamp uint64         `json:"timestamp"`
-	Sig       eth.Signature  `json:"signature"`
-}
-
-type DataSignInput struct {
-	DataRequestInput
-	Datapoints []DataRequestOutput `json:"datapoints"`
-}
-
-type DataSignOutput struct {
-	Provider  common.Address `json:"provider"`
-	Value     common.Hash    `json:"value"`
-	Timestamp uint64         `json:"timestamp"`
-	Sig       eth.Signature  `json:"signature"`
-	Status    string         `json:"status"`
-}
-
-func (input *DataRequestInput) normalizeKey() {
-	if strings.HasPrefix(input.Key, "0x") {
-		decoded, err := hex.DecodeString(input.Key[2:])
-		if err == nil {
-			input.Key = string(decoded)
-		}
-	}
-}
 
 // var adpt adapter.Adapter = &adapter.MockAdapter{}
 // var adpt *adapter.AggMedian = &adapter.AggMedian{}
@@ -163,13 +128,13 @@ func mediumTimestamp(timestamps []uint64) uint64 {
 }
 
 func handleDataRequest(w http.ResponseWriter, r *http.Request) {
-	var arg DataRequestInput
+	var arg reqmsg.DataRequest
 	err := json.NewDecoder(r.Body).Decode(&arg)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	arg.normalizeKey()
+	arg.NormalizeKey()
 	output, err := adapters[arg.Dataset].Query([]byte(arg.Key))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -182,7 +147,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	json.NewEncoder(w).Encode(DataRequestOutput{
+	json.NewEncoder(w).Encode(reqmsg.DataResponse{
 		Provider:  crypto.PubkeyToAddress(pk.PublicKey),
 		Value:     output,
 		Timestamp: currentTimestamp,
@@ -191,13 +156,13 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleSignRequest(w http.ResponseWriter, r *http.Request) {
-	var arg DataSignInput
+	var arg reqmsg.SignRequest
 	err := json.NewDecoder(r.Body).Decode(&arg)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	arg.normalizeKey()
+	arg.NormalizeKey()
 	var values []*big.Int
 	var timestamps []uint64
 	for _, report := range arg.Datapoints {
@@ -225,7 +190,7 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	output := common.BigToHash(adapter.Median(values))
 	timestamp := mediumTimestamp(timestamps)
-	json.NewEncoder(w).Encode(DataSignOutput{
+	json.NewEncoder(w).Encode(reqmsg.SignResponse{
 		Provider:  crypto.PubkeyToAddress(pk.PublicKey),
 		Value:     output,
 		Timestamp: timestamp,
