@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Flex, Box, Text, Card } from 'ui/common'
+import { Flex, Box, Text, Card, Button } from 'ui/common'
 import DataHeader from 'components/DataHeader'
 import styled from 'styled-components'
 import { communityDetailSelector } from 'selectors/communities'
@@ -144,6 +144,7 @@ export default class SportPage extends React.Component {
     // search
     home: null,
     away: null,
+    type: '',
   }
 
   componentDidUpdate(prevProps) {
@@ -210,6 +211,20 @@ export default class SportPage extends React.Component {
             )}
             {...this.props}
           >
+            <Flex>
+              <Button onClick={() => this.setState({ type: 'EPL' })}>
+                Soccer
+              </Button>
+              <Button onClick={() => this.setState({ type: 'NBA' })}>
+                Basketball
+              </Button>
+              <Button onClick={() => this.setState({ type: 'NFL' })}>
+                American Football
+              </Button>
+              <Button onClick={() => this.setState({ type: 'MLB' })}>
+                Baseball
+              </Button>
+            </Flex>
             <SportByTCDFetcher
               tcdAddress={tcdAddress}
               tcdPrefix={tcdPrefix}
