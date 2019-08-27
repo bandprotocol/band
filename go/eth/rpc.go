@@ -22,7 +22,7 @@ type Signature struct {
 	S common.Hash `json:"s"`
 }
 
-type NodeSignedTxRespond struct {
+type NodeSignedTxResponse struct {
 	Raw string `json:"raw"`
 	Tx  struct {
 		Nonce    string `json:"nonce"`
@@ -172,13 +172,14 @@ func GetNonce() (uint64, error) {
 	if len(result) < 2 {
 		return 0, errors.New(fmt.Sprintf("wrong result format %s", result))
 	}
-	nonce, _ := strconv.ParseUint(result[2:], 16, 64)
-	return nonce, nil
+
+	return strconv.ParseUint(result[2:], 16, 64)
 }
 
 // SendTransaction broadcasts the given message to the Ethereum network. This function also
 // handles transaction signing.
 func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
+	// TODO : revisit -> chainId , gas , gasPrice
 	nonce, err := GetNonce()
 	if err != nil {
 		return common.Hash{}, err
@@ -212,7 +213,7 @@ func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
 		return common.HexToHash(txHash), nil
 	}
 
-	var result NodeSignedTxRespond
+	var result NodeSignedTxResponse
 	params := make(map[string]string)
 
 	from, err := GetAddress()

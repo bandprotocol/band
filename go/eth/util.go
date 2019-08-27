@@ -3,7 +3,6 @@ package eth
 import (
 	"encoding/hex"
 	"fmt"
-	"log"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -16,11 +15,8 @@ func VerifyMessage(message []byte, sig Signature, signer common.Address) bool {
 	sigBuff = append(sigBuff, sig.V-27)
 
 	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(message)...)
-	pub, err := crypto.SigToPub(crypto.Keccak256(withPrefix), sigBuff)
-	if err != nil {
-		log.Fatal(err.Error())
-		return false
-	}
+	pub, _ := crypto.SigToPub(crypto.Keccak256(withPrefix), sigBuff)
+
 	return crypto.PubkeyToAddress(*pub).String() == signer.String()
 }
 
