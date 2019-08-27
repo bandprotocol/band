@@ -5,6 +5,7 @@ import { communityDetailSelector } from 'selectors/communities'
 import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
+import DatasetTab from 'components/DatasetTab'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import { getAsset } from 'utils/assetData'
@@ -26,6 +27,12 @@ import Loading from 'components/Loading'
 import DataHeader from 'components/DataHeader'
 import AutocompletedSearch from 'components/AutocompletedSearch'
 import { getPriceKeys } from 'data/detail/price'
+
+// Image
+import FxSrc from 'images/dataset-fiat.png'
+import ErcSrc from 'images/dataset-commodity.png'
+import UseqSrc from 'images/dataset-stock.png'
+import CryptoSrc from 'images/dataset-crypto.png'
 
 const pairToHeader = pair => {
   const [left, right] = pair.split('/')
@@ -121,7 +128,7 @@ const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
 )
 
 export default class CommunityPricePage extends React.Component {
-  state = { query: '', type: '' }
+  state = { query: '', type: CRYPTO_TYPE }
 
   onQuery = val => {
     this.setState({
@@ -166,19 +173,34 @@ export default class CommunityPricePage extends React.Component {
             {...this.props}
           >
             <Flex>
-              <Button onClick={() => this.setState({ type: CRYPTO_TYPE })}>
-                Crypto-Fiat Conversion
-              </Button>
-              <Button onClick={() => this.setState({ type: FX_TYPE })}>
-                Foreign Exchange
-              </Button>
-              <Button onClick={() => this.setState({ type: ERC20_TYPE })}>
-                ERC-20 Pairs
-              </Button>
-              <Button onClick={() => this.setState({ type: USEQUITY_TYPE })}>
-                US Equities
-              </Button>
-              <Button onClick={() => this.setState({ type: '' })}>ALL</Button>
+              <DatasetTab
+                mx="8px"
+                title="Cryptocurrency"
+                src={CryptoSrc}
+                active={this.state.type === CRYPTO_TYPE}
+                onClick={() => this.setState({ type: CRYPTO_TYPE })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="ERC-20 Pairs"
+                src={ErcSrc}
+                active={this.state.type === ERC20_TYPE}
+                onClick={() => this.setState({ type: ERC20_TYPE })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="Foreign Exchange"
+                src={FxSrc}
+                active={this.state.type === FX_TYPE}
+                onClick={() => this.setState({ type: FX_TYPE })}
+              />
+              <DatasetTab
+                mx="8px"
+                title="US Equities"
+                src={UseqSrc}
+                active={this.state.type === USEQUITY_TYPE}
+                onClick={() => this.setState({ type: USEQUITY_TYPE })}
+              />
             </Flex>
             <CurrentPriceFetcher
               tcdAddress={tcdAddress}
@@ -191,7 +213,6 @@ export default class CommunityPricePage extends React.Component {
                     height={281}
                     width={924}
                     rects={[
-                      [0, 0, 120, 32],
                       [880, 0, 32, 32],
                       [0, 52, 924, 61],
                       [0, 135, 924, 61],

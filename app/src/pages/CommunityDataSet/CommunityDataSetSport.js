@@ -150,7 +150,7 @@ export default class SportPage extends React.Component {
     // search
     home: null,
     away: null,
-    type: '',
+    type: 'EPL',
   }
 
   componentDidUpdate(prevProps) {
@@ -259,7 +259,6 @@ export default class SportPage extends React.Component {
                       height={700}
                       width={1141}
                       rects={[
-                        [0, 0, 1141, 60],
                         [0, 80, 1141, 60],
                         [0, 80 * 2, 1141, 60],
                         [0, 80 * 3, 1141, 60],

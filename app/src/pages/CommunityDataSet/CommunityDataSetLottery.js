@@ -185,7 +185,7 @@ export default class LotteryPage extends React.Component {
     nLotteryList: 10,
     currentPage: 1,
     selectedDate: new Date(),
-    type: '',
+    type: 'MMN',
   }
 
   componentDidUpdate(prevProps) {
@@ -278,7 +278,6 @@ export default class LotteryPage extends React.Component {
                       height={700}
                       width={1141}
                       rects={[
-                        [0, 0, 1141, 60],
                         [0, 80, 1141, 60],
                         [0, 80 * 2, 1141, 60],
                         [0, 80 * 3, 1141, 60],
