@@ -1,8 +1,11 @@
 package adapter
 
 import (
+	"bytes"
 	"math/big"
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 func TestEvenMedian(t *testing.T) {
@@ -21,7 +24,19 @@ func TestOddMedian(t *testing.T) {
 
 func TestCryptoPriceAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	agg.Initialize([]Adapter{&CryptoCompare{}, &CoinBase{}, &OpenMarketCap{}})
+	cf := []byte(`
+children:
+  cryptoCompare:
+    name: CryptoCompare
+  coinBase:
+    name: CoinBase
+  openMarketCap:
+    name: OpenMarketCap
+`)
+	config := viper.New()
+	config.SetConfigType("yaml")
+	config.ReadConfig(bytes.NewBuffer(cf))
+	agg.Configure(config)
 	price, err := agg.Query([]byte("SPOTPX/ETH-USD"))
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)
@@ -34,7 +49,21 @@ func TestCryptoPriceAggregator(t *testing.T) {
 
 func TestERC20PriceAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	agg.Initialize([]Adapter{&CryptoCompare{}, &Kyber{}, &Uniswap{}, &Bancor{}})
+	cf := []byte(`
+children:
+  cryptoCompare:
+    name: CryptoCompare
+  kyber:
+    name: Kyber
+  uniswap:
+    name: Uniswap
+  bancor:
+    name: Bancor
+`)
+	config := viper.New()
+	config.SetConfigType("yaml")
+	config.ReadConfig(bytes.NewBuffer(cf))
+	agg.Configure(config)
 	price, err := agg.Query([]byte("SPOTPX/DAI-ETH"))
 	if err != nil {
 		t.Errorf("Query DAI-ETH error: %s", err)
@@ -47,7 +76,19 @@ func TestERC20PriceAggregator(t *testing.T) {
 
 func TestForexAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	agg.Initialize([]Adapter{&Ratesapi{}, &CurrencyConverter{}, &AlphaVantageForex{}, &FreeForexApi{}})
+	cf := []byte(`
+children:
+  ratesapi:
+    name: Ratesapi
+  cc:
+    name: CurrencyConverter
+  avf:
+    name: AlphaVantageForex
+`)
+	config := viper.New()
+	config.SetConfigType("yaml")
+	config.ReadConfig(bytes.NewBuffer(cf))
+	agg.Configure(config)
 	price, err := agg.Query([]byte("SPOTPX/EUR-USD"))
 	if err != nil {
 		t.Errorf("Query EUR-USD error: %s", err)
@@ -69,7 +110,19 @@ func TestForexAggregator(t *testing.T) {
 
 func TestStockAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	agg.Initialize([]Adapter{&AlphaVantageStock{}, &WorldTradingData{}, &FinancialModelPrep{}})
+	cf := []byte(`
+children:
+  fmp:
+    name: FinancialModelPrep
+  wtd:
+    name: WorldTradingData
+  avs:
+    name: AlphaVantageStock
+`)
+	config := viper.New()
+	config.SetConfigType("yaml")
+	config.ReadConfig(bytes.NewBuffer(cf))
+	agg.Configure(config)
 	price, err := agg.Query([]byte("SPOTPX/AAPL"))
 	if err != nil {
 		t.Errorf("Query AAPL error: %s", err)
@@ -82,7 +135,19 @@ func TestStockAggregator(t *testing.T) {
 
 func TestInvalidProviderAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	agg.Initialize([]Adapter{&CryptoCompare{}, &CoinBase{}, &OpenMarketCap{}})
+	cf := []byte(`
+children:
+  cryptoCompare:
+    name: CryptoCompare
+  coinBase:
+    name: CoinBase
+  openMarketCap:
+    name: OpenMarketCap
+`)
+	config := viper.New()
+	config.SetConfigType("yaml")
+	config.ReadConfig(bytes.NewBuffer(cf))
+	agg.Configure(config)
 	_, err := agg.Query([]byte("SPOTPX/AAPL"))
 	if err == nil {
 		t.Errorf("Crypto provider must cannot find APPL price")
@@ -91,7 +156,20 @@ func TestInvalidProviderAggregator(t *testing.T) {
 
 func TestCanErrorOnSomeAdapter(t *testing.T) {
 	agg := &AggMedian{}
-	agg.Initialize([]Adapter{&CryptoCompare{}, &CoinBase{}, &FinancialModelPrep{}, &OpenMarketCap{}})
+	cf := []byte(`
+children:
+  cryptoCompare:
+    name: CryptoCompare
+  coinBase:
+    name: CoinBase
+  financialModelPrep:
+    name: FinancialModelPrep
+`)
+	config := viper.New()
+	config.SetConfigType("yaml")
+	config.ReadConfig(bytes.NewBuffer(cf))
+	agg.Configure(config)
+
 	price, err := agg.Query([]byte("SPOTPX/ETH-USD"))
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)

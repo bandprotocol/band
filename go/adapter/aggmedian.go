@@ -15,7 +15,7 @@ type AggMedian struct {
 
 func (adpt *AggMedian) Configure(config *viper.Viper) {
 	children := config.GetStringMap("children")
-	for name, _ := range children {
+	for name := range children {
 		adpt.children = append(adpt.children, FromConfigIndividual(config.Sub("children."+name)))
 	}
 }

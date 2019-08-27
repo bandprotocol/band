@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-func TestSuccess_CoinMarketcap(t *testing.T) {
-	resolver := &CoinMarketcap{}
+func TestSuccess_CoinMarketCap(t *testing.T) {
+	resolver := &CoinMarketCap{}
 	price, err := resolver.QuerySpotPrice("ETH-USD")
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)
@@ -15,24 +15,24 @@ func TestSuccess_CoinMarketcap(t *testing.T) {
 	}
 }
 
-func TestInvalidSymbolFormat_CoinMarketcap(t *testing.T) {
-	resolver := &CoinMarketcap{}
+func TestInvalidSymbolFormat_CoinMarketCap(t *testing.T) {
+	resolver := &CoinMarketCap{}
 	_, err := resolver.QuerySpotPrice("ETH")
 	if err == nil {
 		t.Errorf("Query ETH must contain error. See nothing")
 	}
 }
 
-func TestUnknownSymbol_CoinMarketcap(t *testing.T) {
-	resolver := &CoinMarketcap{}
+func TestUnknownSymbol_CoinMarketCap(t *testing.T) {
+	resolver := &CoinMarketCap{}
 	_, err := resolver.QuerySpotPrice("ETH-XYZ")
 	if err == nil {
 		t.Errorf("Query ETH-XYZ must contain error. See nothing")
 	}
 }
 
-func TestQueryToQuerySpotPrice_CoinMarketcap(t *testing.T) {
-	resolver := &CoinMarketcap{}
+func TestQueryToQuerySpotPrice_CoinMarketCap(t *testing.T) {
+	resolver := &CoinMarketCap{}
 	price, err := resolver.Query([]byte("SPOTPX/ETH-USD"))
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)
@@ -43,8 +43,8 @@ func TestQueryToQuerySpotPrice_CoinMarketcap(t *testing.T) {
 	}
 }
 
-func TestQueryInvalidFunction_CoinMarketcap(t *testing.T) {
-	resolver := &CoinMarketcap{}
+func TestQueryInvalidFunction_CoinMarketCap(t *testing.T) {
+	resolver := &CoinMarketCap{}
 	_, err := resolver.Query([]byte("REALPRICE/ETH-USD"))
 	if err == nil {
 		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")

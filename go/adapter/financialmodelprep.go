@@ -7,10 +7,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type FinancialModelPrep struct{}
+
+func (*FinancialModelPrep) Configure(*viper.Viper) {}
 
 func (*FinancialModelPrep) QuerySpotPrice(symbol string) (float64, error) {
 	client := http.Client{}
