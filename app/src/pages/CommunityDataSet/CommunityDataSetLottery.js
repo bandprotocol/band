@@ -291,7 +291,19 @@ export default class LotteryPage extends React.Component {
                   )
                 } else {
                   this.currentLotteryLength = data.length
-                  return renderDataPoints(tcdAddress, tcdPrefix, data)
+                  return this.currentLotteryLength !== 0 ? (
+                    renderDataPoints(tcdAddress, tcdPrefix, data)
+                  ) : (
+                    <Flex
+                      mt="100px"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                        There is no data avaliable.
+                      </Text>
+                    </Flex>
+                  )
                 }
               }}
             </LotteyByTCDAddress>

@@ -223,8 +223,14 @@ export default class CommunityPricePage extends React.Component {
                       [0, 218, 924, 61],
                     ]}
                   />
-                ) : (
+                ) : totalCount !== 0 ? (
                   renderDataPoints(data, tcdAddress, tcdPrefix)
+                ) : (
+                  <Flex mt="100px" justifyContent="center" alignItems="center">
+                    <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                      There is no data avaliable.
+                    </Text>
+                  </Flex>
                 )
               }
             </CurrentPriceFetcher>

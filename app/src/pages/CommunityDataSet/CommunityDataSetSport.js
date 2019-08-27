@@ -271,10 +271,20 @@ export default class SportPage extends React.Component {
                     />
                   )
                 } else {
-                  return (
+                  return totalCount !== 0 ? (
                     <React.Fragment>
                       {renderDataPoints(tcdAddress, this.state, data)}
                     </React.Fragment>
+                  ) : (
+                    <Flex
+                      mt="100px"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                        There is no data avaliable.
+                      </Text>
+                    </Flex>
                   )
                 }
               }}
