@@ -30,7 +30,7 @@ import { getPriceKeys } from 'data/detail/price'
 
 // Image
 import FxSrc from 'images/dataset-fiat.png'
-import ErcSrc from 'images/dataset-commodity.png'
+import ErcSrc from 'images/dataset-erc20.png'
 import UseqSrc from 'images/dataset-stock.png'
 import CryptoSrc from 'images/dataset-crypto.png'
 
