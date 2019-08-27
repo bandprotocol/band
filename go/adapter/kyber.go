@@ -7,10 +7,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type Kyber struct{}
+
+func (*Kyber) Configure(*viper.Viper) {}
 
 var tokenNameToAddress = map[string]string{
 	"ETH":  "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",

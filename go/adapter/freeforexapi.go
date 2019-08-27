@@ -7,10 +7,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type FreeForexApi struct{}
+
+func (*FreeForexApi) Configure(*viper.Viper) {}
 
 func (*FreeForexApi) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")

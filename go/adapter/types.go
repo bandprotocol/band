@@ -33,10 +33,46 @@ func FromConfigIndividual(config *viper.Viper) Adapter {
 	switch name {
 	case "AggMedian":
 		adpt = &AggMedian{}
-	case "Coinbase":
-		adpt = &CoinBase{}
+	case "AlphaVantageStock":
+		adpt = &AlphaVantageStock{}
+	case "WorldTradingData":
+		adpt = &WorldTradingData{}
+	case "Bittrex":
+		adpt = &Bittrex{}
+	case "Kyber":
+		adpt = &Kyber{}
+	case "CryptoCompare":
+		adpt = &CryptoCompare{}
+	case "Ratesapi":
+		adpt = &Ratesapi{}
+	case "Bitstamp":
+		adpt = &Bitstamp{}
 	case "Gemini":
 		adpt = &Gemini{}
+	case "FinancialModelPrep":
+		adpt = &FinancialModelPrep{}
+	case "CoinBase":
+		adpt = &CoinBase{}
+	case "OpenMarketCap":
+		adpt = &OpenMarketCap{}
+	case "FreeForexApi":
+		adpt = &FreeForexApi{}
+	case "CurrencyConverter":
+		adpt = &CurrencyConverter{}
+	case "CoinMarketCap":
+		adpt = &CoinMarketCap{}
+	case "Kraken":
+		adpt = &Kraken{}
+	case "OnChainFX":
+		adpt = &OnChainFX{}
+	case "Bitfinex":
+		adpt = &Bitfinex{}
+	case "Uniswap":
+		adpt = &Uniswap{}
+	case "Bancor":
+		adpt = &Bancor{}
+	case "AlphaVantageForex":
+		adpt = &AlphaVantageForex{}
 	default:
 		panic(fmt.Sprintf("adapter.FromConfig: unknown adapter name %s", name))
 	}

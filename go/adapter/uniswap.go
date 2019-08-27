@@ -9,10 +9,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type Uniswap struct{}
+
+func (*Uniswap) Configure(*viper.Viper) {}
 
 func (*Uniswap) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")

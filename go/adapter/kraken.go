@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
@@ -18,6 +19,8 @@ var tokenMap = map[string]string{
 	"XRP": "XXRP",
 	"USD": "ZUSD",
 }
+
+func (*Kraken) Configure(*viper.Viper) {}
 
 func (*Kraken) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")

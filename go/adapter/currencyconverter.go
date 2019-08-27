@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 )
 
 var currencyConverterapikey = os.Getenv("CurrencyConverterApikey")
@@ -52,6 +53,10 @@ func updateCache() error {
 	}
 	lastUpdated = time.Now().Unix()
 	return nil
+}
+
+func (*CurrencyConverter) Configure(config *viper.Viper) {
+	currencyConverterapikey = config.GetString("apikey")
 }
 
 func (*CurrencyConverter) QuerySpotPrice(symbol string) (float64, error) {

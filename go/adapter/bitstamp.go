@@ -7,10 +7,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type Bitstamp struct{}
+
+func (*Bitstamp) Configure(*viper.Viper) {}
 
 func (*Bitstamp) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(strings.ToUpper(symbol), "-")

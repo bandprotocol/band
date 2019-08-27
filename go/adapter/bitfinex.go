@@ -7,10 +7,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type Bitfinex struct{}
+
+func (*Bitfinex) Configure(*viper.Viper) {}
 
 func (*Bitfinex) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")

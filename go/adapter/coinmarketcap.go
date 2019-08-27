@@ -8,12 +8,19 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
-type CoinMarketcap struct{}
+var coinMarketCapApikey = os.Getenv("X-CMC_PRO_API_KEY")
 
-func (*CoinMarketcap) QuerySpotPrice(symbol string) (float64, error) {
+type CoinMarketCap struct{}
+
+func (*CoinMarketCap) Configure(config *viper.Viper) {
+	coinMarketCapApikey = config.GetString("apikey")
+}
+
+func (*CoinMarketCap) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
@@ -30,7 +37,7 @@ func (*CoinMarketcap) QuerySpotPrice(symbol string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	req.Header.Add("X-CMC_PRO_API_KEY", os.Getenv("X-CMC_PRO_API_KEY"))
+	req.Header.Add("X-CMC_PRO_API_KEY", coinMarketCapApikey)
 	res, err := client.Do(req)
 	if err != nil {
 		return 0, err
@@ -54,7 +61,7 @@ func (*CoinMarketcap) QuerySpotPrice(symbol string) (float64, error) {
 	return result[0].Float(), nil
 }
 
-func (a *CoinMarketcap) Query(key []byte) (common.Hash, error) {
+func (a *CoinMarketCap) Query(key []byte) (common.Hash, error) {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
 		return common.Hash{}, fmt.Errorf("Invalid key format")

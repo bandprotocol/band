@@ -60,7 +60,7 @@ var adapters map[common.Address]adapter.Adapter
 
 // func init() {
 // 	adpt.Initialize([]adapter.Adapter{
-// 		&adapter.CoinMarketcap{},
+// 		&adapter.CoinMarketCap{},
 // 		&adapter.CoinBase{},
 // 		&adapter.CryptoCompare{},
 // 		&adapter.OpenMarketCap{},
@@ -236,13 +236,14 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	config := viper.New()
-	config.SetConfigName("node")
-	config.AddConfigPath(".")
+	config.SetConfigName(os.Args[1])
+	config.AddConfigPath("../")
 	if err := config.ReadInConfig(); err != nil {
 		log.Fatal("main: unable to read configuration file")
 	}
+	os.Setenv("ETH_PRIVATE_KEY", config.GetString("privateKey"))
 	adapters = adapter.FromConfig(config)
 	http.HandleFunc("/data", handleDataRequest)
 	http.HandleFunc("/sign", handleSignRequest)
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(http.ListenAndServe(":"+config.GetString("port"), nil))
 }

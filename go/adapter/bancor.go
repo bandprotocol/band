@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
@@ -39,6 +40,8 @@ func Bancor_Token2ETH(symbol1 string, symbol2 string) (float64, error) {
 
 	return price.Float(), nil
 }
+
+func (*Bancor) Configure(*viper.Viper) {}
 
 func (*Bancor) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")

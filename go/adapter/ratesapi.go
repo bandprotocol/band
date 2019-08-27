@@ -7,10 +7,13 @@ import (
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
 type Ratesapi struct{}
+
+func (*Ratesapi) Configure(*viper.Viper) {}
 
 func (*Ratesapi) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")

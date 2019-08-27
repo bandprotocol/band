@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
@@ -57,6 +58,10 @@ func queryValue(from string, to string) error {
 	alphaVantageForexCaches[from+"-"+to] = temp
 
 	return nil
+}
+
+func (*AlphaVantageForex) Configure(config *viper.Viper) {
+	alphaVantageForexApikey = config.GetString("apikey")
 }
 
 func (*AlphaVantageForex) QuerySpotPrice(symbol string) (float64, error) {
