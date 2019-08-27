@@ -217,7 +217,7 @@ export default class SportPage extends React.Component {
             )}
             {...this.props}
           >
-            <Flex>
+            <Flex justifyContent="center">
               <DatasetTab
                 mx="8px"
                 title="Soccer"

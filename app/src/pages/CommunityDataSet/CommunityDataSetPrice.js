@@ -176,7 +176,7 @@ export default class CommunityPricePage extends React.Component {
             )}
             {...this.props}
           >
-            <Flex>
+            <Flex justifyContent="center">
               <DatasetTab
                 mx="8px"
                 title="Cryptocurrency"
