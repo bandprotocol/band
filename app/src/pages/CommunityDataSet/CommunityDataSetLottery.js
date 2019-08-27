@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
+import { Flex, Box, Text, Card, Image } from 'ui/common'
 import DatePicker from 'react-datepicker'
 import 'DatePicker.css'
 import PageStructure from 'components/DataSetPageStructure'
@@ -9,7 +9,6 @@ import DataHeader from 'components/DataHeader'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import {
-  LotteryCountByTypeFetcher,
   LotteryCountByTCDFetcher,
   LotteyByTCDAddress,
   LotteryProvidersByTCDAddressTimeFetcher,
