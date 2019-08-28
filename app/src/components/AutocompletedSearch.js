@@ -27,7 +27,10 @@ class AutocompletedSearch extends React.Component {
 
   // remove current search when change route
   componentDidUpdate(prevProps) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
+    if (
+      prevProps.location.pathname !== this.props.location.pathname ||
+      prevProps.data !== this.props.data
+    ) {
       this.setState(
         {
           suggestion: [],
@@ -84,8 +87,6 @@ class AutocompletedSearch extends React.Component {
   }
 
   render() {
-    console.log('debug state', this.state)
-    console.log('debug props', this.props)
     return (
       <SearchBox
         suggestions={this.state.suggestions}
