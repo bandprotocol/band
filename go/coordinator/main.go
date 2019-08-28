@@ -224,7 +224,6 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		Key:     arg.Key,
 	}
 
-	// TODO : prin-r - make it parallel
 	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
 		go func(chDataResponse chan<- reqmsg.DataResponse, provider common.Address) {
@@ -259,17 +258,20 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	var counter = make(map[valueWithTimeStamp]int)
 
-	// TODO : prin-r - make it parallel
 	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
-		go func(chSignResponse chan<- reqmsg.SignResponse, provider common.Address) {
-			data, err := getAggregateFromProvider(&aggRequest, provider)
+		go func(
+			chSignResponse chan<- reqmsg.SignResponse,
+			provider common.Address,
+			aggRequest *reqmsg.SignRequest,
+		) {
+			data, err := getAggregateFromProvider(aggRequest, provider)
 			if err == nil {
 				chSignResponse <- data
 			} else {
 				chSignResponse <- reqmsg.SignResponse{}
 			}
-		}(chSignResponse, provider)
+		}(chSignResponse, provider, &aggRequest)
 	}
 
 	var validAggs []reqmsg.SignResponse
@@ -284,18 +286,6 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			}] += 1
 		}
 	}
-
-	// for _, provider := range providers {
-	// 	data, err := getAggregateFromProvider(&aggRequest, provider)
-	// 	if err == nil {
-	// 		validAggs = append(validAggs, data)
-	// 		counter[valueWithTimeStamp{
-	// 			Value:     data.Value,
-	// 			Timestamp: data.Timestamp,
-	// 			Status:    statusToInt(data.Status),
-	// 		}] += 1
-	// 	}
-	// }
 
 	// Check valid provider aggregated data
 	if 3*len(validAggs) < 2*len(providers) {
@@ -354,14 +344,12 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			TxHash: txHash,
 		})
 	} else {
-		// TODO : prin-r - add responses
 		json.NewEncoder(w).Encode(ResponseTxObject{
 			To:       arg.Dataset,
 			Data:     "0x" + hex.EncodeToString(txData),
 			Reponses: responses,
 		})
 	}
-
 }
 
 func main() {
