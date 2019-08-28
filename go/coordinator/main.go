@@ -27,14 +27,14 @@ type RequestObject struct {
 }
 
 type ResponseTxHashObject struct {
-	TxHash   common.Hash           `json:"txhash"`
-	Reponses []reqmsg.DataResponse `json:"reponses"`
+	TxHash          common.Hash           `json:"txhash"`
+	ProviderReports []reqmsg.DataResponse `json:"providerReports"`
 }
 
 type ResponseTxObject struct {
-	To       common.Address        `json:"to"`
-	Data     string                `json:"data"`
-	Reponses []reqmsg.DataResponse `json:"reponses"`
+	To              common.Address        `json:"to"`
+	Data            string                `json:"data"`
+	ProviderReports []reqmsg.DataResponse `json:"providerReports"`
 }
 
 type valueWithTimeStamp struct {
@@ -338,14 +338,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		json.NewEncoder(w).Encode(ResponseTxHashObject{
-			TxHash:   txHash,
-			Reponses: responses,
+			TxHash:          txHash,
+			ProviderReports: responses,
 		})
 	} else {
 		json.NewEncoder(w).Encode(ResponseTxObject{
-			To:       arg.Dataset,
-			Data:     "0x" + hex.EncodeToString(txData),
-			Reponses: responses,
+			To:              arg.Dataset,
+			Data:            "0x" + hex.EncodeToString(txData),
+			ProviderReports: responses,
 		})
 	}
 }
