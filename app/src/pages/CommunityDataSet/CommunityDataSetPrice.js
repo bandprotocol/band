@@ -213,16 +213,19 @@ export default class CommunityPricePage extends React.Component {
             >
               {({ fetching, data }) =>
                 fetching ? (
-                  <Loading
-                    height={281}
-                    width={924}
-                    rects={[
-                      [880, 0, 32, 32],
-                      [0, 52, 924, 61],
-                      [0, 135, 924, 61],
-                      [0, 218, 924, 61],
-                    ]}
-                  />
+                  <Box mt={3}>
+                    <Loading
+                      height={361}
+                      width={924}
+                      rects={[
+                        [0, 0, 924, 60],
+                        [0, 72, 924, 60],
+                        [0, 144, 924, 60],
+                        [0, 72 * 3, 924, 60],
+                        [0, 72 * 4, 924, 60],
+                      ]}
+                    />
+                  </Box>
                 ) : totalCount !== 0 ? (
                   renderDataPoints(data, tcdAddress, tcdPrefix)
                 ) : (
