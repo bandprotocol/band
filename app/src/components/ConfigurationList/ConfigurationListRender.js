@@ -32,15 +32,17 @@ export default ({ params, communityAddress, linkToParameter }) => (
     <Flex flexDirection="row" alignItems="center" mx="11px">
       <H3 color="#4a4a4a">Configurations</H3>
       <Flex width={1} justifyContent="flex-end">
-        <CustomButton>
-          <NavLink
-            to={linkToParameter}
-            style={{
-              textDecoration: 'none',
-              color: 'white',
-              lineHeight: '1.4em',
-            }}
-          >
+        <NavLink
+          to={linkToParameter}
+          style={{
+            textDecoration: 'none',
+            color: 'white',
+            lineHeight: '1.4em',
+            alignSelf: 'flex-end',
+            padding: '0 18px 2px',
+          }}
+        >
+          <CustomButton>
             <Flex
               flexDirection="row"
               justifyContent="center"
@@ -50,8 +52,8 @@ export default ({ params, communityAddress, linkToParameter }) => (
               <Image src={EditPropose} height="18px" mr={2} />
               Propose Change
             </Flex>
-          </NavLink>
-        </CustomButton>
+          </CustomButton>
+        </NavLink>
       </Flex>
     </Flex>
     <Flex flexWrap="wrap" mt="12px">
