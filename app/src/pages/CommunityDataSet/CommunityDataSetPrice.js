@@ -26,7 +26,7 @@ import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
 import DataHeader from 'components/DataHeader'
 import AutocompletedSearch from 'components/AutocompletedSearch'
-import { getPriceKeys } from 'data/detail/price'
+import { getAllPriceLabelFromType } from 'data/detail/price'
 
 // Image
 import FxSrc from 'images/dataset-fiat.png'
@@ -169,7 +169,7 @@ export default class CommunityPricePage extends React.Component {
                   {countFetching ? '' : `${totalCount} Pairs Available`}
                 </Text>
                 <AutocompletedSearch
-                  data={getPriceKeys(tcdPrefix)}
+                  data={getAllPriceLabelFromType(this.state.type)}
                   onQuery={this.onQuery}
                 />
               </Flex>

@@ -71,8 +71,7 @@ class AutocompletedSearch extends React.Component {
         inputLength === 0
           ? []
           : this.props.data.filter(
-              each =>
-                each.name.toLowerCase().slice(0, inputLength) === inputValue,
+              each => each.toLowerCase().slice(0, inputLength) === inputValue,
             ),
     })
   }
@@ -85,15 +84,17 @@ class AutocompletedSearch extends React.Component {
   }
 
   render() {
+    console.log('debug state', this.state)
+    console.log('debug props', this.props)
     return (
       <SearchBox
         suggestions={this.state.suggestions}
         // onSuggestionSelected={(...e) => console.log('clicked', ...e)}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        getSuggestionValue={suggestion => suggestion.name}
+        getSuggestionValue={suggestion => suggestion}
         renderSuggestion={suggestion => (
-          <Flex fontSize="13px">{suggestion.name}</Flex>
+          <Flex fontSize="13px">{suggestion}</Flex>
         )}
         inputProps={{
           placeholder: 'Search',
