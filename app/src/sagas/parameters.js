@@ -7,19 +7,22 @@ import { Utils } from 'band.js'
 import BN from 'utils/bignumber'
 
 // HARDCODE
-const WEB_REQ_ADDRESS = '0x3DEb207E098F882C3F351C494b26B26548a33f5B'
+const WEB_REQ_NAME = 'Web Request Oracle'
 
 function* handleLoadParameters({ address }) {
-  const { currentParameters } = (yield Utils.graphqlRequest(`{
+  const { parameterByTokenAddress, name } = (yield Utils.graphqlRequest(`{
     tokenByAddress(address: "${address}") {
       parameterByTokenAddress{
         currentParameters
       }
+      name
     }
-  }`)).tokenByAddress.parameterByTokenAddress
+  }`)).tokenByAddress
+
+  const currentParameters = parameterByTokenAddress.currentParameters
 
   let listInParams = ['bonding', 'params', 'tcd']
-  if (address === WEB_REQ_ADDRESS) {
+  if (name === WEB_REQ_NAME) {
     listInParams = ['bonding', 'params', 'web']
   }
 

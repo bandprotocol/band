@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Button, Image, H3 } from 'ui/common'
+import { Flex, Button, Image, H3 } from 'ui/common'
 import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
 import EditPropose from 'images/edit-proposal.svg'
@@ -18,7 +18,7 @@ const CustomButton = styled(Button).attrs({
   margin-bottom: 2px;
 `
 
-export default ({ params, communityAddress }) => (
+export default ({ params, communityAddress, linkToParameter }) => (
   <Flex
     flexDirection="column"
     mt="30px"
@@ -34,7 +34,7 @@ export default ({ params, communityAddress }) => (
       <Flex width={1} justifyContent="flex-end">
         <CustomButton>
           <NavLink
-            to={`/community/${communityAddress}/parameters?prefix=tcd`}
+            to={linkToParameter}
             style={{
               textDecoration: 'none',
               color: 'white',
