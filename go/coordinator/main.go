@@ -27,12 +27,14 @@ type RequestObject struct {
 }
 
 type ResponseTxHashObject struct {
-	TxHash common.Hash `json:"txhash"`
+	TxHash          common.Hash           `json:"txhash"`
+	ProviderReports []reqmsg.DataResponse `json:"providerReports"`
 }
 
 type ResponseTxObject struct {
-	To   common.Address `json:to`
-	Data string         `json:"data"`
+	To              common.Address        `json:"to"`
+	Data            string                `json:"data"`
+	ProviderReports []reqmsg.DataResponse `json:"providerReports"`
 }
 
 type valueWithTimeStamp struct {
@@ -223,11 +225,23 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		Key:     arg.Key,
 	}
 
-	var responses []reqmsg.DataResponse
+	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
-		data, err := getDataFromProvider(&dataRequest, provider)
-		if err == nil {
-			responses = append(responses, data)
+		go func(provider common.Address) {
+			data, err := getDataFromProvider(&dataRequest, provider)
+			if err == nil {
+				chDataResponse <- data
+			} else {
+				chDataResponse <- reqmsg.DataResponse{}
+			}
+		}(provider)
+	}
+
+	var responses []reqmsg.DataResponse
+	for i := 0; i < len(providers); i++ {
+		r := <-chDataResponse
+		if r != (reqmsg.DataResponse{}) {
+			responses = append(responses, r)
 		}
 	}
 
@@ -243,17 +257,29 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		responses,
 	}
 
-	var validAggs []reqmsg.SignResponse
 	var counter = make(map[valueWithTimeStamp]int)
 
+	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
-		data, err := getAggregateFromProvider(&aggRequest, provider)
-		if err == nil {
-			validAggs = append(validAggs, data)
+		go func(provider common.Address, aggRequest *reqmsg.SignRequest) {
+			data, err := getAggregateFromProvider(aggRequest, provider)
+			if err == nil {
+				chSignResponse <- data
+			} else {
+				chSignResponse <- reqmsg.SignResponse{}
+			}
+		}(provider, &aggRequest)
+	}
+
+	var validAggs []reqmsg.SignResponse
+	for i := 0; i < len(providers); i++ {
+		r := <-chSignResponse
+		if r != (reqmsg.SignResponse{}) {
+			validAggs = append(validAggs, r)
 			counter[valueWithTimeStamp{
-				Value:     data.Value,
-				Timestamp: data.Timestamp,
-				Status:    statusToInt(data.Status),
+				Value:     r.Value,
+				Timestamp: r.Timestamp,
+				Status:    statusToInt(r.Status),
 			}] += 1
 		}
 	}
@@ -312,15 +338,16 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		json.NewEncoder(w).Encode(ResponseTxHashObject{
-			TxHash: txHash,
+			TxHash:          txHash,
+			ProviderReports: responses,
 		})
 	} else {
 		json.NewEncoder(w).Encode(ResponseTxObject{
-			To:   arg.Dataset,
-			Data: "0x" + hex.EncodeToString(txData),
+			To:              arg.Dataset,
+			Data:            "0x" + hex.EncodeToString(txData),
+			ProviderReports: responses,
 		})
 	}
-
 }
 
 func main() {
