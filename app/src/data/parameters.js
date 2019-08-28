@@ -1,7 +1,7 @@
 // TODO
 const allParametersDescription = {
   bonding: {
-    info: 'This parameter group dictates how the token bonding curve bahaves',
+    info: 'This parameter group dictates how the token bonding curve behaves',
   },
   params: {
     info:
@@ -40,6 +40,9 @@ const allParametersDescription = {
   nfl: {
     info:
       'This parameter group governs how NFL (American Football) sport feed is provided',
+  },
+  web: {
+    info: 'This parameter group governs how dataset feed is provided',
   },
   '0xda7adB240Fb99dCD55e19a17B97ac2163d4d4509': {
     info: 'OnchainFX',
