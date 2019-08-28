@@ -31,8 +31,9 @@ type ResponseTxHashObject struct {
 }
 
 type ResponseTxObject struct {
-	To   common.Address `json:to`
-	Data string         `json:"data"`
+	To       common.Address        `json:"to"`
+	Data     string                `json:"data"`
+	Reponses []reqmsg.DataResponse `json:"reponses"`
 }
 
 type valueWithTimeStamp struct {
@@ -223,11 +224,24 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		Key:     arg.Key,
 	}
 
-	var responses []reqmsg.DataResponse
+	// TODO : prin-r - make it parallel
+	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
-		data, err := getDataFromProvider(&dataRequest, provider)
-		if err == nil {
-			responses = append(responses, data)
+		go func(chDataResponse chan<- reqmsg.DataResponse, provider common.Address) {
+			data, err := getDataFromProvider(&dataRequest, provider)
+			if err == nil {
+				chDataResponse <- data
+			} else {
+				chDataResponse <- reqmsg.DataResponse{}
+			}
+		}(chDataResponse, provider)
+	}
+
+	var responses []reqmsg.DataResponse
+	for i := 0; i < len(providers); i++ {
+		r := <-chDataResponse
+		if r != (reqmsg.DataResponse{}) {
+			responses = append(responses, r)
 		}
 	}
 
@@ -243,20 +257,45 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		responses,
 	}
 
-	var validAggs []reqmsg.SignResponse
 	var counter = make(map[valueWithTimeStamp]int)
 
+	// TODO : prin-r - make it parallel
+	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
-		data, err := getAggregateFromProvider(&aggRequest, provider)
-		if err == nil {
-			validAggs = append(validAggs, data)
+		go func(chSignResponse chan<- reqmsg.SignResponse, provider common.Address) {
+			data, err := getAggregateFromProvider(&aggRequest, provider)
+			if err == nil {
+				chSignResponse <- data
+			} else {
+				chSignResponse <- reqmsg.SignResponse{}
+			}
+		}(chSignResponse, provider)
+	}
+
+	var validAggs []reqmsg.SignResponse
+	for i := 0; i < len(providers); i++ {
+		r := <-chSignResponse
+		if r != (reqmsg.SignResponse{}) {
+			validAggs = append(validAggs, r)
 			counter[valueWithTimeStamp{
-				Value:     data.Value,
-				Timestamp: data.Timestamp,
-				Status:    statusToInt(data.Status),
+				Value:     r.Value,
+				Timestamp: r.Timestamp,
+				Status:    statusToInt(r.Status),
 			}] += 1
 		}
 	}
+
+	// for _, provider := range providers {
+	// 	data, err := getAggregateFromProvider(&aggRequest, provider)
+	// 	if err == nil {
+	// 		validAggs = append(validAggs, data)
+	// 		counter[valueWithTimeStamp{
+	// 			Value:     data.Value,
+	// 			Timestamp: data.Timestamp,
+	// 			Status:    statusToInt(data.Status),
+	// 		}] += 1
+	// 	}
+	// }
 
 	// Check valid provider aggregated data
 	if 3*len(validAggs) < 2*len(providers) {
@@ -315,9 +354,11 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			TxHash: txHash,
 		})
 	} else {
+		// TODO : prin-r - add responses
 		json.NewEncoder(w).Encode(ResponseTxObject{
-			To:   arg.Dataset,
-			Data: "0x" + hex.EncodeToString(txData),
+			To:       arg.Dataset,
+			Data:     "0x" + hex.EncodeToString(txData),
+			Reponses: responses,
 		})
 	}
 
