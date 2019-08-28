@@ -82,7 +82,6 @@ export default class DataPoint extends React.Component {
     const {
       children,
       label,
-      k,
       v,
       updatedAt,
       keyOnChain,

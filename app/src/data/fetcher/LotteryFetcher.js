@@ -5,15 +5,6 @@ import { convertToBalls } from 'utils/helper'
 import { Utils } from 'band.js'
 import { getProvider } from 'data/Providers'
 
-const compareBalls = (a, b) =>
-  a.whiteBall1 === b.whiteBall1 &&
-  a.whiteBall2 === b.whiteBall2 &&
-  a.whiteBall3 === b.whiteBall3 &&
-  a.whiteBall4 === b.whiteBall4 &&
-  a.whiteBall5 === b.whiteBall5 &&
-  a.redBall === b.redBall &&
-  a.mul === b.mul
-
 const isNotEqualDate = (a, b) =>
   a.getMonth() !== b.getMonth() || a.getFullYear() !== b.getFullYear()
 

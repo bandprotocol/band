@@ -48,14 +48,8 @@ export const PriceCountByTCDFetcher = withRouter(
     }
 
     async fetch() {
-      const { tcdAddress, type } = this.props
+      const { type } = this.props
       const priceCount = getAllPriceLabelFromType(type).length
-      // const pricesCount = await Utils.getDataRequest(
-      //   `/prices/${this.props.tcdAddress}/count`,
-      //   {
-      //     key: this.props.query,
-      //   },
-      // )
       return priceCount
     }
   },

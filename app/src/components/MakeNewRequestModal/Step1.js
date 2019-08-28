@@ -1,15 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {
-  Flex,
-  Text,
-  AbsoluteLink,
-  Link,
-  Button,
-  Image,
-  Card,
-  Box,
-} from 'ui/common'
+import { Flex, Text, AbsoluteLink, Button, Image, Card, Box } from 'ui/common'
 import RightArrowSrc from 'images/icon-right-arrow.svg'
 
 const Container = styled.div`
@@ -77,14 +68,7 @@ const Input = styled.input`
 
 export default class Step1 extends React.Component {
   render() {
-    const {
-      onNext,
-      ipfsPath,
-      request,
-      params,
-      onSetParams,
-      hideModal,
-    } = this.props
+    const { onNext, ipfsPath, request, params, onSetParams } = this.props
 
     return (
       <Container>

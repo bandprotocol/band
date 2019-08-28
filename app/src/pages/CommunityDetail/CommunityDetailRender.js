@@ -8,7 +8,6 @@ import BN from 'utils/bignumber'
 import { calculateCollateralAt } from 'utils/equation'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Graph from 'components/PriceGraph'
-import Decimal from 'decimal.js'
 import Breadcrumb from 'components/Breadcrumb'
 
 const Field = ({ label, children }) => (
@@ -71,37 +70,6 @@ const getLogPlot = values => {
   const v = values.map(v => Math.log(v + 1))
   const s = v.reduce((c, i) => c + i)
   return v.map(i => i / s)
-}
-
-const renderTCD = (
-  { dataProviderCount, maxProviderCount, totalStake },
-  totalSupply,
-) => {
-  return (
-    <React.Fragment>
-      <Box mt="24px" mb="20px">
-        <Field label="Governance Method">Token Curated DataSources</Field>
-        <Field label="Total Providers">{dataProviderCount}</Field>
-        <Field label="Active Providers">
-          {Math.min(maxProviderCount, dataProviderCount)}
-        </Field>
-        <Field label="Total Stake">
-          <Power
-            color="#718bff"
-            value={new Decimal(totalStake.toString())
-              .div(new Decimal(totalSupply.toString()))
-              .toNumber()}
-          >
-            {new Decimal(totalStake.toString())
-              .mul(100)
-              .div(new Decimal(totalSupply.toString()))
-              .toFixed(2)}
-            %
-          </Power>
-        </Field>
-      </Box>
-    </React.Fragment>
-  )
 }
 
 const renderTCR = tcr => {

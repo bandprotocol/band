@@ -1,14 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {
-  Image,
-  Flex,
-  Text,
-  Bold,
-  HighlightNavLink,
-  Box,
-  Button,
-} from 'ui/common'
+import { Image, Flex, Text, Bold, HighlightNavLink, Box } from 'ui/common'
 import { getProfileColor } from 'ui/communities'
 import OutIcon from 'images/out-white.svg'
 
