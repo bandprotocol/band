@@ -33,13 +33,26 @@ func Median(values []*big.Int) *big.Int {
 }
 
 func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
-	var values []*big.Int
+	ch := make(chan common.Hash)
 	for _, child := range agg.children {
-		val, err := child.Query(key)
-		if err == nil {
-			values = append(values, val.Big())
+		go func(child Adapter) {
+			val, err := child.Query(key)
+			if err == nil {
+				ch <- val
+			} else {
+				ch <- common.Hash{}
+			}
+		}(child)
+	}
+
+	var values []*big.Int
+	for i := 0; i < len(agg.children); i++ {
+		r := <-ch
+		if r != (common.Hash{}) {
+			values = append(values, r.Big())
 		}
 	}
+
 	if len(values) == 0 {
 		return common.Hash{}, errors.New("aggmedian: all children return error")
 	}

@@ -27,7 +27,8 @@ type RequestObject struct {
 }
 
 type ResponseTxHashObject struct {
-	TxHash common.Hash `json:"txhash"`
+	TxHash   common.Hash           `json:"txhash"`
+	Reponses []reqmsg.DataResponse `json:"reponses"`
 }
 
 type ResponseTxObject struct {
@@ -226,14 +227,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
-		go func(chDataResponse chan<- reqmsg.DataResponse, provider common.Address) {
+		go func(provider common.Address) {
 			data, err := getDataFromProvider(&dataRequest, provider)
 			if err == nil {
 				chDataResponse <- data
 			} else {
 				chDataResponse <- reqmsg.DataResponse{}
 			}
-		}(chDataResponse, provider)
+		}(provider)
 	}
 
 	var responses []reqmsg.DataResponse
@@ -260,18 +261,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
-		go func(
-			chSignResponse chan<- reqmsg.SignResponse,
-			provider common.Address,
-			aggRequest *reqmsg.SignRequest,
-		) {
+		go func(provider common.Address, aggRequest *reqmsg.SignRequest) {
 			data, err := getAggregateFromProvider(aggRequest, provider)
 			if err == nil {
 				chSignResponse <- data
 			} else {
 				chSignResponse <- reqmsg.SignResponse{}
 			}
-		}(chSignResponse, provider, &aggRequest)
+		}(provider, &aggRequest)
 	}
 
 	var validAggs []reqmsg.SignResponse
@@ -341,7 +338,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		json.NewEncoder(w).Encode(ResponseTxHashObject{
-			TxHash: txHash,
+			TxHash:   txHash,
+			Reponses: responses,
 		})
 	} else {
 		json.NewEncoder(w).Encode(ResponseTxObject{
