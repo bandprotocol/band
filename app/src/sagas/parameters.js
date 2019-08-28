@@ -6,6 +6,7 @@ import { Utils } from 'band.js'
 
 import BN from 'utils/bignumber'
 
+// HARDCODE
 const WEB_REQ_ADDRESS = '0x3DEb207E098F882C3F351C494b26B26548a33f5B'
 
 function* handleLoadParameters({ address }) {

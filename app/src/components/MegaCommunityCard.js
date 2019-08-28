@@ -52,8 +52,9 @@ const MagicPattern = ({ color, num = 25, size = 5, space = 5 }) => {
         transform: `scale(${1 / ratio})`,
       }}
     >
-      {numPoints.map(() => (
+      {numPoints.map((x, i) => (
         <Box
+          key={x}
           style={{
             margin: space,
             width: size,

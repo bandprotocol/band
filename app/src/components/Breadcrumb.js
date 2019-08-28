@@ -24,7 +24,7 @@ export default ({ links = [] }) => (
     {links.map(({ path, label }, i) => (
       <React.Fragment key={path}>
         <Image mx={3} src={Chevron} width="6px" />
-        <BreadcrumbLink to={path} active={i === links.length - 1}>
+        <BreadcrumbLink to={path} active={i === links.length - 1 ? 1 : 0}>
           <Text fontSize="14px">{label}</Text>
         </BreadcrumbLink>
       </React.Fragment>
