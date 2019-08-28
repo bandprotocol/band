@@ -26,11 +26,11 @@ import PriceTable from 'components/table/PriceTable'
 import Loading from 'components/Loading'
 import DataHeader from 'components/DataHeader'
 import AutocompletedSearch from 'components/AutocompletedSearch'
-import { getPriceKeys } from 'data/detail/price'
+import { getAllPriceLabelFromType } from 'data/detail/price'
 
 // Image
 import FxSrc from 'images/dataset-fiat.png'
-import ErcSrc from 'images/dataset-commodity.png'
+import ErcSrc from 'images/dataset-erc20.png'
 import UseqSrc from 'images/dataset-stock.png'
 import CryptoSrc from 'images/dataset-crypto.png'
 
@@ -169,7 +169,7 @@ export default class CommunityPricePage extends React.Component {
                   {countFetching ? '' : `${totalCount} Pairs Available`}
                 </Text>
                 <AutocompletedSearch
-                  data={getPriceKeys(tcdPrefix)}
+                  data={getAllPriceLabelFromType(this.state.type)}
                   onQuery={this.onQuery}
                 />
               </Flex>
@@ -213,18 +213,27 @@ export default class CommunityPricePage extends React.Component {
             >
               {({ fetching, data }) =>
                 fetching ? (
-                  <Loading
-                    height={281}
-                    width={924}
-                    rects={[
-                      [880, 0, 32, 32],
-                      [0, 52, 924, 61],
-                      [0, 135, 924, 61],
-                      [0, 218, 924, 61],
-                    ]}
-                  />
-                ) : (
+                  <Box mt={3}>
+                    <Loading
+                      height={361}
+                      width={924}
+                      rects={[
+                        [0, 0, 924, 60],
+                        [0, 72, 924, 60],
+                        [0, 144, 924, 60],
+                        [0, 72 * 3, 924, 60],
+                        [0, 72 * 4, 924, 60],
+                      ]}
+                    />
+                  </Box>
+                ) : totalCount !== 0 ? (
                   renderDataPoints(data, tcdAddress, tcdPrefix)
+                ) : (
+                  <Flex mt="100px" justifyContent="center" alignItems="center">
+                    <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                      There is no data avaliable.
+                    </Text>
+                  </Flex>
                 )
               }
             </CurrentPriceFetcher>

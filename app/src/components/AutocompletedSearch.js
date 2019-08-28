@@ -27,7 +27,10 @@ class AutocompletedSearch extends React.Component {
 
   // remove current search when change route
   componentDidUpdate(prevProps) {
-    if (prevProps.location.pathname !== this.props.location.pathname) {
+    if (
+      prevProps.location.pathname !== this.props.location.pathname ||
+      prevProps.data !== this.props.data
+    ) {
       this.setState(
         {
           suggestion: [],
@@ -71,8 +74,7 @@ class AutocompletedSearch extends React.Component {
         inputLength === 0
           ? []
           : this.props.data.filter(
-              each =>
-                each.name.toLowerCase().slice(0, inputLength) === inputValue,
+              each => each.toLowerCase().slice(0, inputLength) === inputValue,
             ),
     })
   }
@@ -91,9 +93,9 @@ class AutocompletedSearch extends React.Component {
         // onSuggestionSelected={(...e) => console.log('clicked', ...e)}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-        getSuggestionValue={suggestion => suggestion.name}
+        getSuggestionValue={suggestion => suggestion}
         renderSuggestion={suggestion => (
-          <Flex fontSize="13px">{suggestion.name}</Flex>
+          <Flex fontSize="13px">{suggestion}</Flex>
         )}
         inputProps={{
           placeholder: 'Search',

@@ -10,8 +10,8 @@ import {
   Button,
 } from 'ui/common'
 import { getProfileColor } from 'ui/communities'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
+import OutIcon from 'images/out-white.svg'
+
 // import TCDSelector from 'components/TCDSelector'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MockProfileSrc from 'images/mock-profile.svg'
@@ -74,7 +74,7 @@ const Tab = ({ link, imgSrcActive, imgSrcInactive, children, handleClick }) =>
     </HighlightNavLink>
   ) : (
     <IntegrationButton onClick={handleClick}>
-      <Flex py={1} px={3} style={{ height: 52 }}>
+      <Flex py={1} px={3} width="100%" style={{ height: 52 }}>
         <Flex
           flex={1}
           flexDirection="row"
@@ -246,7 +246,7 @@ export default ({
 
             <Tab
               link={`/community/${address}/governance`}
-              imgSrcActive={GovernanceSrc}
+              imgSrcActive={GovernanceActiveSrc}
               imgSrcInactive={GovernanceSrc}
             >
               Governance
@@ -265,10 +265,7 @@ export default ({
               handleClick={() => window.open(integrationURL, '_blank')}
             >
               Integration
-              <FontAwesomeIcon
-                style={{ marginLeft: '10px' }}
-                icon={faExternalLinkAlt}
-              ></FontAwesomeIcon>
+              <Image src={OutIcon} ml="10px" />
             </Tab>
             <Bold pl="44px" pt={4} pb={3} fontSize="12px" color="#a6c1ff">
               CONFIGURATIONS

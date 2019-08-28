@@ -255,26 +255,35 @@ export default class SportPage extends React.Component {
               {({ fetching, data, forceFetch }) => {
                 if (fetching || countFetching) {
                   return (
-                    <Loading
-                      height={700}
-                      width={1141}
-                      rects={[
-                        [0, 80, 1141, 60],
-                        [0, 80 * 2, 1141, 60],
-                        [0, 80 * 3, 1141, 60],
-                        [0, 80 * 4, 1141, 60],
-                        [0, 80 * 5, 1141, 60],
-                        [0, 80 * 6, 1141, 60],
-                        [0, 80 * 7, 1141, 60],
-                        [0, 80 * 8, 1141, 60],
-                      ]}
-                    />
+                    <Box mt={3}>
+                      <Loading
+                        height={361}
+                        width={924}
+                        rects={[
+                          [0, 0, 924, 60],
+                          [0, 72, 924, 60],
+                          [0, 144, 924, 60],
+                          [0, 72 * 3, 924, 60],
+                          [0, 72 * 4, 924, 60],
+                        ]}
+                      />
+                    </Box>
                   )
                 } else {
-                  return (
+                  return totalCount !== 0 ? (
                     <React.Fragment>
                       {renderDataPoints(tcdAddress, this.state, data)}
                     </React.Fragment>
+                  ) : (
+                    <Flex
+                      mt="100px"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                        There is no data avaliable.
+                      </Text>
+                    </Flex>
                   )
                 }
               }}

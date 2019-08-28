@@ -168,9 +168,7 @@ const renderDataPoints = (requests, showMakeNewRequest) => {
                   </Flex>
                   <Flex alignItems="center" mr="50px" flex="0 auto">
                     <AbsoluteLink
-                      href={`https://ipfs.bandprotocol.com/api/v0/cat/${
-                        lastRequest.ipfsPath
-                      }`}
+                      href={`https://ipfs.bandprotocol.com/api/v0/cat/${lastRequest.ipfsPath}`}
                     >
                       <ApiSpecBtn>
                         <Flex
@@ -250,21 +248,19 @@ class WebRequestPage extends React.Component {
             {...this.props}
           >
             {fetching ? (
-              <Loading
-                height={700}
-                width={1141}
-                rects={[
-                  [0, 0, 1141, 60],
-                  [0, 80, 1141, 60],
-                  [0, 80 * 2, 1141, 60],
-                  [0, 80 * 3, 1141, 60],
-                  // [0, 80 * 4, 1141, 60],
-                  // [0, 80 * 5, 1141, 60],
-                  // [0, 80 * 6, 1141, 60],
-                  // [0, 80 * 7, 1141, 60],
-                  // [0, 80 * 8, 1141, 60],
-                ]}
-              />
+              <Box mt={3}>
+                <Loading
+                  height={361}
+                  width={924}
+                  rects={[
+                    [0, 0, 924, 60],
+                    [0, 72, 924, 60],
+                    [0, 144, 924, 60],
+                    [0, 72 * 3, 924, 60],
+                    [0, 72 * 4, 924, 60],
+                  ]}
+                />
+              </Box>
             ) : (
               <React.Fragment>
                 {renderDataPoints(data, this.props.showMakeNewRequest)}

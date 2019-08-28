@@ -1,7 +1,7 @@
 import React from 'react'
 import colors from 'ui/colors'
 import styled from 'styled-components'
-import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
+import { Flex, Box, Text, Card, Image } from 'ui/common'
 import DatePicker from 'react-datepicker'
 import 'DatePicker.css'
 import PageStructure from 'components/DataSetPageStructure'
@@ -9,7 +9,6 @@ import DataHeader from 'components/DataHeader'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
 import {
-  LotteryCountByTypeFetcher,
   LotteryCountByTCDFetcher,
   LotteyByTCDAddress,
   LotteryProvidersByTCDAddressTimeFetcher,
@@ -275,24 +274,35 @@ export default class LotteryPage extends React.Component {
               {({ fetching, data }) => {
                 if (fetching || countFetching) {
                   return (
-                    <Loading
-                      height={700}
-                      width={1141}
-                      rects={[
-                        [0, 80, 1141, 60],
-                        [0, 80 * 2, 1141, 60],
-                        [0, 80 * 3, 1141, 60],
-                        [0, 80 * 4, 1141, 60],
-                        [0, 80 * 5, 1141, 60],
-                        [0, 80 * 6, 1141, 60],
-                        [0, 80 * 7, 1141, 60],
-                        [0, 80 * 8, 1141, 60],
-                      ]}
-                    />
+                    <Box mt={3}>
+                      <Loading
+                        height={361}
+                        width={924}
+                        rects={[
+                          [0, 0, 924, 60],
+                          [0, 72, 924, 60],
+                          [0, 144, 924, 60],
+                          [0, 72 * 3, 924, 60],
+                          [0, 72 * 4, 924, 60],
+                        ]}
+                      />
+                    </Box>
                   )
                 } else {
                   this.currentLotteryLength = data.length
-                  return renderDataPoints(tcdAddress, tcdPrefix, data)
+                  return this.currentLotteryLength !== 0 ? (
+                    renderDataPoints(tcdAddress, tcdPrefix, data)
+                  ) : (
+                    <Flex
+                      mt="100px"
+                      justifyContent="center"
+                      alignItems="center"
+                    >
+                      <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                        There is no data avaliable.
+                      </Text>
+                    </Flex>
+                  )
                 }
               }}
             </LotteyByTCDAddress>

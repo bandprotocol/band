@@ -24,6 +24,7 @@
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.24.0",
     "prismjs": "^1.16.0",
+    "query-string": "^6.8.2",
     "react": "^16.7.0",
     "react-autosuggest": "^9.4.3",
     "react-chartjs-2": "^2.7.4",

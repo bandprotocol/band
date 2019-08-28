@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Button, Image, H3 } from 'ui/common'
+import { Flex, Button, Image, H3 } from 'ui/common'
 import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
 import EditPropose from 'images/edit-proposal.svg'
@@ -18,7 +18,7 @@ const CustomButton = styled(Button).attrs({
   margin-bottom: 2px;
 `
 
-export default ({ params, communityAddress }) => (
+export default ({ params, communityAddress, linkToParameter }) => (
   <Flex
     flexDirection="column"
     mt="30px"
@@ -32,15 +32,17 @@ export default ({ params, communityAddress }) => (
     <Flex flexDirection="row" alignItems="center" mx="11px">
       <H3 color="#4a4a4a">Configurations</H3>
       <Flex width={1} justifyContent="flex-end">
-        <CustomButton>
-          <NavLink
-            to={`/community/${communityAddress}/parameters`}
-            style={{
-              textDecoration: 'none',
-              color: 'white',
-              lineHeight: '1.4em',
-            }}
-          >
+        <NavLink
+          to={linkToParameter}
+          style={{
+            textDecoration: 'none',
+            color: 'white',
+            lineHeight: '1.4em',
+            alignSelf: 'flex-end',
+            padding: '0 18px 2px',
+          }}
+        >
+          <CustomButton>
             <Flex
               flexDirection="row"
               justifyContent="center"
@@ -50,8 +52,8 @@ export default ({ params, communityAddress }) => (
               <Image src={EditPropose} height="18px" mr={2} />
               Propose Change
             </Flex>
-          </NavLink>
-        </CustomButton>
+          </CustomButton>
+        </NavLink>
       </Flex>
     </Flex>
     <Flex flexWrap="wrap" mt="12px">

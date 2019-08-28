@@ -23,11 +23,14 @@ const mapStateToProps = (state, { tokenAddress }) => {
   })
   if (!community) return {}
 
-  // find prefix tcds:
+  // find prefix tcds: or web:
   const tcds = community.get('tcds').toJS()
-  const tcdAddress = Object.keys(tcds).find(
-    tcdAddress => tcds[tcdAddress].prefix === 'tcd:',
-  )
+  const tcdAddress = Object.keys(tcds).find(tcdAddress => {
+    if (tcds[tcdAddress].prefix === 'web:') {
+      return true
+    }
+    return tcds[tcdAddress].prefix === 'tcd:'
+  })
 
   return {
     name: community.get('name'),

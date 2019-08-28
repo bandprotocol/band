@@ -42,9 +42,10 @@ export default ({ match, location }) => (
                   />
                   <Route
                     path="/community/:community/parameters"
-                    render={({ match }) => (
+                    render={({ match, location }) => (
                       <CommunityParameterPage
                         tokenAddress={match.params.community}
+                        qs={location.search}
                       />
                     )}
                   />

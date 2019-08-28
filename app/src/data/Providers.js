@@ -165,6 +165,20 @@ const allProviders = {
     name: 'SEA node',
     image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
   },
+  '0xDa7a37EE4069b0C885615DB532D0bAE80B6DFF5c': {
+    name: 'USA node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
+  },
+  '0xda7A38e5645a01Fa62dD3dcc7Cf2435665503e3F': {
+    name: 'EU node',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
+  },
+  '0xDa7A3e3214cbC27bf5e6BbED3Fb6c1779c715D77': {
+    name: 'SEA node',
+    image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
+  },
   default: { name: 'Unknown' },
 }
 
