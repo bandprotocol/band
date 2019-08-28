@@ -20,14 +20,6 @@ class CommunityParameter extends React.Component {
     const values = queryString.parse(this.props.qs)
     if (values.prefix)
       this.setState({ prefix: { value: values.prefix, label: values.prefix } })
-    // if (values.prefix === 'tcd') {
-    //   this.setState({
-    //     prefix: {
-    //       value: 'tcd',
-    //       label: 'tcd',
-    //     },
-    //   })
-    // }
   }
 
   componentDidUpdate(prevProps) {
