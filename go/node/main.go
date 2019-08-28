@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/ecdsa"
-	"encoding/binary"
 	"encoding/json"
 	"log"
 	"math/big"
@@ -15,64 +13,20 @@ import (
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/viper"
 )
 
-// var adpt adapter.Adapter = &adapter.MockAdapter{}
-// var adpt *adapter.AggMedian = &adapter.AggMedian{}
 var adapters map[common.Address]adapter.Adapter
-
-// func init() {
-// 	adpt.Initialize([]adapter.Adapter{
-// 		&adapter.CoinMarketCap{},
-// 		&adapter.CoinBase{},
-// 		&adapter.CryptoCompare{},
-// 		&adapter.OpenMarketCap{},
-// 		&adapter.Gemini{},
-// 		&adapter.Bitfinex{},
-// 		&adapter.Bitstamp{},
-// 		&adapter.Bittrex{},
-// 		&adapter.Kraken{},
-// 		&adapter.Bancor{},
-// 		&adapter.Uniswap{},
-// 		&adapter.Kyber{},
-// 		&adapter.Ratesapi{},
-// 		&adapter.CurrencyConverter{},
-// 		&adapter.AlphaVantageForex{},
-// 		&adapter.FreeForexApi{},
-// 		&adapter.AlphaVantageStock{},
-// 		&adapter.WorldTradingData{},
-// 		&adapter.FinancialModelPrep{},
-// 	})
-// }
 
 func sign(
 	dataset common.Address,
 	key string,
 	value common.Hash,
 	timestamp uint64,
-	pk *ecdsa.PrivateKey,
 ) eth.Signature {
-	bytesTimeStamp := make([]byte, 8)
-	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)
-	bytesTimeStamp = append(make([]byte, 24), bytesTimeStamp...)
-
-	var buff []byte
-	buff = append(buff, []byte(key)...)
-	buff = append(buff, value.Bytes()...)
-	buff = append(buff, bytesTimeStamp...)
-	buff = append(buff, dataset.Bytes()...)
-
-	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(buff)...)
-	signature, _ := crypto.Sign(crypto.Keccak256(withPrefix), pk)
-	signature[len(signature)-1] += 27
-
-	return eth.Signature{
-		V: uint8(int(signature[64])),
-		R: common.BytesToHash(signature[0:32]),
-		S: common.BytesToHash(signature[32:64]),
-	}
+	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), value, timestamp)
+	sig, _ := eth.SignMessage(msgBytes)
+	return sig
 }
 
 func signAggregator(
@@ -81,25 +35,10 @@ func signAggregator(
 	value common.Hash,
 	timestamp uint64,
 	status uint8,
-	pk *ecdsa.PrivateKey,
 ) eth.Signature {
-	bytesTimeStamp := make([]byte, 8)
-	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)
-
-	var buff []byte
-	buff = append(buff, []byte(key)...)
-	buff = append(buff, value.Bytes()...)
-	buff = append(buff, bytesTimeStamp...)
-	buff = append(buff, byte(status))
-	buff = append(buff, dataset.Bytes()...)
-
-	signature, _ := crypto.Sign(crypto.Keccak256(buff), pk)
-
-	return eth.Signature{
-		V: uint8(int(signature[64])) + 27,
-		R: common.BytesToHash(signature[0:32]),
-		S: common.BytesToHash(signature[32:64]),
-	}
+	msgBytes := reqmsg.GetAggregateBytes(dataset, []byte(key), value, timestamp, status)
+	sig, _ := eth.SignMessage(msgBytes)
+	return sig
 }
 
 func verifySignature(
@@ -110,8 +49,11 @@ func verifySignature(
 	provider common.Address,
 	signature eth.Signature,
 ) bool {
-	// TODO: verify signature
-	return true
+	return eth.VerifyMessage(
+		reqmsg.GetRawDataBytes(dataset, []byte(key), value, timestamp),
+		signature,
+		provider,
+	)
 }
 
 func getRequiredProviderCount(dataset common.Address) int {
@@ -145,16 +87,16 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	currentTimestamp := uint64(time.Now().Unix())
-	pk, err := crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
+	providerAddress, err := eth.GetAddress()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	json.NewEncoder(w).Encode(reqmsg.DataResponse{
-		Provider:  crypto.PubkeyToAddress(pk.PublicKey),
+		Provider:  providerAddress,
 		Value:     output,
 		Timestamp: currentTimestamp,
-		Sig:       sign(arg.Dataset, arg.Key, output, currentTimestamp, pk),
+		Sig:       sign(arg.Dataset, arg.Key, output, currentTimestamp),
 	})
 }
 
@@ -186,7 +128,7 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	pk, err := crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
+	providerAddress, err := eth.GetAddress()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -194,24 +136,27 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 	output := common.BigToHash(adapter.Median(values))
 	timestamp := mediumTimestamp(timestamps)
 	json.NewEncoder(w).Encode(reqmsg.SignResponse{
-		Provider:  crypto.PubkeyToAddress(pk.PublicKey),
+		Provider:  providerAddress,
 		Value:     output,
 		Timestamp: timestamp,
 		Status:    "OK",
-		Sig:       signAggregator(arg.Dataset, arg.Key, output, timestamp, 1, pk),
+		Sig:       signAggregator(arg.Dataset, arg.Key, output, timestamp, 1),
 	})
 }
 
 func main() {
 	config := viper.New()
 	config.SetConfigName(os.Args[1])
-	config.AddConfigPath("../")
+	config.AddConfigPath(".")
 	if err := config.ReadInConfig(); err != nil {
-		log.Fatal("main: unable to read configuration file")
+		log.Fatal("main: unable to read configuration file", err)
 	}
 	privateKeyFromConfig := config.GetString("privateKey")
 	if privateKeyFromConfig != "" {
-		os.Setenv("ETH_PRIVATE_KEY", privateKeyFromConfig)
+		err := eth.SetPrivateKey(privateKeyFromConfig)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	adapters = adapter.FromConfig(config)
 	http.HandleFunc("/data", handleDataRequest)

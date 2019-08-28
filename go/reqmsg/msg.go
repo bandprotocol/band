@@ -28,6 +28,7 @@ type DataResponse struct {
 	Timestamp uint64         `json:"timestamp"`
 	Sig       eth.Signature  `json:"signature"`
 }
+
 type SignRequest struct {
 	DataRequest
 	Datapoints []DataResponse `json:"datapoints"`

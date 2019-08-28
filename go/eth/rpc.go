@@ -26,19 +26,26 @@ var pk *ecdsa.PrivateKey
 var rpcClient *rpc.Client
 
 func init() {
-	var err error
 
-	pk, err = crypto.HexToECDSA(os.Getenv("ETH_PRIVATE_KEY"))
+	err := SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
 	if err != nil {
 		log.Println("no private key found, try to connect with localnode")
 	}
 
-	ethRpc := os.Getenv("ETH_RPC")
-
-	rpcClient, err = rpc.Dial(ethRpc)
+	rpcClient, err = rpc.Dial(os.Getenv("ETH_RPC"))
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// SetPrivateKey transform private key string to ECDSA Key
+func SetPrivateKey(newPrivateKey string) error {
+	_pk, err := crypto.HexToECDSA(newPrivateKey)
+	if err != nil {
+		return err
+	}
+	pk = _pk
+	return nil
 }
 
 // GetAddress returns the address of the
@@ -107,7 +114,7 @@ func SignMessage(message []byte) (Signature, error) {
 	}
 
 	signature, err := hex.DecodeString(result[2:])
-	if len(result) != 132 {
+	if err != nil {
 		return Signature{}, err
 	}
 
@@ -127,6 +134,8 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 	var result string
 
 	params := make(map[string]string)
+
+	// Mock gas price and gas limit for kovan
 	params["from"] = from.Hex()
 	params["to"] = to.Hex()
 	params["gas"] = "0xf4240"
@@ -171,12 +180,13 @@ func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
 
 	var signedTx *types.Transaction
 	if pk != nil {
+		// TODO: Remove hard code gas price and gas limit.
 		tx := types.NewTransaction(
 			nonce,
 			to,
 			big.NewInt(0),
-			30000,
-			big.NewInt(1e10),
+			1000000,
+			big.NewInt(1e9),
 			data,
 		)
 		signer := types.NewEIP155Signer(big.NewInt(42)) // kovan
