@@ -22,13 +22,13 @@ func TestGetAddress(t *testing.T) {
 func TestGetStorageAt(t *testing.T) {
 	location := make([]byte, 32)
 	result, err := GetStorageAt(
-		common.HexToAddress("0xa782e64c2588b5da97ac6d2ed2cb548538c1cbd1"),
+		common.HexToAddress("0x92Dce2A99586859713D4f220C0EA9f102D779731"),
 		common.BytesToHash(location),
 	)
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	if result.Big().String() != "1566901413" {
+	if result.Big().String() != "1566967520" {
 		t.Errorf("TestGetStorageAt: got wrong result %s", result.Big().String())
 	}
 }
@@ -58,7 +58,6 @@ func TestCallContract(t *testing.T) {
 	data, err := hex.DecodeString("65ba36c1000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047465737400000000000000000000000000000000000000000000000000000000")
 	if err != nil {
 		t.Errorf(err.Error())
-		fmt.Println("aaa")
 	}
 	result, err := CallContract(
 		common.HexToAddress("0x820b586c8c28125366c998641b09dcbe7d4cbf06"),
@@ -84,7 +83,7 @@ func TestGetNonce(t *testing.T) {
 
 func TestSendTransaction(t *testing.T) {
 	data, _ := hex.DecodeString("e8927fbc")
-	txHash, err := SendTransaction(common.HexToAddress("0x92Dce2A99586859713D4f220C0EA9f102D779731"), data)
+	txHash, err := SendTransaction(common.HexToAddress("0x76f1d7ceCfaCbD6Dfed3A403E57805c1664BA56B"), data)
 	if err != nil {
 		t.Errorf(err.Error())
 	}

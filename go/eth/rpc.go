@@ -179,7 +179,7 @@ func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
 			big.NewInt(1e10),
 			data,
 		)
-		signer := types.NewEIP155Signer(big.NewInt(4)) // rinbeby
+		signer := types.NewEIP155Signer(big.NewInt(42)) // kovan
 
 		signedTx, err = types.SignTx(tx, signer, pk)
 		if err != nil {
