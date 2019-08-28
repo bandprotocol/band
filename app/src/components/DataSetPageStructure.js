@@ -64,14 +64,9 @@ export default ({
         <Breadcrumb
           links={[
             { path: `/community/${communityAddress}`, label: name },
+            
             {
-              path: `/community/${communityAddress}/${tcdAddress}`,
-              label: tcdName,
-            },
-            {
-              path: `/community/${communityAddress}/${tcdAddress}/${
-                breadcrumb.path
-              }`,
+              path: `/community/${communityAddress}/${breadcrumb.path}`,
               label: breadcrumb.label,
             },
           ]}
