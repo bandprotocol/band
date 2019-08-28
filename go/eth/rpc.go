@@ -22,22 +22,6 @@ type Signature struct {
 	S common.Hash `json:"s"`
 }
 
-type NodeSignedTxResponse struct {
-	Raw string `json:"raw"`
-	Tx  struct {
-		Nonce    string `json:"nonce"`
-		GasPrice string `json:"gasPrice"`
-		Gas      string `json:"gas"`
-		To       string `json:"to"`
-		Value    string `json:"value"`
-		Input    string `json:"input"`
-		V        string `json:"v"`
-		R        string `json:"r"`
-		S        string `json:"s"`
-		Hash     string `json:"hash"`
-	} `json:"tx"`
-}
-
 var pk *ecdsa.PrivateKey
 var rpcClient *rpc.Client
 
@@ -145,14 +129,14 @@ func CallContract(to common.Address, data []byte) ([]byte, error) {
 	params := make(map[string]string)
 	params["from"] = from.Hex()
 	params["to"] = to.Hex()
-	params["gas"] = "0x0"
+	params["gas"] = "0xf4240"
 	params["gasPrice"] = "0x0"
 	params["value"] = "0x0"
 	params["data"] = fmt.Sprintf("0x%x", data)
 
 	err = rpcClient.Call(&result, "eth_call", params, "latest")
 	if err != nil {
-		sender = common.Address{}
+		return []byte{}, err
 	}
 
 	return hex.DecodeString(result[2:])
@@ -195,7 +179,7 @@ func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
 			big.NewInt(1e10),
 			data,
 		)
-		signer := types.NewEIP155Signer(big.NewInt(42)) // kovan
+		signer := types.NewEIP155Signer(big.NewInt(4)) // rinbeby
 
 		signedTx, err = types.SignTx(tx, signer, pk)
 		if err != nil {
@@ -213,31 +197,23 @@ func SendTransaction(to common.Address, data []byte) (common.Hash, error) {
 		return common.HexToHash(txHash), nil
 	}
 
-	var result NodeSignedTxResponse
+	var txHash string
 	params := make(map[string]string)
 
 	from, err := GetAddress()
-	params["from"] = from.Hex()
 	params["nonce"] = fmt.Sprintf("0x%x", nonce)
+	params["from"] = from.Hex()
 	params["to"] = to.Hex()
 	params["gas"] = "0xf4240"
 	params["gasPrice"] = "0x2540be400"
 	params["value"] = "0x0"
 	params["data"] = fmt.Sprintf("0x%x", data)
 
-	err = rpcClient.Call(&result, "eth_signTransaction", params)
+	err = rpcClient.Call(&txHash, "eth_sendTransaction", params)
 
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	fmt.Println(result)
-
-	var txHash string
-	err = rpcClient.Call(&txHash, "eth_sendRawTransaction", fmt.Sprintf("%v", result.Raw))
-	if err != nil {
-		return common.Hash{}, err
-	}
-
-	return common.HexToHash(result.Tx.Hash), nil
+	return common.HexToHash(txHash), nil
 }
