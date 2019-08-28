@@ -18,17 +18,6 @@ const allIdentityFeedQL = (nList, address) => `
 }
 `
 
-const allIdentityByAddressQL = address => `
-{
-  allDataIdentityFeedRaws(filter: {userAddress: {likeInsensitive: "%${address}%"}}) {
-    nodes {
-      userAddress
-      timestamp
-    }
-  }
-}
-`
-
 const allIdentityCountQL = () => `
 {
     allDataIdentityFeedRaws {

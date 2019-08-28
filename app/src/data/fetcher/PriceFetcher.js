@@ -146,12 +146,12 @@ export const formatPricePairsForGraph = pairs => {
 
   // Iterate through the filtered timeline and build a square matrix
   const currentIndex = {}
-  pairs.map(({ address }) => {
+  pairs.forEach(({ address }) => {
     currentIndex[address] = 0
   })
-  filteredTimeline.map(t => {
+  filteredTimeline.forEach(t => {
     const row = [new Date(t)]
-    pairs.map(({ address, feed }) => {
+    pairs.forEach(({ address, feed }) => {
       while (
         currentIndex[address] < feed.length &&
         t >= feed[currentIndex[address]].time.valueOf()

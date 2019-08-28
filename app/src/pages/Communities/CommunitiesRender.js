@@ -1,12 +1,12 @@
 import React from 'react'
 import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
-import { Flex, Text, Box, Card, Button, H1, H3, H4 } from 'ui/common'
+import { Flex, Text, Box, Card, Button, H1, H3 } from 'ui/common'
 import { getTCDInfomation } from 'utils/tcds'
 import { getProfileColor } from 'ui/communities'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
-import HeaderBackgroundSrc from 'images/background-header.png'
+import HeaderBackgroundSrc from 'images/background-header.webp'
 
 const Header = styled(Card)`
   padding-top: 60px;
@@ -92,7 +92,6 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
   <PageContainer
     fullWidth
     style={{
-      background: 'white',
       paddingLeft: '0px',
       position: 'relative',
       background: '#E4EDFF',

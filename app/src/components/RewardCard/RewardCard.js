@@ -2,6 +2,8 @@ import React from 'react'
 import { Flex, Text, Card, Image, AbsoluteLink, Button, Box } from 'ui/common'
 import colors from 'ui/colors'
 import styled from 'styled-components'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExternalLinkAlt, faCheck } from '@fortawesome/free-solid-svg-icons'
 
 const MaskCircle = styled(Box)`
   position: absolute;
@@ -95,7 +97,7 @@ export default ({
               style={{ marginLeft: 'auto', fontSize: '1.2em' }}
               dark
             >
-              <i className="fas fa-external-link-alt" />
+              <FontAwesomeIcon icon={faExternalLinkAlt} />
             </AbsoluteLink>
           )}
         </Flex>
@@ -147,7 +149,7 @@ export default ({
           onClick={onClick}
         >
           {claimed && (
-            <i className="fas fa-check" style={{ paddingRight: '4px' }} />
+            <FontAwesomeIcon icon={faCheck} style={{ paddingRight: '4px' }} />
           )}
           Get {amount}
         </Button>

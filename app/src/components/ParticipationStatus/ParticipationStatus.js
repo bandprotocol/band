@@ -1,5 +1,4 @@
 import React from 'react'
-import colors from 'ui/colors'
 import { Flex, Text } from 'ui/common'
 import ProgressBar from 'components/ProgressBar'
 import ToolTip from 'components/ToolTip'

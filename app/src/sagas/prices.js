@@ -1,4 +1,4 @@
-import { takeEvery, put, select, delay } from 'redux-saga/effects'
+import { takeEvery, put } from 'redux-saga/effects'
 
 import { LOAD_PRICE_HISTORY, addPrices } from 'actions'
 import { Utils } from 'band.js'

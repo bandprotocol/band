@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Image, Text } from 'ui/common'
+import { Flex, Text } from 'ui/common'
 import Link from 'components/Link'
-import colors from 'ui/colors'
 import { createTable } from 'components/Table'
 import ReactTooltip from 'react-tooltip'
 
@@ -58,7 +57,7 @@ export default createTable({
               {d.warning}
             </ReactTooltip>
           )}
-          {d.warning && (
+          {/* {d.warning && (
             <ion-icon
               name="ios-warning"
               data-tip
@@ -70,7 +69,7 @@ export default createTable({
                 verticalAlign: 'text-bottom',
               }}
             />
-          )}
+          )} */}
         </React.Fragment>
       ),
       label: 'Last Update',

@@ -1,6 +1,6 @@
 import createReducer from 'reducers/creator'
 import { ADD_TCDS } from 'actions'
-import { Map, List } from 'immutable'
+import { Map } from 'immutable'
 
 const handleAddTcds = (state, { tokenAddress, tcds }) => {
   return state.set(

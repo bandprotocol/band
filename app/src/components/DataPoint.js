@@ -4,6 +4,8 @@ import { Flex, Text, Card } from 'ui/common'
 import colors from 'ui/colors'
 import AutoDate from 'components/AutoDate'
 import { copy } from 'utils/clipboard'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 const DataPointContainer = styled(Card).attrs(p => ({
   variant: 'list',
@@ -117,11 +119,11 @@ export default class DataPoint extends React.Component {
             {v()}
             {this.state.expand ? (
               <Flex mx="20px" alignItems="center">
-                <i className="fas fa-chevron-up" />
+                <FontAwesomeIcon icon={faChevronUp} />
               </Flex>
             ) : (
               <Flex mx="20px" alignItems="center">
-                <i className="fas fa-chevron-down" />
+                <FontAwesomeIcon icon={faChevronDown} />
               </Flex>
             )}
           </Flex>
