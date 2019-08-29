@@ -64,8 +64,5 @@ export default {
     '#65ff73',
   ],
   createChartColors: n =>
-    console.log(
-      'COLLASA',
-      [...Array(n)].map((_, i) => hsl(Math.floor((i * 360) / n), 80, 70)),
-    ) || [...Array(n)].map((_, i) => hsl(Math.floor((i * 360) / n), 80, 70)),
+    [...Array(n)].map((_, i) => hsl(Math.floor((i * 360) / n), 80, 70)),
 }
