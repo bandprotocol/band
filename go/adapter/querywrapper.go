@@ -22,7 +22,7 @@ func logDebug(s string) {
 	}
 }
 
-func DoQuery(adapter *Adapter, key []byte) (common.Hash, error) {
+func DoQuery(adapter Adapter, key []byte) (common.Hash, error) {
 	var adapterName string
 	if t := reflect.TypeOf(adapter); t.Kind() == reflect.Ptr {
 		adapterName = t.Elem().Name()
@@ -30,15 +30,16 @@ func DoQuery(adapter *Adapter, key []byte) (common.Hash, error) {
 		adapterName = t.Name()
 	}
 
-	val, err := (*adapter).Query(key)
+	val, err := adapter.Query(key)
 
+	printFormat := "|%-25s|%-45s|\n"
 	if err == nil {
 		logDebug(
-			fmt.Sprintf("Market:%s, ReportData:%s", adapterName, val.Big().String()),
+			fmt.Sprintf(printFormat, adapterName, val.Big().String()),
 		)
 	} else {
 		logDebug(
-			fmt.Sprintf("Market:%s, Error:%s", adapterName, err.Error()),
+			fmt.Sprintf(printFormat, adapterName, err.Error()),
 		)
 	}
 	return val, err

@@ -80,7 +80,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	arg.NormalizeKey()
-	output, err := adapters[arg.Dataset].Query([]byte(arg.Key))
+	output, err := adapter.DoQuery(adapters[arg.Dataset], []byte(arg.Key))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

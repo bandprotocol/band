@@ -2,9 +2,7 @@ package adapter
 
 import (
 	"errors"
-	"fmt"
 	"math/big"
-	"reflect"
 	"sort"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -13,12 +11,6 @@ import (
 
 type AggMedian struct {
 	children []Adapter
-}
-
-type AdapterReportInfo struct {
-	AdapterName string
-	Error       error
-	ReportData  common.Hash
 }
 
 func (adpt *AggMedian) Configure(config *viper.Viper) {
@@ -41,34 +33,23 @@ func Median(values []*big.Int) *big.Int {
 }
 
 func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
-	ch := make(chan AdapterReportInfo)
+	ch := make(chan common.Hash)
 	for _, child := range agg.children {
 		go func(child Adapter) {
-			ari := AdapterReportInfo{}
-			if t := reflect.TypeOf(child); t.Kind() == reflect.Ptr {
-				ari.AdapterName = t.Elem().Name()
+			val, err := DoQuery(child, key)
+			if err == nil {
+				ch <- val
 			} else {
-				ari.AdapterName = t.Name()
+				ch <- common.Hash{}
 			}
-			val, err := child.Query(key)
-			ari.Error = err
-			ari.ReportData = val
-			ch <- ari
 		}(child)
 	}
 
 	var values []*big.Int
 	for i := 0; i < len(agg.children); i++ {
 		r := <-ch
-		if r.Error == nil {
-			values = append(values, r.ReportData.Big())
-			logDebug(
-				fmt.Sprintf("Market:%s, ReportData:%s", r.AdapterName, r.ReportData.Big().String()),
-			)
-		} else {
-			logDebug(
-				fmt.Sprintf("Market:%s, Error:%s", r.AdapterName, r.Error),
-			)
+		if r != (common.Hash{}) {
+			values = append(values, r.Big())
 		}
 	}
 
