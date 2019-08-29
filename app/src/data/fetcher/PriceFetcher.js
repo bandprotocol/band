@@ -21,7 +21,6 @@ export const CurrentPriceFetcher = withRouter(
         key: this.props.query,
       })
       const priceLabel = getAllPriceLabelFromType(type)
-      // console.log('debug', prices)
       return prices
         .map(({ key, pair, value, timestamp }) => ({
           key,
