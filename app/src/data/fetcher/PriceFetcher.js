@@ -48,14 +48,8 @@ export const PriceCountByTCDFetcher = withRouter(
     }
 
     async fetch() {
-      const { tcdAddress, type } = this.props
+      const { type } = this.props
       const priceCount = getAllPriceLabelFromType(type).length
-      // const pricesCount = await Utils.getDataRequest(
-      //   `/prices/${this.props.tcdAddress}/count`,
-      //   {
-      //     key: this.props.query,
-      //   },
-      // )
       return priceCount
     }
   },
@@ -146,12 +140,12 @@ export const formatPricePairsForGraph = pairs => {
 
   // Iterate through the filtered timeline and build a square matrix
   const currentIndex = {}
-  pairs.map(({ address }) => {
+  pairs.forEach(({ address }) => {
     currentIndex[address] = 0
   })
-  filteredTimeline.map(t => {
+  filteredTimeline.forEach(t => {
     const row = [new Date(t)]
-    pairs.map(({ address, feed }) => {
+    pairs.forEach(({ address, feed }) => {
       while (
         currentIndex[address] < feed.length &&
         t >= feed[currentIndex[address]].time.valueOf()

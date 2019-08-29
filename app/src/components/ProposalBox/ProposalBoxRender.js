@@ -7,6 +7,8 @@ import YourVote from 'components/YourVote'
 import colors from 'ui/colors'
 import CorrectCircle from 'images/correct-circle.svg'
 import WrongCircle from 'images/wrong-circle.svg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 
 import BN from 'utils/bignumber'
 
@@ -165,9 +167,9 @@ export default ({
               color={colors.purple.dark}
             >
               {show ? (
-                <i className="fas fa-angle-up" />
+                <FontAwesomeIcon icon={faAngleUp} />
               ) : (
-                <i className="fas fa-angle-down" />
+                <FontAwesomeIcon icon={faAngleDown} />
               )}
             </Text>
           </Flex>

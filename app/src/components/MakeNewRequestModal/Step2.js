@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Box, Flex, Card, Text, Button, Image } from 'ui/common'
+import { Box, Flex, Text, Button, Image } from 'ui/common'
 import TxHashLink from 'components/TxHashLink'
 import NewRequestLoading from 'images/new-request-load.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'

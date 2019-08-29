@@ -7,6 +7,8 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import PendingTransaction from 'components/PendingTransaction'
 import media from 'ui/media'
 import { colors } from 'ui'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 
 // import AddCommunity from 'images/add-community.svg'
 import Eth from 'images/eth.svg'
@@ -338,7 +340,7 @@ export default ({
                       color={isDashboard ? '#fff' : colors.blue.normal}
                       fontSize={3}
                     >
-                      <i className="fas fa-sort-down" />
+                      <FontAwesomeIcon icon={faSortDown} />
                     </Text>
                   </Flex>
                 </Flex>

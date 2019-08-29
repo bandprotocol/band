@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { hideModal } from 'actions'
 import { Flex, Text } from 'ui/common'
 import colors from 'ui/colors'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const BgCard = styled(Flex).attrs({
   bg: 'white',
@@ -43,7 +45,7 @@ const BecomeProviderModal = ({ hideBeProvider }) => {
             style={{ cursor: 'pointer' }}
             onClick={() => hideBeProvider()}
           >
-            <i className="fas fa-times" />
+            <FontAwesomeIcon icon={faTimes} />
           </Text>
         </Flex>
       </Flex>

@@ -1,6 +1,6 @@
 import { BandProtocolClient } from 'band.js'
 
-import { takeEvery, put, select, all } from 'redux-saga/effects'
+import { takeEvery, put, select } from 'redux-saga/effects'
 import {
   UPDATE_CLIENT,
   LOAD_CURRENT,

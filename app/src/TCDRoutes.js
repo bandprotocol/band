@@ -2,10 +2,7 @@ import React from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { tcdsSelector } from 'selectors/tcd'
-import {
-  communityDetailSelector,
-  communityDefaultTCDSelector,
-} from 'selectors/communities'
+import { communityDetailSelector } from 'selectors/communities'
 
 import CommunityDataSetPage from 'pages/CommunityDataSet'
 import CommunityIntegrationPage from 'pages/CommunityIntegration'

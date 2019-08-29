@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 import { getProvider } from 'data/Providers'
 import {
   tcdSelector,

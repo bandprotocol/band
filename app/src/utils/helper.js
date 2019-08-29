@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 import { Buffer } from 'buffer'
-import parameter from 'reducers/parameter'
 
 export const isPositiveNumber = input => {
   if (input.match(/^\d*\.?\d*$/)) return parseInt(input, 10) >= 0
@@ -272,6 +271,9 @@ export const hexToParameters = (variables, types) => {
         buf = buf.slice(1)
         parameters.push(v)
         break
+      default:
+        console.error('hexToParameter cannot find type')
+        break
     }
   }
 
@@ -295,6 +297,9 @@ export const parametersToHex = (parameters, types) => {
         if (isNaN(paramAsInt)) throw new Error('Param is not number')
         const paramAsHex = paramAsInt.toString(16).padStart(2, '0')
         hexString += paramAsHex
+        continue
+      default:
+        console.error('parametersToHex cannot find type.')
         continue
     }
   }

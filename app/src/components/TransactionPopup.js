@@ -6,6 +6,8 @@ import PendingTransaction from 'components/PendingTransaction'
 import { txIncludePendingSelector } from 'selectors/transaction'
 import { transactionHiddenSelector } from 'selectors/transaction'
 import { hideTxs } from 'actions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const Container = styled(Box)`
   position: fixed;
@@ -94,7 +96,7 @@ class TransactionPopup extends React.Component {
             style={{ cursor: 'pointer' }}
           >
             <Text color="#ffffff" size={24}>
-              <i className="ion ion-md-close" />
+              <FontAwesomeIcon icon={faTimes} />
             </Text>
           </Box>
         </MainBar>

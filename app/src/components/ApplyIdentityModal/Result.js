@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Image, Button, Link } from 'ui/common'
+import { Flex, Text, Image, Button } from 'ui/common'
 import VerifySuccess from 'images/verify-success.svg'
 import VerifyFailed from 'images/verify-failed.svg'
 import RightArrowSrc from 'images/icon-right-arrow.svg'
