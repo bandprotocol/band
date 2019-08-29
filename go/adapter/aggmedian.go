@@ -36,7 +36,7 @@ func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
 	ch := make(chan common.Hash)
 	for _, child := range agg.children {
 		go func(child Adapter) {
-			val, err := child.Query(key)
+			val, err := DoQuery(child, key)
 			if err == nil {
 				ch <- val
 			} else {
