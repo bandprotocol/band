@@ -3,12 +3,9 @@ package adapter
 import (
 	"errors"
 	"fmt"
-	"log"
 	"math/big"
-	"os"
 	"reflect"
 	"sort"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
@@ -22,18 +19,6 @@ type AdapterReportInfo struct {
 	AdapterName string
 	Error       error
 	ReportData  common.Hash
-}
-
-var debug bool
-
-func init() {
-	debug = strings.ToLower(os.Getenv("DEBUG")) == "true"
-}
-
-func logDebug(s string) {
-	if debug {
-		log.Println(s)
-	}
 }
 
 func (adpt *AggMedian) Configure(config *viper.Viper) {
