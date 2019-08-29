@@ -32,15 +32,14 @@ func DoQuery(adapter Adapter, key []byte) (common.Hash, error) {
 
 	val, err := adapter.Query(key)
 
-	printFormat := "|%-25s|%-45s|\n"
+	var queryResult string
 	if err == nil {
-		logDebug(
-			fmt.Sprintf(printFormat, adapterName, val.Big().String()),
-		)
+		queryResult = val.Big().String()
 	} else {
-		logDebug(
-			fmt.Sprintf(printFormat, adapterName, err.Error()),
-		)
+		queryResult = err.Error()
 	}
+	logDebug(
+		fmt.Sprintf("|%-25s|%-45s|\n", adapterName, queryResult),
+	)
 	return val, err
 }
