@@ -121,7 +121,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
         </Text>
         <Box mt={3}>
           <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
-            <WhiteButton>Whitepaper v3.0</WhiteButton>
+            <WhiteButton>Whitepaper v3.1</WhiteButton>
           </AbsoluteLink>
           <AbsoluteLink href="https://bandprotocol.com">
             <WhiteOutlineButton>
