@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const BandRegistry = artifacts.require('BandRegistry');
@@ -60,7 +60,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .should.eq('500000000000000000');
       });
       it('should revert if key does not exited', async () => {
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.getRaw(
             web3.utils.fromAscii('params:support_require_pct'),
           ),
@@ -90,7 +90,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
       });
 
       it('Should revert if set by other', async () => {
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.set(
             web3.utils.fromAscii('test:'),
             [web3.utils.fromAscii('param1')],
@@ -101,7 +101,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           ),
         );
 
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.get(
             web3.utils.fromAscii('test:'),
             web3.utils.fromAscii('param1'),
@@ -191,7 +191,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           '0x' + calldata2.slice(138),
           { from: bob },
         );
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.vote(0, true, {
             from: bob,
           }),
@@ -286,7 +286,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         });
 
         await time.increase(time.duration.seconds(30));
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.vote(0, false, {
             from: alice,
           }),
@@ -294,7 +294,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
 
         await time.increase(time.duration.seconds(30));
         // Time end
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.vote(0, false, {
             from: bob,
           }),
@@ -489,7 +489,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           },
         );
 
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.params.getRaw(web3.utils.fromAscii('example_proposal')),
         );
 

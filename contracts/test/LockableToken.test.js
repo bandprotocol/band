@@ -1,4 +1,4 @@
-const { shouldFail } = require('openzeppelin-test-helpers');
+const { expectRevert } = require('openzeppelin-test-helpers');
 
 const CommunityToken = artifacts.require('CommunityToken');
 
@@ -25,11 +25,13 @@ contract(
         (await this.token.unlockedBalanceOf(alice)).toNumber().should.eq(700);
       });
       it('Should revert if lock by other', async () => {
-        await shouldFail.reverting(this.token.lock(bob, 200, { from: carol }));
+        await expectRevert.unspecified(
+          this.token.lock(bob, 200, { from: carol }),
+        );
       });
       it('Should cannot tranfer token more than unlock token', async () => {
         await this.token.lock(alice, 400, { from: locker1 });
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.token.transfer(bob, 700, { from: alice }),
         );
 
@@ -49,7 +51,7 @@ contract(
         (await this.token.unlockedBalanceOf(alice)).toNumber().should.eq(800);
       });
       it('Should revert if unlock more than lock', async () => {
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.token.unlock(bob, 200, { from: locker1 }),
         );
       });
@@ -87,7 +89,7 @@ contract(
         (await this.token.unlockedBalanceOf(alice)).toNumber().should.eq(1000);
         (await this.token.getLockedToken(alice)).toNumber().should.eq(0);
 
-        await shouldFail.reverting(
+        await expectRevert.unspecified(
           this.token.unlock(alice, 0, { from: locker1 }),
         );
       });
