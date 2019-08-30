@@ -4,8 +4,9 @@
 @require './arrow'
 @require './wrapper'
 @require './toc'
-@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+@import url('https://use.typekit.net/iyw1mjd.css');
 @import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
 
 html, body
   padding 0
@@ -13,13 +14,10 @@ html, body
   background-color #fff
 
 body
+  font-family: 'Open Sans', sans-serif
   // font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
-  // font-family: 'Roboto', sans-serif;
-  font-family: 'Montserrat', sans-serif;
-  // font-family: 'Poppins', sans-serif;
-  // font-family: 'Oxygem', sans-serif;
   font-size 16px
   color $textColor
 
@@ -27,6 +25,7 @@ body
   padding-left $sidebarWidth
 
 .navbar
+  font-family: 'Bio-sans', sans-serif
   position fixed
   z-index 20
   top 0
@@ -116,6 +115,7 @@ strong
   font-weight 600
 
 h1, h2, h3, h4, h5, h6
+  font-family: 'Bio-sans', sans-serif
   font-weight 600
   line-height 1.25
 
@@ -160,6 +160,7 @@ code, kbd, .line-number
   font-family source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace
 
 p, ul, ol
+
   line-height 1.7
 
 hr
