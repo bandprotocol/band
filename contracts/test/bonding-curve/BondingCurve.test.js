@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BondingCurveMock = artifacts.require('BondingCurveMock');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -91,7 +91,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
 
     it('should not allow alice to buy 100 tokens with insufficient funds', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.bondedToken.transferAndCall(
           this.curve.address,
           9000,
@@ -103,7 +103,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     });
 
     it('should not allow non-owner to set parameters', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.curve.setInflationRate('38580246914', { from: alice }),
       );
     });
@@ -137,7 +137,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
 
     it('should not allow Alice to sell 20 tokens with price limit 4000', async () => {
       const calldata = this.curve.contract.methods.sell(_, 0, 4000).encodeABI();
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.bondedToken.transferAndCall(
           this.curve.address,
           20,
