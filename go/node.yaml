@@ -1,4 +1,6 @@
 port: 5000
+ethRpc: "https://kovan.infura.io"
+queryDebug: false
 privateKey: xxxxxx
 adapters:
   "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e":
