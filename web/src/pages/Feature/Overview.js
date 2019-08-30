@@ -132,8 +132,8 @@ export default () => {
                 collusion in the decentralized platform.
               </Text>
               <LinkWithArrow
-                text="Whitepaper v3.0"
-                href="https://bandprotocol.com/whitepaper-3.0.0.pdf"
+                text="Whitepaper v3.1"
+                href="/whitepaper-3.0.1.pdf"
               />
             </Flex>
             <Flex flexDirection="column" alignItems="center">

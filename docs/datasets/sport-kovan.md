@@ -28,7 +28,7 @@ Below is an example of query keys.
 | `EPL/20190811/NEW-ARS`   | Newcastle vs Arsenal match on August 8, 2019                 |
 | `NFL/20190203/LAR-NE`    | NFB match of the Rams vs the Patriots on February 3, 2019    |
 | `NBA/20190430/MIL-BOS`   | NBA match of the Bucks vs the Celtics on April 30, 2019      |
-| `MLB/20190819/HOU-DET/1` | 1st MLB match of the Astros vs the Tigers on August 19, 2019 |
+| `MLB/20190819/HOU-DET/1` | 1<sup>st</sup> MLB match of the Astros vs the Tigers on August 19, 2019 |
 
 ### Output Value
 

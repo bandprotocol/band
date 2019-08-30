@@ -50,7 +50,15 @@ export const getPriceKeys = prefix => allPrices[prefix] || allPrices.default
 
 const allPricesLabel = {
   [CRYPTO_TYPE]: ['BCH-USD', 'BTC-USD', 'ETH-USD', 'LTC-USD', 'XRP-USD'],
-  [FX_TYPE]: ['CNY', 'EUR', 'GBP', 'JPY', 'THB', 'XAG', 'XAU'],
+  [FX_TYPE]: [
+    'CNY-USD',
+    'EUR-USD',
+    'GBP-USD',
+    'JPY-USD',
+    'THB-USD',
+    'XAG',
+    'XAU',
+  ],
   [ERC20_TYPE]: [
     'BAT-ETH',
     'DAI-ETH',

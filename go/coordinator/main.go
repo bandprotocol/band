@@ -209,6 +209,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if arg.Key[:2] != "0x" {
+		arg.Key = "0x" + hex.EncodeToString([]byte(arg.Key))
+	}
+
 	if !eth.IsValidDataset(arg.Dataset) {
 		http.Error(w, "Dataset is not valid", http.StatusBadRequest)
 		return
