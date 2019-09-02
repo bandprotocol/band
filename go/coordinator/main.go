@@ -58,7 +58,7 @@ func getProviderURL(provider common.Address) (string, error) {
 	if !viper.IsSet("providerEndpointContract") {
 		return "", fmt.Errorf("getProviderUrl: unknown provider endpoint contract")
 	}
-	data := append(eth.Get4BytesFunctionSignature("endpoints(address)")[:], provider.Hash().Bytes()...)
+	data := append(eth.Get4BytesFunctionSignature("endpoints(address)"), provider.Hash().Bytes()...)
 
 	callResult, err := eth.CallContract(common.HexToAddress(viper.GetString("providerEndpointContract")), data)
 	if err != nil {
@@ -460,13 +460,6 @@ func main() {
 	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
 	table.Render()
 
-	// fmt.Println("provider list in config file")
-	// table = tablewriter.NewWriter(os.Stdout)
-	// table.SetHeader([]string{"Provider Address", "URL"})
-	// providers := viper.GetStringMapString("providers")
-	// for addr, url := range providers {
-	// 	table.Append([]string{addr, url})
-	// }
 	table.Render()
 
 	http.HandleFunc("/", handleRequest)
