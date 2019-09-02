@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 
@@ -22,8 +22,9 @@ contract('BandToken', ([_, owner, alice, bob]) => {
       // Alice sends 100 tokens to Bob.
       await this.contract.transfer(bob, 100, { from: alice });
       // Alice sends another 1000 tokens. Should fail since Alice only has 900.
-      await shouldFail.reverting(
+      await expectRevert(
         this.contract.transfer(bob, 1000, { from: alice }),
+        'SafeMath: subtraction overflow.',
       );
 
       (await this.contract.balanceOf(alice)).toString().should.eq('900');
@@ -32,14 +33,16 @@ contract('BandToken', ([_, owner, alice, bob]) => {
 
     it('should only allow valid transferFrom', async () => {
       // Bob tries to withdraw 100 from Alice. Should fail since no approve yet.
-      await shouldFail.reverting(
+      await expectRevert(
         this.contract.transferFrom(alice, bob, 100, { from: bob }),
+        'SafeMath: subtraction overflow.',
       );
       // Alice approves Bob's withdrawal.
       await this.contract.approve(bob, 100, { from: alice });
       // Bob tries to withdraw more than the approved amount.
-      await shouldFail.reverting(
+      await expectRevert(
         this.contract.transferFrom(alice, bob, 200, { from: bob }),
+        'SafeMath: subtraction overflow.',
       );
       // Bob withdraws 100 tokens from Alice successfully now.
       await this.contract.transferFrom(alice, bob, 100, { from: bob });

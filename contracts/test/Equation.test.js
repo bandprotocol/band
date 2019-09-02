@@ -1,4 +1,4 @@
-const { shouldFail } = require('openzeppelin-test-helpers');
+const { expectRevert } = require('openzeppelin-test-helpers');
 
 const EquationMock = artifacts.require('EquationMock');
 const Equation = artifacts.require('Equation');
@@ -12,18 +12,22 @@ contract('EquationMock', ([_, owner]) => {
 
   context('Invalid equation', () => {
     it('should fail if an operand is missed: (+) (4)', async () => {
-      await shouldFail.reverting(EquationMock.new([4, 1], { from: owner }));
+      await expectRevert.unspecified(
+        EquationMock.new([4, 1], { from: owner }),
+        's',
+      );
     });
 
     it('should fail if there is an extra term: (*) (4) (x) (3)', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         EquationMock.new([6, 0, 4, 1, 0, 3], { from: owner }),
       );
     });
 
     it('should fail if typecheck fails: (*) (>) (x) (5) (3)', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         EquationMock.new([6, 13, 1, 0, 5, 0, 3], { from: owner }),
+        's',
       );
     });
   });
@@ -138,7 +142,7 @@ contract('EquationMock', ([_, owner]) => {
     });
 
     it('should fail on f(1) < 0', async () => {
-      await shouldFail.reverting(this.contract.getCollateralAt(1));
+      await expectRevert.unspecified(this.contract.getCollateralAt(1), 's');
     });
   });
 

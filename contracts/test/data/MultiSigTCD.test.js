@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandMockExchange = artifacts.require('BandMockExchange');
 const BandToken = artifacts.require('BandToken');
@@ -160,7 +160,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         20,
         { from: bob },
       );
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.mtcd.register(
           carol,
           '0x0000000000000000000000000000000000000001',
@@ -217,7 +217,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         10,
         { from: carol },
       );
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.mtcd.register(
           carol,
           '0x0000000000000000000000000000000000000001',
@@ -227,7 +227,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should revert if not enough tokens', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.mtcd.register(
           carol,
           '0x0000000000000000000000000000000000000000',
@@ -266,7 +266,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should revert if value less than query', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.mtcd.query(
           '0x5000000000000000000000000000000000000000000000000000000000000000',
         ),
@@ -466,7 +466,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         ts.push(timeStamp + i);
         vals.push(1111 + Math.floor(i / 2));
       }
-      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+      await expectRevert.unspecified(
+        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+      );
     });
     it('should fail if timeStamp is oleder than now', async () => {
       const topProviders = [carol, bob, alice].sort((a, b) => {
@@ -490,7 +492,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         ts.push(timeStamp + i);
         vals.push(9999 + i);
       }
-      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+      await expectRevert.unspecified(
+        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+      );
     });
     it('should fail if there is a signature which is not from top provider', async () => {
       const topProviders = [carol, bob, owner].sort((a, b) => {
@@ -514,7 +518,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         ts.push(timeStamp + i);
         vals.push(9999 + i);
       }
-      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+      await expectRevert.unspecified(
+        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+      );
     });
     it('should fail if number of signatures is <= 2/3', async () => {
       const topProviders = [carol].sort((a, b) => {
@@ -538,7 +544,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         ts.push(timeStamp + i);
         vals.push(9999 + i);
       }
-      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+      await expectRevert.unspecified(
+        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+      );
     });
     it('should be able to report if more than 2/3 have signed', async () => {
       await this.params.setRaw(
@@ -579,7 +587,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         ts.push(timeStamp + i);
         vals.push(1111 + Math.floor(i / 2));
       }
-      await shouldFail.reverting(this.mtcd.report(key1, vals, ts, vs, rs, ss));
+      await expectRevert.unspecified(
+        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+      );
 
       topProviders = [carol, bob, owner].sort((a, b) => {
         if (a < b) return -1;
