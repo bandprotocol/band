@@ -1,4 +1,4 @@
-package adapter
+package driver
 
 import (
 	"fmt"
@@ -11,16 +11,16 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type Coingecko struct{}
+type CoinGecko struct{}
 
 var symbolToName = map[string]string{
 	"BTC": "bitcoin",
 	"ETH": "ethereum",
 }
 
-func (*Coingecko) Configure(*viper.Viper) {}
+func (*CoinGecko) Configure(*viper.Viper) {}
 
-func (*Coingecko) QuerySpotPrice(symbol string) (float64, error) {
+func (*CoinGecko) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
@@ -60,7 +60,7 @@ func (*Coingecko) QuerySpotPrice(symbol string) (float64, error) {
 	return price.Float(), nil
 }
 
-func (a *Coingecko) Query(key []byte) (common.Hash, error) {
+func (a *CoinGecko) Query(key []byte) (common.Hash, error) {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
 		return common.Hash{}, fmt.Errorf("Invalid key format")

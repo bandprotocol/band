@@ -1,11 +1,11 @@
-package adapter
+package driver
 
 import (
 	"testing"
 )
 
-func TestSuccess_Coingecko(t *testing.T) {
-	resolver := &Coingecko{}
+func TestSuccess_CoinGecko(t *testing.T) {
+	resolver := &CoinGecko{}
 	price, err := resolver.QuerySpotPrice("ETH-USD")
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)
@@ -15,24 +15,24 @@ func TestSuccess_Coingecko(t *testing.T) {
 	}
 }
 
-func TestInvalidSymbolFormat_Coingecko(t *testing.T) {
-	resolver := &Coingecko{}
+func TestInvalidSymbolFormat_CoinGecko(t *testing.T) {
+	resolver := &CoinGecko{}
 	_, err := resolver.QuerySpotPrice("ETH")
 	if err == nil {
 		t.Errorf("Query ETH must contain error. See nothing")
 	}
 }
 
-func TestUnknownSymbol_Coingecko(t *testing.T) {
-	resolver := &Coingecko{}
+func TestUnknownSymbol_CoinGecko(t *testing.T) {
+	resolver := &CoinGecko{}
 	_, err := resolver.QuerySpotPrice("ETH-XYZ")
 	if err == nil {
 		t.Errorf("Query ETH-XYZ must contain error. See nothing")
 	}
 }
 
-func TestQueryToQuerySpotPrice_Coingecko(t *testing.T) {
-	resolver := &Coingecko{}
+func TestQueryToQuerySpotPrice_CoinGecko(t *testing.T) {
+	resolver := &CoinGecko{}
 	price, err := resolver.Query([]byte("SPOTPX/ETH-USD"))
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)
@@ -43,8 +43,8 @@ func TestQueryToQuerySpotPrice_Coingecko(t *testing.T) {
 	}
 }
 
-func TestQueryInvalidFunction_Coingecko(t *testing.T) {
-	resolver := &Coingecko{}
+func TestQueryInvalidFunction_CoinGecko(t *testing.T) {
+	resolver := &CoinGecko{}
 	_, err := resolver.Query([]byte("REALPRICE/ETH-USD"))
 	if err == nil {
 		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")

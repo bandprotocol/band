@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/bandprotocol/band/go/adapter"
+	"github.com/bandprotocol/band/go/driver"
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/ethereum/go-ethereum/common"
@@ -20,7 +20,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var adapters map[common.Address]adapter.Adapter
+var drivers map[common.Address]driver.Driver
 
 var rootCmd = &cobra.Command{
 	Use:   "./[this] -h \n  ./[this] --help \n  ./[this] [path to node.yml]",
@@ -90,7 +90,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	arg.NormalizeKey()
-	output, err := adapter.DoQuery(adapters[arg.Dataset], []byte(arg.Key))
+	output, err := driver.DoQuery(drivers[arg.Dataset], []byte(arg.Key))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -143,7 +143,7 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	output := common.BigToHash(adapter.Median(values))
+	output := common.BigToHash(driver.Median(values))
 	timestamp := mediumTimestamp(timestamps)
 	json.NewEncoder(w).Encode(reqmsg.SignResponse{
 		Provider:  providerAddress,
@@ -197,7 +197,7 @@ func main() {
 	}
 
 	if queryDebug {
-		adapter.TurnOnQueryDebugging()
+		driver.TurnOnQueryDebugging()
 	}
 	err := eth.SetPrivateKey(privateKey)
 	if err != nil {
@@ -215,7 +215,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	adapters = adapter.FromConfig(config)
+	drivers = driver.FromConfig(config)
 
 	fmt.Println("start provider node with these following parameters")
 	table := tablewriter.NewWriter(os.Stdout)

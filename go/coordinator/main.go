@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bandprotocol/band/go/adapter"
+	"github.com/bandprotocol/band/go/driver"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/olekukonko/tablewriter"
 
@@ -407,7 +407,7 @@ func main() {
 	}
 
 	if queryDebug {
-		adapter.TurnOnQueryDebugging()
+		driver.TurnOnQueryDebugging()
 	}
 	err := eth.SetPrivateKey(privateKey)
 	if err != nil {

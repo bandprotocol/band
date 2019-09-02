@@ -1,4 +1,4 @@
-package adapter
+package driver
 
 import (
 	"fmt"
@@ -8,28 +8,28 @@ import (
 	"github.com/spf13/viper"
 )
 
-type Adapter interface {
+type Driver interface {
 	Configure(*viper.Viper)
 	Query([]byte) (common.Hash, error)
 }
 
-func FromConfig(config *viper.Viper) map[common.Address]Adapter {
-	output := make(map[common.Address]Adapter)
-	adapters := config.GetStringMap("adapters")
-	for datasetHex, _ := range adapters {
+func FromConfig(config *viper.Viper) map[common.Address]Driver {
+	output := make(map[common.Address]Driver)
+	drivers := config.GetStringMap("drivers")
+	for datasetHex, _ := range drivers {
 		dataset := common.HexToAddress(datasetHex)
-		output[dataset] = FromConfigIndividual(config.Sub("adapters." + datasetHex))
+		output[dataset] = FromConfigIndividual(config.Sub("drivers." + datasetHex))
 	}
 	return output
 }
 
-func FromConfigIndividual(config *viper.Viper) Adapter {
+func FromConfigIndividual(config *viper.Viper) Driver {
 	name := config.GetString("name")
 	if name == "" {
-		panic("adapter.FromConfig: missing adapter name")
+		panic("driver.FromConfig: missing driver name")
 	}
 
-	var adpt Adapter
+	var adpt Driver
 	switch name {
 	case "AggMedian":
 		adpt = &AggMedian{}
@@ -75,8 +75,10 @@ func FromConfigIndividual(config *viper.Viper) Adapter {
 		adpt = &AlphaVantageForex{}
 	case "PriceHttp":
 		adpt = &PriceHttp{}
+	case "CoinGecko":
+		adpt = &CoinGecko{}
 	default:
-		panic(fmt.Sprintf("adapter.FromConfig: unknown adapter name %s", name))
+		panic(fmt.Sprintf("driver.FromConfig: unknown driver name %s", name))
 	}
 
 	adpt.Configure(config)
