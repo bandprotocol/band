@@ -284,13 +284,11 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
   context('Historical voting power snapshot features', () => {
     it('should give zero balance if account has no activity', async () => {
-      await expectRevert(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtIndex(alice, 1),
-        'Array index out of bound.',
       );
-      await expectRevert(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtIndex(alice, 10),
-        'Array index out of bound.',
       );
 
       (await this.contract.historicalVotingPowerAtIndex(alice, 0))
@@ -300,9 +298,8 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('0');
 
-      await expectRevert(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtNonce(alice, 1),
-        'Nonce morethan votingPowerChangeNonce',
       );
     });
 
@@ -335,9 +332,8 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('87');
 
-      await expectRevert(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtIndex(alice, 5),
-        'Array index out of bound.',
       );
 
       (await this.contract.historicalVotingPowerAtNonce(alice, 0))
