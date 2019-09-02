@@ -44,7 +44,7 @@ If you are a Go-hacker, you can fork Band's provider node that start implementin
 An adapter specifies the way to obtain obtain real-world data. You can add a new adapter implementation to [adapter package](https://github.com/bandprotocol/band/tree/master/go/adapter). To be classified as an adapter, must implements `Adapter` interface which consists of two functions.
 
 - `Configure(*viper.Viper)`: This function is called exactly once during the initialization. It receives the adapter's configuration as specified in YAML file as a [viper](https://github.com/spf13/viper) object.
-- `Query([]byte) (common.Hash, error)`: This function is called whenever there is a data query. It takes an arbitrary-length bytearray and returns a result as a 32-byte value, or error if an error occurs.
+- `Query([]byte) (common.Hash, error)`: This function is called whenever there is a data query. It takes an arbitrary-length bytearray, as specified in [dataset specifications](../datasets/overview.md), and returns a result as a 32-byte value, or error if an error occurs.
 
 ### 2. Edit `adapter/types.go`
 
