@@ -76,10 +76,6 @@ func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, e
 // SignMessage returns the signature of signing the given message using Ethereum's message
 // signing scheme.
 func SignMessage(message []byte) (Signature, error) {
-	if rpcClient == nil {
-		return Signature{}, errors.New("SignMessage: Initialization is required")
-	}
-
 	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(message)...)
 	msgHash := crypto.Keccak256(withPrefix)
 
@@ -94,6 +90,9 @@ func SignMessage(message []byte) (Signature, error) {
 		}, nil
 	}
 
+	if rpcClient == nil {
+		return Signature{}, errors.New("SignMessage: Initialization is required")
+	}
 	signerAddress, err := GetAddress()
 	if err != nil {
 		return Signature{}, errors.New("SignMessage: Can not get signer address")
