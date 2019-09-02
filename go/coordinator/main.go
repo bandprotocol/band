@@ -460,13 +460,13 @@ func main() {
 	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
 	table.Render()
 
-	fmt.Println("provider list in config file")
-	table = tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Provider Address", "URL"})
-	providers := viper.GetStringMapString("providers")
-	for addr, url := range providers {
-		table.Append([]string{addr, url})
-	}
+	// fmt.Println("provider list in config file")
+	// table = tablewriter.NewWriter(os.Stdout)
+	// table.SetHeader([]string{"Provider Address", "URL"})
+	// providers := viper.GetStringMapString("providers")
+	// for addr, url := range providers {
+	// 	table.Append([]string{addr, url})
+	// }
 	table.Render()
 
 	http.HandleFunc("/", handleRequest)
