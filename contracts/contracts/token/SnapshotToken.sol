@@ -18,7 +18,7 @@ contract SnapshotToken is ERC20Base {
 
   /// Returns user voting power at the given index, that is, as of the user's index^th voting power change
   function historicalVotingPowerAtIndex(address owner, uint256 index) public view returns (uint256) {
-    require(index <= votingPowerChangeCount[owner],'Array index out of bound.');
+    require(index <= votingPowerChangeCount[owner]);
     return _votingPower[owner][index] & ((1 << 192) - 1);  // Lower 192 bits
   }
 
@@ -26,7 +26,7 @@ contract SnapshotToken is ERC20Base {
   /// to look for the largest index at which the nonce is not greater than 'nonce'.
   /// The voting power at that index is the returning value.
   function historicalVotingPowerAtNonce(address owner, uint256 nonce) public view returns (uint256) {
-    require(nonce <= votingPowerChangeNonce && nonce < (1 << 64),'Nonce morethan votingPowerChangeNonce.');
+    require(nonce <= votingPowerChangeNonce && nonce < (1 << 64));
     uint256 start = 0;
     uint256 end = votingPowerChangeCount[owner];
     while (start < end) {
