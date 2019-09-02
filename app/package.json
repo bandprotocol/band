@@ -16,7 +16,7 @@
     "buffer": "^5.2.1",
     "chartjs-plugin-downsample": "^1.1.0",
     "decimal.js": "^10.2.0",
-    "highcharts": "^7.0.2",
+    "highcharts": "^7.1.3",
     "highcharts-react-official": "^2.0.0",
     "highlight.js": "^9.15.8",
     "highlightjs-solidity": "^1.0.6",
