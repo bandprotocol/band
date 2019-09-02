@@ -54,12 +54,39 @@ var rootCmd = &cobra.Command{
 	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
-func getProviderUrl(provider common.Address) (string, error) {
-	key := "providers." + provider.Hex()
-	if !viper.IsSet(key) {
-		return "", fmt.Errorf("getProviderUrl: unknown provider url for %s", provider.Hex())
+func getProviderURL(provider common.Address) (string, error) {
+	if !viper.IsSet("providerEndpointContract") {
+		return "", fmt.Errorf("getProviderUrl: unknown provider endpoint contract")
 	}
-	return viper.GetString(key), nil
+	data := append(eth.Get4BytesFunctionSignature("endpoints(address)")[:], provider.Hash().Bytes()...)
+
+	callResult, err := eth.CallContract(common.HexToAddress(viper.GetString("providerEndpointContract")), data)
+	if err != nil {
+		return "", err
+	}
+	const definition = `[{
+		"constant": true,
+		"inputs": [
+		  {
+		    "name": "",
+		    "type": "address"
+	 	  }
+		],
+		"name": "endpoints",
+		"outputs": [
+		  {
+			"name": "",
+			"type": "string"
+		  }
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}]`
+	contractABI, err := abi.JSON(strings.NewReader(definition))
+	var endpoint string
+	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
+	return endpoint, err
 }
 
 func statusToInt(status string) uint8 {
@@ -72,7 +99,7 @@ func statusToInt(status string) uint8 {
 }
 
 func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (reqmsg.DataResponse, error) {
-	url, err := getProviderUrl(provider)
+	url, err := getProviderURL(provider)
 	if err != nil {
 		return reqmsg.DataResponse{}, err
 	}
@@ -111,7 +138,7 @@ func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (
 }
 
 func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Address) (reqmsg.SignResponse, error) {
-	url, err := getProviderUrl(provider)
+	url, err := getProviderURL(provider)
 	if err != nil {
 		return reqmsg.SignResponse{}, err
 	}
