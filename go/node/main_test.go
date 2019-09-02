@@ -21,7 +21,7 @@ func Test_sign(t *testing.T) {
 	val := common.HexToHash("0x00000000000000000000000000000000000000000000000a4de26e35c6c9a000")
 	time := uint64(time.Now().Unix())
 
-	sig := sign(addr, key, val, time, pk)
+	sig := sign(addr, key, val, time)
 
 	// validate
 

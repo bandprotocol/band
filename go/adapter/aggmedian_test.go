@@ -1,4 +1,4 @@
-package adapter
+package driver
 
 import (
 	"bytes"
@@ -154,7 +154,7 @@ children:
 	}
 }
 
-func TestCanErrorOnSomeAdapter(t *testing.T) {
+func TestCanErrorOnSomeDriver(t *testing.T) {
 	agg := &AggMedian{}
 	cf := []byte(`
 children:

@@ -1,4 +1,4 @@
-package adapter
+package driver
 
 import (
 	"fmt"
@@ -20,15 +20,15 @@ func TurnOnQueryDebugging() {
 	debug = true
 }
 
-func DoQuery(adapter Adapter, key []byte) (common.Hash, error) {
-	var adapterName string
-	if t := reflect.TypeOf(adapter); t.Kind() == reflect.Ptr {
-		adapterName = t.Elem().Name()
+func DoQuery(driver Driver, key []byte) (common.Hash, error) {
+	var driverName string
+	if t := reflect.TypeOf(driver); t.Kind() == reflect.Ptr {
+		driverName = t.Elem().Name()
 	} else {
-		adapterName = t.Name()
+		driverName = t.Name()
 	}
 
-	val, err := adapter.Query(key)
+	val, err := driver.Query(key)
 
 	var queryResult string
 	if err == nil {
@@ -37,7 +37,7 @@ func DoQuery(adapter Adapter, key []byte) (common.Hash, error) {
 		queryResult = err.Error()
 	}
 	logDebug(
-		fmt.Sprintf("|%-25s|%-45s|\n", adapterName, queryResult),
+		fmt.Sprintf("|%-25s|%-45s|\n", driverName, queryResult),
 	)
 	return val, err
 }

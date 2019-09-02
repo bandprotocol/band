@@ -1,4 +1,4 @@
-package adapter
+package driver
 
 import (
 	"errors"
@@ -10,7 +10,7 @@ import (
 )
 
 type AggMedian struct {
-	children []Adapter
+	children []Driver
 }
 
 func (adpt *AggMedian) Configure(config *viper.Viper) {
@@ -35,7 +35,7 @@ func Median(values []*big.Int) *big.Int {
 func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
 	ch := make(chan common.Hash)
 	for _, child := range agg.children {
-		go func(child Adapter) {
+		go func(child Driver) {
 			val, err := DoQuery(child, key)
 			if err == nil {
 				ch <- val

@@ -11,27 +11,37 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type CryptoCompare struct{}
+type CoinGecko struct{}
 
-func (*CryptoCompare) Configure(*viper.Viper) {}
+var symbolToName = map[string]string{
+	"BTC": "bitcoin",
+	"ETH": "ethereum",
+}
 
-func (*CryptoCompare) QuerySpotPrice(symbol string) (float64, error) {
+func (*CoinGecko) Configure(*viper.Viper) {}
+
+func (*CoinGecko) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
 
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://min-api.cryptocompare.com/data/price", nil)
-	if err != nil {
-		return 0, err
+	var srcName string
+	if val, ok := symbolToName[strings.ToUpper(pairs[0])]; ok {
+		srcName = val
+	} else {
+		return 0, fmt.Errorf("key does not exist")
 	}
-	q := req.URL.Query()
-	q.Add("fsym", pairs[0])
-	q.Add("tsyms", pairs[1])
-	req.URL.RawQuery = q.Encode()
-	req.Header.Add("Accept", "application/json")
-	res, err := client.Do(req)
+
+	var url strings.Builder
+	url.WriteString("https://api.coingecko.com/api/v3/simple/price?ids=")
+	url.WriteString(srcName)
+	url.WriteString("&vs_currencies=")
+	url.WriteString(strings.ToUpper(pairs[1]))
+
+	var client = &http.Client{}
+
+	res, err := client.Get(url.String())
 	if err != nil {
 		return 0, err
 	}
@@ -41,17 +51,16 @@ func (*CryptoCompare) QuerySpotPrice(symbol string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	price := gjson.GetBytes(body, pairs[1])
+	price := gjson.GetBytes(body, srcName+".usd")
 
 	if !price.Exists() {
 		return 0, fmt.Errorf("key does not exist")
 	}
 
 	return price.Float(), nil
-
 }
 
-func (a *CryptoCompare) Query(key []byte) (common.Hash, error) {
+func (a *CoinGecko) Query(key []byte) (common.Hash, error) {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
 		return common.Hash{}, fmt.Errorf("Invalid key format")
