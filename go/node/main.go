@@ -2,21 +2,31 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"math/big"
 	"net/http"
 	"os"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/bandprotocol/band/go/adapter"
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 var adapters map[common.Address]adapter.Adapter
+
+var rootCmd = &cobra.Command{
+	Use:   "./[this] -h \n  ./[this] --help \n  ./[this] [path to node.yml]",
+	Short: "The Band provider node is middleware, operating between the blockchain and external data",
+	Run:   func(cmd *cobra.Command, args []string) {},
+}
 
 func sign(
 	dataset common.Address,
@@ -145,21 +155,77 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	var port string
+	var ethRpc string
+	var privateKey string
+	var queryDebug bool
+
+	if len(os.Args) < 2 {
+		fmt.Println("should have at least 1 argument, -h or --help for more detail")
+		os.Exit(1)
+	} else if os.Args[1] == "-h" || os.Args[1] == "--help" {
+		rootCmd.PersistentFlags().StringVar(&port, "port", "should be set by node.yml", `port of your app, for example "5000"`)
+		rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", "should be set by node.yml", `Ethereum rcp url, for example "https://kovan.infura.io"`)
+		rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", "should be set by node.yml", `Private Key of the data provider, 64 hex characters`)
+		rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
+		err := rootCmd.Execute()
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
 	config := viper.New()
 	config.SetConfigName(os.Args[1])
 	config.AddConfigPath(".")
 	if err := config.ReadInConfig(); err != nil {
 		log.Fatal("main: unable to read configuration file", err)
 	}
-	privateKeyFromConfig := config.GetString("privateKey")
-	if privateKeyFromConfig != "" {
-		err := eth.SetPrivateKey(privateKeyFromConfig)
-		if err != nil {
-			log.Fatal(err)
-		}
+
+	privateKey = config.GetString("privateKey")
+	ethRpc = config.GetString("ethRpc")
+	port = config.GetString("port")
+	queryDebug = config.GetBool("queryDebug")
+
+	rootCmd.PersistentFlags().StringVar(&port, "port", port, `port of your app, for example "5000"`)
+	rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", ethRpc, `Ethereum rcp url, for example "https://kovan.infura.io"`)
+	rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", privateKey, `Private Key of the data provider, 64 hex characters`)
+	rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
+
+	if queryDebug {
+		adapter.TurnOnQueryDebugging()
+	}
+	err := eth.SetPrivateKey(privateKey)
+	if err != nil {
+		log.Println(err.Error())
+		log.Println("Warning: Private key not set. Ethereum node according to ethRpc will be used for signing")
+	}
+	err = eth.SetRpcClient(ethRpc)
+	if err != nil {
+		log.Println("create ethRpc client error")
+		log.Fatal(err)
+	}
+	_, err = strconv.Atoi(port)
+	if err != nil {
+		log.Println("wrong port format")
+		log.Fatal(err)
+	}
+
 	adapters = adapter.FromConfig(config)
+
+	fmt.Println("start provider node with these following parameters")
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Parameter Name", "Value"})
+	table.Append([]string{"port", port})
+	table.Append([]string{"ethRpc", ethRpc})
+	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
+	table.Render()
+
 	http.HandleFunc("/data", handleDataRequest)
 	http.HandleFunc("/sign", handleSignRequest)
-	log.Fatal(http.ListenAndServe(":"+config.GetString("port"), nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

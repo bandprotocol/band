@@ -1,3 +1,7 @@
+port: 8000
+ethRpc: "https://kovan.infura.io"
+queryDebug: false
+privateKey: "xxxxxx"
 datasets:
   - "0x1234"
   - "0x5678"

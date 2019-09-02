@@ -5,9 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
 	"math/big"
-	"os"
 	"strconv"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -25,19 +23,6 @@ type Signature struct {
 var pk *ecdsa.PrivateKey
 var rpcClient *rpc.Client
 
-func init() {
-
-	err := SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
-	if err != nil {
-		log.Println("no private key found, try to connect with localnode")
-	}
-
-	rpcClient, err = rpc.Dial(os.Getenv("ETH_RPC"))
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 // SetPrivateKey transform private key string to ECDSA Key
 func SetPrivateKey(newPrivateKey string) error {
 	_pk, err := crypto.HexToECDSA(newPrivateKey)
@@ -45,6 +30,16 @@ func SetPrivateKey(newPrivateKey string) error {
 		return err
 	}
 	pk = _pk
+	return nil
+}
+
+// SetRpcClient receive url of ethereum node to initiate rpcClient
+func SetRpcClient(rpcUrl string) error {
+	var err error
+	rpcClient, err = rpc.Dial(rpcUrl)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -3,23 +3,21 @@ package adapter
 import (
 	"fmt"
 	"log"
-	"os"
 	"reflect"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 )
 
-var debug bool
-
-func init() {
-	debug = strings.ToLower(os.Getenv("DEBUG")) == "true"
-}
+var debug = false
 
 func logDebug(s string) {
 	if debug {
 		log.Println(s)
 	}
+}
+
+func TurnOnQueryDebugging() {
+	debug = true
 }
 
 func DoQuery(adapter Adapter, key []byte) (common.Hash, error) {
