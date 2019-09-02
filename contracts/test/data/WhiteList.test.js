@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandMockExchange = artifacts.require('BandMockExchange');
 const BandToken = artifacts.require('BandToken');
@@ -171,7 +171,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
         .should.eq('0x0000000000000000000000000000000000000000');
       await this.registry.setWhiteList(bob, { from: owner });
       (await this.registry.whiteList()).toString().should.eq(bob);
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.registry.setWhiteList(alice, { from: alice }),
       );
       (await this.registry.whiteList()).toString().should.eq(bob);
@@ -278,7 +278,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       });
     });
     it('should revert if value less than query', async () => {
-      shouldFail.reverting(
+      expectRevert.unspecified(
         this.tcd.query(
           '0x5000000000000000000000000000000000000000000000000000000000000000',
         ),
@@ -322,7 +322,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
         },
       );
 
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.query(
           '0x5000000000000000000000000000000000000000000000000000000000000000',
           {
@@ -369,7 +369,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
         from: carol,
       });
 
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.query(
           '0x5000000000000000000000000000000000000000000000000000000000000000',
           {
