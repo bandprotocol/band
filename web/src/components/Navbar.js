@@ -768,13 +768,13 @@ const Navbar = props => {
             isSelected={selectedTab === 2}
             title="Join Community"
             tabs={[
-              {
-                title: 'Developer Forum',
-                href: 'https://forum.bandprotocol.com',
-                imgIndex: 7,
-                imgHeight: '60px',
-                content: `Discuss protocol improvements, troubleshoot integrations, and much more`,
-              },
+              // {
+              //   title: 'Developer Forum',
+              //   href: 'https://forum.bandprotocol.com',
+              //   imgIndex: 7,
+              //   imgHeight: '60px',
+              //   content: `Discuss protocol improvements, troubleshoot integrations, and much more`,
+              // },
               {
                 title: 'Blog',
                 href: 'https://medium.com/bandprotocol',
