@@ -31,6 +31,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 
 	var adpt Driver
 	switch name {
+	case "RegEx":
+		adpt = &RegEx{}
 	case "AggMedian":
 		adpt = &AggMedian{}
 	case "AlphaVantageStock":

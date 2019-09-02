@@ -1,53 +1,63 @@
 port: 5000
 ethRpc: "https://kovan.infura.io"
 queryDebug: false
-privateKey: xxxxxx
+privateKey: "xxxxxx"
 drivers:
   "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e":
-    name: AggMedian
+    name: RegEx
     children:
-      coinBase:
-        name: CoinBase
-      gemini:
-        name: Gemini
-      kraken:
-        name: Kraken
-      bitfinex:
-        name: Bitfinex
-      bitstamp:
-        name: Bitstamp
-      openMarketCap:
-        name: OpenMarketCap
-      onChainFX:
-        name: OnChainFX
-      cryptoCompare:
-        name: CryptoCompare
-      bittrex:
-        name: Bittrex
-      coinMarketCap:
-        name: CoinMarketCap
-        apikey: xxxxxx
-      bancor:
-        name: Bancor
-      uniswap:
-        name: Uniswap
-      kyber:
-        name: Kyber
-      ratesapi:
-        name: Ratesapi
-      currencyConverter:
-        name: CurrencyConverter
-        apikey: xxxxxx
-      alphaVantageForex:
-        name: AlphaVantageForex
-        apikey: xxxxxx
-      freeForexApi:
-        name: FreeForexApi
-      alphaVantageStock:
-        name: AlphaVantageStock
-        apikey: xxxxxx
-      worldTradingData:
-        name: WorldTradingData
-        apikey: xxxxxx
-      financialModelPrep:
-        name: FinancialModelPrep
+      stock:
+        match: ^SPOTPX/([A-Z]+)$
+        driver:
+          name: AggMedian
+          children:
+            alphaVantageForex:
+              name: AlphaVantageForex
+              apikey: xxxxxx
+            freeForexApi:
+              name: FreeForexApi
+            alphaVantageStock:
+              name: AlphaVantageStock
+              apikey: xxxxxx
+            worldTradingData:
+              name: WorldTradingData
+              apikey: xxxxxx
+            financialModelPrep:
+              name: FinancialModelPrep
+      crypto:
+        match: ^SPOTPX/([A-Z]+)-([A-Z]+)$
+        driver:
+          name: AggMedian
+          children:
+            coinBase:
+              name: CoinBase
+            gemini:
+              name: Gemini
+            kraken:
+              name: Kraken
+            bitfinex:
+              name: Bitfinex
+            bitstamp:
+              name: Bitstamp
+            openMarketCap:
+              name: OpenMarketCap
+            onChainFX:
+              name: OnChainFX
+            cryptoCompare:
+              name: CryptoCompare
+            bittrex:
+              name: Bittrex
+            coinMarketCap:
+              name: CoinMarketCap
+              apikey: xxxxxx
+            bancor:
+              name: Bancor
+            uniswap:
+              name: Uniswap
+            kyber:
+              name: Kyber
+            ratesapi:
+              name: Ratesapi
+            currencyConverter:
+              name: CurrencyConverter
+              apikey: xxxxxx
