@@ -50,7 +50,7 @@ module.exports = {
           "providers/overview",
           "providers/architecture",
           "providers/getting-started",
-          "providers/custom-adapter"
+          "providers/custom-driver"
         ]
       },
       {

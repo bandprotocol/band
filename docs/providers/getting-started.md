@@ -39,15 +39,15 @@ Next
 
 - `port`: The port that this provide node will listen to the coordinator's request
 - `privateKey`: Your private key for signing data
-- `adapters`: The adapter for each type of dataset. Note that different kinds of adapters take different types of arguments. Some adapters are _higher-order_ and contain child adapters. Band Protocol provides various types of builtin adapters below. Note that we regularly fix bugs, update, and make changes to this list.
+- `drivers`: The driver for each type of dataset. Note that different kinds of drivers take different types of arguments. Some drivers are _higher-order_ and contain child drivers. Band Protocol provides various types of builtin drivers below. Note that we regularly fix bugs, update, and make changes to this list.
 
 ```yaml
 port: 5000
 privateKey: YOUR_PRIVATE_KEY
-adapters:
+drivers:
   "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e": # Dataset Address
-    name: AggMedian # Handle the query with "AggMedian" adapter
-    children: # "children" arguments of "AggMedian" adapter
+    name: AggMedian # Handle the query with "AggMedian" driver
+    children: # "children" arguments of "AggMedian" driver
       uniswap:
         name: Uniswap
       gemini:
@@ -62,11 +62,11 @@ Lastly, to run a provider node, simply run the binary with the full name of the 
 $ ./node.bin node
 ```
 
-## Available Adapters
+## Available Drivers
 
-The following is the list of currently supported adapters.
+The following is the list of currently supported drivers.
 
-- `AggMedian`: (Meta) Median aggregation from child adapters.
+- `AggMedian`: (Meta) Median aggregation from child drivers.
 - `PriceHttp`: Connect to a custom HTTP endpoint. See next subsection for more details.
 - `AlphaVantageForex`: Connect to [AlphaVantage](https://www.alphavantage.co/) forex API.
 - `AlphaVantageStock`: Connect to [AlphaVantage](https://www.alphavantage.co/) stock API.
