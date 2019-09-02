@@ -460,8 +460,6 @@ func main() {
 	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
 	table.Render()
 
-	table.Render()
-
 	http.HandleFunc("/", handleRequest)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
