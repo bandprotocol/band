@@ -411,8 +411,8 @@ func main() {
 	}
 	err := eth.SetPrivateKey(privateKey)
 	if err != nil {
-		log.Println("wrong privateKey format")
-		log.Fatal(err)
+		log.Println(err.Error())
+		log.Println("Warning: Private key not set. Ethereum node according to ethRpc will be used for signing")
 	}
 	err = eth.SetRpcClient(ethRpc)
 	if err != nil {
