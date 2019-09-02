@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"fmt"
 	"math/big"
 	"sort"
 
@@ -35,7 +34,6 @@ func Median(values []*big.Int) *big.Int {
 func (agg *AggMedian) Query(key []byte) Answer {
 	ch := make(chan Answer)
 	for _, child := range agg.children {
-		fmt.Println("YO")
 		go func(child Driver) {
 			ch <- DoQuery(child, key)
 		}(child)
@@ -44,7 +42,6 @@ func (agg *AggMedian) Query(key []byte) Answer {
 	var values []*big.Int
 	for i := 0; i < len(agg.children); i++ {
 		r := <-ch
-		fmt.Println(r)
 		if r.Option == "OK" {
 			values = append(values, r.Value.Big())
 		}

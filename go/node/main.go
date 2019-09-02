@@ -22,6 +22,11 @@ import (
 
 var drivers map[common.Address]driver.Driver
 
+type valueWithTimeStamp struct {
+	Value     *big.Int
+	Timestamp uint64
+}
+
 var rootCmd = &cobra.Command{
 	Use:   "./[this] -h \n  ./[this] --help \n  ./[this] [path to node.yml]",
 	Short: "The Band provider node is middleware, operating between the blockchain and external data",
@@ -66,10 +71,6 @@ func verifySignature(
 		signature,
 		provider,
 	)
-}
-
-func getRequiredProviderCount(dataset common.Address) int {
-	return 2
 }
 
 func mediumTimestamp(timestamps []uint64) uint64 {
@@ -118,6 +119,9 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 	arg.NormalizeKey()
 	var values []*big.Int
 	var timestamps []uint64
+
+	reportedValue := make(map[common.Address]valueWithTimeStamp)
+	delegateList := make([]common.Address, 0)
 	for _, report := range arg.Datapoints {
 		if verifySignature(
 			arg.Dataset,
@@ -130,11 +134,23 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 			if report.Answer.Option == "OK" {
 				values = append(values, report.Answer.Value.Big())
 				timestamps = append(timestamps, report.Timestamp)
+				reportedValue[report.Provider] = valueWithTimeStamp{
+					Value:     report.Answer.Value.Big(),
+					Timestamp: report.Timestamp,
+				}
+			} else if report.Answer.Option == "Delegated" {
+				delegateList = append(delegateList, common.BytesToAddress(report.Answer.Value.Bytes()))
 			}
-			// TODO: Aggregate deleagated value
+
+			for _, delegator := range delegateList {
+				if v, ok := reportedValue[delegator]; ok {
+					values = append(values, v.Value)
+					timestamps = append(timestamps, v.Timestamp)
+				}
+			}
 		}
 	}
-	if len(values) < getRequiredProviderCount(arg.Dataset) {
+	if len(values) < arg.MinimumProviderCount {
 		http.Error(w, "Insufficient signatures", http.StatusBadRequest)
 		return
 	}

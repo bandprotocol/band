@@ -33,7 +33,8 @@ type DataResponse struct {
 
 type SignRequest struct {
 	DataRequest
-	Datapoints []DataResponse `json:"datapoints"`
+	Datapoints           []DataResponse `json:"datapoints"`
+	MinimumProviderCount int            `json:"minimumProviders"`
 }
 
 type SignResponse struct {

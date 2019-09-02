@@ -31,8 +31,8 @@ func DoQuery(driver Driver, key []byte) Answer {
 	var queryResult string
 	if val.Option == "OK" {
 		queryResult = val.Value.Big().String()
-	} else if val.Option == "Deligated" {
-		queryResult = "Delegate to " + val.Value.Hex()
+	} else if val.Option == "Delegated" {
+		queryResult = "Delegated to " + val.Value.Hex()
 	} else {
 		queryResult = val.Option
 	}

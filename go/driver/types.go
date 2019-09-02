@@ -56,6 +56,10 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &RegEx{}
 	case "AggMedian":
 		adpt = &AggMedian{}
+	case "IdleDriver":
+		adpt = &IdleDriver{}
+	case "DelegateDriver":
+		adpt = &DelegateDriver{}
 	case "AlphaVantageStock":
 		adpt = &AlphaVantageStock{}
 	case "WorldTradingData":
