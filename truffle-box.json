@@ -1,5 +1,6 @@
 {
   "ignore": [
+    ".circleci",
     ".github",
     ".vscode",
     "app",
@@ -8,11 +9,12 @@
     "contracts",
     "docs",
     "web",
+    "go",
     ".gitignore",
-    ".travis.yml",
     "CODE_OF_CONDUCT.md",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "project-dirs"
   ],
   "commands": {
     "Compile contracts": "yarn compile",
