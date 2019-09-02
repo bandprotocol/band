@@ -203,11 +203,11 @@ func main() {
 	if err != nil {
 		log.Println(err.Error())
 		log.Println("Warning: Private key not set. Ethereum node according to ethRpc will be used for signing")
-	}
-	err = eth.SetRpcClient(ethRpc)
-	if err != nil {
-		log.Println("create ethRpc client error")
-		log.Fatal(err)
+		err = eth.SetRpcClient(ethRpc)
+		if err != nil {
+			log.Println("create ethRpc client error")
+			log.Fatal(err)
+		}
 	}
 	_, err = strconv.Atoi(port)
 	if err != nil {
