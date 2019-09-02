@@ -430,7 +430,6 @@ func main() {
 	table.SetHeader([]string{"Parameter Name", "Value"})
 	table.Append([]string{"port", port})
 	table.Append([]string{"ethRpc", ethRpc})
-	table.Append([]string{"privateKey", privateKey})
 	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
 	table.Render()
 
