@@ -37,11 +37,11 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
-	price, err := agg.Query([]byte("SPOTPX/ETH-USD"))
-	if err != nil {
-		t.Errorf("Query ETH-USD error: %s", err)
+	price := agg.Query([]byte("SPOTPX/ETH-USD"))
+	if price.Option != "OK" {
+		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(50)) == -1 || priceBig.Cmp(PriceToBigInt(1000)) == 1 {
 		t.Errorf("Query ETH-USD price is way off: %s", priceBig.String())
 	}
@@ -64,11 +64,11 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
-	price, err := agg.Query([]byte("SPOTPX/DAI-ETH"))
-	if err != nil {
-		t.Errorf("Query DAI-ETH error: %s", err)
+	price := agg.Query([]byte("SPOTPX/DAI-ETH"))
+	if price.Option != "OK" {
+		t.Errorf("Query DAI-ETH error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(0)) == -1 || priceBig.Cmp(PriceToBigInt(0.01)) == 1 {
 		t.Errorf("Query DAI-ETH price is way off: %s", priceBig.String())
 	}
@@ -81,7 +81,7 @@ children:
   ratesapi:
     name: Ratesapi
   cc:
-    name: CurrencyConverter
+	name: CurrencyConverter
   avf:
     name: AlphaVantageForex
 `)
@@ -89,20 +89,20 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
-	price, err := agg.Query([]byte("SPOTPX/EUR-USD"))
-	if err != nil {
-		t.Errorf("Query EUR-USD error: %s", err)
+	price := agg.Query([]byte("SPOTPX/EUR-USD"))
+	if price.Option != "OK" {
+		t.Errorf("Query EUR-USD error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(1)) == -1 || priceBig.Cmp(PriceToBigInt(2)) == 1 {
 		t.Errorf("Query EUR-USD price is way off: %s", priceBig.String())
 	}
 
-	price, err = agg.Query([]byte("SPOTPX/XAU"))
-	if err != nil {
-		t.Errorf("Query XAU error: %s", err)
+	price = agg.Query([]byte("SPOTPX/XAU"))
+	if price.Option != "OK" {
+		t.Errorf("Query XAU error: %s", price.Option)
 	}
-	priceBig = price.Big()
+	priceBig = price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(1000)) == -1 || priceBig.Cmp(PriceToBigInt(2000)) == 1 {
 		t.Errorf("Query XAU price is way off: %s", priceBig.String())
 	}
@@ -123,11 +123,11 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
-	price, err := agg.Query([]byte("SPOTPX/AAPL"))
-	if err != nil {
-		t.Errorf("Query AAPL error: %s", err)
+	price := agg.Query([]byte("SPOTPX/AAPL"))
+	if price.Option != "OK" {
+		t.Errorf("Query AAPL error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(100)) == -1 || priceBig.Cmp(PriceToBigInt(500)) == 1 {
 		t.Errorf("Query AAPL price is way off: %s", priceBig.String())
 	}
@@ -148,8 +148,8 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
-	_, err := agg.Query([]byte("SPOTPX/AAPL"))
-	if err == nil {
+	output := agg.Query([]byte("SPOTPX/AAPL"))
+	if output.Option == "OK" {
 		t.Errorf("Crypto provider must cannot find APPL price")
 	}
 }
@@ -170,11 +170,11 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
 
-	price, err := agg.Query([]byte("SPOTPX/ETH-USD"))
-	if err != nil {
-		t.Errorf("Query ETH-USD error: %s", err)
+	price := agg.Query([]byte("SPOTPX/ETH-USD"))
+	if price.Option != "OK" {
+		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(50)) == -1 || priceBig.Cmp(PriceToBigInt(1000)) == 1 {
 		t.Errorf("Query ETH-USD price is way off: %s", priceBig.String())
 	}

@@ -10,6 +10,7 @@ import (
 func GetRawDataBytes(
 	dataset common.Address,
 	key []byte,
+	option uint8,
 	value common.Hash,
 	timestamp uint64,
 ) []byte {
@@ -19,6 +20,7 @@ func GetRawDataBytes(
 	var buff []byte
 
 	buff = append(buff, key...)
+	buff = append(buff, byte(option))
 	buff = append(buff, value.Bytes()...)
 	buff = append(buff, bytesTimeStamp...)
 	buff = append(buff, dataset.Bytes()...)

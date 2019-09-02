@@ -34,11 +34,11 @@ func TestFinancialModelPrepUnknownSymbol(t *testing.T) {
 
 func TestFinancialModelPrepQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &FinancialModelPrep{}
-	price, err := resolver.Query([]byte("SPOTPX/GOOG"))
-	if err != nil {
-		t.Errorf("Query GOOG error: %s", err)
+	output := resolver.Query([]byte("SPOTPX/GOOG"))
+	if output.Option != "OK" {
+		t.Errorf("Query GOOG error: %s", output.Option)
 	}
-	priceBig := price.Big()
+	priceBig := output.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(500)) == -1 || priceBig.Cmp(PriceToBigInt(2000)) == 1 {
 		t.Errorf("Query GOOG price is way off: %s", priceBig.String())
 	}
@@ -46,8 +46,8 @@ func TestFinancialModelPrepQueryToQuerySpotPrice(t *testing.T) {
 
 func TestFinancialModelPrepQueryInvalidFunction(t *testing.T) {
 	resolver := &FinancialModelPrep{}
-	_, err := resolver.Query([]byte("REALPRICE/GOOG"))
-	if err == nil {
+	output := resolver.Query([]byte("REALPRICE/GOOG"))
+	if output.Option == "OK" {
 		t.Errorf("Query REALPRICE/GOOG must contain error. See nothing")
 	}
 }

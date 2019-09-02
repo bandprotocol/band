@@ -10,7 +10,28 @@ import (
 
 type Driver interface {
 	Configure(*viper.Viper)
-	Query([]byte) (common.Hash, error)
+	Query([]byte) Answer
+}
+
+type Answer struct {
+	Option string      `json:"option"`
+	Value  common.Hash `json:"value"`
+}
+
+var NotFound = Answer{
+	Option: "Not found",
+	Value:  common.Hash{},
+}
+
+func (ans *Answer) GetOptionValue() uint8 {
+	if ans.Option == "Not found" {
+		return 0
+	} else if ans.Option == "OK" {
+		return 1
+	} else if ans.Option == "Delegated" {
+		return 2
+	}
+	panic("Invalid option")
 }
 
 func FromConfig(config *viper.Viper) map[common.Address]Driver {

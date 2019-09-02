@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-
-	"github.com/ethereum/go-ethereum/common"
 )
 
 var debug = false
@@ -20,7 +18,7 @@ func TurnOnQueryDebugging() {
 	debug = true
 }
 
-func DoQuery(driver Driver, key []byte) (common.Hash, error) {
+func DoQuery(driver Driver, key []byte) Answer {
 	var driverName string
 	if t := reflect.TypeOf(driver); t.Kind() == reflect.Ptr {
 		driverName = t.Elem().Name()
@@ -28,16 +26,18 @@ func DoQuery(driver Driver, key []byte) (common.Hash, error) {
 		driverName = t.Name()
 	}
 
-	val, err := driver.Query(key)
+	val := driver.Query(key)
 
 	var queryResult string
-	if err == nil {
-		queryResult = val.Big().String()
+	if val.Option == "OK" {
+		queryResult = val.Value.Big().String()
+	} else if val.Option == "Deligated" {
+		queryResult = "Delegate to " + val.Value.Hex()
 	} else {
-		queryResult = err.Error()
+		queryResult = val.Option
 	}
 	logDebug(
 		fmt.Sprintf("|%-25s|%-45s|\n", driverName, queryResult),
 	)
-	return val, err
+	return val
 }

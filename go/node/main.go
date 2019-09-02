@@ -31,10 +31,10 @@ var rootCmd = &cobra.Command{
 func sign(
 	dataset common.Address,
 	key string,
-	value common.Hash,
+	answer driver.Answer,
 	timestamp uint64,
 ) eth.Signature {
-	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), value, timestamp)
+	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), answer.GetOptionValue(), answer.Value, timestamp)
 	sig, _ := eth.SignMessage(msgBytes)
 	return sig
 }
@@ -54,13 +54,15 @@ func signAggregator(
 func verifySignature(
 	dataset common.Address,
 	key string,
-	value common.Hash,
+	answer driver.Answer,
 	timestamp uint64,
 	provider common.Address,
 	signature eth.Signature,
 ) bool {
 	return eth.VerifyMessage(
-		reqmsg.GetRawDataBytes(dataset, []byte(key), value, timestamp),
+		reqmsg.GetRawDataBytes(
+			dataset, []byte(key), answer.GetOptionValue(), answer.Value, timestamp,
+		),
 		signature,
 		provider,
 	)
@@ -90,11 +92,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	arg.NormalizeKey()
-	output, err := driver.DoQuery(drivers[arg.Dataset], []byte(arg.Key))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	output := driver.DoQuery(drivers[arg.Dataset], []byte(arg.Key))
 	w.Header().Set("Content-Type", "application/json")
 	currentTimestamp := uint64(time.Now().Unix())
 	providerAddress, err := eth.GetAddress()
@@ -104,7 +102,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(reqmsg.DataResponse{
 		Provider:  providerAddress,
-		Value:     output,
+		Answer:    output,
 		Timestamp: currentTimestamp,
 		Sig:       sign(arg.Dataset, arg.Key, output, currentTimestamp),
 	})
@@ -124,13 +122,16 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		if verifySignature(
 			arg.Dataset,
 			arg.Key,
-			report.Value,
+			report.Answer,
 			report.Timestamp,
 			report.Provider,
 			report.Sig,
 		) {
-			values = append(values, report.Value.Big())
-			timestamps = append(timestamps, report.Timestamp)
+			if report.Answer.Option == "OK" {
+				values = append(values, report.Answer.Value.Big())
+				timestamps = append(timestamps, report.Timestamp)
+			}
+			// TODO: Aggregate deleagated value
 		}
 	}
 	if len(values) < getRequiredProviderCount(arg.Dataset) {

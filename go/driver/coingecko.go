@@ -60,17 +60,20 @@ func (*CoinGecko) QuerySpotPrice(symbol string) (float64, error) {
 	return price.Float(), nil
 }
 
-func (a *CoinGecko) Query(key []byte) (common.Hash, error) {
+func (a *CoinGecko) Query(key []byte) Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return common.Hash{}, fmt.Errorf("Invalid key format")
+		return NotFound
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return common.Hash{}, err
+			return NotFound
 		}
-		return common.BigToHash(PriceToBigInt(value)), nil
+		return Answer{
+			Option: "OK",
+			Value:  common.BigToHash(PriceToBigInt(value)),
+		}
 	}
-	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
+	return NotFound
 }
