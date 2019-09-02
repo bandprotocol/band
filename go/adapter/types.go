@@ -73,6 +73,8 @@ func FromConfigIndividual(config *viper.Viper) Adapter {
 		adpt = &Bancor{}
 	case "AlphaVantageForex":
 		adpt = &AlphaVantageForex{}
+	case "PriceHttp":
+		adpt = &PriceHttp{}
 	default:
 		panic(fmt.Sprintf("adapter.FromConfig: unknown adapter name %s", name))
 	}
