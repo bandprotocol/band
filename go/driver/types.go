@@ -1,6 +1,8 @@
 package driver
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"math/big"
 
@@ -13,25 +15,58 @@ type Driver interface {
 	Query([]byte) Answer
 }
 
-type Answer struct {
-	Option string      `json:"option"`
-	Value  common.Hash `json:"value"`
+type AnswerOption uint8
+
+const (
+	NotFound AnswerOption = iota
+	OK
+	Delegated
+)
+
+func (o AnswerOption) String() string {
+	return toString[o]
 }
 
-var NotFound = Answer{
-	Option: "Not found",
-	Value:  common.Hash{},
+var toString = map[AnswerOption]string{
+	NotFound:  "Not found",
+	OK:        "OK",
+	Delegated: "Delegated",
 }
 
-func (ans *Answer) GetOptionValue() uint8 {
-	if ans.Option == "Not found" {
-		return 0
-	} else if ans.Option == "OK" {
-		return 1
-	} else if ans.Option == "Delegated" {
-		return 2
+var toID = map[string]AnswerOption{
+	"Not found": NotFound,
+	"OK":        OK,
+	"Delegated": Delegated,
+}
+
+// MarshalJSON marshals the enum as a quoted json string
+func (o AnswerOption) MarshalJSON() ([]byte, error) {
+	buffer := bytes.NewBufferString(`"`)
+	buffer.WriteString(toString[o])
+	buffer.WriteString(`"`)
+	return buffer.Bytes(), nil
+}
+
+// UnmarshalJSON unmashals a quoted json string to the enum value
+func (o *AnswerOption) UnmarshalJSON(b []byte) error {
+	var j string
+	err := json.Unmarshal(b, &j)
+	if err != nil {
+		return err
 	}
-	panic("Invalid option")
+	// Note that if the string cannot be found then it will be set to the zero value, 'Created' in this case.
+	*o = toID[j]
+	return nil
+}
+
+type Answer struct {
+	Option AnswerOption `json:"option"`
+	Value  common.Hash  `json:"value"`
+}
+
+var NotFoundAnswer = Answer{
+	Option: NotFound,
+	Value:  common.Hash{},
 }
 
 func FromConfig(config *viper.Viper) map[common.Address]Driver {

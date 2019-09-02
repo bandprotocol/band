@@ -29,12 +29,12 @@ func DoQuery(driver Driver, key []byte) Answer {
 	val := driver.Query(key)
 
 	var queryResult string
-	if val.Option == "OK" {
+	if val.Option == OK {
 		queryResult = val.Value.Big().String()
-	} else if val.Option == "Delegated" {
+	} else if val.Option == Delegated {
 		queryResult = "Delegated to " + val.Value.Hex()
 	} else {
-		queryResult = val.Option
+		queryResult = val.Option.String()
 	}
 	logDebug(
 		fmt.Sprintf("|%-25s|%-45s|\n", driverName, queryResult),

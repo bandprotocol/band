@@ -128,7 +128,7 @@ func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (
 	// Verify signature
 	if !eth.VerifyMessage(
 		reqmsg.GetRawDataBytes(
-			request.Dataset, keyBytes, result.Answer.GetOptionValue(), result.Answer.Value, result.Timestamp,
+			request.Dataset, keyBytes, result.Answer.Option, result.Answer.Value, result.Timestamp,
 		),
 		result.Sig,
 		provider,

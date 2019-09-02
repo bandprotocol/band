@@ -84,17 +84,17 @@ func (a *PriceHttp) QuerySpotPrice(symbol string) (float64, error) {
 func (a *PriceHttp) Query(key []byte) Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return NotFound
+		return NotFoundAnswer
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return NotFound
+			return NotFoundAnswer
 		}
 		return Answer{
-			Option: "OK",
+			Option: OK,
 			Value:  common.BigToHash(PriceToBigInt(value)),
 		}
 	}
-	return NotFound
+	return NotFoundAnswer
 }

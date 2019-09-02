@@ -7,5 +7,5 @@ type IdleDriver struct{}
 func (*IdleDriver) Configure(*viper.Viper) {}
 
 func (*IdleDriver) Query(key []byte) Answer {
-	return NotFound
+	return NotFoundAnswer
 }

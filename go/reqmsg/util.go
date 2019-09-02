@@ -3,6 +3,7 @@ package reqmsg
 import (
 	"encoding/binary"
 
+	"github.com/bandprotocol/band/go/driver"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -10,7 +11,7 @@ import (
 func GetRawDataBytes(
 	dataset common.Address,
 	key []byte,
-	option uint8,
+	option driver.AnswerOption,
 	value common.Hash,
 	timestamp uint64,
 ) []byte {

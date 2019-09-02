@@ -42,17 +42,17 @@ func (agg *AggMedian) Query(key []byte) Answer {
 	var values []*big.Int
 	for i := 0; i < len(agg.children); i++ {
 		r := <-ch
-		if r.Option == "OK" {
+		if r.Option == OK {
 			values = append(values, r.Value.Big())
 		}
 	}
 
 	if len(values) == 0 {
-		return NotFound
+		return NotFoundAnswer
 	}
 
 	return Answer{
-		Option: "OK",
+		Option: OK,
 		Value:  common.BigToHash(Median(values)),
 	}
 }

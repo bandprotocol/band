@@ -39,7 +39,7 @@ func sign(
 	answer driver.Answer,
 	timestamp uint64,
 ) eth.Signature {
-	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), answer.GetOptionValue(), answer.Value, timestamp)
+	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), answer.Option, answer.Value, timestamp)
 	sig, _ := eth.SignMessage(msgBytes)
 	return sig
 }
@@ -66,7 +66,7 @@ func verifySignature(
 ) bool {
 	return eth.VerifyMessage(
 		reqmsg.GetRawDataBytes(
-			dataset, []byte(key), answer.GetOptionValue(), answer.Value, timestamp,
+			dataset, []byte(key), answer.Option, answer.Value, timestamp,
 		),
 		signature,
 		provider,
@@ -131,14 +131,14 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 			report.Provider,
 			report.Sig,
 		) {
-			if report.Answer.Option == "OK" {
+			if report.Answer.Option == driver.OK {
 				values = append(values, report.Answer.Value.Big())
 				timestamps = append(timestamps, report.Timestamp)
 				reportedValue[report.Provider] = valueWithTimeStamp{
 					Value:     report.Answer.Value.Big(),
 					Timestamp: report.Timestamp,
 				}
-			} else if report.Answer.Option == "Delegated" {
+			} else if report.Answer.Option == driver.Delegated {
 				delegateList = append(delegateList, common.BytesToAddress(report.Answer.Value.Bytes()))
 			}
 

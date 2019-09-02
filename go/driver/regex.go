@@ -30,5 +30,5 @@ func (regs *RegEx) Query(key []byte) Answer {
 			return DoQuery(child, key)
 		}
 	}
-	return NotFound
+	return NotFoundAnswer
 }

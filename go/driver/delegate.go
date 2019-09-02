@@ -15,7 +15,7 @@ func (dd *DelegateDriver) Configure(config *viper.Viper) {
 
 func (dd *DelegateDriver) Query(key []byte) Answer {
 	return Answer{
-		Option: "Delegated",
+		Option: Delegated,
 		Value:  dd.delegator.Hash(),
 	}
 }
