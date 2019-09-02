@@ -6,7 +6,7 @@ import (
 
 func TestSuccess_Coingecko(t *testing.T) {
 	resolver := &Coingecko{}
-	price, err := resolver.QuerySpotPrice("BTC-USD")
+	price, err := resolver.QuerySpotPrice("ETH-USD")
 	if err != nil {
 		t.Errorf("Query ETH-USD error: %s", err)
 	}

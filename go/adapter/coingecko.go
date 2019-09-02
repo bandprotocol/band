@@ -29,6 +29,8 @@ func (*Coingecko) QuerySpotPrice(symbol string) (float64, error) {
 	var srcName string
 	if val, ok := symbolToName[strings.ToUpper(pairs[0])]; ok {
 		srcName = val
+	} else {
+		return 0, fmt.Errorf("key does not exist")
 	}
 
 	var url strings.Builder
