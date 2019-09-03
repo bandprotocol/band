@@ -34,7 +34,7 @@ func TestUnknownSymbol_Kyber(t *testing.T) {
 func TestQueryToQuerySpotPrice_Kyber(t *testing.T) {
 	resolver := &Kyber{}
 	output := resolver.Query([]byte("SPOTPX/DAI-ETH"))
-	if output.Option != "OK" {
+	if output.Option != OK {
 		t.Errorf("Query ETH-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -46,7 +46,7 @@ func TestQueryToQuerySpotPrice_Kyber(t *testing.T) {
 func TestQueryInvalidFunction_Kyber(t *testing.T) {
 	resolver := &Kyber{}
 	output := resolver.Query([]byte("REALPRICE/DAI-ETH"))
-	if output.Option == "OK" {
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/DAI-ETH must contain error. See nothing")
 	}
 }

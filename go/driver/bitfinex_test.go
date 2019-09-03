@@ -34,7 +34,7 @@ func TestUnknownSymbol_Bitfinex(t *testing.T) {
 func TestQueryToQuerySpotPrice_Bitfinex(t *testing.T) {
 	resolver := &Bitfinex{}
 	output := resolver.Query([]byte("SPOTPX/ETH-USD"))
-	if output.Option != "OK" {
+	if output.Option != OK {
 		t.Errorf("Query ETH-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -46,7 +46,7 @@ func TestQueryToQuerySpotPrice_Bitfinex(t *testing.T) {
 func TestQueryInvalidFunction_Bitfinex(t *testing.T) {
 	resolver := &Bitfinex{}
 	output := resolver.Query([]byte("REALPRICE/ETH-USD"))
-	if output.Option == "OK" {
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")
 	}
 }

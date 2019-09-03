@@ -34,7 +34,7 @@ func TestUnknownSymbol_Uniswap(t *testing.T) {
 func TestQueryToQuerySpotPrice_Uniswap(t *testing.T) {
 	resolver := &Uniswap{}
 	output := resolver.Query([]byte("SPOTPX/DAI-ETH"))
-	if output.Option != "OK" {
+	if output.Option != OK {
 		t.Errorf("Query DAI-ETH error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -46,7 +46,7 @@ func TestQueryToQuerySpotPrice_Uniswap(t *testing.T) {
 func TestQueryInvalidFunction_Uniswap(t *testing.T) {
 	resolver := &Uniswap{}
 	output := resolver.Query([]byte("REALPRICE/DAI-ETH"))
-	if output.Option == "OK" {
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/DAI-ETH must contain error. See nothing")
 	}
 }

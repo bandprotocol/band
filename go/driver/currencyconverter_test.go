@@ -45,7 +45,7 @@ func TestCurrencyConverterUnknownSymbol(t *testing.T) {
 func TestCurrencyConverterQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &CurrencyConverter{}
 	output := resolver.Query([]byte("SPOTPX/EUR-USD"))
-	if output.Option != "OK" {
+	if output.Option != OK {
 		t.Errorf("Query EUR-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -57,7 +57,7 @@ func TestCurrencyConverterQueryToQuerySpotPrice(t *testing.T) {
 func TestCurrencyConverterQueryInvalidFunction(t *testing.T) {
 	resolver := &CurrencyConverter{}
 	output := resolver.Query([]byte("REALPRICE/EUR-USD"))
-	if output.Option == "OK" {
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/EUR-USD must contain error. See nothing")
 	}
 }

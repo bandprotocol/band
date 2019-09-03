@@ -28,7 +28,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	regEx.Configure(config)
 	price := regEx.Query([]byte("SPOTPX/ETH-USD"))
-	if price.Option != "OK" {
+	if price.Option != OK {
 		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -56,7 +56,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	regEx.Configure(config)
 	price := regEx.Query([]byte("SPOTPX/FB"))
-	if price.Option != "OK" {
+	if price.Option != OK {
 		t.Errorf("Query FB error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
