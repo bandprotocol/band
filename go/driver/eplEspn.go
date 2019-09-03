@@ -41,7 +41,6 @@ func init() {
 	esplCodeName["NOR"] = []string{"NOR"}
 	esplCodeName["SHFU"] = []string{"SHFU", "SHU"}
 	esplCodeName["AVL"] = []string{"AVL", "AST"}
-
 }
 
 func (*EplEspn) Configure(*viper.Viper) {}
@@ -92,7 +91,6 @@ func (*EplEspn) QueryEplScore(date string, shortName string) ([]int, error) {
 				"events."+strconv.Itoa(i)+".competitions.0.competitors.#.score").Array()
 			return []int{int(scores[0].Int()), int(scores[1].Int())}, nil
 		}
-
 	}
 	return []int{}, fmt.Errorf("QueryEplScore: Not found")
 }

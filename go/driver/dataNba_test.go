@@ -8,7 +8,7 @@ func TestDataNbaSuccess(t *testing.T) {
 	resolver := &DataNbaEspn{}
 	score, err := resolver.QueryDataNbaScore("20180110", "CHA-DAL")
 	if err != nil {
-		t.Errorf("Query ARS-TOT error: %s", err)
+		t.Errorf("Query CHA-DAL error: %s", err)
 	}
 	if score[0] != 111 && score[1] != 115 {
 		t.Errorf("Wrong result")
@@ -19,7 +19,7 @@ func TestDataNbaFail(t *testing.T) {
 	resolver := &DataNbaEspn{}
 	_, err := resolver.QueryDataNbaScore("20180110", "DAL-CHA")
 	if err == nil {
-		t.Errorf("Query ARS-TOT error: %s", err)
+		t.Errorf("Query DAL-CHA error: %s", err)
 	}
 }
 

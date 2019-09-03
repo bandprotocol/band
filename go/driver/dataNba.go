@@ -46,13 +46,11 @@ func init() {
 	dataNbaEspnCodeName["TOR"] = []string{"TOR"}
 	dataNbaEspnCodeName["UTA"] = []string{"UTA", "UTAH"}
 	dataNbaEspnCodeName["WAS"] = []string{"WAS", "WSH"}
-
 }
 
 func (*DataNbaEspn) Configure(*viper.Viper) {}
 
 func (*DataNbaEspn) QueryDataNbaScore(date string, shortName string) ([]int, error) {
-
 	pairs := strings.Split(shortName, "-")
 	if len(pairs) != 2 {
 		return []int{}, fmt.Errorf("nba team %s is not valid", shortName)
@@ -105,7 +103,6 @@ func (n *DataNbaEspn) Query(key []byte) (common.Hash, error) {
 		result := common.Hash{}
 		result[0] = byte(value[0])
 		result[1] = byte(value[1])
-
 		return result, nil
 	}
 	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])

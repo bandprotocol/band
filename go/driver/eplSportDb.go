@@ -39,7 +39,6 @@ func init() {
 	eplCodename["NOR"] = "Norwich"
 	eplCodename["SHFU"] = "Sheffield United"
 	eplCodename["AVL"] = "Aston Villa"
-
 }
 
 func (*EplSport) Configure(*viper.Viper) {}
@@ -91,7 +90,6 @@ func (e *EplSport) Query(key []byte) (common.Hash, error) {
 		result := common.Hash{}
 		result[0] = byte(value[0])
 		result[1] = byte(value[1])
-
 		return result, nil
 	}
 	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])

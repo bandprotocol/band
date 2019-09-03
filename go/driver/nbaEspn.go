@@ -47,7 +47,6 @@ func init() {
 	nbaEspnCodeName["TOR"] = []string{"TOR"}
 	nbaEspnCodeName["UTA"] = []string{"UTA", "UTAH"}
 	nbaEspnCodeName["WAS"] = []string{"WAS", "WSH"}
-
 }
 
 func (*NbaEspn) Configure(*viper.Viper) {}
