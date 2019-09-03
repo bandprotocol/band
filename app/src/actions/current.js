@@ -7,10 +7,9 @@ export const SAVE_BALANCE = 'SAVE_BALANCE'
 export const DUMP_CURRENT = 'DUMP_CURRENT'
 export const LOAD_CURRENT = 'LOAD_CURRENT'
 
-export const setUserAddress = address => ({
-  type: SET_USER_ADDRESS,
-  address,
-})
+export const setUserAddress = address => {
+  return { type: SET_USER_ADDRESS, address }
+}
 
 export const setNetwork = network => ({
   type: SET_NETWORK,

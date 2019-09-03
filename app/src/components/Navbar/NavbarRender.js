@@ -236,6 +236,7 @@ export default ({
   onClickOutside,
   showBlockTransactions,
   toggleShowBlockTransactions,
+  showLoginModal,
 }) => {
   const pending =
     (txs &&
@@ -380,7 +381,7 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : user === 'NOT_SIGNIN' ? (
-              <SignIn onClick={showWallet} isDashboard={isDashboard}>
+              <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
                 Sign in
               </SignIn>
             ) : (

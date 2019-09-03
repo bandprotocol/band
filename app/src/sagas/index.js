@@ -48,9 +48,10 @@ switch (network) {
   case 'mainnet':
   case 'kovan':
     RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
-    if (process.env.NODE_ENV !== 'production')
-      WALLET_ENDPOINT = 'http://localhost:3000'
     break
+  // if (process.env.NODE_ENV !== 'production')
+  //   WALLET_ENDPOINT = 'http://localhost:3000'getUser
+  // break
   case 'rinkeby':
   case 'local':
   default:
@@ -62,6 +63,7 @@ const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 const web3Channel = channel()
 
 function* handleWeb3Channel({ type, status }) {
+  console.log('handleWeb3Channel', type, status)
   switch (type) {
     case 'CHANGE_STATUS':
       switch (status) {

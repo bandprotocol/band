@@ -7,6 +7,7 @@ import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { txIncludePendingSelector } from 'selectors/transaction'
 import { walletSelector } from 'selectors/wallet'
+import { showModal, hideModal } from 'actions'
 
 class Navbar extends React.Component {
   state = {
@@ -136,4 +137,14 @@ const mapStateToProps = (state, props) => {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Navbar))
+const mapDispatchToProps = (dispatch, props) => ({
+  hideModal: () => dispatch(hideModal()),
+  showLoginModal: () => dispatch(showModal('LOGIN')),
+})
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(Navbar),
+)
