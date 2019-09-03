@@ -1,6 +1,6 @@
 pragma solidity 0.5.10;
 
-import {usingBandProtocol, Oracle} from "band-solidity/contracts/data/BandLib.sol";
+import {usingBandProtocol, Oracle} from "band-solidity/contracts/Band.sol";
 
 contract GroceryStore is usingBandProtocol {
 
