@@ -86,8 +86,8 @@ func (*EplEspn) QueryEplScore(date string, shortName string) ([]int, error) {
 		name := strings.Replace(event, " ", "", -1)
 		teams := strings.Split(name, "@")
 
-		if contain(esplCodeName[pairs[0]], teams[0]) &&
-			contain(esplCodeName[pairs[1]], teams[1]) {
+		if contain(esplCodeName[pairs[0]], teams[1]) &&
+			contain(esplCodeName[pairs[1]], teams[0]) {
 			scores := gjson.GetBytes(body,
 				"events."+strconv.Itoa(i)+".competitions.0.competitors.#.score").Array()
 			return []int{int(scores[0].Int()), int(scores[1].Int())}, nil

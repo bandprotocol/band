@@ -7,7 +7,7 @@ import (
 
 func TestEplEspnSuccess(t *testing.T) {
 	resolver := &EplEspn{}
-	score, err := resolver.QueryEplScore("20190901", "TOT-ARS")
+	score, err := resolver.QueryEplScore("20190901", "ARS-TOT")
 	if err != nil {
 		t.Errorf("Query ARS-TOT error: %s", err)
 	}
@@ -18,7 +18,7 @@ func TestEplEspnSuccess(t *testing.T) {
 
 func TestEplEspnFail(t *testing.T) {
 	resolver := &EplEspn{}
-	_, err := resolver.QueryEplScore("20190901", "ARS-TOT")
+	_, err := resolver.QueryEplScore("20190801", "ARS-TOT")
 	if err == nil {
 		t.Errorf("Query ARS-TOT error: %s", err)
 	}
@@ -26,7 +26,7 @@ func TestEplEspnFail(t *testing.T) {
 
 func TestEqlEspnSuccessHash(t *testing.T) {
 	resolver := &EplEspn{}
-	hash, err := resolver.Query([]byte("EPL/20190901/TOT-ARS"))
+	hash, err := resolver.Query([]byte("EPL/20190901/ARS-TOT"))
 	if err != nil {
 		t.Errorf("Query EPL error: %s", err)
 	}
