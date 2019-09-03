@@ -13,9 +13,11 @@ import {
   loadCurrent,
   dumpCurrent,
   reloadBalance,
+  saveWalletType,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
+import { walletTypeSelector } from 'selectors/current'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -63,7 +65,12 @@ const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 const web3Channel = channel()
 
 function* handleWeb3Channel({ type, status }) {
-  console.log('handleWeb3Channel', type, status)
+  // console.log('handleWeb3Channel', type, status)
+  // if(yield select(walletTypeSelector))
+  if ((yield select(walletTypeSelector)) === 'metamask') {
+    console.log('Using Metamask, do not use band wallet')
+    return
+  }
   switch (type) {
     case 'CHANGE_STATUS':
       switch (status) {
@@ -82,6 +89,7 @@ function* handleWeb3Channel({ type, status }) {
           yield put(setWeb3(web3))
           yield put(setUserAddress(userAddress))
           yield put(updateClient(provider))
+          yield put(saveWalletType('bandwallet'))
           break
         }
         default:
@@ -99,31 +107,8 @@ function* baseInitialize() {
   yield put(toggleFetch(true))
 
   yield put(loadCurrent())
-  // Initialize wallet
-  window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
-    walletPosition: {
-      top: 60,
-      right: 30,
-    },
-    approvalPosition: {
-      bottom: 0,
-      right: 10,
-      zIndex: 30,
-    },
-  })
 
-  window.BandWallet.on('network', ({ name }) => {
-    if (name !== localStorage.getItem('network')) {
-      localStorage.setItem('network', name)
-      window.location.reload()
-    }
-  })
-
-  window.BandWallet.on('status', s =>
-    web3Channel.put({ type: 'CHANGE_STATUS', status: s }),
-  )
-
-  yield put(setWallet(window.BandWallet))
+  // default before sign in any wallet
   yield put(setWeb3(defaultWeb3))
 
   const query = yield Utils.graphqlRequest(`
@@ -274,10 +259,61 @@ function* baseInitialize() {
     )
   }
 
+  /**
+   *  Band Wallet
+   */
+  // Initialize wallet
+  window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
+    walletPosition: {
+      top: 60,
+      right: 30,
+    },
+    approvalPosition: {
+      bottom: 0,
+      right: 10,
+      zIndex: 30,
+    },
+  })
+
+  // listen network emit
+  window.BandWallet.on('network', ({ name }) => {
+    if (name !== localStorage.getItem('network')) {
+      localStorage.setItem('network', name)
+      window.location.reload()
+    }
+  })
+
+  // listen status emit from band wallet
+  window.BandWallet.on('status', s =>
+    web3Channel.put({ type: 'CHANGE_STATUS', status: s }),
+  )
+  yield put(setWallet(window.BandWallet))
+
+  /**
+   * Metamask
+   */
+  if (
+    (typeof window.ethereum !== 'undefined' ||
+      typeof window.web3 !== 'undefined') &&
+    (yield select(walletTypeSelector)) !== 'bandwallet'
+  ) {
+    const provider = window['ethereum'] || window.web3.currentProvider
+    const web3 = new Web3(provider)
+    const userAddress = yield getUser(web3)
+    if (userAddress !== '') {
+      yield put(setWeb3(web3))
+      yield put(setUserAddress(userAddress))
+      yield put(updateClient(provider))
+      yield put(saveWalletType('metamask'))
+    } else {
+      console.log('Cannot find metamask user')
+    }
+  }
+
   // Auto reload balance
   yield fork(autoRefresh)
   // Auto update pending transaction
-  yield fork(checkTransaction)
+  yield fork(updateTransaction)
   // stop fetching state
   yield put(toggleFetch(false))
 }
@@ -289,7 +325,8 @@ function* autoRefresh() {
   }
 }
 
-function* checkTransaction() {
+/* update tx confirmation */
+function* updateTransaction() {
   while (true) {
     const currentBlock = yield defaultWeb3.eth.getBlockNumber()
     if (currentBlock !== (yield select(blockNumberSelector))) {

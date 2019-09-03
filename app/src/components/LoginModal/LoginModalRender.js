@@ -19,7 +19,6 @@ const openMetaMask = () => {
 
 export default props => {
   const { hideLogin, showWallet } = props
-  console.log('debug', props)
   return (
     <Card variant="modal">
       <Flex

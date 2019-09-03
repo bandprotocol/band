@@ -68,7 +68,7 @@ const SignIn = styled(Text).attrs({
   }
 `
 
-const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
+const BalanceBar = ({ isBND, toggle, showWallet }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
       {isBND ? (
@@ -105,6 +105,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
           USD
         </Text>
       )}
+      {/* Wallet image */}
       <Flex
         ml={3}
         mr={1}
@@ -303,7 +304,7 @@ export default ({
                     >
                       {balance.pretty()}
                     </Text>
-                    <HighlightBNDOrUSD
+                    <BalanceBar
                       isBND={isBND}
                       toggle={toggleBalance}
                       showWallet={showWallet}

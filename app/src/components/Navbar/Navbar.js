@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import NavbarRender from './NavbarRender'
-import { currentUserSelector } from 'selectors/current'
+import { currentUserSelector, walletTypeSelector } from 'selectors/current'
 import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { txIncludePendingSelector } from 'selectors/transaction'
@@ -84,8 +84,8 @@ class Navbar extends React.Component {
   }
 
   showWallet() {
-    const { wallet } = this.props
-    if (!wallet) {
+    const { wallet, walletType } = this.props
+    if (!wallet || walletType === 'metamask') {
       return
     }
     if (this.state.isWalletShow) {
@@ -131,6 +131,7 @@ const mapStateToProps = (state, props) => {
   return {
     wallet: walletSelector(state),
     user: currentUserSelector(state),
+    walletType: walletTypeSelector(state),
     balance: bandBalanceSelector(state),
     price: bandPriceSelector(state),
     txs: txIncludePendingSelector(state),

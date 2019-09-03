@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
 import LoginModalRender from './LoginModalRender'
 import { hideModal } from 'actions'
-
 import { walletSelector } from 'selectors/wallet'
 
 class LoginModal extends React.Component {

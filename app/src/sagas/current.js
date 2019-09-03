@@ -3,7 +3,6 @@ import { takeEvery, put, select } from 'redux-saga/effects'
 import {
   UPDATE_CLIENT,
   LOAD_CURRENT,
-  updateClient,
   setUserAddress,
   setNetwork,
   saveBalance,
@@ -30,28 +29,9 @@ import { List, Set, Map } from 'immutable'
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
   console.log('address current user', address)
-  if (
-    typeof window.ethereum !== 'undefined' ||
-    typeof window.web3 !== 'undefined'
-  ) {
-    // Web3 browser user detected. You can now use the provider.
-    const provider = window['ethereum'] || window.web3.currentProvider
-    console.log('procider', provider)
-    console.log('address', window.ethereum.selectedAddress)
-    const address = window.ethereum.selectedAddress
 
-    yield put(setUserAddress(address))
-    // yield put(updateClient(provider))
-    yield put(reloadBalance())
-    yield put(
-      saveBandClient(
-        yield BandProtocolClient.make({
-          provider,
-        }),
-      ),
-    )
-  }
   if (address) {
+    // if user is exist then reload for polling user balance.
     yield put(setUserAddress(address))
     yield put(reloadBalance())
     yield put(
@@ -89,19 +69,22 @@ function* handleUpdateClient({ provider }) {
   }
 }
 
+/* load user, network, balances and txs from LocalStroage */
 function* handleLoadCurrent() {
-  console.log('hello handleLoad')
   // Load user
   const user = localStorage.getItem('user')
   if (user) yield put(setUserAddress(user))
+
   // Load network
   const network = localStorage.getItem('network')
   yield put(setNetwork(network || 'kovan'))
+
   // Load balance
   const balances = localStorage.getItem('balances')
   if (balances) yield put(saveBalance(JSON.parse(balances)))
   else yield put(saveBalance({}))
 
+  // load txs and hidden txs
   if (user) {
     const rawTxState = localStorage.getItem(`txs-${user}`)
     const rawHiddenTxState = localStorage.getItem(`hiddenTxs-${user}`)
@@ -124,8 +107,8 @@ function* handleLoadCurrent() {
   }
 }
 
+/* save user, network and balances to LocalStroage */
 function* handleDumpCurrent() {
-  console.log('hello handleDump')
   const current = yield select(currentSelector)
   // Dump user
   const user = current.get('user')
