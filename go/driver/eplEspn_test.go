@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -30,7 +29,6 @@ func TestEqlEspnSuccessHash(t *testing.T) {
 	if err != nil {
 		t.Errorf("Query EPL error: %s", err)
 	}
-	fmt.Println(hash.Hex())
 	if hash.Hex() != "0x0202000000000000000000000000000000000000000000000000000000000000" {
 		t.Errorf("Wrong result")
 	}

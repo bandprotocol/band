@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -30,7 +29,6 @@ func TestNbaEspnSuccessHash(t *testing.T) {
 	if err != nil {
 		t.Errorf("Query NBA error: %s", err)
 	}
-	fmt.Println(hash.Hex())
 	if hash.Hex() != "0x6f73000000000000000000000000000000000000000000000000000000000000" {
 		t.Errorf("Wrong result")
 	}
