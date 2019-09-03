@@ -44,7 +44,7 @@ type ResponseTxObject struct {
 
 type valueWithTimeStamp struct {
 	Value     common.Hash
-	Status    uint8
+	Status    reqmsg.QueryStatus
 	Timestamp uint64
 }
 
@@ -87,15 +87,6 @@ func getProviderURL(provider common.Address) (string, error) {
 	var endpoint string
 	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
 	return endpoint, err
-}
-
-func statusToInt(status string) uint8 {
-	switch status {
-	case "OK":
-		return 1
-	default:
-		return 0
-	}
 }
 
 func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (reqmsg.DataResponse, error) {
@@ -165,8 +156,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 		return reqmsg.SignResponse{}, err
 	}
 
-	status := statusToInt(result.Status)
-	if status == 0 {
+	if result.Status != reqmsg.OK && result.Status == reqmsg.Disagreement {
 		return reqmsg.SignResponse{}, fmt.Errorf("getAggregateFromProvider: status invalid")
 	}
 
@@ -178,7 +168,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 			keyBytes,
 			result.Value,
 			result.Timestamp,
-			status,
+			result.Status,
 		),
 		result.Sig,
 		provider,
@@ -325,7 +315,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			counter[valueWithTimeStamp{
 				Value:     r.Value,
 				Timestamp: r.Timestamp,
-				Status:    statusToInt(r.Status),
+				Status:    r.Status,
 			}] += 1
 		}
 	}
@@ -355,7 +345,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	for _, agg := range validAggs {
 		if agg.Value == majority.Value &&
 			agg.Timestamp == majority.Timestamp &&
-			statusToInt(agg.Status) == majority.Status {
+			agg.Status == majority.Status {
 			agreedData = append(agreedData, agg)
 		}
 	}
@@ -374,7 +364,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		rs = append(rs, agg.Sig.R)
 		ss = append(ss, agg.Sig.S)
 	}
-	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, majority.Status, vs, rs, ss)
+	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, uint8(majority.Status), vs, rs, ss)
 	w.Header().Set("Content-Type", "application/json")
 
 	if arg.Broadcast {

@@ -35,7 +35,7 @@ func GetAggregateBytes(
 	key []byte,
 	value common.Hash,
 	timestamp uint64,
-	status uint8,
+	status QueryStatus,
 ) []byte {
 	bytesTimeStamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)

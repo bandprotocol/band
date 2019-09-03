@@ -20,7 +20,32 @@ import (
 	"github.com/spf13/viper"
 )
 
+type AggMethod int
+
+const (
+	Median AggMethod = iota
+	Majority
+	Custom
+)
+
+func (met AggMethod) String() string {
+	return toString[met]
+}
+
+var toString = map[AggMethod]string{
+	Median:   "Median",
+	Majority: "Majority",
+	Custom:   "Custom",
+}
+
+var toID = map[string]AggMethod{
+	"Median":   Median,
+	"Majority": Majority,
+	"Custom":   Custom,
+}
+
 var drivers map[common.Address]driver.Driver
+var aggregateMethods map[common.Address]AggMethod
 
 type valueWithTimeStamp struct {
 	Value     *big.Int
@@ -49,7 +74,7 @@ func signAggregator(
 	key string,
 	value common.Hash,
 	timestamp uint64,
-	status uint8,
+	status reqmsg.QueryStatus,
 ) eth.Signature {
 	msgBytes := reqmsg.GetAggregateBytes(dataset, []byte(key), value, timestamp, status)
 	sig, _ := eth.SignMessage(msgBytes)
@@ -73,7 +98,24 @@ func verifySignature(
 	)
 }
 
-func mediumTimestamp(timestamps []uint64) uint64 {
+func methodsFromConfig(config *viper.Viper) map[common.Address]AggMethod {
+	output := make(map[common.Address]AggMethod)
+	drivers := config.GetStringMap("drivers")
+	for datasetHex, _ := range drivers {
+		dataset := common.HexToAddress(datasetHex)
+		method := config.GetString("drivers." + datasetHex + ".method")
+		if method == "" {
+			panic("Need specific aggregator method")
+		}
+		var ok bool
+		if output[dataset], ok = toID[method]; !ok {
+			panic("Unknown aggregator method")
+		}
+	}
+	return output
+}
+
+func medianTimestamp(timestamps []uint64) uint64 {
 	sort.Slice(timestamps, func(i, j int) bool {
 		return timestamps[i] < timestamps[j]
 	})
@@ -160,14 +202,24 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	output := common.BigToHash(driver.Median(values))
-	timestamp := mediumTimestamp(timestamps)
+	var output common.Hash
+	var status reqmsg.QueryStatus
+	if aggregateMethods[arg.Dataset] == Median {
+		output = common.BigToHash(driver.Median(values))
+		status = reqmsg.OK
+	} else if aggregateMethods[arg.Dataset] == Majority {
+		// TODO: Majortity value
+	} else if aggregateMethods[arg.Dataset] == Custom {
+		// TODO: Get Ipfs hash
+	}
+
+	timestamp := medianTimestamp(timestamps)
 	json.NewEncoder(w).Encode(reqmsg.SignResponse{
 		Provider:  providerAddress,
 		Value:     output,
 		Timestamp: timestamp,
-		Status:    "OK",
-		Sig:       signAggregator(arg.Dataset, arg.Key, output, timestamp, 1),
+		Status:    status,
+		Sig:       signAggregator(arg.Dataset, arg.Key, output, timestamp, status),
 	})
 }
 
@@ -233,6 +285,7 @@ func main() {
 	}
 
 	drivers = driver.FromConfig(config)
+	aggregateMethods = methodsFromConfig(config)
 
 	fmt.Println("start provider node with these following parameters")
 	table := tablewriter.NewWriter(os.Stdout)

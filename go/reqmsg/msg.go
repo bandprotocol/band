@@ -42,5 +42,5 @@ type SignResponse struct {
 	Value     common.Hash    `json:"value"`
 	Timestamp uint64         `json:"timestamp"`
 	Sig       eth.Signature  `json:"signature"`
-	Status    string         `json:"status"`
+	Status    QueryStatus    `json:"status"`
 }
