@@ -51,15 +51,6 @@ func init() {
 
 func (*MlbEspn) Configure(*viper.Viper) {}
 
-func containMlb(arr []string, str string) bool {
-	for _, i := range arr {
-		if i == str {
-			return true
-		}
-	}
-	return false
-}
-
 func (*MlbEspn) QueryMlbScore(date string, shortName string, round string) ([]int, error) {
 	countRound := 1
 	rountInt, err := strconv.Atoi(round)
@@ -94,8 +85,8 @@ func (*MlbEspn) QueryMlbScore(date string, shortName string, round string) ([]in
 		name := strings.Replace(event, " ", "", -1)
 		teams := strings.Split(name, "@")
 
-		if containMlb(mlbEsplCodeName[pairs[0]], teams[1]) &&
-			containMlb(mlbEsplCodeName[pairs[1]], teams[0]) {
+		if contain(mlbEsplCodeName[pairs[0]], teams[1]) &&
+			contain(mlbEsplCodeName[pairs[1]], teams[0]) {
 			if countRound == rountInt {
 				scores := gjson.GetBytes(body,
 					"events."+strconv.Itoa(i)+".competitions.0.competitors.#.score").Array()

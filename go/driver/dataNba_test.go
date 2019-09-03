@@ -5,30 +5,30 @@ import (
 	"testing"
 )
 
-func TestNbaEspnSuccess(t *testing.T) {
-	resolver := &NbaEspn{}
-	score, err := resolver.QueryNbaScore("20180110", "CHA-DAL")
+func TestDataNbaSuccess(t *testing.T) {
+	resolver := &DataNbaEspn{}
+	score, err := resolver.QueryDataNbaScore("20180110", "CHA-DAL")
 	if err != nil {
-		t.Errorf("Query CHA-DAL error: %s", err)
+		t.Errorf("Query ARS-TOT error: %s", err)
 	}
 	if score[0] != 111 && score[1] != 115 {
 		t.Errorf("Wrong result")
 	}
 }
 
-func TestNbaEspnFail(t *testing.T) {
-	resolver := &NbaEspn{}
-	_, err := resolver.QueryNbaScore("20180110", "ARS-TOT")
+func TestDataNbaFail(t *testing.T) {
+	resolver := &DataNbaEspn{}
+	_, err := resolver.QueryDataNbaScore("20180110", "DAL-CHA")
 	if err == nil {
 		t.Errorf("Query ARS-TOT error: %s", err)
 	}
 }
 
-func TestNbaEspnSuccessHash(t *testing.T) {
-	resolver := &NbaEspn{}
+func TestDataNbaSuccessHash(t *testing.T) {
+	resolver := &DataNbaEspn{}
 	hash, err := resolver.Query([]byte("NBA/20180110/CHA-DAL"))
 	if err != nil {
-		t.Errorf("Query NBA error: %s", err)
+		t.Errorf("Query DataNba error: %s", err)
 	}
 	fmt.Println(hash.Hex())
 	if hash.Hex() != "0x6f73000000000000000000000000000000000000000000000000000000000000" {

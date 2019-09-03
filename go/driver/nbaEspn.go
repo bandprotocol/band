@@ -50,27 +50,17 @@ func init() {
 
 }
 
-func containNba(arr []string, str string) bool {
-	for _, i := range arr {
-		if i == str {
-			return true
-		}
-	}
-	return false
-}
-
 func (*NbaEspn) Configure(*viper.Viper) {}
 
 func (*NbaEspn) QueryNbaScore(date string, shortName string) ([]int, error) {
-
 	pairs := strings.Split(shortName, "-")
 	if len(pairs) != 2 {
-		return []int{}, fmt.Errorf("nba team %s is not valid", shortName)
+		return []int{}, fmt.Errorf("nba name team %s is not valid", shortName)
 	}
 	var url strings.Builder
-	url.WriteString("http://data.nba.net/prod/v2/")
+	url.WriteString("http://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard")
+	url.WriteString("?dates=")
 	url.WriteString(date)
-	url.WriteString("/scoreboard.json")
 
 	var client = &http.Client{}
 
@@ -84,28 +74,31 @@ func (*NbaEspn) QueryNbaScore(date string, shortName string) ([]int, error) {
 	if err != nil {
 		return []int{}, err
 	}
-	games := gjson.GetBytes(body, "games").Array()
-	if len(games) == 0 {
-		return []int{}, fmt.Errorf("QueryNbaScore: There is no NBA match today.")
-	}
-	hTeam := gjson.GetBytes(body, "games.#.hTeam.triCode").Array()
-	for i, homeTeamName := range hTeam {
-		if containNba(nbaEspnCodeName[pairs[0]], homeTeamName.Str) {
-			homeScore := gjson.GetBytes(body, "games."+strconv.Itoa(i)+".hTeam.score")
-			awayScore := gjson.GetBytes(body, "games."+strconv.Itoa(i)+".vTeam.score")
-			return []int{int(homeScore.Int()), int(awayScore.Int())}, nil
+	events := gjson.GetBytes(body, "events.#.shortName")
+	for i, rawEvent := range events.Array() {
+		event := rawEvent.String()
+
+		name := strings.Replace(event, " ", "", -1)
+		teams := strings.Split(name, "@")
+
+		if contain(nbaEspnCodeName[pairs[0]], teams[1]) &&
+			contain(nbaEspnCodeName[pairs[1]], teams[0]) {
+			scores := gjson.GetBytes(body,
+				"events."+strconv.Itoa(i)+".competitions.0.competitors.#.score").Array()
+			return []int{int(scores[0].Int()), int(scores[1].Int())}, nil
 		}
+
 	}
-	return []int{}, fmt.Errorf("QueryEplScore: Not found")
+	return []int{}, fmt.Errorf("QueryNbaEspnScore: Not found")
 }
 
-func (n *NbaEspn) Query(key []byte) (common.Hash, error) {
+func (e *NbaEspn) Query(key []byte) (common.Hash, error) {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 3 {
 		return common.Hash{}, fmt.Errorf("Invalid key format")
 	}
 	if keys[0] == "NBA" {
-		value, err := n.QueryNbaScore(keys[1], keys[2])
+		value, err := e.QueryNbaScore(keys[1], keys[2])
 		if err != nil {
 			return common.Hash{}, err
 		}
