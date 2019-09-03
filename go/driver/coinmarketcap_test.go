@@ -51,11 +51,11 @@ func TestUnknownSymbol_CoinMarketCap(t *testing.T) {
 func TestQueryToQuerySpotPrice_CoinMarketCap(t *testing.T) {
 	resolver := &CoinMarketCap{}
 	resolver.Configure(viper.New())
-	price, err := resolver.Query([]byte("SPOTPX/ETH-USD"))
-	if err != nil {
-		t.Errorf("Query ETH-USD error: %s", err)
+	output := resolver.Query([]byte("SPOTPX/ETH-USD"))
+	if output.Option != OK {
+		t.Errorf("Query ETH-USD error: %s", output.Option)
 	}
-	priceBig := price.Big()
+	priceBig := output.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(50)) == -1 || priceBig.Cmp(PriceToBigInt(1000)) == 1 {
 		t.Errorf("Query ETH-USD price is way off: %s", priceBig.String())
 	}
@@ -64,8 +64,8 @@ func TestQueryToQuerySpotPrice_CoinMarketCap(t *testing.T) {
 func TestQueryInvalidFunction_CoinMarketCap(t *testing.T) {
 	resolver := &CoinMarketCap{}
 	resolver.Configure(viper.New())
-	_, err := resolver.Query([]byte("REALPRICE/ETH-USD"))
-	if err == nil {
+	output := resolver.Query([]byte("REALPRICE/ETH-USD"))
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")
 	}
 }

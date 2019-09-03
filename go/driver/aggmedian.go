@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"errors"
 	"math/big"
 	"sort"
 
@@ -32,30 +31,28 @@ func Median(values []*big.Int) *big.Int {
 	}
 }
 
-func (agg *AggMedian) Query(key []byte) (common.Hash, error) {
-	ch := make(chan common.Hash)
+func (agg *AggMedian) Query(key []byte) Answer {
+	ch := make(chan Answer)
 	for _, child := range agg.children {
 		go func(child Driver) {
-			val, err := DoQuery(child, key)
-			if err == nil {
-				ch <- val
-			} else {
-				ch <- common.Hash{}
-			}
+			ch <- DoQuery(child, key)
 		}(child)
 	}
 
 	var values []*big.Int
 	for i := 0; i < len(agg.children); i++ {
 		r := <-ch
-		if r != (common.Hash{}) {
-			values = append(values, r.Big())
+		if r.Option == OK {
+			values = append(values, r.Value.Big())
 		}
 	}
 
 	if len(values) == 0 {
-		return common.Hash{}, errors.New("aggmedian: all children return error")
+		return NotFoundAnswer
 	}
 
-	return common.BigToHash(Median(values)), nil
+	return Answer{
+		Option: OK,
+		Value:  common.BigToHash(Median(values)),
+	}
 }

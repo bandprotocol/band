@@ -127,7 +127,9 @@ func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (
 	keyBytes, _ := hex.DecodeString(request.Key[2:])
 	// Verify signature
 	if !eth.VerifyMessage(
-		reqmsg.GetRawDataBytes(request.Dataset, keyBytes, result.Value, result.Timestamp),
+		reqmsg.GetRawDataBytes(
+			request.Dataset, keyBytes, result.Answer.Option, result.Answer.Value, result.Timestamp,
+		),
 		result.Sig,
 		provider,
 	) {
@@ -294,9 +296,11 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get aggregate data
+	minProviders := 2*len(providers)/3 + 1
 	aggRequest := reqmsg.SignRequest{
 		dataRequest,
 		responses,
+		minProviders,
 	}
 
 	var counter = make(map[valueWithTimeStamp]int)

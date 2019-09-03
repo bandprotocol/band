@@ -46,11 +46,11 @@ func TestAlphaVantageForexUnknownSymbol(t *testing.T) {
 
 func TestAlphaVantageForexQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &AlphaVantageForex{}
-	price, err := resolver.Query([]byte("SPOTPX/EUR-USD"))
-	if err != nil {
-		t.Errorf("Query EUR-USD error: %s", err)
+	output := resolver.Query([]byte("SPOTPX/EUR-USD"))
+	if output.Option != OK {
+		t.Errorf("Query EUR-USD error: %s", output.Option)
 	}
-	priceBig := price.Big()
+	priceBig := output.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(1)) == -1 || priceBig.Cmp(PriceToBigInt(2)) == 1 {
 		t.Errorf("Query EUR-USD price is way off: %s", priceBig.String())
 	}
@@ -58,8 +58,8 @@ func TestAlphaVantageForexQueryToQuerySpotPrice(t *testing.T) {
 
 func TestAlphaVantageForexQueryInvalidFunction(t *testing.T) {
 	resolver := &AlphaVantageForex{}
-	_, err := resolver.Query([]byte("REALPRICE/EUR-USD"))
-	if err == nil {
+	output := resolver.Query([]byte("REALPRICE/EUR-USD"))
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/EUR-USD must contain error. See nothing")
 	}
 }

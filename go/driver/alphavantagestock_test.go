@@ -34,11 +34,11 @@ func TestAlphaVantageStockUnknownSymbol(t *testing.T) {
 
 func TestAlphaVantageStockQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &AlphaVantageStock{}
-	price, err := resolver.Query([]byte("SPOTPX/GOOG"))
-	if err != nil {
-		t.Errorf("Query GOOG error: %s", err)
+	output := resolver.Query([]byte("SPOTPX/GOOG"))
+	if output.Option != OK {
+		t.Errorf("Query GOOG error: %s", output.Option)
 	}
-	priceBig := price.Big()
+	priceBig := output.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(500)) == -1 || priceBig.Cmp(PriceToBigInt(2000)) == 1 {
 		t.Errorf("Query GOOG price is way off: %s", priceBig.String())
 	}
@@ -46,8 +46,8 @@ func TestAlphaVantageStockQueryToQuerySpotPrice(t *testing.T) {
 
 func TestAlphaVantageStockQueryInvalidFunction(t *testing.T) {
 	resolver := &AlphaVantageStock{}
-	_, err := resolver.Query([]byte("REALPRICE/GOOG"))
-	if err == nil {
+	output := resolver.Query([]byte("REALPRICE/GOOG"))
+	if output.Option == OK {
 		t.Errorf("Query REALPRICE/GOOG must contain error. See nothing")
 	}
 }

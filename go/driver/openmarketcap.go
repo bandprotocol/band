@@ -65,17 +65,20 @@ func (*OpenMarketCap) QuerySpotPrice(symbol string) (float64, error) {
 	return prices[pairs[0]] / prices[pairs[1]], nil
 }
 
-func (a *OpenMarketCap) Query(key []byte) (common.Hash, error) {
+func (a *OpenMarketCap) Query(key []byte) Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return common.Hash{}, fmt.Errorf("Invalid key format")
+		return NotFoundAnswer
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return common.Hash{}, err
+			return NotFoundAnswer
 		}
-		return common.BigToHash(PriceToBigInt(value)), nil
+		return Answer{
+			Option: OK,
+			Value:  common.BigToHash(PriceToBigInt(value)),
+		}
 	}
-	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
+	return NotFoundAnswer
 }

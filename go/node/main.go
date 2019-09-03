@@ -22,6 +22,11 @@ import (
 
 var drivers map[common.Address]driver.Driver
 
+type valueWithTimeStamp struct {
+	Value     *big.Int
+	Timestamp uint64
+}
+
 var rootCmd = &cobra.Command{
 	Use:   "./[this] -h \n  ./[this] --help \n  ./[this] [path to node.yml]",
 	Short: "The Band provider node is middleware, operating between the blockchain and external data",
@@ -31,10 +36,10 @@ var rootCmd = &cobra.Command{
 func sign(
 	dataset common.Address,
 	key string,
-	value common.Hash,
+	answer driver.Answer,
 	timestamp uint64,
 ) eth.Signature {
-	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), value, timestamp)
+	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), answer.Option, answer.Value, timestamp)
 	sig, _ := eth.SignMessage(msgBytes)
 	return sig
 }
@@ -54,20 +59,18 @@ func signAggregator(
 func verifySignature(
 	dataset common.Address,
 	key string,
-	value common.Hash,
+	answer driver.Answer,
 	timestamp uint64,
 	provider common.Address,
 	signature eth.Signature,
 ) bool {
 	return eth.VerifyMessage(
-		reqmsg.GetRawDataBytes(dataset, []byte(key), value, timestamp),
+		reqmsg.GetRawDataBytes(
+			dataset, []byte(key), answer.Option, answer.Value, timestamp,
+		),
 		signature,
 		provider,
 	)
-}
-
-func getRequiredProviderCount(dataset common.Address) int {
-	return 2
 }
 
 func mediumTimestamp(timestamps []uint64) uint64 {
@@ -90,11 +93,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	arg.NormalizeKey()
-	output, err := driver.DoQuery(drivers[arg.Dataset], []byte(arg.Key))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	output := driver.DoQuery(drivers[arg.Dataset], []byte(arg.Key))
 	w.Header().Set("Content-Type", "application/json")
 	currentTimestamp := uint64(time.Now().Unix())
 	providerAddress, err := eth.GetAddress()
@@ -104,7 +103,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(reqmsg.DataResponse{
 		Provider:  providerAddress,
-		Value:     output,
+		Answer:    output,
 		Timestamp: currentTimestamp,
 		Sig:       sign(arg.Dataset, arg.Key, output, currentTimestamp),
 	})
@@ -120,20 +119,38 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 	arg.NormalizeKey()
 	var values []*big.Int
 	var timestamps []uint64
+
+	reportedValue := make(map[common.Address]valueWithTimeStamp)
+	delegateList := make([]common.Address, 0)
 	for _, report := range arg.Datapoints {
 		if verifySignature(
 			arg.Dataset,
 			arg.Key,
-			report.Value,
+			report.Answer,
 			report.Timestamp,
 			report.Provider,
 			report.Sig,
 		) {
-			values = append(values, report.Value.Big())
-			timestamps = append(timestamps, report.Timestamp)
+			if report.Answer.Option == driver.OK {
+				values = append(values, report.Answer.Value.Big())
+				timestamps = append(timestamps, report.Timestamp)
+				reportedValue[report.Provider] = valueWithTimeStamp{
+					Value:     report.Answer.Value.Big(),
+					Timestamp: report.Timestamp,
+				}
+			} else if report.Answer.Option == driver.Delegated {
+				delegateList = append(delegateList, common.BytesToAddress(report.Answer.Value.Bytes()))
+			}
+
+			for _, delegator := range delegateList {
+				if v, ok := reportedValue[delegator]; ok {
+					values = append(values, v.Value)
+					timestamps = append(timestamps, v.Timestamp)
+				}
+			}
 		}
 	}
-	if len(values) < getRequiredProviderCount(arg.Dataset) {
+	if len(values) < arg.MinimumProviderCount {
 		http.Error(w, "Insufficient signatures", http.StatusBadRequest)
 		return
 	}

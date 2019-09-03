@@ -90,17 +90,20 @@ func (*CurrencyConverter) QuerySpotPrice(symbol string) (float64, error) {
 	return 0, fmt.Errorf("Invalid key")
 }
 
-func (a *CurrencyConverter) Query(key []byte) (common.Hash, error) {
+func (a *CurrencyConverter) Query(key []byte) Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return common.Hash{}, fmt.Errorf("Invalid key format")
+		return NotFoundAnswer
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return common.Hash{}, err
+			return NotFoundAnswer
 		}
-		return common.BigToHash(PriceToBigInt(value)), nil
+		return Answer{
+			Option: OK,
+			Value:  common.BigToHash(PriceToBigInt(value)),
+		}
 	}
-	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
+	return NotFoundAnswer
 }

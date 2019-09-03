@@ -27,11 +27,11 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	regEx.Configure(config)
-	price, err := regEx.Query([]byte("SPOTPX/ETH-USD"))
-	if err != nil {
-		t.Errorf("Query ETH-USD error: %s", err)
+	price := regEx.Query([]byte("SPOTPX/ETH-USD"))
+	if price.Option != OK {
+		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(50)) == -1 || priceBig.Cmp(PriceToBigInt(1000)) == 1 {
 		t.Errorf("Query ETH-USD price is way off: %s", priceBig.String())
 	}
@@ -55,11 +55,11 @@ children:
 	config.SetConfigType("yaml")
 	config.ReadConfig(bytes.NewBuffer(cf))
 	regEx.Configure(config)
-	price, err := regEx.Query([]byte("SPOTPX/FB"))
-	if err != nil {
-		t.Errorf("Query FB error: %s", err)
+	price := regEx.Query([]byte("SPOTPX/FB"))
+	if price.Option != OK {
+		t.Errorf("Query FB error: %s", price.Option)
 	}
-	priceBig := price.Big()
+	priceBig := price.Value.Big()
 	if priceBig.Cmp(PriceToBigInt(50)) == -1 || priceBig.Cmp(PriceToBigInt(1000)) == 1 {
 		t.Errorf("Query FB price is way off: %s", priceBig.String())
 	}
