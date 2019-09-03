@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -79,12 +78,15 @@ func (*DataNbaEspn) QueryDataNbaScore(date string, shortName string) ([]int, err
 	if len(games) == 0 {
 		return []int{}, fmt.Errorf("QueryDataNbaScore: There is no NBA match today.")
 	}
-	hTeam := gjson.GetBytes(body, "games.#.hTeam.triCode").Array()
-	for i, homeTeamName := range hTeam {
-		if contain(dataNbaEspnCodeName[pairs[0]], homeTeamName.Str) {
-			homeScore := gjson.GetBytes(body, "games."+strconv.Itoa(i)+".hTeam.score")
-			awayScore := gjson.GetBytes(body, "games."+strconv.Itoa(i)+".vTeam.score")
-			return []int{int(homeScore.Int()), int(awayScore.Int())}, nil
+
+	for _, game := range games {
+		homeObj := game.Map()["hTeam"].Map()
+		awayObj := game.Map()["vTeam"].Map()
+		if contain(dataNbaEspnCodeName[pairs[0]], homeObj["triCode"].Str) &&
+			contain(dataNbaEspnCodeName[pairs[1]], awayObj["triCode"].Str) {
+			homeScore := homeObj["score"].Int()
+			awayScore := awayObj["score"].Int()
+			return []int{int(homeScore), int(awayScore)}, nil
 		}
 	}
 	return []int{}, fmt.Errorf("QueryDataScore: Not found")
