@@ -49,16 +49,6 @@ func init() {
 	nflEspnCodeName["TB"] = []string{"TB"}
 	nflEspnCodeName["TEN"] = []string{"TEN"}
 	nflEspnCodeName["WAS"] = []string{"WAS"}
-
-}
-
-func containNfl(arr []string, str string) bool {
-	for _, i := range arr {
-		if i == str {
-			return true
-		}
-	}
-	return false
 }
 
 func (*NflEspn) Configure(*viper.Viper) {}
@@ -93,14 +83,12 @@ func (*NflEspn) QueryNflScore(date string, shortName string) ([]int, error) {
 		name := strings.Replace(event, " ", "", -1)
 		teams := strings.Split(name, "@")
 
-		if containNfl(nflEspnCodeName[pairs[0]], teams[1]) &&
-			containNfl(nflEspnCodeName[pairs[1]], teams[0]) {
+		if contain(nflEspnCodeName[pairs[0]], teams[1]) &&
+			contain(nflEspnCodeName[pairs[1]], teams[0]) {
 			scores := gjson.GetBytes(body,
 				"events."+strconv.Itoa(i)+".competitions.0.competitors.#.score").Array()
-			fmt.Println(scores)
 			return []int{int(scores[0].Int()), int(scores[1].Int())}, nil
 		}
-
 	}
 	return []int{}, fmt.Errorf("QueryNflScore: Not found")
 }
@@ -118,7 +106,6 @@ func (n *NflEspn) Query(key []byte) (common.Hash, error) {
 		result := common.Hash{}
 		result[0] = byte(value[0])
 		result[1] = byte(value[1])
-
 		return result, nil
 	}
 	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
