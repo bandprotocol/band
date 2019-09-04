@@ -1,6 +1,6 @@
 # Band Protocol
 
-翻译内容来自 [River的简书](https://www.jianshu.com/nb/39705712)，并保续同步更新。
+本文档由 [Rebase技术社区](http://rebase.network/) 翻译，翻译内容来自 [River的简书](https://www.jianshu.com/nb/39705712)，并保续同步更新。
 
 欢迎来到 [Band Protocol](https://bandprotocol.com)的开放的知识库。在这里你会得到一切关于Band Protocol的知识，从高层次的非技术概念到最详细的规范。无论你是一个token持有者，dapp开发者，或者是一个区块链爱好者，我们都能满足你!
 
