@@ -67,7 +67,7 @@ const bandwalletChannel = channel()
 /* handle web3 channel from band wallet*/
 function* handleBandWalletChannel({ type, status }) {
   if ((yield select(walletTypeSelector)) === 'metamask') {
-    console.log('Not using bandwallet')
+    // console.log('Not using bandwallet')
     return
   }
   switch (type) {

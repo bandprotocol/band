@@ -29,7 +29,7 @@ import { List, Set, Map } from 'immutable'
 
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
-  console.log('current user address:', address)
+  // console.log('current user address:', address)
 
   if (address) {
     // if user is exist then reload for polling user balance.
