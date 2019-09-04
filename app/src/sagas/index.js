@@ -17,7 +17,7 @@ import {
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
-import { walletTypeSelector } from 'selectors/current'
+import { walletTypeSelector, currentUserSelector } from 'selectors/current'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -52,7 +52,7 @@ switch (network) {
     RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
     break
   // if (process.env.NODE_ENV !== 'production')
-  //   WALLET_ENDPOINT = 'http://localhost:3000'getUser
+  //   WALLET_ENDPOINT = 'http://localhost:3000'
   // break
   case 'rinkeby':
   case 'local':
@@ -62,13 +62,12 @@ switch (network) {
 }
 
 const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
-const web3Channel = channel()
+const bandwalletChannel = channel()
 
-function* handleWeb3Channel({ type, status }) {
-  // console.log('handleWeb3Channel', type, status)
-  // if(yield select(walletTypeSelector))
+/* handle web3 channel from band wallet*/
+function* handleBandWalletChannel({ type, status }) {
   if ((yield select(walletTypeSelector)) === 'metamask') {
-    console.log('Using Metamask, do not use band wallet')
+    console.log('Not using bandwallet')
     return
   }
   switch (type) {
@@ -79,10 +78,13 @@ function* handleWeb3Channel({ type, status }) {
         case 'INITIALIZED':
           break
         case 'NOT_SIGNIN':
+          // console.log('not_signin')
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
+          yield put(saveWalletType('none'))
           break
         case 'PROVIDER_READY': {
+          // console.log('provider ready')
           const provider = yield window.BandWallet.provider
           const web3 = new Web3(provider)
           const userAddress = yield getUser(web3)
@@ -193,6 +195,7 @@ function* baseInitialize() {
     }
   `,
   )
+
   for (const community of communityDetails.allBandCommunities.nodes) {
     const token = community.tokenByTokenAddress
     yield put(
@@ -275,7 +278,7 @@ function* baseInitialize() {
     },
   })
 
-  // listen network emit
+  // listen network changed
   window.BandWallet.on('network', ({ name }) => {
     if (name !== localStorage.getItem('network')) {
       localStorage.setItem('network', name)
@@ -283,32 +286,17 @@ function* baseInitialize() {
     }
   })
 
-  // listen status emit from band wallet
-  window.BandWallet.on('status', s =>
-    web3Channel.put({ type: 'CHANGE_STATUS', status: s }),
-  )
+  // listen status changed
+  window.BandWallet.on('status', status => {
+    bandwalletChannel.put({ type: 'CHANGE_STATUS', status })
+  })
+
   yield put(setWallet(window.BandWallet))
 
   /**
    * Metamask
    */
-  if (
-    (typeof window.ethereum !== 'undefined' ||
-      typeof window.web3 !== 'undefined') &&
-    (yield select(walletTypeSelector)) !== 'bandwallet'
-  ) {
-    const provider = window['ethereum'] || window.web3.currentProvider
-    const web3 = new Web3(provider)
-    const userAddress = yield getUser(web3)
-    if (userAddress !== '') {
-      yield put(setWeb3(web3))
-      yield put(setUserAddress(userAddress))
-      yield put(updateClient(provider))
-      yield put(saveWalletType('metamask'))
-    } else {
-      console.log('Cannot find metamask user')
-    }
-  }
+  yield fork(metaMaskProcess)
 
   // Auto reload balance
   yield fork(autoRefresh)
@@ -316,6 +304,37 @@ function* baseInitialize() {
   yield fork(updateTransaction)
   // stop fetching state
   yield put(toggleFetch(false))
+}
+
+function* metaMaskProcess() {
+  while (true) {
+    const walletType = yield select(walletTypeSelector)
+    if (
+      (typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined') &&
+      (walletType === 'metamask' || walletType === 'none')
+    ) {
+      const provider = window['ethereum'] || window.web3.currentProvider
+      const web3 = new Web3(provider)
+      const newUserAddress = yield getUser(web3)
+
+      if (newUserAddress) {
+        const currentUser = yield select(currentUserSelector)
+        if (currentUser !== newUserAddress) {
+          yield put(setWeb3(web3))
+          yield put(setUserAddress(newUserAddress))
+          yield put(updateClient(provider))
+          yield put(saveWalletType('metamask'))
+        }
+      } else {
+        // console.log('Cannot find metamask user')
+        yield put(setUserAddress('NOT_SIGNIN'))
+        yield put(updateClient())
+        yield put(saveWalletType('none'))
+      }
+    }
+    yield delay(1000)
+  }
 }
 
 function* autoRefresh() {
@@ -411,6 +430,6 @@ export default function*() {
     fork(holderSaga),
     fork(tcdSaga),
   ])
-  yield takeEvery(web3Channel, handleWeb3Channel)
+  yield takeEvery(bandwalletChannel, handleBandWalletChannel)
   yield* baseInitialize()
 }

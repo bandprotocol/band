@@ -6,6 +6,7 @@ import {
   setUserAddress,
   setNetwork,
   saveBalance,
+  saveWalletType,
   saveBandClient,
   saveCommunityClient,
   saveTCDClient,
@@ -28,7 +29,7 @@ import { List, Set, Map } from 'immutable'
 
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
-  console.log('address current user', address)
+  console.log('current user address:', address)
 
   if (address) {
     // if user is exist then reload for polling user balance.
@@ -84,6 +85,9 @@ function* handleLoadCurrent() {
   if (balances) yield put(saveBalance(JSON.parse(balances)))
   else yield put(saveBalance({}))
 
+  const walletType = localStorage.getItem('walletType')
+  if (walletType) yield put(saveWalletType(walletType))
+
   // load txs and hidden txs
   if (user) {
     const rawTxState = localStorage.getItem(`txs-${user}`)
@@ -120,6 +124,10 @@ function* handleDumpCurrent() {
   else localStorage.removeItem('network')
   // Dump balance
   const balances = current.get('balances')
+  // Dump wallet type
+  const walletType = current.get('walletType')
+  if (walletType) localStorage.setItem('walletType', walletType)
+
   if (balances) {
     const bj = balances.map(v =>
       Map({

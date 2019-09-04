@@ -68,7 +68,7 @@ const SignIn = styled(Text).attrs({
   }
 `
 
-const BalanceBar = ({ isBND, toggle, showWallet }) => {
+const BalanceBar = ({ isBND, toggle, showWallet, isBandWallet }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
       {isBND ? (
@@ -106,15 +106,17 @@ const BalanceBar = ({ isBND, toggle, showWallet }) => {
         </Text>
       )}
       {/* Wallet image */}
-      <Flex
-        ml={3}
-        mr={1}
-        mb={0}
-        style={{ cursor: 'pointer' }}
-        onClick={() => showWallet()}
-      >
-        <Image src={Wallet} width="20px" height="20px" />
-      </Flex>
+      {isBandWallet && (
+        <Flex
+          ml={3}
+          mr={1}
+          mb={0}
+          style={{ cursor: 'pointer' }}
+          onClick={() => showWallet()}
+        >
+          <Image src={Wallet} width="20px" height="20px" />
+        </Flex>
+      )}
     </Flex>
   )
 }
@@ -227,6 +229,7 @@ export default ({
   showWallet,
   showSignOut,
   toggleSignOut,
+  isBandWallet,
   signOut,
   user,
   balance,
@@ -308,6 +311,7 @@ export default ({
                       isBND={isBND}
                       toggle={toggleBalance}
                       showWallet={showWallet}
+                      isBandWallet={isBandWallet}
                     />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
@@ -327,7 +331,10 @@ export default ({
                   </DropdownButton>
                   <Flex
                     alignItems="center"
-                    style={{ cursor: 'pointer' }}
+                    style={{
+                      cursor: isBandWallet ? 'pointer' : 'pointer',
+                      pointerEvents: isBandWallet ? 'auto' : 'none',
+                    }}
                     onClick={() => toggleSignOut()}
                   >
                     <Flex ml="15px" mr="10px">
@@ -338,12 +345,14 @@ export default ({
                         />
                       )}
                     </Flex>
-                    <Text
-                      color={isDashboard ? '#fff' : colors.blue.normal}
-                      fontSize={3}
-                    >
-                      <FontAwesomeIcon icon={faSortDown} />
-                    </Text>
+                    {isBandWallet && (
+                      <Text
+                        color={isDashboard ? '#fff' : colors.blue.normal}
+                        fontSize={3}
+                      >
+                        <FontAwesomeIcon icon={faSortDown} />
+                      </Text>
+                    )}
                   </Flex>
                 </Flex>
                 <SignOutDropDown show={showSignOut}>
