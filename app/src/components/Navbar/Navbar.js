@@ -85,8 +85,8 @@ class Navbar extends React.Component {
   }
 
   showWallet() {
-    const { wallet, walletType } = this.props
-    if (!wallet || walletType === 'metamask') {
+    const { wallet } = this.props
+    if (!wallet) {
       return
     }
     if (this.state.isWalletShow) {
