@@ -160,15 +160,16 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 			} else if report.Answer.Option == dt.Delegated {
 				delegateList = append(delegateList, common.BytesToAddress(report.Answer.Value.Bytes()))
 			}
-
-			for _, delegator := range delegateList {
-				if v, ok := reportedValue[delegator]; ok {
-					values = append(values, v.Value)
-					timestamps = append(timestamps, v.Timestamp)
-				}
-			}
 		}
 	}
+
+	for _, delegator := range delegateList {
+		if v, ok := reportedValue[delegator]; ok {
+			values = append(values, v.Value)
+			timestamps = append(timestamps, v.Timestamp)
+		}
+	}
+
 	if len(values) < arg.MinimumProviderCount {
 		http.Error(w, "Insufficient signatures", http.StatusBadRequest)
 		return
@@ -185,10 +186,17 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		output = common.BigToHash(driver.Median(values))
 		status = dt.OK
 	} else if aggregateMethods[arg.Dataset] == dt.Majority {
-		// TODO: Majortity value
-
+		value, count, err := driver.Majority(values)
+		if err != nil || count < arg.MinimumProviderCount {
+			output = common.Hash{}
+			status = dt.Disagreement
+			log.Printf("Disagree on %s", arg.Key)
+		} else {
+			output = common.BigToHash(value)
+			status = dt.OK
+		}
 	} else if aggregateMethods[arg.Dataset] == dt.Custom {
-		// TODO: Get Ipfs hash
+		// TODO: Get aggregate method from ipfs
 	}
 
 	timestamp := medianTimestamp(timestamps)

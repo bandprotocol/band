@@ -157,7 +157,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 		return reqmsg.SignResponse{}, err
 	}
 
-	if result.Status != dt.OK && result.Status == dt.Disagreement {
+	if result.Status != dt.OK && result.Status != dt.Disagreement {
 		return reqmsg.SignResponse{}, fmt.Errorf("getAggregateFromProvider: status invalid")
 	}
 
@@ -303,6 +303,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 				chSignResponse <- data
 			} else {
+				log.Printf("Fail to get aggreagated value from %s: %s", provider.Hex(), err)
 				chSignResponse <- reqmsg.SignResponse{}
 			}
 		}(provider, &aggRequest)
