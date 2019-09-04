@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 var debug = false
@@ -18,7 +20,7 @@ func TurnOnQueryDebugging() {
 	debug = true
 }
 
-func DoQuery(driver Driver, key []byte) Answer {
+func DoQuery(driver Driver, key []byte) dt.Answer {
 	var driverName string
 	if t := reflect.TypeOf(driver); t.Kind() == reflect.Ptr {
 		driverName = t.Elem().Name()
@@ -29,9 +31,9 @@ func DoQuery(driver Driver, key []byte) Answer {
 	val := driver.Query(key)
 
 	var queryResult string
-	if val.Option == OK {
+	if val.Option == dt.Answered {
 		queryResult = val.Value.Big().String()
-	} else if val.Option == Delegated {
+	} else if val.Option == dt.Delegated {
 		queryResult = "Delegated to " + val.Value.Hex()
 	} else {
 		queryResult = val.Option.String()

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/bandprotocol/band/go/driver"
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/ethereum/go-ethereum/common"
@@ -20,32 +21,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-type AggMethod int
-
-const (
-	Median AggMethod = iota
-	Majority
-	Custom
-)
-
-func (met AggMethod) String() string {
-	return toString[met]
-}
-
-var toString = map[AggMethod]string{
-	Median:   "Median",
-	Majority: "Majority",
-	Custom:   "Custom",
-}
-
-var toID = map[string]AggMethod{
-	"Median":   Median,
-	"Majority": Majority,
-	"Custom":   Custom,
-}
-
 var drivers map[common.Address]driver.Driver
-var aggregateMethods map[common.Address]AggMethod
+var aggregateMethods map[common.Address]dt.AggMethod
 
 type valueWithTimeStamp struct {
 	Value     *big.Int
@@ -61,7 +38,7 @@ var rootCmd = &cobra.Command{
 func sign(
 	dataset common.Address,
 	key string,
-	answer driver.Answer,
+	answer dt.Answer,
 	timestamp uint64,
 ) eth.Signature {
 	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), answer.Option, answer.Value, timestamp)
@@ -74,7 +51,7 @@ func signAggregator(
 	key string,
 	value common.Hash,
 	timestamp uint64,
-	status reqmsg.QueryStatus,
+	status dt.QueryStatus,
 ) eth.Signature {
 	msgBytes := reqmsg.GetAggregateBytes(dataset, []byte(key), value, timestamp, status)
 	sig, _ := eth.SignMessage(msgBytes)
@@ -84,7 +61,7 @@ func signAggregator(
 func verifySignature(
 	dataset common.Address,
 	key string,
-	answer driver.Answer,
+	answer dt.Answer,
 	timestamp uint64,
 	provider common.Address,
 	signature eth.Signature,
@@ -98,8 +75,8 @@ func verifySignature(
 	)
 }
 
-func methodsFromConfig(config *viper.Viper) map[common.Address]AggMethod {
-	output := make(map[common.Address]AggMethod)
+func methodsFromConfig(config *viper.Viper) map[common.Address]dt.AggMethod {
+	output := make(map[common.Address]dt.AggMethod)
 	drivers := config.GetStringMap("drivers")
 	for datasetHex, _ := range drivers {
 		dataset := common.HexToAddress(datasetHex)
@@ -108,7 +85,7 @@ func methodsFromConfig(config *viper.Viper) map[common.Address]AggMethod {
 			panic("Need specific aggregator method")
 		}
 		var ok bool
-		if output[dataset], ok = toID[method]; !ok {
+		if output[dataset], ok = dt.AggMethodToID[method]; !ok {
 			panic("Unknown aggregator method")
 		}
 	}
@@ -173,14 +150,14 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 			report.Provider,
 			report.Sig,
 		) {
-			if report.Answer.Option == driver.OK {
+			if report.Answer.Option == dt.Answered {
 				values = append(values, report.Answer.Value.Big())
 				timestamps = append(timestamps, report.Timestamp)
 				reportedValue[report.Provider] = valueWithTimeStamp{
 					Value:     report.Answer.Value.Big(),
 					Timestamp: report.Timestamp,
 				}
-			} else if report.Answer.Option == driver.Delegated {
+			} else if report.Answer.Option == dt.Delegated {
 				delegateList = append(delegateList, common.BytesToAddress(report.Answer.Value.Bytes()))
 			}
 
@@ -203,13 +180,14 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var output common.Hash
-	var status reqmsg.QueryStatus
-	if aggregateMethods[arg.Dataset] == Median {
+	var status dt.QueryStatus
+	if aggregateMethods[arg.Dataset] == dt.Median {
 		output = common.BigToHash(driver.Median(values))
-		status = reqmsg.OK
-	} else if aggregateMethods[arg.Dataset] == Majority {
+		status = dt.OK
+	} else if aggregateMethods[arg.Dataset] == dt.Majority {
 		// TODO: Majortity value
-	} else if aggregateMethods[arg.Dataset] == Custom {
+
+	} else if aggregateMethods[arg.Dataset] == dt.Custom {
 		// TODO: Get Ipfs hash
 	}
 

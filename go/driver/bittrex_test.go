@@ -2,6 +2,8 @@ package driver
 
 import (
 	"testing"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestSuccess_Bittrex(t *testing.T) {
@@ -34,7 +36,7 @@ func TestUnknownSymbol_Bittrex(t *testing.T) {
 func TestQueryToQuerySpotPrice_Bittrex(t *testing.T) {
 	resolver := &Bittrex{}
 	output := resolver.Query([]byte("SPOTPX/ETH-USD"))
-	if output.Option != OK {
+	if output.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -46,7 +48,7 @@ func TestQueryToQuerySpotPrice_Bittrex(t *testing.T) {
 func TestQueryInvalidFunction_Bittrex(t *testing.T) {
 	resolver := &Bittrex{}
 	output := resolver.Query([]byte("REALPRICE/ETH-USD"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")
 	}
 }

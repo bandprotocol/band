@@ -2,37 +2,37 @@ package driver
 
 import (
 	"math/big"
-	"sort"
 
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 )
 
-type AggMedian struct {
+type AggMajority struct {
 	children []Driver
 }
 
-func (adpt *AggMedian) Configure(config *viper.Viper) {
+func (adpt *AggMajority) Configure(config *viper.Viper) {
 	children := config.GetStringMap("children")
 	for name := range children {
 		adpt.children = append(adpt.children, FromConfigIndividual(config.Sub("children."+name)))
 	}
 }
 
-func Median(values []*big.Int) *big.Int {
-	sort.Slice(values, func(i, j int) bool {
-		return values[i].Cmp(values[j]) <= 0
-	})
-	if len(values)%2 == 0 {
-		result := big.NewInt(0)
-		return result.Add(values[len(values)/2-1], values[len(values)/2]).Div(result, big.NewInt(2))
-	} else {
-		return values[len(values)/2]
-	}
+func Majority(values []*big.Int) (*big.Int, dt.QueryStatus) {
+	// sort.Slice(values, func(i, j int) bool {
+	// 	return values[i].Cmp(values[j]) <= 0
+	// })
+	// if len(values)%2 == 0 {
+	// 	result := big.NewInt(0)
+	// 	return result.Add(values[len(values)/2-1], values[len(values)/2]).Div(result, big.NewInt(2))
+	// } else {
+	// 	return values[len(values)/2]
+	// }
+	return big.NewInt(0), dt.OK
 }
 
-func (agg *AggMedian) Query(key []byte) dt.Answer {
+func (agg *AggMajority) Query(key []byte) dt.Answer {
 	ch := make(chan dt.Answer)
 	for _, child := range agg.children {
 		go func(child Driver) {

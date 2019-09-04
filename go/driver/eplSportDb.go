@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
@@ -77,20 +78,23 @@ func (*EplSport) QueryEplSportScore(date string, shortName string) ([]int, error
 	return []int{}, fmt.Errorf("QueryEplScore: Not found")
 }
 
-func (e *EplSport) Query(key []byte) (common.Hash, error) {
+func (e *EplSport) Query(key []byte) dt.Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 3 {
-		return common.Hash{}, fmt.Errorf("Invalid key format")
+		return dt.NotFoundAnswer
 	}
 	if keys[0] == "EPL" {
 		value, err := e.QueryEplSportScore(keys[1], keys[2])
 		if err != nil {
-			return common.Hash{}, err
+			return dt.NotFoundAnswer
 		}
 		result := common.Hash{}
 		result[0] = byte(value[0])
 		result[1] = byte(value[1])
-		return result, nil
+		return dt.Answer{
+			Option: dt.Answered,
+			Value:  result,
+		}
 	}
-	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
+	return dt.NotFoundAnswer
 }

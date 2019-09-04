@@ -1,12 +1,14 @@
 package eth
 
 import (
+	"os"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
 )
 
 func TestGetActiveProviders(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	dataset := common.HexToAddress("0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e")
 	providers, err := GetActiveProviders(dataset)
 	if err != nil {
@@ -30,6 +32,7 @@ func TestGetActiveProviders(t *testing.T) {
 }
 
 func TestGetActiveProvidersFailed(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	dataset := common.HexToAddress("0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 	_, err := GetActiveProviders(dataset)
 	if err == nil {
@@ -38,6 +41,7 @@ func TestGetActiveProvidersFailed(t *testing.T) {
 }
 
 func TestIsActiveProvider(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	dataset := common.HexToAddress("0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e")
 	provider := common.HexToAddress("0xDa7AFDeE902A41769479349373EF24D19368a9f1")
 	isIn, err := IsActiveProvider(dataset, provider)
@@ -50,6 +54,7 @@ func TestIsActiveProvider(t *testing.T) {
 }
 
 func TestIsActiveProviderIfNotInDataset(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	dataset := common.HexToAddress("0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e")
 	provider := common.HexToAddress("0xda7AdcB9b801952019f8d44889A9F4038443dD97")
 	isIn, err := IsActiveProvider(dataset, provider)
@@ -62,6 +67,7 @@ func TestIsActiveProviderIfNotInDataset(t *testing.T) {
 }
 
 func TestIsValidDataset(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	if !IsValidDataset(common.HexToAddress("0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e")) {
 		t.Errorf("This dataset is a valid one")
 	}

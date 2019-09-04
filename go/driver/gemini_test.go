@@ -2,6 +2,8 @@ package driver
 
 import (
 	"testing"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestSuccess_Gemini(t *testing.T) {
@@ -34,7 +36,7 @@ func TestUnknownSymbol_Gemini(t *testing.T) {
 func TestQueryToQuerySpotPrice_Gemini(t *testing.T) {
 	resolver := &Gemini{}
 	output := resolver.Query([]byte("SPOTPX/ETH-USD"))
-	if output.Option != OK {
+	if output.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -46,7 +48,7 @@ func TestQueryToQuerySpotPrice_Gemini(t *testing.T) {
 func TestQueryInvalidFunction_Gemini(t *testing.T) {
 	resolver := &Gemini{}
 	output := resolver.Query([]byte("REALPRICE/ETH-USD"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Query REALPRICE/ETH-USD must contain error. See nothing")
 	}
 }

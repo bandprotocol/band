@@ -5,6 +5,7 @@ import (
 	"math/big"
 	"testing"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/spf13/viper"
 )
 
@@ -38,7 +39,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
 	price := agg.Query([]byte("SPOTPX/ETH-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -65,7 +66,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
 	price := agg.Query([]byte("SPOTPX/DAI-ETH"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query DAI-ETH error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -90,7 +91,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
 	price := agg.Query([]byte("SPOTPX/EUR-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query EUR-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -99,7 +100,7 @@ children:
 	}
 
 	price = agg.Query([]byte("SPOTPX/XAU"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query XAU error: %s", price.Option)
 	}
 	priceBig = price.Value.Big()
@@ -124,7 +125,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
 	price := agg.Query([]byte("SPOTPX/AAPL"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query AAPL error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -149,7 +150,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	agg.Configure(config)
 	output := agg.Query([]byte("SPOTPX/AAPL"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Crypto provider must cannot find APPL price")
 	}
 }
@@ -171,7 +172,7 @@ children:
 	agg.Configure(config)
 
 	price := agg.Query([]byte("SPOTPX/ETH-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()

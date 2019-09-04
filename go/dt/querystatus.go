@@ -1,4 +1,4 @@
-package reqmsg
+package dt
 
 import (
 	"bytes"
@@ -15,17 +15,17 @@ const (
 )
 
 func (q QueryStatus) String() string {
-	return toString[q]
+	return queryStatusToString[q]
 }
 
-var toString = map[QueryStatus]string{
+var queryStatusToString = map[QueryStatus]string{
 	Invalid:      "Invalid",
 	OK:           "OK",
 	NotAvailable: "Not Available",
 	Disagreement: "Disagreement",
 }
 
-var toID = map[string]QueryStatus{
+var queryStatusToID = map[string]QueryStatus{
 	"Invalid":       Invalid,
 	"OK":            OK,
 	"Not Available": NotAvailable,
@@ -35,7 +35,7 @@ var toID = map[string]QueryStatus{
 // MarshalJSON marshals the enum as a quoted json string
 func (q QueryStatus) MarshalJSON() ([]byte, error) {
 	buffer := bytes.NewBufferString(`"`)
-	buffer.WriteString(toString[q])
+	buffer.WriteString(queryStatusToString[q])
 	buffer.WriteString(`"`)
 	return buffer.Bytes(), nil
 }
@@ -48,6 +48,6 @@ func (q *QueryStatus) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	// Note that if the string cannot be found then it will be set to the zero value, 'Created' in this case.
-	*q = toID[j]
+	*q = queryStatusToID[j]
 	return nil
 }

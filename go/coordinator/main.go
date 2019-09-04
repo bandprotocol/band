@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/bandprotocol/band/go/driver"
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/olekukonko/tablewriter"
 
@@ -44,7 +45,7 @@ type ResponseTxObject struct {
 
 type valueWithTimeStamp struct {
 	Value     common.Hash
-	Status    reqmsg.QueryStatus
+	Status    dt.QueryStatus
 	Timestamp uint64
 }
 
@@ -156,7 +157,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 		return reqmsg.SignResponse{}, err
 	}
 
-	if result.Status != reqmsg.OK && result.Status == reqmsg.Disagreement {
+	if result.Status != dt.OK && result.Status == dt.Disagreement {
 		return reqmsg.SignResponse{}, fmt.Errorf("getAggregateFromProvider: status invalid")
 	}
 

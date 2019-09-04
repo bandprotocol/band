@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/spf13/viper"
 )
 
@@ -28,7 +29,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	regEx.Configure(config)
 	price := regEx.Query([]byte("SPOTPX/ETH-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -56,7 +57,7 @@ children:
 	config.ReadConfig(bytes.NewBuffer(cf))
 	regEx.Configure(config)
 	price := regEx.Query([]byte("SPOTPX/FB"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query FB error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()

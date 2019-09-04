@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
 )
 
-type DataNbaEspn struct{}
+type DataNba struct{}
 
 var dataNbaEspnCodeName = make(map[string]([]string))
 
@@ -48,9 +49,9 @@ func init() {
 	dataNbaEspnCodeName["WAS"] = []string{"WAS", "WSH"}
 }
 
-func (*DataNbaEspn) Configure(*viper.Viper) {}
+func (*DataNba) Configure(*viper.Viper) {}
 
-func (*DataNbaEspn) QueryDataNbaScore(date string, shortName string) ([]int, error) {
+func (*DataNba) QueryDataNbaScore(date string, shortName string) ([]int, error) {
 	pairs := strings.Split(shortName, "-")
 	if len(pairs) != 2 {
 		return []int{}, fmt.Errorf("nba team %s is not valid", shortName)
@@ -90,20 +91,23 @@ func (*DataNbaEspn) QueryDataNbaScore(date string, shortName string) ([]int, err
 	return []int{}, fmt.Errorf("QueryDataScore: Not found")
 }
 
-func (n *DataNbaEspn) Query(key []byte) (common.Hash, error) {
+func (n *DataNba) Query(key []byte) dt.Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 3 {
-		return common.Hash{}, fmt.Errorf("Invalid key format")
+		return dt.NotFoundAnswer
 	}
 	if keys[0] == "NBA" {
 		value, err := n.QueryDataNbaScore(keys[1], keys[2])
 		if err != nil {
-			return common.Hash{}, err
+			return dt.NotFoundAnswer
 		}
 		result := common.Hash{}
 		result[0] = byte(value[0])
 		result[1] = byte(value[1])
-		return result, nil
+		return dt.Answer{
+			Option: dt.Answered,
+			Value:  result,
+		}
 	}
-	return common.Hash{}, fmt.Errorf("Doesn't supported %s query", keys[0])
+	return dt.NotFoundAnswer
 }

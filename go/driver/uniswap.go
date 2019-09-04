@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 	"github.com/tidwall/gjson"
@@ -68,20 +69,20 @@ func (*Uniswap) QuerySpotPrice(symbol string) (float64, error) {
 	return 1 / price.Float(), nil
 }
 
-func (a *Uniswap) Query(key []byte) Answer {
+func (a *Uniswap) Query(key []byte) dt.Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return NotFoundAnswer
+			return dt.NotFoundAnswer
 		}
-		return Answer{
-			Option: OK,
+		return dt.Answer{
+			Option: dt.Answered,
 			Value:  common.BigToHash(PriceToBigInt(value)),
 		}
 	}
-	return NotFoundAnswer
+	return dt.NotFoundAnswer
 }

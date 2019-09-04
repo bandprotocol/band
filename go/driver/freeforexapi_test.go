@@ -2,6 +2,8 @@ package driver
 
 import (
 	"testing"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestFreeForexApiSuccess(t *testing.T) {
@@ -48,7 +50,7 @@ func TestFreeForexApiUnknownSymbol(t *testing.T) {
 func TestFreeForexApiQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &FreeForexApi{}
 	output := resolver.Query([]byte("SPOTPX/EUR-USD"))
-	if output.Option != OK {
+	if output.Option != dt.Answered {
 		t.Errorf("Query EUR-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -60,7 +62,7 @@ func TestFreeForexApiQueryToQuerySpotPrice(t *testing.T) {
 func TestFreeForexApiQueryInvalidFunction(t *testing.T) {
 	resolver := &FreeForexApi{}
 	output := resolver.Query([]byte("REALPRICE/EUR-USD"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Query REALPRICE/EUR-USD must contain error. See nothing")
 	}
 }
