@@ -294,7 +294,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		minProviders,
 	}
 
-	var counter = make(map[valueWithTimeStamp]int)
+	counter := make(map[valueWithTimeStamp]int)
 
 	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
@@ -317,7 +317,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 				Value:     r.Value,
 				Timestamp: r.Timestamp,
 				Status:    r.Status,
-			}] += 1
+			}]++
 		}
 	}
 

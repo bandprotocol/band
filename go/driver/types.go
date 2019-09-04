@@ -36,6 +36,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &RegEx{}
 	case "AggMedian":
 		adpt = &AggMedian{}
+	case "AggMajority":
+		adpt = &AggMajority{}
 	case "IdleDriver":
 		adpt = &IdleDriver{}
 	case "DelegateDriver":
