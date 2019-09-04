@@ -10,6 +10,7 @@ import {
   SAVE_TCD_CLIENT,
   SHOW_MODAL,
   HIDE_MODAL,
+  SAVE_WALLET_TYPE,
 } from 'actions'
 import BN from 'utils/bignumber'
 
@@ -33,6 +34,9 @@ const handleSaveBalance = (state, { balances }) =>
       Map(),
     ),
   )
+
+const handleSaveWalletType = (state, { walletType }) =>
+  state.set('walletType', walletType)
 
 const handleSaveBandClient = (state, { client }) =>
   state.setIn(['client', 'band'], client)
@@ -58,6 +62,7 @@ export default createReducer({
   [SET_USER_ADDRESS]: handleSetUserAddress,
   [SET_NETWORK]: handleSetNetwork,
   [SAVE_BALANCE]: handleSaveBalance,
+  [SAVE_WALLET_TYPE]: handleSaveWalletType,
   [SAVE_BAND_CLIENT]: handleSaveBandClient,
   [SAVE_COMMUNITY_CLIENT]: handleSaveCommunityClient,
   [SAVE_TCD_CLIENT]: handleSaveTCDClient,

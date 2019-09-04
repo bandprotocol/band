@@ -13,9 +13,11 @@ import {
   loadCurrent,
   dumpCurrent,
   reloadBalance,
+  saveWalletType,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
+import { walletTypeSelector, currentUserSelector } from 'selectors/current'
 
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -48,9 +50,10 @@ switch (network) {
   case 'mainnet':
   case 'kovan':
     RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
-    if (process.env.NODE_ENV !== 'production')
-      WALLET_ENDPOINT = 'http://localhost:3000'
     break
+  // if (process.env.NODE_ENV !== 'production')
+  //   WALLET_ENDPOINT = 'http://localhost:3000'
+  // break
   case 'rinkeby':
   case 'local':
   default:
@@ -59,9 +62,14 @@ switch (network) {
 }
 
 const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
-const web3Channel = channel()
+const bandwalletChannel = channel()
 
-function* handleWeb3Channel({ type, status }) {
+/* handle web3 channel from band wallet*/
+function* handleBandWalletChannel({ type, status }) {
+  if ((yield select(walletTypeSelector)) === 'metamask') {
+    // console.log('Not using bandwallet')
+    return
+  }
   switch (type) {
     case 'CHANGE_STATUS':
       switch (status) {
@@ -70,16 +78,20 @@ function* handleWeb3Channel({ type, status }) {
         case 'INITIALIZED':
           break
         case 'NOT_SIGNIN':
+          // console.log('not_signin')
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
+          yield put(saveWalletType('none'))
           break
         case 'PROVIDER_READY': {
+          // console.log('provider ready')
           const provider = yield window.BandWallet.provider
           const web3 = new Web3(provider)
           const userAddress = yield getUser(web3)
           yield put(setWeb3(web3))
           yield put(setUserAddress(userAddress))
           yield put(updateClient(provider))
+          yield put(saveWalletType('bandwallet'))
           break
         }
         default:
@@ -97,31 +109,8 @@ function* baseInitialize() {
   yield put(toggleFetch(true))
 
   yield put(loadCurrent())
-  // Initialize wallet
-  window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
-    walletPosition: {
-      top: 60,
-      right: 30,
-    },
-    approvalPosition: {
-      bottom: 0,
-      right: 10,
-      zIndex: 30,
-    },
-  })
 
-  window.BandWallet.on('network', ({ name }) => {
-    if (name !== localStorage.getItem('network')) {
-      localStorage.setItem('network', name)
-      window.location.reload()
-    }
-  })
-
-  window.BandWallet.on('status', s =>
-    web3Channel.put({ type: 'CHANGE_STATUS', status: s }),
-  )
-
-  yield put(setWallet(window.BandWallet))
+  // default before sign in any wallet
   yield put(setWeb3(defaultWeb3))
 
   const query = yield Utils.graphqlRequest(`
@@ -206,6 +195,7 @@ function* baseInitialize() {
     }
   `,
   )
+
   for (const community of communityDetails.allBandCommunities.nodes) {
     const token = community.tokenByTokenAddress
     yield put(
@@ -272,12 +262,79 @@ function* baseInitialize() {
     )
   }
 
+  /**
+   *  Band Wallet
+   */
+  // Initialize wallet
+  window.BandWallet = new BandWallet(WALLET_ENDPOINT, {
+    walletPosition: {
+      top: 60,
+      right: 30,
+    },
+    approvalPosition: {
+      bottom: 0,
+      right: 10,
+      zIndex: 30,
+    },
+  })
+
+  // listen network changed
+  window.BandWallet.on('network', ({ name }) => {
+    if (name !== localStorage.getItem('network')) {
+      localStorage.setItem('network', name)
+      window.location.reload()
+    }
+  })
+
+  // listen status changed
+  window.BandWallet.on('status', status => {
+    bandwalletChannel.put({ type: 'CHANGE_STATUS', status })
+  })
+
+  yield put(setWallet(window.BandWallet))
+
+  /**
+   * Metamask
+   */
+  yield fork(metaMaskProcess)
+
   // Auto reload balance
   yield fork(autoRefresh)
   // Auto update pending transaction
-  yield fork(checkTransaction)
+  yield fork(updateTransaction)
   // stop fetching state
   yield put(toggleFetch(false))
+}
+
+function* metaMaskProcess() {
+  while (true) {
+    const walletType = yield select(walletTypeSelector)
+    if (
+      (typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined') &&
+      (walletType === 'metamask' || walletType === 'none')
+    ) {
+      const provider = window['ethereum'] || window.web3.currentProvider
+      const web3 = new Web3(provider)
+      const newUserAddress = yield getUser(web3)
+
+      if (newUserAddress) {
+        const currentUser = yield select(currentUserSelector)
+        if (currentUser !== newUserAddress) {
+          yield put(setWeb3(web3))
+          yield put(setUserAddress(newUserAddress))
+          yield put(updateClient(provider))
+          yield put(saveWalletType('metamask'))
+        }
+      } else {
+        // console.log('Cannot find metamask user')
+        yield put(setUserAddress('NOT_SIGNIN'))
+        yield put(updateClient())
+        yield put(saveWalletType('none'))
+      }
+    }
+    yield delay(1000)
+  }
 }
 
 function* autoRefresh() {
@@ -287,7 +344,8 @@ function* autoRefresh() {
   }
 }
 
-function* checkTransaction() {
+/* update tx confirmation */
+function* updateTransaction() {
   while (true) {
     const currentBlock = yield defaultWeb3.eth.getBlockNumber()
     if (currentBlock !== (yield select(blockNumberSelector))) {
@@ -372,6 +430,6 @@ export default function*() {
     fork(holderSaga),
     fork(tcdSaga),
   ])
-  yield takeEvery(web3Channel, handleWeb3Channel)
+  yield takeEvery(bandwalletChannel, handleBandWalletChannel)
   yield* baseInitialize()
 }
