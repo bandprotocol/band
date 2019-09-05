@@ -19,6 +19,11 @@ import {
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
 import { walletTypeSelector, currentUserSelector } from 'selectors/current'
 
+import {
+  logoCommunityFromSymbol,
+  bannerCommunityFromSymbol,
+} from 'utils/communityImg'
+
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
 import priceSaga from 'sagas/prices'
@@ -204,10 +209,8 @@ function* baseInitialize() {
         token.symbol,
         token.address,
         community.organization,
-        community.logo &&
-          `https://ipfs.bandprotocol.com/api/v0/cat/${community.logo}`,
-        community.banner &&
-          `https://ipfs.bandprotocol.com/api/v0/cat/${community.banner}`,
+        logoCommunityFromSymbol(token.symbol),
+        bannerCommunityFromSymbol(token.symbol),
         community.description,
         community.website,
         (parseFloat(token.curveByTokenAddress.price) *
