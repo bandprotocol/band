@@ -42,6 +42,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &IdleDriver{}
 	case "DelegateDriver":
 		adpt = &DelegateDriver{}
+	case "WebRequest":
+		adpt = &WebRequest{}
 	case "AlphaVantageStock":
 		adpt = &AlphaVantageStock{}
 	case "WorldTradingData":
