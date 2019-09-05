@@ -47,7 +47,7 @@ func (q *QueryStatus) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	// Note that if the string cannot be found then it will be set to the zero value, 'Created' in this case.
+	// Note that if the string cannot be found then it will be set to the zero value, 'Invalid' in this case.
 	*q = queryStatusToID[j]
 	return nil
 }

@@ -46,7 +46,7 @@ func (o *AnswerOption) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	// Note that if the string cannot be found then it will be set to the zero value, 'Created' in this case.
+	// Note that if the string cannot be found then it will be set to the zero value, 'NotFound' in this case.
 	*o = toID[j]
 	return nil
 }
