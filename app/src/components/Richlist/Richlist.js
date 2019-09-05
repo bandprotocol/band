@@ -17,7 +17,7 @@ class Richlist extends React.Component {
 
     this.checker = setInterval(() => {
       this.props.loadHoldersOnPage(this.state.currentPage)
-    }, 3000)
+    }, 300000)
   }
 
   componentWillUnmount() {

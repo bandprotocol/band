@@ -16,7 +16,7 @@ class OrderHistory extends React.Component {
     await this.loadOrderHistory()
     this.checker = setInterval(() => {
       this.props.loadOrderHistoryOnPage(this.state.currentPage)
-    }, 3000)
+    }, 300000)
   }
 
   componentWillUnmount() {
