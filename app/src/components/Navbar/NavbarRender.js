@@ -395,7 +395,7 @@ export default ({
                 Sign in
               </SignIn>
             ) : (
-              <CircleLoadingSpinner radius="40px" color="red" />
+              <CircleLoadingSpinner radius="40px" color="white" />
             )}
           </Flex>
         </Flex>
