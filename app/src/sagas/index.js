@@ -331,9 +331,13 @@ function* metaMaskProcess() {
         }
       } else {
         // console.log('Cannot find metamask user')
-        yield put(setUserAddress('NOT_SIGNIN'))
-        yield put(updateClient())
-        yield put(saveWalletType('none'))
+        const currentUser = yield select(currentUserSelector)
+        if (currentUser !== 'NOT_SIGNIN') {
+          // console.log('NOTSIGNIN')
+          yield put(setUserAddress('NOT_SIGNIN'))
+          yield put(updateClient())
+          yield put(saveWalletType('none'))
+        }
       }
     }
     yield delay(1000)
