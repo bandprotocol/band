@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 )
@@ -90,20 +91,20 @@ func (*CurrencyConverter) QuerySpotPrice(symbol string) (float64, error) {
 	return 0, fmt.Errorf("Invalid key")
 }
 
-func (a *CurrencyConverter) Query(key []byte) Answer {
+func (a *CurrencyConverter) Query(key []byte) dt.Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 	if keys[0] == "SPOTPX" {
 		value, err := a.QuerySpotPrice(keys[1])
 		if err != nil {
-			return NotFoundAnswer
+			return dt.NotFoundAnswer
 		}
-		return Answer{
-			Option: OK,
+		return dt.Answer{
+			Option: dt.Answered,
 			Value:  common.BigToHash(PriceToBigInt(value)),
 		}
 	}
-	return NotFoundAnswer
+	return dt.NotFoundAnswer
 }

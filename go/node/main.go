@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/bandprotocol/band/go/driver"
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/ethereum/go-ethereum/common"
@@ -21,6 +22,7 @@ import (
 )
 
 var drivers map[common.Address]driver.Driver
+var aggregateMethods map[common.Address]dt.AggMethod
 
 type valueWithTimeStamp struct {
 	Value     *big.Int
@@ -36,7 +38,7 @@ var rootCmd = &cobra.Command{
 func sign(
 	dataset common.Address,
 	key string,
-	answer driver.Answer,
+	answer dt.Answer,
 	timestamp uint64,
 ) eth.Signature {
 	msgBytes := reqmsg.GetRawDataBytes(dataset, []byte(key), answer.Option, answer.Value, timestamp)
@@ -49,7 +51,7 @@ func signAggregator(
 	key string,
 	value common.Hash,
 	timestamp uint64,
-	status uint8,
+	status dt.QueryStatus,
 ) eth.Signature {
 	msgBytes := reqmsg.GetAggregateBytes(dataset, []byte(key), value, timestamp, status)
 	sig, _ := eth.SignMessage(msgBytes)
@@ -59,7 +61,7 @@ func signAggregator(
 func verifySignature(
 	dataset common.Address,
 	key string,
-	answer driver.Answer,
+	answer dt.Answer,
 	timestamp uint64,
 	provider common.Address,
 	signature eth.Signature,
@@ -73,7 +75,24 @@ func verifySignature(
 	)
 }
 
-func mediumTimestamp(timestamps []uint64) uint64 {
+func methodsFromConfig(config *viper.Viper) map[common.Address]dt.AggMethod {
+	output := make(map[common.Address]dt.AggMethod)
+	drivers := config.GetStringMap("drivers")
+	for datasetHex, _ := range drivers {
+		dataset := common.HexToAddress(datasetHex)
+		method := config.GetString("drivers." + datasetHex + ".method")
+		if method == "" {
+			panic("Need specific aggregator method")
+		}
+		var ok bool
+		if output[dataset], ok = dt.AggMethodToID[method]; !ok {
+			panic("Unknown aggregator method")
+		}
+	}
+	return output
+}
+
+func medianTimestamp(timestamps []uint64) uint64 {
 	sort.Slice(timestamps, func(i, j int) bool {
 		return timestamps[i] < timestamps[j]
 	})
@@ -131,25 +150,26 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 			report.Provider,
 			report.Sig,
 		) {
-			if report.Answer.Option == driver.OK {
+			if report.Answer.Option == dt.Answered {
 				values = append(values, report.Answer.Value.Big())
 				timestamps = append(timestamps, report.Timestamp)
 				reportedValue[report.Provider] = valueWithTimeStamp{
 					Value:     report.Answer.Value.Big(),
 					Timestamp: report.Timestamp,
 				}
-			} else if report.Answer.Option == driver.Delegated {
+			} else if report.Answer.Option == dt.Delegated {
 				delegateList = append(delegateList, common.BytesToAddress(report.Answer.Value.Bytes()))
-			}
-
-			for _, delegator := range delegateList {
-				if v, ok := reportedValue[delegator]; ok {
-					values = append(values, v.Value)
-					timestamps = append(timestamps, v.Timestamp)
-				}
 			}
 		}
 	}
+
+	for _, delegator := range delegateList {
+		if v, ok := reportedValue[delegator]; ok {
+			values = append(values, v.Value)
+			timestamps = append(timestamps, v.Timestamp)
+		}
+	}
+
 	if len(values) < arg.MinimumProviderCount {
 		http.Error(w, "Insufficient signatures", http.StatusBadRequest)
 		return
@@ -160,14 +180,32 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	output := common.BigToHash(driver.Median(values))
-	timestamp := mediumTimestamp(timestamps)
+	var output common.Hash
+	var status dt.QueryStatus
+	if aggregateMethods[arg.Dataset] == dt.Median {
+		output = common.BigToHash(driver.Median(values))
+		status = dt.OK
+	} else if aggregateMethods[arg.Dataset] == dt.Majority {
+		value, count, err := driver.Majority(values)
+		if err != nil || count < arg.MinimumProviderCount {
+			output = common.Hash{}
+			status = dt.Disagreement
+			log.Printf("Disagree on %s", arg.Key)
+		} else {
+			output = common.BigToHash(value)
+			status = dt.OK
+		}
+	} else if aggregateMethods[arg.Dataset] == dt.Custom {
+		// TODO: Get aggregate method from ipfs
+	}
+
+	timestamp := medianTimestamp(timestamps)
 	json.NewEncoder(w).Encode(reqmsg.SignResponse{
 		Provider:  providerAddress,
 		Value:     output,
 		Timestamp: timestamp,
-		Status:    "OK",
-		Sig:       signAggregator(arg.Dataset, arg.Key, output, timestamp, 1),
+		Status:    status,
+		Sig:       signAggregator(arg.Dataset, arg.Key, output, timestamp, status),
 	})
 }
 
@@ -233,6 +271,7 @@ func main() {
 	}
 
 	drivers = driver.FromConfig(config)
+	aggregateMethods = methodsFromConfig(config)
 
 	fmt.Println("start provider node with these following parameters")
 	table := tablewriter.NewWriter(os.Stdout)

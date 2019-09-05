@@ -2,6 +2,8 @@ package driver
 
 import (
 	"testing"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestAlphaVantageStockSuccess(t *testing.T) {
@@ -35,7 +37,7 @@ func TestAlphaVantageStockUnknownSymbol(t *testing.T) {
 func TestAlphaVantageStockQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &AlphaVantageStock{}
 	output := resolver.Query([]byte("SPOTPX/GOOG"))
-	if output.Option != OK {
+	if output.Option != dt.Answered {
 		t.Errorf("Query GOOG error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -47,7 +49,7 @@ func TestAlphaVantageStockQueryToQuerySpotPrice(t *testing.T) {
 func TestAlphaVantageStockQueryInvalidFunction(t *testing.T) {
 	resolver := &AlphaVantageStock{}
 	output := resolver.Query([]byte("REALPRICE/GOOG"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Query REALPRICE/GOOG must contain error. See nothing")
 	}
 }

@@ -1,17 +1,16 @@
 package driver
 
 import (
-	"bytes"
 	"math/big"
 	"testing"
 
-	"github.com/spf13/viper"
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestEvenMedian(t *testing.T) {
 	median := Median([]*big.Int{big.NewInt(12), big.NewInt(20), big.NewInt(1), big.NewInt(9), big.NewInt(17)})
 	if median.Cmp(big.NewInt(12)) != 0 {
-		t.Errorf("Median of this array must be 17 not %d", median.Int64())
+		t.Errorf("Median of this array must be 12 not %d", median.Int64())
 	}
 }
 
@@ -24,21 +23,9 @@ func TestOddMedian(t *testing.T) {
 
 func TestCryptoPriceAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	cf := []byte(`
-children:
-  cryptoCompare:
-    name: CryptoCompare
-  coinBase:
-    name: CoinBase
-  openMarketCap:
-    name: OpenMarketCap
-`)
-	config := viper.New()
-	config.SetConfigType("yaml")
-	config.ReadConfig(bytes.NewBuffer(cf))
-	agg.Configure(config)
+	agg.children = []Driver{&CryptoCompare{}, &CoinBase{}, &Bittrex{}}
 	price := agg.Query([]byte("SPOTPX/ETH-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -49,23 +36,9 @@ children:
 
 func TestERC20PriceAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	cf := []byte(`
-children:
-  cryptoCompare:
-    name: CryptoCompare
-  kyber:
-    name: Kyber
-  uniswap:
-    name: Uniswap
-  bancor:
-    name: Bancor
-`)
-	config := viper.New()
-	config.SetConfigType("yaml")
-	config.ReadConfig(bytes.NewBuffer(cf))
-	agg.Configure(config)
+	agg.children = []Driver{&CryptoCompare{}, &Kyber{}, &Uniswap{}, &Bancor{}}
 	price := agg.Query([]byte("SPOTPX/DAI-ETH"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query DAI-ETH error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -76,21 +49,9 @@ children:
 
 func TestForexAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	cf := []byte(`
-children:
-  ratesapi:
-    name: Ratesapi
-  cc:
-	name: CurrencyConverter
-  avf:
-    name: AlphaVantageForex
-`)
-	config := viper.New()
-	config.SetConfigType("yaml")
-	config.ReadConfig(bytes.NewBuffer(cf))
-	agg.Configure(config)
+	agg.children = []Driver{&Ratesapi{}, &CurrencyConverter{}, &AlphaVantageForex{}}
 	price := agg.Query([]byte("SPOTPX/EUR-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query EUR-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -99,7 +60,7 @@ children:
 	}
 
 	price = agg.Query([]byte("SPOTPX/XAU"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query XAU error: %s", price.Option)
 	}
 	priceBig = price.Value.Big()
@@ -110,21 +71,9 @@ children:
 
 func TestStockAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	cf := []byte(`
-children:
-  fmp:
-    name: FinancialModelPrep
-  wtd:
-    name: WorldTradingData
-  avs:
-    name: AlphaVantageStock
-`)
-	config := viper.New()
-	config.SetConfigType("yaml")
-	config.ReadConfig(bytes.NewBuffer(cf))
-	agg.Configure(config)
+	agg.children = []Driver{&FinancialModelPrep{}, &WorldTradingData{}, &AlphaVantageStock{}}
 	price := agg.Query([]byte("SPOTPX/AAPL"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query AAPL error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()
@@ -135,43 +84,18 @@ children:
 
 func TestInvalidProviderAggregator(t *testing.T) {
 	agg := &AggMedian{}
-	cf := []byte(`
-children:
-  cryptoCompare:
-    name: CryptoCompare
-  coinBase:
-    name: CoinBase
-  openMarketCap:
-    name: OpenMarketCap
-`)
-	config := viper.New()
-	config.SetConfigType("yaml")
-	config.ReadConfig(bytes.NewBuffer(cf))
-	agg.Configure(config)
+	agg.children = []Driver{&CryptoCompare{}, &CoinBase{}, &Kyber{}}
 	output := agg.Query([]byte("SPOTPX/AAPL"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Crypto provider must cannot find APPL price")
 	}
 }
 
 func TestCanErrorOnSomeDriver(t *testing.T) {
 	agg := &AggMedian{}
-	cf := []byte(`
-children:
-  cryptoCompare:
-    name: CryptoCompare
-  coinBase:
-    name: CoinBase
-  financialModelPrep:
-    name: FinancialModelPrep
-`)
-	config := viper.New()
-	config.SetConfigType("yaml")
-	config.ReadConfig(bytes.NewBuffer(cf))
-	agg.Configure(config)
-
+	agg.children = []Driver{&CryptoCompare{}, &CoinBase{}, &FinancialModelPrep{}}
 	price := agg.Query([]byte("SPOTPX/ETH-USD"))
-	if price.Option != OK {
+	if price.Option != dt.Answered {
 		t.Errorf("Query ETH-USD error: %s", price.Option)
 	}
 	priceBig := price.Value.Big()

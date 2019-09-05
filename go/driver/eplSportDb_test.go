@@ -2,6 +2,8 @@ package driver
 
 import (
 	"testing"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestEplSportScoreSuccess(t *testing.T) {
@@ -25,11 +27,11 @@ func TestEplSportScoreFail(t *testing.T) {
 
 func TestEplSportSuccessHash(t *testing.T) {
 	resolver := &EplSport{}
-	hash, err := resolver.Query([]byte("EPL/20190901/ARS-TOT"))
-	if err != nil {
-		t.Errorf("Query EPLSport error: %s", err)
+	output := resolver.Query([]byte("EPL/20190901/ARS-TOT"))
+	if output.Option != dt.Answered {
+		t.Errorf("Query EPLSport error: %s", output.Option)
 	}
-	if hash.Hex() != "0x0202000000000000000000000000000000000000000000000000000000000000" {
+	if output.Value.Hex() != "0x0202000000000000000000000000000000000000000000000000000000000000" {
 		t.Errorf("Wrong result")
 	}
 }

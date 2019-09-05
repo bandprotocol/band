@@ -4,6 +4,7 @@ import (
 	"math/big"
 	"sort"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 )
@@ -31,8 +32,8 @@ func Median(values []*big.Int) *big.Int {
 	}
 }
 
-func (agg *AggMedian) Query(key []byte) Answer {
-	ch := make(chan Answer)
+func (agg *AggMedian) Query(key []byte) dt.Answer {
+	ch := make(chan dt.Answer)
 	for _, child := range agg.children {
 		go func(child Driver) {
 			ch <- DoQuery(child, key)
@@ -42,17 +43,17 @@ func (agg *AggMedian) Query(key []byte) Answer {
 	var values []*big.Int
 	for i := 0; i < len(agg.children); i++ {
 		r := <-ch
-		if r.Option == OK {
+		if r.Option == dt.Answered {
 			values = append(values, r.Value.Big())
 		}
 	}
 
 	if len(values) == 0 {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 
-	return Answer{
-		Option: OK,
+	return dt.Answer{
+		Option: dt.Answered,
 		Value:  common.BigToHash(Median(values)),
 	}
 }

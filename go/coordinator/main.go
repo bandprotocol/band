@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/bandprotocol/band/go/driver"
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/reqmsg"
 	"github.com/olekukonko/tablewriter"
 
@@ -44,7 +45,7 @@ type ResponseTxObject struct {
 
 type valueWithTimeStamp struct {
 	Value     common.Hash
-	Status    uint8
+	Status    dt.QueryStatus
 	Timestamp uint64
 }
 
@@ -87,15 +88,6 @@ func getProviderURL(provider common.Address) (string, error) {
 	var endpoint string
 	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
 	return endpoint, err
-}
-
-func statusToInt(status string) uint8 {
-	switch status {
-	case "OK":
-		return 1
-	default:
-		return 0
-	}
 }
 
 func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (reqmsg.DataResponse, error) {
@@ -165,8 +157,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 		return reqmsg.SignResponse{}, err
 	}
 
-	status := statusToInt(result.Status)
-	if status == 0 {
+	if result.Status != dt.OK && result.Status != dt.Disagreement {
 		return reqmsg.SignResponse{}, fmt.Errorf("getAggregateFromProvider: status invalid")
 	}
 
@@ -178,7 +169,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 			keyBytes,
 			result.Value,
 			result.Timestamp,
-			status,
+			result.Status,
 		),
 		result.Sig,
 		provider,
@@ -303,7 +294,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		minProviders,
 	}
 
-	var counter = make(map[valueWithTimeStamp]int)
+	counter := make(map[valueWithTimeStamp]int)
 
 	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
@@ -312,6 +303,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 				chSignResponse <- data
 			} else {
+				log.Printf("Fail to get aggreagated value from %s: %s", provider.Hex(), err)
 				chSignResponse <- reqmsg.SignResponse{}
 			}
 		}(provider, &aggRequest)
@@ -325,8 +317,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			counter[valueWithTimeStamp{
 				Value:     r.Value,
 				Timestamp: r.Timestamp,
-				Status:    statusToInt(r.Status),
-			}] += 1
+				Status:    r.Status,
+			}]++
 		}
 	}
 
@@ -355,7 +347,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	for _, agg := range validAggs {
 		if agg.Value == majority.Value &&
 			agg.Timestamp == majority.Timestamp &&
-			statusToInt(agg.Status) == majority.Status {
+			agg.Status == majority.Status {
 			agreedData = append(agreedData, agg)
 		}
 	}
@@ -374,7 +366,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		rs = append(rs, agg.Sig.R)
 		ss = append(ss, agg.Sig.S)
 	}
-	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, majority.Status, vs, rs, ss)
+	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, uint8(majority.Status), vs, rs, ss)
 	w.Header().Set("Content-Type", "application/json")
 
 	if arg.Broadcast {

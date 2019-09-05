@@ -1,72 +1,17 @@
 package driver
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"math/big"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 )
 
 type Driver interface {
 	Configure(*viper.Viper)
-	Query([]byte) Answer
-}
-
-type AnswerOption uint8
-
-const (
-	NotFound AnswerOption = iota
-	OK
-	Delegated
-)
-
-func (o AnswerOption) String() string {
-	return toString[o]
-}
-
-var toString = map[AnswerOption]string{
-	NotFound:  "Not found",
-	OK:        "OK",
-	Delegated: "Delegated",
-}
-
-var toID = map[string]AnswerOption{
-	"Not found": NotFound,
-	"OK":        OK,
-	"Delegated": Delegated,
-}
-
-// MarshalJSON marshals the enum as a quoted json string
-func (o AnswerOption) MarshalJSON() ([]byte, error) {
-	buffer := bytes.NewBufferString(`"`)
-	buffer.WriteString(toString[o])
-	buffer.WriteString(`"`)
-	return buffer.Bytes(), nil
-}
-
-// UnmarshalJSON unmashals a quoted json string to the enum value
-func (o *AnswerOption) UnmarshalJSON(b []byte) error {
-	var j string
-	err := json.Unmarshal(b, &j)
-	if err != nil {
-		return err
-	}
-	// Note that if the string cannot be found then it will be set to the zero value, 'Created' in this case.
-	*o = toID[j]
-	return nil
-}
-
-type Answer struct {
-	Option AnswerOption `json:"option"`
-	Value  common.Hash  `json:"value"`
-}
-
-var NotFoundAnswer = Answer{
-	Option: NotFound,
-	Value:  common.Hash{},
+	Query([]byte) dt.Answer
 }
 
 func FromConfig(config *viper.Viper) map[common.Address]Driver {
@@ -91,6 +36,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &RegEx{}
 	case "AggMedian":
 		adpt = &AggMedian{}
+	case "AggMajority":
+		adpt = &AggMajority{}
 	case "IdleDriver":
 		adpt = &IdleDriver{}
 	case "DelegateDriver":
@@ -139,6 +86,18 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &PriceHttp{}
 	case "CoinGecko":
 		adpt = &CoinGecko{}
+	case "EplEspn":
+		adpt = &EplEspn{}
+	case "EplSport":
+		adpt = &EplSport{}
+	case "NbaEspn":
+		adpt = &NbaEspn{}
+	case "DataNba":
+		adpt = &DataNba{}
+	case "MlbEspn":
+		adpt = &MlbEspn{}
+	case "NflEspn":
+		adpt = &NflEspn{}
 	default:
 		panic(fmt.Sprintf("driver.FromConfig: unknown driver name %s", name))
 	}

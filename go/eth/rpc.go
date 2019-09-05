@@ -120,17 +120,14 @@ func SignMessage(message []byte) (Signature, error) {
 }
 
 func CallContract(to common.Address, data []byte) ([]byte, error) {
+	var result string
+	params := make(map[string]string)
 	from, err := GetAddress()
-	if err != nil {
-		return []byte{}, err
+	if err == nil {
+		params["from"] = from.Hex()
 	}
 
-	var result string
-
-	params := make(map[string]string)
-
 	// Mock gas price and gas limit for kovan
-	params["from"] = from.Hex()
 	params["to"] = to.Hex()
 	params["gas"] = "0xf4240"
 	params["gasPrice"] = "0x0"

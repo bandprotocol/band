@@ -2,6 +2,8 @@ package driver
 
 import (
 	"testing"
+
+	"github.com/bandprotocol/band/go/dt"
 )
 
 func TestRatesapiSuccess(t *testing.T) {
@@ -35,7 +37,7 @@ func TestRatesapiUnknownSymbol(t *testing.T) {
 func TestRatesapiQueryToQuerySpotPrice(t *testing.T) {
 	resolver := &Ratesapi{}
 	output := resolver.Query([]byte("SPOTPX/EUR-USD"))
-	if output.Option != OK {
+	if output.Option != dt.Answered {
 		t.Errorf("Query EUR-USD error: %s", output.Option)
 	}
 	priceBig := output.Value.Big()
@@ -47,7 +49,7 @@ func TestRatesapiQueryToQuerySpotPrice(t *testing.T) {
 func TestRatesapiQueryInvalidFunction(t *testing.T) {
 	resolver := &Ratesapi{}
 	output := resolver.Query([]byte("REALPRICE/EUR-USD"))
-	if output.Option == OK {
+	if output.Option == dt.Answered {
 		t.Errorf("Query REALPRICE/EUR-USD must contain error. See nothing")
 	}
 }

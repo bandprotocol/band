@@ -4,6 +4,7 @@ import (
 	"log"
 	"regexp"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/spf13/viper"
 )
 
@@ -24,11 +25,11 @@ func (adpt *RegEx) Configure(config *viper.Viper) {
 	}
 }
 
-func (regs *RegEx) Query(key []byte) Answer {
+func (regs *RegEx) Query(key []byte) dt.Answer {
 	for reg, child := range regs.children {
 		if reg.MatchString(string(key)) {
 			return DoQuery(child, key)
 		}
 	}
-	return NotFoundAnswer
+	return dt.NotFoundAnswer
 }
