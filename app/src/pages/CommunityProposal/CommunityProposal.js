@@ -14,7 +14,7 @@ class CommunityProposal extends React.Component {
     this.props.loadProposals()
     this.checker = setInterval(() => {
       this.props.loadProposals()
-    }, 3000)
+    }, 300000)
   }
 
   componentWillUnmount() {

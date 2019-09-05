@@ -17,7 +17,7 @@ class TransferHistory extends React.Component {
 
     this.checker = setInterval(() => {
       this.props.loadTransferHistoryOnPage(this.state.currentPage)
-    }, 3000)
+    }, 300000)
   }
 
   componentWillUnmount() {

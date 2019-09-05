@@ -33,7 +33,7 @@ export default {
       border: `solid 1px ${colors.purple.normal}`,
       transition: 'all 250ms',
       '&:hover': {
-        backgroundColor: '#7E5CFD',
+        backgroundColor: '#2d44ad',
       },
     },
     outline: {
