@@ -209,8 +209,8 @@ function* baseInitialize() {
         token.symbol,
         token.address,
         community.organization,
-        community.logo && logoCommunityFromSymbol(token.symbol),
-        community.banner && bannerCommunityFromSymbol(token.symbol),
+        logoCommunityFromSymbol(token.symbol),
+        bannerCommunityFromSymbol(token.symbol),
         community.description,
         community.website,
         (parseFloat(token.curveByTokenAddress.price) *
