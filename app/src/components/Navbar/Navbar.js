@@ -11,7 +11,7 @@ import { showModal, hideModal, saveWalletType } from 'actions'
 
 class Navbar extends React.Component {
   state = {
-    isBND: true,
+    isBAND: true,
     showBlockTransactions: false,
     showSignOut: false,
     isWalletShow: false,
@@ -57,7 +57,7 @@ class Navbar extends React.Component {
 
   toggleBalance() {
     this.setState({
-      isBND: !this.state.isBND,
+      isBAND: !this.state.isBAND,
     })
   }
 
@@ -104,7 +104,7 @@ class Navbar extends React.Component {
   render() {
     const { balance, price, walletType } = this.props
     const balanceToggled =
-      this.state.isBND || !balance ? balance : balance.bandToUSD(price)
+      this.state.isBAND || !balance ? balance : balance.bandToUSD(price)
 
     return (
       <NavbarRender

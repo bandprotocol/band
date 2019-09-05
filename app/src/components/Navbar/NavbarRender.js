@@ -68,12 +68,12 @@ const SignIn = styled(Text).attrs({
   }
 `
 
-const BalanceBar = ({ isBND, toggle, showWallet, isBandWallet }) => {
+const BalanceBar = ({ isBAND, toggle, showWallet, isBandWallet }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
-      {isBND ? (
+      {isBAND ? (
         <Text mr={0} color="#4a4a4a" fontSize="15px" fontWeight={500}>
-          BND
+          BAND
         </Text>
       ) : (
         <TextClickable
@@ -82,7 +82,7 @@ const BalanceBar = ({ isBND, toggle, showWallet, isBandWallet }) => {
           fontWeight={500}
           fontSize="15px"
         >
-          BND
+          BAND
         </TextClickable>
       )}
       <Box
@@ -91,7 +91,7 @@ const BalanceBar = ({ isBND, toggle, showWallet, isBandWallet }) => {
         mx={1}
         style={{ height: '20px' }}
       ></Box>
-      {isBND ? (
+      {isBAND ? (
         <TextClickable
           onClick={toggle}
           color="#b8c1dd"
@@ -233,7 +233,7 @@ export default ({
   signOut,
   user,
   balance,
-  isBND,
+  isBAND,
   showNav,
   toggleBalance,
   txs,
@@ -308,7 +308,7 @@ export default ({
                       {balance.pretty()}
                     </Text>
                     <BalanceBar
-                      isBND={isBND}
+                      isBAND={isBAND}
                       toggle={toggleBalance}
                       showWallet={showWallet}
                       isBandWallet={isBandWallet}
