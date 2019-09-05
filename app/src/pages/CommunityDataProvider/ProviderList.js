@@ -35,7 +35,7 @@ class ProviderList extends React.Component {
     })
     this.checker = setInterval(() => {
       this.props.loadTcds()
-    }, 300000)
+    }, 3000)
   }
 
   componentWillUnmount() {
