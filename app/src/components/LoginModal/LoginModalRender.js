@@ -6,19 +6,8 @@ import { colors } from 'ui'
 import LogoSrc from 'images/loginLogo.png'
 import BackgroundSrc from 'images/loginBG.svg'
 
-const login = async hideLogin => {
-  if (typeof window.ethereum !== 'undefined') {
-    await window.ethereum.enable() // TODO: put it to band.js
-    hideLogin()
-  }
-}
-
-const openMetaMask = () => {
-  window.open('https://metamask.io/', '_blank')
-}
-
 export default props => {
-  const { hideLogin, showWallet } = props
+  const { signin } = props
   return (
     <Card variant="modal">
       <Flex
@@ -53,7 +42,7 @@ export default props => {
             width="345px"
             variant="primary"
             style={{ height: '55px' }}
-            onClick={() => login(hideLogin)}
+            onClick={() => signin('metamask')}
             my={1}
           >
             <Text color={colors.white} fontSize={1}>
@@ -65,7 +54,7 @@ export default props => {
             variant="outline"
             style={{ height: '55px', backgroundColor: '#f2f5ff' }}
             my={3}
-            onClick={showWallet}
+            onClick={() => signin('bandwallet')}
           >
             <Text color={colors.purple.normal} fontSize={1}>
               Connect via BandWallet
