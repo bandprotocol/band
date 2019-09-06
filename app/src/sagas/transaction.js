@@ -53,7 +53,7 @@ function* sendTransaction({ transaction, title, type }) {
         `Insufficient ETH to pay for gas fee. Please request free Kovan testnet ETH and send it to ${currentUser} ?`,
       )
     ) {
-      window.open('https://faucet.kovan.network/')
+      window.open('https://gitter.im/kovan-testnet/faucet')
     }
   } finally {
     yield put(removePendingTx(timestamp))
