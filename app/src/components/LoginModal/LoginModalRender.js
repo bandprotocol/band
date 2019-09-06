@@ -6,6 +6,9 @@ import { colors } from 'ui'
 import LogoSrc from 'images/loginLogo.png'
 import BackgroundSrc from 'images/loginBG.svg'
 
+const isChrome =
+  !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime)
+
 export default props => {
   const { signin } = props
   return (
@@ -14,7 +17,8 @@ export default props => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        py={1}
+        pt={1}
+        pb={2}
         mb={3}
       >
         <BackgroundCard
@@ -49,17 +53,19 @@ export default props => {
               Connect via MetaMask
             </Text>
           </Button>
-          <Button
-            width="345px"
-            variant="outline"
-            style={{ height: '55px', backgroundColor: '#f2f5ff' }}
-            my={3}
-            onClick={() => signin('bandwallet')}
-          >
-            <Text color={colors.purple.normal} fontSize={1}>
-              Connect via BandWallet
-            </Text>
-          </Button>
+          {isChrome && (
+            <Button
+              width="345px"
+              variant="outline"
+              style={{ height: '55px', backgroundColor: '#f2f5ff' }}
+              my={3}
+              onClick={() => signin('bandwallet')}
+            >
+              <Text color={colors.purple.normal} fontSize={1}>
+                Connect via BandWallet
+              </Text>
+            </Button>
+          )}
         </Flex>
       </Flex>
     </Card>
