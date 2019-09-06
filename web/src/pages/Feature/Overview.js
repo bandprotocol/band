@@ -132,7 +132,7 @@ export default () => {
                 collusion in the decentralized platform.
               </Text>
               <LinkWithArrow
-                text="Whitepaper v3.1"
+                text="Whitepaper v3.0.1"
                 href="/whitepaper-3.0.1.pdf"
               />
             </Flex>

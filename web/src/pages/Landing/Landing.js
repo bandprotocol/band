@@ -160,7 +160,7 @@ export default () => {
                   <Flex mx={['0px', '10px']} my={['10px', '0px']} />
                   <AbsoluteLink href="/whitepaper-3.0.1.pdf">
                     <OutlineButton isMobile={_isMobile}>
-                      Whitepaper v3.1
+                      Whitepaper v3.0.1
                     </OutlineButton>
                   </AbsoluteLink>
                 </Flex>
