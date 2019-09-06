@@ -556,7 +556,7 @@ const Navbar = props => {
                   Join Community
                 </Text>
               </Flex>
-              <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
+              {/* <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
                   link="/company/about-us"
@@ -566,7 +566,7 @@ const Navbar = props => {
                   title="Developer Forum"
                   description={`Discuss protocol improvements, troubleshoot integrations, and much more`}
                 />
-              </Flex>
+              </Flex> */}
               <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
                 <SubMenuMobile
                   closeMenu={closeMenu}
