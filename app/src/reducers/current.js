@@ -10,7 +10,6 @@ import {
   SAVE_TCD_CLIENT,
   SHOW_MODAL,
   HIDE_MODAL,
-  SAVE_WALLET_TYPE,
 } from 'actions'
 import BN from 'utils/bignumber'
 
