@@ -264,14 +264,14 @@ export default () => {
                     sufficient value for correct dataset incentives to function
                     properly.
                   </Text>
-                  <FilledButton
+                  {/* <FilledButton
                     message="Get Band Airdrop"
                     bg="linear-gradient(to bottom, #00a4ff, #5569de)"
                     arrow
                     width="233px"
                     fontSize="14px"
                     href="http://airdrop.bandprotocol.com/"
-                  />
+                  /> */}
                 </Flex>
               </Flex>
             </Flex>
