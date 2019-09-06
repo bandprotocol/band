@@ -236,17 +236,17 @@ class DepositWithdrawModal extends React.Component {
                 Deposit your tokens to delegate data curation right to the
                 provider. In return, you are entitle to a portion of fee that
                 the provider earn.{' '}
-                <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
+                {/* <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
                   Learn more
-                </a>
+                </a> */}
               </React.Fragment>
             ) : (
               <React.Fragment>
                 Withdraw your staked tokens from the provider. You will no
                 longer earn the portion of curation fee you entitle to.{' '}
-                <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
+                {/* <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
                   Learnmore
-                </a>
+                </a> */}
               </React.Fragment>
             )}
           </Text>
