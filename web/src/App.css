@@ -168,7 +168,7 @@ a:active {
 }
 
 html {
-  background: #2a304e;
+  background: #557bfe;
   max-width: 100vw;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
@@ -188,7 +188,7 @@ body {
   flex-direction: column;
   overflow: auto;
   font-family: 'Open sans';
-  background: white;
+  background: #557bfe;
 }
 
 @media only screen and (max-width: 640px) {
