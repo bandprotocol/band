@@ -435,7 +435,9 @@ export default () => {
               >
                 <Flex alignItems="center">
                   <ArrowRight color="white" reverse />
-                  <Text ml={4}>Previous</Text>
+                  <Text fontSize={['13px', '18px']} ml={[1, 4]}>
+                    Previous
+                  </Text>
                 </Flex>
               </StepButton>
 
@@ -444,7 +446,9 @@ export default () => {
                 disabled={step === animatorSteps.length - 1}
               >
                 <Flex alignItems="center">
-                  <Text mr={4}>Next</Text>
+                  <Text fontSize={['13px', '18px']} mr={[1, 4]}>
+                    Next
+                  </Text>
                   <ArrowRight color="white" />
                 </Flex>
               </StepButton>

@@ -34,6 +34,7 @@ export default ({
     <Container ml={ml} style={style}>
       <Text
         fontWeight="bold"
+        fontSize={['14px', '18px']}
         color={textColor}
         style={{ fontFamily: 'bio-sans', whiteSpace: 'nowrap', ...style }}
       >

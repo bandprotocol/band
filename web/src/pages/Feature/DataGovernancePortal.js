@@ -94,7 +94,7 @@ export default () => {
             mt={['70px', '250px']}
             alignItems="left"
           >
-            <Flex pr="74px" flex={2}>
+            <Flex pr={['0', '74px']} flex={2}>
               <Flex flexDirection={['column']}>
                 <Text
                   fontSize={['22px', '28px']}
@@ -139,10 +139,10 @@ export default () => {
                 </Flex> */}
               </Flex>
             </Flex>
-            <Box mt="-40px" flex={1}>
+            <Box mt={['0', '-40px']} flex={1}>
               <Image src={SetupBandSrcHome} />
             </Box>
-            <Box mt="-40px" flex={1}>
+            <Box mt={['0', '-40px']} flex={1}>
               <Image src={SetupBandSrcLogin} />
             </Box>
           </Flex>
@@ -182,7 +182,7 @@ export default () => {
                   for Qualified Providers
                 </Text>
                 <Text
-                  fontSize={['16px', '18px']}
+                  fontSize={['14px', '18px']}
                   lineHeight="36px"
                   color="#323232"
                   style={{ lineHeight: '2', maxWidth: '650px' }}
@@ -226,7 +226,7 @@ export default () => {
                 </Text>
 
                 <Text
-                  fontSize={['16px', '18px']}
+                  fontSize={['14px', '18px']}
                   lineHeight="36px"
                   style={{ lineHeight: '2', maxWidth: '650px' }}
                   my={['19px']}
