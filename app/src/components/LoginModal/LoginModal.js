@@ -5,21 +5,37 @@ import { hideModal } from 'actions'
 import { walletSelector } from 'selectors/wallet'
 
 class LoginModal extends React.Component {
-  showWallet() {
-    const { wallet, hideLogin } = this.props
-    if (!wallet) {
-      return
+  signin = async walletType => {
+    console.log(walletType)
+    const { hideLogin } = this.props
+    switch (walletType) {
+      case 'metamask':
+        if (typeof window.ethereum === 'undefined') {
+          console.error('Cannot find metamask provider.')
+          break
+        }
+        await window.ethereum.enable()
+        localStorage.setItem('walletType', 'metamask')
+        break
+      case 'bandwallet':
+        const { wallet } = this.props
+        if (!wallet) {
+          console.error('Cannot find band wallet')
+          break
+        }
+        localStorage.setItem('walletType', 'bandwallet')
+        wallet.showWallet()
+        break
+      default:
+        console.error('Cannot find any wallet.')
+        break
     }
-    wallet.showWallet()
     hideLogin()
   }
 
   render() {
     return (
-      <LoginModalRender
-        {...this.props}
-        showWallet={() => this.showWallet()}
-      ></LoginModalRender>
+      <LoginModalRender {...this.props} signin={this.signin}></LoginModalRender>
     )
   }
 }

@@ -19,12 +19,6 @@ export const setNetwork = network => ({
   network,
 })
 
-// save wallet type
-export const saveWalletType = walletType => ({
-  type: SAVE_WALLET_TYPE,
-  walletType,
-})
-
 // reload, save balances
 export const reloadBalance = () => ({ type: RELOAD_BALANCE })
 export const saveBalance = balances => ({

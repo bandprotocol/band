@@ -11,11 +11,6 @@ export const currentNetworkSelector = createSelector(
   current => current.get('network'),
 )
 
-export const walletTypeSelector = createSelector(
-  currentSelector,
-  current => current.get('walletType'),
-)
-
 export const currentModalSelector = createSelector(
   currentSelector,
   current => current.get('modal'),

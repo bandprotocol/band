@@ -35,9 +35,6 @@ const handleSaveBalance = (state, { balances }) =>
     ),
   )
 
-const handleSaveWalletType = (state, { walletType }) =>
-  state.set('walletType', walletType)
-
 const handleSaveBandClient = (state, { client }) =>
   state.setIn(['client', 'band'], client)
 
@@ -62,7 +59,6 @@ export default createReducer({
   [SET_USER_ADDRESS]: handleSetUserAddress,
   [SET_NETWORK]: handleSetNetwork,
   [SAVE_BALANCE]: handleSaveBalance,
-  [SAVE_WALLET_TYPE]: handleSaveWalletType,
   [SAVE_BAND_CLIENT]: handleSaveBandClient,
   [SAVE_COMMUNITY_CLIENT]: handleSaveCommunityClient,
   [SAVE_TCD_CLIENT]: handleSaveTCDClient,

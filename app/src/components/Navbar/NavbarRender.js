@@ -9,6 +9,7 @@ import media from 'ui/media'
 import { colors } from 'ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortDown } from '@fortawesome/free-solid-svg-icons'
+import MetamaskSrc from 'images/metamask.png'
 
 // import AddCommunity from 'images/add-community.svg'
 import Eth from 'images/eth.svg'
@@ -18,7 +19,6 @@ import WhiteLogoSrc from 'images/logo-white.png'
 
 // Other Page
 import LogoSrc from 'images/logo-dark.png'
-import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 const Nav = styled.nav`
   display: flex;
@@ -229,7 +229,7 @@ export default ({
   showWallet,
   showSignOut,
   toggleSignOut,
-  isBandWallet,
+  walletType,
   signOut,
   user,
   balance,
@@ -311,7 +311,7 @@ export default ({
                       isBAND={isBAND}
                       toggle={toggleBalance}
                       showWallet={showWallet}
-                      isBandWallet={isBandWallet}
+                      walletType={walletType}
                     />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
@@ -332,8 +332,10 @@ export default ({
                   <Flex
                     alignItems="center"
                     style={{
-                      cursor: isBandWallet ? 'pointer' : 'pointer',
-                      pointerEvents: isBandWallet ? 'auto' : 'none',
+                      cursor:
+                        walletType === 'bandwallet' ? 'pointer' : 'pointer',
+                      pointerEvents:
+                        walletType === 'bandwallet' ? 'auto' : 'none',
                     }}
                     onClick={() => toggleSignOut()}
                   >
@@ -345,13 +347,15 @@ export default ({
                         />
                       )}
                     </Flex>
-                    {isBandWallet && (
+                    {walletType === 'bandwallet' ? (
                       <Text
                         color={isDashboard ? '#fff' : colors.blue.normal}
                         fontSize={3}
                       >
                         <FontAwesomeIcon icon={faSortDown} />
                       </Text>
+                    ) : (
+                      <Image src={MetamaskSrc} width="15px" />
                     )}
                   </Flex>
                 </Flex>
@@ -390,12 +394,10 @@ export default ({
                   </Box>
                 </BlockTransactions>
               </ClickOutSide>
-            ) : user === 'NOT_SIGNIN' ? (
+            ) : (
               <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
                 Sign in
               </SignIn>
-            ) : (
-              <CircleLoadingSpinner radius="40px" color="white" />
             )}
           </Flex>
         </Flex>
