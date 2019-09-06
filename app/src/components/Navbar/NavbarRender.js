@@ -68,7 +68,7 @@ const SignIn = styled(Text).attrs({
   }
 `
 
-const BalanceBar = ({ isBAND, toggle, showWallet, isBandWallet }) => {
+const BalanceBar = ({ isBAND, toggle, showWallet, walletType }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
       {isBAND ? (
@@ -106,7 +106,7 @@ const BalanceBar = ({ isBAND, toggle, showWallet, isBandWallet }) => {
         </Text>
       )}
       {/* Wallet image */}
-      {isBandWallet && (
+      {walletType === 'bandwallet' ? (
         <Flex
           ml={3}
           mr={1}
@@ -116,6 +116,8 @@ const BalanceBar = ({ isBAND, toggle, showWallet, isBandWallet }) => {
         >
           <Image src={Wallet} width="20px" height="20px" />
         </Flex>
+      ) : (
+        <Image src={MetamaskSrc} width="15px" mr={1} ml={2} />
       )}
     </Flex>
   )
@@ -332,10 +334,7 @@ export default ({
                   <Flex
                     alignItems="center"
                     style={{
-                      cursor:
-                        walletType === 'bandwallet' ? 'pointer' : 'pointer',
-                      pointerEvents:
-                        walletType === 'bandwallet' ? 'auto' : 'none',
+                      cursor: 'pointer',
                     }}
                     onClick={() => toggleSignOut()}
                   >
@@ -347,16 +346,12 @@ export default ({
                         />
                       )}
                     </Flex>
-                    {walletType === 'bandwallet' ? (
-                      <Text
-                        color={isDashboard ? '#fff' : colors.blue.normal}
-                        fontSize={3}
-                      >
-                        <FontAwesomeIcon icon={faSortDown} />
-                      </Text>
-                    ) : (
-                      <Image src={MetamaskSrc} width="15px" />
-                    )}
+                    <Text
+                      color={isDashboard ? '#fff' : colors.blue.normal}
+                      fontSize={3}
+                    >
+                      <FontAwesomeIcon icon={faSortDown} />
+                    </Text>
                   </Flex>
                 </Flex>
                 <SignOutDropDown show={showSignOut}>
@@ -365,7 +360,7 @@ export default ({
                     size={14}
                     color="#7688f4"
                     style={{ cursor: 'pointer' }}
-                    onClick={signOut}
+                    onClick={() => signOut(localStorage.getItem('walletType'))}
                   >
                     Sign Out
                   </Text>

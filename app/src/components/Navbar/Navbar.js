@@ -7,7 +7,7 @@ import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { txIncludePendingSelector } from 'selectors/transaction'
 import { walletSelector } from 'selectors/wallet'
-import { showModal, hideModal } from 'actions'
+import { showModal, hideModal, setUserAddress, updateClient } from 'actions'
 
 class Navbar extends React.Component {
   state = {
@@ -69,10 +69,26 @@ class Navbar extends React.Component {
     })
   }
 
-  signOut() {
-    this.props.wallet.signOut()
+  /* sign out */
+  signOut(walletType) {
+    switch (walletType) {
+      case 'bandwallet':
+        this.props.wallet.signOut()
+        // console.log('sign out bandwallet')
+        // window.location.reload()
+        break
+      case 'metamask':
+        this.props.signOutMetamask()
+        localStorage.removeItem('walletType')
+        break
+      default:
+        console.error('Not find wallet to sign out')
+        // reset wallet type state
+        this.props.signOutMetamask()
+        localStorage.removeItem('walletType')
+        break
+    }
     this.toggleSignOut()
-    // window.location.reload()
   }
 
   toggleSignOut() {
@@ -113,7 +129,7 @@ class Navbar extends React.Component {
         walletType={walletType}
         showWallet={() => this.showWallet()}
         balance={balanceToggled}
-        signOut={() => this.signOut()}
+        signOut={this.signOut.bind(this)}
         toggleSignOut={this.toggleSignOut.bind(this)}
         toggleBalance={this.toggleBalance.bind(this)}
         onClickOutside={() =>
@@ -142,6 +158,10 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch, props) => ({
   hideModal: () => dispatch(hideModal()),
   showLoginModal: () => dispatch(showModal('LOGIN')),
+  signOutMetamask: () => {
+    dispatch(setUserAddress('NOT_SIGNIN'))
+    dispatch(updateClient())
+  },
 })
 
 export default withRouter(
