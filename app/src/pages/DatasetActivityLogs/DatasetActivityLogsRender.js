@@ -260,12 +260,12 @@ export default props => (
         pr="30px"
       >
         <Flex alignItems="center">
-          <AutocompletedSearch data={props.providers} onQuery={props.onQuery} />
-          {!searchProviderAddress(props.query) && (
+          {/* <AutocompletedSearch data={props.providers} onQuery={props.onQuery} /> */}
+          {/* {!searchProviderAddress(props.query) && (
             <Text fontWeight="700" fontSize="12px" color="#ec6363" ml={2}>
               NOT FOUND
             </Text>
-          )}
+          )} */}
         </Flex>
         <Box ml={2} style={{ position: 'relative' }}>
           <ClickOutSide
