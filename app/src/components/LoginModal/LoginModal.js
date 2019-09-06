@@ -6,7 +6,7 @@ import { walletSelector } from 'selectors/wallet'
 
 class LoginModal extends React.Component {
   signin = async walletType => {
-    console.log(walletType)
+    // console.log(walletType)
     const { hideLogin } = this.props
     switch (walletType) {
       case 'metamask':
