@@ -142,6 +142,7 @@ export default () => {
                     <span style={{ color: '#BBDEFF' }}>smart contracts</span>{' '}
                     with trusted{' '}
                     <span style={{ color: '#BBDEFF' }}>off-chain</span>
+                    {' '}
                     {_isMobile ? null : <br />}
                     <span style={{ color: '#BBDEFF' }}>information</span>,
                     provided through community-curated data providers.
