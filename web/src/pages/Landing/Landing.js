@@ -12,7 +12,7 @@ import {
   Box,
   AbsoluteLink,
 } from 'ui/common'
-import { isMobile } from 'ui/media'
+import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 
 import AngleArrow from 'images/angle-arrow-down.png'
@@ -74,6 +74,7 @@ const CircleLink = () => (
 export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
+  const _isSmallMobile = isSmallMobile()
   return (
     <Box
       style={{
