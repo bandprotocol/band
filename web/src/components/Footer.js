@@ -124,14 +124,14 @@ export default () => {
               <H4 mb={['10px', '30px']} py={['30px', 1]}>
                 Join Community
               </H4>
-              <Box mb={[3, '20px']}>
+              {/* <Box mb={[3, '20px']}>
                 <AbsoluteLink
                   target="_blank"
                   href="https://forum.bandprotocol.com"
                 >
                   <Text fontSize="14px">Developer Forum</Text>
                 </AbsoluteLink>
-              </Box>
+              </Box> */}
 
               <Flex
                 ml={['-5px', '-5px']}
