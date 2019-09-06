@@ -47,7 +47,14 @@ function* sendTransaction({ transaction, title, type }) {
     yield put(addTx(txHash, title, type))
     yield put(dumpTxs())
   } catch (error) {
-    alert('Cannot send this transaction')
+    const currentUser = yield select(currentUserSelector)
+    if (
+      window.confirm(
+        `Insufficient ETH to pay for gas fee. Please request free Kovan testnet ETH and send it to ${currentUser} ?`,
+      )
+    ) {
+      window.open('https://faucet.kovan.network/')
+    }
   } finally {
     yield put(removePendingTx(timestamp))
   }
