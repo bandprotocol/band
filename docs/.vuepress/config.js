@@ -1,12 +1,20 @@
 module.exports = {
-  head: [["link", { rel: "icon", href: "/assets/favicon.ico" }]],
-  themeConfig: {
-    logo: "/assets/logo.png",
-    nav: [{ text: "Home", link: "https://bandprotocol.com" }],
-    sidebarDepth: 0,
-    displayAllHeaders: true,
-    sidebar: [
-      {
+    head: [
+        ["link", {
+            rel: "icon",
+            href: "/assets/favicon.ico"
+        }]
+    ],
+    themeConfig: {
+        locales: {
+            '/': {
+                selectText: 'Language',
+                logo: "/assets/logo.png",
+                nav: [{ text: "Home", link: "https://bandprotocol.com" }],
+                sidebarDepth: 0,
+                displayAllHeaders: true,
+                sidebar: [
+                 {
         title: "🏡 Introduction",
         collapsable: false,
         children: [
@@ -74,6 +82,43 @@ module.exports = {
       //   collapsable: false,
       //   children: []
       // }
-    ]
-  }
+                ]
+            },
+
+            '/zh/': {
+                selectText: '选择语言',
+                logo: "/assets/logo.png",
+                nav: [{
+                    text: "首页",
+                    link: "https://bandprotocol.com"
+                }],
+                sidebarDepth: 0,
+                displayAllHeaders: false,
+                sidebar: [{
+                    title: "🏡 介绍",
+                    collapsable: false,
+                    children: ["zh/", "zh/home/comparison"]
+                }, {
+                    title: "🚀 DApp 开发指南",
+                    collapsable: false,
+                    children: ["zh/devs/overview", "zh/devs/connect-with-band", "zh/devs/data-query", "zh/devs/reference", "zh/devs/walkthrough"]
+                }, {
+                    title: "📦 可用的数据集",
+                    collapsable: false,
+                    children: ["zh/datasets/overview", "zh/datasets/financial-kovan", "zh/datasets/sport-kovan", "zh/datasets/lottery-kovan", "zh/datasets/web-oracle"]
+                }
+
+                ]
+            }
+        }
+    },
+    locales: {
+        '/': {
+            lang: 'English',
+        },
+        '/zh/': {
+            lang: '简体中文',
+        }
+    }
+
 };
