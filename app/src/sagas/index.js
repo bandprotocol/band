@@ -16,7 +16,7 @@ import {
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
-import { currentUserSelector } from 'selectors/current'
+import { currentUserSelector, web3Selector } from 'selectors/current'
 
 import {
   logoCommunityFromSymbol,
@@ -65,7 +65,6 @@ switch (network) {
     WALLET_ENDPOINT = 'http://localhost:3000'
 }
 
-const defaultWeb3 = new Web3(new Web3.providers.HttpProvider(RPC_ENDPOINT))
 const bandwalletChannel = channel()
 
 /* handle web3 channel from band wallet*/
@@ -108,9 +107,6 @@ function* baseInitialize() {
   yield put(toggleFetch(true))
 
   yield put(loadCurrent())
-
-  // default before sign in any wallet
-  yield put(setWeb3(defaultWeb3))
 
   const query = yield Utils.graphqlRequest(`
     {
@@ -322,11 +318,9 @@ function* metaMaskProcess() {
 
       if (newUserAddress) {
         const currentUser = yield select(currentUserSelector)
-        if (currentUser !== newUserAddress) {
-          yield put(setWeb3(web3))
-          yield put(setUserAddress(newUserAddress))
-          yield put(updateClient(provider))
-        }
+        yield put(setWeb3(web3))
+        yield put(setUserAddress(newUserAddress))
+        yield put(updateClient(provider))
       } else {
         // console.log('Cannot find metamask user')
         const currentUser = yield select(currentUserSelector)
@@ -352,59 +346,62 @@ function* autoRefresh() {
 /* update tx confirmation */
 function* updateTransaction() {
   while (true) {
-    const currentBlock = yield defaultWeb3.eth.getBlockNumber()
-    if (currentBlock !== (yield select(blockNumberSelector))) {
-      const allTxs = (yield select(transactionSelector)).get('txs')
-      if (allTxs) {
-        const newTxs = fromJS(
-          yield all(
-            allTxs
-              .map(function*(tx) {
-                try {
-                  if (
-                    tx.get('status') === 'COMPLETED' ||
-                    tx.get('status') === 'FAILED'
-                  ) {
-                    if (currentBlock - tx.get('blocknumber') >= 12) {
-                      yield put(saveHiddenTxs(Set([tx.get('txHash')])))
+    const currentWeb3 = yield select(web3Selector)
+    if (currentWeb3) {
+      const currentBlock = yield currentWeb3.eth.getBlockNumber()
+      if (currentBlock !== (yield select(blockNumberSelector))) {
+        const allTxs = (yield select(transactionSelector)).get('txs')
+        if (allTxs) {
+          const newTxs = fromJS(
+            yield all(
+              allTxs
+                .map(function*(tx) {
+                  try {
+                    if (
+                      tx.get('status') === 'COMPLETED' ||
+                      tx.get('status') === 'FAILED'
+                    ) {
+                      if (currentBlock - tx.get('blocknumber') >= 12) {
+                        yield put(saveHiddenTxs(Set([tx.get('txHash')])))
+                      }
+                      return tx
                     }
-                    return tx
+
+                    const receipt = yield currentWeb3.eth.getTransactionReceipt(
+                      tx.get('txHash'),
+                    )
+
+                    if (receipt) {
+                      if (!tx.get('blocknumber')) {
+                        return tx.set('blocknumber', receipt.blockNumber)
+                      }
+                      if (receipt.status) {
+                        if (currentBlock - receipt.blockNumber + 1 >= 4)
+                          return tx.set('status', 'COMPLETED')
+                        else
+                          return tx
+                            .set('status', 'WAIT_CONFIRM')
+                            .set(
+                              'confirm',
+                              currentBlock - receipt.blockNumber + 1,
+                            )
+                      } else {
+                        return tx.set('status', 'FAILED')
+                      }
+                    }
+
+                    return tx.set('status', 'SENDING').set('confirm', 0)
+                  } catch (e) {
+                    console.error('Error processing txn:', e)
+                    return tx.set('status', 'SENDING').set('confirm', 0)
                   }
-
-                  const receipt = yield defaultWeb3.eth.getTransactionReceipt(
-                    tx.get('txHash'),
-                  )
-
-                  if (receipt) {
-                    if (!tx.get('blocknumber')) {
-                      return tx.set('blocknumber', receipt.blockNumber)
-                    }
-                    if (receipt.status) {
-                      if (currentBlock - receipt.blockNumber + 1 >= 4)
-                        return tx.set('status', 'COMPLETED')
-                      else
-                        return tx
-                          .set('status', 'WAIT_CONFIRM')
-                          .set(
-                            'confirm',
-                            currentBlock - receipt.blockNumber + 1,
-                          )
-                    } else {
-                      return tx.set('status', 'FAILED')
-                    }
-                  }
-
-                  return tx.set('status', 'SENDING').set('confirm', 0)
-                } catch (e) {
-                  console.error('Error processing txn:', e)
-                  return tx.set('status', 'SENDING').set('confirm', 0)
-                }
-              })
-              .toJS(),
-          ),
-        )
-        yield put(saveTxs(currentBlock, newTxs, false))
-        yield put(dumpTxs())
+                })
+                .toJS(),
+            ),
+          )
+          yield put(saveTxs(currentBlock, newTxs, false))
+          yield put(dumpTxs())
+        }
       }
     }
 
