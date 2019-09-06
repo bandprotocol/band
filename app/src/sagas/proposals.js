@@ -1,4 +1,4 @@
-import { takeEvery, put, select, delay, all } from 'redux-saga/effects'
+import { takeEvery, put, select, all } from 'redux-saga/effects'
 import { Utils } from 'band.js'
 import BN from 'utils/bignumber'
 import moment from 'utils/moment'

@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandMockExchange = artifacts.require('BandMockExchange');
 const BandToken = artifacts.require('BandToken');
@@ -165,7 +165,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         20,
         { from: bob },
       );
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.register(
           carol,
           '0x0000000000000000000000000000000000000001',
@@ -222,7 +222,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         10,
         { from: carol },
       );
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.register(
           carol,
           '0x0000000000000000000000000000000000000001',
@@ -258,7 +258,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.tcd.infoMap(carol)).owner.toString().should.eq(alice);
     });
     it('should revert if not enough tokens', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.register(
           carol,
           '0x0000000000000000000000000000000000000000',
@@ -436,7 +436,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(alice))
         .toNumber()
         .should.eq(1000 - 30);
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.stake(
           owner,
           '0x0000000000000000000000000000000000000000',
@@ -1000,7 +1000,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should revert if value less than query', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.query(
           '0x5000000000000000000000000000000000000000000000000000000000000000',
         ),
@@ -1312,7 +1312,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
           from: alice,
         },
       );
-      await shouldFail.reverting(this.tcd.unlockTokenFromReceipt(0));
+      await expectRevert.unspecified(this.tcd.unlockTokenFromReceipt(0));
     });
     it('should unlock withdraw if time passed', async () => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
@@ -1341,7 +1341,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
       await time.increase(time.duration.seconds(3600));
-      await shouldFail.throwing(this.tcd.unlockTokenFromReceipt(1));
+      await expectRevert.assertion(this.tcd.unlockTokenFromReceipt(1));
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(970);
     });
     it('should withdraw normally if he is not owner', async () => {
@@ -1464,7 +1464,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         600,
         { from: owner },
       );
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.tcd.register(
           alice,
           '0x0000000000000000000000000000000000000000',
@@ -1485,7 +1485,9 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         { from: owner },
       );
 
-      await shouldFail.reverting(this.comm.transfer(bob, 10, { from: owner }));
+      await expectRevert.unspecified(
+        this.comm.transfer(bob, 10, { from: owner }),
+      );
       await this.tcd3.unstake(
         alice,
         '0x0000000000000000000000000000000000000000',
@@ -1495,11 +1497,15 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
       (await this.comm.balanceOf(owner)).toNumber().should.eq(1000);
       (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(0);
-      await shouldFail.reverting(this.comm.transfer(bob, 10, { from: owner }));
+      await expectRevert.unspecified(
+        this.comm.transfer(bob, 10, { from: owner }),
+      );
 
       await time.increase(time.duration.seconds(20));
       await this.tcd3.unlockTokenFromReceipt(0);
-      await shouldFail.reverting(this.comm.transfer(bob, 210, { from: owner }));
+      await expectRevert.unspecified(
+        this.comm.transfer(bob, 210, { from: owner }),
+      );
       await this.comm.transfer(bob, 10, { from: owner });
       (await this.comm.balanceOf(owner)).toNumber().should.eq(990);
       (await this.comm.unlockedBalanceOf(owner)).toNumber().should.eq(190);

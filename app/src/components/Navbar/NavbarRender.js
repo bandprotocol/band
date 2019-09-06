@@ -7,6 +7,8 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import PendingTransaction from 'components/PendingTransaction'
 import media from 'ui/media'
 import { colors } from 'ui'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 
 // import AddCommunity from 'images/add-community.svg'
 import Eth from 'images/eth.svg'
@@ -66,12 +68,12 @@ const SignIn = styled(Text).attrs({
   }
 `
 
-const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
+const BalanceBar = ({ isBAND, toggle, showWallet, isBandWallet }) => {
   return (
     <Flex justifyContent="center" alignItems="center">
-      {isBND ? (
+      {isBAND ? (
         <Text mr={0} color="#4a4a4a" fontSize="15px" fontWeight={500}>
-          BND
+          BAND
         </Text>
       ) : (
         <TextClickable
@@ -80,7 +82,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
           fontWeight={500}
           fontSize="15px"
         >
-          BND
+          BAND
         </TextClickable>
       )}
       <Box
@@ -89,7 +91,7 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
         mx={1}
         style={{ height: '20px' }}
       ></Box>
-      {isBND ? (
+      {isBAND ? (
         <TextClickable
           onClick={toggle}
           color="#b8c1dd"
@@ -103,15 +105,18 @@ const HighlightBNDOrUSD = ({ isBND, toggle, showWallet }) => {
           USD
         </Text>
       )}
-      <Flex
-        ml={3}
-        mr={1}
-        mb={0}
-        style={{ cursor: 'pointer' }}
-        onClick={() => showWallet()}
-      >
-        <Image src={Wallet} width="20px" height="20px" />
-      </Flex>
+      {/* Wallet image */}
+      {isBandWallet && (
+        <Flex
+          ml={3}
+          mr={1}
+          mb={0}
+          style={{ cursor: 'pointer' }}
+          onClick={() => showWallet()}
+        >
+          <Image src={Wallet} width="20px" height="20px" />
+        </Flex>
+      )}
     </Flex>
   )
 }
@@ -224,16 +229,18 @@ export default ({
   showWallet,
   showSignOut,
   toggleSignOut,
+  isBandWallet,
   signOut,
   user,
   balance,
-  isBND,
+  isBAND,
   showNav,
   toggleBalance,
   txs,
   onClickOutside,
   showBlockTransactions,
   toggleShowBlockTransactions,
+  showLoginModal,
 }) => {
   const pending =
     (txs &&
@@ -300,10 +307,11 @@ export default ({
                     >
                       {balance.pretty()}
                     </Text>
-                    <HighlightBNDOrUSD
-                      isBND={isBND}
+                    <BalanceBar
+                      isBAND={isBAND}
                       toggle={toggleBalance}
                       showWallet={showWallet}
+                      isBandWallet={isBandWallet}
                     />
                   </Flex>
                   <DropdownButton onClick={toggleShowBlockTransactions}>
@@ -323,7 +331,10 @@ export default ({
                   </DropdownButton>
                   <Flex
                     alignItems="center"
-                    style={{ cursor: 'pointer' }}
+                    style={{
+                      cursor: isBandWallet ? 'pointer' : 'pointer',
+                      pointerEvents: isBandWallet ? 'auto' : 'none',
+                    }}
                     onClick={() => toggleSignOut()}
                   >
                     <Flex ml="15px" mr="10px">
@@ -334,12 +345,14 @@ export default ({
                         />
                       )}
                     </Flex>
-                    <Text
-                      color={isDashboard ? '#fff' : colors.blue.normal}
-                      fontSize={3}
-                    >
-                      <i className="fas fa-sort-down" />
-                    </Text>
+                    {isBandWallet && (
+                      <Text
+                        color={isDashboard ? '#fff' : colors.blue.normal}
+                        fontSize={3}
+                      >
+                        <FontAwesomeIcon icon={faSortDown} />
+                      </Text>
+                    )}
                   </Flex>
                 </Flex>
                 <SignOutDropDown show={showSignOut}>
@@ -378,11 +391,11 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : user === 'NOT_SIGNIN' ? (
-              <SignIn onClick={showWallet} isDashboard={isDashboard}>
+              <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
                 Sign in
               </SignIn>
             ) : (
-              <CircleLoadingSpinner radius="40px" color="red" />
+              <CircleLoadingSpinner radius="40px" color="white" />
             )}
           </Flex>
         </Flex>

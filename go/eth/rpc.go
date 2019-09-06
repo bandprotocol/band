@@ -5,9 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
 	"math/big"
-	"os"
 	"strconv"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -25,19 +23,6 @@ type Signature struct {
 var pk *ecdsa.PrivateKey
 var rpcClient *rpc.Client
 
-func init() {
-
-	err := SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
-	if err != nil {
-		log.Println("no private key found, try to connect with localnode")
-	}
-
-	rpcClient, err = rpc.Dial(os.Getenv("ETH_RPC"))
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
 // SetPrivateKey transform private key string to ECDSA Key
 func SetPrivateKey(newPrivateKey string) error {
 	_pk, err := crypto.HexToECDSA(newPrivateKey)
@@ -45,6 +30,16 @@ func SetPrivateKey(newPrivateKey string) error {
 		return err
 	}
 	pk = _pk
+	return nil
+}
+
+// SetRpcClient receive url of ethereum node to initiate rpcClient
+func SetRpcClient(rpcUrl string) error {
+	var err error
+	rpcClient, err = rpc.Dial(rpcUrl)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -81,10 +76,6 @@ func GetStorageAt(contract common.Address, location common.Hash) (common.Hash, e
 // SignMessage returns the signature of signing the given message using Ethereum's message
 // signing scheme.
 func SignMessage(message []byte) (Signature, error) {
-	if rpcClient == nil {
-		return Signature{}, errors.New("SignMessage: Initialization is required")
-	}
-
 	withPrefix := append([]byte("\x19Ethereum Signed Message:\n32"), crypto.Keccak256(message)...)
 	msgHash := crypto.Keccak256(withPrefix)
 
@@ -99,6 +90,9 @@ func SignMessage(message []byte) (Signature, error) {
 		}, nil
 	}
 
+	if rpcClient == nil {
+		return Signature{}, errors.New("SignMessage: Initialization is required")
+	}
 	signerAddress, err := GetAddress()
 	if err != nil {
 		return Signature{}, errors.New("SignMessage: Can not get signer address")
@@ -126,17 +120,14 @@ func SignMessage(message []byte) (Signature, error) {
 }
 
 func CallContract(to common.Address, data []byte) ([]byte, error) {
+	var result string
+	params := make(map[string]string)
 	from, err := GetAddress()
-	if err != nil {
-		return []byte{}, err
+	if err == nil {
+		params["from"] = from.Hex()
 	}
 
-	var result string
-
-	params := make(map[string]string)
-
 	// Mock gas price and gas limit for kovan
-	params["from"] = from.Hex()
 	params["to"] = to.Hex()
 	params["gas"] = "0xf4240"
 	params["gasPrice"] = "0x0"

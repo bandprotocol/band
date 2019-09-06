@@ -60,8 +60,8 @@ contract ExampleContract {
   uint256 public ethusd;
 
   function update() public payable {
-    Oracle oracle = Oracle(0x07416E24085889082d767AF4CA09c37180A3853c);
-    (bytes32 raw,,) = oracle.query.value(oracle.queryPrice())("ETH/USD");
+    Oracle oracle = Oracle(0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e);
+    (bytes32 raw,,) = oracle.query.value(oracle.queryPrice())("SPOTPX/ETH-USD");
     ethusd = uint256(raw);
   }
 }
@@ -77,7 +77,7 @@ Once the contract is implemented, go to "Deploy and Run Transaction" tab and cli
   </figure>
 </div>
 
-After the contract is deployed successfully, click on `update` button on the button left to send a transaction to invoke `update` function. To call this function successfully, the caller must pass `0.001 ETH` as a query fee. You can specify that under `Value` tab.
+After the contract is deployed successfully, click on `update` button on the button left to send a transaction to invoke `update` function. To call this function successfully, the caller must pass `0.001 ETH` as a query fee. You can specify that on `Value` field.
 
 <div align="center">
   <figure>

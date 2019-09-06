@@ -123,7 +123,7 @@ export default () => {
                 color="#3b426b"
                 style={{ maxWidth: 900 }}
               >
-                Join Our Team's Mission to Democretize Data
+                Join Our Team's Mission to Democratize Data
               </Text>
 
               <Text

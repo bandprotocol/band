@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Text, H2, H3 } from 'ui/common'
+import { Flex, Text, H2 } from 'ui/common'
 
 export default ({ lines }) => (
   <Flex flexDirection="column" style={{ width: '100%' }}>

@@ -8,15 +8,21 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"sort"
+	"strconv"
 	"strings"
 
+	"github.com/bandprotocol/band/go/driver"
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/reqmsg"
+	"github.com/olekukonko/tablewriter"
 
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
@@ -39,29 +45,53 @@ type ResponseTxObject struct {
 
 type valueWithTimeStamp struct {
 	Value     common.Hash
-	Status    uint8
+	Status    dt.QueryStatus
 	Timestamp uint64
 }
 
-func getProviderUrl(provider common.Address) (string, error) {
-	key := "providers." + provider.Hex()
-	if !viper.IsSet(key) {
-		return "", fmt.Errorf("getProviderUrl: unknown provider url for %s", provider.Hex())
-	}
-	return viper.GetString(key), nil
+var rootCmd = &cobra.Command{
+	Use:   "./[this] -h \n  ./[this] --help \n  ./[this] [path to node.yml]",
+	Short: "The Band coordinator node is middleware, gathering data from all provider nodes",
+	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
-func statusToInt(status string) uint8 {
-	switch status {
-	case "OK":
-		return 1
-	default:
-		return 0
+func getProviderURL(provider common.Address) (string, error) {
+	if !viper.IsSet("providerEndpointContract") {
+		return "", fmt.Errorf("getProviderUrl: unknown provider endpoint contract")
 	}
+	data := append(eth.Get4BytesFunctionSignature("endpoints(address)"), provider.Hash().Bytes()...)
+
+	callResult, err := eth.CallContract(common.HexToAddress(viper.GetString("providerEndpointContract")), data)
+	if err != nil {
+		return "", err
+	}
+	const definition = `[{
+		"constant": true,
+		"inputs": [
+		  {
+		    "name": "",
+		    "type": "address"
+	 	  }
+		],
+		"name": "endpoints",
+		"outputs": [
+		  {
+			"name": "",
+			"type": "string"
+		  }
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}]`
+	contractABI, err := abi.JSON(strings.NewReader(definition))
+	var endpoint string
+	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
+	return endpoint, err
 }
 
 func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (reqmsg.DataResponse, error) {
-	url, err := getProviderUrl(provider)
+	url, err := getProviderURL(provider)
 	if err != nil {
 		return reqmsg.DataResponse{}, err
 	}
@@ -89,7 +119,9 @@ func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (
 	keyBytes, _ := hex.DecodeString(request.Key[2:])
 	// Verify signature
 	if !eth.VerifyMessage(
-		reqmsg.GetRawDataBytes(request.Dataset, keyBytes, result.Value, result.Timestamp),
+		reqmsg.GetRawDataBytes(
+			request.Dataset, keyBytes, result.Answer.Option, result.Answer.Value, result.Timestamp,
+		),
 		result.Sig,
 		provider,
 	) {
@@ -100,7 +132,7 @@ func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (
 }
 
 func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Address) (reqmsg.SignResponse, error) {
-	url, err := getProviderUrl(provider)
+	url, err := getProviderURL(provider)
 	if err != nil {
 		return reqmsg.SignResponse{}, err
 	}
@@ -125,8 +157,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 		return reqmsg.SignResponse{}, err
 	}
 
-	status := statusToInt(result.Status)
-	if status == 0 {
+	if result.Status != dt.OK && result.Status != dt.Disagreement {
 		return reqmsg.SignResponse{}, fmt.Errorf("getAggregateFromProvider: status invalid")
 	}
 
@@ -138,7 +169,7 @@ func getAggregateFromProvider(request *reqmsg.SignRequest, provider common.Addre
 			keyBytes,
 			result.Value,
 			result.Timestamp,
-			status,
+			result.Status,
 		),
 		result.Sig,
 		provider,
@@ -209,6 +240,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if arg.Key[:2] != "0x" {
+		arg.Key = "0x" + hex.EncodeToString([]byte(arg.Key))
+	}
+
 	if !eth.IsValidDataset(arg.Dataset) {
 		http.Error(w, "Dataset is not valid", http.StatusBadRequest)
 		return
@@ -252,12 +287,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get aggregate data
+	minProviders := 2*len(providers)/3 + 1
 	aggRequest := reqmsg.SignRequest{
 		dataRequest,
 		responses,
+		minProviders,
 	}
 
-	var counter = make(map[valueWithTimeStamp]int)
+	counter := make(map[valueWithTimeStamp]int)
 
 	chSignResponse := make(chan reqmsg.SignResponse)
 	for _, provider := range providers {
@@ -266,6 +303,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 				chSignResponse <- data
 			} else {
+				log.Printf("Fail to get aggreagated value from %s: %s", provider.Hex(), err)
 				chSignResponse <- reqmsg.SignResponse{}
 			}
 		}(provider, &aggRequest)
@@ -279,8 +317,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			counter[valueWithTimeStamp{
 				Value:     r.Value,
 				Timestamp: r.Timestamp,
-				Status:    statusToInt(r.Status),
-			}] += 1
+				Status:    r.Status,
+			}]++
 		}
 	}
 
@@ -309,7 +347,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	for _, agg := range validAggs {
 		if agg.Value == majority.Value &&
 			agg.Timestamp == majority.Timestamp &&
-			statusToInt(agg.Status) == majority.Status {
+			agg.Status == majority.Status {
 			agreedData = append(agreedData, agg)
 		}
 	}
@@ -328,7 +366,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		rs = append(rs, agg.Sig.R)
 		ss = append(ss, agg.Sig.S)
 	}
-	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, majority.Status, vs, rs, ss)
+	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, uint8(majority.Status), vs, rs, ss)
 	w.Header().Set("Content-Type", "application/json")
 
 	if arg.Broadcast {
@@ -351,11 +389,73 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	viper.SetConfigName("coord")
+	var port string
+	var ethRpc string
+	var privateKey string
+	var queryDebug bool
+
+	if len(os.Args) < 2 {
+		fmt.Println("should have at least 1 argument, -h or --help for more detail")
+		os.Exit(1)
+	} else if os.Args[1] == "-h" || os.Args[1] == "--help" {
+		rootCmd.PersistentFlags().StringVar(&port, "port", "should be set by node.yml", `port of your app, for example "5000"`)
+		rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", "should be set by node.yml", `Ethereum rcp url, for example "https://kovan.infura.io"`)
+		rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", "should be set by node.yml", `Private Key of the data provider, 64 hex characters`)
+		rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
+		err := rootCmd.Execute()
+		if err != nil {
+			log.Println(err)
+		}
+		return
+	}
+
+	viper.SetConfigName(os.Args[1])
 	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal("Unable to locate config file (coord.yaml)")
 	}
+
+	privateKey = viper.GetString("privateKey")
+	ethRpc = viper.GetString("ethRpc")
+	port = viper.GetString("port")
+	queryDebug = viper.GetBool("queryDebug")
+
+	rootCmd.PersistentFlags().StringVar(&port, "port", port, `port of your app, for example "5000"`)
+	rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", ethRpc, `Ethereum rcp url, for example "https://kovan.infura.io"`)
+	rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", privateKey, `Private Key of the data provider, 64 hex characters`)
+	rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if queryDebug {
+		driver.TurnOnQueryDebugging()
+	}
+	err := eth.SetPrivateKey(privateKey)
+	if err != nil {
+		log.Println(err.Error())
+		log.Println("Warning: Private key not set. Ethereum node according to ethRpc will be used for signing")
+	}
+	err = eth.SetRpcClient(ethRpc)
+	if err != nil {
+		log.Println("create ethRpc client error")
+		log.Fatal(err)
+	}
+	_, err = strconv.Atoi(port)
+	if err != nil {
+		log.Println("wrong port format")
+		log.Fatal(err)
+	}
+
+	fmt.Println("start coordinator node with these following parameters")
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Parameter Name", "Value"})
+	table.Append([]string{"port", port})
+	table.Append([]string{"ethRpc", ethRpc})
+	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
+	table.Render()
+
 	http.HandleFunc("/", handleRequest)
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

@@ -219,7 +219,7 @@ export default () => {
             </Report>
           </Flex>
 
-          <Flex
+          {/* <Flex
             mt={['40px', '50px']}
             justifyContent="center"
             alignItems={['center', 'flex-start']}
@@ -240,7 +240,7 @@ export default () => {
               width="227px"
               href="https://developer.bandprotocol.com/devs/connect-with-band.html"
             />
-          </Flex>
+          </Flex> */}
 
           {/* Section2: Embedded Video */}
           <Flex

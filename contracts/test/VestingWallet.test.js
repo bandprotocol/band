@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const VestingWallet = artifacts.require('VestingWallet');
@@ -41,26 +41,26 @@ contract('VestingWallet', ([_, owner, alice, bob]) => {
 
       it('should only allow transfer after the cliff ends', async () => {
         await time.increaseTo(1581724800); // 2020/02/15 (0.5 months)
-        await shouldFail.reverting(this.wallet.release({ from: alice }));
+        await expectRevert.unspecified(this.wallet.release({ from: alice }));
         await time.increaseTo(1584230400); // 2020/03/15 (1.5 months)
-        await shouldFail.reverting(this.wallet.release({ from: alice }));
+        await expectRevert.unspecified(this.wallet.release({ from: alice }));
         await time.increaseTo(1586908800); // 2020/04/15 (2.5 months)
-        await shouldFail.reverting(this.wallet.release({ from: alice }));
+        await expectRevert.unspecified(this.wallet.release({ from: alice }));
         await time.increaseTo(1589500800); // 2020/05/15 (3.5 months) - 1/4 vested
 
         // Can release now
         await this.wallet.release({ from: alice });
-        await shouldFail.reverting(this.wallet.release({ from: alice }));
-        (await this.band.balanceOf(alice)).toString().should.eq('250');
+        await expectRevert.unspecified(this.wallet.release({ from: alice }));
+        expect((await this.band.balanceOf(alice)).toString()).to.eq('250');
 
         await time.increaseTo(1610668800); // 2021/01/15 (11.5 months)
         // 11/12 vested - locked balance should be floor(1/12*1000).
         await this.wallet.release({ from: alice });
-        (await this.band.balanceOf(alice)).toString().should.eq('917');
+        expect((await this.band.balanceOf(alice)).toString()).to.eq('917');
         await time.increaseTo(1613347200); // 2021/02/01
         // All fully vested. 1000 should transfer to alice
         await this.wallet.release({ from: alice });
-        (await this.band.balanceOf(alice)).toString().should.eq('1000');
+        expect((await this.band.balanceOf(alice)).toString()).to.eq('1000');
       });
 
       it('should revoke by owner', async () => {
@@ -88,14 +88,16 @@ contract('VestingWallet', ([_, owner, alice, bob]) => {
 
         // Can release now
         await this.wallet.release({ from: alice });
-        (await this.band.balanceOf(alice)).toString().should.eq('417');
+        expect((await this.band.balanceOf(alice)).toString()).to.eq('417');
 
         await time.increaseTo(1643673600);
         await this.wallet.revoke({ from: owner });
-        (await this.band.balanceOf(owner)).toNumber().should.eq(1000000 - 1417);
-        (await this.band.balanceOf(this.wallet.address))
-          .toNumber()
-          .should.eq(0);
+        expect((await this.band.balanceOf(owner)).toNumber()).to.eq(
+          1000000 - 1417,
+        );
+        expect(
+          (await this.band.balanceOf(this.wallet.address)).toNumber(),
+        ).to.eq(0);
         // await shouldFail.throwing(this.wallet.release({ from: alice }));
       });
     },

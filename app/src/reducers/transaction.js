@@ -38,7 +38,7 @@ const handleSaveHiddenTxs = (state, { txs }) => {
   return state.set('hide', (state.get('hide') || new Set()).union(txs))
 }
 
-const handleHideTxs = (state, {}) => {
+const handleHideTxs = state => {
   const txs = Set(
     state
       .get('txs', List())

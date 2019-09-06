@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Box, Flex, Card, Text, AbsoluteLink, Button, Image } from 'ui/common'
+import { Box, Flex, Text, Button, Image } from 'ui/common'
 import WebRequestUpload from 'images/web-request-upload.png'
 import RightArrowSrc from 'images/icon-right-arrow.svg'
 import { copy } from 'utils/clipboard'

@@ -1,0 +1,39 @@
+port: 5000
+privateKey: "xxxxxx"
+drivers:
+  "0xF904Db9817E4303c77e1Df49722509a0d7266934":
+    name: RegEx
+    method: Majority
+    children:
+      epl:
+        match: ^EPL/([0-9]+)/([A-Z]+)-([A-Z]+)$
+        driver:
+          name: AggMajority
+          children:
+            espn:
+              name: EplEspn
+            sportsDB:
+              name: EplSport
+      nba:
+        match: ^NBA/([0-9]+)/([A-Z]+)-([A-Z]+)$
+        driver:
+          name: AggMajority
+          children:
+            espn:
+              name: NbaEspn
+            dataNba:
+              name: DataNba
+      mlb:
+        match: ^MLB/([0-9]+)/([A-Z]+)-([A-Z]+)/([0-9])$
+        driver:
+          name: AggMajority
+          children:
+            espn:
+              name: MlbEspn
+      nfl:
+        match: ^NFL/([0-9]+)/([A-Z]+)-([A-Z]+)$
+        driver:
+          name: AggMajority
+          children:
+            espn:
+              name: NflEspn

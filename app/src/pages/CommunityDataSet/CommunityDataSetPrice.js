@@ -1,14 +1,11 @@
 import React from 'react'
 import moment from 'moment'
-import { connect } from 'react-redux'
-import { communityDetailSelector } from 'selectors/communities'
-import { Flex, Box, Text, Card, Image, Button } from 'ui/common'
+import { Flex, Box, Text, Card } from 'ui/common'
 import PageStructure from 'components/DataSetPageStructure'
 import DataSetPriceGraph from 'components/DataSetPriceGraph'
 import DatasetTab from 'components/DatasetTab'
 import DataPoint from 'components/DataPoint'
 import FlipMove from 'react-flip-move'
-import { getAsset } from 'utils/assetData'
 import {
   CRYPTO_TYPE,
   FX_TYPE,
@@ -34,24 +31,12 @@ import ErcSrc from 'images/dataset-erc20.png'
 import UseqSrc from 'images/dataset-stock.png'
 import CryptoSrc from 'images/dataset-crypto.png'
 
-const pairToHeader = pair => {
-  const [left, right] = pair.split('/')
-  const { image: imgl, label: labell } = getAsset(left)
-  const { image: imgr, label: labelr } = getAsset(right)
-  return labell + '/' + labelr
-}
-
 const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   <React.Fragment>
     <Box mt={3}>
       <FlipMove>
         {pairs.map(({ pair, key, value, lastUpdate }) => {
           let numDigits = 2
-          // if (tcdPrefix.includes('erc')) {
-          //   numDigits = 6
-          // } else if (tcdPrefix.includes('fx')) {
-          //   numDigits = 4
-          // }
           if (value > 1) numDigits = 2
           else if (value > 0.001) numDigits = 4
           else numDigits = 6

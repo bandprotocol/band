@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const BondingCurve = artifacts.require('BondingCurve');
@@ -47,13 +47,13 @@ contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
 
   context('Checking buy and sell community tokens with f(s) = x ^ 2', () => {
     it('should not allow buying directly without approval', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.curve.buy(alice, 100, 11000, { from: alice }),
       );
     });
     it('should not allow buying if buy does not have enough band', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.band.transferAndCall(
           this.curve.address,
           110000,
@@ -66,7 +66,7 @@ contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
 
     it('should not allow buying if price limit does not pass', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.band.transferAndCall(
           this.curve.address,
           9000,
@@ -129,7 +129,7 @@ contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
       const calldata2 = this.curve.contract.methods
         .sell(_, 0, 10000)
         .encodeABI();
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.comm.transferAndCall(
           this.curve.address,
           10,
@@ -332,7 +332,7 @@ contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
     });
 
     it('should not allow deflate more than what they own', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.curve.deflate(owner, 110, { from: owner }),
       );
     });

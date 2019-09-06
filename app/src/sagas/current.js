@@ -1,12 +1,12 @@
 import { BandProtocolClient } from 'band.js'
-
-import { takeEvery, put, select, all } from 'redux-saga/effects'
+import { takeEvery, put, select } from 'redux-saga/effects'
 import {
   UPDATE_CLIENT,
   LOAD_CURRENT,
   setUserAddress,
   setNetwork,
   saveBalance,
+  saveWalletType,
   saveBandClient,
   saveCommunityClient,
   saveTCDClient,
@@ -29,7 +29,10 @@ import { List, Set, Map } from 'immutable'
 
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
+  // console.log('current user address:', address)
+
   if (address) {
+    // if user is exist then reload for polling user balance.
     yield put(setUserAddress(address))
     yield put(reloadBalance())
     yield put(
@@ -67,18 +70,25 @@ function* handleUpdateClient({ provider }) {
   }
 }
 
+/* load user, network, balances and txs from LocalStroage */
 function* handleLoadCurrent() {
   // Load user
   const user = localStorage.getItem('user')
   if (user) yield put(setUserAddress(user))
+
   // Load network
   const network = localStorage.getItem('network')
   yield put(setNetwork(network || 'kovan'))
+
   // Load balance
   const balances = localStorage.getItem('balances')
   if (balances) yield put(saveBalance(JSON.parse(balances)))
   else yield put(saveBalance({}))
 
+  const walletType = localStorage.getItem('walletType')
+  if (walletType) yield put(saveWalletType(walletType))
+
+  // load txs and hidden txs
   if (user) {
     const rawTxState = localStorage.getItem(`txs-${user}`)
     const rawHiddenTxState = localStorage.getItem(`hiddenTxs-${user}`)
@@ -101,6 +111,7 @@ function* handleLoadCurrent() {
   }
 }
 
+/* save user, network and balances to LocalStroage */
 function* handleDumpCurrent() {
   const current = yield select(currentSelector)
   // Dump user
@@ -113,6 +124,10 @@ function* handleDumpCurrent() {
   else localStorage.removeItem('network')
   // Dump balance
   const balances = current.get('balances')
+  // Dump wallet type
+  const walletType = current.get('walletType')
+  if (walletType) localStorage.setItem('walletType', walletType)
+
   if (balances) {
     const bj = balances.map(v =>
       Map({

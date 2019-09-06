@@ -88,7 +88,7 @@ class HighChartGraph extends React.Component {
         chartObj.hideLoading()
         break
       }
-      await delay(1000)
+      await delay(500)
     }
   }
 

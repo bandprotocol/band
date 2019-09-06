@@ -9,20 +9,10 @@
     <meta name="theme-color" content="#8868ff" />
 
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.png" />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
-      crossorigin="anonymous"
-    />
-    <link
-      href="https://unpkg.com/ionicons@4.4.6/dist/css/ionicons.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Source+Code+Pro:300,400,500,600,700,900"
-      rel="stylesheet"
-    />
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+    integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" /> -->
+    <!-- <link href="https://unpkg.com/ionicons@4.4.6/dist/css/ionicons.min.css" rel="stylesheet" /> -->
+
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <title>Band Protocol - Decentralized Data Governance</title>
@@ -74,11 +64,31 @@
       content="Band Protocol - Decentralized Data Governance"
     />
     <meta name="og:type" content="website" />
-    <link rel="stylesheet" href="https://use.typekit.net/iyw1mjd.css" />
+    <!-- <link rel="stylesheet" href="https://use.typekit.net/iyw1mjd.css" /> -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-119399530-7"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+
+      gtag('config', 'UA-119399530-7')
+    </script>
   </head>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <link
+      href="https://fonts.googleapis.com/css?family=Source+Code+Pro:300,400,500,600,700,900"
+      rel="stylesheet"
+    />
     <div id="root"></div>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -89,6 +99,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-    <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script>
+    <!-- <script src="https://unpkg.com/ionicons@4.5.5/dist/ionicons.js"></script> -->
   </body>
 </html>

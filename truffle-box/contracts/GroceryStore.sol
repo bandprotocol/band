@@ -1,6 +1,6 @@
 pragma solidity 0.5.10;
 
-import {usingBandProtocol, Oracle} from "band-solidity/contracts/data/BandLib.sol";
+import {usingBandProtocol, Oracle} from "band-solidity/contracts/Band.sol";
 
 contract GroceryStore is usingBandProtocol {
 
@@ -13,7 +13,7 @@ contract GroceryStore is usingBandProtocol {
   mapping(address => Receipt) public lastPay;
 
   function pay(uint256 priceInUSD) public payable {
-    uint256 ethUsd = CRYPTO.querySpotPrice("ETH/USD");
+    uint256 ethUsd = FINANCIAL.querySpotPrice("ETH-USD");
     uint256 price = priceInUSD * 1e36 / ethUsd;
     require(msg.value >= price);
     lastPay[msg.sender] = Receipt(priceInUSD, msg.value, now);

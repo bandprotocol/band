@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const CommunityToken = artifacts.require('CommunityToken');
 const BandRegistry = artifacts.require('BandRegistry');
@@ -41,8 +41,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     const newExchange = await BandMockExchange.new(this.band.address, {
       from: bob,
     });
-    await shouldFail.reverting(
+    await expectRevert(
       this.factory.setExchange(newExchange.address, { from: bob }),
+      'Ownable: caller is not the owner -- Reason given: Ownable: caller is not the owner.',
     );
   });
 
@@ -69,8 +70,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should allow only owner to mint tokens', async () => {
-      await shouldFail.reverting(
+      await expectRevert(
         this.contract.mint(alice, 1000000, { from: alice }),
+        'MinterRole: caller does not have the Minter role -- Reason given: MinterRole: caller does not have the Minter role.',
       );
       await this.contract.mint(alice, 1000000, { from: owner });
 
@@ -85,8 +87,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
     });
 
     it('should allow transfer of ownership', async () => {
-      await shouldFail.reverting(
+      await expectRevert(
         this.contract.mint(alice, 1000000, { from: alice }),
+        'MinterRole: caller does not have the Minter role -- Reason given: MinterRole: caller does not have the Minter role.',
       );
       await this.contract.addMinter(alice, { from: owner });
       await this.contract.mint(alice, 1000000, { from: alice });
@@ -104,8 +107,9 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
       const owner1stBalance = await this.contract.balanceOf(owner);
       owner1stBalance.toString().should.eq('1000000');
 
-      await shouldFail.reverting(
+      await expectRevert(
         this.contract.burn(owner, 10, { from: alice }),
+        'MinterRole: caller does not have the Minter role -- Reason given: MinterRole: caller does not have the Minter role.',
       );
       await this.contract.burn(owner, 10, { from: owner });
 
@@ -280,10 +284,10 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
 
   context('Historical voting power snapshot features', () => {
     it('should give zero balance if account has no activity', async () => {
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtIndex(alice, 1),
       );
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtIndex(alice, 10),
       );
 
@@ -294,7 +298,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('0');
 
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtNonce(alice, 1),
       );
     });
@@ -328,7 +332,7 @@ contract('CommunityToken', ([_, owner, alice, bob, carol]) => {
         .toString()
         .should.eq('87');
 
-      await shouldFail.reverting(
+      await expectRevert.unspecified(
         this.contract.historicalVotingPowerAtIndex(alice, 5),
       );
 

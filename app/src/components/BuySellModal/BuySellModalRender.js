@@ -5,6 +5,13 @@ import styled from 'styled-components'
 import BN from 'utils/bignumber'
 import DotLoading from 'components/DotLoading'
 import ToolTip from 'components/ToolTip'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faAngleUp,
+  faAngleDown,
+  faArrowUp,
+  faArrowDown,
+} from '@fortawesome/free-solid-svg-icons'
 
 const AmountInput = styled.input`
   width: 100%;
@@ -244,9 +251,9 @@ const Advance = ({
             onClick={toggleAdvance}
           >
             {showAdvance ? (
-              <i className="fas fa-angle-up" />
+              <FontAwesomeIcon icon={faAngleUp} />
             ) : (
-              <i className="fas fa-angle-down" />
+              <FontAwesomeIcon icon={faAngleDown} />
             )}
           </Box>
         </Flex>
@@ -485,9 +492,9 @@ export default ({
         />
         <Flex justifyContent="center" width={1} mb="20px">
           <Text color="#4853ff">
-            <i className="fas fa-arrow-up" />
+            <FontAwesomeIcon icon={faArrowUp} />
             {` `}
-            <i className="fas fa-arrow-down" />
+            <FontAwesomeIcon icon={faArrowDown} />
           </Text>
         </Flex>
         <EstimatedPrice

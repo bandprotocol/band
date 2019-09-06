@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'ui/common'
-import colors from 'ui/colors'
 
 const WithBottomBorder = styled(Flex)`
   border-radius: 6px;

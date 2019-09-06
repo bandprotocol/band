@@ -3,6 +3,7 @@ package reqmsg
 import (
 	"encoding/binary"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -10,6 +11,7 @@ import (
 func GetRawDataBytes(
 	dataset common.Address,
 	key []byte,
+	option dt.AnswerOption,
 	value common.Hash,
 	timestamp uint64,
 ) []byte {
@@ -19,6 +21,7 @@ func GetRawDataBytes(
 	var buff []byte
 
 	buff = append(buff, key...)
+	buff = append(buff, byte(option))
 	buff = append(buff, value.Bytes()...)
 	buff = append(buff, bytesTimeStamp...)
 	buff = append(buff, dataset.Bytes()...)
@@ -32,7 +35,7 @@ func GetAggregateBytes(
 	key []byte,
 	value common.Hash,
 	timestamp uint64,
-	status uint8,
+	status dt.QueryStatus,
 ) []byte {
 	bytesTimeStamp := make([]byte, 8)
 	binary.BigEndian.PutUint64(bytesTimeStamp, timestamp)

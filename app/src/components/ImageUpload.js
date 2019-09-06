@@ -4,6 +4,8 @@ import { Flex, Text, Image } from 'ui/common'
 import { IPFS } from 'band.js'
 import ImageLogoSrc from 'images/upload-logo.svg'
 import ImageBannerSrc from 'images/upload-banner.svg'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const parentStyle = {
   borderRadius: '6px',
@@ -121,7 +123,7 @@ export default class ImageUpload extends React.Component {
             }}
           >
             <Text color="white">
-              <i className="fas fa-times" />
+              <FontAwesomeIcon icon={faTimes} />
             </Text>
           </Flex>
         </div>

@@ -21,19 +21,19 @@
     "chai": "^4.2.0",
     "chai-bignumber": "^3.0.0",
     "decimal.js": "^10.2.0",
-    "eslint": "^6.2.2",
+    "eslint": "^6.3.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-node": "^9.2.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "openzeppelin-solidity": "2.3.0",
-    "openzeppelin-test-helpers": "^0.2.0",
+    "openzeppelin-test-helpers": "^0.4.3",
     "pify": "^4.0.0",
     "randomhex": "^0.1.5",
     "solium": "^1.2.4",
-    "truffle": "^5.0.32",
-    "truffle-flattener": "^1.4.0",
-    "truffle-hdwallet-provider": "^1.0.16"
+    "truffle": "^5.0.34",
+    "truffle-flattener": "^1.4.2",
+    "truffle-hdwallet-provider": "^1.0.17"
   }
 }

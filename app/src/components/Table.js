@@ -45,9 +45,9 @@ export const createTable = ({ columns }) =>
           </THead>
           <TBody mb="-10px">
             {data.map((r, i) => (
-              <Flex style={{ lineHeight: '32px' }}>
+              <Flex style={{ lineHeight: '32px' }} key={i}>
                 {columns.map(({ label, data, cell = {}, ...p }) => (
-                  <Text {...p} {...cell}>
+                  <Text {...p} {...cell} key={label}>
                     {data(r, i, props, numDataProviders, numDigits)}
                   </Text>
                 ))}

@@ -19,7 +19,7 @@ First, you need to import `Oracle` interface to your smart contract. Depending o
 **For `band-solidity` users:**
 
 ```ts
-import { usingBandProtocol, Oracle } from "band-solidity/contracts/main.sol";
+import { usingBandProtocol, Oracle } from "band-solidity/contracts/Band.sol";
 
 /// Inherit from `usingBandProtocol` to get access to helper functions
 contract MyContract is usingBandProtocol {

@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"strings"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/eth"
 	"github.com/ethereum/go-ethereum/common"
 )
@@ -24,14 +25,15 @@ func (input *DataRequest) NormalizeKey() {
 
 type DataResponse struct {
 	Provider  common.Address `json:"provider"`
-	Value     common.Hash    `json:"value"`
+	Answer    dt.Answer      `json:"answer"`
 	Timestamp uint64         `json:"timestamp"`
 	Sig       eth.Signature  `json:"signature"`
 }
 
 type SignRequest struct {
 	DataRequest
-	Datapoints []DataResponse `json:"datapoints"`
+	Datapoints           []DataResponse `json:"datapoints"`
+	MinimumProviderCount int            `json:"minimumProviders"`
 }
 
 type SignResponse struct {
@@ -39,5 +41,5 @@ type SignResponse struct {
 	Value     common.Hash    `json:"value"`
 	Timestamp uint64         `json:"timestamp"`
 	Sig       eth.Signature  `json:"signature"`
-	Status    string         `json:"status"`
+	Status    dt.QueryStatus `json:"status"`
 }

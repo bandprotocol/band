@@ -1,4 +1,4 @@
-const { shouldFail, time } = require('openzeppelin-test-helpers');
+const { expectRevert, time } = require('openzeppelin-test-helpers');
 
 const BandToken = artifacts.require('BandToken');
 const BandMockExchange = artifacts.require('BandMockExchange');
@@ -38,8 +38,9 @@ contract('BandMockExchange', ([owner, alice]) => {
         .should.eq('5000000000000000000');
     });
     it('ExchangeRate cant be set by none owner address', async () => {
-      await shouldFail.reverting(
+      await expectRevert(
         this.bse.setExchangeRate('5000000000000000000', { from: alice }),
+        'Ownable: caller is not the owner',
       );
     });
     it('Can convert ETH to BandToken', async () => {

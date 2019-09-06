@@ -3,6 +3,7 @@ package eth
 import (
 	"encoding/hex"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -10,6 +11,7 @@ import (
 )
 
 func TestGetAddress(t *testing.T) {
+	SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
 	addr, err := GetAddress()
 	if err != nil {
 		t.Errorf(err.Error())
@@ -20,6 +22,7 @@ func TestGetAddress(t *testing.T) {
 }
 
 func TestGetStorageAt(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	location := make([]byte, 32)
 	result, err := GetStorageAt(
 		common.HexToAddress("0x92Dce2A99586859713D4f220C0EA9f102D779731"),
@@ -34,6 +37,7 @@ func TestGetStorageAt(t *testing.T) {
 }
 
 func TestSignMessage(t *testing.T) {
+	SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
 	data := []byte("hell0")
 	sig, err := SignMessage(data)
 	if err != nil {
@@ -55,6 +59,7 @@ func TestSignMessage(t *testing.T) {
 }
 
 func TestCallContract(t *testing.T) {
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	data, err := hex.DecodeString("65ba36c1000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000047465737400000000000000000000000000000000000000000000000000000000")
 	if err != nil {
 		t.Errorf(err.Error())
@@ -72,6 +77,8 @@ func TestCallContract(t *testing.T) {
 }
 
 func TestGetNonce(t *testing.T) {
+	SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	nonce, err := GetNonce()
 	if err != nil {
 		t.Errorf(err.Error())
@@ -82,6 +89,8 @@ func TestGetNonce(t *testing.T) {
 }
 
 func TestSendTransaction(t *testing.T) {
+	SetPrivateKey(os.Getenv("ETH_PRIVATE_KEY"))
+	SetRpcClient(os.Getenv("ETH_RPC"))
 	data, _ := hex.DecodeString("e8927fbc")
 	txHash, err := SendTransaction(common.HexToAddress("0x76f1d7ceCfaCbD6Dfed3A403E57805c1664BA56B"), data)
 	if err != nil {
