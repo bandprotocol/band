@@ -543,7 +543,9 @@ export default () => {
                   onClick={() =>
                     window.setTimeout(
                       () =>
-                        _isMobile
+                        _isSmallMobile
+                          ? window.scroll(0, 2830)
+                          : _isMobile
                           ? window.scroll(0, 2700)
                           : window.scroll(0, 2300),
                       10,
@@ -565,8 +567,10 @@ export default () => {
                   onClick={() =>
                     window.setTimeout(
                       () =>
-                        _isMobile
-                          ? window.scroll(0, 3430)
+                        _isSmallMobile
+                          ? window.scroll(0, 3650)
+                          : _isMobile
+                          ? window.scroll(0, 3480)
                           : window.scroll(0, 3300),
                       10,
                     )
@@ -586,8 +590,10 @@ export default () => {
                   onClick={() =>
                     window.setTimeout(
                       () =>
-                        _isMobile
-                          ? window.scroll(0, 3060)
+                        _isSmallMobile
+                          ? window.scroll(0, 3260)
+                          : _isMobile
+                          ? window.scroll(0, 3090)
                           : window.scroll(0, 2820),
                       10,
                     )
@@ -608,8 +614,10 @@ export default () => {
                   onClick={() =>
                     window.setTimeout(
                       () =>
-                        _isMobile
-                          ? window.scroll(0, 3830)
+                        _isSmallMobile
+                          ? window.scroll(0, 4110)
+                          : _isMobile
+                          ? window.scroll(0, 3940)
                           : window.scroll(0, 3800),
                       10,
                     )
@@ -639,7 +647,7 @@ export default () => {
           mx="auto"
           mb={['0px', '0px']}
           style={{
-            height: _isMobile ? '1490px' : '2000px',
+            height: _isMobile ? '1720px' : '2000px',
             backgroundImage: `${!_isMobile && `url(${LandingFeature})`}`,
             backgroundSize: '1400px',
             backgroundRepeat: 'no-repeat',
@@ -700,10 +708,10 @@ export default () => {
               flexDirection="column"
               justifyContent="center"
               pl={['20px', '0px']}
-              pr={['30px', '0px']}
+              pr={['0px', '0px']}
               style={{
                 position: 'absolute',
-                top: _isMobile ? '400px' : '540px',
+                top: _isMobile ? '450px' : '540px',
                 right: _isMobile ? 0 : '30px',
               }}
             >
@@ -732,6 +740,7 @@ export default () => {
                 fontSize={['16px', '18px']}
                 fontWeight="400"
                 color="text"
+                pr={['30px', '0px']}
                 style={{ lineHeight: '2', maxWidth: '600px' }}
               >
                 Band enforces strict requirements before serving each query.
@@ -754,7 +763,7 @@ export default () => {
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '770px' : '1020px',
+                top: _isMobile ? '850px' : '1020px',
                 left: 0,
               }}
             >
@@ -813,13 +822,13 @@ export default () => {
             {/* Part 4: Community Runs Datasets and Grows Together */}
             <Flex
               flexDirection="column"
-              pl={['20px', '0px']}
-              pr={['30px', '0px']}
+              pl={['0px', '0px']}
+              pr={['0px', '0px']}
               justifyContent="center"
               style={{
                 position: 'absolute',
-                top: _isMobile ? '1170px' : '1580px',
-                right: _isMobile ? '-10px' : '30px',
+                top: _isMobile ? '1310px' : '1580px',
+                right: _isMobile ? 'unset' : '30px',
               }}
             >
               <Text
@@ -834,6 +843,7 @@ export default () => {
                 fontFamily="bio-sans"
                 fontSize={['24px', '40px']}
                 fontWeight="bold"
+                pr={['20px', '0px']}
                 mb="10px"
                 mt="10px"
                 style={{ lineHeight: '1.5' }}
@@ -846,6 +856,7 @@ export default () => {
                 mt={2}
                 fontSize={['16px', '18px']}
                 fontWeight="400"
+                pr={['50px', '0px']}
                 color="text"
                 style={{ lineHeight: '2', maxWidth: '600px' }}
               >
@@ -870,8 +881,12 @@ export default () => {
               {/* Explore more feature button */}
               <Flex justifyContent="center" mt={['50px', '50px']}>
                 <FilledButton
-                  width={_isMobile ? '320px' : '500px'}
-                  message="Explore Band Protocol Features"
+                  width={_isMobile ? '220px' : '500px'}
+                  message={
+                    _isMobile
+                      ? 'Explore More'
+                      : 'Explore Band Protocol Features'
+                  }
                   arrow
                   fontSize={_isMobile ? '14px' : '16px'}
                   to="/features/overview"
