@@ -6,7 +6,7 @@ import { getTCDInfomation } from 'utils/tcds'
 import { getProfileColor } from 'ui/communities'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
-import HeaderBackgroundSrc from 'images/background-header.webp'
+import HeaderBackgroundSrc from 'images/background-header.png'
 
 const Header = styled(Card)`
   padding-top: 60px;
@@ -121,7 +121,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
         </Text>
         <Box mt={3}>
           <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
-            <WhiteButton>Whitepaper v3.1</WhiteButton>
+            <WhiteButton>Whitepaper v3.0.1</WhiteButton>
           </AbsoluteLink>
           <AbsoluteLink href="https://bandprotocol.com">
             <WhiteOutlineButton>
