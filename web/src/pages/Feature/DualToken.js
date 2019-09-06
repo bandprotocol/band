@@ -245,7 +245,10 @@ export default () => {
                 justifyContent={['space-between']}
               >
                 <Box>
-                  <Image src={BondingCurveSrc} style={{ maxWidth: '340px' }} />
+                  <Image
+                    src={BondingCurveSrc}
+                    style={{ maxWidth: _isMobile ? '' : 460 }}
+                  />
                 </Box>
                 <Flex flexDirection="column" style={{ maxWidth: '700px' }}>
                   <Text
