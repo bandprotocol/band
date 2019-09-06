@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/btcsuite/btcutil/base58"
@@ -62,7 +63,7 @@ func replaceString(
 	return output.String()
 }
 
-func (w *WebRequest) Query(_key []byte) Answer {
+func (w *WebRequest) Query(_key []byte) dt.Answer {
 	paramRegex, _ := regexp.Compile(`\{\d*\}`)
 	key := hex.EncodeToString(_key)
 	params := make([]interface{}, 0)
@@ -71,22 +72,22 @@ func (w *WebRequest) Query(_key []byte) Answer {
 
 	// Minimum ipfs (hex) hash length is 2(0x) + 4 (1220) + 64(32 byte)
 	if len(key) < 68 {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 	hexKey := string(key)
 	ipfsHash, err := hex.DecodeString(hexKey[:68])
 	if err != nil {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 	read, err := w.store.Cat(base58.Encode(ipfsHash))
 	if err != nil {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 	defer read.Close()
 
 	rawBytes, err := ioutil.ReadAll(read)
 	if err != nil {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 
 	results := gjson.GetManyBytes(rawBytes, "meta", "request", "response")
@@ -97,7 +98,7 @@ func (w *WebRequest) Query(_key []byte) Answer {
 	rawParamType := meta["variables"].Array()
 	parameterBytes, err := hex.DecodeString((hexKey[68:]))
 	if err != nil {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 
 	for _, pt := range rawParamType {
@@ -106,7 +107,7 @@ func (w *WebRequest) Query(_key []byte) Answer {
 			word = append(word, parameterBytes[0])
 			parameterBytes = parameterBytes[1:]
 			if len(parameterBytes) == 0 {
-				return NotFoundAnswer
+				return dt.NotFoundAnswer
 			}
 		}
 		parameterBytes = parameterBytes[1:]
@@ -118,7 +119,7 @@ func (w *WebRequest) Query(_key []byte) Answer {
 
 	// Must use all parameter
 	if len(parameterBytes) != 0 {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 
 	url := replaceString(request["url"].String(), paramRegex, params, paramsType)
@@ -128,7 +129,7 @@ func (w *WebRequest) Query(_key []byte) Answer {
 
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
-			return NotFoundAnswer
+			return dt.NotFoundAnswer
 		}
 		if reqParams, ok := request["params"]; ok {
 			q := req.URL.Query()
@@ -141,7 +142,7 @@ func (w *WebRequest) Query(_key []byte) Answer {
 		req.Header.Add("Accept", "application/json")
 		res, err := client.Do(req)
 		if err != nil {
-			return NotFoundAnswer
+			return dt.NotFoundAnswer
 		}
 		defer res.Body.Close()
 
@@ -157,7 +158,7 @@ func (w *WebRequest) Query(_key []byte) Answer {
 		}
 		answer = gjson.GetBytes(body, responsePath.String())
 	} else {
-		return NotFoundAnswer
+		return dt.NotFoundAnswer
 	}
 
 	if response["type"].String() == "uint256" {
@@ -167,10 +168,10 @@ func (w *WebRequest) Query(_key []byte) Answer {
 		} else {
 			mutilplier = 1
 		}
-		return Answer{
-			Option: OK,
+		return dt.Answer{
+			Option: dt.Answered,
 			Value:  common.BigToHash(GetMultiplierValue(answer.Float(), mutilplier)),
 		}
 	}
-	return NotFoundAnswer
+	return dt.NotFoundAnswer
 }
