@@ -9,7 +9,6 @@ import axios from 'axios'
 import Step1 from './Step1'
 import Step2 from './Step2'
 import { Buffer } from 'buffer'
-import delay from 'delay'
 
 const Container = styled(Flex).attrs({
   flexDirection: 'column',
@@ -111,11 +110,11 @@ class MakeNewRequest extends React.Component {
         })
 
         // waiting for txHash confirm
-        while (true) {
-          const trx = await this.props.web3.eth.getTransaction(txHash)
-          if (trx && trx.blockNumber) break
-          await delay(50)
-        }
+        // while (true) {
+        //   const trx = await this.props.web3.eth.getTransaction(txHash)
+        //   if (trx && trx.blockNumber) break
+        //   await delay(50)
+        // }
         this.setState({
           txHash,
         })
