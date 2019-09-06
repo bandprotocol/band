@@ -53,7 +53,7 @@ export default props => {
               Connect via MetaMask
             </Text>
           </Button>
-          {isChrome ? (
+          {isChrome && (
             <Button
               width="345px"
               variant="outline"
@@ -65,8 +65,6 @@ export default props => {
                 Connect via BandWallet
               </Text>
             </Button>
-          ) : (
-            ''
           )}
         </Flex>
       </Flex>
