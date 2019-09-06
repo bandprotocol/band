@@ -10,6 +10,7 @@ import LogoSrc from 'images/logo.png'
 import Reddit from 'images/reddit.svg'
 import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
+import Github from 'images/github.svg'
 import Twitter from 'images/twitter.svg'
 
 const Container = styled(Box)`
@@ -26,7 +27,7 @@ const Container = styled(Box)`
 `
 
 const SmallIcon = ({ ml, href, src }) => (
-  <Flex ml={ml} alignItems="center" justifyContent="center">
+  <Flex mx={'5px'} mb="10px" alignItems="center" justifyContent="center">
     <AbsoluteLink
       href={href}
       css={{
@@ -107,6 +108,11 @@ export default () => {
                 </Link>
               </Box>
               <Box mb={[3, '20px']}>
+                <Link to="/company/about-us">
+                  <Text fontSize="14px">About us</Text>
+                </Link>
+              </Box>
+              <Box mb={[3, '20px']}>
                 <Link to="/company/career">
                   <Text fontSize="14px">Career with Band</Text>
                 </Link>
@@ -118,27 +124,21 @@ export default () => {
               <H4 mb={['10px', '30px']} py={['30px', 1]}>
                 Join Community
               </H4>
-              {/* <Box mb={[3, '20px']}>
+              <Box mb={[3, '20px']}>
                 <AbsoluteLink
                   target="_blank"
                   href="https://forum.bandprotocol.com"
                 >
                   <Text fontSize="14px">Developer Forum</Text>
                 </AbsoluteLink>
-              </Box> */}
-              <Box mb={[3, '20px']}>
-                <AbsoluteLink
-                  target="_blank"
-                  href="https://medium.com/bandprotocol"
-                >
-                  <Text fontSize="14px">Blog</Text>
-                </AbsoluteLink>
               </Box>
+
               <Flex
                 ml={['-5px', '-5px']}
                 mt={['10px', '20px']}
                 mb={['20px', '21px']}
                 justifyContent={['center', 'flex-start']}
+                flexWrap="wrap"
               >
                 <SmallIcon
                   href="https://www.reddit.com/r/bandprotocol"
@@ -148,20 +148,21 @@ export default () => {
                 <SmallIcon
                   href="https://t.me/joinchat/E48nA06UIBFmNsE9OaDusQ"
                   src={Telegram}
-                  ml="12px"
                   bg
                 />
                 <SmallIcon
                   href="https://medium.com/bandprotocol"
                   src={Medium}
-                  ml="12px"
                   bg
                 />
-
+                <SmallIcon
+                  href="https://github.com/bandprotocol"
+                  src={Github}
+                  bg
+                ></SmallIcon>
                 <SmallIcon
                   href="https://twitter.com/bandprotocol"
                   src={Twitter}
-                  ml="12px"
                   bg
                 />
               </Flex>
