@@ -544,9 +544,9 @@ export default () => {
                     window.setTimeout(
                       () =>
                         _isSmallMobile
-                          ? window.scroll(0, 2830)
+                          ? window.scroll(0, 2760)
                           : _isMobile
-                          ? window.scroll(0, 2700)
+                          ? window.scroll(0, 2640)
                           : window.scroll(0, 2300),
                       10,
                     )
@@ -568,9 +568,9 @@ export default () => {
                     window.setTimeout(
                       () =>
                         _isSmallMobile
-                          ? window.scroll(0, 3650)
+                          ? window.scroll(0, 3600)
                           : _isMobile
-                          ? window.scroll(0, 3480)
+                          ? window.scroll(0, 3420)
                           : window.scroll(0, 3300),
                       10,
                     )
@@ -591,9 +591,9 @@ export default () => {
                     window.setTimeout(
                       () =>
                         _isSmallMobile
-                          ? window.scroll(0, 3260)
+                          ? window.scroll(0, 3200)
                           : _isMobile
-                          ? window.scroll(0, 3090)
+                          ? window.scroll(0, 3030)
                           : window.scroll(0, 2820),
                       10,
                     )
@@ -615,9 +615,9 @@ export default () => {
                     window.setTimeout(
                       () =>
                         _isSmallMobile
-                          ? window.scroll(0, 4110)
+                          ? window.scroll(0, 4050)
                           : _isMobile
-                          ? window.scroll(0, 3940)
+                          ? window.scroll(0, 3900)
                           : window.scroll(0, 3800),
                       10,
                     )
