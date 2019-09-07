@@ -88,6 +88,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &PriceHttp{}
 	case "CoinGecko":
 		adpt = &CoinGecko{}
+	case "Binance":
+		adpt = &Binance{}
 	case "EplEspn":
 		adpt = &EplEspn{}
 	case "EplSport":

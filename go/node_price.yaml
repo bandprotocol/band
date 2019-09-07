@@ -6,6 +6,10 @@ drivers:
     name: RegEx
     method: Median
     children:
+      binance:
+        match: ^SPOTPX/BTC-USDT$
+        driver:
+          name: Binance
       stock:
         match: ^SPOTPX/([A-Z]+)$
         driver:
