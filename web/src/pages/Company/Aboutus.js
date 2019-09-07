@@ -262,7 +262,7 @@ export default () => {
         </PageContainer>
       </Box>
       <PageContainer>
-        <Flex mt={5} flexDirection={['column', 'row']}>
+        <Flex mt={5} flexDirection={['column', 'row']} bg="#fff">
           <Flex
             flexDirection={'column'}
             alignItems="center"
