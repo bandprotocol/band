@@ -10,7 +10,7 @@ func TestBinanceSuccess(t *testing.T) {
 	if err != nil {
 		t.Errorf("Query BTC-USDT error: %s", err)
 	}
-	if price <= 0 {
+	if price <= 8000 || price >= 20000 {
 		t.Errorf("QueryBTC-USDT price is way off: %f", price)
 	}
 }
