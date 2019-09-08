@@ -17,7 +17,7 @@ func (*Binance) Configure(*viper.Viper) {}
 
 func (*Binance) QueryBinancePrice() (float64, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT", nil)
+	req, err := http.NewRequest("GET", "https://api.binance.com/api/v1/depth?symbol=BTCUSDT&limit=5", nil)
 	if err != nil {
 		return 0, err
 	}
@@ -32,11 +32,11 @@ func (*Binance) QueryBinancePrice() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	price := gjson.GetBytes(body,"price")
-	if !price.Exists() {
+	prices := gjson.GetManyBytes(body, "bids.0.0", "asks.0.0")
+	if !prices[0].Exists() || !prices[1].Exists() {
 		return 0, fmt.Errorf("key does not exist")
 	}
-	return price.Float(), nil
+	return (prices[0].Float() + prices[1].Float()) / 2, nil
 }
 
 func (a *Binance) Query(key []byte) dt.Answer {
