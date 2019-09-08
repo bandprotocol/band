@@ -3,32 +3,54 @@ package driver
 import (
 	"log"
 	"regexp"
+	"sort"
+	"strconv"
 
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/spf13/viper"
 )
 
-type RegEx struct {
-	children map[*regexp.Regexp]Driver
+type regexGroup struct {
+	regex    *regexp.Regexp
+	driver   Driver
+	priority int
 }
 
-func (adpt *RegEx) Configure(config *viper.Viper) {
+type RegEx struct {
+	children []regexGroup
+}
+
+func (drv *RegEx) Configure(config *viper.Viper) {
 	children := config.GetStringMap("children")
-	adpt.children = map[*regexp.Regexp]Driver{}
+	drv.children = make([]regexGroup, len(children))
+	count := 0
 	for name := range children {
 		subConfig := config.Sub("children." + name)
-		r, err := regexp.Compile(subConfig.GetString("match"))
+		regex, err := regexp.Compile(subConfig.GetString("match"))
 		if err != nil {
 			log.Fatal(err.Error())
 		}
-		adpt.children[r] = FromConfigIndividual(subConfig.Sub("driver"))
+		priority, err := strconv.Atoi(subConfig.GetString("priority"))
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		dv := FromConfigIndividual(subConfig.Sub("driver"))
+		drv.children[count] = regexGroup{
+			regex:    regex,
+			driver:   dv,
+			priority: priority,
+		}
+		count++
 	}
+	sort.Slice(drv.children, func(i, j int) bool {
+		return drv.children[i].priority < drv.children[j].priority
+	})
 }
 
-func (regs *RegEx) Query(key []byte) dt.Answer {
-	for reg, child := range regs.children {
-		if reg.MatchString(string(key)) {
-			return DoQuery(child, key)
+func (drv *RegEx) Query(key []byte) dt.Answer {
+	for _, child := range drv.children {
+		if child.regex.MatchString(string(key)) {
+			return DoQuery(child.driver, key)
 		}
 	}
 	return dt.NotFoundAnswer
