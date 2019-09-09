@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "band-solidity": "^0.0.7",
+    "band-solidity": "^0.0.8",
     "solc": "^0.5.11",
     "truffle": "^5.0.32",
     "truffle-flattener": "^1.4.2",
