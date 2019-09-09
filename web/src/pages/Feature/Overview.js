@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import FilledButton from 'components/FilledButton'
 import LinkWithArrow from 'components/LinkWithArrow'
-import { Flex, Text, Button, Image, Box } from 'ui/common'
+import { Flex, Text, AbsoluteLink, Image, Box } from 'ui/common'
 import { isMobile } from 'ui/media'
 
 import SimpleIntegration from 'images/simple-integration.svg'
@@ -16,6 +16,9 @@ import Usecase4 from 'images/usecase4.jpg'
 import Usecase5 from 'images/usecase5.jpg'
 import Usecase6 from 'images/usecase6.jpg'
 import BandOffering from 'images/comparison-table.jpg'
+import USFlag from 'images/us.svg'
+import CNFlag from 'images/cn.svg'
+import KRFlag from 'images/kr.svg'
 
 export default () => {
   const exRef = useRef(null)
@@ -131,10 +134,32 @@ export default () => {
                 Leverage built-in delegated consensus to distribute risk of
                 collusion in the decentralized platform.
               </Text>
-              <LinkWithArrow
-                text="Whitepaper v3.0.1"
-                href="/whitepaper-3.0.1.pdf"
-              />
+              {/* Whitepaper*/}
+              <Flex flexDirection="column" alignItems="Center">
+                <Text
+                  fontWeight="bold"
+                  fontSize={['14px', '18px']}
+                  style={{ fontFamily: 'bio-sans', whiteSpace: 'nowrap' }}
+                  mb="20px"
+                >
+                  Whitepaper v3.0.1
+                </Text>
+                <Flex
+                  width="100%"
+                  justifyContent="space-evenly"
+                  alignItems="center"
+                >
+                  <AbsoluteLink href="/whitepaper-3.0.1.pdf">
+                    <Image src={USFlag} width="25px" />
+                  </AbsoluteLink>
+                  <AbsoluteLink href="/whitepaper-v3.0.1-cn.pdf">
+                    <Image src={CNFlag} width="25px" />
+                  </AbsoluteLink>
+                  <AbsoluteLink href="/whitepaper-v3.0.1-kr.pdf">
+                    <Image src={KRFlag} width="25px" />
+                  </AbsoluteLink>
+                </Flex>
+              </Flex>
             </Flex>
             <Flex flexDirection="column" alignItems="center">
               <Box style={{ height: '110px' }}>

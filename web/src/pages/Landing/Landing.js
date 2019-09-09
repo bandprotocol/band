@@ -1,5 +1,4 @@
 import React, { useRef } from 'react'
-import styled from 'styled-components/macro'
 import PageContainer from 'components/PageContainer'
 import LinkWithArrow from 'components/LinkWithArrow'
 import Subscribe from 'components/Subscribe'
@@ -14,6 +13,7 @@ import {
 } from 'ui/common'
 import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
+import WppButton from 'components/WppButton'
 
 import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
@@ -27,29 +27,6 @@ import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
-
-const OutlineButton = styled(Button)`
-  font-family: Avenir;
-  color: #122069;
-  font-size: 16px;
-  font-weight: 600;
-  background-color: white;
-  width: ${props => (props.isMobile ? '196px' : '182px')};
-  height: 46px;
-  border-radius: 2px;
-  cursor: pointer;
-  font-family: bio-sans;
-
-  transition: all 0.2s;
-
-  &:active {
-    background-color: #5269ff;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`
 
 const CircleLink = () => (
   <Flex
@@ -159,11 +136,7 @@ export default () => {
                     />
                   </AbsoluteLink>
                   <Flex mx={['0px', '10px']} my={['10px', '0px']} />
-                  <AbsoluteLink href="/whitepaper-3.0.1.pdf">
-                    <OutlineButton isMobile={_isMobile}>
-                      Whitepaper v3.0.1
-                    </OutlineButton>
-                  </AbsoluteLink>
+                  <WppButton />
                 </Flex>
                 {/* Join us */}
                 <Flex
