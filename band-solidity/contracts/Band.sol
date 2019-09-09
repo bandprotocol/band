@@ -19,43 +19,43 @@ contract usingBandProtocol {
 }
 
 library BandLib {
-  function querySpotPrice(Oracle oracle, bytes memory key) internal returns(uint256) {
+  function querySpotPrice(Oracle oracle, string memory key) internal returns(uint256) {
     (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked('SPOTPX/',key));
     require(status == Oracle.QueryStatus.OK, 'DATA_UNAVAILABLE');
     return uint256(output);
   }
 
-  function querySpotPriceWithExpiry(Oracle oracle, bytes memory key, uint256 timeLimit) internal returns (uint256) {
+  function querySpotPriceWithExpiry(Oracle oracle, string memory key, uint256 timeLimit) internal returns (uint256) {
     (bytes32 output, uint256 lastUpdated, Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked('SPOTPX/',key));
     require(status == Oracle.QueryStatus.OK, 'DATA_UNAVAILABLE');
     require(now - lastUpdated <= timeLimit, 'DATA_OUTDATED');
     return uint256(output);
   }
 
-  function queryScore(Oracle oracle, bytes memory key) internal returns (uint8, uint8) {
-    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
+  function queryScore(Oracle oracle, string memory key) internal returns (uint8, uint8) {
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked(key));
     require(status == Oracle.QueryStatus.OK, 'DATA_NOT_READY');
     return (uint8(output[0]), uint8(output[1]));
   }
 
-  function queryScoreWithStatus(Oracle oracle, bytes memory key) internal returns (uint8, uint8, Oracle.QueryStatus) {
-    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
+  function queryScoreWithStatus(Oracle oracle, string memory key) internal returns (uint8, uint8, Oracle.QueryStatus) {
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked(key));
     if (status == Oracle.QueryStatus.OK)
       return (uint8(output[0]), uint8(output[1]), Oracle.QueryStatus.OK);
     return (0, 0, status);
   }
 
-  function queryLottery(Oracle oracle, bytes memory key) internal returns(uint8[7] memory) {
-    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
+  function queryLottery(Oracle oracle, string memory key) internal returns(uint8[7] memory) {
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked(key));
     require(status == Oracle.QueryStatus.OK, 'DATA_NOT_READY');
     return getLotteryResult(output);
   }
 
-  function queryLotteryWithStatus(Oracle oracle, bytes memory key)
+  function queryLotteryWithStatus(Oracle oracle, string memory key)
     internal
     returns(uint8[7] memory, Oracle.QueryStatus)
   {
-    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(key);
+    (bytes32 output, , Oracle.QueryStatus status) = oracle.query.value(oracle.queryPrice())(abi.encodePacked(key));
     if (status == Oracle.QueryStatus.OK)
       return (getLotteryResult(output), Oracle.QueryStatus.OK);
     uint8[7] memory zero;
