@@ -8,10 +8,12 @@ drivers:
     children:
       binance:
         match: ^SPOTPX/BTC-USDT$
+        priority: 1
         driver:
           name: Binance
       stock:
         match: ^SPOTPX/([A-Z]+)$
+        priority: 3
         driver:
           name: AggMedian
           children:
@@ -30,6 +32,7 @@ drivers:
               name: FinancialModelPrep
       crypto:
         match: ^SPOTPX/([A-Z]+)-([A-Z]+)$
+        priority: 2
         driver:
           name: AggMedian
           children:
