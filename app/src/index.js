@@ -13,7 +13,7 @@ import rootSaga from 'sagas'
 import rootReducer from 'reducers'
 import { BandProtocolClient } from 'band.js'
 import { mobilecheck } from './utils/detectmobilebrowser'
-import bandLogoSrc from './images/band.svg'
+import MobilePage from './pages/MobilePage'
 
 const network = localStorage.getItem('network') || 'kovan'
 switch (network) {
@@ -45,36 +45,7 @@ const isMobile = mobilecheck()
 
 ReactDOM.render(
   isMobile ? (
-    <div
-      style={{
-        margin: '16vh 20px',
-        textAlign: 'center',
-        fontSize: '18px',
-        lineHeight: '20px',
-      }}
-    >
-      <img
-        src={bandLogoSrc}
-        width="100px"
-        style={{ marginBottom: '20px' }}
-        alt="band logo"
-      />
-      <br></br>
-      <span style={{}}>
-        Band Governance Portal is currently not supported on mobile platforms.
-      </span>
-      <br></br>
-      <span>
-        You can use desktop browsers to interact with Governance Portal.
-      </span>
-      <br></br>
-      <div style={{ marginTop: '50px' }}>
-        <span>Please visit</span>
-        <a href="https://bandprotocol.com">https://bandprotocol.com</a>
-        <br></br>
-        <span>to learn more about Band Protocol.</span>
-      </div>
-    </div>
+    <MobilePage></MobilePage>
   ) : (
     <Provider store={store}>
       <App />
