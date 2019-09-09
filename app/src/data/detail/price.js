@@ -49,7 +49,14 @@ const allPrices = {
 export const getPriceKeys = prefix => allPrices[prefix] || allPrices.default
 
 const allPricesLabel = {
-  [CRYPTO_TYPE]: ['BCH-USD', 'BTC-USD', 'ETH-USD', 'LTC-USD', 'XRP-USD'],
+  [CRYPTO_TYPE]: [
+    'BCH-USD',
+    'BTC-USD',
+    'BTC-USDT',
+    'ETH-USD',
+    'LTC-USD',
+    'XRP-USD',
+  ],
   [FX_TYPE]: [
     'CNY-USD',
     'EUR-USD',
