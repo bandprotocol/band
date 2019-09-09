@@ -6,11 +6,14 @@ import createSagaMiddleware from 'redux-saga'
 import { fromJS } from 'immutable'
 
 import App from './App'
+
 import * as serviceWorker from './serviceWorker'
 
 import rootSaga from 'sagas'
 import rootReducer from 'reducers'
 import { BandProtocolClient } from 'band.js'
+import { mobilecheck } from './utils/detectmobilebrowser'
+import MobilePage from './pages/MobilePage'
 
 const network = localStorage.getItem('network') || 'kovan'
 switch (network) {
@@ -38,10 +41,16 @@ const store = createStore(
 
 sagaMiddleware.run(rootSaga)
 
+const isMobile = mobilecheck()
+
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
+  isMobile ? (
+    <MobilePage></MobilePage>
+  ) : (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  ),
   document.getElementById('root'),
 )
 
