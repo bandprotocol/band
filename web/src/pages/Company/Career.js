@@ -223,6 +223,14 @@ export default () => {
             title="Senior UX/UI Designer"
             to="https://angel.co/company/bandprotocol/jobs/559812-senior-ui-ux-designer"
           />
+          <JobPositionComponent
+            title="Business Development Manager"
+            to="https://angel.co/company/bandprotocol/jobs/575076-business-development-manager"
+          />
+          <JobPositionComponent
+            title="Head of Marketing and Public Relation"
+            to="https://angel.co/company/bandprotocol/jobs/575085-head-of-marketing-and-public-relation"
+          />
         </Flex>
       </PageContainer>
       <Box mt="60px" pb="60px" px="20px">
