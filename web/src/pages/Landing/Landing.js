@@ -271,25 +271,25 @@ export default () => {
           fontSize: _isMobile ? 14 : 16,
         }}
       >
-        Kovan Testnet is LIVE! Check out the{' '}
+        Introducing{' '}
         <Flex mt={['5px', '0px']}>
           <a
-            href="https://app.kovan.bandprotocol.com/"
+            href="https://bitswing.bandprotocol.com"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Text color="#5569de" mx="5px">
-              new Data Governance Portal
+              BitSwing
             </Text>
           </a>
-          and
+          - the first dapp built with Band Protocol on Kovan.
           <a
-            href="https://developer.bandprotocol.com/"
+            href="https://medium.com/bandprotocol/7750fe756ecf"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Text color="#5569de" mx="5px">
-              Developer Doc.
+              Learn more.
             </Text>
           </a>
         </Flex>
