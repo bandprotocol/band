@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/bandprotocol/band/go/reqmsg"
-	"github.com/ethereum/goethereum/common"
+	"github.com/ethereum/go-ethereum/common"
 	_ "github.com/lib/pq"
 )
 
