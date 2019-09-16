@@ -16,6 +16,7 @@ import (
 	"github.com/bandprotocol/band/go/driver"
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/bandprotocol/band/go/reqmsg"
+	"github.com/bandprotocol/band/go/stat"
 	"github.com/olekukonko/tablewriter"
 
 	"github.com/bandprotocol/band/go/eth"
@@ -260,6 +261,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		Key:     arg.Key,
 	}
 
+	summary := stat.Summary{}
+	summary.DataSet = arg.Dataset
+	summary.Conclusion.Status = "initialized"
+
 	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
 		go func(provider common.Address) {
@@ -282,9 +287,13 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	// Check valid provider data
 	if 3*len(responses) < 2*len(providers) {
+		summary.Conclusion.Status = "insufficient reports"
+		stat.SaveRequestToDB(arg.Key, arg.Dataset, 0, summary)
 		http.Error(w, "Insufficient providers", http.StatusBadRequest)
 		return
 	}
+
+	summary.Reports = responses
 
 	// Get aggregate data
 	minProviders := 2*len(providers)/3 + 1
@@ -324,9 +333,13 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	// Check valid provider aggregated data
 	if 3*len(validAggs) < 2*len(providers) {
+		summary.Conclusion.Status = "insufficient agreements"
+		stat.SaveRequestToDB(arg.Key, arg.Dataset, 0, summary)
 		http.Error(w, "Insufficient providers", http.StatusBadRequest)
 		return
 	}
+
+	summary.Agreements = validAggs
 
 	// Find majority of value and timestamp
 	var majority valueWithTimeStamp
@@ -339,6 +352,8 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if 3*maxCount < 2*len(providers) {
+		summary.Conclusion.Status = "fail to agree on majority of value and timestamp"
+		stat.SaveRequestToDB(arg.Key, arg.Dataset, 0, summary)
 		http.Error(w, "Insufficient providers", http.StatusBadRequest)
 		return
 	}
@@ -369,17 +384,27 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, uint8(majority.Status), vs, rs, ss)
 	w.Header().Set("Content-Type", "application/json")
 
+	summary.Conclusion.Value = majority.Value
+	summary.Conclusion.Timestamp = majority.Timestamp
+	summary.Conclusion.Status = "OK"
+	summary.Conclusion.Submission = "not submitted"
+
 	if arg.Broadcast {
 		txHash, err := eth.SendTransaction(arg.Dataset, txData)
 		if err != nil {
+			summary.Conclusion.Submission = fmt.Sprintf(err.Error())
+			stat.SaveRequestToDB(arg.Key, arg.Dataset, majority.Timestamp, summary)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		summary.Conclusion.Submission = txHash.Hex()
+		stat.SaveRequestToDB(arg.Key, arg.Dataset, majority.Timestamp, summary)
 		json.NewEncoder(w).Encode(ResponseTxHashObject{
 			TxHash:          txHash,
 			ProviderReports: responses,
 		})
 	} else {
+		stat.SaveRequestToDB(arg.Key, arg.Dataset, majority.Timestamp, summary)
 		json.NewEncoder(w).Encode(ResponseTxObject{
 			To:              arg.Dataset,
 			Data:            "0x" + hex.EncodeToString(txData),
@@ -393,6 +418,7 @@ func main() {
 	var ethRpc string
 	var privateKey string
 	var queryDebug bool
+	var dbConf string
 
 	if len(os.Args) < 2 {
 		fmt.Println("should have at least 1 argument, -h or --help for more detail")
@@ -402,6 +428,7 @@ func main() {
 		rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", "should be set by node.yml", `Ethereum rcp url, for example "https://kovan.infura.io"`)
 		rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", "should be set by node.yml", `Private Key of the data provider, 64 hex characters`)
 		rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
+		rootCmd.PersistentFlags().StringVar(&dbConf, "dbConf", "", `database connection configuration`)
 		err := rootCmd.Execute()
 		if err != nil {
 			log.Println(err)
@@ -419,11 +446,13 @@ func main() {
 	ethRpc = viper.GetString("ethRpc")
 	port = viper.GetString("port")
 	queryDebug = viper.GetBool("queryDebug")
+	dbConf = viper.GetString("dbConf")
 
 	rootCmd.PersistentFlags().StringVar(&port, "port", port, `port of your app, for example "5000"`)
 	rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", ethRpc, `Ethereum rcp url, for example "https://kovan.infura.io"`)
 	rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", privateKey, `Private Key of the data provider, 64 hex characters`)
 	rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
+	rootCmd.PersistentFlags().StringVar(&dbConf, "dbConf", dbConf, `database connection configuration`)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -431,6 +460,10 @@ func main() {
 
 	if queryDebug {
 		driver.TurnOnQueryDebugging()
+	}
+	if dbConf != "" {
+		stat.InitDb(dbConf)
+		defer stat.CloseDb()
 	}
 	err := eth.SetPrivateKey(privateKey)
 	if err != nil {

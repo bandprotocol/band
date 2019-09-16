@@ -1,6 +1,7 @@
 port: 8000
 ethRpc: "https://kovan.infura.io"
 queryDebug: false
+dbConf: "host=localhost port=5432 user=xxxx dbname=xxxx sslmode=disable"
 privateKey: "xxxxxx"
 providerEndpointContract: "0xfa8ed88e5078f6a3f8008f3cc8ecff3643320980"
 providers:

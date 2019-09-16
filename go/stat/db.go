@@ -64,6 +64,10 @@ func InitDb(dbParam string) {
 	log.Println("database is connected")
 }
 
+func CloseDb() {
+	summaryDB.Close()
+}
+
 func SaveRequestToDB(key string, dataset common.Address, timestamp uint64, detail Summary) {
 	if summaryDB == nil {
 		return
