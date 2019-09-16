@@ -27,7 +27,7 @@
     "query-string": "^6.8.2",
     "react": "^16.9.0",
     "react-autosuggest": "^9.4.3",
-    "react-chartjs-2": "^2.7.4",
+    "react-chartjs-2": "^2.7.6",
     "react-click-outside": "tj/react-click-outside",
     "react-content-loader": "^4.2.1",
     "react-datepicker": "^2.8.0",
