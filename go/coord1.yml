@@ -1,0 +1,10 @@
+port: 8000
+ethRpc: "https://kovan.infura.io"
+queryDebug: false
+dbConf: "host=localhost port=5432 user=mumu dbname=TestGo sslmode=disable"
+privateKey: "641708EBCE10B60822B637ED5026A142C1A0F09C3E72FAAABEA8B25B4A80C036"
+providerEndpointContract: "0xfa8ed88e5078f6a3f8008f3cc8ecff3643320980"
+providers:
+  "0xDa7AFDeE902A41769479349373EF24D19368a9f1": http://3.81.86.43:9990
+  "0xDA7afa8f087AA2571276b17dBe45A4097C380eff": http://54.146.96.106:9991
+  "0xdA7Af7Ce7baD1454bdB96507Fb73b7478A345e3b": http://54.179.172.200:9992
