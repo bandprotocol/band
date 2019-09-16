@@ -34,6 +34,8 @@ const handleSaveBalance = (state, { balances }) =>
     ),
   )
 
+window.lastOpenModal = Date.now()
+
 const handleSaveBandClient = (state, { client }) =>
   state.setIn(['client', 'band'], client)
 
@@ -43,16 +45,23 @@ const handleSaveCommunityClient = (state, { address, client }) =>
 const handleSaveTCDClient = (state, { address, client }) =>
   state.setIn(['client', 'tcds', address], client)
 
-const handleShowModal = (state, { modalName, data }) =>
-  state.set(
+const handleShowModal = (state, { modalName, data }) => {
+  if (Date.now() - window.lastOpenModal < 500) return state
+  window.lastOpenModal = Date.now()
+  return state.set(
     'modal',
     fromJS({
       name: modalName,
       data,
     }),
   )
+}
 
-const handleHideModal = (state, _) => state.delete('modal')
+const handleHideModal = (state, _) => {
+  if (Date.now() - window.lastOpenModal < 500) return state
+  window.lastOpenModal = Date.now()
+  return state.delete('modal')
+}
 
 export default createReducer({
   [SET_USER_ADDRESS]: handleSetUserAddress,
