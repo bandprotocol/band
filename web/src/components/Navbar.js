@@ -226,14 +226,40 @@ const Navbar = props => {
   const [showMenu, setShowMenu] = useState(false)
   const [showTier2Index, setShowTier2Index] = useState(0)
   const [selectedTab, setSelectedTab] = useState(-1)
-  const [showNav, setShowNav] = useState(true)
+  const [showNav, setShowNav] = useState(false)
+  const [navOpa, setNavOpa] = useState(0)
 
   const scrollHistory = useRef()
   const prevLocation = useRef()
+  const oldST = useRef()
+  const isAutoScrolling = useRef()
 
   const handleScroll = useCallback(e => {
-    if (e.target.documentElement.scrollTop < 80) return
     const newST = Math.floor(e.target.documentElement.scrollTop)
+    if (newST === 0) isAutoScrolling.current = false
+    if (newST < window.innerHeight) {
+      if (isAutoScrolling.current) return
+      if (oldST.current < newST) {
+        window.scroll(0, window.innerHeight)
+        oldST.current = window.innerHeight
+        isAutoScrolling.current = true
+        setNavOpa(1)
+        setShowNav(true)
+        return
+      } else if (oldST.current > newST) {
+        window.scroll(0, 0)
+        oldST.current = 0
+        isAutoScrolling.current = true
+        setNavOpa(0)
+        setShowNav(false)
+        return
+      }
+    } else {
+      isAutoScrolling.current = false
+    }
+    oldST.current = newST
+
+    if (newST < window.innerHeight + 80) return
     if (!scrollHistory.current || scrollHistory.current.length === 0) {
       scrollHistory.current = [0]
     }
@@ -806,8 +832,9 @@ const Navbar = props => {
       style={{
         backgroundImage: 'linear-gradient(to bottom, #5a7ffd, #547bff)',
         width: '100vw',
-        transition: 'all 350ms',
+        transition: 'transform 350ms, opacity 500ms',
         position: 'fixed',
+        opacity: navOpa,
         transform: `translateY(${!showNav && !showMenu ? '-60px' : '0px'})`,
         zIndex: 3,
       }}
