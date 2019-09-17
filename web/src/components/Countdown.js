@@ -2,24 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import { Flex, Text } from 'ui/common'
+import { isMobile } from 'ui/media'
 
 const Time = styled(Text).attrs({
   fontSize: '144px',
   color: 'white',
 })`
-  text-shadow: 1px 1px 20px #000000;
   font-family: Open Sans;
 `
 
 const SeparateIcon = () => (
-  <Text
-    fontWeight="900"
-    fontSize="60px"
-    color="white"
-    mx="14px"
-    mb="18px"
-    style={{ textShadow: '1px 1px 20px #000000' }}
-  >
+  <Text fontWeight="900" fontSize="60px" color="white" mx="14px" mb="18px">
     :
   </Text>
 )
@@ -59,6 +52,7 @@ export default class Countdown extends React.Component {
 
   render() {
     const { duration } = this.state
+    const _isMobile = isMobile()
     return (
       <Flex
         bg="transparent"

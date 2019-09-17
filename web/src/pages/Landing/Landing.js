@@ -74,41 +74,29 @@ export default () => {
             overflow: 'hidden',
             width: '100%',
             backgroundImage:
-              'radial-gradient(circle at 50% -100%, #ffffff, #4d599f 50%, #0d143f)',
+              'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
           }}
         >
           <Flex justifyContent="center" alignItems="center">
-            <Text
-              fontSize="55px"
-              color="white"
-              style={{ textShadow: '1px 1px 15px #000000' }}
-            >
+            <Text fontSize={['21px', '55px']} color="white">
               OFFICIAL MAINNET LAUNCH IN
             </Text>
           </Flex>
           <Flex mt="30px">
             <Countdown eventTime={1569819600} />
           </Flex>
-          <Flex my="70px" justifyContent="center" style={{ cursor: 'pointer' }}>
+          <Flex my="70px" justifyContent="center">
+            <FilledButton message="Continue" href={false} />
             <Flex
-              justifyContent="center"
-              alignItems="center"
-              bg="rgba(255, 255, 255, 0.25)"
               onClick={() => window.scroll(0, window.innerHeight)}
               style={{
-                maxWidth: '128px',
-                minWidth: '128px',
-                maxHeight: '32px',
-                minHeight: '32px',
-                borderRadius: '16px',
-                boxShadow: '1px 1px 9px 0 #000000',
-                fontSize: '21px',
-                color: 'white',
-                fontWeight: 300,
+                zIndex: 1,
+                position: 'absolute',
+                height: '32px',
+                width: '128px',
+                cursor: 'pointer',
               }}
-            >
-              Continue
-            </Flex>
+            />
           </Flex>
           <Flex
             flexDirection="row"
