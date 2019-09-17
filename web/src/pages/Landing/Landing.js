@@ -81,7 +81,7 @@ export default () => {
               'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
           }}
         >
-          <Flex
+          {/* <Flex
             width="100%"
             style={{
               position: 'absolute',
@@ -90,9 +90,9 @@ export default () => {
               backgroundSize: 'cover',
               height: '400px',
               top: 0,
-              left: 0
+              left: 0,
             }}
-          ></Flex>
+          ></Flex> */}
           <Flex justifyContent="center" alignItems="center">
             <Text fontSize={['21px', '55px']} color="white">
               OFFICIAL MAINNET LAUNCH IN
