@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
+import Chart from 'chart.js'
+import { AutoSizer } from 'react-virtualized'
 import colors from 'ui/colors'
 import { Box } from 'rebass'
-import { Chart } from 'react-google-charts'
+// import Chart from 'react-google-charts'
 import Loading from 'components/Loading'
 
 const Container = styled(Box)`
@@ -28,75 +30,120 @@ const Container = styled(Box)`
   }
 `
 
-export default ({ data, numberOfProvider }) => (
-  <Container>
-    <Chart
-      width="100%"
-      style={{ maxWidth: 'calc(100vw - 320px)' }}
-      height={'300px'}
-      chartType="SteppedAreaChart"
-      loader={
-        <Loading height={300} width={922} rects={[[0, 24, 922, 300 - 48]]} />
-      }
-      data={data}
-      options={{
-        // title: 'BTC/USD price movement in the past 7 days',
-        series: {
-          0: { targetAxisIndex: 1 },
-        },
-        colors: colors.createChartColors(numberOfProvider),
-        legend: { position: 'none' },
-        vAxes: [
+class Graph extends Component {
+  constructor(props) {
+    super(props)
+    this.chartRef = React.createRef()
+  }
+
+  componentDidUpdate() {
+    // this.myChart.data.labels = this.props.data.map(d => d.time)
+    if (!this.cht) return
+    this.cht.data.datasets[0].data = this.props.data
+    this.cht.update()
+  }
+
+  componentDidMount() {
+    const canvas = this.chartRef.current
+    const ctx = canvas.getContext('2d')
+    const gradientStroke = ctx.createLinearGradient(0, 0, this.props.width, 0)
+    gradientStroke.addColorStop(0, '#567dfd')
+    gradientStroke.addColorStop(1, '#567dfd')
+
+    const cfg = {
+      type: 'bar',
+      data: {
+        datasets: [
           {
-            gridlines: {
-              color: 'transparent',
-            },
-          },
-          {
-            format: '#######.###########',
-            textPosition: 'in',
-            textStyle: {
-              color: colors.text.light,
-              fontName: 'Source Code Pro',
-            },
-            gridlines: {
-              color: '#eef3ff',
-            },
+            borderColor: gradientStroke,
+            data: this.props.data,
+            type: 'line',
+            pointRadius: 0,
+            fill: false,
+            lineTension: 0,
+            borderWidth: 2,
           },
         ],
-        hAxis: {
-          textPosition: 'in',
-          textStyle: {
-            color: colors.text.graph,
-            fontSize: 11, // TODO: Change back to 11
-            fontName: 'Source Code Pro',
-          },
-          gridlines: {
-            color: '#f3f7ff',
-          },
+      },
+      options: {
+        legend: {
+          display: false,
         },
-        chartArea: {
-          left: 0,
-          top: 0,
-          width: '100%',
-          height: '100%',
+        scales: {
+          xAxes: [
+            {
+              type: 'time',
+              distribution: 'linear',
+              ticks: {
+                source: 'data',
+                autoSkip: true,
+                autoSkipPadding: 15,
+                fontFamily: 'Source Code Pro, monospace',
+                fontColor: '#567dfd',
+                display: true,
+                fontSize: 11,
+              },
+              gridLines: {
+                display: false,
+                drawBorder: true,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                // display: true,
+                labelString: 'BTC-USDT',
+              },
+              ticks: {
+                fontFamily: 'Source Code Pro, monospace',
+                fontColor: '#567dfd',
+              },
+              gridLines: {
+                display: false,
+                // drawBorder: false,
+              },
+            },
+          ],
         },
-        explorer: {
-          actions: ['dragToZoom', 'rightClickToReset'],
-          axis: 'horizontal',
-          keepInBounds: true,
-          maxZoomIn: 4.0,
+        tooltips: {
+          // enabled: false,
         },
-        isStacked: false,
-        areaOpacity: 0,
-        focusTarget: 'category',
-        tooltip: {
-          isHtml: true,
-          ignoreBounds: true,
-        },
-        fontSize: 12,
-      }}
-      rootProps={{ 'data-testid': '1' }}
-    />
-  </Container>
-)
+      },
+    }
+
+    this.cht = new Chart(ctx, cfg)
+  }
+
+  render() {
+    const { width, height } = this.props
+    return (
+      <div style={{ width, height }}>
+        <canvas style={{ width, height }} ref={this.chartRef} />
+      </div>
+    )
+  }
+}
+
+export default ({ data, numberOfProvider }) => {
+  const init = data.slice(1).map(d => {
+    return {
+      x: d[0],
+      y: d[1],
+    }
+  })
+
+  return (
+    <Container>
+      <Box width="100%" px={['', '50px']} mt="30px">
+        <AutoSizer disableHeight>
+          {({ width }) => {
+            if (width) {
+              return <Graph data={init} width={width} />
+            }
+          }}
+        </AutoSizer>
+      </Box>
+    </Container>
+  )
+}
