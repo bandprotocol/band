@@ -5,20 +5,27 @@ import { Flex, Text } from 'ui/common'
 import { isMobile } from 'ui/media'
 
 const Time = styled(Text).attrs({
-  fontSize: '144px',
+  fontSize: isMobile() ? '30px' : '144px',
   color: 'white',
 })`
   font-family: Open Sans;
 `
 
 const SeparateIcon = () => (
-  <Text fontWeight="900" fontSize="60px" color="white" mx="14px" mb="18px">
+  <Text
+    fontWeight="900"
+    fontSize={['20px', '60px']}
+    color="white"
+    mx={['5px', '14px']}
+    mt={['3px', '40px']}
+    style={{ alignSelf: 'flex-start' }}
+  >
     :
   </Text>
 )
 
 const Indicator = styled(Text).attrs({
-  fontSize: '21px',
+  fontSize: isMobile() ? '14px' : '21px',
   fontWeight: '300',
   color: 'rgba(255,255,255,0.61)',
 })`
@@ -52,7 +59,6 @@ export default class Countdown extends React.Component {
 
   render() {
     const { duration } = this.state
-    const _isMobile = isMobile()
     return (
       <Flex
         bg="transparent"
@@ -70,6 +76,7 @@ export default class Countdown extends React.Component {
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
+            style={{ minWidth: isMobile() ? '55px' : '165px' }}
           >
             <Time>{duration.days()}</Time>
             <Indicator>Days</Indicator>
