@@ -12,6 +12,9 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/bandprotocol/band/go/driver"
 	"github.com/bandprotocol/band/go/dt"
@@ -88,6 +91,10 @@ func getProviderURL(provider common.Address) (string, error) {
 	var endpoint string
 	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
 	return endpoint, err
+}
+
+func logWithTimestamp(l *log.Logger, msg string) {
+	l.Printf(",%d,%s", time.Now().UnixNano()/int64(time.Millisecond), msg)
 }
 
 func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (reqmsg.DataResponse, error) {
@@ -260,6 +267,20 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		Key:     arg.Key,
 	}
 
+	// Create logger
+	fileName := time.Now().UTC().Format("2006-01-02") + ".log"
+	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+	}
+	defer f.Close()
+	id := uuid.New()
+	requestLog := log.New(f, strconv.FormatUint(uint64(id.ID()), 10), 0)
+
+	logWithTimestamp(requestLog,
+		fmt.Sprintf("Request,%s,%s,%s,%t", arg.Dataset.Hex(), arg.Key, r.RemoteAddr, arg.Broadcast),
+	)
+
 	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
 		go func(provider common.Address) {
@@ -277,6 +298,14 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		r := <-chDataResponse
 		if r != (reqmsg.DataResponse{}) {
 			responses = append(responses, r)
+			logWithTimestamp(requestLog,
+				fmt.Sprintf("Report,%s,%s,%s,%d,%s",
+					r.Provider.Hex(),
+					r.Answer.Option,
+					r.Answer.Value.Hex(),
+					r.Timestamp,
+					r.Sig,
+				))
 		}
 	}
 
@@ -319,6 +348,18 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 				Timestamp: r.Timestamp,
 				Status:    r.Status,
 			}]++
+
+			// log to file
+			logWithTimestamp(
+				requestLog,
+				fmt.Sprintf("Aggregate,%s,%s,%s,%d,%s",
+					r.Provider.Hex(),
+					r.Status,
+					r.Value.Hex(),
+					r.Timestamp,
+					r.Sig,
+				),
+			)
 		}
 	}
 
@@ -369,12 +410,17 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, uint8(majority.Status), vs, rs, ss)
 	w.Header().Set("Content-Type", "application/json")
 
+	logWithTimestamp(
+		requestLog,
+		fmt.Sprintf("Result,%s,%s,%d", majority.Value.Hex(), majority.Status, majority.Timestamp),
+	)
 	if arg.Broadcast {
 		txHash, err := eth.SendTransaction(arg.Dataset, txData)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		logWithTimestamp(requestLog, fmt.Sprintf("Broadcast,%s", txHash.Hex()))
 		json.NewEncoder(w).Encode(ResponseTxHashObject{
 			TxHash:          txHash,
 			ProviderReports: responses,

@@ -20,6 +20,10 @@ type Signature struct {
 	S common.Hash `json:"s"`
 }
 
+func (sig Signature) String() string {
+	return fmt.Sprintf("%d,%s,%s", sig.V, sig.R.Hex(), sig.S.Hex())
+}
+
 var pk *ecdsa.PrivateKey
 var rpcClient *rpc.Client
 
