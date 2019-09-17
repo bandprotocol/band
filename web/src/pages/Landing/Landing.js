@@ -55,6 +55,8 @@ export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
   const _isSmallMobile = isSmallMobile()
+  const extraHeigt = window.innerHeight - 40
+
   return (
     <>
       <Flex
@@ -629,10 +631,10 @@ export default () => {
                       window.setTimeout(
                         () =>
                           _isSmallMobile
-                            ? window.scroll(0, 2760)
+                            ? window.scroll(0, extraHeigt + 2760)
                             : _isMobile
-                            ? window.scroll(0, 2560)
-                            : window.scroll(0, 2300),
+                            ? window.scroll(0, extraHeigt + 2560)
+                            : window.scroll(0, extraHeigt + 2300),
                         10,
                       )
                     }
@@ -653,10 +655,10 @@ export default () => {
                       window.setTimeout(
                         () =>
                           _isSmallMobile
-                            ? window.scroll(0, 3600)
+                            ? window.scroll(0, extraHeigt + 3600)
                             : _isMobile
-                            ? window.scroll(0, 3370)
-                            : window.scroll(0, 3300),
+                            ? window.scroll(0, extraHeigt + 3370)
+                            : window.scroll(0, extraHeigt + 3300),
                         10,
                       )
                     }
@@ -676,10 +678,10 @@ export default () => {
                       window.setTimeout(
                         () =>
                           _isSmallMobile
-                            ? window.scroll(0, 3200)
+                            ? window.scroll(0, extraHeigt + 3200)
                             : _isMobile
-                            ? window.scroll(0, 2980)
-                            : window.scroll(0, 2820),
+                            ? window.scroll(0, extraHeigt + 2980)
+                            : window.scroll(0, extraHeigt + 2820),
                         10,
                       )
                     }
@@ -700,10 +702,10 @@ export default () => {
                       window.setTimeout(
                         () =>
                           _isSmallMobile
-                            ? window.scroll(0, 4050)
+                            ? window.scroll(0, extraHeigt + 4050)
                             : _isMobile
-                            ? window.scroll(0, 3850)
-                            : window.scroll(0, 3800),
+                            ? window.scroll(0, extraHeigt + 3850)
+                            : window.scroll(0, extraHeigt + 3800),
                         10,
                       )
                     }
