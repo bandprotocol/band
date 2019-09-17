@@ -28,6 +28,8 @@ import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
+import RightHexs from 'images/rightHexs.png'
+import LeftHexs from 'images/leftHexs.png'
 
 const CircleLink = () => (
   <Flex
@@ -58,6 +60,7 @@ export default () => {
       <Flex
         mt="-60px"
         style={{
+          overflow: 'hidden',
           width: '100vw',
           height: '100vh',
         }}
@@ -66,6 +69,7 @@ export default () => {
           flexDirection="column"
           justifyContent="center"
           style={{
+            overflow: 'hidden',
             width: '100%',
             backgroundImage:
               'radial-gradient(circle at 50% -100%, #ffffff, #4d599f 50%, #0d143f)',
@@ -73,19 +77,22 @@ export default () => {
         >
           <Flex justifyContent="center" alignItems="center">
             <Text
-              fontSize="48px"
+              fontSize="55px"
               color="white"
               style={{ textShadow: '1px 1px 15px #000000' }}
             >
-              OFFICIAL MAINNET
+              OFFICIAL MAINNET LAUNCH IN
             </Text>
           </Flex>
-
-          <Flex mt="50px" justifyContent="center">
+          <Flex mt="30px">
+            <Countdown eventTime={1569819600} />
+          </Flex>
+          <Flex my="70px" justifyContent="center" style={{ cursor: 'pointer' }}>
             <Flex
               justifyContent="center"
               alignItems="center"
               bg="rgba(255, 255, 255, 0.25)"
+              onClick={() => window.scroll(0, window.innerHeight)}
               style={{
                 maxWidth: '128px',
                 minWidth: '128px',
@@ -93,12 +100,37 @@ export default () => {
                 minHeight: '32px',
                 borderRadius: '16px',
                 boxShadow: '1px 1px 9px 0 #000000',
-                fontSize: '18px',
+                fontSize: '21px',
                 color: 'white',
+                fontWeight: 300,
               }}
             >
               Continue
             </Flex>
+          </Flex>
+          <Flex
+            flexDirection="row"
+            style={{
+              position: 'absolute',
+              bottom: '200px',
+              left: '-20px',
+              width: '40%',
+              overflow: 'hidden',
+            }}
+          >
+            <Image src={LeftHexs} />
+          </Flex>
+          <Flex
+            flexDirection="row"
+            style={{
+              position: 'absolute',
+              bottom: '-50px',
+              right: '0px',
+              width: '75%',
+              overflow: 'hidden',
+            }}
+          >
+            <Image src={RightHexs} />
           </Flex>
         </Flex>
       </Flex>

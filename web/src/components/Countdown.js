@@ -25,10 +25,11 @@ const SeparateIcon = () => (
 )
 
 const Indicator = styled(Text).attrs({
-  fontSize: '28px',
+  fontSize: '21px',
   fontWeight: '300',
-  color: 'white',
+  color: 'rgba(255,255,255,0.61)',
 })`
+  margin-top: 30px;
   font-family: Open Sans;
 `
 
@@ -77,7 +78,7 @@ export default class Countdown extends React.Component {
             justifyContent="center"
           >
             <Time>{duration.days()}</Time>
-            <Indicator>days</Indicator>
+            <Indicator>Days</Indicator>
           </Flex>
           <SeparateIcon />
           <Flex
@@ -91,7 +92,7 @@ export default class Countdown extends React.Component {
                 .toString()
                 .padStart(2, '0')}
             </Time>
-            <Indicator>hours</Indicator>
+            <Indicator>Hours</Indicator>
           </Flex>
           <SeparateIcon />
           <Flex
@@ -105,7 +106,7 @@ export default class Countdown extends React.Component {
                 .toString()
                 .padStart(2, '0')}
             </Time>
-            <Indicator>minutes</Indicator>
+            <Indicator>Minutes</Indicator>
           </Flex>
           <SeparateIcon />
           <Flex
@@ -119,7 +120,7 @@ export default class Countdown extends React.Component {
                 .toString()
                 .padStart(2, '0')}
             </Time>
-            <Indicator>seconds</Indicator>
+            <Indicator>Seconds</Indicator>
           </Flex>
         </Flex>
       </Flex>
