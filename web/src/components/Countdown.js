@@ -44,9 +44,16 @@ export default class Countdown extends React.Component {
     const diffTime = eventTime - currentTime
     let duration = moment.duration(diffTime * 1000, 'milliseconds')
     const interval = 1000
+
+    // set first time
+    duration = moment.duration(duration - interval, 'milliseconds')
+    this.setState({
+      duration,
+    })
+
     this.countInterval = setInterval(() => {
       duration = moment.duration(duration - interval, 'milliseconds')
-      if (duration <= 0) window.location.reload()
+
       this.setState({
         duration,
       })
