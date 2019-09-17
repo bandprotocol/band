@@ -15,6 +15,7 @@ import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 import WppButton, { OutlineButton } from 'components/WppButton'
 import Countdown from 'components/Countdown'
+import Snow from 'components/Snow'
 
 import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
@@ -68,6 +69,7 @@ export default () => {
           height: '100vh',
         }}
       >
+        <Snow />
         <Flex
           flexDirection="column"
           justifyContent="center"
@@ -79,7 +81,7 @@ export default () => {
               'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
           }}
         >
-          <Flex
+          {/* <Flex
             width="100%"
             style={{
               position: 'absolute',
@@ -90,7 +92,7 @@ export default () => {
               top: 0,
               left: 0,
             }}
-          ></Flex>
+          ></Flex> */}
           <Flex justifyContent="center" alignItems="center">
             <Text fontSize={['21px', '55px']} color="white">
               OFFICIAL MAINNET LAUNCH IN
