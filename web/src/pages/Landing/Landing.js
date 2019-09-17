@@ -14,6 +14,7 @@ import {
 import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 import WppButton from 'components/WppButton'
+import Countdown from 'components/Countdown'
 
 import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
@@ -92,6 +93,7 @@ export default () => {
                   <Image src={LandingHero} />
                 </Flex>
               )} */}
+              {/* <Countdown eventTime={1569844800}/> */}
               <Box flex={1}>
                 <Text
                   lineHeight={1.4}
