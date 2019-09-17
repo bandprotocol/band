@@ -15,6 +15,7 @@ import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 import WppButton, { OutlineButton } from 'components/WppButton'
 import Countdown from 'components/Countdown'
+import Snow from 'components/Snow'
 
 import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
@@ -68,6 +69,7 @@ export default () => {
           height: '100vh',
         }}
       >
+        <Snow />
         <Flex
           flexDirection="column"
           justifyContent="center"
