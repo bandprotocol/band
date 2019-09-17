@@ -31,7 +31,7 @@
     "openzeppelin-test-helpers": "^0.4.3",
     "pify": "^4.0.0",
     "randomhex": "^0.1.5",
-    "solium": "^1.2.4",
+    "solium": "^1.2.5",
     "truffle": "^5.0.36",
     "truffle-flattener": "^1.4.2",
     "truffle-hdwallet-provider": "^1.0.17"
