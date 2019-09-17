@@ -30,6 +30,7 @@ import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
 import RightHexs from 'images/rightHexs.png'
 import LeftHexs from 'images/leftHexs.png'
+import snowSrc from 'images/snow.png'
 
 const CircleLink = () => (
   <Flex
@@ -71,12 +72,25 @@ export default () => {
           flexDirection="column"
           justifyContent="center"
           style={{
+            positon: 'relative',
             overflow: 'hidden',
             width: '100%',
             backgroundImage:
               'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
           }}
         >
+          <Flex
+            width="100%"
+            style={{
+              position: 'absolute',
+              backgroundImage: `url(${snowSrc})`,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              height: '400px',
+              top: 0,
+              left: 0
+            }}
+          ></Flex>
           <Flex justifyContent="center" alignItems="center">
             <Text fontSize={['21px', '55px']} color="white">
               OFFICIAL MAINNET LAUNCH IN
