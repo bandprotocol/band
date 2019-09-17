@@ -88,7 +88,7 @@ export default () => {
               backgroundSize: 'cover',
               height: '400px',
               top: 0,
-              left: 0
+              left: 0,
             }}
           ></Flex>
           <Flex justifyContent="center" alignItems="center">
@@ -122,7 +122,9 @@ export default () => {
                   overflow: 'hidden',
                 }}
               >
-                <Image src={LeftHexs} />
+                <Box>
+                  <Image src={LeftHexs} />
+                </Box>
               </Flex>
 
               <Flex
@@ -135,7 +137,9 @@ export default () => {
                   overflow: 'hidden',
                 }}
               >
-                <Image src={RightHexs} />
+                <Box>
+                  <Image src={RightHexs} />
+                </Box>
               </Flex>
             </>
           ) : (
