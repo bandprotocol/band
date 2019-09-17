@@ -55,7 +55,7 @@ export default () => {
   const exRef = useRef(null)
   const _isMobile = isMobile()
   const _isSmallMobile = isSmallMobile()
-  const extraHeigt = window.innerHeight - 30
+  const extraHeigt = window.innerHeight - 40
 
   return (
     <>
