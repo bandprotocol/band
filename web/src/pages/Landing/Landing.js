@@ -13,7 +13,7 @@ import {
 } from 'ui/common'
 import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
-import WppButton from 'components/WppButton'
+import WppButton, { OutlineButton } from 'components/WppButton'
 import Countdown from 'components/Countdown'
 
 import AngleArrow from 'images/angle-arrow-down.png'
@@ -74,66 +74,85 @@ export default () => {
             overflow: 'hidden',
             width: '100%',
             backgroundImage:
-              'radial-gradient(circle at 50% -100%, #ffffff, #4d599f 50%, #0d143f)',
+              'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
           }}
         >
           <Flex justifyContent="center" alignItems="center">
-            <Text
-              fontSize="55px"
-              color="white"
-              style={{ textShadow: '1px 1px 15px #000000' }}
-            >
+            <Text fontSize={['21px', '55px']} color="white">
               OFFICIAL MAINNET LAUNCH IN
             </Text>
           </Flex>
           <Flex mt="30px">
-            <Countdown eventTime={1569819600} />
+            <Countdown eventTime={1569844800} />
           </Flex>
-          <Flex my="70px" justifyContent="center" style={{ cursor: 'pointer' }}>
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              bg="rgba(255, 255, 255, 0.25)"
+          <Flex my="70px" justifyContent="center">
+            <OutlineButton
               onClick={() => window.scroll(0, window.innerHeight)}
-              style={{
-                maxWidth: '128px',
-                minWidth: '128px',
-                maxHeight: '32px',
-                minHeight: '32px',
-                borderRadius: '16px',
-                boxShadow: '1px 1px 9px 0 #000000',
-                fontSize: '21px',
-                color: 'white',
-                fontWeight: 300,
-              }}
+              style={{ zIndex: 1, cursor: 'pointer' }}
             >
               Continue
-            </Flex>
+            </OutlineButton>
           </Flex>
-          <Flex
-            flexDirection="row"
-            style={{
-              position: 'absolute',
-              bottom: '200px',
-              left: '-20px',
-              width: '40%',
-              overflow: 'hidden',
-            }}
-          >
-            <Image src={LeftHexs} />
-          </Flex>
-          <Flex
-            flexDirection="row"
-            style={{
-              position: 'absolute',
-              bottom: '-50px',
-              right: '0px',
-              width: '75%',
-              overflow: 'hidden',
-            }}
-          >
-            <Image src={RightHexs} />
-          </Flex>
+
+          {/* Hex background */}
+
+          {isMobile() ? (
+            <>
+              <Flex
+                flexDirection="row"
+                style={{
+                  position: 'absolute',
+                  bottom: '120px',
+                  left: '0px',
+                  width: '50%',
+                  overflow: 'hidden',
+                }}
+              >
+                <Image src={LeftHexs} />
+              </Flex>
+
+              <Flex
+                flexDirection="row"
+                style={{
+                  position: 'absolute',
+                  bottom: '50px',
+                  right: '0px',
+                  width: '75%',
+                  overflow: 'hidden',
+                }}
+              >
+                <Image src={RightHexs} />
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Flex
+                flexDirection="row"
+                style={{
+                  position: 'absolute',
+                  bottom: '200px',
+                  left: '-20px',
+                  width: '40%',
+                  overflow: 'hidden',
+                }}
+              >
+                <Image src={LeftHexs} />
+              </Flex>
+
+              <Flex
+                flexDirection="row"
+                style={{
+                  position: 'absolute',
+                  bottom: '-50px',
+                  right: '0px',
+                  width: '75%',
+                  overflow: 'hidden',
+                }}
+              >
+                <Image src={RightHexs} />
+              </Flex>
+            </>
+          )}
         </Flex>
       </Flex>
       <Box

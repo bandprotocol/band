@@ -9,7 +9,7 @@ import KRFlag from 'images/kr.svg'
 
 const _isMobile = isMobile()
 
-const OutlineButton = styled(Button)`
+export const OutlineButton = styled(Button)`
   font-family: Avenir;
   color: #122069;
   font-size: 16px;

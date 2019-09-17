@@ -2,30 +2,30 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import { Flex, Text } from 'ui/common'
+import { isMobile } from 'ui/media'
 
 const Time = styled(Text).attrs({
-  fontSize: '144px',
+  fontSize: isMobile() ? '30px' : '144px',
   color: 'white',
 })`
-  text-shadow: 1px 1px 20px #000000;
   font-family: Open Sans;
 `
 
 const SeparateIcon = () => (
   <Text
     fontWeight="900"
-    fontSize="60px"
+    fontSize={['20px', '60px']}
     color="white"
-    mx="14px"
-    mb="18px"
-    style={{ textShadow: '1px 1px 20px #000000' }}
+    mx={['5px', '14px']}
+    mt={['3px', '40px']}
+    style={{ alignSelf: 'flex-start' }}
   >
     :
   </Text>
 )
 
 const Indicator = styled(Text).attrs({
-  fontSize: '21px',
+  fontSize: isMobile() ? '14px' : '21px',
   fontWeight: '300',
   color: 'rgba(255,255,255,0.61)',
 })`
@@ -76,6 +76,7 @@ export default class Countdown extends React.Component {
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
+            style={{ minWidth: isMobile() ? '55px' : '165px' }}
           >
             <Time>{duration.days()}</Time>
             <Indicator>Days</Indicator>
