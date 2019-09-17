@@ -273,28 +273,59 @@ export default () => {
           fontSize: _isMobile ? 14 : 16,
         }}
       >
-        Introducing{' '}
-        <Flex mt={['5px', '0px']}>
-          <a
-            href="https://bitswing.bandprotocol.com"
-            target="_blank"
-            rel="noopener noreferrer"
+        Introducing
+        {_isMobile ? (
+          <Flex
+            mt="8px"
+            flexDirection="column"
+            fontSize="11px"
+            alignItems="center"
           >
-            <Text color="#5569de" mx="5px">
-              BitSwing
-            </Text>
-          </a>
-          - the first dapp built with Band Protocol on Kovan.
-          <a
-            href="https://medium.com/bandprotocol/7750fe756ecf"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Text color="#5569de" mx="5px">
-              Learn more.
-            </Text>
-          </a>
-        </Flex>
+            <Flex>
+              <a
+                href="https://bitswing.bandprotocol.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Text color="#5569de" mx="5px">
+                  BitSwing
+                </Text>
+              </a>
+              - the first dapp built with Band Protocol on Kovan.
+            </Flex>
+            <a
+              href="https://medium.com/bandprotocol/7750fe756ecf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text color="#5569de" mx="5px" mt="5px">
+                Learn more.
+              </Text>
+            </a>
+          </Flex>
+        ) : (
+          <Flex mt={['5px', '0px']}>
+            <a
+              href="https://bitswing.bandprotocol.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text color="#5569de" mx="5px">
+                BitSwing
+              </Text>
+            </a>
+            - the first dapp built with Band Protocol on Kovan.
+            <a
+              href="https://medium.com/bandprotocol/7750fe756ecf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Text color="#5569de" mx="5px">
+                Learn more.
+              </Text>
+            </a>
+          </Flex>
+        )}
       </Flex>
 
       {/* Section 2: Connecting to ... */}
