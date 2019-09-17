@@ -333,111 +333,6 @@ export default () => {
                 <Image src={HeroSrc} width="50vw" />
               </Flex>
             )} */}
-            </Flex>
-          </PageContainer>
-        </Box>
-      </Box>
-
-      {/* Testnet live bar */}
-      <Flex
-        bg="#dce1ff"
-        justifyContent="center"
-        mx={['calc(50vw - 400px)', 'calc(480px - 50vw)']}
-        alignItems="center"
-        fontWeight="900"
-        flexDirection={['column', 'row']}
-        style={{
-          height: '65px',
-          fontFamily: 'bio-sans',
-          fontSize: _isMobile ? 14 : 16,
-        }}
-      >
-        Introducing
-        {_isMobile ? (
-          <Flex
-            mt="8px"
-            flexDirection="column"
-            fontSize="11px"
-            alignItems="center"
-          >
-            <Flex>
-              <a
-                href="https://bitswing.bandprotocol.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Text color="#5569de" mx="5px">
-                  BitSwing
-                </Text>
-              </a>
-              - the first dapp built with Band Protocol on Kovan.
-            </Flex>
-            <a
-              href="https://medium.com/bandprotocol/7750fe756ecf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="#5569de" mx="5px" mt="5px">
-                Learn more.
-              </Text>
-            </a>
-          </Flex>
-        ) : (
-          <Flex mt={['5px', '0px']}>
-            <a
-              href="https://bitswing.bandprotocol.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="#5569de" mx="5px">
-                BitSwing
-              </Text>
-            </a>
-            - the first dapp built with Band Protocol on Kovan.
-            <a
-              href="https://medium.com/bandprotocol/7750fe756ecf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="#5569de" mx="5px">
-                Learn more.
-              </Text>
-            </a>
-          </Flex>
-        )}
-      </Flex>
-
-      {/* Section 2: Connecting to ... */}
-      <Box
-        style={{
-          backgroundImage: 'linear-gradient(to bottom, #ffffff 30%, #d8dfff)',
-        }}
-      >
-        <PageContainer>
-          <Flex
-            pt={['20px', '100px']}
-            pb={['50px', '150px']}
-            flexDirection={['column', 'row']}
-          >
-            {/* Connect to Real-World Information */}
-            <Flex flexDirection="column" alignItems="flex-start" mt="50px">
-              <Image src={LandingRealworld} />
-              <Flex
-                flexDirection={['column', 'row']}
-                alignItems={['flex-start', 'center']}
-                fontSize={['18px', '24px']}
-                mt="35px"
-                mb="10px"
-                style={{
-                  lineHeight: '2.25',
-                  fontWeight: 'bold',
-                  fontFamily: 'bio-sans',
-                }}
-              >
-                <Text color="#3b426b">Connect to</Text>
-                <Text color="#5569de" ml={['0px', '5px']}>
-                  Real-World Information
-                </Text>
               </Flex>
             </PageContainer>
           </Box>
@@ -457,28 +352,59 @@ export default () => {
             fontSize: _isMobile ? 14 : 16,
           }}
         >
-          Introducing{' '}
-          <Flex mt={['5px', '0px']}>
-            <a
-              href="https://bitswing.bandprotocol.com"
-              target="_blank"
-              rel="noopener noreferrer"
+          Introducing
+          {_isMobile ? (
+            <Flex
+              mt="8px"
+              flexDirection="column"
+              fontSize="11px"
+              alignItems="center"
             >
-              <Text color="#5569de" mx="5px">
-                BitSwing
-              </Text>
-            </a>
-            - the first dapp built with Band Protocol on Kovan.
-            <a
-              href="https://medium.com/bandprotocol/7750fe756ecf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Text color="#5569de" mx="5px">
-                Learn more.
-              </Text>
-            </a>
-          </Flex>
+              <Flex>
+                <a
+                  href="https://bitswing.bandprotocol.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Text color="#5569de" mx="5px">
+                    BitSwing
+                  </Text>
+                </a>
+                - the first dapp built with Band Protocol on Kovan.
+              </Flex>
+              <a
+                href="https://medium.com/bandprotocol/7750fe756ecf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Text color="#5569de" mx="5px" mt="5px">
+                  Learn more.
+                </Text>
+              </a>
+            </Flex>
+          ) : (
+            <Flex mt={['5px', '0px']}>
+              <a
+                href="https://bitswing.bandprotocol.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Text color="#5569de" mx="5px">
+                  BitSwing
+                </Text>
+              </a>
+              - the first dapp built with Band Protocol on Kovan.
+              <a
+                href="https://medium.com/bandprotocol/7750fe756ecf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Text color="#5569de" mx="5px">
+                  Learn more.
+                </Text>
+              </a>
+            </Flex>
+          )}
         </Flex>
 
         {/* Section 2: Connecting to ... */}
