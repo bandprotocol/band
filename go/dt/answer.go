@@ -10,7 +10,8 @@ import (
 type AnswerOption uint8
 
 const (
-	NotFound AnswerOption = iota
+	Missing AnswerOption = iota
+	NotFound
 	Answered
 	Delegated
 )
@@ -20,12 +21,14 @@ func (o AnswerOption) String() string {
 }
 
 var toString = map[AnswerOption]string{
+	Missing:   "Missing",
 	NotFound:  "Not found",
 	Answered:  "Answered",
 	Delegated: "Delegated",
 }
 
 var toID = map[string]AnswerOption{
+	"Missing":   Missing,
 	"Not found": NotFound,
 	"Answered":  Answered,
 	"Delegated": Delegated,
