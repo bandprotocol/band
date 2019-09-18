@@ -288,7 +288,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 				chDataResponse <- data
 			} else {
-				chDataResponse <- reqmsg.DataResponse{}
+				missingResponse := reqmsg.DataResponse{}
+				missingResponse.Provider = provider
+				missingResponse.Answer.Option = dt.Missing
+				chDataResponse <- missingResponse
 			}
 		}(provider)
 	}
@@ -296,17 +299,17 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	var responses []reqmsg.DataResponse
 	for i := 0; i < len(providers); i++ {
 		r := <-chDataResponse
-		if r != (reqmsg.DataResponse{}) {
+		if r.Answer.Option != dt.Missing && r.Answer.Option != dt.NotFound {
 			responses = append(responses, r)
-			logWithTimestamp(requestLog,
-				fmt.Sprintf("Report,%s,%s,%s,%d,%s",
-					r.Provider.Hex(),
-					r.Answer.Option,
-					r.Answer.Value.Hex(),
-					r.Timestamp,
-					r.Sig,
-				))
 		}
+		logWithTimestamp(requestLog,
+			fmt.Sprintf("Report,%s,%s,%s,%d,%s",
+				r.Provider.Hex(),
+				r.Answer.Option,
+				r.Answer.Value.Hex(),
+				r.Timestamp,
+				r.Sig,
+			))
 	}
 
 	// Check valid provider data
@@ -333,7 +336,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 				chSignResponse <- data
 			} else {
 				log.Printf("Fail to get aggreagated value from %s: %s", provider.Hex(), err)
-				chSignResponse <- reqmsg.SignResponse{}
+				missingResponse := reqmsg.SignResponse{}
+				missingResponse.Provider = provider
+				missingResponse.Status = dt.Invalid
+				chSignResponse <- missingResponse
 			}
 		}(provider, &aggRequest)
 	}
@@ -341,26 +347,24 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	var validAggs []reqmsg.SignResponse
 	for i := 0; i < len(providers); i++ {
 		r := <-chSignResponse
-		if r != (reqmsg.SignResponse{}) {
+		if r.Status != dt.Invalid {
 			validAggs = append(validAggs, r)
 			counter[valueWithTimeStamp{
 				Value:     r.Value,
 				Timestamp: r.Timestamp,
 				Status:    r.Status,
 			}]++
-
-			// log to file
-			logWithTimestamp(
-				requestLog,
-				fmt.Sprintf("Aggregate,%s,%s,%s,%d,%s",
-					r.Provider.Hex(),
-					r.Status,
-					r.Value.Hex(),
-					r.Timestamp,
-					r.Sig,
-				),
-			)
 		}
+		logWithTimestamp(
+			requestLog,
+			fmt.Sprintf("Aggregate,%s,%s,%s,%d,%s",
+				r.Provider.Hex(),
+				r.Status,
+				r.Value.Hex(),
+				r.Timestamp,
+				r.Sig,
+			),
+		)
 	}
 
 	// Check valid provider aggregated data
