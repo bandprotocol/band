@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/user"
 	"sort"
 	"strconv"
 	"strings"
@@ -268,7 +269,19 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create logger
-	fileName := time.Now().UTC().Format("2006-01-02") + ".log"
+	usr, err := user.Current()
+	if err != nil {
+		log.Print(err)
+	}
+
+	path := usr.HomeDir + "/band-log/"
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, 0644)
+		if err != nil {
+			log.Print(err)
+		}
+	}
+	fileName := path + time.Now().UTC().Format("2006-01-02") + ".log"
 	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Println(err)
