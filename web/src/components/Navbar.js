@@ -240,7 +240,9 @@ const Navbar = props => {
   const refPathName = useRef()
 
   useEffect(() => {
-    if (pathname !== '/') {
+    if (pathname === '/') {
+      setShowNav(false)
+    } else {
       setShowNav(true)
     }
     refPathName.current = pathname
