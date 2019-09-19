@@ -16,11 +16,16 @@ def get_requests():
     page = int(request.args.get("page", "1")) - 1
     dataset = request.args.get("dataset")
     key = request.args.get("key")
+    status = request.args.get("status")
+
     query = db.session.query(Request).order_by(Request.requested_at.desc())
+
     if key is not None:
         query = query.filter_by(key="0x"+str.encode(key).hex())
     if dataset is not None:
         query = query.filter_by(tcd_address=dataset)
+    if status is not None:
+        query = query.filter_by(status=status)
     results = []
     for req in query.offset(limit*page).limit(limit).all():
         req_obj = {
