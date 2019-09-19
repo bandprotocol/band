@@ -1,0 +1,44 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: PriceTCD
+    network: kovan
+    source:
+      address: "0xa24df0420de1f3b8d740a52aaeb9d55d6d64478e"
+      abi: OffchainAggTCD
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - DataUpdated
+        - DataSourceRegistered
+        - DataSourceStaked
+        - DataSourceUnstaked
+        - FeeDistributed
+        - WithdrawReceiptCreated
+        - WithdrawReceiptUnlocked
+        - Query
+      abis:
+        - name: OffchainAggTCD
+          file: ./abis/OffchainAggTCD.json
+      eventHandlers:
+        - event: DataUpdated(bytes,uint256,uint64,uint8)
+          handler: handleDataUpdated
+        - event: DataSourceRegistered(indexed address,indexed address,uint256)
+          handler: handleDataSourceRegistered
+        - event: DataSourceStaked(indexed address,indexed address,uint256)
+          handler: handleDataSourceStaked
+        - event: DataSourceUnstaked(indexed address,indexed address,uint256)
+          handler: handleDataSourceUnstaked
+        - event: FeeDistributed(indexed address,uint256,uint256)
+          handler: handleFeeDistributed
+        - event: WithdrawReceiptCreated(uint256,indexed address,uint256,uint64)
+          handler: handleWithdrawReceiptCreated
+        - event: WithdrawReceiptUnlocked(uint256,indexed address,uint256)
+          handler: handleWithdrawReceiptUnlocked
+        - event: Query(indexed address,bytes,uint8)
+          handler: handleQuery
+      file: ./src/mapping.ts

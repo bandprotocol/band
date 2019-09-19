@@ -1,0 +1,14 @@
+type TCDContract @entity {
+  id: ID!
+  queryCount: Int!
+  reportCount: Int!
+}
+
+type Report @entity {
+  id: ID!
+  key: Bytes!
+  value: BigInt!
+  timestamp: BigInt!
+  status: Int!
+  txHash: Bytes!
+}
