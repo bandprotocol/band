@@ -85,12 +85,12 @@ uint256 ethusd = oracle.querySpotPriceWithExpiry("ETH-USD", 10 minutes);
 In this initial release, Band Foundation is responsible for facilitating data request updates. We are developing a decentralized peer-to-peer network to replace this. See [Data Provider](../providers/overview.md) for more details.
 :::
 
-Although data providers strive to continously supply data to on-chain dataset contracts, it is possible that some data may not be up-to-date the at the moment you need. As a dapp developer, you can request data providers to supply data for a given **key** of a given **dataset** instantly by [POSTing](<https://en.wikipedia.org/wiki/POST_(HTTP)>) a [HTTP](https://en.wikipedia.org/wiki/HTTP) request to [https://data-request.bandprotocol.com](https://data-request.bandprotocol.com). An example is provided below.
+Although data providers strive to continously supply data to on-chain dataset contracts, it is possible that some data may not be up-to-date the at the moment you need. As a dapp developer, you can request data providers to supply data for a given **key** of a given **dataset** instantly by [POSTing](<https://en.wikipedia.org/wiki/POST_(HTTP)>) a [HTTP](https://en.wikipedia.org/wiki/HTTP) request to [https://data-request.bandprotocol.com/data/request](https://data-request.bandprotocol.com/data/request). An example is provided below.
 
 ```sh
 # Request a data update request for key SPOTPX/ETH-USD
 curl -X POST \
-  https://data-request.bandprotocol.com \
+  https://data-request.bandprotocol.com/data/request \
   -H 'Content-Type: application/json' \
   -d '{
     "network_id": 42,
@@ -104,7 +104,7 @@ Or
 
 ```sh
 curl -X POST \
-  https://data-request.bandprotocol.com \
+  https://data-request.bandprotocol.com/data/request \
   -H 'Content-Type: application/json' \
   -d '{
     "network_id": 42,
