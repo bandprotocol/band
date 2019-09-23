@@ -35,7 +35,6 @@ const ExchangeButton = styled(FontAwesomeIcon)`
 `
 
 const DWButton = styled(Button).attrs({
-  p: '0 15px 2px',
   flex: '0 0 auto',
 })`
   border-radius: 17.5px;
