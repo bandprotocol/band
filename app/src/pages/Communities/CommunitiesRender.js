@@ -95,6 +95,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
       paddingLeft: '0px',
       position: 'relative',
       background: '#E4EDFF',
+      height: '100vh',
     }}
   >
     <Header>
