@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Card, Box, Flex, Text, H5 } from 'ui/common'
 import TxHashLink from 'components/TxHashLink'
+import { getLink } from 'utils/etherscan'
+
 
 const Field = ({ label, children }) => (
   <Flex my={2} style={{ lineHeight: '24px' }}>
@@ -12,7 +14,7 @@ const Field = ({ label, children }) => (
       textAlign="right"
       style={{ width: 110 }}
       mr={2}
-    >
+      >
       {label}:
     </Text>
     <Text fontSize="14px">{children}</Text>
@@ -22,11 +24,13 @@ const Field = ({ label, children }) => (
 const Address = styled(Text).attrs(() => ({
   fontFamily: 'code',
 }))`
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  whitespace: nowrap;
+max-width: 160px;
+overflow: hidden;
+text-overflow: ellipsis;
+whitespace: nowrap;
 `
+
+const etherscanLink = getLink()
 
 export default ({
   banner,
@@ -60,7 +64,7 @@ export default ({
           <Flex flexDirection="row" alignItems="center">
             <Address>{tcdAddr}</Address>
             <TxHashLink
-              href={`https://kovan.etherscan.io/address/${tcdAddr}`}
+              href={`${etherscanLink}/address/${tcdAddr}`}
               pl="5px"
             />
           </Flex>
@@ -69,7 +73,7 @@ export default ({
           <Flex flexDirection="row" alignItems="center">
             <Address>{tokenAddr}</Address>
             <TxHashLink
-              href={`https://kovan.etherscan.io/address/${tokenAddr}`}
+              href={`${etherscanLink}/address/${tokenAddr}`}
               pl="5px"
             />
           </Flex>
@@ -78,7 +82,7 @@ export default ({
           <Flex flexDirection="row" alignItems="center">
             <Address>{parameterAddr}</Address>
             <TxHashLink
-              href={`https://kovan.etherscan.io/address/${parameterAddr}`}
+              href={`${etherscanLink}/address/${parameterAddr}`}
               pl="5px"
             />
           </Flex>

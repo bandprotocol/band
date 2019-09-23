@@ -4,6 +4,7 @@ import { Flex, Text } from 'ui/common'
 import Link from 'components/Link'
 import { createTable } from 'components/Table'
 import ReactTooltip from 'react-tooltip'
+import { getLink } from 'utils/etherscan'
 
 const LogoTeam = styled(Flex).attrs({
   mr: '10px',
@@ -21,10 +22,7 @@ export default createTable({
     {
       cell: { fontFamily: 'code' },
       data: (d, i) => (
-        <Link
-          target="_blank"
-          href={`http://kovan.etherscan.io/address/${d.address}`}
-        >
+        <Link target="_blank" href={`${getLink()}/address/${d.address}`}>
           <Text fontFamily="code">{d.address.slice(0, 18)}</Text>
         </Link>
       ),

@@ -2,16 +2,14 @@ import React from 'react'
 import { Text, Card, Flex, Image } from 'ui/common'
 import { createTable } from 'components/Table'
 import Link from 'components/Link'
+import { getLink } from 'utils/etherscan'
 
 export default createTable({
   columns: [
     {
       cell: { fontFamily: 'code' },
       data: (d, i, props, numDataProviders) => (
-        <Link
-          target="_blank"
-          href={`http://kovan.etherscan.io/address/${d.address}`}
-        >
+        <Link target="_blank" href={`${getLink()}/address/${d.address}`}>
           <Card
             bg={`hsl(${(i * 360) / numDataProviders}, 80%, 70%)`}
             borderRadius={4}
