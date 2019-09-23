@@ -98,7 +98,6 @@ class BuySellModal extends React.Component {
     const { bandBalance } = this.props
 
     if (amount === '') {
-      console.log('amount', amount, 'empth')
       this.setTypeState(type, {
         price: new BN('0'),
         priceLimit: priceChange ? '0' : priceLimit,
