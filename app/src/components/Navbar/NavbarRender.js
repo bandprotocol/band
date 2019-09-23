@@ -266,9 +266,9 @@ export default ({
               style={{ height: 60, width: 220 }}
             >
               {isDashboard ? (
-                <Image src={WhiteLogoSrc} height="32px" />
+                <Image src={WhiteLogoSrc} width="160px" />
               ) : (
-                <Image src={LogoSrc} height="32px" />
+                <Image src={LogoSrc} width="160px" />
               )}
             </Flex>
           </Link>
