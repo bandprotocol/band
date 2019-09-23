@@ -32,7 +32,7 @@ const TxnContainer = styled(Box)`
 `
 
 const MainBar = styled(Flex)`
-  padding: 0 12px;
+  padding: 0 12px 10px;
   line-height: 36px;
   background: #5973e7;
   cursor: pointer;
