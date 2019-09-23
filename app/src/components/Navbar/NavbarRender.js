@@ -156,7 +156,6 @@ const BlockTransactions = styled(Card).attrs({
   boxShadow:
     '0 2px 16px 0 rgba(33, 43, 54, 0.08), 0 14px 18px 0 rgba(0, 0, 0, 0.07)',
   borderRadius: 4,
-  padding: 3,
 })`
   position: absolute;
   top: 55px;
@@ -181,7 +180,6 @@ const SignOutDropDown = styled(Card).attrs({
   boxShadow:
     '0 2px 16px 0 rgba(33, 43, 54, 0.08), 0 14px 18px 0 rgba(0, 0, 0, 0.07)',
   borderRadius: 4,
-  padding: 3,
 })`
   text-align: center;
   line-height: 30px;
@@ -327,7 +325,7 @@ export default ({
                         height: '36px',
                       }}
                     >
-                      <Image src={Eth} width={27} height={27} />
+                      <Image src={Eth} width={15} />
                     </Flex>
                     {pending.length !== 0 && <Badge bg={colors.red} />}
                   </DropdownButton>
@@ -357,7 +355,6 @@ export default ({
                 <SignOutDropDown show={showSignOut}>
                   <Text
                     block
-                    size={14}
                     color="#7688f4"
                     style={{ cursor: 'pointer' }}
                     onClick={() => signOut(localStorage.getItem('walletType'))}
@@ -368,7 +365,6 @@ export default ({
                 <BlockTransactions show={showBlockTransactions}>
                   <Text
                     block
-                    size={14}
                     lineHeight={2.5}
                     weight="semibold"
                     color="#ffffff"
