@@ -35,7 +35,6 @@
     "react-dom": "^16.9.0",
     "react-dropzone": "9.0.0",
     "react-flip-move": "^3.0.3",
-    "react-google-charts": "^3.0.13",
     "react-jazzicon": "^0.1.3",
     "react-json-view": "^1.19.1",
     "react-mailchimp-subscribe": "^2.0.2",
