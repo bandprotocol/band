@@ -32,7 +32,7 @@ export default createTable({
         <Flex flexDirection="row" alignItems="center">
           <Image
             src={d.image}
-            height="16px"
+            width="18px"
             mr={2}
             style={{ filter: 'grayscale(1)' }}
           />
