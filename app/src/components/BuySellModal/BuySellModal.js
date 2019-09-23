@@ -11,6 +11,7 @@ import {
 import BN from 'utils/bignumber'
 import { Utils } from 'band.js'
 import { isPositiveNumber } from 'utils/helper'
+import { bandPriceSelector } from 'selectors/bandPrice'
 
 class BuySellModal extends React.Component {
   state = {
@@ -97,6 +98,7 @@ class BuySellModal extends React.Component {
     const { bandBalance } = this.props
 
     if (amount === '') {
+      console.log('amount', amount, 'empth')
       this.setTypeState(type, {
         price: new BN('0'),
         priceLimit: priceChange ? '0' : priceLimit,
@@ -260,7 +262,14 @@ class BuySellModal extends React.Component {
   }
 
   render() {
-    const { name, logo, symbol, tokenNormalPrice, communityClient } = this.props
+    const {
+      name,
+      logo,
+      symbol,
+      tokenNormalPrice,
+      communityClient,
+      bandPrice,
+    } = this.props
     const { type, showAdvance, loading } = this.state
     const currentType = this.state[type]
     return (
@@ -271,6 +280,7 @@ class BuySellModal extends React.Component {
         type={type}
         amount={currentType.amount}
         tokenNormalPrice={tokenNormalPrice}
+        bandPrice={bandPrice}
         price={currentType.price}
         priceChange={currentType.priceChange}
         priceLimit={currentType.priceLimit}
@@ -302,6 +312,7 @@ const mapStateToProps = (state, { type, tokenAddress }) => {
     tokenBalance: communityUnlockBalanceSelector(state, {
       address: tokenAddress,
     }),
+    bandPrice: bandPriceSelector(state),
     tokenNormalPrice: community.get('price'),
     type: type,
     communityClient: currentCommunityClientSelector(state, {
