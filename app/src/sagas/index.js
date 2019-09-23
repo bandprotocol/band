@@ -46,19 +46,24 @@ import { toggleFetch } from 'actions'
 import Web3 from 'web3'
 
 // Select network (HARDCODE)!!!
-let RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
+let RPC_ENDPOINT
 let WALLET_ENDPOINT = 'https://wallet.kovan.bandprotocol.com'
+if (process.env.NODE_ENV !== 'production')
+  WALLET_ENDPOINT = 'http://localhost:3000'
 
 const network = localStorage.getItem('network') || 'kovan'
 switch (network) {
   case 'mainnet':
+    RPC_ENDPOINT =
+      'https://mainnet.infura.io/v3/7288751bb1014a7d8012057ca9303bed'
+    break
   case 'kovan':
     RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
     break
-  // if (process.env.NODE_ENV !== 'production')
-  //   WALLET_ENDPOINT = 'http://localhost:3000'
-  // break
   case 'rinkeby':
+    RPC_ENDPOINT =
+      'https://rinkeby.infura.io/v3/7288751bb1014a7d8012057ca9303bed'
+    break
   case 'local':
   default:
     RPC_ENDPOINT = 'http://localhost:8545'
