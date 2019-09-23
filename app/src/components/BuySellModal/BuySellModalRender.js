@@ -12,6 +12,7 @@ import {
   faArrowUp,
   faArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
+import {formatPrice} from 'utils/format'
 
 const AmountInput = styled.input`
   width: 100%;
@@ -143,68 +144,74 @@ const Amount = ({
   </Box>
 )
 
-const EstimatedPrice = ({ type, price, priceStatus, loading }) => (
-  <Box>
-    <Flex width={1}>
-      <Flex flex={1}>
-        <Text
-          fontSize="14px"
-          color="#4a4a4a"
-          fontWeight={500}
-          letterSpacing="-0.2px"
-        >
-          {type === 'buy' ? 'Paying' : 'Receiving'}
-        </Text>
-      </Flex>
-      <Flex flex={1} justifyContent="flex-end">
-        <Text fontSize="11px" color="#4e3ca9">
-          {`≈ ${BN.isBN(price) ? price.pretty() : price} USD`}
-        </Text>
-      </Flex>
-    </Flex>
-    <Box
-      mt={3}
-      style={{
-        height: '45px',
-        border: '1px solid #cbcfe3',
-        borderRadius: '2px',
-      }}
-    >
-      <Flex flexDirection="row" alignItems="center">
-        {loading ? (
-          <Box flex={1} pl={2} py="20px">
-            <DotLoading color="#b1b8e7" size="6px" />
-          </Box>
-        ) : (
+const EstimatedPrice = ({ type, price, priceStatus, loading, bandPrice }) => {
+  return (
+    <Box>
+      <Flex width={1}>
+        <Flex flex={1}>
           <Text
-            flex={1}
-            fontSize={0}
-            pl={3}
-            py={3}
-            style={{
-              width: '300px',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              letterSpacing: '-0.2px',
-            }}
+            fontSize="14px"
+            color="#4a4a4a"
+            fontWeight={500}
+            letterSpacing="-0.2px"
           >
-            {BN.isBN(price) ? price.pretty() : price}
+            {type === 'buy' ? 'Paying' : 'Receiving'}
           </Text>
-        )}
-        <SymbolType>BAND</SymbolType>
+        </Flex>
+        <Flex flex={1} justifyContent="flex-end">
+          <Text fontSize="11px" color="#4e3ca9">
+            {`≈ ${
+              BN.isBN(price) ? formatPrice(price.pretty() * bandPrice) : price
+            } USD`}
+          </Text>
+        </Flex>
       </Flex>
+      <Box
+        mt={3}
+        style={{
+          height: '45px',
+          border: '1px solid #cbcfe3',
+          borderRadius: '2px',
+        }}
+      >
+        <Flex flexDirection="row" alignItems="center">
+          {loading ? (
+            <Box flex={1} pl={2} py="20px">
+              <DotLoading color="#b1b8e7" size="6px" />
+            </Box>
+          ) : (
+            <Text
+              flex={1}
+              fontSize={0}
+              pl={3}
+              py={3}
+              style={{
+                width: '300px',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                letterSpacing: '-0.2px',
+              }}
+            >
+              {BN.isBN(price) ? price.pretty() : price}
+            </Text>
+          )}
+          <SymbolType>BAND</SymbolType>
+        </Flex>
+      </Box>
+      <Text
+        fontSize="10px"
+        color={colors.red}
+        lineHeight="15px"
+        style={{ display: 'block', height: '15px' }}
+      >
+        {priceStatus === 'INSUFFICIENT_BAND'
+          ? 'Insufficient BAND balance.'
+          : ' '}
+      </Text>
     </Box>
-    <Text
-      fontSize="10px"
-      color={colors.red}
-      lineHeight="15px"
-      style={{ display: 'block', height: '15px' }}
-    >
-      {priceStatus === 'INSUFFICIENT_BAND' ? 'Insufficient BAND balance.' : ' '}
-    </Text>
-  </Box>
-)
+  )
+}
 
 const Advance = ({
   type,
@@ -432,6 +439,7 @@ export default ({
   toggleAdvance,
   onButtonClick,
   communityClient,
+  bandPrice,
 }) => {
   const ratio = (() => {
     try {
@@ -503,6 +511,7 @@ export default ({
           ratio={ratio.pretty()}
           priceStatus={priceStatus}
           loading={loading}
+          bandPrice={bandPrice}
         />
         <Flex flexDirection="column" mt="20px" fontSize="12px" fontWeight={500}>
           <Flex flexDirection="row">
@@ -518,7 +527,7 @@ export default ({
                 <React.Fragment>
                   {`1 ${symbol} = ${ratio.pretty()} BAND `}
                   <Text color="#4e3ca9" ml="5px">
-                    ${`(${ratio.pretty()} USD)`}
+                    ${`(${ formatPrice(ratio.pretty() * bandPrice)} USD)`}
                   </Text>
                 </React.Fragment>
               )}

@@ -44,6 +44,8 @@ import { fromJS, Set, Map } from 'immutable'
 import { toggleFetch } from 'actions'
 import { networkIdtoName } from 'utils/network'
 
+import { getBandUSD } from 'utils/bandPrice'
+
 // import web3
 import Web3 from 'web3'
 
@@ -146,9 +148,10 @@ function* baseInitialize() {
   `)
   const bandAddress = query.allContracts.nodes[0].address
 
+  const { usd, usd_24h_change } = yield getBandUSD()
   yield put(
     // TODO: Mock on price and last24hr
-    saveBandInfo(bandAddress, '1000000000000000000000000', 1.0, 0),
+    saveBandInfo(bandAddress, '1000000000000000000000000', usd, usd_24h_change),
   )
   const communityDetails = yield Utils.graphqlRequest(
     `
