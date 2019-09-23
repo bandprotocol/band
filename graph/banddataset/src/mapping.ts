@@ -10,7 +10,7 @@ import {
   WithdrawReceiptUnlocked,
   Query
 } from "../generated/PriceTCD/OffchainAggTCD";
-import { TCDContract, Report } from "../generated/schema";
+import { TCDContract, Report, QueryCounter } from "../generated/schema";
 
 export function handleDataUpdated(event: DataUpdated): void {
   let tcd = TCDContract.load(event.address.toHexString());
@@ -36,6 +36,7 @@ export function handleDataUpdated(event: DataUpdated): void {
     report.timestamp = event.params.timestamp;
     report.status = event.params.status;
     report.txHash = event.transaction.hash;
+    report.contract = event.address;
     report.save();
   }
 }
@@ -67,4 +68,19 @@ export function handleQuery(event: Query): void {
   }
   tcd.queryCount = tcd.queryCount + 1;
   tcd.save();
+
+  let hourInterval = event.block.timestamp.div(BigInt.fromI32(3600));
+  let startTime = hourInterval.times(BigInt.fromI32(3600));
+
+  let key = event.address.toHexString() + "/" + hourInterval.toString();
+  let counter = QueryCounter.load(key);
+  if (counter === null) {
+    counter = new QueryCounter(key);
+    counter.startTime = startTime;
+    counter.query = 0;
+    counter.contract = event.address;
+  }
+
+  counter.query = counter.query + 1;
+  counter.save();
 }

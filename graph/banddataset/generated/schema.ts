@@ -61,6 +61,64 @@ export class TCDContract extends Entity {
   }
 }
 
+export class QueryCounter extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id !== null, "Cannot save QueryCounter entity without an ID");
+    assert(
+      id.kind == ValueKind.STRING,
+      "Cannot save QueryCounter entity with non-string ID. " +
+        'Considering using .toHex() to convert the "id" to a string.'
+    );
+    store.set("QueryCounter", id.toString(), this);
+  }
+
+  static load(id: string): QueryCounter | null {
+    return store.get("QueryCounter", id) as QueryCounter | null;
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get contract(): Bytes {
+    let value = this.get("contract");
+    return value.toBytes();
+  }
+
+  set contract(value: Bytes) {
+    this.set("contract", Value.fromBytes(value));
+  }
+
+  get startTime(): BigInt {
+    let value = this.get("startTime");
+    return value.toBigInt();
+  }
+
+  set startTime(value: BigInt) {
+    this.set("startTime", Value.fromBigInt(value));
+  }
+
+  get query(): i32 {
+    let value = this.get("query");
+    return value.toI32();
+  }
+
+  set query(value: i32) {
+    this.set("query", Value.fromI32(value));
+  }
+}
+
 export class Report extends Entity {
   constructor(id: string) {
     super();
@@ -89,6 +147,15 @@ export class Report extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get contract(): Bytes {
+    let value = this.get("contract");
+    return value.toBytes();
+  }
+
+  set contract(value: Bytes) {
+    this.set("contract", Value.fromBytes(value));
   }
 
   get key(): Bytes {

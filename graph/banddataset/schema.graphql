@@ -4,8 +4,17 @@ type TCDContract @entity {
   reportCount: Int!
 }
 
+
+type QueryCounter @entity {
+  id: ID!
+  contract: Bytes!
+  startTime: BigInt!
+  query: Int!
+}
+
 type Report @entity {
   id: ID!
+  contract: Bytes!
   key: Bytes!
   value: BigInt!
   timestamp: BigInt!
