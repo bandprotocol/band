@@ -2,10 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import Chart from 'chart.js'
 import { AutoSizer } from 'react-virtualized'
-import colors from 'ui/colors'
 import { Box } from 'rebass'
-// import Chart from 'react-google-charts'
-import Loading from 'components/Loading'
 
 const Container = styled(Box)`
   rect[stroke-opacity] {
@@ -119,7 +116,7 @@ class Graph extends Component {
     const { width, height } = this.props
     return (
       <div style={{ width, height }}>
-        <canvas style={{ width, height }} ref={this.chartRef} />
+        <canvas style={{ width, height: '300px' }} ref={this.chartRef} />
       </div>
     )
   }
@@ -129,7 +126,7 @@ export default ({ data, numberOfProvider }) => {
   const init = data.slice(1).map(d => {
     return {
       x: d[0],
-      y: d[1],
+      y: d[1].toFixed(2),
     }
   })
 
