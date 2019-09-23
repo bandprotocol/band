@@ -60,7 +60,20 @@ if (
   window.ethereum.autoRefreshOnNetworkChange = false
 }
 
-const network = localStorage.getItem('network') || 'kovan'
+let network = localStorage.getItem('network') || 'kovan'
+
+if (localStorage.getItem('walletType') === 'metamask') {
+  if (
+    typeof window.ethereum !== 'undefined' ||
+    typeof window.web3 !== 'undefined'
+  ) {
+    
+    network = networkIdtoName(window.ethereum.networkVersion)
+
+    console.log('metamks', network,window.ethereum.networkVersion)
+  }
+}
+
 switch (network) {
   case 'mainnet':
     RPC_ENDPOINT =
@@ -334,6 +347,7 @@ function* metaMaskProcess() {
         setNetwork(networkIdtoName(window.ethereum.networkVersion))
         updateClient(provider)
         localStorage.setItem('network', networkIdtoName(networkId))
+
         window.open(window.location.origin, '_self')
       })
 
