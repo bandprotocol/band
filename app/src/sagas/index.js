@@ -13,6 +13,7 @@ import {
   loadCurrent,
   dumpCurrent,
   reloadBalance,
+  setNetwork,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
@@ -41,6 +42,7 @@ import BN from 'utils/bignumber'
 
 import { fromJS, Set, Map } from 'immutable'
 import { toggleFetch } from 'actions'
+import { networkIdtoName } from 'utils/network'
 
 // import web3
 import Web3 from 'web3'
@@ -50,6 +52,13 @@ let RPC_ENDPOINT
 let WALLET_ENDPOINT = 'https://wallet.kovan.bandprotocol.com'
 if (process.env.NODE_ENV !== 'production')
   WALLET_ENDPOINT = 'http://localhost:3000'
+
+if (
+  typeof window.ethereum !== 'undefined' ||
+  typeof window.web3 !== 'undefined'
+) {
+  window.ethereum.autoRefreshOnNetworkChange = false
+}
 
 const network = localStorage.getItem('network') || 'kovan'
 switch (network) {
@@ -321,10 +330,18 @@ function* metaMaskProcess() {
       const web3 = new Web3(provider)
       const newUserAddress = yield getUser(web3)
 
+      window.ethereum.on('networkChanged', function(networkId) {
+        setNetwork(networkIdtoName(window.ethereum.networkVersion))
+        updateClient(provider)
+        localStorage.setItem('network', networkIdtoName(networkId))
+        window.open(window.location.origin, '_self')
+      })
+
       if (newUserAddress) {
         const currentUser = yield select(currentUserSelector)
         yield put(setWeb3(web3))
         yield put(setUserAddress(newUserAddress))
+        yield put(setNetwork(networkIdtoName(window.ethereum.networkVersion)))
         yield put(updateClient(provider))
       } else {
         // console.log('Cannot find metamask user')
