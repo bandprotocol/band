@@ -32,7 +32,7 @@ const TxnContainer = styled(Box)`
 `
 
 const MainBar = styled(Flex)`
-  padding: 0 12px 10px;
+  padding: 0 12px;
   line-height: 36px;
   background: #5973e7;
   cursor: pointer;
@@ -77,12 +77,12 @@ class TransactionPopup extends React.Component {
     return txns ? (
       <Container show={!!txns.length}>
         <MainBar onClick={this.toggleExpand.bind(this)}>
-          <Text fontWeight="600" color="#ffffff" size={13}>
+          <Text fontWeight="600" color="#ffffff">
             Transactions ({txns.length})
           </Text>
           <Box flex={1} />
           <Box ml={2} style={{ cursor: 'pointer' }}>
-            <Text color="#ffffff" size={24}>
+            <Text color="#ffffff">
               <i
                 className={
                   this.state.expand ? 'ion ion-md-remove' : 'ion ion-ios-expand'
@@ -95,7 +95,7 @@ class TransactionPopup extends React.Component {
             onClick={this.hideTxns.bind(this)}
             style={{ cursor: 'pointer' }}
           >
-            <Text color="#ffffff" size={24}>
+            <Text color="#ffffff">
               <FontAwesomeIcon icon={faTimes} />
             </Text>
           </Box>
