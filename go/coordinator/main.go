@@ -9,9 +9,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/user"
 	"sort"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/google/uuid"
 
 	"github.com/bandprotocol/band/go/driver"
 	"github.com/bandprotocol/band/go/dt"
@@ -88,6 +92,10 @@ func getProviderURL(provider common.Address) (string, error) {
 	var endpoint string
 	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
 	return endpoint, err
+}
+
+func logWithTimestamp(l *log.Logger, msg string) {
+	l.Printf(",%d,%s", time.Now().UnixNano()/int64(time.Millisecond), msg)
 }
 
 func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (reqmsg.DataResponse, error) {
@@ -260,6 +268,32 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		Key:     arg.Key,
 	}
 
+	// Create logger
+	usr, err := user.Current()
+	if err != nil {
+		log.Print(err)
+	}
+
+	path := usr.HomeDir + "/band-log/"
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		err := os.Mkdir(path, 0644)
+		if err != nil {
+			log.Print(err)
+		}
+	}
+	fileName := path + time.Now().UTC().Format("2006-01-02") + ".log"
+	f, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Println(err)
+	}
+	defer f.Close()
+	id := uuid.New()
+	requestLog := log.New(f, strconv.FormatUint(uint64(id.ID()), 10), 0)
+
+	logWithTimestamp(requestLog,
+		fmt.Sprintf("Request,%s,%s,%s,%t", arg.Dataset.Hex(), arg.Key, r.RemoteAddr, arg.Broadcast),
+	)
+
 	chDataResponse := make(chan reqmsg.DataResponse)
 	for _, provider := range providers {
 		go func(provider common.Address) {
@@ -267,7 +301,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 				chDataResponse <- data
 			} else {
-				chDataResponse <- reqmsg.DataResponse{}
+				missingResponse := reqmsg.DataResponse{}
+				missingResponse.Provider = provider
+				missingResponse.Answer.Option = dt.Missing
+				chDataResponse <- missingResponse
 			}
 		}(provider)
 	}
@@ -275,9 +312,17 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	var responses []reqmsg.DataResponse
 	for i := 0; i < len(providers); i++ {
 		r := <-chDataResponse
-		if r != (reqmsg.DataResponse{}) {
+		if r.Answer.Option != dt.Missing && r.Answer.Option != dt.NotFound {
 			responses = append(responses, r)
 		}
+		logWithTimestamp(requestLog,
+			fmt.Sprintf("Report,%s,%s,%s,%d,%s",
+				r.Provider.Hex(),
+				r.Answer.Option,
+				r.Answer.Value.Hex(),
+				r.Timestamp,
+				r.Sig,
+			))
 	}
 
 	// Check valid provider data
@@ -304,7 +349,10 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 				chSignResponse <- data
 			} else {
 				log.Printf("Fail to get aggreagated value from %s: %s", provider.Hex(), err)
-				chSignResponse <- reqmsg.SignResponse{}
+				missingResponse := reqmsg.SignResponse{}
+				missingResponse.Provider = provider
+				missingResponse.Status = dt.Invalid
+				chSignResponse <- missingResponse
 			}
 		}(provider, &aggRequest)
 	}
@@ -312,7 +360,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	var validAggs []reqmsg.SignResponse
 	for i := 0; i < len(providers); i++ {
 		r := <-chSignResponse
-		if r != (reqmsg.SignResponse{}) {
+		if r.Status != dt.Invalid {
 			validAggs = append(validAggs, r)
 			counter[valueWithTimeStamp{
 				Value:     r.Value,
@@ -320,6 +368,16 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 				Status:    r.Status,
 			}]++
 		}
+		logWithTimestamp(
+			requestLog,
+			fmt.Sprintf("Aggregate,%s,%s,%s,%d,%s",
+				r.Provider.Hex(),
+				r.Status,
+				r.Value.Hex(),
+				r.Timestamp,
+				r.Sig,
+			),
+		)
 	}
 
 	// Check valid provider aggregated data
@@ -369,12 +427,17 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	txData := generateTransaction(arg.Key, majority.Value, majority.Timestamp, uint8(majority.Status), vs, rs, ss)
 	w.Header().Set("Content-Type", "application/json")
 
+	logWithTimestamp(
+		requestLog,
+		fmt.Sprintf("Result,%s,%s,%d", majority.Value.Hex(), majority.Status, majority.Timestamp),
+	)
 	if arg.Broadcast {
 		txHash, err := eth.SendTransaction(arg.Dataset, txData)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		logWithTimestamp(requestLog, fmt.Sprintf("Broadcast,%s", txHash.Hex()))
 		json.NewEncoder(w).Encode(ResponseTxHashObject{
 			TxHash:          txHash,
 			ProviderReports: responses,

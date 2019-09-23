@@ -104,8 +104,9 @@ const getImg = id =>
     DatasetExplorerImg,
   ][id]
 
-const NavMenu = ({ isSelected, title, tabs }) => {
+const NavMenu = ({ isSelected, title, tabs, match }) => {
   const [currentTab, setCurrentTab] = useState(-1)
+
   return (
     <Flex
       flexDirection="column"
@@ -223,21 +224,34 @@ const SubMenuMobile = ({
 }
 
 const Navbar = props => {
+  const { location } = props
+  const { pathname } = location
+
   const [showMenu, setShowMenu] = useState(false)
   const [showTier2Index, setShowTier2Index] = useState(0)
   const [selectedTab, setSelectedTab] = useState(-1)
-  const [showNav, setShowNav] = useState(false)
+  const [showNav, setShowNav] = useState(!(pathname === '/'))
   const [navOpa, setNavOpa] = useState(0)
 
   const scrollHistory = useRef()
   const prevLocation = useRef()
   const oldST = useRef()
   const isAutoScrolling = useRef()
+  const refPathName = useRef()
+
+  useEffect(() => {
+    if (pathname === '/') {
+      setShowNav(false)
+    } else {
+      setShowNav(true)
+    }
+    refPathName.current = pathname
+  }, [pathname])
 
   const handleScroll = useCallback(e => {
     const newST = Math.floor(e.target.documentElement.scrollTop)
     if (newST === 0) isAutoScrolling.current = false
-    if (newST < window.innerHeight) {
+    if (newST < window.innerHeight && refPathName.current === '/') {
       if (isAutoScrolling.current) return
       if (oldST.current < newST) {
         window.scroll(0, window.innerHeight)
@@ -259,7 +273,9 @@ const Navbar = props => {
     }
     oldST.current = newST
 
-    if (newST < window.innerHeight + 80) return
+    const activeTop = refPathName.current === '/' ? window.innerHeight + 80 : 80
+
+    if (newST < activeTop) return
     if (!scrollHistory.current || scrollHistory.current.length === 0) {
       scrollHistory.current = [0]
     }
