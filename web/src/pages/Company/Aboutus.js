@@ -35,6 +35,7 @@ import E27Src from 'images/featured/e27.png'
 import DealSrc from 'images/featured/deal.png'
 
 import JumpstartSrc from 'images/featured/jumpstart.png'
+import DefiPrimeSrc from 'images/featured/defi-prime.jpg'
 import Linkedin from 'images/linkedin.svg'
 import Git from 'images/github-logo.svg'
 import Behance from 'images/behance-logo.svg'
@@ -354,6 +355,9 @@ export default () => {
                 </Featured>
                 <Featured href="https://jumpstartmag.com/blog/band-protocol-raises-us3-million-seed-funding-led-by-sequoia-india-to-give-power-back-to-internet">
                   <Image height={['28px', '40px']} src={JumpstartSrc} />
+                </Featured>
+                <Featured href="https://defiprime.com/bandprotocol">
+                  <Image height={['28px', '40px']} src={DefiPrimeSrc} />
                 </Featured>
               </Flex>
               <Flex>
