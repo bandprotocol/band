@@ -238,6 +238,7 @@ export default ({
   showNav,
   toggleBalance,
   txs,
+  network,
   onClickOutside,
   showBlockTransactions,
   toggleShowBlockTransactions,
@@ -258,19 +259,24 @@ export default ({
     <Nav isDashboard={isDashboard} showNav={showNav}>
       <PageContainer fullWidth>
         <Flex alignItems="center">
-          <Link dark="true" to="/">
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              style={{ height: 60, width: 220 }}
-            >
-              {isDashboard ? (
-                <Image src={WhiteLogoSrc} width="160px" />
-              ) : (
-                <Image src={LogoSrc} width="160px" />
-              )}
-            </Flex>
-          </Link>
+          <Flex alignItems="center">
+            <Link dark="true" to="/">
+              <Flex
+                justifyContent="center"
+                alignItems="center"
+                style={{ height: 60, width: 220 }}
+              >
+                {isDashboard ? (
+                  <Image src={WhiteLogoSrc} width="160px" />
+                ) : (
+                  <Image src={LogoSrc} width="160px" />
+                )}
+              </Flex>
+            </Link>
+            <Text fontSize="13px" ml="-10px" color="white">
+              {network}
+            </Text>
+          </Flex>
           <Flex ml="auto">
             {/* <Link dark="true" to="/create-community" px={1}>
               <Flex px={3} alignItems="center">
