@@ -5,36 +5,22 @@ import { hideModal } from 'actions'
 import { walletSelector } from 'selectors/wallet'
 
 class ClaimXFNModal extends React.Component {
-  signin = async walletType => {
-    // console.log(walletType)
-    const { hideLogin } = this.props
-    switch (walletType) {
-      case 'metamask':
-        if (typeof window.ethereum === 'undefined') {
-          console.error('Cannot find metamask provider.')
-          break
-        }
-        await window.ethereum.enable()
-        localStorage.setItem('walletType', 'metamask')
-        break
-      case 'bandwallet':
-        const { wallet } = this.props
-        if (!wallet) {
-          console.error('Cannot find band wallet')
-          break
-        }
-        localStorage.setItem('walletType', 'bandwallet')
-        wallet.showWallet()
-        break
-      default:
-        console.error('Cannot find any wallet.')
-        break
-    }
-    hideLogin()
+  getXFNAmount = async () => {
+    console.log('getXFNAmount')
+  }
+
+  claim = async () => {
+    console.log('claim')
   }
 
   render() {
-    return <ClaimXFNModalRender {...this.props} signin={this.signin} />
+    return (
+      <ClaimXFNModalRender
+        {...this.props}
+        getXFNAmount={this.getXFNAmount}
+        claim={this.claim}
+      />
+    )
   }
 }
 
