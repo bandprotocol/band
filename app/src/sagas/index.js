@@ -58,7 +58,7 @@ if (process.env.NODE_ENV !== 'production')
   WALLET_ENDPOINT = 'http://localhost:3000'
 
 /**
- * Recheck this
+ * disable Metamask auto refresh
  */
 if (
   typeof window.ethereum !== 'undefined' ||
