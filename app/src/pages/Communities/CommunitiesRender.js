@@ -14,11 +14,31 @@ const Header = styled(Card)`
   height: 264px;
   width: 100%;
   background: linear-gradient(90deg, #6483e6 0%,#505fc9 99%);
-  background-image: url('${HeaderBackgroundSrc}'); 
+  background-image: url('${HeaderBackgroundSrc}');
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   border-bottom-right-radius: 345px;
+`
+
+const ClaimButton = styled(Flex).attrs({
+  justifyContent: 'center',
+  alignItems: 'center',
+})`
+  width: 180px;
+  height: 44px;
+  line-height: 44px;
+  color: white;
+  z-index: 9999999;
+  cursor: pointer;
+  border-radius: 24px;
+  transition: all 250ms;
+  background-image: linear-gradient(to left, #f75c9d, #8c69ff);
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3);
+  &:hover {
+    background-image: linear-gradient(to left, #ff6ba9, #9f82ff);
+    box-shadow: -1px 1px 5px 0px #8c69ff, 1px 1px 5px 0px #f75c9d;
+  }
 `
 
 const AbsoluteLink = styled.a.attrs(props => ({
@@ -88,7 +108,14 @@ const CountBadge = styled(Flex).attrs({
   margin-top: 4px;
 `
 
-export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
+export default ({
+  user,
+  tcdCommunities,
+  tcrCommunities,
+  bandPrice,
+  history,
+  showClaimXFNModal,
+}) => (
   <PageContainer
     fullWidth
     style={{
@@ -120,7 +147,7 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
           curated through a decentralized network of data providers. We use
           dataset tokens to incentivize providers.
         </Text>
-        <Box mt={3}>
+        <Flex alignItems="center" mt={3}>
           <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
             <WhiteButton>Whitepaper v3.0.1</WhiteButton>
           </AbsoluteLink>
@@ -129,7 +156,12 @@ export default ({ tcdCommunities, tcrCommunities, bandPrice, history }) => (
               Learn more about Band Protocol
             </WhiteOutlineButton>
           </AbsoluteLink>
-        </Box>
+          {user && user.length === 42 && (
+            <ClaimButton onClick={() => showClaimXFNModal()}>
+              Claim Free XFN
+            </ClaimButton>
+          )}
+        </Flex>
       </Flex>
     </Header>
     {/* TODO: Fix this condition(loading forever when length === 0) and
