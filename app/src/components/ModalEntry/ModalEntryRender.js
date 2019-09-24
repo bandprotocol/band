@@ -4,6 +4,7 @@ import ModalContainer from 'components/ModalContainer'
 
 // modal
 import LoginModal from 'components/LoginModal'
+import ClaimXFNModal from 'components/ClaimXFNModal'
 import BuySellModal from 'components/BuySellModal'
 import ProposeModal from 'components/ProposeModal'
 import DepositWithdrawModal from 'components/DepositWithdrawModal'
@@ -17,6 +18,8 @@ export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
     {modalName === 'LOGIN' ? (
       <LoginModal />
+    ) : modalName === 'CLAIM_XFN' ? (
+      <ClaimXFNModal />
     ) : modalName === 'BUY' ? (
       <BuySellModal type="buy" tokenAddress={data.tokenAddress} />
     ) : modalName === 'SELL' ? (

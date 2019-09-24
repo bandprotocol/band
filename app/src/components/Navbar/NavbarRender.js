@@ -130,9 +130,7 @@ const DropdownButton = styled(Flex)`
   border-radius: 50%;
   z-index: 9999999;
   cursor: pointer;
-  border-radius: 50%;
   transition: all 250ms;
-  border-radius: 50%;
   &:hover {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.07);
   }
