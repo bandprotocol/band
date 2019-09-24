@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Box, Flex, Text } from 'ui/common'
 import TxHashLink from 'components/TxHashLink'
+import { getLink } from 'utils/etherscan'
 
 const Container = styled(Box).attrs({
   bg: '#ffffff',
@@ -195,9 +196,7 @@ export default ({ title, type, txHash, status, confirm }) => (
     <Flex py={3}>
       <Flex flex={1} style={{ minWidth: 0 }}>
         <EllipsisText>{title}</EllipsisText>
-        {txHash && (
-          <TxHashLink href={'https://kovan.etherscan.io/tx/' + txHash} />
-        )}
+        {txHash && <TxHashLink href={`${getLink()}/tx/${txHash}`} />}
       </Flex>
       <TxType type={type} />
     </Flex>

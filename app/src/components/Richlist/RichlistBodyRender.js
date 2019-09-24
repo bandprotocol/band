@@ -3,7 +3,7 @@ import { colors } from 'ui'
 import { Flex, Text } from 'ui/common'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 
-const HistoryRow = ({ index, rank, address, balance, txLink, percentage }) => (
+const HistoryRow = ({ rank, address, balance, percentage }) => (
   <Flex
     flexDirection="row"
     mx="30px"
@@ -106,16 +106,14 @@ export default ({ items }) => {
         if (!item) {
           return <Flex width={1} key={i} style={{ height: 48 }} />
         }
-        const { rank, tokenAddress, address, balance, percentage } = item
+        const { rank, address, balance, percentage } = item
         return (
           <HistoryRow
-            index={i}
             rank={rank}
             address={address}
             balance={balance.pretty()}
             key={i}
             percentage={percentage + '%'}
-            txLink={`https://kovan.etherscan.io/token/${tokenAddress}?a=${address}`}
           />
         )
       })}

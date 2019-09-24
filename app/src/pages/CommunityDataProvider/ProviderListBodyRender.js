@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { colors } from 'ui'
 import { Flex, Box, Text, Button, Image, AbsoluteLink } from 'ui/common'
 import { getProvider } from 'data/Providers'
+import { getLink } from 'utils/etherscan'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 import OutImg from 'images/out.svg'
@@ -339,7 +340,7 @@ export default ({
             showDepositWithdraw={showDepositWithdraw}
             showConvertRevenue={showConvertRevenue}
             remainingToken={remainingToken}
-            txLink={`https://kovan.etherscan.io/address/${dataSourceAddress}`}
+            txLink={`${getLink()}/address/${dataSourceAddress}`}
             userRevenue={userRevenue}
           />
         )

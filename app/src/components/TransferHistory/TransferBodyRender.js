@@ -1,9 +1,10 @@
 import React from 'react'
 import { colors } from 'ui'
 import { Flex, Text } from 'ui/common'
+import { getLink } from 'utils/etherscan'
 import TxHashLink from 'components/TxHashLink'
 
-const HistoryRow = ({ index, from, to, quantity, timeStamp, txLink }) => (
+const HistoryRow = ({ from, to, quantity, timeStamp, txLink }) => (
   <Flex
     flexDirection="row"
     mx="20px"
@@ -95,13 +96,12 @@ export default ({ items }) => (
       const { txHash, from, to, quantity, timeStamp } = item
       return (
         <HistoryRow
-          index={i}
           from={from}
           to={to}
           quantity={quantity.pretty()}
           timeStamp={timeStamp.formal()}
           key={i}
-          txLink={`https://kovan.etherscan.io/tx/${txHash}`}
+          txLink={`${getLink()}/tx/${txHash}`}
         />
       )
     })}
