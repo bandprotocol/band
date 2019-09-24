@@ -3,14 +3,13 @@ import { connect } from 'react-redux'
 import './App.css'
 import { ThemeProvider } from 'styled-components'
 import theme from 'ui/theme'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Navbar from 'components/Navbar'
 import TransactionPopup from 'components/TransactionPopup'
 import ModalEntry from 'components/ModalEntry'
 import Routes from 'Routes'
 import FullLoadingPage from 'pages/FullLoading'
 import { fetchSelector } from 'selectors/basic'
-import NotFound from 'pages/NotFound'
 
 class App extends Component {
   render() {
