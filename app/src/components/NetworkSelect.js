@@ -7,7 +7,7 @@ import {
   getNetworkIndex,
 } from 'utils/network'
 import { setNetwork, dumpCurrent } from 'actions'
-import { currentNetworkSelector } from 'selectors/current'
+import { currentNetworkSelector, currentUserSelector } from 'selectors/current'
 import { connect } from 'react-redux'
 
 const dot = (color = '#ccc') => ({
@@ -92,6 +92,7 @@ export class NetworkSelect extends React.Component {
 
   render() {
     const networkIndex = getNetworkIndex(this.props.currentNetwork)
+    const { user } = this.props
 
     console.log(networkIndex, networkOptions[networkIndex])
     return (
@@ -104,7 +105,7 @@ export class NetworkSelect extends React.Component {
           isSearchable={false}
           onChange={this.handleChangeOption.bind(this)}
           // if user login, disable it.
-          isDisabled={true}
+          isDisabled={user && user.length === 42}
         />
       </Flex>
     )
@@ -112,7 +113,10 @@ export class NetworkSelect extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return { currentNetwork: currentNetworkSelector(state) }
+  return {
+    user: currentUserSelector(state),
+    currentNetwork: currentNetworkSelector(state),
+  }
 }
 
 const mapDispatchToProps = (dispatch, props) => ({
