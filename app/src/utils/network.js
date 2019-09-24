@@ -1,3 +1,5 @@
+import { exportDefaultSpecifier } from '@babel/types'
+
 export const networkIdtoName = id => {
   return network[id]
 }
@@ -42,15 +44,12 @@ const NETWORK = {
 }
 
 // for selector
-export const networkOptions =
-  window.document.location.host === 'app.kovan.bandprotocol.com'
-    ? [{ value: 'kovan', label: 'Kovan Test Network', color: '#b3a5ff' }]
-    : [
-        { value: 'mainnet', label: 'Main Ethereum Network', color: '#47cc81' },
-        { value: 'rinkeby', label: 'Rinkeby Test Network', color: '#ffca55' },
-        { value: 'kovan', label: 'Kovan Test Network', color: '#b3a5ff' },
-        { value: 'robsten', label: 'Robsten Test Network', color: 'black' },
-      ]
+export const networkOptions = [
+  { value: 'mainnet', label: 'Main Ethereum Network', color: '#47cc81' },
+  { value: 'rinkeby', label: 'Rinkeby Test Network', color: '#ffca55' },
+  { value: 'kovan', label: 'Kovan Test Network', color: '#b3a5ff' },
+  { value: 'robsten', label: 'Robsten Test Network', color: 'black' },
+]
 
 export const getCurrentNetworkOption = () => {
   return networkOptions.filter(
@@ -61,4 +60,8 @@ export const getCurrentNetworkOption = () => {
 export const getCurrentNetworkName = () => {
   const network = localStorage.getItem(LOCALSTORAGE_KEY)
   return network ? network : 'kovan'
+}
+
+export const getNetworkIndex = network => {
+  return networkOptions.findIndex(n => n.value === network)
 }

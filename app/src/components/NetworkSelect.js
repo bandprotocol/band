@@ -1,8 +1,13 @@
 import React from 'react'
 import { Flex } from 'rebass'
 import Select from 'react-select'
-import { getCurrentNetworkOption, networkOptions } from 'utils/network'
+import {
+  getCurrentNetworkOption,
+  networkOptions,
+  getNetworkIndex,
+} from 'utils/network'
 import { setNetwork, dumpCurrent } from 'actions'
+import { currentNetworkSelector } from 'selectors/current'
 import { connect } from 'react-redux'
 
 const dot = (color = '#ccc') => ({
@@ -86,11 +91,13 @@ export class NetworkSelect extends React.Component {
   }
 
   render() {
+    const networkIndex = getNetworkIndex(this.props.currentNetwork)
     return (
       <Flex width="100%" justifyContent="center" alignItems="center">
         <Select
           options={networkOptions}
           value={this.state.currentOption}
+          defaultValue={networkOptions[networkIndex]}
           styles={selectStyles}
           isSearchable={false}
           onChange={this.handleChangeOption.bind(this)}
@@ -120,6 +127,10 @@ export class NetworkSelect extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return { currentNetwork: currentNetworkSelector(state) }
+}
+
 const mapDispatchToProps = (dispatch, props) => ({
   setNetwork: network => {
     dispatch(setNetwork(network))
@@ -129,6 +140,6 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 export default connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps,
 )(NetworkSelect)
