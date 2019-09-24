@@ -2,7 +2,6 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 import { Flex } from 'ui/common'
-
 import ScrollToTop from 'ScrollToTop'
 import TCDRoutes from 'TCDRoutes'
 import { BackdropProvider } from 'context/backdrop'
@@ -15,7 +14,7 @@ import CommunityProposalPage from 'pages/CommunityProposal'
 import CreateCommunityPage from 'pages/CreateCommunity'
 import { communitySelector } from 'selectors/basic'
 
-const Routes = ({ match, location, communitiesId }) => {
+const Routes = ({ location, communities }) => {
   return (
     <React.Fragment>
       <ScrollToTop />
@@ -23,16 +22,17 @@ const Routes = ({ match, location, communitiesId }) => {
         <BackdropProvider>
           <Route
             path="/community/:community/"
-            render={({ match, history, location }) => {
+            render={({ match }) => {
               const communityAddr = match.params.community
-              if (communityAddr) {
-                const foundCommunityAddress = communitiesId.find(
-                  community => community === communityAddr,
-                )
-                if (!foundCommunityAddress) {
-                  return <Redirect to="/"></Redirect>
-                }
+              if (!communityAddr) return <Redirect to="/"></Redirect>
+
+              const foundCommunityAddress = communities.find(
+                community => community === communityAddr,
+              )
+              if (!foundCommunityAddress) {
+                return <Redirect to="/"></Redirect>
               }
+
               return (
                 <React.Fragment>
                   <Flex
@@ -82,15 +82,6 @@ const Routes = ({ match, location, communitiesId }) => {
                         )}
                       />
 
-                      {/* Default TCD Route */}
-                      {/* <Route
-                    path="/community/:community/"
-                    render={({ match }) => (
-                      <Redirect
-                        to={`/community/${match.params.community}/${match.params.tcd}/dataset`}
-                      />
-                    )}
-                  /> */}
                       {/* Default Global Route */}
                       <Route
                         path="/community/:community"
@@ -108,11 +99,16 @@ const Routes = ({ match, location, communitiesId }) => {
             }}
           />
 
-          <Route
+          {/* Redirect if there is no community address */}
+          <Route path="/community" exact render={() => <Redirect to="/" />} />
+
+          {/* TODO: Redirect if there is no path */}
+
+          {/* <Route
             exact
             path="/create-community"
             component={CreateCommunityPage}
-          />
+          /> */}
           <Route exact path="/" component={CommunitiesPage} />
         </BackdropProvider>
       </Switch>
@@ -120,9 +116,9 @@ const Routes = ({ match, location, communitiesId }) => {
   )
 }
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   const communities = communitySelector(state)
-  return { communitiesId: Object.keys(communities.toJS()) }
+  return { communities: Object.keys(communities.toJS()) }
 }
 
 export default withRouter(connect(mapStateToProps)(Routes))
