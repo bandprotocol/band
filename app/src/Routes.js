@@ -26,10 +26,10 @@ const Routes = ({ match, location, communitiesId }) => {
           <Route
             path="/community/:community/"
             render={({ match, history, location }) => {
-              const communityAdd = match.params.community
-              if (communityAdd) {
+              const communityAddr = match.params.community
+              if (communityAddr) {
                 const foundCommunityAddress = communitiesId.find(
-                  community => community === communityAdd,
+                  community => community === communityAddr,
                 )
                 if (!foundCommunityAddress) {
                   return <Redirect to="/"></Redirect>
