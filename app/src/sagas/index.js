@@ -22,7 +22,11 @@ import {
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
-import { currentUserSelector, web3Selector } from 'selectors/current'
+import {
+  currentUserSelector,
+  web3Selector,
+  currentNetworkSelector,
+} from 'selectors/current'
 
 import {
   logoCommunityFromSymbol,
@@ -67,17 +71,6 @@ if (
  *  get current network
  */
 let network = localStorage.getItem('network') || 'kovan'
-
-if (localStorage.getItem('walletType') === 'metamask') {
-  if (
-    typeof window.ethereum !== 'undefined' ||
-    typeof window.web3 !== 'undefined'
-  ) {
-    network = networkIdtoName(window.ethereum.networkVersion)
-
-    console.log('metamks', network, window.ethereum.networkVersion)
-  }
-}
 
 switch (network) {
   case 'mainnet':
@@ -369,25 +362,21 @@ function* metaMaskProcess() {
       const web3 = new Web3(provider)
       const newUserAddress = yield getUser(web3)
 
-      window.ethereum.on('networkChanged', function(networkId) {
-        setNetwork(networkIdtoName(window.ethereum.networkVersion))
-        updateClient(provider)
-        localStorage.setItem('network', networkIdtoName(networkId))
-
-        window.open(window.location.origin, '_self')
-      })
-
       if (newUserAddress) {
-        const currentUser = yield select(currentUserSelector)
         yield put(setWeb3(web3))
         yield put(setUserAddress(newUserAddress))
-        yield put(setNetwork(networkIdtoName(window.ethereum.networkVersion)))
+
+        const network = yield select(currentNetworkSelector)
+        if (network !== networkIdtoName(window.ethereum.networkVersion)) {
+          yield put(setNetwork(networkIdtoName(window.ethereum.networkVersion)))
+          yield put(updateClient(provider))
+          yield put(dumpCurrent())
+          window.location.reload(true)
+        }
         yield put(updateClient(provider))
       } else {
-        // console.log('Cannot find metamask user')
         const currentUser = yield select(currentUserSelector)
         if (currentUser !== 'NOT_SIGNIN') {
-          // console.log('NOTSIGNIN')
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
           localStorage.removeItem('walletType')
