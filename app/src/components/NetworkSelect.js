@@ -10,72 +10,48 @@ import { setNetwork, dumpCurrent } from 'actions'
 import { currentNetworkSelector, currentUserSelector } from 'selectors/current'
 import { connect } from 'react-redux'
 
-const dot = (color = '#ccc') => ({
-  alignItems: 'center',
-  justifyContent: 'center',
-  display: 'flex',
-
-  ':before': {
-    backgroundColor: color,
-    borderRadius: '50%',
-    content: '" "',
-    display: 'block',
-    marginRight: 8,
-    height: '6px',
-    width: '6px',
-  },
-})
-
-const selectStyles = {
+const selectStyles = isLogin => ({
   control: styles => ({
     ...styles,
-    backgroundColor: '#3c55f9',
+    backgroundColor: isLogin ? '#7d8dfa' : '#3c55f9',
     border: '0px',
-    width: '200px',
+    width: '140px',
     minHeight: '25px',
     borderRadius: '17.5px',
+    cursor: 'pointer',
   }),
   indicatorSeparator: () => ({
     display: 'none',
   }),
-  dropdownIndicator: (styles, state) => ({
-    ...styles,
-    transition: 'all .2s ease',
-    transform: state.selectProps.menuIsOpen ? 'rotate(180deg)' : null,
-    padding: '0px 5px',
-    color: '#ffffff',
-    width: '90%',
-    height: '70%',
-    '&:hover': {
-      color: '#ffffff',
-    },
+  dropdownIndicator: () => ({
+    display: 'none',
   }),
   menu: styles => ({
     ...styles,
     backgroundColor: '#3c55f9',
     zIndex: 3,
   }),
-  option: (styles, { data }) => ({
+  option: styles => ({
     ...styles,
     fontSize: '10px',
     color: '#ffffff',
+    display: 'flex',
+    justifyContent: 'center',
     backgroundColor: '#3c55f9',
     '&:hover': {
       backgroundColor: '#2438b7',
     },
-    ...dot(data.color),
   }),
-  singleValue: (styles, { data }) => ({
+  singleValue: styles => ({
     ...styles,
     fontSize: '10px',
     fontWeight: '500',
     display: 'flex',
-    width: '100%',
+    width: '90%',
     color: '#ffffff',
     justifyContent: 'center',
-    ...dot(data.color),
   }),
-}
+})
 
 export class NetworkSelect extends React.Component {
   state = {
@@ -93,19 +69,19 @@ export class NetworkSelect extends React.Component {
   render() {
     const networkIndex = getNetworkIndex(this.props.currentNetwork)
     const { user } = this.props
+    const isLogin = user && user.length === 42
 
-    console.log(networkIndex, networkOptions[networkIndex])
     return (
       <Flex width="100%" justifyContent="center" alignItems="center">
         <Select
           options={networkOptions}
           value={this.state.currentOption}
           defaultValue={networkOptions[networkIndex]}
-          styles={selectStyles}
+          styles={selectStyles(isLogin)}
           isSearchable={false}
           onChange={this.handleChangeOption.bind(this)}
           // if user login, disable it.
-          isDisabled={user && user.length === 42}
+          isDisabled={isLogin}
         />
       </Flex>
     )
