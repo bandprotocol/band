@@ -80,9 +80,10 @@ contract TCDBase is QueryInterface {
   }
 
   function register(address dataSource, address prevDataSource, uint256 initialStake) public {
-    require(token.lock(msg.sender, initialStake));
+    require(dataSource != NOT_FOUND && dataSource != ACTIVE_GUARD && dataSource != RESERVE_GUARD);
     require(infoMap[dataSource].totalOwnerships == 0);
     require(initialStake > 0 && initialStake >= params.get(prefix, "min_provider_stake"));
+    require(token.lock(msg.sender, initialStake));
     infoMap[dataSource] = DataSourceInfo({
       owner: msg.sender,
       stake: initialStake,
@@ -114,7 +115,7 @@ contract TCDBase is QueryInterface {
     _removeDataSource(dataSource, prevDataSource);
     uint256 newOwnership = provider.totalOwnerships.sub(withdrawOwnership);
     uint256 currentStakerStake = getStake(dataSource, msg.sender);
-    if (currentStakerStake > provider.tokenLocks[msg.sender]){
+    if (currentStakerStake > provider.tokenLocks[msg.sender]) {
       uint256 unrealizedStake = currentStakerStake.sub(provider.tokenLocks[msg.sender]);
       require(token.transfer(msg.sender, unrealizedStake));
       require(token.lock(msg.sender, unrealizedStake));
@@ -146,6 +147,13 @@ contract TCDBase is QueryInterface {
       _addDataSource(dataSource, newPrevDataSource);
     }
     _rebalanceLists();
+  }
+
+  function addManualETHFee() public payable {}
+
+  function addManualTokenFee(uint256 tokenAmount) public {
+    token.transferFrom(msg.sender, address(this), tokenAmount);
+    undistributedReward = undistributedReward.add(tokenAmount);
   }
 
   function distributeFee(uint256 tokenAmount) public {
