@@ -378,10 +378,15 @@ export default ({
                     Pending Transaction ({txs && txs.length})
                   </Text>
                   <Box px={3} pb={3} pt={3}>
-                    {txs &&
+                    {txs.length > 0 ? (
                       txs.map((txn, i) => (
                         <PendingTransaction key={i} {...txn} />
-                      ))}
+                      ))
+                    ) : (
+                      <Text py="15px" textAlign="center">
+                        No Transaction.
+                      </Text>
+                    )}
                   </Box>
                 </BlockTransactions>
               </ClickOutSide>
