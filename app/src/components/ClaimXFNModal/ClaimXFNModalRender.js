@@ -12,7 +12,7 @@ const ClaimButton = styled(Flex).attrs({
   justifyContent: 'center',
   alignItems: 'center',
 })`
-  width: 240px;
+  padding: 0px 30px;
   height: 64px;
   line-height: 64px;
   color: white;
@@ -60,6 +60,7 @@ const MoveFlex2 = styled(Flex)`
 
 export default props => {
   const { signin } = props
+  const xfnAmount = 56.43
   return (
     <Card
       variant="modal"
@@ -165,7 +166,7 @@ export default props => {
         >
           <ClaimButton>
             <Text color="white" fontSize="24px">
-              Get XFN Now!
+              Get XFN {xfnAmount} Now!
             </Text>
           </ClaimButton>
         </Flex>
