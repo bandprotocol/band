@@ -7,7 +7,13 @@ import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { txIncludePendingSelector } from 'selectors/transaction'
 import { walletSelector } from 'selectors/wallet'
-import { showModal, hideModal, setUserAddress, updateClient } from 'actions'
+import {
+  showModal,
+  hideModal,
+  setUserAddress,
+  updateClient,
+  dumpCurrent,
+} from 'actions'
 
 class Navbar extends React.Component {
   state = {
@@ -161,6 +167,7 @@ const mapDispatchToProps = (dispatch, props) => ({
   signOutMetamask: () => {
     dispatch(setUserAddress('NOT_SIGNIN'))
     dispatch(updateClient())
+    dispatch(dumpCurrent())
   },
 })
 

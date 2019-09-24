@@ -380,6 +380,7 @@ function* metaMaskProcess() {
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
           localStorage.removeItem('walletType')
+          yield put(dumpCurrent())
         }
       }
     }
