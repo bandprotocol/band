@@ -322,11 +322,9 @@ function* metaMaskProcess() {
       const provider = window['ethereum'] || window.web3.currentProvider
       const web3 = new Web3(provider)
       const newUserAddress = yield getUser(web3)
-      const network = window.ethereum.networkId == 42 ? 'kovan' : 'rinkeby'
 
       if (newUserAddress) {
         const currentUser = yield select(currentUserSelector)
-        yield put(setNetwork(network))
         yield put(setWeb3(web3))
         yield put(setUserAddress(newUserAddress))
         yield put(updateClient(provider))
