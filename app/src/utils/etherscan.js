@@ -1,6 +1,5 @@
 export const getLink = () => {
   const network = localStorage.getItem('network')
-  // console.log(network)
   switch (network) {
     case 'mainnet':
       return 'https://etherscan.io'
