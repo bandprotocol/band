@@ -13,8 +13,6 @@ import CommunityDetailPage from 'pages/CommunityDetail'
 import CommunityParameterPage from 'pages/CommunityParameter'
 import CommunityProposalPage from 'pages/CommunityProposal'
 import CreateCommunityPage from 'pages/CreateCommunity'
-import { tcdsSelector } from 'selectors/tcd'
-import { communityDetailSelector } from 'selectors/communities'
 import { communitySelector } from 'selectors/basic'
 
 const Routes = ({ match, location, communitiesId }) => {
