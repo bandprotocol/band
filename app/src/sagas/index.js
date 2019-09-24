@@ -13,6 +13,7 @@ import {
   loadCurrent,
   dumpCurrent,
   reloadBalance,
+  setNetwork,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
@@ -61,6 +62,9 @@ switch (network) {
   //   WALLET_ENDPOINT = 'http://localhost:3000'
   // break
   case 'rinkeby':
+    RPC_ENDPOINT =
+      'https://rinkeby.infura.io/v3/7288751bb1014a7d8012057ca9303bed'
+    break
   case 'local':
   default:
     RPC_ENDPOINT = 'http://localhost:8545'
@@ -318,9 +322,11 @@ function* metaMaskProcess() {
       const provider = window['ethereum'] || window.web3.currentProvider
       const web3 = new Web3(provider)
       const newUserAddress = yield getUser(web3)
+      const network = window.ethereum.networkId == 42 ? 'kovan' : 'rinkeby'
 
       if (newUserAddress) {
         const currentUser = yield select(currentUserSelector)
+        yield put(setNetwork(network))
         yield put(setWeb3(web3))
         yield put(setUserAddress(newUserAddress))
         yield put(updateClient(provider))

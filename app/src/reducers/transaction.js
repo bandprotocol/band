@@ -10,7 +10,7 @@ import {
 } from 'actions'
 import { Map, List, Set } from 'immutable'
 
-const handleAddTx = (state, { txHash, title, txType }) =>
+const handleAddTx = (state, { txHash, title, txType, network }) =>
   state.set(
     'txs',
     state.get('txs', List()).push(
@@ -19,6 +19,7 @@ const handleAddTx = (state, { txHash, title, txType }) =>
         type: txType,
         title,
         status: 'SENDING',
+        network: network,
         confirm: 0,
       }),
     ),

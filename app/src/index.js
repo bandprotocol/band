@@ -25,6 +25,11 @@ switch (network) {
     )
     break
   case 'rinkeby':
+    BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-rinkeby.bandprotocol.com/graphql',
+    )
+    break
   case 'local':
     BandProtocolClient.setAPI('http://localhost:5000')
     BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
