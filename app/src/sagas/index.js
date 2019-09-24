@@ -49,6 +49,8 @@ import tcdSaga from 'sagas/tcd'
 import { networkIdtoName } from 'utils/network'
 import { getBandUSD } from 'utils/bandPrice'
 
+import { getBandUSD } from 'utils/bandPrice'
+
 // import web3
 import Web3 from 'web3'
 
