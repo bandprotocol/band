@@ -54,6 +54,7 @@ const TCDRoutes = ({ path, communityAddress, tcdAddress, redirect }) => {
 }
 
 const mapStateToProps = (state, { communityAddress, path }) => {
+  console.log(state, path)
   const tcds = communityDetailSelector(state, {
     address: communityAddress,
   })
