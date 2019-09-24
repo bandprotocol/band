@@ -23,9 +23,7 @@ class App extends Component {
             <React.Fragment>
               <Navbar />
               <TransactionPopup />
-              <Switch>
-                <Route component={Routes} />
-              </Switch>
+              <Route component={Routes} />
               <ModalEntry />
             </React.Fragment>
           </Router>
