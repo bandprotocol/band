@@ -10,6 +10,7 @@ import { colors } from 'ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 import MetamaskSrc from 'images/metamask.png'
+import NetworkSelect from 'components/NetworkSelect'
 
 // import AddCommunity from 'images/add-community.svg'
 import Eth from 'images/eth.svg'
@@ -386,9 +387,14 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : (
-              <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
-                Sign in
-              </SignIn>
+              <Flex alignItems="center">
+                <Flex mr="20px">
+                  <NetworkSelect></NetworkSelect>
+                </Flex>
+                <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
+                  Sign in
+                </SignIn>
+              </Flex>
             )}
           </Flex>
         </Flex>
