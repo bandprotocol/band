@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import NavbarRender from './NavbarRender'
-import { currentUserSelector,currentNetworkSelector } from 'selectors/current'
+import { currentUserSelector } from 'selectors/current'
 import { bandBalanceSelector } from 'selectors/balances'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { txIncludePendingSelector } from 'selectors/transaction'
@@ -158,7 +158,6 @@ const mapStateToProps = (state, props) => {
     balance: bandBalanceSelector(state),
     price: bandPriceSelector(state),
     txs: txIncludePendingSelector(state),
-    network: currentNetworkSelector(state),
   }
 }
 

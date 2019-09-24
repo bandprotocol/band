@@ -238,7 +238,6 @@ export default ({
   showNav,
   toggleBalance,
   txs,
-  network,
   onClickOutside,
   showBlockTransactions,
   toggleShowBlockTransactions,
@@ -273,9 +272,7 @@ export default ({
                 )}
               </Flex>
             </Link>
-            <Text fontSize="13px" ml="-10px" color="white">
-              {network}
-            </Text>
+            <NetworkSelect />
           </Flex>
           <Flex ml="auto">
             {/* <Link dark="true" to="/create-community" px={1}>
@@ -394,9 +391,6 @@ export default ({
               </ClickOutSide>
             ) : (
               <Flex alignItems="center">
-                <Flex mr="20px">
-                  <NetworkSelect></NetworkSelect>
-                </Flex>
                 <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
                   Sign in
                 </SignIn>

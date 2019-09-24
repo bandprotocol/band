@@ -103,27 +103,9 @@ export class NetworkSelect extends React.Component {
           styles={selectStyles}
           isSearchable={false}
           onChange={this.handleChangeOption.bind(this)}
+          // if user login, disable it.
+          isDisabled={true}
         />
-        {/* {noOption && (
-          <Flex
-            alignItems="center"
-            style={{
-              position: 'absolute',
-              minWidth: '70%',
-              minHeight: '100%',
-            }}
-          >
-            <Flex
-              bg="#3c55f9"
-              style={{
-                position: 'absolute',
-                right: '20px',
-                minWidth: '20px',
-                minHeight: '40%',
-              }}
-            />
-          </Flex>
-        )} */}
       </Flex>
     )
   }
