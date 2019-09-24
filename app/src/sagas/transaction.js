@@ -24,6 +24,7 @@ import {
   currentTCDClientSelector,
   currentCommunityClientSelector,
   currentUserSelector,
+  currentNetworkSelector,
 } from 'selectors/current'
 import { walletSelector } from 'selectors/wallet'
 
@@ -44,7 +45,8 @@ function* sendTransaction({ transaction, title, type }) {
   try {
     yield put(addPendingTx(timestamp, title, type))
     const txHash = yield transaction.sendFeeless()
-    yield put(addTx(txHash, title, type))
+    const network = yield select(currentNetworkSelector)
+    yield put(addTx(txHash, title, type, network))
     yield put(dumpTxs())
   } catch (error) {
     const currentUser = yield select(currentUserSelector)
