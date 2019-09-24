@@ -92,6 +92,8 @@ export class NetworkSelect extends React.Component {
 
   render() {
     const networkIndex = getNetworkIndex(this.props.currentNetwork)
+
+    console.log(networkIndex, networkOptions[networkIndex])
     return (
       <Flex width="100%" justifyContent="center" alignItems="center">
         <Select
