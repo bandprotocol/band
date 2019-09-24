@@ -1,5 +1,9 @@
 import { all, fork, put, delay, select, takeEvery } from 'redux-saga/effects'
 import { channel } from 'redux-saga'
+import BandWallet from 'band-wallet'
+import BN from 'utils/bignumber'
+import { Utils, BandProtocolClient } from 'band.js'
+import { fromJS, Set, Map } from 'immutable'
 import {
   updateClient,
   saveBandInfo,
@@ -13,16 +17,23 @@ import {
   loadCurrent,
   dumpCurrent,
   reloadBalance,
+  setNetwork,
+  toggleFetch,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
-import { currentUserSelector, web3Selector } from 'selectors/current'
+import {
+  currentUserSelector,
+  web3Selector,
+  currentNetworkSelector,
+} from 'selectors/current'
 
 import {
   logoCommunityFromSymbol,
   bannerCommunityFromSymbol,
 } from 'utils/communityImg'
 
+// saga
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
 import priceSaga from 'sagas/prices'
@@ -35,45 +46,70 @@ import transferSaga from 'sagas/transfer'
 import holderSaga from 'sagas/holder'
 import tcdSaga from 'sagas/tcd'
 
-import BandWallet from 'band-wallet'
-import { Utils } from 'band.js'
-import BN from 'utils/bignumber'
-
-import { fromJS, Set, Map } from 'immutable'
-import { toggleFetch } from 'actions'
-
+import { networkIdtoName } from 'utils/network'
 import { getBandUSD } from 'utils/bandPrice'
 
 // import web3
 import Web3 from 'web3'
 
 // Select network (HARDCODE)!!!
-let RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
 let WALLET_ENDPOINT = 'https://wallet.kovan.bandprotocol.com'
+if (process.env.NODE_ENV !== 'production')
+  WALLET_ENDPOINT = 'http://localhost:3000'
 
-const network = localStorage.getItem('network') || 'kovan'
+/**
+ * disable Metamask auto refresh
+ */
+if (
+  typeof window.ethereum !== 'undefined' ||
+  typeof window.web3 !== 'undefined'
+) {
+  window.ethereum.autoRefreshOnNetworkChange = false
+}
+
+/**
+ *  get current network
+ */
+let network = localStorage.getItem('network') || 'kovan'
+
 switch (network) {
   case 'mainnet':
-  case 'kovan':
-    RPC_ENDPOINT = 'https://kovan.infura.io/v3/1edf94718018482aa7055218e84486d7'
+    /**
+     * add mainnet GRAPHQL and API endpoint
+     */
     break
-  // if (process.env.NODE_ENV !== 'production')
-  //   WALLET_ENDPOINT = 'http://localhost:3000'
-  // break
+  case 'kovan':
+    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-kovan.bandprotocol.com/graphql',
+    )
+    break
   case 'rinkeby':
+    BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-rinkeby.bandprotocol.com/graphql',
+    )
+    break
+  case 'ropsten':
+    /**
+     * add ropsten GRAPHQL and API endpoint
+     */
+    break
   case 'local':
   default:
-    RPC_ENDPOINT = 'http://localhost:8545'
+    BandProtocolClient.setAPI('http://localhost:5000')
+    BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
     WALLET_ENDPOINT = 'http://localhost:3000'
+    break
 }
 
 const bandwalletChannel = channel()
 
 /* handle web3 channel from band wallet*/
-function* handleBandWalletChannel({ type, status }) {
+function* handleBandWalletChannel({ type, payload }) {
   switch (type) {
     case 'CHANGE_STATUS':
-      switch (status) {
+      switch (payload) {
         case 'UNINITIALIZED':
           break
         case 'INITIALIZED':
@@ -99,11 +135,19 @@ function* handleBandWalletChannel({ type, status }) {
       }
       yield put(dumpCurrent())
       break
+    case 'SET_NETWORK':
+      yield put(setNetwork(payload))
+      yield put(dumpCurrent())
+      window.open(window.location.origin, '_self')
+      break
     default:
       alert('Action type not recognized')
   }
 }
 
+/**
+ * Initialize
+ */
 function* baseInitialize() {
   // start fetching state
   yield put(toggleFetch(true))
@@ -121,9 +165,9 @@ function* baseInitialize() {
   `)
   const bandAddress = query.allContracts.nodes[0].address
 
+  /* get BAND-USD conversion rate from Coingecko */
   const { usd, usd_24h_change } = yield getBandUSD()
   yield put(
-    // TODO: Mock on price and last24hr
     saveBandInfo(bandAddress, '1000000000000000000000000', usd, usd_24h_change),
   )
   const communityDetails = yield Utils.graphqlRequest(
@@ -280,15 +324,14 @@ function* baseInitialize() {
       name !== localStorage.getItem('network') &&
       localStorage.getItem('walletType') === 'bandwallet'
     ) {
-      localStorage.setItem('network', name)
-      window.location.reload()
+      bandwalletChannel.put({ type: 'SET_NETWORK', payload: name })
     }
   })
 
   // listen status changed
   window.BandWallet.on('status', status => {
     if (localStorage.getItem('walletType') === 'bandwallet') {
-      bandwalletChannel.put({ type: 'CHANGE_STATUS', status })
+      bandwalletChannel.put({ type: 'CHANGE_STATUS', payload: status })
     }
   })
 
@@ -320,18 +363,24 @@ function* metaMaskProcess() {
       const newUserAddress = yield getUser(web3)
 
       if (newUserAddress) {
-        const currentUser = yield select(currentUserSelector)
         yield put(setWeb3(web3))
         yield put(setUserAddress(newUserAddress))
+
+        const network = yield select(currentNetworkSelector)
+        if (network !== networkIdtoName(window.ethereum.networkVersion)) {
+          yield put(setNetwork(networkIdtoName(window.ethereum.networkVersion)))
+          yield put(updateClient(provider))
+          yield put(dumpCurrent())
+          window.location.reload(true)
+        }
         yield put(updateClient(provider))
       } else {
-        // console.log('Cannot find metamask user')
         const currentUser = yield select(currentUserSelector)
         if (currentUser !== 'NOT_SIGNIN') {
-          // console.log('NOTSIGNIN')
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
           localStorage.removeItem('walletType')
+          yield put(dumpCurrent())
         }
       }
     }

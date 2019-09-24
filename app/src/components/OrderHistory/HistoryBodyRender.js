@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { getLink } from 'utils/etherscan'
 import { colors } from 'ui'
 import { Flex, Text, AbsoluteLink, Image, Bold } from 'ui/common'
 import OutImg from 'images/out.svg'
@@ -59,7 +59,7 @@ export default ({ items }) => (
           amount={amount.pretty()}
           type={type}
           key={i}
-          txLink={`https://kovan.etherscan.io/tx/${txHash}`}
+          txLink={`${getLink()}/tx/${txHash}`}
         />
       )
     })}

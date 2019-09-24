@@ -10,6 +10,7 @@ import { colors } from 'ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortDown } from '@fortawesome/free-solid-svg-icons'
 import MetamaskSrc from 'images/metamask.png'
+import NetworkSelect from 'components/NetworkSelect'
 
 // import AddCommunity from 'images/add-community.svg'
 import Eth from 'images/eth.svg'
@@ -257,19 +258,22 @@ export default ({
     <Nav isDashboard={isDashboard} showNav={showNav}>
       <PageContainer fullWidth>
         <Flex alignItems="center">
-          <Link dark="true" to="/">
-            <Flex
-              justifyContent="center"
-              alignItems="center"
-              style={{ height: 60, width: 220 }}
-            >
-              {isDashboard ? (
-                <Image src={WhiteLogoSrc} width="160px" />
-              ) : (
-                <Image src={LogoSrc} width="160px" />
-              )}
-            </Flex>
-          </Link>
+          <Flex alignItems="center">
+            <Link dark="true" to="/">
+              <Flex
+                justifyContent="center"
+                alignItems="center"
+                style={{ height: 60, width: 220 }}
+              >
+                {isDashboard ? (
+                  <Image src={WhiteLogoSrc} width="160px" />
+                ) : (
+                  <Image src={LogoSrc} width="160px" />
+                )}
+              </Flex>
+            </Link>
+            <NetworkSelect />
+          </Flex>
           <Flex ml="auto">
             {/* <Link dark="true" to="/create-community" px={1}>
               <Flex px={3} alignItems="center">
@@ -386,9 +390,11 @@ export default ({
                 </BlockTransactions>
               </ClickOutSide>
             ) : (
-              <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
-                Sign in
-              </SignIn>
+              <Flex alignItems="center">
+                <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
+                  Sign in
+                </SignIn>
+              </Flex>
             )}
           </Flex>
         </Flex>
