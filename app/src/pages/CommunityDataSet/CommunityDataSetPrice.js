@@ -122,7 +122,7 @@ export default class CommunityPricePage extends React.Component {
   }
 
   render() {
-    const { tcdAddress, tcdPrefix } = this.props
+    const { tcdAddress, tcdPrefix, network } = this.props
     return (
       <CurrentPriceFetcher
         tcdAddress={tcdAddress}
@@ -161,36 +161,39 @@ export default class CommunityPricePage extends React.Component {
             )}
             {...this.props}
           >
-            <Flex justifyContent="center">
-              <DatasetTab
-                mx="8px"
-                title="Cryptocurrency"
-                src={CryptoSrc}
-                active={this.state.type === CRYPTO_TYPE}
-                onClick={() => this.setState({ type: CRYPTO_TYPE })}
-              />
-              <DatasetTab
-                mx="8px"
-                title="ERC-20 Pairs"
-                src={ErcSrc}
-                active={this.state.type === ERC20_TYPE}
-                onClick={() => this.setState({ type: ERC20_TYPE })}
-              />
-              <DatasetTab
-                mx="8px"
-                title="Foreign Exchange"
-                src={FxSrc}
-                active={this.state.type === FX_TYPE}
-                onClick={() => this.setState({ type: FX_TYPE })}
-              />
-              <DatasetTab
-                mx="8px"
-                title="US Equities"
-                src={UseqSrc}
-                active={this.state.type === USEQUITY_TYPE}
-                onClick={() => this.setState({ type: USEQUITY_TYPE })}
-              />
-            </Flex>
+            {/* TCD Types */}
+            {network === 'kovan' && (
+              <Flex justifyContent="center">
+                <DatasetTab
+                  mx="8px"
+                  title="Cryptocurrency"
+                  src={CryptoSrc}
+                  active={this.state.type === CRYPTO_TYPE}
+                  onClick={() => this.setState({ type: CRYPTO_TYPE })}
+                />
+                <DatasetTab
+                  mx="8px"
+                  title="ERC-20 Pairs"
+                  src={ErcSrc}
+                  active={this.state.type === ERC20_TYPE}
+                  onClick={() => this.setState({ type: ERC20_TYPE })}
+                />
+                <DatasetTab
+                  mx="8px"
+                  title="Foreign Exchange"
+                  src={FxSrc}
+                  active={this.state.type === FX_TYPE}
+                  onClick={() => this.setState({ type: FX_TYPE })}
+                />
+                <DatasetTab
+                  mx="8px"
+                  title="US Equities"
+                  src={UseqSrc}
+                  active={this.state.type === USEQUITY_TYPE}
+                  onClick={() => this.setState({ type: USEQUITY_TYPE })}
+                />
+              </Flex>
+            )}
 
             {fetching ? (
               <Box mt={3}>

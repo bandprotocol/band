@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Flex, Text } from 'ui/common'
 import { communityDetailSelector } from 'selectors/communities'
+import { currentNetworkSelector } from 'selectors/current'
 import { getTCDInfomation } from 'utils/tcds'
 import { tcdsSelector } from 'selectors/tcd'
 import CommunityDataSetPrice from './CommunityDataSetPrice'
@@ -46,6 +47,7 @@ const mapStateToProps = (state, { communityAddress, tcdAddress }) => {
 
   return {
     name: community.get('name'),
+    network: currentNetworkSelector(state),
     tcdName:
       tcds && getTCDInfomation(tcds.toJS().prefix, community.get('name')).label,
     tcdPrefix: community.getIn(['tcds', tcdAddress, 'prefix']).slice(0, -1),
