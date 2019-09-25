@@ -46,7 +46,8 @@ function* sendTransaction({ transaction, title, type }) {
     yield put(addPendingTx(timestamp, title, type))
     const txHash = yield transaction.sendFeeless()
     const network = yield select(currentNetworkSelector)
-    yield put(addTx(txHash, title, type, network))
+    const userAddress = yield select(currentUserSelector)
+    yield put(addTx(txHash, title, type, network, userAddress))
     yield put(dumpTxs())
   } catch (error) {
     const currentUser = yield select(currentUserSelector)

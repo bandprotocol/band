@@ -11,12 +11,13 @@ export const TCD_REVENUE_TO_STAKE = 'TCD_REVENUE_TO_STAKE'
 export const ADD_PENDING_TX = 'ADD_PENDING_TX'
 export const REMOVE_PENDING_TX = 'REMOVE_PENDING_TX'
 
-export const addTx = (txHash, title, txType, network) => ({
+export const addTx = (txHash, title, txType, network, userAddress) => ({
   type: ADD_TX,
   txHash,
   title,
   txType,
   network,
+  userAddress,
 })
 
 export const saveTxs = (currentBlock, txs, force) => ({
