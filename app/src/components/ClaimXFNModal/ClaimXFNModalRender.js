@@ -60,16 +60,13 @@ const MoveFlex2 = styled(Flex)`
 
 export default props => {
   const {
-    signin,
-    hasPendingReward,
     rewardAmount,
     xfnRewardContract,
     claimXFNReward,
+    hideXFNRewardModal,
   } = props
   const [loading, setLoading] = useState(true)
   const [pendingTx, setPendingTx] = useState(false)
-
-  window.setPendingTx = setPendingTx
 
   useEffect(() => {
     ;(async () => {
@@ -83,9 +80,10 @@ export default props => {
   const claim = async () => {
     if (!xfnRewardContract) return
     setPendingTx(true)
-    const a = await claimXFNReward(xfnRewardContract)
-    console.log(a)
+    await claimXFNReward(xfnRewardContract)
     setPendingTx(false)
+    await new Promise(resolve => setTimeout(resolve, 100))
+    hideXFNRewardModal()
   }
 
   if (loading) {

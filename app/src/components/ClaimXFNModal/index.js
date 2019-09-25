@@ -25,6 +25,7 @@ class ClaimXFNModal extends React.Component {
         {...this.props}
         getXFNAmount={this.getXFNAmount}
         claim={this.claim}
+        hideModal={hideModal}
       />
     )
   }

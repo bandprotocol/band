@@ -39,7 +39,12 @@ const mapStateToProps = (state, props) => {
   const user = currentUserSelector(state)
   const currentNetwork = currentNetworkSelector(state)
   const web3 = web3Selector(state)
+  const xfnRewardInfo = xfnRewardInfoSelector(state)
   const xfnRewardContract = xfnRewardContracts[currentNetwork]
+  const { hasPendingReward, rewardAmount } = xfnRewardInfo || {
+    hasPendingReward: false,
+    rewardAmount: 0,
+  }
   let shouldDisplayClaimXFN =
     web3 &&
     user &&
@@ -47,8 +52,9 @@ const mapStateToProps = (state, props) => {
     user.length === 42 &&
     xfnRewardContract.length === 42
 
+  window.web3 = web3
+
   if (shouldDisplayClaimXFN) {
-    window.web3 = web3
     if (
       !window.lastXFNCallTime ||
       Date.now() - window.lastXFNCallTime >= 5000
@@ -58,9 +64,7 @@ const mapStateToProps = (state, props) => {
     }
   }
 
-  const xfnRewardInfo = xfnRewardInfoSelector(state)
   if (xfnRewardInfo) {
-    const { hasPendingReward, rewardAmount } = xfnRewardInfo
     shouldDisplayClaimXFN =
       shouldDisplayClaimXFN && hasPendingReward && rewardAmount > 0.0
   } else {
