@@ -124,12 +124,12 @@ export default class CommunityPricePage extends React.Component {
   render() {
     const { tcdAddress, tcdPrefix } = this.props
     return (
-      <PriceCountByTCDFetcher
+      <CurrentPriceFetcher
         tcdAddress={tcdAddress}
         type={this.state.type}
         query={this.state.query}
       >
-        {({ fetching: countFetching, data: totalCount }) => (
+        {({ fetching, data }) => (
           <PageStructure
             renderHeader={() => (
               <DataHeader
@@ -151,7 +151,7 @@ export default class CommunityPricePage extends React.Component {
                 pr="20px"
               >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
-                  {countFetching ? '' : `${totalCount} Pairs Available`}
+                  {fetching ? '' : `${data.length} Pairs Available`}
                 </Text>
                 <AutocompletedSearch
                   data={getAllPriceLabelFromType(this.state.type)}
@@ -191,40 +191,33 @@ export default class CommunityPricePage extends React.Component {
                 onClick={() => this.setState({ type: USEQUITY_TYPE })}
               />
             </Flex>
-            <CurrentPriceFetcher
-              tcdAddress={tcdAddress}
-              query={this.state.query}
-              type={this.state.type}
-            >
-              {({ fetching, data }) =>
-                fetching ? (
-                  <Box mt={3}>
-                    <Loading
-                      height={361}
-                      width={924}
-                      rects={[
-                        [0, 0, 924, 60],
-                        [0, 72, 924, 60],
-                        [0, 144, 924, 60],
-                        [0, 72 * 3, 924, 60],
-                        [0, 72 * 4, 924, 60],
-                      ]}
-                    />
-                  </Box>
-                ) : totalCount !== 0 ? (
-                  renderDataPoints(data, tcdAddress, tcdPrefix)
-                ) : (
-                  <Flex mt="100px" justifyContent="center" alignItems="center">
-                    <Text fontSize="28px" fontFamily="head" fontWeight="600">
-                      There is no data avaliable.
-                    </Text>
-                  </Flex>
-                )
-              }
-            </CurrentPriceFetcher>
+
+            {fetching ? (
+              <Box mt={3}>
+                <Loading
+                  height={361}
+                  width={924}
+                  rects={[
+                    [0, 0, 924, 60],
+                    [0, 72, 924, 60],
+                    [0, 144, 924, 60],
+                    [0, 72 * 3, 924, 60],
+                    [0, 72 * 4, 924, 60],
+                  ]}
+                />
+              </Box>
+            ) : data.length !== 0 ? (
+              renderDataPoints(data, tcdAddress, tcdPrefix)
+            ) : (
+              <Flex mt="100px" justifyContent="center" alignItems="center">
+                <Text fontSize="28px" fontFamily="head" fontWeight="600">
+                  There is no data avaliable.
+                </Text>
+              </Flex>
+            )}
           </PageStructure>
         )}
-      </PriceCountByTCDFetcher>
+      </CurrentPriceFetcher>
     )
   }
 }
