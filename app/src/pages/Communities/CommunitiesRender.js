@@ -115,165 +115,172 @@ export default ({
   history,
   showClaimXFNModal,
   shouldDisplayClaimXFN,
-}) => (
-  <PageContainer
-    fullWidth
-    style={{
-      paddingLeft: '0px',
-      position: 'relative',
-      background: '#E4EDFF',
-      minHeight: '100vh',
-    }}
-  >
-    <Header>
-      <Flex
-        flexDirection="column"
-        alignItems="flex-start"
-        width="1170px"
-        p="0px 32px"
-        style={{ height: '100%', margin: '0 auto' }}
-      >
-        <H1 mb={2} py={2}>
-          Data Governance Portal
-        </H1>
-        <Text
-          my={1}
-          width="750px"
-          fontSize="17px"
-          lineHeight="1.6"
-          color="#ffffff"
+}) => {
+  return (
+    <PageContainer
+      fullWidth
+      style={{
+        paddingLeft: '0px',
+        position: 'relative',
+        background: '#E4EDFF',
+        minHeight: '100vh',
+      }}
+    >
+      <Header>
+        <Flex
+          flexDirection="column"
+          alignItems="flex-start"
+          width="1170px"
+          p="0px 32px"
+          style={{ height: '100%', margin: '0 auto' }}
         >
-          Band Protocol connects ÐApps with trusted off-chain information,
-          curated through a decentralized network of data providers. We use
-          dataset tokens to incentivize providers.
-        </Text>
-        <Flex alignItems="center" mt={3}>
-          <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
-            <WhiteButton>Whitepaper v3.0.1</WhiteButton>
-          </AbsoluteLink>
-          <AbsoluteLink href="https://bandprotocol.com">
-            <WhiteOutlineButton>
-              Learn more about Band Protocol
-            </WhiteOutlineButton>
-          </AbsoluteLink>
-          {shouldDisplayClaimXFN && (
-            <ClaimButton onClick={() => showClaimXFNModal()}>
-              Claim Free XFN
-            </ClaimButton>
-          )}
+          <H1 mb={2} py={2}>
+            Data Governance Portal
+          </H1>
+          <Text
+            my={1}
+            width="750px"
+            fontSize="17px"
+            lineHeight="1.6"
+            color="#ffffff"
+          >
+            Band Protocol connects ÐApps with trusted off-chain information,
+            curated through a decentralized network of data providers. We use
+            dataset tokens to incentivize providers.
+          </Text>
+          <Flex alignItems="center" mt={3}>
+            <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
+              <WhiteButton>Whitepaper v3.0.1</WhiteButton>
+            </AbsoluteLink>
+            <AbsoluteLink href="https://bandprotocol.com">
+              <WhiteOutlineButton>
+                Learn more about Band Protocol
+              </WhiteOutlineButton>
+            </AbsoluteLink>
+            {shouldDisplayClaimXFN && (
+              <ClaimButton onClick={() => showClaimXFNModal()}>
+                Claim Free XFN
+              </ClaimButton>
+            )}
+          </Flex>
         </Flex>
-      </Flex>
-    </Header>
-    {/* TODO: Fix this condition(loading forever when length === 0) and
+      </Header>
+      {/* TODO: Fix this condition(loading forever when length === 0) and
     check yourcommunity, feature community as well */}
-    {tcdCommunities && tcrCommunities ? (
-      <Flex flexDirection="column">
-        <Box
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          <PageContainer dashboard>
-            {/* TCD Communities */}
-            <Flex flexDirection="row" alignItems="center" mt="15px" mb="10px">
-              <H3 color="#4a4a4a" style={{ letterSpacing: '1px' }}>
-                Available Datasets for DApps
-              </H3>
-              <CountBadge>{tcdCommunities.length}</CountBadge>
-            </Flex>
-            <Flex flexWrap="wrap" mt={3} mx="-20px" justifyContent="flex-start">
-              {tcdCommunities.map((community, i) => (
-                <MegaCommunityCard
-                  key={i}
-                  community={community}
-                  bandPrice={bandPrice}
-                  borderColor={getProfileColor(community.symbol)}
-                  defaultTcd={
-                    Object.keys(community.tcds).find(
-                      tcdAddr =>
-                        getTCDInfomation(community.tcds[tcdAddr].prefix)
-                          .order === 1,
-                    ) || Object.keys(community.tcds)[0]
-                  }
-                  isTcd
-                  onClick={() =>
-                    history.push(
-                      `/community/${community.tokenAddress}/overview`,
-                    )
-                  }
-                />
-              ))}
-            </Flex>
-            {/* TCR Communities */}
-            {tcrCommunities.length > 0 && (
+      {tcdCommunities && tcrCommunities ? (
+        <Flex flexDirection="column">
+          <Box
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <PageContainer dashboard>
+              {/* TCD Communities */}
+              <Flex flexDirection="row" alignItems="center" mt="15px" mb="10px">
+                <H3 color="#4a4a4a" style={{ letterSpacing: '1px' }}>
+                  Available Datasets for DApps
+                </H3>
+                <CountBadge>{tcdCommunities.length}</CountBadge>
+              </Flex>
               <Flex
-                mb="100px"
-                style={{
-                  position: 'absolute',
-                  left: '0px',
-                  minWidth: '100vw',
-                  height: '460px',
-                  padding: '18px 32px 48px',
-                }}
+                flexWrap="wrap"
+                mt={3}
+                mx="-20px"
+                justifyContent="flex-start"
               >
+                {tcdCommunities.map((community, i) => (
+                  <MegaCommunityCard
+                    key={i}
+                    community={community}
+                    bandPrice={bandPrice}
+                    borderColor={getProfileColor(community.symbol)}
+                    defaultTcd={
+                      Object.keys(community.tcds).find(
+                        tcdAddr =>
+                          getTCDInfomation(community.tcds[tcdAddr].prefix)
+                            .order === 1,
+                      ) || Object.keys(community.tcds)[0]
+                    }
+                    isTcd
+                    onClick={() =>
+                      history.push(
+                        `/community/${community.tokenAddress}/overview`,
+                      )
+                    }
+                  />
+                ))}
+              </Flex>
+              {/* TCR Communities */}
+              {tcrCommunities.length > 0 && (
                 <Flex
-                  flexDirection="column"
-                  width="1110px"
-                  style={{ margin: '80px auto' }}
+                  mb="100px"
+                  style={{
+                    position: 'absolute',
+                    left: '0px',
+                    minWidth: '100vw',
+                    height: '460px',
+                    padding: '18px 32px 48px',
+                  }}
                 >
                   <Flex
-                    flexDirection="row"
-                    alignItems="center"
-                    mt="12px"
-                    mb={3}
+                    flexDirection="column"
+                    width="1110px"
+                    style={{ margin: '80px auto' }}
                   >
-                    <Text
-                      fontSize="25px"
-                      fontWeight="700"
-                      color="#4a4a4a"
-                      style={{ letterSpacing: '0.01em' }}
+                    <Flex
+                      flexDirection="row"
+                      alignItems="center"
+                      mt="12px"
+                      mb={3}
                     >
-                      DApps built with Token Curated Registry
-                    </Text>
-                    <CountBadge>{tcrCommunities.length}</CountBadge>
-                  </Flex>
-                  <Flex
-                    flexWrap="wrap"
-                    mt={3}
-                    mx="-20px"
-                    justifyContent="flex-start"
-                  >
-                    {tcrCommunities.map((community, i) => (
-                      <MegaCommunityCard
-                        key={i}
-                        community={community}
-                        bandPrice={bandPrice}
-                        statusBg="#2771ec"
-                        onClick={() =>
-                          history.push(
-                            `/community/${community.tokenAddress}/overview`,
-                          )
-                        }
-                      />
-                    ))}
+                      <Text
+                        fontSize="25px"
+                        fontWeight="700"
+                        color="#4a4a4a"
+                        style={{ letterSpacing: '0.01em' }}
+                      >
+                        DApps built with Token Curated Registry
+                      </Text>
+                      <CountBadge>{tcrCommunities.length}</CountBadge>
+                    </Flex>
+                    <Flex
+                      flexWrap="wrap"
+                      mt={3}
+                      mx="-20px"
+                      justifyContent="flex-start"
+                    >
+                      {tcrCommunities.map((community, i) => (
+                        <MegaCommunityCard
+                          key={i}
+                          community={community}
+                          bandPrice={bandPrice}
+                          statusBg="#2771ec"
+                          onClick={() =>
+                            history.push(
+                              `/community/${community.tokenAddress}/overview`,
+                            )
+                          }
+                        />
+                      ))}
+                    </Flex>
                   </Flex>
                 </Flex>
-              </Flex>
-            )}
-          </PageContainer>
-        </Box>
-      </Flex>
-    ) : (
-      // Loading icon
-      <Flex
-        style={{ height: 225 }}
-        width="100%"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <CircleLoadingSpinner radius="80px" />
-      </Flex>
-    )}
-  </PageContainer>
-)
+              )}
+            </PageContainer>
+          </Box>
+        </Flex>
+      ) : (
+        // Loading icon
+        <Flex
+          style={{ height: 225 }}
+          width="100%"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <CircleLoadingSpinner radius="80px" />
+        </Flex>
+      )}
+    </PageContainer>
+  )
+}

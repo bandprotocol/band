@@ -10,6 +10,7 @@ export const TCD_WITHDRAW = 'TCD_WITHDRAW'
 export const TCD_REVENUE_TO_STAKE = 'TCD_REVENUE_TO_STAKE'
 export const ADD_PENDING_TX = 'ADD_PENDING_TX'
 export const REMOVE_PENDING_TX = 'REMOVE_PENDING_TX'
+export const CLAIM_XFN = 'CLAIM_XFN'
 
 export const addTx = (txHash, title, txType, network, userAddress) => ({
   type: ADD_TX,
@@ -98,3 +99,10 @@ export const removePendingTx = id => ({
   type: REMOVE_PENDING_TX,
   id,
 })
+
+export const claimXFN = xfnRewardContractAddr => {
+  return {
+    type: CLAIM_XFN,
+    xfnRewardContractAddr,
+  }
+}
