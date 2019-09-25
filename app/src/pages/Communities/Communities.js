@@ -13,21 +13,18 @@ import {
 import { showModal, setXFNRewardInfo } from 'actions'
 import xfnRewardContracts from 'utils/xfnRewardContracts'
 
-const getPendingReward = async (user, xfnRewardContract) => {
-  if (!window.dispatch) return
-  const result = await window.web3.eth.call({
-    to: xfnRewardContract,
-    data: '0xf40f0f52' + user.slice(2).padStart(64, '0'),
-  })
-  if (!result || result.length !== 130) return
-  const hasPendingReward = Number(result.slice(2, 66)) === 1
-  const rewardAmount = Number('0x' + result.slice(66)) / 1e18
-  window.dispatch(setXFNRewardInfo({ hasPendingReward, rewardAmount }))
-}
-
 const mapDispatchToProps = (dispatch, props) => {
-  window.dispatch = dispatch
   return {
+    getPendingReward: async (user, xfnRewardContract) => {
+      const result = await window.web3.eth.call({
+        to: xfnRewardContract,
+        data: '0xf40f0f52' + user.slice(2).padStart(64, '0'),
+      })
+      if (!result || result.length !== 130) return
+      const hasPendingReward = Number(result.slice(2, 66)) === 1
+      const rewardAmount = Number('0x' + result.slice(66)) / 1e18
+      dispatch(setXFNRewardInfo({ hasPendingReward, rewardAmount }))
+    },
     showClaimXFNModal: () => dispatch(showModal('CLAIM_XFN')),
   }
 }
@@ -54,25 +51,12 @@ const mapStateToProps = (state, props) => {
 
   window.web3 = web3
 
-  if (shouldDisplayClaimXFN) {
-    if (
-      !window.lastXFNCallTime ||
-      Date.now() - window.lastXFNCallTime >= 5000
-    ) {
-      window.lastXFNCallTime = Date.now()
-      getPendingReward(user, xfnRewardContract)
-    }
-  }
-
-  if (xfnRewardInfo) {
-    shouldDisplayClaimXFN =
-      shouldDisplayClaimXFN && hasPendingReward && rewardAmount > 0.0
-  } else {
-    shouldDisplayClaimXFN = false
-  }
-
   return {
+    hasPendingReward,
+    rewardAmount,
     user,
+    xfnRewardInfo,
+    xfnRewardContract,
     currentNetwork,
     shouldDisplayClaimXFN,
     bandPrice: bandPriceSelector(state),
