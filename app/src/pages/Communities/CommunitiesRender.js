@@ -109,12 +109,12 @@ const CountBadge = styled(Flex).attrs({
 `
 
 export default ({
-  user,
   tcdCommunities,
   tcrCommunities,
   bandPrice,
   history,
   showClaimXFNModal,
+  shouldDisplayClaimXFN,
 }) => (
   <PageContainer
     fullWidth
@@ -156,7 +156,7 @@ export default ({
               Learn more about Band Protocol
             </WhiteOutlineButton>
           </AbsoluteLink>
-          {user && user.length === 42 && (
+          {shouldDisplayClaimXFN && (
             <ClaimButton onClick={() => showClaimXFNModal()}>
               Claim Free XFN
             </ClaimButton>
