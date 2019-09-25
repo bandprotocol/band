@@ -304,7 +304,6 @@ function* handleClaimXFN({ xfnRewardContractAddr }) {
   wallet.setDetail({
     type: 'CLAIM',
     title: 'Claim XFN',
-    balance: 'XFN Amount',
   })
   yield sendTransaction({
     transaction,
