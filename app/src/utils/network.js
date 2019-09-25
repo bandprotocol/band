@@ -14,7 +14,7 @@ export const networkOptions = [
   { value: 'mainnet', label: 'Main Ethereum Network', color: '#47cc81' },
   { value: 'rinkeby', label: 'Rinkeby Test Network', color: '#ffca55' },
   { value: 'kovan', label: 'Kovan Test Network', color: '#b3a5ff' },
-  { value: 'robsten', label: 'Robsten Test Network', color: 'black' },
+  { value: 'ropsten', label: 'Ropsten Test Network', color: 'red' },
 ]
 
 export const getCurrentNetworkOption = () => {
