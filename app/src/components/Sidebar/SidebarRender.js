@@ -21,6 +21,8 @@ import ProposalActiveSrc from 'images/voteActive.svg'
 
 import DataLogInactive from 'images/dataLogInactive.svg'
 import DataSetInactive from 'images/datasetInactive.svg'
+import DataLogActive from 'images/dataLogActive.svg'
+import DataSetActive from 'images/datasetActive.svg'
 import IntegrationInactive from 'images/integrationInactive.svg'
 
 const Left = styled.div`
@@ -230,7 +232,7 @@ export default ({
 
             <Tab
               link={`/community/${address}/dataset`}
-              imgSrcActive={DataSetInactive}
+              imgSrcActive={DataSetActive}
               imgSrcInactive={DataSetInactive}
             >
               Explore Data
@@ -245,7 +247,7 @@ export default ({
             </Tab>
             <Tab
               link={`/community/${address}/logs`}
-              imgSrcActive={DataLogInactive}
+              imgSrcActive={DataLogActive}
               imgSrcInactive={DataLogInactive}
             >
               Activity Logs
