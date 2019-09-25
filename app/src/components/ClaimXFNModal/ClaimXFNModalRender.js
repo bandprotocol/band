@@ -227,7 +227,7 @@ export default props => {
               style={{ opacity: pendingTx ? 0 : 1 }}
             >
               Get XFN{' '}
-              {rewardAmount > 0
+              {rewardAmount >= 1
                 ? rewardAmount.toFixed(2)
                 : rewardAmount.toFixed(4)}{' '}
               Now!
