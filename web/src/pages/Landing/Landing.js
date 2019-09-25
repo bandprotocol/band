@@ -92,25 +92,16 @@ export default () => {
               left: 0,
             }}
           ></Flex> */}
-          <Flex justifyContent="center" alignItems="center">
-            <Text fontSize={['21px', '55px']} color="white">
-              OFFICIAL MAINNET LAUNCH IN
-            </Text>
-          </Flex>
+
           <Flex mt="30px">
-            <Countdown eventTime={1569844800} />
-          </Flex>
-          <Flex my="70px" justifyContent="center">
-            <OutlineButton
-              onClick={() => window.scroll(0, window.innerHeight)}
-              style={{ zIndex: 1, cursor: 'pointer' }}
-            >
-              Continue
-            </OutlineButton>
+            <Countdown eventTime={1569844800}>
+              <Text fontSize={['21px', '55px']} color="white">
+                Mainnet launch live now
+              </Text>
+            </Countdown>
           </Flex>
 
           {/* Hex background */}
-
           {isMobile() ? (
             <>
               <Flex
