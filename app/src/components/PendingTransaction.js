@@ -85,6 +85,12 @@ const TxType = ({ type }) => {
           Deposit
         </Badge>
       )
+    case 'CLAIM':
+      return (
+        <Badge bg="#edffe7" color="#42c47f">
+          Claim
+        </Badge>
+      )
     default:
       return (
         <Badge bg="#ffe7e7" color="#ec6363">
