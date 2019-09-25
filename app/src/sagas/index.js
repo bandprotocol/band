@@ -54,8 +54,8 @@ import Web3 from 'web3'
 
 // Select network (HARDCODE)!!!
 let WALLET_ENDPOINT = 'https://wallet.kovan.bandprotocol.com'
-// if (process.env.NODE_ENV !== 'production')
-//   WALLET_ENDPOINT = 'http://localhost:3000'
+if (process.env.NODE_ENV !== 'production')
+  WALLET_ENDPOINT = 'http://localhost:3000'
 
 /**
  * disable Metamask auto refresh
