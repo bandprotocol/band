@@ -211,7 +211,7 @@ export default class CommunityPricePage extends React.Component {
             ) : (
               <Flex mt="100px" justifyContent="center" alignItems="center">
                 <Text fontSize="28px" fontFamily="head" fontWeight="600">
-                  There is no data avaliable.
+                  There is no data available.
                 </Text>
               </Flex>
             )}
