@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Flex, Box, Text } from 'ui/common'
 import styled from 'styled-components'
-import { currentNetworkSelector } from 'selectors/current'
+import { currentNetworkSelector, currentUserSelector } from 'selectors/current'
 import PendingTransaction from 'components/PendingTransaction'
 import { txIncludePendingSelector } from 'selectors/transaction'
 import { transactionHiddenSelector } from 'selectors/transaction'
@@ -117,12 +117,16 @@ class TransactionPopup extends React.Component {
 
 const mapStateToProps = state => {
   const network = currentNetworkSelector(state)
+  const currentUserAddr = currentUserSelector(state)
   const txs = txIncludePendingSelector(state)
   const hiddenTxs = transactionHiddenSelector(state)
   if (txs && hiddenTxs) {
     return {
       txns: txs.filter(
-        tx => !hiddenTxs.has(tx.txHash) && tx.network === network,
+        tx =>
+          !hiddenTxs.has(tx.txHash) &&
+          tx.network === network &&
+          tx.userAddress === currentUserAddr,
       ),
     }
   }

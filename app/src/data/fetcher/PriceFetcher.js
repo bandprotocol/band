@@ -17,9 +17,11 @@ export const CurrentPriceFetcher = withRouter(
 
     async fetch() {
       const { tcdAddress, type } = this.props
+
       const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
         key: this.props.query,
       })
+
       const priceLabel = getAllPriceLabelFromType(type)
       const result = prices
         .map(({ key, pair, value, timestamp }) => ({
