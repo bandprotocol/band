@@ -315,7 +315,7 @@ function* baseInitialize() {
     approvalPosition: {
       bottom: 0,
       right: 10,
-      zIndex: 30,
+      zIndex: 1000000001,
     },
   })
 
