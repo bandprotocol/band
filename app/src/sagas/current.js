@@ -72,10 +72,12 @@ function* handleUpdateClient({ provider }) {
 /* load user, network, balances and txs from LocalStroage */
 function* handleLoadCurrent() {
   // Load user
-  const user = localStorage.getItem('user')
-  if (user) yield put(setUserAddress(user))
+  // const user = localStorage.getItem('user')
+  // if (user) yield put(setUserAddress(user))
 
   // Load network
+  const user = yield select(currentUserSelector)
+
   const network = localStorage.getItem('network')
   yield put(setNetwork(network || 'kovan'))
 
@@ -111,9 +113,9 @@ function* handleLoadCurrent() {
 function* handleDumpCurrent() {
   const current = yield select(currentSelector)
   // Dump user
-  const user = current.get('user')
-  if (user) localStorage.setItem('user', user)
-  else localStorage.removeItem('user')
+  // const user = current.get('user')
+  // if (user) localStorage.setItem('user', user)
+  // else localStorage.removeItem('user')
   // Dump network
   const network = current.get('network')
   if (network) localStorage.setItem('network', network)
