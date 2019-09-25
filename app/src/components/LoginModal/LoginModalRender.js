@@ -12,7 +12,7 @@ const isChrome =
 export default props => {
   const { signin } = props
   return (
-    <Card variant="modal">
+    <Card variant="modal" style={{ overflow: 'hidden' }}>
       <Flex
         flexDirection="column"
         alignItems="center"
