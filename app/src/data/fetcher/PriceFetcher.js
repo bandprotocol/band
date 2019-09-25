@@ -21,7 +21,7 @@ export const CurrentPriceFetcher = withRouter(
         key: this.props.query,
       })
       const priceLabel = getAllPriceLabelFromType(type)
-      return prices
+      const result = prices
         .map(({ key, pair, value, timestamp }) => ({
           key,
           pair,
@@ -33,6 +33,7 @@ export const CurrentPriceFetcher = withRouter(
           if (a.key > b.key) return 1
           return -1
         })
+      return result
     }
   },
 )
