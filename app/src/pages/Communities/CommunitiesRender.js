@@ -109,6 +109,12 @@ const CountBadge = styled(Flex).attrs({
 `
 
 export default ({
+  user,
+  xfnRewardContract,
+  xfnRewardInfo,
+  getPendingReward,
+  hasPendingReward,
+  rewardAmount,
   tcdCommunities,
   tcrCommunities,
   bandPrice,
@@ -116,6 +122,22 @@ export default ({
   showClaimXFNModal,
   shouldDisplayClaimXFN,
 }) => {
+  if (shouldDisplayClaimXFN) {
+    if (
+      !window.lastXFNCallTime ||
+      Date.now() - window.lastXFNCallTime >= 5000
+    ) {
+      window.lastXFNCallTime = Date.now()
+      getPendingReward(user, xfnRewardContract)
+    }
+  }
+
+  const sdcx =
+    xfnRewardInfo &&
+    shouldDisplayClaimXFN &&
+    hasPendingReward &&
+    rewardAmount > 0.0
+
   return (
     <PageContainer
       fullWidth
@@ -157,7 +179,7 @@ export default ({
                 Learn more about Band Protocol
               </WhiteOutlineButton>
             </AbsoluteLink>
-            {shouldDisplayClaimXFN && (
+            {sdcx && (
               <ClaimButton onClick={() => showClaimXFNModal()}>
                 Claim Free XFN
               </ClaimButton>
