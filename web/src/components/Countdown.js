@@ -56,7 +56,6 @@ export default class Countdown extends React.Component {
 
     this.countInterval = setInterval(() => {
       duration = moment.duration(duration - interval, 'milliseconds')
-      console.log('duration', duration._milliseconds === 0)
       if (duration._milliseconds === 0) {
         this.setState({
           duration,
