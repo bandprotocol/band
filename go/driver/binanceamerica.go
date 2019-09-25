@@ -12,23 +12,29 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type Bitstamp struct{}
+type BinanceAmerica struct{}
 
-func (*Bitstamp) Configure(*viper.Viper) {}
+func (*BinanceAmerica) Configure(*viper.Viper) {}
 
-func (*Bitstamp) QuerySpotPrice(symbol string) (float64, error) {
+func (*BinanceAmerica) QuerySpotPrice(symbol string) (float64, error) {
+	client := &http.Client{}
+
 	pairs := strings.Split(strings.ToUpper(symbol), "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
-
 	var url strings.Builder
-	url.WriteString("https://bitstamp.net/api/v2/ticker/")
+	url.WriteString("https://api.binance.us/api/v1/depth?symbol=")
 	url.WriteString(pairs[0])
 	url.WriteString(pairs[1])
-	var client = &http.Client{}
+	url.WriteString("&limit=5")
 
-	res, err := client.Get(url.String())
+	req, err := http.NewRequest("GET", url.String(), nil)
+	if err != nil {
+		return 0, err
+	}
+	req.Header.Add("Accept", "application/json")
+	res, err := client.Do(req)
 	if err != nil {
 		return 0, err
 	}
@@ -38,16 +44,14 @@ func (*Bitstamp) QuerySpotPrice(symbol string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	price := gjson.GetBytes(body, "last")
-
-	if !price.Exists() {
+	prices := gjson.GetManyBytes(body, "bids.0.0", "asks.0.0")
+	if !prices[0].Exists() || !prices[1].Exists() {
 		return 0, fmt.Errorf("key does not exist")
 	}
-
-	return price.Float(), nil
+	return (prices[0].Float() + prices[1].Float()) / 2, nil
 }
 
-func (a *Bitstamp) Query(key []byte) dt.Answer {
+func (a *BinanceAmerica) Query(key []byte) dt.Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
 		return dt.NotFoundAnswer

@@ -21,8 +21,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-var drivers map[common.Address]driver.Driver
-var aggregateMethods map[common.Address]dt.AggMethod
+var myDriver driver.Driver
+var aggregateMethod dt.AggMethod
 
 type valueWithTimeStamp struct {
 	Value     *big.Int
@@ -75,21 +75,17 @@ func verifySignature(
 	)
 }
 
-func methodsFromConfig(config *viper.Viper) map[common.Address]dt.AggMethod {
-	output := make(map[common.Address]dt.AggMethod)
-	drivers := config.GetStringMap("drivers")
-	for datasetHex, _ := range drivers {
-		dataset := common.HexToAddress(datasetHex)
-		method := config.GetString("drivers." + datasetHex + ".method")
-		if method == "" {
-			panic("Need specific aggregator method")
-		}
-		var ok bool
-		if output[dataset], ok = dt.AggMethodToID[method]; !ok {
-			panic("Unknown aggregator method")
-		}
+func methodsFromConfig(config *viper.Viper) dt.AggMethod {
+	method := config.GetString("method")
+	if method == "" {
+		return dt.Median
+		// panic("Need specific aggregator method")
 	}
-	return output
+	aggMethod, ok := dt.AggMethodToID[method]
+	if !ok {
+		panic("Unknown aggregator method")
+	}
+	return aggMethod
 }
 
 func medianTimestamp(timestamps []uint64) uint64 {
@@ -112,7 +108,7 @@ func handleDataRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	arg.NormalizeKey()
-	output := driver.DoQuery(drivers[arg.Dataset], []byte(arg.Key))
+	output := driver.DoQuery(myDriver, []byte(arg.Key))
 	w.Header().Set("Content-Type", "application/json")
 	currentTimestamp := uint64(time.Now().Unix())
 	providerAddress, err := eth.GetAddress()
@@ -182,10 +178,10 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	var output common.Hash
 	var status dt.QueryStatus
-	if aggregateMethods[arg.Dataset] == dt.Median {
+	if aggregateMethod == dt.Median {
 		output = common.BigToHash(driver.Median(values))
 		status = dt.OK
-	} else if aggregateMethods[arg.Dataset] == dt.Majority {
+	} else if aggregateMethod == dt.Majority {
 		value, count, err := driver.Majority(values)
 		if err != nil || count < arg.MinimumProviderCount {
 			output = common.Hash{}
@@ -195,7 +191,7 @@ func handleSignRequest(w http.ResponseWriter, r *http.Request) {
 			output = common.BigToHash(value)
 			status = dt.OK
 		}
-	} else if aggregateMethods[arg.Dataset] == dt.Custom {
+	} else if aggregateMethod == dt.Custom {
 		// TODO: Get aggregate method from ipfs
 	}
 
@@ -243,7 +239,7 @@ func main() {
 	queryDebug = config.GetBool("queryDebug")
 
 	rootCmd.PersistentFlags().StringVar(&port, "port", port, `port of your app, for example "5000"`)
-	rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", ethRpc, `Ethereum rcp url, for example "https://kovan.infura.io"`)
+	rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", ethRpc, `Ethereum rpc url, for example "https://kovan.infura.io"`)
 	rootCmd.PersistentFlags().StringVar(&privateKey, "privateKey", privateKey, `Private Key of the data provider, 64 hex characters`)
 	rootCmd.PersistentFlags().BoolVar(&queryDebug, "debug", false, `turn on debugging when query`)
 	if err := rootCmd.Execute(); err != nil {
@@ -270,14 +266,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	drivers = driver.FromConfig(config)
-	aggregateMethods = methodsFromConfig(config)
+	myDriver = driver.FromConfig(config)
+	aggregateMethod = methodsFromConfig(config)
 
 	fmt.Println("start provider node with these following parameters")
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Parameter Name", "Value"})
+	table.SetHeader([]string{"Arg", "Val"})
 	table.Append([]string{"port", port})
-	table.Append([]string{"ethRpc", ethRpc})
+	if ethRpc != "" {
+		table.Append([]string{"ethRpc", ethRpc})
+	}
 	table.Append([]string{"debug", strconv.FormatBool(queryDebug)})
 	table.Render()
 

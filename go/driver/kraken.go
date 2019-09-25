@@ -15,6 +15,7 @@ import (
 type Kraken struct{}
 
 var tokenMap = map[string]string{
+	"BTC": "XXBT",
 	"ETH": "XETH",
 	"LTC": "XLTC",
 	"XRP": "XXRP",

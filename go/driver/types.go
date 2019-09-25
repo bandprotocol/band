@@ -5,7 +5,6 @@ import (
 	"math/big"
 
 	"github.com/bandprotocol/band/go/dt"
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
 )
 
@@ -14,14 +13,8 @@ type Driver interface {
 	Query([]byte) dt.Answer
 }
 
-func FromConfig(config *viper.Viper) map[common.Address]Driver {
-	output := make(map[common.Address]Driver)
-	drivers := config.GetStringMap("drivers")
-	for datasetHex, _ := range drivers {
-		dataset := common.HexToAddress(datasetHex)
-		output[dataset] = FromConfigIndividual(config.Sub("drivers." + datasetHex))
-	}
-	return output
+func FromConfig(config *viper.Viper) Driver {
+	return FromConfigIndividual(config.Sub("driver"))
 }
 
 func FromConfigIndividual(config *viper.Viper) Driver {
@@ -62,8 +55,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &Gemini{}
 	case "FinancialModelPrep":
 		adpt = &FinancialModelPrep{}
-	case "CoinBase":
-		adpt = &CoinBase{}
+	case "Coinbase":
+		adpt = &Coinbase{}
 	case "OpenMarketCap":
 		adpt = &OpenMarketCap{}
 	case "FreeForexApi":
@@ -88,6 +81,8 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &PriceHttp{}
 	case "CoinGecko":
 		adpt = &CoinGecko{}
+	case "BinanceAmerica":
+		adpt = &BinanceAmerica{}
 	case "Binance":
 		adpt = &Binance{}
 	case "EplEspn":
@@ -115,11 +110,11 @@ func PriceToBigInt(price float64) *big.Int {
 	bigval.SetFloat64(price)
 
 	multiplier := new(big.Float)
-	multiplier.SetInt(big.NewInt(1000000000000000000))
+	multiplier.SetInt(big.NewInt(100))
 	bigval.Mul(bigval, multiplier)
 
 	result := new(big.Int)
 	bigval.Int(result)
 
-	return result
+	return result.Mul(result, big.NewInt(10000000000000000))
 }

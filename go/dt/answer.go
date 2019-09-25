@@ -21,17 +21,17 @@ func (o AnswerOption) String() string {
 }
 
 var toString = map[AnswerOption]string{
-	Missing:   "Missing",
-	NotFound:  "Not found",
-	Answered:  "Answered",
-	Delegated: "Delegated",
+	Missing:   "MISSING",
+	NotFound:  "NOT_FOUND",
+	Answered:  "OK",
+	Delegated: "DELEGATE",
 }
 
 var toID = map[string]AnswerOption{
-	"Missing":   Missing,
-	"Not found": NotFound,
-	"Answered":  Answered,
-	"Delegated": Delegated,
+	"MISSING":   Missing,
+	"NOT_FOUND": NotFound,
+	"OK":        Answered,
+	"DELEGATE":  Delegated,
 }
 
 // MarshalJSON marshals the enum as a quoted json string

@@ -12,11 +12,11 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-type CoinBase struct{}
+type Coinbase struct{}
 
-func (*CoinBase) Configure(*viper.Viper) {}
+func (*Coinbase) Configure(*viper.Viper) {}
 
-func (*CoinBase) QuerySpotPrice(symbol string) (float64, error) {
+func (*Coinbase) QuerySpotPrice(symbol string) (float64, error) {
 	pairs := strings.Split(symbol, "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
@@ -48,7 +48,7 @@ func (*CoinBase) QuerySpotPrice(symbol string) (float64, error) {
 	return price.Float(), nil
 }
 
-func (a *CoinBase) Query(key []byte) dt.Answer {
+func (a *Coinbase) Query(key []byte) dt.Answer {
 	keys := strings.Split(string(key), "/")
 	if len(keys) != 2 {
 		return dt.NotFoundAnswer

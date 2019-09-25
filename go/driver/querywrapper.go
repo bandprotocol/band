@@ -39,7 +39,7 @@ func DoQuery(driver Driver, key []byte) dt.Answer {
 		queryResult = val.Option.String()
 	}
 	logDebug(
-		fmt.Sprintf("|%-25s|%-45s|\n", driverName, queryResult),
+		fmt.Sprintf("%s - %s: %s", key, driverName, queryResult),
 	)
 	return val
 }

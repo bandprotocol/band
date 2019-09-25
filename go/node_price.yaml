@@ -1,70 +1,23 @@
-port: 5000
-queryDebug: false
-privateKey: "xxxxxx"
-drivers:
-  "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e":
-    name: RegEx
-    method: Median
-    children:
-      binance:
-        match: ^SPOTPX/BTC-USDT$
-        priority: 1
-        driver:
-          name: Binance
-      stock:
-        match: ^SPOTPX/([A-Z]+)$
-        priority: 3
-        driver:
-          name: AggMedian
-          children:
-            alphaVantageForex:
-              name: AlphaVantageForex
-              apikey: xxxxxx
-            freeForexApi:
-              name: FreeForexApi
-            alphaVantageStock:
-              name: AlphaVantageStock
-              apikey: xxxxxx
-            worldTradingData:
-              name: WorldTradingData
-              apikey: xxxxxx
-            financialModelPrep:
-              name: FinancialModelPrep
-      crypto:
-        match: ^SPOTPX/([A-Z]+)-([A-Z]+)$
-        priority: 2
-        driver:
-          name: AggMedian
-          children:
-            coinBase:
-              name: CoinBase
-            gemini:
-              name: Gemini
-            kraken:
-              name: Kraken
-            bitfinex:
-              name: Bitfinex
-            bitstamp:
-              name: Bitstamp
-            openMarketCap:
-              name: OpenMarketCap
-            onChainFX:
-              name: OnChainFX
-            cryptoCompare:
-              name: CryptoCompare
-            bittrex:
-              name: Bittrex
-            coinMarketCap:
-              name: CoinMarketCap
-              apikey: xxxxxx
-            bancor:
-              name: Bancor
-            uniswap:
-              name: Uniswap
-            kyber:
-              name: Kyber
-            ratesapi:
-              name: Ratesapi
-            currencyConverter:
-              name: CurrencyConverter
-              apikey: xxxxxx
+privateKey: "5b8ab179d8acee1378088e30883138b8be3c38ec099726db6dbf9e139bff7f01"
+driver:
+  name: AggMedian
+  children:
+    binanceamerica:
+      name: BinanceAmerica
+    coinbase:
+      name: Coinbase
+    gemini:
+      name: Gemini
+    kraken:
+      name: Kraken
+    bitfinex:
+      name: Bitfinex
+    bittrex:
+      name: Bittrex
+    coinmarketcxap:
+      name: CoinMarketCap
+      apiKey: XXX
+    cryptocompare:
+      name: CryptoCompare
+    coingecko:
+      name: CoinGecko
