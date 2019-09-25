@@ -91,9 +91,10 @@ switch (network) {
     )
     break
   case 'ropsten':
-    /**
-     * add ropsten GRAPHQL and API endpoint
-     */
+    BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-ropsten.bandprotocol.com/graphql',
+    )
     break
   case 'local':
   default:
