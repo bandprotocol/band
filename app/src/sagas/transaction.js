@@ -50,12 +50,28 @@ function* sendTransaction({ transaction, title, type }) {
     yield put(dumpTxs())
   } catch (error) {
     const currentUser = yield select(currentUserSelector)
-    if (
+    const currentNetwork = yield select(currentNetworkSelector)
+    if (currentNetwork === 'mainnet') {
+      window.confirm(`Insufficient ETH to pay for gas fee. Please Buy eth`)
+    } else {
       window.confirm(
-        `Insufficient ETH to pay for gas fee. Please request free Kovan testnet ETH and send it to ${currentUser} ?`,
+        `Insufficient ETH to pay for gas fee. Please request free ${currentNetwork} testnet ETH and send it to ${currentUser} ?`,
       )
-    ) {
-      window.open('https://gitter.im/kovan-testnet/faucet')
+
+      switch (currentNetwork) {
+        case 'kovan':
+          window.open('https://gitter.im/kovan-testnet/faucet')
+          break
+        case 'rinkeby':
+          window.open('https://faucet.rinkeby.io/')
+          break
+        case 'ropsten':
+          window.open('https://faucet.ropsten.be/')
+          break
+        case 'mainet':
+        default:
+          break
+      }
     }
   } finally {
     yield put(removePendingTx(timestamp))
