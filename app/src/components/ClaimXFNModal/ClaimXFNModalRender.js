@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Button, Text, Card } from 'ui/common'
-import { colors } from 'ui'
+import { Image, Flex, Text, Card } from 'ui/common'
+import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 
 // Images
 import AdtlSrc from 'images/airdropxfn_tl.svg'
@@ -59,8 +59,63 @@ const MoveFlex2 = styled(Flex)`
 `
 
 export default props => {
-  const { signin } = props
-  const xfnAmount = 56.43
+  const {
+    signin,
+    hasPendingReward,
+    rewardAmount,
+    xfnRewardContract,
+    claimXFNReward,
+  } = props
+  const [loading, setLoading] = useState(true)
+  const [pendingTx, setPendingTx] = useState(false)
+
+  window.setPendingTx = setPendingTx
+
+  useEffect(() => {
+    ;(async () => {
+      await new Promise(resolve =>
+        setTimeout(resolve, 800 + Math.ceil(200 * Math.random())),
+      )
+      setLoading(false)
+    })()
+  }, [])
+
+  const claim = async () => {
+    if (!xfnRewardContract) return
+    setPendingTx(true)
+    const a = await claimXFNReward(xfnRewardContract)
+    console.log(a)
+    setPendingTx(false)
+  }
+
+  if (loading) {
+    return (
+      <Card
+        variant="modal"
+        style={{
+          border: '0px',
+          boxShadow: '1px 1px 49px rgba(0,0,0,0.25)',
+          borderRadius: '20px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <Flex
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          mb={3}
+          style={{
+            minWidth: '500px',
+            minHeight: '500px',
+          }}
+        >
+          <CircleLoadingSpinner radius="80px" />
+        </Flex>
+      </Card>
+    )
+  }
+
   return (
     <Card
       variant="modal"
@@ -163,12 +218,28 @@ export default props => {
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
+          style={{ position: 'relative' }}
         >
-          <ClaimButton>
-            <Text color="white" fontSize="24px">
-              Get XFN {xfnAmount} Now!
+          <ClaimButton onClick={() => claim()}>
+            <Text
+              color="white"
+              fontSize="24px"
+              style={{ opacity: pendingTx ? 0 : 1 }}
+            >
+              Get XFN{' '}
+              {rewardAmount > 0
+                ? rewardAmount.toFixed(2)
+                : rewardAmount.toFixed(4)}{' '}
+              Now!
             </Text>
           </ClaimButton>
+          {pendingTx && (
+            <ClaimButton
+              style={{ position: 'absolute', top: '0px', width: '100%' }}
+            >
+              <CircleLoadingSpinner radius="40px" color="white" />
+            </ClaimButton>
+          )}
         </Flex>
       </Flex>
     </Card>
