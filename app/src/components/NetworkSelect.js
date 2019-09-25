@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 const selectStyles = isLogin => ({
   control: styles => ({
     ...styles,
-    backgroundColor: isLogin ? '#7d8dfa' : '#3c55f9',
+    backgroundColor: isLogin ? '#7d8dfa' : '#5269ff',
     border: '0px',
     width: '140px',
     minHeight: '25px',
