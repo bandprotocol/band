@@ -27,8 +27,8 @@ func (*Binance) QuerySpotPrice(symbol string) (float64, error) {
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
-	timeoutDuration, _ := time.ParseDuration("5s")
-	timeout5SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
+	timeoutDuration, _ := time.ParseDuration("3s")
+	timeout3SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
 
 	needConvert := false
 	if pairs[1] == "USD" {
@@ -37,7 +37,7 @@ func (*Binance) QuerySpotPrice(symbol string) (float64, error) {
 	}
 	response, err := grequests.Get(
 		fmt.Sprintf("https://api.binance.com/api/v1/depth?symbol=%s%s&limit=5", pairs[0], pairs[1]),
-		&timeout5SecondOption,
+		&timeout3SecondOption,
 	)
 	if err != nil {
 		return 0, err
@@ -46,6 +46,9 @@ func (*Binance) QuerySpotPrice(symbol string) (float64, error) {
 	err = response.JSON(&result)
 	if err != nil {
 		return 0, err
+	}
+	if len(result.Bids) == 0 || len(result.Asks) == 0 {
+		return 0, fmt.Errorf("Missing key")
 	}
 	bid, err := strconv.ParseFloat(result.Bids[0][0], 64)
 	if err != nil {
@@ -59,7 +62,7 @@ func (*Binance) QuerySpotPrice(symbol string) (float64, error) {
 	if needConvert {
 		res, err := grequests.Get(
 			"https://min-api.cryptocompare.com/data/price?fsym=USDT&tsyms=USD",
-			&timeout5SecondOption,
+			&timeout3SecondOption,
 		)
 		if err != nil {
 			return 0, err

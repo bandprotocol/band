@@ -2,14 +2,15 @@ package driver
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"strconv"
 	"strings"
+	"time"
+
+	"github.com/levigross/grequests"
 
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
-	"github.com/tidwall/gjson"
 )
 
 type BinanceAmerica struct{}
@@ -17,7 +18,8 @@ type BinanceAmerica struct{}
 func (*BinanceAmerica) Configure(*viper.Viper) {}
 
 func (*BinanceAmerica) QuerySpotPrice(symbol string) (float64, error) {
-	client := &http.Client{}
+	timeoutDuration, _ := time.ParseDuration("3s")
+	timeout3SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
 
 	pairs := strings.Split(strings.ToUpper(symbol), "-")
 	if len(pairs) != 2 {
@@ -29,26 +31,24 @@ func (*BinanceAmerica) QuerySpotPrice(symbol string) (float64, error) {
 	url.WriteString(pairs[1])
 	url.WriteString("&limit=5")
 
-	req, err := http.NewRequest("GET", url.String(), nil)
+	response, err := grequests.Get(url.String(), &timeout3SecondOption)
 	if err != nil {
 		return 0, err
 	}
-	req.Header.Add("Accept", "application/json")
-	res, err := client.Do(req)
+	var result BinanceResponse
+	response.JSON(&result)
+	if len(result.Bids) == 0 || len(result.Asks) == 0 {
+		return 0, fmt.Errorf("Missing key")
+	}
+	bid, err := strconv.ParseFloat(result.Bids[0][0], 64)
 	if err != nil {
 		return 0, err
 	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
+	ask, err := strconv.ParseFloat(result.Asks[0][0], 64)
 	if err != nil {
 		return 0, err
 	}
-	prices := gjson.GetManyBytes(body, "bids.0.0", "asks.0.0")
-	if !prices[0].Exists() || !prices[1].Exists() {
-		return 0, fmt.Errorf("key does not exist")
-	}
-	return (prices[0].Float() + prices[1].Float()) / 2, nil
+	return (bid + ask) / 2, nil
 }
 
 func (a *BinanceAmerica) Query(key []byte) dt.Answer {

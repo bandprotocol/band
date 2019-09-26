@@ -2,21 +2,29 @@ package driver
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"strconv"
 	"strings"
+	"time"
+
+	"github.com/levigross/grequests"
 
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/viper"
-	"github.com/tidwall/gjson"
 )
 
 type Coinbase struct{}
 
+type CoinbaseResponse struct {
+	Price string `json:"price"`
+}
+
 func (*Coinbase) Configure(*viper.Viper) {}
 
 func (*Coinbase) QuerySpotPrice(symbol string) (float64, error) {
+	timeoutDuration, _ := time.ParseDuration("3s")
+	timeout3SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
+
 	pairs := strings.Split(symbol, "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
@@ -25,27 +33,26 @@ func (*Coinbase) QuerySpotPrice(symbol string) (float64, error) {
 	var url strings.Builder
 	url.WriteString("https://api.pro.coinbase.com/products/")
 	url.WriteString(strings.ToUpper(symbol))
-	url.WriteString("/trades")
+	url.WriteString("/trades?limit=1")
 
-	var client = &http.Client{}
-
-	res, err := client.Get(url.String())
+	response, err := grequests.Get(url.String(), &timeout3SecondOption)
 	if err != nil {
 		return 0, err
 	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
+	var result []CoinbaseResponse
+	err = response.JSON(&result)
 	if err != nil {
 		return 0, err
 	}
-	price := gjson.GetBytes(body, "0.price")
-
-	if !price.Exists() {
-		return 0, fmt.Errorf("key does not exist")
+	if len(result) == 0 || result[0].Price == "" {
+		return 0, fmt.Errorf("Missing key")
+	}
+	price, err := strconv.ParseFloat(result[0].Price, 64)
+	if err != nil {
+		return 0, err
 	}
 
-	return price.Float(), nil
+	return price, nil
 }
 
 func (a *Coinbase) Query(key []byte) dt.Answer {

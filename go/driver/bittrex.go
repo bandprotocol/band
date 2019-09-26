@@ -2,21 +2,29 @@ package driver
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"strings"
+	"time"
 
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/levigross/grequests"
 	"github.com/spf13/viper"
-	"github.com/tidwall/gjson"
 )
 
 type Bittrex struct{}
 
+type BittrexResponse struct {
+	Result struct {
+		Last float64 `json:"Last`
+	} `json:"result"`
+}
+
 func (*Bittrex) Configure(*viper.Viper) {}
 
 func (*Bittrex) QuerySpotPrice(symbol string) (float64, error) {
+	timeoutDuration, _ := time.ParseDuration("3s")
+	timeout3SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
+
 	pairs := strings.Split(symbol, "-")
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
@@ -28,25 +36,20 @@ func (*Bittrex) QuerySpotPrice(symbol string) (float64, error) {
 	url.WriteString("-")
 	url.WriteString(strings.ToUpper(pairs[0]))
 
-	var client = &http.Client{}
-
-	res, err := client.Get(url.String())
+	response, err := grequests.Get(url.String(), &timeout3SecondOption)
 	if err != nil {
 		return 0, err
 	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
+	var result BittrexResponse
+	err = response.JSON(&result)
 	if err != nil {
 		return 0, err
 	}
-	price := gjson.GetBytes(body, "result.Last")
-
-	if !price.Exists() {
-		return 0, fmt.Errorf("key does not exist")
+	if result.Result.Last == 0 {
+		return 0, fmt.Errorf("Invalid response")
 	}
 
-	return price.Float(), nil
+	return result.Result.Last, nil
 }
 
 func (a *Bittrex) Query(key []byte) dt.Answer {
