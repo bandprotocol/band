@@ -7,6 +7,7 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import AdtlSrc from 'images/airdropxfn_tl.svg'
 import AdcSrc from 'images/airdropcoin.svg'
 import Clouds from 'images/clouds.svg'
+import { hideModal } from 'actions'
 
 const ClaimButton = styled(Flex).attrs({
   justifyContent: 'center',
@@ -66,6 +67,9 @@ export default props => {
     hideXFNRewardModal,
   } = props
   const [loading, setLoading] = useState(true)
+
+  const [airDropPeriod] = useState(false)
+
   const [pendingTx, setPendingTx] = useState(false)
 
   useEffect(() => {
@@ -199,26 +203,65 @@ export default props => {
           p="20px"
           style={{ borderRadius: '20px', maxWidth: '375px', zIndex: 1 }}
         >
-          <Text
-            fontWeight={300}
-            fontSize="18px"
-            color="white"
-            lineHeight="24px"
-          >
-            Financial Data Feeds Token (
-            <span style={{ fontWeight: 900 }}> XFN</span> ) is Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Dolor sed viverra ipsum
-            nunc aliquet bibendum enim.
-          </Text>
+          {airDropPeriod ? (
+            <>
+              <Text
+                fontWeight={300}
+                fontSize="18px"
+                color="white"
+                lineHeight="24px"
+              >
+                Financial Data Feeds Token (
+                <span style={{ fontWeight: 900 }}> XFN</span> ) is Lorem ipsum
+                dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Dolor sed
+                viverra ipsum nunc aliquet bibendum enim.
+              </Text>
+            </>
+          ) : (
+            <Flex
+              flexDirection="column"
+              color="white"
+              fontWeight={300}
+              fontSize="18px"
+              lineHeight="24px"
+            >
+              <Text fontSize="28px">Instruction</Text>
+              <Flex mt="10px" flexDirection="column">
+                <Flex mt="10px">
+                  <Text mr="10px">1.</Text>
+                  <Text>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
+                    ad soluta voluptatum animi. Vitae, illo dolorem? Blanditiis
+                    nihil accusantium molestiae.
+                  </Text>
+                </Flex>
+                <Flex mt="10px">
+                  <Text mr="10px">2.</Text>
+                  <Text>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Ratione porro quo non hic ut harum totam corrupti,
+                  </Text>
+                </Flex>
+                <Flex mt="10px">
+                  <Text mr="10px">3.</Text>
+                  <Text>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                  </Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          )}
         </Flex>
+
         <Flex
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
           style={{ position: 'relative' }}
         >
-          <ClaimButton onClick={() => claim()}>
+          {/* Hard code */}
+          {/* <ClaimButton onClick={() => claim()}>
             <Text
               color="white"
               fontSize="24px"
@@ -237,7 +280,12 @@ export default props => {
             >
               <CircleLoadingSpinner radius="40px" color="white" />
             </ClaimButton>
-          )}
+          )} */}
+          <ClaimButton onClick={() => hideXFNRewardModal()}>
+            <Text color="white" fontSize="24px">
+              Understand
+            </Text>
+          </ClaimButton>
         </Flex>
       </Flex>
     </Card>

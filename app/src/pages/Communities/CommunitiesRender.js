@@ -181,7 +181,8 @@ export default ({
             </AbsoluteLink>
             {sdcx && (
               <ClaimButton onClick={() => showClaimXFNModal()}>
-                Claim Free XFN
+                {/* Claim Free XFN */}
+                XFN Airdrop
               </ClaimButton>
             )}
           </Flex>
