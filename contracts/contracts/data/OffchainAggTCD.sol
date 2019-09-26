@@ -32,7 +32,7 @@ contract OffchainAggTCD is TCDBase {
     uint8[] calldata v, bytes32[] calldata r, bytes32[] calldata s
   ) external {
     require(v.length == r.length && v.length == s.length);
-    require(v.length.mul(3) > activeCount.mul(2));
+    uint256 validSignatures = 0;
     bytes32 message = keccak256(abi.encodePacked(
       "\x19Ethereum Signed Message:\n32",
       keccak256(abi.encodePacked(key, value, timestamp, status, address(this))))
@@ -40,10 +40,13 @@ contract OffchainAggTCD is TCDBase {
     address lastSigner = address(0);
     for (uint256 i = 0; i < v.length; ++i) {
       address recovered = ecrecover(message, v[i], r[i], s[i]);
-      require(activeList[recovered] != NOT_FOUND);
       require(recovered > lastSigner);
       lastSigner = recovered;
+      if (activeList[recovered] != NOT_FOUND) {
+        validSignatures++;
+      }
     }
+    require(validSignatures.mul(3) > activeCount.mul(2));
     require(timestamp > aggData[key].timestamp && uint256(timestamp) <= now);
     aggData[key] = DataPoint({
       value: value,
