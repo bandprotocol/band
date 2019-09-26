@@ -76,29 +76,36 @@ function* sendTransaction({ transaction, title, type }) {
     yield put(addTx(txHash, title, type, network, userAddress))
     yield put(dumpTxs())
   } catch (error) {
-    const currentUser = yield select(currentUserSelector)
-    const currentNetwork = yield select(currentNetworkSelector)
-    if (currentNetwork === 'mainnet') {
-      window.confirm(`Insufficient ETH to pay for gas fee. Please Buy eth`)
-    } else {
-      window.confirm(
-        `Insufficient ETH to pay for gas fee. Please request free ${currentNetwork} testnet ETH and send it to ${currentUser} ?`,
-      )
-
-      switch (currentNetwork) {
-        case 'kovan':
-          window.open('https://gitter.im/kovan-testnet/faucet')
-          break
-        case 'rinkeby':
-          window.open('https://faucet.rinkeby.io/')
-          break
-        case 'ropsten':
-          window.open('https://faucet.ropsten.be/')
-          break
-        case 'mainet':
-        default:
-          break
+    if (error.code === -32010) {
+      const currentUser = yield select(currentUserSelector)
+      const currentNetwork = yield select(currentNetworkSelector)
+      if (currentNetwork === 'mainnet') {
+        window.confirm(`Insufficient ETH to pay for gas fee. Please Buy eth`)
+      } else {
+        if (
+          window.confirm(
+            `Insufficient ETH to pay for gas fee. Please request free ${currentNetwork} testnet ETH and send it to ${currentUser} ?`,
+          )
+        ) {
+          switch (currentNetwork) {
+            case 'kovan':
+              window.open('https://gitter.im/kovan-testnet/faucet')
+              break
+            case 'rinkeby':
+              window.open('https://faucet.rinkeby.io/')
+              break
+            case 'ropsten':
+              window.open('https://faucet.ropsten.be/')
+              break
+            case 'mainet':
+            default:
+              break
+          }
+        }
       }
+    } else {
+      console.error(error)
+      alert(error.message)
     }
   } finally {
     yield put(removePendingTx(timestamp))
