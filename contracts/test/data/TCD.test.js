@@ -999,6 +999,40 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
         },
       );
     });
+
+    it('should allow stake distribution', async () => {
+      // Carol join owner
+      await this.tcd.stake(
+        this.ownerSource.address,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        10,
+        { from: carol },
+      );
+
+      (await this.tcd.infoMap(this.ownerSource.address)).stake
+        .toNumber()
+        .should.eq(50);
+      (await this.tcd.getStake(this.ownerSource.address, owner))
+        .toNumber()
+        .should.eq(40);
+      (await this.tcd.getStake(this.ownerSource.address, carol))
+        .toNumber()
+        .should.eq(10);
+      await this.comm.approve(this.tcd.address, 100000, { from: owner });
+      await this.tcd.distributeStakeReward(100, { from: owner });
+      (await this.tcd.infoMap(this.ownerSource.address)).stake
+        .toNumber()
+        .should.eq(83);
+      (await this.tcd.getStake(this.ownerSource.address, owner))
+        .toNumber()
+        .should.eq(66);
+      (await this.tcd.getStake(this.ownerSource.address, carol))
+        .toNumber()
+        .should.eq(16);
+      (await this.tcd.undistributedReward()).toNumber().should.eq(1);
+    });
+
     it('should revert if value less than query', async () => {
       await expectRevert.unspecified(
         this.tcd.query(

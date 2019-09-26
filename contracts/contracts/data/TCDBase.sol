@@ -149,9 +149,9 @@ contract TCDBase is QueryInterface {
     _rebalanceLists();
   }
 
-  function addManualETHFee() public payable {}
+  function addETHFee() public payable {}
 
-  function addManualTokenFee(uint256 tokenAmount) public {
+  function addTokenFee(uint256 tokenAmount) public {
     token.transferFrom(msg.sender, address(this), tokenAmount);
     undistributedReward = undistributedReward.add(tokenAmount);
   }
@@ -174,6 +174,21 @@ contract TCDBase is QueryInterface {
       emit FeeDistributed(dataSourceAddress, providerReward, ownerReward);
       dataSourceAddress = activeList[dataSourceAddress];
     }
+  }
+
+  function distributeStakeReward(uint256 tokenAmount) public {
+    token.transferFrom(msg.sender, address(this), tokenAmount);
+    uint256 remainingReward = tokenAmount;
+    uint256 stakeReward = tokenAmount.div(activeCount);
+    address dataSourceAddress = activeList[ACTIVE_GUARD];
+    while (dataSourceAddress != ACTIVE_GUARD) {
+      DataSourceInfo storage provider = infoMap[dataSourceAddress];
+      provider.stake = provider.stake.add(stakeReward);
+      remainingReward = remainingReward.sub(stakeReward);
+      emit FeeDistributed(dataSourceAddress, stakeReward, 0);
+      dataSourceAddress = activeList[dataSourceAddress];
+    }
+    undistributedReward = undistributedReward.add(remainingReward);
   }
 
   function unlockTokenFromReceipt(uint256 receiptId) public {
