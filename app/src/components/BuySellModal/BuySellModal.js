@@ -19,7 +19,7 @@ class BuySellModal extends React.Component {
       amount: '',
       price: new BN(0), // CANNOT CALCULATE PRICE, number
       priceLimit: '',
-      priceChange: '5',
+      priceChange: '2.5',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK', // INSUFFICIENT_BAND, OK
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -28,7 +28,7 @@ class BuySellModal extends React.Component {
       amount: '',
       price: new BN(0), // CANNOT CALCULATE PRICE, number
       priceLimit: '',
-      priceChange: '5',
+      priceChange: '2.5',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK',
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -119,7 +119,7 @@ class BuySellModal extends React.Component {
       this.setState({ loading: true })
       const price = await this.getPrice(type, amount)
       this.setState({ loading: false })
-      let newPriceLimit = this.calculatePriceLimit(type, price, '5')
+      let newPriceLimit = this.calculatePriceLimit(type, price, '2.5')
       if (
         newPriceLimit &&
         newPriceLimit.gt &&

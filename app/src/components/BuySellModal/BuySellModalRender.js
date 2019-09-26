@@ -219,14 +219,9 @@ const Advance = ({
   toggleAdvance,
   priceLimit,
   priceChange,
-  ratio,
   priceLimitStatus,
   handlePriceLimit,
 }) => {
-  const acceptablePriceChange = ratio
-    .mul(BN.parse(type === 'buy' ? 100 + 1.0 * priceChange : 100 - priceChange))
-    .div(BN.parse(100.0))
-    .clamp(BN.parse(10000000), BN.parse(0))
   return (
     <Box
       bg="#ffffff"
@@ -290,10 +285,12 @@ const Advance = ({
                     value={
                       !priceLimit || isNaN(priceLimit)
                         ? priceLimit
-                        : (priceLimit / 1e18).toLocaleString('en-US', {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 6,
-                          })
+                        : (priceLimit / 1e18)
+                            .toLocaleString('en-US', {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 6,
+                            })
+                            .replace(',', '')
                     }
                     placeholder="Price Limit ex. 10000.00"
                     onChange={e => handlePriceLimit(e)}
@@ -415,6 +412,7 @@ export default ({
       return new BN(0)
     }
   })()
+
   const priceSlippage = (() => {
     try {
       if (type === 'sell' && ratio.isZero()) {
@@ -494,7 +492,10 @@ export default ({
                 </React.Fragment>
               ) : (
                 <React.Fragment>
-                  {`1 ${symbol} = ${ratio.pretty()} BAND `}
+                  {`1 ${symbol} = ${(ratio / 1e18).toLocaleString('en-US', {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 4,
+                  })} BAND `}
                   <Text color="#4e3ca9" ml="5px">
                     ${`(${formatPrice(ratio.pretty() * bandPrice)} USD)`}
                   </Text>
@@ -527,7 +528,10 @@ export default ({
               </React.Fragment>
             ) : (
               <Flex flex={2} justifyContent="flex-end">
-                {`${priceSlippage.pretty()} %`}
+                {`${(priceSlippage / 1e18).toLocaleString('en-US', {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 4,
+                })} %`}
               </Flex>
             )}
           </Flex>
