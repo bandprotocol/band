@@ -21,3 +21,11 @@ driver:
       name: CryptoCompare
     coingecko:
       name: CoinGecko
+    upbit:
+      name: Upbit
+    coinone:
+      name: Coinone
+    binance:
+      name: Binance
+    huobi:
+      name: Huobi

@@ -45,6 +45,14 @@ func FromConfigIndividual(config *viper.Viper) Driver {
 		adpt = &CoinGecko{}
 	case "BinanceAmerica":
 		adpt = &BinanceAmerica{}
+	case "Binance":
+		adpt = &Binance{}
+	case "Huobi":
+		adpt = &Huobi{}
+	case "Upbit":
+		adpt = &Upbit{}
+	case "Coinone":
+		adpt = &Coinone{}
 	default:
 		panic(fmt.Sprintf("driver.FromConfig: unknown driver name %s", name))
 	}
