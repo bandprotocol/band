@@ -6,12 +6,10 @@ const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const MultiSigTCD = artifacts.require('MultiSigTCD');
-const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
+const OffchainAggTCD = artifacts.require('OffchainAggTCD');
+const OffchainAggTCDFactory = artifacts.require('OffchainAggTCDFactory');
 const BondingCurveExpression = artifacts.require('BondingCurveExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
-const MedianAggregator = artifacts.require('MedianAggregator');
-const MajorityAggregator = artifacts.require('MajorityAggregator');
 const QueryTCDMock = artifacts.require('QueryTCDMock');
 
 require('chai').should();
@@ -20,7 +18,8 @@ const sign = async (k, v, t, addr, signer) => {
   const hash = web3.utils.soliditySha3(
     { t: 'bytes', v: k },
     { t: 'uint256', v: v },
-    { t: 'uint256', v: t },
+    { t: 'uint64', v: t },
+    { t: 'uint8', v: 1 },
     { t: 'address', v: addr },
   );
   const sig = await web3.eth.sign(hash, signer);
@@ -31,14 +30,14 @@ const sign = async (k, v, t, addr, signer) => {
   };
 };
 
-contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
+contract('OffchainAggTCD', ([_, owner, alice, bob, carol]) => {
   beforeEach(async () => {
     this.band = await BandToken.new({ from: owner });
     await this.band.mint(owner, 100000000, { from: owner });
     this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
-    this.mtcdFactory = await MultiSigTCDFactory.new();
+    this.mtcdFactory = await OffchainAggTCDFactory.new();
     this.registry = await BandRegistry.new(
       this.band.address,
       this.exchange.address,
@@ -65,14 +64,12 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     this.curve = await BondingCurve.at(data1.receipt.logs[2].args.bondingCurve);
     this.params = await Parameters.at(data1.receipt.logs[2].args.params);
     await this.comm.addCapper(this.mtcdFactory.address, { from: owner });
-    const data2 = await this.mtcdFactory.createMultiSigTCD(
+    const data2 = await this.mtcdFactory.createOffchainAggTCD(
       web3.utils.fromAscii('data:'),
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
     );
-    this.median = await MedianAggregator.new({ from: owner });
-    this.majority = await MajorityAggregator.new({ from: owner });
     await this.params.setRaw(
       [
         web3.utils.fromAscii('data:min_provider_stake'),
@@ -80,13 +77,12 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('data:owner_revenue_pct'),
         web3.utils.fromAscii('data:query_price'),
         web3.utils.fromAscii('data:withdraw_delay'),
-        web3.utils.fromAscii('data:data_aggregator'),
       ],
-      [10, 3, '500000000000000000', 100, 0, this.median.address],
+      [10, 3, '500000000000000000', 100, 0],
       { from: owner },
     );
 
-    this.mtcd = await MultiSigTCD.at(data2.receipt.logs[0].args.mtcd);
+    this.mtcd = await OffchainAggTCD.at(data2.receipt.logs[0].args.mtcd);
     this.queryMock = await QueryTCDMock.new(this.mtcd.address);
 
     await this.band.transfer(alice, 10000000, { from: owner });
@@ -382,102 +378,139 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
       (await this.comm.unlockedBalanceOf(alice)).toNumber().should.eq(1000);
       (await this.comm.balanceOf(alice)).toNumber().should.eq(1000);
     });
+    it('should accept even if contain non active providers', async () => {
+      const topProviders = [carol, bob, alice, owner].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = await time.latest();
+      const val = 9999;
+      const [vs, rs, ss] = [[], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          val,
+          timeStamp,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+      }
+      await this.mtcd.report(key1, val, timeStamp, 1, vs, rs, ss);
+      await this.queryMock.query(key1, { from: owner, value: 100 });
+      parseInt(await this.queryMock.result()).should.eq(9999);
+    });
+    it('should not accept if contain not enough active providers', async () => {
+      const topProviders = [carol, bob, owner].sort((a, b) => {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+      });
+      const timeStamp = await time.latest();
+      const val = 9999;
+      const [vs, rs, ss] = [[], [], []];
+      for (let i = 0; i < topProviders.length; i++) {
+        const sig = await sign(
+          key1,
+          val,
+          timeStamp,
+          this.mtcd.address,
+          topProviders[i],
+        );
+        vs.push(sig.v);
+        rs.push(sig.r);
+        ss.push(sig.s);
+      }
+      await expectRevert.unspecified(
+        this.mtcd.report(key1, val, timeStamp, 1, vs, rs, ss),
+      );
+    });
     it('should be able to report and get median', async () => {
       const topProviders = [carol, bob, alice].sort((a, b) => {
         if (a < b) return -1;
         if (a > b) return 1;
         return 0;
       });
-      const timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
-      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      const timeStamp = await time.latest();
+      const val = 9999;
+      const [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
-          9999 + i,
-          timeStamp + i,
+          val,
+          timeStamp,
           this.mtcd.address,
           topProviders[i],
         );
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(9999 + i);
       }
-      await this.mtcd.report(key1, vals, ts, vs, rs, ss);
+      await this.mtcd.report(key1, val, timeStamp, 1, vs, rs, ss);
       await this.queryMock.query(key1, { from: owner, value: 100 });
-      parseInt(await this.queryMock.result()).should.eq(10000);
+      parseInt(await this.queryMock.result()).should.eq(9999);
     });
     it('should be able to report and get majority', async () => {
-      await this.params.setRaw(
-        [web3.utils.fromAscii('data:data_aggregator')],
-        [this.majority.address],
-        { from: owner },
-      );
       const topProviders = [carol, bob, alice].sort((a, b) => {
         if (a < b) return -1;
         if (a > b) return 1;
         return 0;
       });
-      const timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
-      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      const timeStamp = await time.latest();
+      const val = 1111;
+      const [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
-          1111 + Math.floor(i / 2),
-          timeStamp + i,
+          1111,
+          timeStamp,
           this.mtcd.address,
           topProviders[i],
         );
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(1111 + Math.floor(i / 2));
       }
-      await this.mtcd.report(key1, vals, ts, vs, rs, ss);
+      await this.mtcd.report(key1, val, timeStamp, 1, vs, rs, ss);
       await this.queryMock.query(key1, { from: owner, value: 100 });
       parseInt(await this.queryMock.result()).should.eq(1111);
     });
     it('should fail if signers are not in ascending order', async () => {
-      await this.params.setRaw(
-        [web3.utils.fromAscii('data:data_aggregator')],
-        [this.majority.address],
-        { from: owner },
-      );
       const topProviders = [carol, bob, alice].sort((a, b) => {
         if (a < b) return 1;
         if (a > b) return -1;
         return 0;
       });
-      const timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
-      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      const timeStamp = await time.latest();
+      const [vs, rs, ss] = [[], [], []];
+      const val = 1111;
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
-          1111 + Math.floor(i / 2),
-          timeStamp + i,
+          val,
+          timeStamp,
           this.mtcd.address,
           topProviders[i],
         );
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(1111 + Math.floor(i / 2));
       }
       await expectRevert.unspecified(
-        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+        this.mtcd.report(key1, val, timeStamp, 1, vs, rs, ss),
       );
     });
-    it('should fail if timeStamp is oleder than now', async () => {
+    it('should fail if timeStamp is newer than now', async () => {
       const topProviders = [carol, bob, alice].sort((a, b) => {
         if (a < b) return -1;
         if (a > b) return 1;
         return 0;
       });
-      const timeStamp = Math.floor(100 + Date.now() / 1000) - 1000;
-      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      const timeStamp = (await time.latest()) + 1000;
+      const [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
@@ -489,11 +522,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(9999 + i);
       }
       await expectRevert.unspecified(
-        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+        this.mtcd.report(key1, 9999, timeStamp, 1, vs, rs, ss),
       );
     });
     it('should fail if there is a signature which is not from top provider', async () => {
@@ -502,8 +533,8 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         if (a > b) return 1;
         return 0;
       });
-      const timeStamp = Math.floor(100 + Date.now() / 1000) + 1000;
-      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      const timeStamp = await time.latest();
+      const [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
@@ -515,11 +546,9 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(9999 + i);
       }
       await expectRevert.unspecified(
-        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+        this.mtcd.report(key1, 9999, timeStamp, 1, vs, rs, ss),
       );
     });
     it('should fail if number of signatures is <= 2/3', async () => {
@@ -528,8 +557,8 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         if (a > b) return 1;
         return 0;
       });
-      const timeStamp = Math.floor(100 + Date.now() / 1000) + 1000;
-      const [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      const timeStamp = await time.latest();
+      const [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
@@ -541,20 +570,15 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(9999 + i);
       }
       await expectRevert.unspecified(
-        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+        this.mtcd.report(key1, 9999, timeStamp, 1, vs, rs, ss),
       );
     });
     it('should be able to report if more than 2/3 have signed', async () => {
       await this.params.setRaw(
-        [
-          web3.utils.fromAscii('data:data_aggregator'),
-          web3.utils.fromAscii('data:max_provider_count'),
-        ],
-        [this.majority.address, 4],
+        [web3.utils.fromAscii('data:max_provider_count')],
+        [4],
         { from: owner },
       );
 
@@ -571,24 +595,22 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         if (a > b) return 1;
         return 0;
       });
-      let timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
-      let [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      let timeStamp = await time.latest();
+      let [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
-          1111 + Math.floor(i / 2),
-          timeStamp + i,
+          1111,
+          timeStamp,
           this.mtcd.address,
           topProviders[i],
         );
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(1111 + Math.floor(i / 2));
       }
       await expectRevert.unspecified(
-        this.mtcd.report(key1, vals, ts, vs, rs, ss),
+        this.mtcd.report(key1, 1111, timeStamp, 1, vs, rs, ss),
       );
 
       topProviders = [carol, bob, owner].sort((a, b) => {
@@ -596,23 +618,21 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
         if (a > b) return 1;
         return 0;
       });
-      timeStamp = 100 + Math.floor(100 + Date.now() / 1000);
-      [vs, rs, ss, ts, vals] = [[], [], [], [], []];
+      timeStamp = await time.latest();
+      [vs, rs, ss] = [[], [], []];
       for (let i = 0; i < topProviders.length; i++) {
         const sig = await sign(
           key1,
-          1111 + Math.floor(i / 2),
-          timeStamp + i,
+          1111,
+          timeStamp,
           this.mtcd.address,
           topProviders[i],
         );
         vs.push(sig.v);
         rs.push(sig.r);
         ss.push(sig.s);
-        ts.push(timeStamp + i);
-        vals.push(1111 + Math.floor(i / 2));
       }
-      await this.mtcd.report(key1, vals, ts, vs, rs, ss);
+      await this.mtcd.report(key1, 1111, timeStamp, 1, vs, rs, ss);
       await this.queryMock.query(key1, { from: owner, value: 100 });
       parseInt(await this.queryMock.result()).should.eq(1111);
     });
