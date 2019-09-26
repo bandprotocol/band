@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Text, Card } from 'ui/common'
+import { Image, Flex, Text, Card, AbsoluteLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 // Images
 import AdtlSrc from 'images/airdropxfn_tl.svg'
@@ -64,8 +66,14 @@ export default props => {
     xfnRewardContract,
     claimXFNReward,
     hideXFNRewardModal,
+    doneStep1 = false,
+    doneStep2 = false,
+    doneStep3 = false,
   } = props
   const [loading, setLoading] = useState(true)
+
+  const [airDropPeriod] = useState(false)
+
   const [pendingTx, setPendingTx] = useState(false)
 
   useEffect(() => {
@@ -199,26 +207,87 @@ export default props => {
           p="20px"
           style={{ borderRadius: '20px', maxWidth: '375px', zIndex: 1 }}
         >
-          <Text
-            fontWeight={300}
-            fontSize="18px"
-            color="white"
-            lineHeight="24px"
-          >
-            Financial Data Feeds Token (
-            <span style={{ fontWeight: 900 }}> XFN</span> ) is Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Dolor sed viverra ipsum
-            nunc aliquet bibendum enim.
-          </Text>
+          {airDropPeriod ? (
+            <>
+              <Text
+                fontWeight={300}
+                fontSize="18px"
+                color="white"
+                lineHeight="24px"
+              >
+                Financial Data Feeds Token (
+                <span style={{ fontWeight: 900 }}> XFN</span> ) is Lorem ipsum
+                dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Dolor sed
+                viverra ipsum nunc aliquet bibendum enim.
+              </Text>
+            </>
+          ) : (
+            <Flex
+              flexDirection="column"
+              color="white"
+              fontWeight={300}
+              fontSize="18px"
+              lineHeight="24px"
+            >
+              <Flex alignItems="flex-end">
+                <Text fontSize="24px" mr="10px">
+                  Claim XFN Airdrop
+                </Text>
+                <AbsoluteLink href="https://google.com">
+                  Learn more.
+                </AbsoluteLink>
+              </Flex>
+              <Flex mt="10px" flexDirection="column">
+                <Flex alignItems="flex-start" mt="10px">
+                  <Flex alignItems="center">
+                    <Text mr="10px">
+                      <FontAwesomeIcon
+                        icon={doneStep1 ? faCheckCircle : faCircle}
+                      ></FontAwesomeIcon>
+                    </Text>
+                    <Text mr="10px">1.</Text>
+                  </Flex>
+
+                  <Text>Login with Metamask or BandWallet.</Text>
+                </Flex>
+                <Flex alignItems="flex-start" mt="10px">
+                  <Flex alignItems="center">
+                    <Text mr="10px">
+                      <FontAwesomeIcon
+                        icon={doneStep2 ? faCheckCircle : faCircle}
+                      ></FontAwesomeIcon>
+                    </Text>
+                    <Text mr="10px">2.</Text>
+                  </Flex>
+                  <Text>Transfer band to your account.</Text>
+                </Flex>
+                <Flex alignItems="flex-start" mt="10px">
+                  <Flex alignItems="center">
+                    <Text mr="10px">
+                      <FontAwesomeIcon
+                        icon={doneStep3 ? faCheckCircle : faCircle}
+                      ></FontAwesomeIcon>
+                    </Text>
+                    <Text mr="10px">3.</Text>
+                  </Flex>
+                  <Text>
+                    Hold band until 30/10/2019 then you will get XFN Airdrop.
+                  </Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          )}
         </Flex>
+
         <Flex
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
           style={{ position: 'relative' }}
         >
-          <ClaimButton onClick={() => claim()}>
+          {/* Disable XFN Airdrop */}
+          {/* <ClaimButton onClick={() => claim()}>
             <Text
               color="white"
               fontSize="24px"
@@ -237,7 +306,12 @@ export default props => {
             >
               <CircleLoadingSpinner radius="40px" color="white" />
             </ClaimButton>
-          )}
+          )} */}
+          <ClaimButton onClick={() => hideXFNRewardModal()}>
+            <Text color="white" fontSize="24px">
+              Understand
+            </Text>
+          </ClaimButton>
         </Flex>
       </Flex>
     </Card>
