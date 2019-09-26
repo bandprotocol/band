@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Text, Card } from 'ui/common'
+import { Image, Flex, Text, Card, AbsoluteLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 // Images
 import AdtlSrc from 'images/airdropxfn_tl.svg'
@@ -65,6 +67,9 @@ export default props => {
     xfnRewardContract,
     claimXFNReward,
     hideXFNRewardModal,
+    doneStep1 = false,
+    doneStep2 = false,
+    doneStep3 = false,
   } = props
   const [loading, setLoading] = useState(true)
 
@@ -226,28 +231,48 @@ export default props => {
               fontSize="18px"
               lineHeight="24px"
             >
-              <Text fontSize="28px">Instruction</Text>
+              <Flex alignItems="flex-end">
+                <Text fontSize="24px" mr="10px">
+                  Claim XFN Airdrop
+                </Text>
+                <AbsoluteLink href="https://google.com">
+                  Learn more.
+                </AbsoluteLink>
+              </Flex>
               <Flex mt="10px" flexDirection="column">
-                <Flex mt="10px">
-                  <Text mr="10px">1.</Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
-                    ad soluta voluptatum animi. Vitae, illo dolorem? Blanditiis
-                    nihil accusantium molestiae.
-                  </Text>
+                <Flex alignItems="flex-start" mt="10px">
+                  <Flex alignItems="center">
+                    <Text mr="10px">
+                      <FontAwesomeIcon
+                        icon={doneStep1 ? faCheckCircle : faCircle}
+                      ></FontAwesomeIcon>
+                    </Text>
+                    <Text mr="10px">1.</Text>
+                  </Flex>
+
+                  <Text>Login with Metamask or BandWallet.</Text>
                 </Flex>
-                <Flex mt="10px">
-                  <Text mr="10px">2.</Text>
-                  <Text>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Ratione porro quo non hic ut harum totam corrupti,
-                  </Text>
+                <Flex alignItems="flex-start" mt="10px">
+                  <Flex alignItems="center">
+                    <Text mr="10px">
+                      <FontAwesomeIcon
+                        icon={doneStep2 ? faCheckCircle : faCircle}
+                      ></FontAwesomeIcon>
+                    </Text>
+                    <Text mr="10px">2.</Text>
+                  </Flex>
+                  <Text>Transfer band to your account.</Text>
                 </Flex>
-                <Flex mt="10px">
-                  <Text mr="10px">3.</Text>
-                  <Text>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  </Text>
+                <Flex alignItems="flex-start" mt="10px">
+                  <Flex alignItems="center">
+                    <Text mr="10px">
+                      <FontAwesomeIcon
+                        icon={doneStep3 ? faCheckCircle : faCircle}
+                      ></FontAwesomeIcon>
+                    </Text>
+                    <Text mr="10px">3.</Text>
+                  </Flex>
+                  <Text>Hold band until 30/10/2019 then you will get XFN.</Text>
                 </Flex>
               </Flex>
             </Flex>

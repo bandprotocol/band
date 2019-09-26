@@ -7,7 +7,9 @@ import { walletSelector } from 'selectors/wallet'
 import {
   xfnRewardInfoSelector,
   currentNetworkSelector,
+  currentUserSelector,
 } from 'selectors/current'
+import { bandBalanceSelector } from 'selectors/balances'
 import xfnRewardContracts from 'utils/xfnRewardContracts'
 
 class ClaimXFNModal extends React.Component {
@@ -35,6 +37,11 @@ const mapStateToProps = (state, props) => {
   const xfnRewardInfo = xfnRewardInfoSelector(state)
   const currentNetwork = currentNetworkSelector(state)
   const xfnRewardContract = xfnRewardContracts[currentNetwork]
+  const isLogin = currentUserSelector(state)
+    ? currentUserSelector(state) !== 'NOT_SIGNIN'
+    : false
+  const haveBand = Number(bandBalanceSelector(state).toString()) > 0
+
   const { hasPendingReward, rewardAmount } = xfnRewardInfo || {
     hasPendingReward: false,
     rewardAmount: 0,
@@ -44,6 +51,8 @@ const mapStateToProps = (state, props) => {
     rewardAmount,
     wallet: walletSelector(state),
     xfnRewardContract: xfnRewardContract || '',
+    doneStep1: isLogin,
+    doneStep2: haveBand,
   }
 }
 
