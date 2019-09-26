@@ -12,7 +12,7 @@ import {
   faArrowUp,
   faArrowDown,
 } from '@fortawesome/free-solid-svg-icons'
-import {formatPrice} from 'utils/format'
+import { formatPrice } from 'utils/format'
 
 const AmountInput = styled.input`
   width: 100%;
@@ -220,10 +220,8 @@ const Advance = ({
   priceLimit,
   priceChange,
   ratio,
-  loading,
   priceLimitStatus,
   handlePriceLimit,
-  handlePriceChange,
 }) => {
   const acceptablePriceChange = ratio
     .mul(BN.parse(type === 'buy' ? 100 + 1.0 * priceChange : 100 - priceChange))
@@ -309,8 +307,8 @@ const Advance = ({
                   ? 'Invalid pricelimit.'
                   : ' '}
               </Text>
-              <Flex mt={3} flexDirection="column">
-                <Text fontSize="12px">BAND Price change</Text>
+              <Flex mt={3} mb={4} flexDirection="column">
+                <Text fontSize="12px">Price change allowed</Text>
                 <Flex
                   bg="white"
                   mt="5px"
@@ -324,42 +322,9 @@ const Advance = ({
                   }}
                 >
                   <Flex style={{ position: 'absolute', right: '10px' }}>
-                    <Text fontSize="12px">%</Text>
+                    <Text fontSize="12px">{priceChange} %</Text>
                   </Flex>
-                  <AmountInput
-                    type="text"
-                    name="priceChange"
-                    value={priceChange}
-                    placeholder="Price change ex. 10"
-                    onChange={e => handlePriceChange(e)}
-                    style={{ width: '90%' }}
-                  />
                 </Flex>
-              </Flex>
-              <Flex my="10px">
-                {isNaN(priceChange) || priceChange < 0 ? (
-                  <Text
-                    fontSize="10px"
-                    color={colors.red}
-                    lineHeight="15px"
-                    style={{ display: 'block', height: '15px' }}
-                  >
-                    Invalid pricechange.
-                  </Text>
-                ) : (
-                  !acceptablePriceChange.isZero() && (
-                    <Text
-                      fontSize="11px"
-                      lineHeight={1.45}
-                      letterSpacing="-0.1px"
-                    >
-                      {`The transaction will fail if the price of 1 CHT is ${
-                        type === 'buy' ? 'higher' : 'lower'
-                      } than ${acceptablePriceChange.pretty()}
-                BAND ($${acceptablePriceChange.pretty()})`}
-                    </Text>
-                  )
-                )}
               </Flex>
             </React.Fragment>
           )}
@@ -471,6 +436,7 @@ export default ({
       return new BN(0)
     }
   })()
+
   return (
     <Flex
       flexDirection="column"
@@ -527,7 +493,7 @@ export default ({
                 <React.Fragment>
                   {`1 ${symbol} = ${ratio.pretty()} BAND `}
                   <Text color="#4e3ca9" ml="5px">
-                    ${`(${ formatPrice(ratio.pretty() * bandPrice)} USD)`}
+                    ${`(${formatPrice(ratio.pretty() * bandPrice)} USD)`}
                   </Text>
                 </React.Fragment>
               )}

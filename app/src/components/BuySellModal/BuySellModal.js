@@ -176,6 +176,7 @@ class BuySellModal extends React.Component {
     if (priceLimit === '') {
       this.setTypeState(type, {
         priceLimit: '',
+        priceChange: '',
         priceLimitStatus: 'INVALID_PRICELIMIT',
       })
       return
@@ -189,7 +190,8 @@ class BuySellModal extends React.Component {
           priceLimit,
           price,
         ),
-        priceChange: '',
+        priceChange:
+          price > 0 ? Number((priceLimit * 1e20) / price - 100).toFixed(2) : '',
       })
     } else {
       this.setTypeState(type, {
@@ -251,9 +253,6 @@ class BuySellModal extends React.Component {
         break
       case 'priceLimit':
         this.updatePriceLimit(value)
-        break
-      case 'priceChange':
-        this.updatePriceChange(value)
         break
       default:
         break
