@@ -179,15 +179,15 @@ export default ({
                 Learn more about Band Protocol
               </WhiteOutlineButton>
             </AbsoluteLink>
-            {/* fix || to && for real airdrop */}
-            {/* sdcx && */}
-            {
-               (
+            {/* disable XFN airdrop */}
+            {/* sdcx && (
               <ClaimButton onClick={() => showClaimXFNModal()}>
-                {/* Claim Free XFN */}
-                XFN Airdrop
-              </ClaimButton>
-            )}
+                Claim Free XFN
+              </ClaimButton>  
+            ) */}
+            <ClaimButton onClick={() => showClaimXFNModal()}>
+              XFN Airdrop
+            </ClaimButton>
           </Flex>
         </Flex>
       </Header>

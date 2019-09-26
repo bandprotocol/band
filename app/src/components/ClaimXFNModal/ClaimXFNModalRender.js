@@ -9,7 +9,6 @@ import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import AdtlSrc from 'images/airdropxfn_tl.svg'
 import AdcSrc from 'images/airdropcoin.svg'
 import Clouds from 'images/clouds.svg'
-import { hideModal } from 'actions'
 
 const ClaimButton = styled(Flex).attrs({
   justifyContent: 'center',
@@ -272,7 +271,9 @@ export default props => {
                     </Text>
                     <Text mr="10px">3.</Text>
                   </Flex>
-                  <Text>Hold band until 30/10/2019 then you will get XFN.</Text>
+                  <Text>
+                    Hold band until 30/10/2019 then you will get XFN Airdrop.
+                  </Text>
                 </Flex>
               </Flex>
             </Flex>
@@ -285,7 +286,7 @@ export default props => {
           justifyContent="center"
           style={{ position: 'relative' }}
         >
-          {/* Hard code */}
+          {/* Disable XFN Airdrop */}
           {/* <ClaimButton onClick={() => claim()}>
             <Text
               color="white"
