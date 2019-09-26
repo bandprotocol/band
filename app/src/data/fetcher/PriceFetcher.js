@@ -80,7 +80,10 @@ export const PricePairFetcher = withRouter(
       const providers = {}
       const providerLastUpdate = {}
       for (const report of reports) {
-        const { reportedData, timestamp } = report
+        const { reportedData, timestamp } = report || {
+          reportedData: {},
+          timestamp: 0,
+        }
         const kvs = Object.entries(reportedData)
         for (const [address, vt] of kvs) {
           if (!providers[address]) {
