@@ -19,7 +19,7 @@ class BuySellModal extends React.Component {
       amount: '',
       price: new BN(0), // CANNOT CALCULATE PRICE, number
       priceLimit: '',
-      priceChange: '5',
+      priceChange: '2.5',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK', // INSUFFICIENT_BAND, OK
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -28,7 +28,7 @@ class BuySellModal extends React.Component {
       amount: '',
       price: new BN(0), // CANNOT CALCULATE PRICE, number
       priceLimit: '',
-      priceChange: '5',
+      priceChange: '2.5',
       amountStatus: null, // INVALID_AMOUNT, INSUFFICIENT_TOKEN, OK
       priceStatus: 'OK',
       priceLimitStatus: 'OK', //INVALID_PRICELIMIT, INSUFFICIENT_BUYPRICE, INSUFFICIENT_SELLPRICE, OK
@@ -119,8 +119,15 @@ class BuySellModal extends React.Component {
       this.setState({ loading: true })
       const price = await this.getPrice(type, amount)
       this.setState({ loading: false })
-      const newPriceLimit =
-        this.calculatePriceLimit(type, price, priceChange) || priceLimit
+      let newPriceLimit = this.calculatePriceLimit(type, price, '2.5')
+      if (
+        newPriceLimit &&
+        newPriceLimit.gt &&
+        newPriceLimit.gt(bandBalance) &&
+        type === 'buy'
+      ) {
+        newPriceLimit = new BN(bandBalance.toString())
+      }
       this.setTypeState(type, {
         price,
         priceLimit: newPriceLimit,
@@ -131,6 +138,10 @@ class BuySellModal extends React.Component {
           newPriceLimit,
           price,
         ),
+        priceChange:
+          price > 0
+            ? Number((newPriceLimit.toString() * 100) / price - 100).toFixed(2)
+            : '',
       })
     } else {
       this.setState({
@@ -144,13 +155,26 @@ class BuySellModal extends React.Component {
   }
 
   calculatePriceLimitStatus(type, priceLimit, price) {
+    const { bandBalance } = this.props
     if (priceLimit === '') return 'INVALID_PRICELIMIT'
-    if (isPositiveNumber(priceLimit)) {
-      const priceLimitBN = Utils.toBlockchainUnit(priceLimit)
+    const isPN =
+      typeof priceLimit === 'string'
+        ? isPositiveNumber(Number(priceLimit))
+        : isPositiveNumber(priceLimit)
+
+    if (isPN) {
+      const priceLimitBN = Utils.toBlockchainUnit(priceLimit).div(
+        new BN((1e18).toString()),
+      )
       if (type === 'buy') {
-        return price.gt(priceLimitBN) ? 'INSUFFICIENT_BUYPRICE' : 'OK'
+        if (priceLimitBN.gt(bandBalance)) {
+          return 'INVALID_EXCEED'
+        }
+        const p = new BN(price.toString())
+        return p.gt(priceLimitBN) ? 'INSUFFICIENT_BUYPRICE' : 'OK'
       } else {
-        return priceLimitBN.gt(price) ? 'INSUFFICIENT_SELLPRICE' : 'OK'
+        const p = new BN(price.toString())
+        return priceLimitBN.gt(p) ? 'INSUFFICIENT_SELLPRICE' : 'OK'
       }
     }
     return 'INVALID_PRICELIMIT'
@@ -159,29 +183,29 @@ class BuySellModal extends React.Component {
   calculatePriceLimit(type, price, priceChange) {
     if (priceChange === '') return null
     if (type === 'buy') {
-      return Utils.fromBlockchainUnit(
-        price.applyPercentage(100 + parseFloat(priceChange)),
-      ).toFixed(2)
+      return price.applyPercentage(100 + parseFloat(priceChange))
     } else if (type === 'sell') {
-      return Utils.fromBlockchainUnit(
-        price.applyPercentage(100 - parseFloat(priceChange)),
-      ).toFixed(2)
+      return price.applyPercentage(100 - parseFloat(priceChange))
     }
     return null
   }
 
-  updatePriceLimit(priceLimit) {
+  updatePriceLimit(_priceLimit) {
     const { type } = this.state
     const { price } = this.state[type]
-    if (priceLimit === '') {
+
+    if (_priceLimit === '' || isNaN(_priceLimit)) {
       this.setTypeState(type, {
-        priceLimit: '',
+        priceLimit: _priceLimit,
+        priceChange: '',
         priceLimitStatus: 'INVALID_PRICELIMIT',
       })
       return
     }
 
-    if (isPositiveNumber(priceLimit)) {
+    const priceLimit = (_priceLimit * 1e18).toString()
+
+    if (isPositiveNumber(_priceLimit * 1e18)) {
       this.setTypeState(type, {
         priceLimit,
         priceLimitStatus: this.calculatePriceLimitStatus(
@@ -189,7 +213,8 @@ class BuySellModal extends React.Component {
           priceLimit,
           price,
         ),
-        priceChange: '',
+        priceChange:
+          price > 0 ? Number((priceLimit * 100) / price - 100).toFixed(2) : '',
       })
     } else {
       this.setTypeState(type, {
@@ -251,9 +276,6 @@ class BuySellModal extends React.Component {
         break
       case 'priceLimit':
         this.updatePriceLimit(value)
-        break
-      case 'priceChange':
-        this.updatePriceChange(value)
         break
       default:
         break
