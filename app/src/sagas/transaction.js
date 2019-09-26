@@ -103,7 +103,8 @@ function* sendTransaction({ transaction, title, type }) {
           }
         }
       }
-    }else {
+    } else {
+      console.error(error)
       alert(error.message)
     }
   } finally {
@@ -304,7 +305,7 @@ function* handleDumpTxs() {
 
 function* handleClaimXFN({ xfnRewardContractAddr }) {
   const user = yield select(currentUserSelector)
-  const transaction = new Transaction(user, xfnRewardContractAddr, '0x6e71d92d')
+  const transaction = new Transaction(user, xfnRewardContractAddr, '0x4e71d92d')
 
   const wallet = yield select(walletSelector)
   wallet.setDetail({
