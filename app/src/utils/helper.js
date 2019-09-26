@@ -1,8 +1,17 @@
 import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 import { Buffer } from 'buffer'
+import { Utils } from 'band.js'
 
 export const isPositiveNumber = input => {
+  if (typeof input === 'object') {
+    const _input = Utils.fromBlockchainUnit(input).toString()
+    if (_input.match(/^\d*\.?\d*$/)) return parseInt(_input, 10) >= 0
+    else return false
+  }
+
+  if (typeof input === 'number') return input >= 0
+
   if (input.match(/^\d*\.?\d*$/)) return parseInt(input, 10) >= 0
   else return false
 }
