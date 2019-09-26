@@ -120,7 +120,12 @@ class BuySellModal extends React.Component {
       const price = await this.getPrice(type, amount)
       this.setState({ loading: false })
       let newPriceLimit = this.calculatePriceLimit(type, price, '5')
-      if (newPriceLimit && newPriceLimit.gt && newPriceLimit.gt(bandBalance)) {
+      if (
+        newPriceLimit &&
+        newPriceLimit.gt &&
+        newPriceLimit.gt(bandBalance) &&
+        type === 'buy'
+      ) {
         newPriceLimit = new BN(bandBalance.toString())
       }
       this.setTypeState(type, {
