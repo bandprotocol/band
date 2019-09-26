@@ -295,7 +295,7 @@ function* handleVoteProposal({ address, proposalId, vote }) {
 
 function* handleDumpTxs() {
   const user = yield select(currentUserSelector)
-  if (user) {
+  if (user && user !== 'NOT_SIGNIN') {
     const txs = yield select(allTxsSelector)
     const hiddenTxs = yield select(transactionHiddenSelector)
     localStorage.setItem(`txs-${user}`, transit.toJSON(txs))
