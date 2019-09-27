@@ -101,7 +101,7 @@ const ProvidersRow = ({
         {rank}
       </Text>
     </Tab>
-    <Tab flex={20} alignItems="center">
+    <Tab flex={13} alignItems="center">
       <Box
         width="20px"
         mr={2}
@@ -124,29 +124,8 @@ const ProvidersRow = ({
       >
         {detail}
       </Text>
-    </Tab>
-    <Tab flex={20} style={{ position: 'relative' }}>
-      <Text
-        color={colors.text}
-        fontSize="14px"
-        fontFamily="code"
-        style={{
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-      >
-        {dataSourceAddress}
-      </Text>
       <AbsoluteLink href={txLink}>
-        <Image
-          style={{ position: 'absolute' }}
-          src={OutImg}
-          width="14px"
-          height="14px"
-          ml={1}
-        />
+        <Image src={OutImg} width="14px" height="14px" ml={1} />
       </AbsoluteLink>
     </Tab>
     <Tab flex={12} justifyContent="center">
@@ -188,7 +167,7 @@ const ProvidersRow = ({
           overflow: 'hidden',
         }}
       >
-        {userStake.pretty()}
+        {userStake.sub(userRevenue).pretty(6)}
       </Text>
     </Tab>
     <Tab flex={12} justifyContent="center">
@@ -202,10 +181,10 @@ const ProvidersRow = ({
           overflow: 'hidden',
         }}
       >
-        {userRevenue.pretty()}
+        {userRevenue.pretty(6)}
       </Text>
       <ExchangeButton
-        haveRevenue={userRevenue.pretty() > 0 ? 1 : 0}
+        haveRevenue={userRevenue.pretty(6) > 0 ? 1 : 0}
         icon={faExchangeAlt}
         onClick={() =>
           showConvertRevenue(
