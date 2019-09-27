@@ -119,13 +119,13 @@ function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
     stake,
   })
   const dataProviderName = getProvider(sourceAddress).name
-  const title = `Deposit ${Utils.fromBlockchainUnit(stake)} ${
+  const title = `Stake ${Utils.fromBlockchainUnit(stake)} ${
     stake.eq(BN.parse(1)) ? 'token' : 'tokens'
   }`
   const wallet = yield select(walletSelector)
   wallet.setDetail({
     type: 'DEPOSIT',
-    title: `Deposit to ${dataProviderName}`,
+    title: `Stake to ${dataProviderName}`,
     balance: `${Utils.fromBlockchainUnit(stake)} ${
       stake.eq(BN.parse(1)) ? 'token' : 'tokens'
     }`,
@@ -150,14 +150,14 @@ function* handleTcdWithdraw({
     withdrawOwnership: ownership,
   })
   const dataProviderName = getProvider(sourceAddress).name
-  const title = `Withdraw ${withdrawAmount} ${
+  const title = `Unstake ${withdrawAmount} ${
     withdrawAmount === 1 ? 'token' : 'tokens'
   }`
   yield put(hideModal())
   const wallet = yield select(walletSelector)
   wallet.setDetail({
     type: 'WITHDRAW',
-    title: `Withdraw from ${dataProviderName}`,
+    title: `Unstake from ${dataProviderName}`,
     balance: `${withdrawAmount} ${withdrawAmount === 1 ? 'token' : 'tokens'}`,
   })
   yield sendTransaction({
@@ -184,7 +184,7 @@ function* handleTcdRevenueToStake({
   const wallet = yield select(walletSelector)
   wallet.setDetail({
     type: 'DEPOSIT',
-    title: `Deposit to ${dataProviderName}`,
+    title: `Stake to ${dataProviderName}`,
     balance: `${revenueAmount} ${revenueAmount === 1 ? 'token' : 'tokens'}`,
   })
   yield put(hideModal())

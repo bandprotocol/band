@@ -101,7 +101,7 @@ class ConvertRevenueModal extends React.Component {
                   )
                 }
               >
-                Withdraw Revenue{' '}
+                Unstake Revenue{' '}
               </CustomButton>
             </Flex>
           </Flex>
@@ -109,7 +109,7 @@ class ConvertRevenueModal extends React.Component {
             * Stake Revenue is action to deposit your revenue for staking.
           </Text>
           <Text color="#4a4a4a" fontSize="12px" lineHeight={1.43}>
-            * Withdraw Revenue is action to withdraw your revenue.
+            * Unstake Revenue is action to withdraw your revenue.
           </Text>
         </Flex>
       </BgCard>
