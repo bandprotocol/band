@@ -1,7 +1,10 @@
 import createReducer from 'reducers/creator'
 
-import { SAVE_COMMUNITY_INFO } from 'actions'
+import { SAVE_COMMUNITY_INFO, SAVE_COMMUNITY_PRICE } from 'actions'
 import { Map } from 'immutable'
+
+const handleSaveCommunityPrice = (state, { tokenAddress, price }) =>
+  state.setIn([tokenAddress, 'price'], price)
 
 const handleSaveCommunityInfo = (
   state,
@@ -50,4 +53,5 @@ const handleSaveCommunityInfo = (
 
 export default createReducer({
   [SAVE_COMMUNITY_INFO]: handleSaveCommunityInfo,
+  [SAVE_COMMUNITY_PRICE]: handleSaveCommunityPrice,
 })
