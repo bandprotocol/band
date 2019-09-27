@@ -254,7 +254,7 @@ const ProvidersRow = ({
             </Box>
           )}
           <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
-            Deposit
+            Stake
           </Text>
         </Flex>
       </DWButton>
@@ -289,7 +289,7 @@ const ProvidersRow = ({
             </Box>
           )}
           <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
-            Withdraw
+            Unstake
           </Text>
         </Flex>
       </DWButton>

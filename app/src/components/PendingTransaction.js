@@ -70,19 +70,19 @@ const TxType = ({ type }) => {
     case 'DEPOSIT':
       return (
         <Badge bg="#edffe7" color="#42c47f">
-          Deposit
+          Stake
         </Badge>
       )
     case 'WITHDRAW':
       return (
         <Badge bg="#ffe7e7" color="#ec6363">
-          Withdraw
+          Unstake
         </Badge>
       )
     case 'REVENUE_TO_STAKE':
       return (
         <Badge bg="#edffe7" color="#42c47f">
-          Deposit
+          Stake
         </Badge>
       )
     case 'CLAIM':

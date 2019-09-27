@@ -161,7 +161,7 @@ export default () => {
                     color="#4c4c4c"
                     textAlign={['center', 'left']}
                   >
-                    Deposit in the bonding curve to govern each dataset
+                    Stake in the bonding curve to govern each dataset
                   </Text>
                 </Flex>
               </Flex>
