@@ -15,6 +15,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/levigross/grequests"
+
 	"github.com/google/uuid"
 
 	"github.com/bandprotocol/band/go/driver"
@@ -59,39 +61,14 @@ var rootCmd = &cobra.Command{
 	Run:   func(cmd *cobra.Command, args []string) {},
 }
 
-func getProviderURL(provider common.Address) (string, error) {
-	if !viper.IsSet("providerEndpointContract") {
-		return "", fmt.Errorf("getProviderUrl: unknown provider endpoint contract")
-	}
-	data := append(eth.Get4BytesFunctionSignature("endpoints(address)"), provider.Hash().Bytes()...)
+var providerEndpoints map[string]string
 
-	callResult, err := eth.CallContract(common.HexToAddress(viper.GetString("providerEndpointContract")), data)
-	if err != nil {
-		return "", err
+func getProviderURL(provider common.Address) (string, error) {
+	addr := strings.ToLower(provider.Hex())
+	if _, ok := providerEndpoints[addr]; !ok {
+		return "", fmt.Errorf("Address not found")
 	}
-	const definition = `[{
-		"constant": true,
-		"inputs": [
-		  {
-		    "name": "",
-		    "type": "address"
-	 	  }
-		],
-		"name": "endpoints",
-		"outputs": [
-		  {
-			"name": "",
-			"type": "string"
-		  }
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	}]`
-	contractABI, err := abi.JSON(strings.NewReader(definition))
-	var endpoint string
-	err = contractABI.Unpack(&endpoint, "endpoints", callResult)
-	return endpoint, err
+	return providerEndpoints[addr], nil
 }
 
 func logWithTimestamp(l *log.Logger, msg string) {
@@ -103,21 +80,15 @@ func getDataFromProvider(request *reqmsg.DataRequest, provider common.Address) (
 	if err != nil {
 		return reqmsg.DataResponse{}, err
 	}
-	jsonValue, _ := json.Marshal(request)
+	// jsonValue, _ := json.Marshal(request)
 
-	res, err := http.Post(url+"/data", "application/json", bytes.NewBuffer(jsonValue))
-	if err != nil {
-		return reqmsg.DataResponse{}, err
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
+	response, err := grequests.Post(url+"/data", &grequests.RequestOptions{JSON: request})
 	if err != nil {
 		return reqmsg.DataResponse{}, err
 	}
 
 	var result reqmsg.DataResponse
-	json.Unmarshal(body, &result)
+	response.JSON(&result)
 
 	// Check provider address
 	if provider != result.Provider {
@@ -482,6 +453,7 @@ func main() {
 	ethRpc = viper.GetString("ethRpc")
 	port = viper.GetString("port")
 	queryDebug = viper.GetBool("queryDebug")
+	providerEndpoints = viper.GetStringMapString("providers")
 
 	rootCmd.PersistentFlags().StringVar(&port, "port", port, `port of your app, for example "5000"`)
 	rootCmd.PersistentFlags().StringVar(&ethRpc, "ethRpc", ethRpc, `Ethereum rcp url, for example "https://kovan.infura.io"`)
