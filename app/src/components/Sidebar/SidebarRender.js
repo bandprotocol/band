@@ -202,7 +202,7 @@ export default ({
               </Flex>
               <Flex mt="10px">
                 <Text color="white" fontSize="14px" fontWeight={500}>
-                  {`Locked: ${lockBalance.pretty()} ${symbol}`}
+                  {`Staked: ${lockBalance.pretty()} ${symbol}`}
                 </Text>
               </Flex>
               <Flex
