@@ -5,6 +5,7 @@ import { communityDetailSelector } from 'selectors/communities'
 import { bandPriceSelector } from 'selectors/bandPrice'
 import { numHolders } from 'selectors/holder'
 
+import { currentNetworkSelector } from 'selectors/current'
 import CommunityDetailRender from './CommunityDetailRender'
 import { convertFromChain } from 'utils/helper'
 
@@ -47,6 +48,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
       .calculateChanged(community.get('last24HrsTotalSupply')),
     collateralEquation: community.get('collateralEquation'),
     // TODO: Summary multiple TCD
+    network: currentNetworkSelector(state),
     // tcd: community.get('tcd') && community.get('tcd').toJS(),
     tcr: community.get('tcr'),
   }

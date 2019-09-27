@@ -1,4 +1,5 @@
 const Decimal = require('decimal.js')
+const BigNumber = require('bignumber.js')
 
 const OPCODE_CONST = 0
 const OPCODE_VAR = 1
@@ -31,11 +32,18 @@ export function calculatePriceAt(self, value) {
   )
 }
 
-export function calculateCollateralAt(self, value) {
-  const xValue = new Decimal(value)
-  const [end, val] = solveMath(self, 0, xValue)
-  if (end !== self.length - 1) throw new Error('Invalid variant')
-  return val
+export function calculateCollateralAt(self, value, network) {
+  if (network !== 'ropsten' && network !== 'mainnet') {
+    const xValue = new Decimal(value)
+    const [end, val] = solveMath(self, 0, xValue)
+    if (end !== self.length - 1) throw new Error('Invalid variant')
+    return val
+  } else {
+    const valueBN = new BigNumber(value).pow(10)
+    return new BigNumber(2)
+      .times(new BigNumber(10).pow(new BigNumber(-65)))
+      .times(valueBN)
+  }
 }
 
 function getChildrenCount(opcode) {

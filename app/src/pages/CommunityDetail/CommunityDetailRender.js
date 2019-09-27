@@ -125,6 +125,7 @@ export default props => {
     totalSupply,
     totalSupplyChanged,
     collateralEquation,
+    network,
     tcr,
     // tcd,
   } = props
@@ -246,6 +247,7 @@ export default props => {
                 calculateCollateralAt(
                   collateralEquation,
                   BN.parse(totalSupply).toString(),
+                  network,
                 ).toFixed(0),
               ).pretty()} BAND collateral`}
           />
