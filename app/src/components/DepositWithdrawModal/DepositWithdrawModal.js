@@ -212,7 +212,7 @@ class DepositWithdrawModal extends React.Component {
           alignItems="center"
         >
           <Text color="#4e3ca9" fontFamily="Avenir-Heavy" fontSize="14px">
-            {actionType === 'DEPOSIT' ? 'Stake' : 'Unstake'}
+            {actionType === 'DEPOSIT' ? 'Stake' : 'Widthdraw'}
           </Text>
           <Flex
             width={1}
@@ -242,8 +242,8 @@ class DepositWithdrawModal extends React.Component {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                Unstake your staked tokens from the provider. You will no longer
-                earn the portion of curation fee you entitle to.{' '}
+                Withdraw your staked tokens from the provider. You will no
+                longer earn the portion of curation fee you entitle to.{' '}
                 {/* <a href="https://developer.bandprotocol.com/docs/tcd.html#supporting-data-providers">
                   Learnmore
                 </a> */}

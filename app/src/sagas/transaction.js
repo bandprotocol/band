@@ -150,14 +150,14 @@ function* handleTcdWithdraw({
     withdrawOwnership: ownership,
   })
   const dataProviderName = getProvider(sourceAddress).name
-  const title = `Unstake ${withdrawAmount} ${
+  const title = `Withdraw ${withdrawAmount} ${
     withdrawAmount === 1 ? 'token' : 'tokens'
   }`
   yield put(hideModal())
   const wallet = yield select(walletSelector)
   wallet.setDetail({
     type: 'WITHDRAW',
-    title: `Unstake from ${dataProviderName}`,
+    title: `Withdraw from ${dataProviderName}`,
     balance: `${withdrawAmount} ${withdrawAmount === 1 ? 'token' : 'tokens'}`,
   })
   yield sendTransaction({
