@@ -66,6 +66,7 @@ const mapStateToProps = (
       items.push(null)
     }
   */
+  console.log(items)
   return { user, items, remainingToken }
 }
 
