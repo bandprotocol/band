@@ -122,6 +122,9 @@ function* handleLoadTcds({ user, tokenAddress }) {
             }
             return 0
           })
+          .sort((a, b) => {
+            return a.status === b.status ? 0 : a.status === 'ACTIVE' ? -1 : 1
+          })
           .map((dataProviders, i) => ({ ...dataProviders, rank: i + 1 })),
       }
     },

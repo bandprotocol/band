@@ -322,6 +322,7 @@ export default ({
           status,
           userRevenue,
         } = item
+
         return (
           <ProvidersRow
             user={user}
