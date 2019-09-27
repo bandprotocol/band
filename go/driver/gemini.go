@@ -42,7 +42,7 @@ func (*Gemini) QuerySpotPrice(symbol string) (float64, error) {
 	price := gjson.GetBytes(body, "last")
 
 	if !price.Exists() {
-		return 0, fmt.Errorf("key does not exist")
+		return 0, fmt.Errorf("QuerySpotPrice: key does not exist")
 	}
 
 	return price.Float(), nil

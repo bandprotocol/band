@@ -62,16 +62,16 @@ func (*Kraken) QuerySpotPrice(symbol string) (float64, error) {
 
 	arr := gjson.GetBytes(body, fmt.Sprintf("result.%s%s", pairs[0], pairs[1])).Array()
 	if len(arr) == 0 {
-		return 0, fmt.Errorf("key does not exist")
+		return 0, fmt.Errorf("QuerySpotPrice: key does not exist")
 	}
 
 	lastElement := arr[len(arr)-1].Array()
 	if len(lastElement) == 0 {
-		return 0, fmt.Errorf("key does not exist")
+		return 0, fmt.Errorf("QuerySpotPrice: key does not exist")
 	}
 
 	if !lastElement[0].Exists() {
-		return 0, fmt.Errorf("key does not exist")
+		return 0, fmt.Errorf("QuerySpotPrice: key does not exist")
 	}
 
 	return lastElement[0].Float(), nil

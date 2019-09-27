@@ -2,17 +2,18 @@ package driver
 
 import (
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"strings"
+	"time"
 
 	"github.com/bandprotocol/band/go/dt"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/levigross/grequests"
 	"github.com/spf13/viper"
-	"github.com/tidwall/gjson"
 )
 
 type CoinGecko struct{}
+
+type CoinGeckoResponse map[string]interface{}
 
 var symbolToName = map[string]string{
 	"BTC": "bitcoin",
@@ -27,11 +28,14 @@ func (*CoinGecko) QuerySpotPrice(symbol string) (float64, error) {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
 
+	timeoutDuration, _ := time.ParseDuration("3s")
+	timeout3SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
+
 	var srcName string
 	if val, ok := symbolToName[strings.ToUpper(pairs[0])]; ok {
 		srcName = val
 	} else {
-		return 0, fmt.Errorf("key does not exist")
+		return 0, fmt.Errorf("QuerySpotPrice: key does not exist")
 	}
 
 	var url strings.Builder
@@ -40,25 +44,17 @@ func (*CoinGecko) QuerySpotPrice(symbol string) (float64, error) {
 	url.WriteString("&vs_currencies=")
 	url.WriteString(strings.ToUpper(pairs[1]))
 
-	var client = &http.Client{}
-
-	res, err := client.Get(url.String())
+	response, err := grequests.Get(url.String(), &timeout3SecondOption)
 	if err != nil {
 		return 0, err
 	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body)
+	var result CoinGeckoResponse
+	err = response.JSON(&result)
 	if err != nil {
 		return 0, err
 	}
-	price := gjson.GetBytes(body, srcName+".usd")
 
-	if !price.Exists() {
-		return 0, fmt.Errorf("key does not exist")
-	}
-
-	return price.Float(), nil
+	return result[srcName].(map[string]interface{})[strings.ToLower(pairs[1])].(float64), nil
 }
 
 func (a *CoinGecko) Query(key []byte) dt.Answer {
