@@ -9,7 +9,6 @@ function* handleFetchCommunity() {
       allBandCommunities {
         nodes {
           tokenAddress
-  
           tokenByTokenAddress {
             address
             curveByTokenAddress {

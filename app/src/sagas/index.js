@@ -305,7 +305,6 @@ function* baseInitialize() {
       ),
     )
   }
-  // yield put(fetchCommunity())
 
   /**
    *  Band Wallet
@@ -395,7 +394,7 @@ function* metaMaskProcess() {
 
 function* autoRefresh() {
   while (true) {
-    yield delay(1000)
+    yield delay(10000)
     yield put(reloadBalance())
     yield put(fetchCommunityPrice())
   }
