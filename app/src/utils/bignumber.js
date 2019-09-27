@@ -6,11 +6,12 @@ const THOUSAND = BigNumber(10).pow(3)
 const MILLION = BigNumber(10).pow(6)
 const BILLION = BigNumber(10).pow(9)
 
-BN.prototype.pretty = function() {
+BN.prototype.pretty = function(digits) {
+  if (digits === undefined) digits = 2
   const result = BigNumber(this.toString())
     .div(DIVISOR)
     .toFixed(18)
-  return result.slice(0, result.length - 16)
+  return result.slice(0, result.length - (18 - digits))
   // .toLocaleString('en-US', {
   //   minimumFractionDigits: 2,
   //   maximumFractionDigits: 2,
