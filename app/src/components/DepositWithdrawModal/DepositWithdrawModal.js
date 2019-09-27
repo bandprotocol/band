@@ -201,7 +201,7 @@ class DepositWithdrawModal extends React.Component {
       symbol,
       actionType,
       hideDepositWithdraw,
-      userOwnership,
+      maxWithdrawStake,
       remainingToken,
     } = this.props
     return (
@@ -262,9 +262,10 @@ class DepositWithdrawModal extends React.Component {
                 <MaxButton
                   isMax={
                     this.state.value &&
-                    Number(this.state.value) === Number(userOwnership.pretty())
+                    Number(this.state.value) ===
+                      Number(maxWithdrawStake.pretty(6))
                   }
-                  onClick={() => this.updateValue(userOwnership.pretty())}
+                  onClick={() => this.updateValue(maxWithdrawStake.pretty(6))}
                 >
                   Max
                 </MaxButton>
@@ -352,6 +353,7 @@ const mapStateToProps = (
     balance: communityBalanceSelector(state, { address: tokenAddress }).sub(
       tokenLockByTCDSelector(state, { address: tokenAddress, tcdAddress }),
     ),
+    maxWithdrawStake: userOwnership.mul(stake).div(totalOwnership),
   }
 }
 

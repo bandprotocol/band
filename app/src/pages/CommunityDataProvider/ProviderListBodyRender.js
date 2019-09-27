@@ -167,7 +167,7 @@ const ProvidersRow = ({
           overflow: 'hidden',
         }}
       >
-        {userStake.pretty(6)}
+        {userStake.sub(userRevenue).pretty(6)}
       </Text>
     </Tab>
     <Tab flex={12} justifyContent="center">
@@ -184,7 +184,7 @@ const ProvidersRow = ({
         {userRevenue.pretty(6)}
       </Text>
       <ExchangeButton
-        haveRevenue={userRevenue.pretty() > 0 ? 1 : 0}
+        haveRevenue={userRevenue.pretty(6) > 0 ? 1 : 0}
         icon={faExchangeAlt}
         onClick={() =>
           showConvertRevenue(
