@@ -19,6 +19,7 @@ import {
   reloadBalance,
   setNetwork,
   toggleFetch,
+  fetchCommunityPrice,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
@@ -45,6 +46,7 @@ import proposalSaga from 'sagas/proposals'
 import transferSaga from 'sagas/transfer'
 import holderSaga from 'sagas/holder'
 import tcdSaga from 'sagas/tcd'
+import communitySaga from 'sagas/community'
 
 import { networkIdtoName } from 'utils/network'
 import { getBandUSD } from 'utils/bandPrice'
@@ -171,6 +173,7 @@ function* baseInitialize() {
   yield put(
     saveBandInfo(bandAddress, '1000000000000000000000000', usd, usd_24h_change),
   )
+
   const communityDetails = yield Utils.graphqlRequest(
     `
     {
@@ -391,8 +394,9 @@ function* metaMaskProcess() {
 
 function* autoRefresh() {
   while (true) {
-    yield put(reloadBalance())
     yield delay(10000)
+    yield put(reloadBalance())
+    yield put(fetchCommunityPrice())
   }
 }
 
@@ -484,6 +488,7 @@ export default function*() {
     fork(transferSaga),
     fork(holderSaga),
     fork(tcdSaga),
+    fork(communitySaga),
   ])
   yield takeEvery(bandwalletChannel, handleBandWalletChannel)
   yield* baseInitialize()
