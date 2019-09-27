@@ -1,10 +1,10 @@
 export const SAVE_COMMUNITY_INFO = 'SAVE_COMMUNITY_INFO'
 export const SAVE_COMMUNITY_PRICE = 'SAVE_COMMUNITY_PRICE'
 export const SAVE_COMMUNITY_CLIENT = 'SAVE_COMMUNITY_CLIENT'
-export const FETCH_COMMUNITY = 'FETCH_COMMUNITY'
+export const FETCH_COMMUNITY_PRICE = 'FETCH_COMMUNITY_PRICE'
 
-export const fetchCommunity = () => ({
-  type: FETCH_COMMUNITY,
+export const fetchCommunityPrice = () => ({
+  type: FETCH_COMMUNITY_PRICE,
 })
 
 export const saveCommunityPrice = (tokenAddress, price) => ({

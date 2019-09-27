@@ -19,7 +19,7 @@ import {
   reloadBalance,
   setNetwork,
   toggleFetch,
-  fetchCommunity,
+  fetchCommunityPrice,
 } from 'actions'
 
 import { blockNumberSelector, transactionSelector } from 'selectors/basic'
@@ -397,7 +397,7 @@ function* autoRefresh() {
   while (true) {
     yield delay(1000)
     yield put(reloadBalance())
-    yield put(fetchCommunity())
+    yield put(fetchCommunityPrice())
   }
 }
 
