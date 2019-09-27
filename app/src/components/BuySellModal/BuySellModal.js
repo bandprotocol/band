@@ -70,13 +70,13 @@ class BuySellModal extends React.Component {
     if (type === 'buy') {
       onBuy(
         BN.parse(parseFloat(amount)),
-        priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+        priceLimit !== '' ? new BN(priceLimit) : price,
         symbol,
       )
     } else {
       onSell(
         BN.parse(parseFloat(amount)),
-        priceLimit !== '' ? BN.parse(parseFloat(priceLimit)) : price,
+        priceLimit !== '' ? new BN(priceLimit) : price,
         symbol,
       )
     }
