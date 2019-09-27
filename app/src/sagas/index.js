@@ -74,9 +74,10 @@ let network = localStorage.getItem('network') || 'kovan'
 
 switch (network) {
   case 'mainnet':
-    /**
-     * add mainnet GRAPHQL and API endpoint
-     */
+    BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-mainnet.bandprotocol.com/graphql',
+    )
     break
   case 'kovan':
     BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
