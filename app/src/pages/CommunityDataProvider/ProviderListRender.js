@@ -14,7 +14,7 @@ const ProviderListHeader = ({ symbol }) => (
     alignItems="center"
   >
     <Flex ml="17px" width="60px" />
-    <Flex flex={20} px="10px">
+    <Flex flex={13} px="10px">
       <Text
         color="#6878e2"
         fontSize="14px"
@@ -22,16 +22,6 @@ const ProviderListHeader = ({ symbol }) => (
         fontWeight="bold"
       >
         Source
-      </Text>
-    </Flex>
-    <Flex flex={20} px="10px">
-      <Text
-        color="#6878e2"
-        fontSize="14px"
-        lineHeight="1.4em"
-        fontWeight="bold"
-      >
-        Contract Address
       </Text>
     </Flex>
     <Flex flex={12} justifyContent="center" px="10px">
