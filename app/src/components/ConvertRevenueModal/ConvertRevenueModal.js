@@ -49,9 +49,16 @@ class ConvertRevenueModal extends React.Component {
           pl="30px"
           alignItems="center"
         >
-          <Text color="#4e3ca9" fontFamily="Avenir-Heavy" fontSize="14px">
-            ConvertRevenueModal
-          </Text>
+          <Flex>
+            <Text
+              color="#4e3ca9"
+              fontFamily="Avenir-Heavy"
+              fontSize="14px"
+              style={{ whiteSpace: 'nowrap' }}
+            >
+              Stake or Withdraw
+            </Text>
+          </Flex>
           <Flex
             width={1}
             justifyContent="flex-end"
@@ -70,7 +77,7 @@ class ConvertRevenueModal extends React.Component {
           style={{ position: 'relative' }}
         >
           <Text color="#4a4a4a" fontSize="14px" lineHeight={1.43}>
-            Stake the revenue or withdraw the revenue
+            Stake the revenue or Withdraw the revenue
           </Text>
           <Flex
             style={{ verticalAlign: 'baseline' }}
@@ -101,16 +108,10 @@ class ConvertRevenueModal extends React.Component {
                   )
                 }
               >
-                Unstake Revenue{' '}
+                Widthdraw Revenue{' '}
               </CustomButton>
             </Flex>
           </Flex>
-          <Text color="#4a4a4a" fontSize="12px" lineHeight={1.43}>
-            * Stake Revenue is action to deposit your revenue for staking.
-          </Text>
-          <Text color="#4a4a4a" fontSize="12px" lineHeight={1.43}>
-            * Unstake Revenue is action to withdraw your revenue.
-          </Text>
         </Flex>
       </BgCard>
     )

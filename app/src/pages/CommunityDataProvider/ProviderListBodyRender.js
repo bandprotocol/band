@@ -289,7 +289,7 @@ const ProvidersRow = ({
             </Box>
           )}
           <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
-            Unstake
+            Withdraw
           </Text>
         </Flex>
       </DWButton>
