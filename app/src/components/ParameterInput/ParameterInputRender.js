@@ -23,7 +23,7 @@ const ModernInput = styled.input`
 `
 
 const UnitSelector = styled.select`
-  height: 10px;
+  height: auto;
   fontsize: 14px;
   border: 0px;
   background-color: #fff;
