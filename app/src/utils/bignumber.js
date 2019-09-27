@@ -9,6 +9,7 @@ const BILLION = BigNumber(10).pow(9)
 BN.prototype.pretty = function(digits) {
   if (digits === undefined) digits = 2
   const result = BigNumber(this.toString())
+    .plus(MILLION)
     .div(DIVISOR)
     .toFixed(18)
   return result.slice(0, result.length - (18 - digits))
