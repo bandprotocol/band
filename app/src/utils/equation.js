@@ -1,5 +1,5 @@
 const Decimal = require('decimal.js')
-const BigNumber = require('bignumber.js')
+const BN = 'utils/bignumber'
 
 const OPCODE_CONST = 0
 const OPCODE_VAR = 1
@@ -39,10 +39,9 @@ export function calculateCollateralAt(self, value, network) {
     if (end !== self.length - 1) throw new Error('Invalid variant')
     return val
   } else {
-    const valueBN = new BigNumber(value).pow(10)
-    return new BigNumber(2)
-      .times(new BigNumber(10).pow(new BigNumber(-65)))
-      .times(valueBN)
+    const val = (value / 1e18) ** 10
+    const eq = 2 * 10 ** -65
+    return new Decimal(Math.round(val * eq) * 1e18)
   }
 }
 
