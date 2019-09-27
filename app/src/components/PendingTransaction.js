@@ -76,7 +76,7 @@ const TxType = ({ type }) => {
     case 'WITHDRAW':
       return (
         <Badge bg="#ffe7e7" color="#ec6363">
-          Unstake
+          Withdraw
         </Badge>
       )
     case 'REVENUE_TO_STAKE':
