@@ -101,9 +101,10 @@ switch (network) {
     break
   case 'local':
   default:
-    BandProtocolClient.setAPI('http://localhost:5000')
-    BandProtocolClient.setGraphQlAPI('http://localhost:5001/graphql')
-    WALLET_ENDPOINT = 'http://localhost:3000'
+      BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+      BandProtocolClient.setGraphQlAPI(
+        'https://graphql-kovan.bandprotocol.com/graphql',
+      )
     break
 }
 
