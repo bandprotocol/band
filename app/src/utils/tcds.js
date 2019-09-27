@@ -37,6 +37,7 @@ import WebRequestInactive from 'images/requestInactive.svg'
 const getTCDType = communityName =>
   ({
     'Financial Data Feeds': 'prices',
+    'Financial Data Token': 'prices',
     'Sport Data Feeds': 'sports',
     'Lottery Data Feeds': 'lotteries',
     'Web Request Oracle': 'web_requests',
@@ -45,6 +46,8 @@ const getTCDType = communityName =>
 export const getTCDIntegrationURLbyName = communityName =>
   ({
     'Financial Data Feeds':
+      'https://developer.bandprotocol.com/datasets/financial-kovan.html',
+    'Financial Data Token':
       'https://developer.bandprotocol.com/datasets/financial-kovan.html',
     'Sport Data Feeds':
       'https://developer.bandprotocol.com/datasets/sport-kovan.html',
