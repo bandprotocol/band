@@ -76,7 +76,7 @@ function* sendTransaction({ transaction, title, type }) {
     yield put(addTx(txHash, title, type, network, userAddress))
     yield put(dumpTxs())
   } catch (error) {
-    if (error.code === -32010) {
+    if (error.code === -32000) {
       const currentUser = yield select(currentUserSelector)
       const currentNetwork = yield select(currentNetworkSelector)
       if (currentNetwork === 'mainnet') {
