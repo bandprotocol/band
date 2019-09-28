@@ -236,7 +236,7 @@ export default () => {
 
             {isMobile() ? (
               <Flex
-                mt="80px"
+                mt="30px"
                 style={{
                   width: '100%',
                 }}
@@ -244,7 +244,7 @@ export default () => {
                 <Flex width="100%" justifyContent="center">
                   <Flex
                     flexDirection="column"
-                    py="20px"
+                    py="7px"
                     px="20px"
                     style={{
                       fontSize: '16px',
@@ -261,17 +261,18 @@ export default () => {
                       justifyContent="center"
                       flex={1}
                       flexDirection="column"
-                      pb="20px"
-                      style={{
-                        borderBottom: '2px solid rgba(255,255,255,0.5)',
-                      }}
+                      pb="10px"
+                      my="8px"
+                      // style={{
+                      //   borderBottom: '2px solid rgba(255,255,255,0.5)',
+                      // }}
                     >
                       <Flex
                         alignItems="center"
                         justifyContent="center"
                         flexDirection="row"
                         width="100%"
-                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                        mb="5px"
                       >
                         <Text mr="20px" color="white">
                           What is Mainnet
@@ -305,22 +306,23 @@ export default () => {
                       justifyContent="center"
                       flex={1}
                       flexDirection="column"
-                      pb="20px"
-                      style={{
-                        borderBottom: '2px solid rgba(255,255,255,0.5)',
-                      }}
+                      pb="10px"
+                      mb="8px"
+                      // style={{
+                      //   borderBottom: '2px solid rgba(255,255,255,0.5)',
+                      // }}
                     >
                       <Flex
                         alignItems="center"
                         justifyContent="center"
                         flexDirection="row"
                         width="100%"
-                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                        mb="5px"
                       >
                         <Text mr="20px" color="white">
                           Stake Token
                         </Text>
-                        <Flex pb="20px">
+                        <Flex>
                           <Image src={Plant} style={{ maxHeight: '40px' }} />
                         </Flex>
                       </Flex>
@@ -349,7 +351,8 @@ export default () => {
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      pb="20px"
+                      pb="10px"
+                      mb="8px"
                       flexDirection="column"
                     >
                       <Flex
@@ -357,7 +360,7 @@ export default () => {
                         justifyContent="center"
                         flexDirection="row"
                         width="100%"
-                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                        mb="5px"
                       >
                         <Text mr="20px" color="white">
                           Play Bitswing
@@ -397,7 +400,9 @@ export default () => {
                     overflow: 'hidden',
                   }}
                 >
-                  <Image src={HexBottom} style={{ minWidth: '100vw' }} />
+                  <Box>
+                    <Image src={HexBottom} style={{ minWidth: '100vw' }} />
+                  </Box>
                 </Flex>
               </Flex>
             ) : (
