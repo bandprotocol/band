@@ -139,6 +139,18 @@ class BuySellModal extends React.Component {
 
       this.setState({ loading: true })
       const price = await this.getPrice(type, adjustedAmount)
+
+      // if price is more than 100M
+      if (price.gt(BN.parse(100000000))) {
+        this.setTypeState(type, {
+          price: new BN('0'),
+          priceLimit: priceChange ? '0' : priceLimit,
+          amountStatus: 'INSUFFICIENT_BAND',
+        })
+        this.setState({ loading: false })
+        return null
+      }
+
       this.setState({ loading: false })
       let newPriceLimit = this.calculatePriceLimit(type, price, '2.5')
       if (
