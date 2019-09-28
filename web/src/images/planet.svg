@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="336" height="274" viewBox="0 0 336 274">
+    <defs>
+        <radialGradient id="a" cx="65.187%" cy="13.185%" r="120.833%" fx="65.187%" fy="13.185%">
+            <stop offset="0%" stop-color="#B4C5FF"/>
+            <stop offset="100%" stop-color="#162E80"/>
+        </radialGradient>
+        <linearGradient id="d" x1="91.733%" x2="8.194%" y1="11.02%" y2="94.175%">
+            <stop offset="0%" stop-color="#A0B5FF"/>
+            <stop offset="100%" stop-color="#2D5BFF"/>
+        </linearGradient>
+        <path id="c" d="M60.657 39.744l.368-.008c-.831.849-1.652 1.708-2.46 2.578-23.63 1.182-41.848 9.151-50.529 24.186-21.125 36.59 22.236 101.173 96.85 144.25 74.614 43.08 152.225 48.34 173.35 11.75 6.873-11.903 6.92-26.77 1.287-42.895.57-1.509 1.117-3.03 1.637-4.565 7.67 18.528 8.398 35.716.607 49.21-21.677 37.546-101.093 32.278-177.38-11.767C28.097 168.438-16.174 102.296 5.504 64.75c9.321-16.145 29.318-24.373 55.152-25.006l.368-.008-.368.008z"/>
+        <filter id="b" width="126.1%" height="135.8%" x="-13.1%" y="-17.9%" filterUnits="objectBoundingBox">
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="4.5"/>
+            <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1" values="0 0 0 0 0.71023247 0 0 0 0 0.781202085 0 0 0 0 1 0 0 0 1 0"/>
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
+            <feGaussianBlur in="shadowOffsetOuter2" result="shadowBlurOuter2" stdDeviation="8"/>
+            <feColorMatrix in="shadowBlurOuter2" result="shadowMatrixOuter2" values="0 0 0 0 0.315910823 0 0 0 0 0.483457358 0 0 0 0 1 0 0 0 1 0"/>
+            <feOffset in="SourceAlpha" result="shadowOffsetOuter3"/>
+            <feGaussianBlur in="shadowOffsetOuter3" result="shadowBlurOuter3" stdDeviation="12.5"/>
+            <feColorMatrix in="shadowBlurOuter3" result="shadowMatrixOuter3" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0"/>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"/>
+                <feMergeNode in="shadowMatrixOuter2"/>
+                <feMergeNode in="shadowMatrixOuter3"/>
+            </feMerge>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="translate(23.864)">
+        <circle cx="156.772" cy="132.5" r="132.5" fill="url(#a)"/>
+        <use fill="#000" filter="url(#b)" xlink:href="#c"/>
+        <use fill="url(#d)" xlink:href="#c"/>
+    </g>
+</svg>
