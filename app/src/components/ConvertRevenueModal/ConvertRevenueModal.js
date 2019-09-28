@@ -91,7 +91,7 @@ class ConvertRevenueModal extends React.Component {
                   dispatchRevenueToStake(
                     tcdAddress,
                     dataSourceAddress,
-                    userRevenue.pretty(),
+                    userRevenue.pretty(6),
                   )
                 }
               >
@@ -104,7 +104,7 @@ class ConvertRevenueModal extends React.Component {
                     tcdAddress,
                     dataSourceAddress,
                     revenueAmount,
-                    userRevenue.pretty(),
+                    userRevenue.pretty(6),
                   )
                 }
               >

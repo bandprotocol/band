@@ -104,7 +104,7 @@ class Graph extends Component {
           ],
         },
         tooltips: {
-          // enabled: false,
+          enabled: false,
         },
       },
     }
