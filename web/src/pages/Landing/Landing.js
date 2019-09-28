@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PageContainer from 'components/PageContainer'
 import LinkWithArrow from 'components/LinkWithArrow'
 import Subscribe from 'components/Subscribe'
@@ -59,9 +59,18 @@ export default () => {
   const _isSmallMobile = isSmallMobile()
   const extraHeigt = window.innerHeight - 40
   const [mainnet, setMainnet] = useState(false)
-  const mainnetBeginAt = Math.ceil(Date.now() / 1000) + 10 // 1569844800
+  const mainnetBeginAt = Math.ceil(Date.now() / 1000) + 5 // 1569844800
 
   window.setMainnet = setMainnet
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (Math.ceil(Date.now() / 1000) > mainnetBeginAt) {
+        setMainnet(true)
+      }
+    }, 1000)
+    return () => clearInterval(intervalId)
+  }, [])
 
   return (
     <>
