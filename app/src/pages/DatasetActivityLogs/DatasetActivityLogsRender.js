@@ -143,6 +143,32 @@ const Report = ({
   </Flex>
 )
 
+function prettyMedianPrice(reported_data) {
+  const pxs =Object.entries(reported_data).map(([_, { value }]) => {
+    return parseInt(value)
+  })
+  const sorted = pxs.slice().sort((a, b) => a - b)
+  const middle = Math.floor(sorted.length / 2)
+
+  if (sorted.length % 2 === 0) {
+    return (sorted[middle - 1] + sorted[middle]) / 2
+  }
+
+  const mid = sorted[middle] / 1e18
+  return mid.toLocaleString('en-US', {
+    currency: 'USD',
+    ...(mid > 1
+      ? {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      : {
+          minimumSignificantDigits: 2,
+          maximumSignificantDigits: 3,
+        }),
+  })
+}
+
 const Broadcast = ({
   symbol,
   event: {
@@ -179,6 +205,7 @@ const Broadcast = ({
           }}
         >
           {getFormatDataKey(symbol, dataKey)}
+          {symbol == 'XFN' ? ': ' + prettyMedianPrice(reported_data) : ''}
         </Text>
       </Flex>
       <Flex mt="10px" mb="20px" alignItems="center">
