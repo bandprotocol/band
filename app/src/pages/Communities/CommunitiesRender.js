@@ -171,19 +171,17 @@ export default ({
             dataset tokens to incentivize providers.
           </Text>
           <Flex alignItems="center" mt={3}>
-            <AbsoluteLink href="https://whitepaper.bandprotocol.com/">
-              <WhiteButton>Whitepaper v3.0.1</WhiteButton>
+            <AbsoluteLink href="https://bandprotocol.com/">
+              <WhiteButton>Band Protocol Website</WhiteButton>
             </AbsoluteLink>
-            <AbsoluteLink href="https://bandprotocol.com">
-              <WhiteOutlineButton>
-                Learn more about Band Protocol
-              </WhiteOutlineButton>
+            <AbsoluteLink href="https://medium.com/bandprotocol">
+              <WhiteOutlineButton>Learn how to Stake</WhiteOutlineButton>
             </AbsoluteLink>
             {/* disable XFN airdrop */}
             {/* sdcx && (
               <ClaimButton onClick={() => showClaimXFNModal()}>
                 Claim Free XFN
-              </ClaimButton>  
+              </ClaimButton>
             ) */}
             <ClaimButton onClick={() => showClaimXFNModal()}>
               XFN Airdrop
