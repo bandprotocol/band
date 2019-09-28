@@ -66,16 +66,28 @@ class BuySellModal extends React.Component {
   onButtonClick() {
     const { type } = this.state
     const { amount, priceLimit, price } = this.state[type]
-    const { onBuy, onSell, symbol } = this.props
+
+    const { onBuy, onSell, symbol, tokenBalance } = this.props
     if (type === 'buy') {
       onBuy(
-        BN.parse(parseFloat(amount)),
+        Utils.toBlockchainUnit(amount),
         priceLimit !== '' ? new BN(priceLimit) : price,
         symbol,
       )
     } else {
+      let adjustedAmount = Utils.toBlockchainUnit(amount)
+
+      if (
+        Utils.toBlockchainUnit(amount).gt(tokenBalance) &&
+        Utils.toBlockchainUnit(amount)
+          .sub(tokenBalance)
+          .lt(new BN(1e12))
+      ) {
+        adjustedAmount = tokenBalance
+      }
+
       onSell(
-        BN.parse(parseFloat(amount)),
+        adjustedAmount,
         priceLimit !== '' ? new BN(priceLimit) : price,
         symbol,
       )
@@ -84,18 +96,14 @@ class BuySellModal extends React.Component {
 
   async getPrice(type, amount) {
     return type === 'buy'
-      ? await this.props.communityClient.getBuyPrice(
-          Utils.toBlockchainUnit(amount),
-        )
-      : await this.props.communityClient.getSellPrice(
-          Utils.toBlockchainUnit(amount),
-        )
+      ? await this.props.communityClient.getBuyPrice(amount)
+      : await this.props.communityClient.getSellPrice(amount)
   }
 
   async updateAmount() {
     const { type } = this.state
     const { amount, priceChange, priceLimit } = this.state[type]
-    const { bandBalance } = this.props
+    const { bandBalance, tokenBalance } = this.props
 
     if (amount === '') {
       this.setTypeState(type, {
@@ -108,16 +116,29 @@ class BuySellModal extends React.Component {
     }
 
     if (isPositiveNumber(amount)) {
-      const amountStatusChecking = Utils.toBlockchainUnit(amount).gt(
-        this.props.tokenBalance,
-      )
+      // use amount in blockchain unit BN (amount * 1e18)
+      let adjustedAmount = Utils.toBlockchainUnit(amount)
+
+      // In case of inputAmount > tokenBalance, if inputAmount - tokenBalance < 1e12, amount should be tokenBalance
+      if (
+        type === 'sell' &&
+        Utils.toBlockchainUnit(amount).gt(tokenBalance) &&
+        Utils.toBlockchainUnit(amount)
+          .sub(tokenBalance)
+          .lt(new BN(1e12))
+      ) {
+        // adjustedAmount and tokenbalance is BN unit (wei)
+        adjustedAmount = tokenBalance
+      }
+
+      const cannotSell = adjustedAmount.gt(tokenBalance)
       this.setTypeState(type, {
         amountStatus:
-          type === 'sell' && amountStatusChecking ? 'INSUFFICIENT_TOKEN' : 'OK',
+          type === 'sell' && cannotSell ? 'INSUFFICIENT_TOKEN' : 'OK',
       })
 
       this.setState({ loading: true })
-      const price = await this.getPrice(type, amount)
+      const price = await this.getPrice(type, adjustedAmount)
       this.setState({ loading: false })
       let newPriceLimit = this.calculatePriceLimit(type, price, '2.5')
       if (
