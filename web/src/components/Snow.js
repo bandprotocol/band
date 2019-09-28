@@ -24,7 +24,7 @@ const MoveCircle = styled(Flex)`
       opacity: 1;
     }
     100% {
-      transform: translate(0px, 500px);
+      transform: translate(0px, 90vh);
       opacity: 0;
     }
   }

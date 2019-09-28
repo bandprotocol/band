@@ -1,21 +1,16 @@
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import PageContainer from 'components/PageContainer'
 import LinkWithArrow from 'components/LinkWithArrow'
 import Subscribe from 'components/Subscribe'
-import {
-  Flex,
-  Text,
-  Highlight,
-  Button,
-  Image,
-  Box,
-  AbsoluteLink,
-} from 'ui/common'
+import { Flex, Text, Highlight, Image, Box, AbsoluteLink } from 'ui/common'
 import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 import WppButton, { OutlineButton } from 'components/WppButton'
 import Countdown from 'components/Countdown'
 import Snow from 'components/Snow'
+import Pyro from 'components/Pyro.js'
+import FlexHover from 'components/FlexHover'
+import A from 'components/A'
 
 import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
@@ -31,7 +26,12 @@ import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
 import RightHexs from 'images/rightHexs.png'
 import LeftHexs from 'images/leftHexs.png'
-import snowSrc from 'images/snow.png'
+import HexBottom from 'images/hexBottom.png'
+import Planet from 'images/planet.svg'
+import Plant from 'images/plant.svg'
+import BSLogo from 'images/bitswinglogo.svg'
+import BandLogo from 'images/logoSmall.png'
+import MLogo from 'images/mediumLogo.svg'
 
 const CircleLink = () => (
   <Flex
@@ -58,122 +58,518 @@ export default () => {
   const _isMobile = isMobile()
   const _isSmallMobile = isSmallMobile()
   const extraHeigt = window.innerHeight - 40
+  const [mainnet, setMainnet] = useState(false)
+  const mainnetBeginAt = Math.ceil(Date.now() / 1000) + 10 // 1569844800
+
+  window.setMainnet = setMainnet
 
   return (
     <>
-      <Flex
-        mt="-60px"
-        style={{
-          overflow: 'hidden',
-          height: '100vh',
-        }}
-      >
-        <Snow />
+      {!mainnet && (
         <Flex
-          flexDirection="column"
-          justifyContent="center"
+          mt="-60px"
           style={{
-            positon: 'relative',
             overflow: 'hidden',
-            width: '100%',
-            backgroundImage:
-              'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
+            height: '100vh',
           }}
         >
-          {/* <Flex
-            width="100%"
+          <Snow />
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
             style={{
-              position: 'absolute',
-              backgroundImage: `url(${snowSrc})`,
-              backgroundPosition: 'center',
-              backgroundSize: 'cover',
-              height: '400px',
-              top: 0,
-              left: 0,
+              positon: 'relative',
+              overflow: 'hidden',
+              width: '100%',
+              backgroundImage:
+                'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
             }}
-          ></Flex> */}
-          <Flex justifyContent="center" alignItems="center">
-            <Text fontSize={['21px', '55px']} color="white">
-              OFFICIAL MAINNET LAUNCH IN
-            </Text>
-          </Flex>
-          <Flex mt="30px">
-            <Countdown eventTime={1569844800} />
-          </Flex>
-          <Flex my="70px" justifyContent="center">
-            <OutlineButton
-              onClick={() => window.scroll(0, window.innerHeight)}
-              style={{ zIndex: 1, cursor: 'pointer' }}
-            >
-              Continue
-            </OutlineButton>
-          </Flex>
-
-          {/* Hex background */}
-
-          {isMobile() ? (
-            <>
-              <Flex
-                flexDirection="row"
-                style={{
-                  position: 'absolute',
-                  bottom: '120px',
-                  left: '0px',
-                  width: '50%',
-                  overflow: 'hidden',
-                }}
+          >
+            <Flex justifyContent="center" alignItems="center">
+              <Text fontSize={['21px', '55px']} color="white">
+                OFFICIAL MAINNET LAUNCH IN
+              </Text>
+            </Flex>
+            <Flex mt="30px">
+              <Countdown eventTime={mainnetBeginAt} />
+            </Flex>
+            <Flex my="70px" justifyContent="center">
+              <OutlineButton
+                onClick={() => window.scroll(0, window.innerHeight)}
+                style={{ zIndex: 1, cursor: 'pointer' }}
               >
-                <Box>
+                Continue
+              </OutlineButton>
+            </Flex>
+
+            {/* Hex background */}
+
+            {isMobile() ? (
+              <>
+                <Flex
+                  flexDirection="row"
+                  style={{
+                    position: 'absolute',
+                    bottom: '120px',
+                    left: '0px',
+                    width: '50%',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Box>
+                    <Image src={LeftHexs} />
+                  </Box>
+                </Flex>
+
+                <Flex
+                  flexDirection="row"
+                  style={{
+                    position: 'absolute',
+                    bottom: '50px',
+                    right: '0px',
+                    width: '75%',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Box>
+                    <Image src={RightHexs} />
+                  </Box>
+                </Flex>
+              </>
+            ) : (
+              <>
+                <Flex
+                  flexDirection="row"
+                  style={{
+                    position: 'absolute',
+                    bottom: '200px',
+                    left: '-20px',
+                    width: '40%',
+                    overflow: 'hidden',
+                  }}
+                >
                   <Image src={LeftHexs} />
-                </Box>
-              </Flex>
+                </Flex>
 
-              <Flex
-                flexDirection="row"
-                style={{
-                  position: 'absolute',
-                  bottom: '50px',
-                  right: '0px',
-                  width: '75%',
-                  overflow: 'hidden',
-                }}
-              >
-                <Box>
+                <Flex
+                  flexDirection="row"
+                  style={{
+                    position: 'absolute',
+                    bottom: '-50px',
+                    right: '0px',
+                    width: '75%',
+                    overflow: 'hidden',
+                  }}
+                >
                   <Image src={RightHexs} />
-                </Box>
-              </Flex>
-            </>
-          ) : (
-            <>
-              <Flex
-                flexDirection="row"
-                style={{
-                  position: 'absolute',
-                  bottom: '200px',
-                  left: '-20px',
-                  width: '40%',
-                  overflow: 'hidden',
-                }}
-              >
-                <Image src={LeftHexs} />
-              </Flex>
-
-              <Flex
-                flexDirection="row"
-                style={{
-                  position: 'absolute',
-                  bottom: '-50px',
-                  right: '0px',
-                  width: '75%',
-                  overflow: 'hidden',
-                }}
-              >
-                <Image src={RightHexs} />
-              </Flex>
-            </>
-          )}
+                </Flex>
+              </>
+            )}
+          </Flex>
         </Flex>
-      </Flex>
+      )}
+      {mainnet && (
+        <Flex
+          mt="-60px"
+          style={{
+            overflow: 'hidden',
+            height: '100vh',
+            fontFamily: 'bio-sans',
+          }}
+        >
+          <Pyro />
+          <Flex
+            flexDirection="column"
+            justifyContent="center"
+            style={{
+              positon: 'relative',
+              overflow: 'hidden',
+              width: '100%',
+              backgroundImage: 'linear-gradient(to bottom, #6376b7, #587bf7)',
+            }}
+          >
+            <Flex style={{ position: 'absolute', top: '60px', left: '100px' }}>
+              <Image src={Planet} style={{ opacity: 1 }} />
+            </Flex>
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+              width="100%"
+              style={{
+                position: 'absolute',
+                top: '0%',
+                height: isMobile() ? '30%' : '50%',
+              }}
+            >
+              <Text
+                fontSize={['40px', '96px']}
+                color="white"
+                fontFamily="bio-sans"
+                fontWeight={700}
+                style={{ zIndex: 1 }}
+              >
+                BAND PROTOCOL
+              </Text>
+              <Text
+                mt="20px"
+                fontFamily="bio-sans"
+                fontSize={['21px', '40px']}
+                color="white"
+                textAlign="center"
+                style={{ zIndex: 1 }}
+              >
+                OFFICIAL ETHEREUM MAINNET LAUNCH
+              </Text>
+            </Flex>
+
+            {/* Hex background */}
+
+            {isMobile() ? (
+              <Flex
+                mt="80px"
+                style={{
+                  width: '100%',
+                }}
+              >
+                <Flex width="100%" justifyContent="center">
+                  <Flex
+                    flexDirection="column"
+                    py="20px"
+                    px="20px"
+                    style={{
+                      fontSize: '16px',
+                      width: '90%',
+                      borderRadius: '8px',
+                      boxShadow: '0 50px 100px 0 rgba(0, 0, 0, 0.5)',
+                      backgroundImage:
+                        'linear-gradient(to bottom, rgba(55, 81, 171, 0.8), rgba(2, 7, 41, 0.8))',
+                      zIndex: 1,
+                    }}
+                  >
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      flex={1}
+                      flexDirection="column"
+                      pb="20px"
+                      style={{
+                        borderBottom: '2px solid rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="row"
+                        width="100%"
+                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                      >
+                        <Text mr="20px" color="white">
+                          What is Mainnet
+                        </Text>
+                        <Image src={BandLogo} style={{ maxHeight: '40px' }} />
+                      </Flex>
+                      <A href="https://medium.com/bandprotocol" target="_blank">
+                        <FlexHover
+                          justifyContent="center"
+                          alignItems="center"
+                          boxShadow="0 8px 16px 0 #020729"
+                          boxShadowHover="0 8px 16px 0 #4e5799"
+                          bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
+                          bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
+                          style={{
+                            cursor: 'pointer',
+                            width: '188px',
+                            height: '40px',
+                            borderRadius: '24px',
+                          }}
+                        >
+                          <Text mr="10px" color="#4a4a4a" fontSize="16px">
+                            Read more
+                          </Text>
+                          <Image src={MLogo} width="30px" />
+                        </FlexHover>
+                      </A>
+                    </Flex>
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      flex={1}
+                      flexDirection="column"
+                      pb="20px"
+                      style={{
+                        borderBottom: '2px solid rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="row"
+                        width="100%"
+                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                      >
+                        <Text mr="20px" color="white">
+                          Stake Token
+                        </Text>
+                        <Flex pb="20px">
+                          <Image src={Plant} style={{ maxHeight: '40px' }} />
+                        </Flex>
+                      </Flex>
+                      <A href="https://app.bandprotocol.com/" target="_blank">
+                        <FlexHover
+                          justifyContent="center"
+                          alignItems="center"
+                          boxShadow="0 8px 16px 0 #68356e"
+                          boxShadowHover="0 8px 16px 0 #8c4a94"
+                          bgImg="linear-gradient(52deg, #9e32ab, #ffb45b)"
+                          bgImgHover="linear-gradient(52deg, #d155e0, #ffc075)"
+                          style={{
+                            cursor: 'pointer',
+                            width: '202px',
+                            height: '40px',
+                            borderRadius: '27.5px',
+                          }}
+                        >
+                          <Text color="white" fontSize="16px">
+                            Governance Portal
+                          </Text>
+                        </FlexHover>
+                      </A>
+                    </Flex>
+                    <Flex
+                      alignItems="center"
+                      justifyContent="center"
+                      flex={1}
+                      pb="20px"
+                      flexDirection="column"
+                    >
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="row"
+                        width="100%"
+                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                      >
+                        <Text mr="20px" color="white">
+                          Play Bitswing
+                        </Text>
+                        <Image src={BSLogo} style={{ maxHeight: '40px' }} />
+                      </Flex>
+                      <A href="https://bitswing.io/" target="_blank">
+                        <FlexHover
+                          justifyContent="center"
+                          alignItems="center"
+                          boxShadow="0 8px 16px 0 #71114c"
+                          boxShadowHover="0 8px 16px 0 #c92e8e"
+                          bgImg="linear-gradient(52deg, #36ffe5, #ff0077)"
+                          bgImgHover="linear-gradient(52deg, #00ffde, #ff52a3)"
+                          style={{
+                            cursor: 'pointer',
+                            width: '202px',
+                            height: '40px',
+                            borderRadius: '27.5px',
+                          }}
+                        >
+                          <Text color="white" fontSize="16px">
+                            Bitswing
+                          </Text>
+                        </FlexHover>
+                      </A>
+                    </Flex>
+                  </Flex>
+                </Flex>
+                <Flex
+                  flexDirection="row"
+                  style={{
+                    position: 'absolute',
+                    bottom: '0px',
+                    right: '0px',
+                    width: '100vw',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Image src={HexBottom} style={{ minWidth: '100vw' }} />
+                </Flex>
+              </Flex>
+            ) : (
+              <Flex
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  width: '100%',
+                  height: '50%',
+                }}
+              >
+                <Flex width="100%" justifyContent="center">
+                  <Flex
+                    flexDirection="row"
+                    py="30px"
+                    style={{
+                      fontSize: '24px',
+                      width: '90%',
+                      minWidth: '760px',
+                      height: '230px',
+                      borderRadius: '8px',
+                      boxShadow: '0 50px 100px 0 rgba(0, 0, 0, 0.5)',
+                      backgroundImage:
+                        'linear-gradient(to bottom, rgba(55, 81, 171, 0.8), rgba(2, 7, 41, 0.8))',
+                      zIndex: 1,
+                    }}
+                  >
+                    <Flex
+                      alignItems="center"
+                      flex={1}
+                      flexDirection="column"
+                      style={{
+                        borderRight: '2px solid rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="row"
+                        width="100%"
+                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                      >
+                        <Text mr="20px" color="white">
+                          What is Mainnet
+                        </Text>
+                        <Image src={BandLogo} style={{ maxHeight: '40px' }} />
+                      </Flex>
+                      <A href="https://medium.com/bandprotocol" target="_blank">
+                        <FlexHover
+                          mt="30px"
+                          justifyContent="center"
+                          alignItems="center"
+                          boxShadow="0 8px 16px 0 #020729"
+                          boxShadowHover="0 8px 16px 0 #4e5799"
+                          bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
+                          bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
+                          style={{
+                            cursor: 'pointer',
+                            width: '188px',
+                            height: '48px',
+                            borderRadius: '24px',
+                          }}
+                        >
+                          <Text mr="10px" color="#4a4a4a" fontSize="18px">
+                            Read more
+                          </Text>
+                          <Image src={MLogo} width="30px" />
+                        </FlexHover>
+                      </A>
+                    </Flex>
+                    <Flex
+                      alignItems="center"
+                      flex={1}
+                      flexDirection="column"
+                      style={{
+                        borderRight: '2px solid rgba(255,255,255,0.5)',
+                      }}
+                    >
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="row"
+                        width="100%"
+                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                      >
+                        <Text mr="20px" color="white">
+                          Stake Token
+                        </Text>
+                        <Flex pb="20px">
+                          <Image src={Plant} style={{ maxHeight: '40px' }} />
+                        </Flex>
+                      </Flex>
+                      <A href="https://app.bandprotocol.com/" target="_blank">
+                        <FlexHover
+                          mt="30px"
+                          justifyContent="center"
+                          alignItems="center"
+                          boxShadow="0 8px 16px 0 #68356e"
+                          boxShadowHover="0 8px 16px 0 #8c4a94"
+                          bgImg="linear-gradient(52deg, #9e32ab, #ffb45b)"
+                          bgImgHover="linear-gradient(52deg, #d155e0, #ffc075)"
+                          style={{
+                            cursor: 'pointer',
+                            width: '202px',
+                            height: '48px',
+                            borderRadius: '27.5px',
+                          }}
+                        >
+                          <Text color="white" fontSize="18px">
+                            Governance Portal
+                          </Text>
+                        </FlexHover>
+                      </A>
+                    </Flex>
+                    <Flex alignItems="center" flex={1} flexDirection="column">
+                      <Flex
+                        alignItems="center"
+                        justifyContent="center"
+                        flexDirection="row"
+                        width="100%"
+                        style={{ maxHeight: '60px', minHeight: '60px' }}
+                      >
+                        <Text mr="20px" color="white">
+                          Play Bitswing
+                        </Text>
+                        <Image src={BSLogo} style={{ maxHeight: '40px' }} />
+                      </Flex>
+                      <A href="https://bitswing.io/" target="_blank">
+                        <FlexHover
+                          mt="30px"
+                          justifyContent="center"
+                          alignItems="center"
+                          boxShadow="0 8px 16px 0 #71114c"
+                          boxShadowHover="0 8px 16px 0 #c92e8e"
+                          bgImg="linear-gradient(52deg, #36ffe5, #ff0077)"
+                          bgImgHover="linear-gradient(52deg, #00ffde, #ff52a3)"
+                          style={{
+                            cursor: 'pointer',
+                            width: '202px',
+                            height: '48px',
+                            borderRadius: '27.5px',
+                          }}
+                        >
+                          <Text color="white" fontSize="18px">
+                            Bitswing
+                          </Text>
+                        </FlexHover>
+                      </A>
+                    </Flex>
+                  </Flex>
+                </Flex>
+                <Flex
+                  flexDirection="row"
+                  style={{
+                    position: 'absolute',
+                    bottom: '0px',
+                    right: '0px',
+                    width: '100vw',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Image src={HexBottom} style={{ minWidth: '100vw' }} />
+                </Flex>
+              </Flex>
+            )}
+
+            <Flex
+              width="100%"
+              justifyContent="center"
+              style={{ bottom: 'calc(10% - 40px)', position: 'absolute' }}
+            >
+              <OutlineButton
+                onClick={() => window.scroll(0, window.innerHeight)}
+                style={{ zIndex: 1, cursor: 'pointer' }}
+              >
+                Continue
+              </OutlineButton>
+            </Flex>
+          </Flex>
+        </Flex>
+      )}
       <Box
         style={{
           background: 'white',
