@@ -84,10 +84,14 @@ class DepositWithdrawModal extends React.Component {
     this.setState({ ...this.state, ...this.props })
   }
 
-  updateValue(newValue) {
+  updateValue(newValue, optionalNewValueOnChain) {
     let newValueOnChain = new BN(0)
     try {
-      newValueOnChain = BN.parse(parseFloat(newValue))
+      if (optionalNewValueOnChain) {
+        newValueOnChain = optionalNewValueOnChain
+      } else {
+        newValueOnChain = BN.parse(parseFloat(newValue))
+      }
     } catch (e) {
       console.warn(e)
     }
@@ -152,7 +156,7 @@ class DepositWithdrawModal extends React.Component {
         withdrawOwnershipAmount.gt(userOwnership)
       ) {
         this.setState({
-          errorMessage: "can't be able to withdraw more than your ownership",
+          errorMessage: 'you cannot withdraw more than your stake',
         })
         return false
       }
@@ -265,7 +269,12 @@ class DepositWithdrawModal extends React.Component {
                     Number(this.state.value) ===
                       Number(maxWithdrawStake.pretty(6))
                   }
-                  onClick={() => this.updateValue(maxWithdrawStake.pretty(6))}
+                  onClick={() =>
+                    this.updateValue(
+                      maxWithdrawStake.pretty(6),
+                      maxWithdrawStake,
+                    )
+                  }
                 >
                   Max
                 </MaxButton>
@@ -273,9 +282,12 @@ class DepositWithdrawModal extends React.Component {
                 <MaxButton
                   isMax={
                     this.state.value &&
-                    Number(this.state.value) === Number(remainingToken.pretty())
+                    Number(this.state.value) ===
+                      Number(remainingToken.pretty(6))
                   }
-                  onClick={() => this.updateValue(remainingToken.pretty())}
+                  onClick={() =>
+                    this.updateValue(remainingToken.pretty(6), remainingToken)
+                  }
                 >
                   Max
                 </MaxButton>
