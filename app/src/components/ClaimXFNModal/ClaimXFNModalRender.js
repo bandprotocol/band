@@ -205,7 +205,7 @@ export default props => {
           bg="#74608f"
           mb="30px"
           p="20px"
-          style={{ borderRadius: '20px', maxWidth: '375px', zIndex: 1 }}
+          style={{ borderRadius: '20px', maxWidth: '375px', zIndex: 3 }}
         >
           {airDropPeriod ? (
             <>
@@ -230,15 +230,28 @@ export default props => {
               fontSize="18px"
               lineHeight="24px"
             >
-              <Flex alignItems="flex-end">
+              <Flex alignItems="flex-end" justifyContent="space-between">
                 <Text fontSize="24px" mr="10px">
                   Claim XFN Airdrop
                 </Text>
-                <AbsoluteLink href="https://google.com">
-                  Learn more.
+                <AbsoluteLink href="https://medium.com/bandprotocol">
+                  <Text
+                    fontSize="14px"
+                    color="white"
+                    px="4px"
+                    style={{ border: '1px solid #ffffff', borderRadius: '8px' }}
+                  >
+                    Learn more
+                  </Text>
                 </AbsoluteLink>
               </Flex>
               <Flex mt="10px" flexDirection="column">
+                <Text fontSize="14px" my="10px">
+                  From October 1st to October 7th 2019, a snapshot of BAND token
+                  balances will be taken everyday at 12 PM UTC. For each 10 BAND
+                  tokens held on average across 7 days, you will be able to
+                  claim 1 XFN.
+                </Text>
                 <Flex alignItems="flex-start" mt="10px">
                   <Flex alignItems="center">
                     <Text mr="10px">
@@ -248,8 +261,9 @@ export default props => {
                     </Text>
                     <Text mr="10px">1.</Text>
                   </Flex>
-
-                  <Text>Login with Metamask or BandWallet.</Text>
+                  <Text fontSize="16px">
+                    Login with Metamask or BandWallet.
+                  </Text>
                 </Flex>
                 <Flex alignItems="flex-start" mt="10px">
                   <Flex alignItems="center">
@@ -260,20 +274,7 @@ export default props => {
                     </Text>
                     <Text mr="10px">2.</Text>
                   </Flex>
-                  <Text>Transfer band to your account.</Text>
-                </Flex>
-                <Flex alignItems="flex-start" mt="10px">
-                  <Flex alignItems="center">
-                    <Text mr="10px">
-                      <FontAwesomeIcon
-                        icon={doneStep3 ? faCheckCircle : faCircle}
-                      ></FontAwesomeIcon>
-                    </Text>
-                    <Text mr="10px">3.</Text>
-                  </Flex>
-                  <Text>
-                    Hold band until 30/10/2019 then you will get XFN Airdrop.
-                  </Text>
+                  <Text fontSize="16px">Transfer band to your account.</Text>
                 </Flex>
               </Flex>
             </Flex>
