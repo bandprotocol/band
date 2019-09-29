@@ -275,7 +275,7 @@ export default () => {
                         mb="5px"
                       >
                         <Text mr="20px" color="white">
-                          What is Mainnet
+                          Live Ethereum Mainnet
                         </Text>
                         <Image src={BandLogo} style={{ maxHeight: '40px' }} />
                       </Flex>
@@ -295,7 +295,7 @@ export default () => {
                           }}
                         >
                           <Text mr="10px" color="#4a4a4a" fontSize="16px">
-                            Read more
+                            Learn More
                           </Text>
                           <Image src={MLogo} width="30px" />
                         </FlexHover>
@@ -342,7 +342,7 @@ export default () => {
                           }}
                         >
                           <Text color="white" fontSize="16px">
-                            Governance Portal
+                            Stake Token
                           </Text>
                         </FlexHover>
                       </A>
@@ -363,7 +363,7 @@ export default () => {
                         mb="5px"
                       >
                         <Text mr="20px" color="white">
-                          Play Bitswing
+                          Play BitSwing
                         </Text>
                         <Image src={BSLogo} style={{ maxHeight: '40px' }} />
                       </Flex>
@@ -383,7 +383,7 @@ export default () => {
                           }}
                         >
                           <Text color="white" fontSize="16px">
-                            Bitswing
+                            Play Now
                           </Text>
                         </FlexHover>
                       </A>
@@ -446,7 +446,7 @@ export default () => {
                         style={{ maxHeight: '60px', minHeight: '60px' }}
                       >
                         <Text mr="20px" color="white">
-                          What is Mainnet
+                          Live Ethereum Mainnet
                         </Text>
                         <Image src={BandLogo} style={{ maxHeight: '40px' }} />
                       </Flex>
@@ -467,7 +467,7 @@ export default () => {
                           }}
                         >
                           <Text mr="10px" color="#4a4a4a" fontSize="18px">
-                            Read more
+                            Learn More
                           </Text>
                           <Image src={MLogo} width="30px" />
                         </FlexHover>
@@ -512,7 +512,7 @@ export default () => {
                           }}
                         >
                           <Text color="white" fontSize="18px">
-                            Governance Portal
+                            Stake Token
                           </Text>
                         </FlexHover>
                       </A>
@@ -526,7 +526,7 @@ export default () => {
                         style={{ maxHeight: '60px', minHeight: '60px' }}
                       >
                         <Text mr="20px" color="white">
-                          Play Bitswing
+                          Play BitSwing
                         </Text>
                         <Image src={BSLogo} style={{ maxHeight: '40px' }} />
                       </Flex>
@@ -547,7 +547,7 @@ export default () => {
                           }}
                         >
                           <Text color="white" fontSize="18px">
-                            Bitswing
+                            Play Now
                           </Text>
                         </FlexHover>
                       </A>
