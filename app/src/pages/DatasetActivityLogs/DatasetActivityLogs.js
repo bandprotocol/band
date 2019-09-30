@@ -64,6 +64,10 @@ class DatasetActivityLogs extends React.Component {
   }
 
   render() {
+    window.gtag('event', 'click-tab', {
+      event_category: 'Dataset',
+      event_label: 'logs',
+    })
     return (
       <DatasetActivityLogsRender
         {...this.props}

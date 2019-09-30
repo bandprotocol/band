@@ -129,6 +129,10 @@ export default props => {
     tcr,
     // tcd,
   } = props
+  window.gtag('event', 'enter', {
+    event_category: 'Dataset',
+    event_label: symbol,
+  })
   return (
     <PageContainer withSidebar style={{ minWidth: 0, marginTop: '60px' }}>
       <Breadcrumb
