@@ -74,7 +74,7 @@ export default class Countdown extends React.Component {
           <Clock duration={duration}></Clock>
         ) : (
           <Text mt="20px" color="white" fontSize="50px">
-            Let's hack
+            Mainnet live now
           </Text>
         )}
         <Flex mt="30px">
