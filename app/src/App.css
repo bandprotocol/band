@@ -316,6 +316,10 @@ body {
   scroll-behavior: smooth;
 }
 
+#root {
+  height: 100%;
+}
+
 *:focus {
   outline: none;
 }
