@@ -69,6 +69,7 @@ module.exports = {
             collapsable: false,
             children: [
               "datasets/overview",
+              "datasets/financial-mainnet",
               "datasets/financial-kovan",
               "datasets/sport-kovan",
               "datasets/lottery-kovan",
