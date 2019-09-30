@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PageContainer from 'components/PageContainer'
+import styled from 'styled-components'
 import LinkWithArrow from 'components/LinkWithArrow'
 import Subscribe from 'components/Subscribe'
 import { Flex, Text, Highlight, Image, Box, AbsoluteLink } from 'ui/common'
@@ -10,6 +11,7 @@ import Countdown from 'components/Countdown'
 import Snow from 'components/Snow'
 import Pyro from 'components/Pyro.js'
 import FlexHover from 'components/FlexHover'
+import ArrowMove from 'components/ArrowMove'
 import A from 'components/A'
 
 import AngleArrow from 'images/angle-arrow-down.png'
@@ -32,6 +34,12 @@ import Plant from 'images/plant.svg'
 import BSLogo from 'images/bitswinglogo.svg'
 import BandLogo from 'images/logoSmall.png'
 import MLogo from 'images/mediumLogo.svg'
+
+const GBG = styled(Flex)`
+  background: linear-gradient(#ad42ff, #5a85ff, #587bf7),
+    radial-gradient(100vw at 150vw -50vw, white, transparent);
+  background-blend-mode: screen;
+`
 
 const CircleLink = () => (
   <Flex
@@ -69,7 +77,7 @@ export default () => {
         setMainnet(true)
         clearInterval(intervalId)
       }
-    }, 600)
+    }, 200)
     return () => clearInterval(intervalId)
   }, [])
 
@@ -188,14 +196,13 @@ export default () => {
           }}
         >
           <Pyro />
-          <Flex
+          <GBG
             flexDirection="column"
             justifyContent="center"
             style={{
               positon: 'relative',
               overflow: 'hidden',
               width: '100%',
-              backgroundImage: 'linear-gradient(#ad42ff,#5a85ff, #587bf7)',
             }}
           >
             <Flex
@@ -206,7 +213,7 @@ export default () => {
               style={{
                 position: 'absolute',
                 top: '0%',
-                height: isMobile() ? '40%' : '60%',
+                height: isMobile() ? '20%' : '60%',
               }}
             >
               <Box flex={2} />
@@ -589,17 +596,28 @@ export default () => {
 
             <Flex
               width="100%"
+              flexDirection="column"
               justifyContent="center"
-              style={{ bottom: 'calc(10% - 40px)', position: 'absolute' }}
+              alignItems="center"
+              style={{
+                bottom: 'calc(10% - 40px)',
+                position: 'absolute',
+              }}
             >
-              <OutlineButton
+              <Flex
                 onClick={() => window.scroll(0, window.innerHeight)}
-                style={{ zIndex: 1, cursor: 'pointer' }}
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                style={{ cursor: 'pointer' }}
               >
-                Continue
-              </OutlineButton>
+                <Text color="white" fontSize="18px" mb="10px">
+                  Continue
+                </Text>
+                <ArrowMove />
+              </Flex>
             </Flex>
-          </Flex>
+          </GBG>
         </Flex>
       )}
       <Box
