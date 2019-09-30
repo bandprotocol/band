@@ -101,10 +101,10 @@ switch (network) {
     break
   case 'local':
   default:
-      BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
-      BandProtocolClient.setGraphQlAPI(
-        'https://graphql-kovan.bandprotocol.com/graphql',
-      )
+    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-kovan.bandprotocol.com/graphql',
+    )
     break
 }
 
@@ -133,6 +133,10 @@ function* handleBandWalletChannel({ type, payload }) {
           yield put(setWeb3(web3))
           yield put(setUserAddress(userAddress))
           yield put(updateClient(provider))
+          window.gtag('event', 'User', {
+            event_category: 'sigin',
+            event_label: userAddress,
+          })
           break
         }
         default:

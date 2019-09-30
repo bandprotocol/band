@@ -13,6 +13,10 @@ import GovernanceHeader from 'images/govenance-header.svg'
 
 class CommunityDataProvider extends React.Component {
   render() {
+    window.gtag('event', 'click-tab', {
+      event_category: 'Dataset',
+      event_label: 'govenance',
+    })
     const { user, tokenAddress, name, prefix, tcdAddress } = this.props
     return (
       <PageStructure

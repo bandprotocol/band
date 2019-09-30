@@ -136,6 +136,12 @@ function* handleTcdDeposit({ tcdAddress, sourceAddress, stake }) {
     title: title,
     type: 'DEPOSIT',
   })
+
+  window.gtag('event', 'stake', {
+    event_category: 'Dataset',
+    event_label: stake.pretty(),
+    value: stake.pretty(),
+  })
 }
 
 function* handleTcdWithdraw({
@@ -144,6 +150,12 @@ function* handleTcdWithdraw({
   ownership /* ownership */,
   withdrawAmount,
 }) {
+  window.gtag('event', 'widthdraw', {
+    event_category: 'Dataset',
+    event_label: withdrawAmount,
+    value: withdrawAmount,
+  })
+  console.log(withdrawAmount)
   const client = yield select(currentTCDClientSelector, { address: tcdAddress })
   const transaction = yield client.createWithdrawDataSourceTransaction({
     dataSource: sourceAddress,
