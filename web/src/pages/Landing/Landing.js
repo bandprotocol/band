@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import PageContainer from 'components/PageContainer'
+import styled from 'styled-components'
 import LinkWithArrow from 'components/LinkWithArrow'
 import Subscribe from 'components/Subscribe'
 import { Flex, Text, Highlight, Image, Box, AbsoluteLink } from 'ui/common'
@@ -10,6 +11,7 @@ import Countdown from 'components/Countdown'
 import Snow from 'components/Snow'
 import Pyro from 'components/Pyro.js'
 import FlexHover from 'components/FlexHover'
+import ArrowMove from 'components/ArrowMove'
 import A from 'components/A'
 
 import AngleArrow from 'images/angle-arrow-down.png'
@@ -32,6 +34,12 @@ import Plant from 'images/plant.svg'
 import BSLogo from 'images/bitswinglogo.svg'
 import BandLogo from 'images/logoSmall.png'
 import MLogo from 'images/mediumLogo.svg'
+
+const GBG = styled(Flex)`
+  background: linear-gradient(#ad42ff, #5a85ff, #587bf7),
+    radial-gradient(100vw at 150vw -50vw, white, transparent);
+  background-blend-mode: screen;
+`
 
 const CircleLink = () => (
   <Flex
@@ -58,17 +66,20 @@ export default () => {
   const _isMobile = isMobile()
   const _isSmallMobile = isSmallMobile()
   const extraHeigt = window.innerHeight - 40
-  const [mainnet, setMainnet] = useState(false)
-  const mainnetBeginAt = Math.ceil(Date.now() / 1000) + 5 // 1569844800
+  const mainnetBeginAt = 1569844800
+  const [mainnet, setMainnet] = useState(
+    Math.ceil(Date.now() / 1000) >= mainnetBeginAt,
+  )
 
   window.setMainnet = setMainnet
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (Math.ceil(Date.now() / 1000) > mainnetBeginAt) {
+      if (Math.ceil(Date.now() / 1000) >= mainnetBeginAt) {
         setMainnet(true)
+        clearInterval(intervalId)
       }
-    }, 1000)
+    }, 200)
     return () => clearInterval(intervalId)
   }, [])
 
@@ -187,14 +198,13 @@ export default () => {
           }}
         >
           <Pyro />
-          <Flex
+          <GBG
             flexDirection="column"
             justifyContent="center"
             style={{
               positon: 'relative',
               overflow: 'hidden',
               width: '100%',
-              backgroundImage: 'linear-gradient(#ad42ff,#5a85ff, #587bf7)',
             }}
           >
             <Flex
@@ -217,17 +227,20 @@ export default () => {
                 style={{ zIndex: 1, position: 'relative' }}
               >
                 Band Protocol
-                <Box
-                  style={{
-                    position: 'absolute',
-                    top: '30%',
-                    right: '-35%',
-                    maxWidth: 500,
-                    width: '60vw',
-                  }}
-                >
-                  <Image src={Mainnet} style={{ opacity: 1 }} />
-                </Box>
+                {!isMobile() && (
+                  <Box
+                    style={{
+                      position: 'absolute',
+                      right: '-10%',
+                      top: '30%',
+                      maxWidth: '60%',
+                      minWidth: '60%',
+                      zIndex: -1,
+                    }}
+                  >
+                    <Image src={Mainnet} style={{ opacity: 1 }} />
+                  </Box>
+                )}
               </Text>
               <Text
                 mt="20px"
@@ -237,7 +250,9 @@ export default () => {
                 textAlign="center"
                 style={{ zIndex: 1 }}
               >
-                OFFICIAL ETHEREUM MAINNET LAUNCH
+                {isMobile()
+                  ? 'OFFICIAL ETHEREUM MAINNET'
+                  : 'OFFICIAL ETHEREUM MAINNET LAUNCH'}
               </Text>
               <Box flex={1.5} />
             </Flex>
@@ -257,7 +272,7 @@ export default () => {
                     py="16px"
                     px="20px"
                     style={{
-                      fontSize: '16px',
+                      fontSize: '12px',
                       width: '90%',
                       borderRadius: '8px',
                       boxShadow: '0 50px 100px 0 rgba(0, 0, 0, 0.5)',
@@ -270,44 +285,37 @@ export default () => {
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      flexDirection="column"
-                      pb="10px"
-                      my="8px"
-                      // style={{
-                      //   borderBottom: '2px solid rgba(255,255,255,0.5)',
-                      // }}
+                      flexDirection="row"
+                      my="20px"
                     >
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="row"
-                        width="100%"
-                        mb="5px"
+                      <Image
+                        src={BandLogo}
+                        style={{ maxHeight: '30px', maxWidth: '30px' }}
+                      />
+                      <Text ml="10px" mr="auto" color="white">
+                        Live Ethereum Mainnet
+                      </Text>
+                      <A
+                        href="https://medium.com/@soravis/abf1dd97c9d2"
+                        target="_blank"
                       >
-                        <Text mr="20px" color="white">
-                          Live Ethereum Mainnet
-                        </Text>
-                        <Image src={BandLogo} style={{ maxHeight: '40px' }} />
-                      </Flex>
-                      <A href="https://medium.com/bandprotocol" target="_blank">
                         <FlexHover
                           justifyContent="center"
                           alignItems="center"
-                          boxShadow="0 8px 16px 0 #020729"
+                          boxShadow="0 8px 16px 0 #030a3b"
                           boxShadowHover="0 8px 16px 0 #4e5799"
-                          bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
-                          bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
+                          bgImg="linear-gradient(52deg, #414e94, #668cff)"
+                          bgImgHover="linear-gradient(52deg, #414e94, #94afff)"
                           style={{
                             cursor: 'pointer',
-                            width: '188px',
-                            height: '40px',
+                            width: '105px',
+                            height: '30px',
                             borderRadius: '24px',
                           }}
                         >
-                          <Text mr="10px" color="#4a4a4a" fontSize="16px">
+                          <Text mr="10px" color="white">
                             Learn More
                           </Text>
-                          <Image src={MLogo} width="30px" />
                         </FlexHover>
                       </A>
                     </Flex>
@@ -315,27 +323,16 @@ export default () => {
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      flexDirection="column"
-                      pb="10px"
-                      mb="8px"
-                      // style={{
-                      //   borderBottom: '2px solid rgba(255,255,255,0.5)',
-                      // }}
+                      flexDirection="row"
+                      my="20px"
                     >
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="row"
-                        width="100%"
-                        mb="5px"
-                      >
-                        <Text mr="20px" color="white">
-                          Stake Token
-                        </Text>
-                        <Flex>
-                          <Image src={Plant} style={{ maxHeight: '40px' }} />
-                        </Flex>
-                      </Flex>
+                      <Image
+                        src={Plant}
+                        style={{ maxHeight: '30px', maxWidth: '30px' }}
+                      />
+                      <Text ml="10px" mr="auto" color="white">
+                        Stake Token
+                      </Text>
                       <A href="https://app.bandprotocol.com/" target="_blank">
                         <FlexHover
                           justifyContent="center"
@@ -346,37 +343,30 @@ export default () => {
                           bgImgHover="linear-gradient(52deg, #d155e0, #ffc075)"
                           style={{
                             cursor: 'pointer',
-                            width: '202px',
-                            height: '40px',
+                            width: '105px',
+                            height: '30px',
                             borderRadius: '27.5px',
                           }}
                         >
-                          <Text color="white" fontSize="16px">
-                            Stake Token
-                          </Text>
+                          <Text color="white">Stake Token</Text>
                         </FlexHover>
                       </A>
                     </Flex>
                     <Flex
+                      flexDirection="row"
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      pb="10px"
-                      mb="8px"
-                      flexDirection="column"
+                      my="20px"
                     >
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="row"
-                        width="100%"
-                        mb="5px"
-                      >
-                        <Text mr="20px" color="white">
-                          Play BitSwing
-                        </Text>
-                        <Image src={BSLogo} style={{ maxHeight: '40px' }} />
-                      </Flex>
+                      <Image
+                        src={BSLogo}
+                        style={{ maxHeight: '30px', maxWidth: '30px' }}
+                      />
+                      <Text ml="10px" mr="auto" color="white">
+                        Play BitSwing
+                      </Text>
+
                       <A href="https://bitswing.io/" target="_blank">
                         <FlexHover
                           justifyContent="center"
@@ -387,14 +377,12 @@ export default () => {
                           bgImgHover="linear-gradient(52deg, #00ffde, #ff52a3)"
                           style={{
                             cursor: 'pointer',
-                            width: '202px',
-                            height: '40px',
+                            width: '105px',
+                            height: '30px',
                             borderRadius: '27.5px',
                           }}
                         >
-                          <Text color="white" fontSize="16px">
-                            Play Now
-                          </Text>
+                          <Text color="white">Play Now</Text>
                         </FlexHover>
                       </A>
                     </Flex>
@@ -467,15 +455,18 @@ export default () => {
                           style={{ maxHeight: '40px' }}
                         />
                       </Flex>
-                      <A href="https://medium.com/bandprotocol" target="_blank">
+                      <A
+                        href="https://medium.com/@soravis/abf1dd97c9d2"
+                        target="_blank"
+                      >
                         <FlexHover
                           mt="10px"
                           justifyContent="center"
                           alignItems="center"
-                          boxShadow="0 8px 16px 0 rgba(2, 7, 41, 0.5)"
-                          boxShadowHover="0 8px 16px 0 rgba(78, 87, 153, 0.55)"
-                          bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
-                          bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
+                          boxShadow="0 8px 16px 0 #030a3b"
+                          boxShadowHover="0 8px 16px 0 #4e5799"
+                          bgImg="linear-gradient(52deg, #414e94, #668cff)"
+                          bgImgHover="linear-gradient(52deg, #414e94, #94afff)"
                           style={{
                             cursor: 'pointer',
                             width: '188px',
@@ -483,10 +474,9 @@ export default () => {
                             borderRadius: '24px',
                           }}
                         >
-                          <Text mr="10px" color="#4a4a4a" fontSize="18px">
+                          <Text mr="10px" color="white" fontSize="18px">
                             Learn More
                           </Text>
-                          <Image src={MLogo} width="30px" />
                         </FlexHover>
                       </A>
                     </Flex>
@@ -588,17 +578,28 @@ export default () => {
 
             <Flex
               width="100%"
+              flexDirection="column"
               justifyContent="center"
-              style={{ bottom: 'calc(10% - 40px)', position: 'absolute' }}
+              alignItems="center"
+              style={{
+                bottom: 'calc(10% - 40px)',
+                position: 'absolute',
+              }}
             >
-              <OutlineButton
+              <Flex
                 onClick={() => window.scroll(0, window.innerHeight)}
-                style={{ zIndex: 1, cursor: 'pointer' }}
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                style={{ cursor: 'pointer' }}
               >
-                Continue
-              </OutlineButton>
+                <Text color="white" fontSize="18px" mb="10px">
+                  Continue
+                </Text>
+                <ArrowMove />
+              </Flex>
             </Flex>
-          </Flex>
+          </GBG>
         </Flex>
       )}
       <Box
