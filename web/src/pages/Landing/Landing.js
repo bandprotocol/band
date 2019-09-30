@@ -213,7 +213,7 @@ export default () => {
               style={{
                 position: 'absolute',
                 top: '0%',
-                height: isMobile() ? '30%' : '60%',
+                height: isMobile() ? '40%' : '60%',
               }}
             >
               <Box flex={2} />
@@ -229,10 +229,11 @@ export default () => {
                   <Box
                     style={{
                       position: 'absolute',
+                      right: '-10%',
                       top: '30%',
-                      right: '-35%',
-                      maxWidth: 500,
-                      width: '60vw',
+                      maxWidth: '60%',
+                      minWidth: '60%',
+                      zIndex: -1,
                     }}
                   >
                     <Image src={Mainnet} style={{ opacity: 1 }} />
@@ -269,7 +270,7 @@ export default () => {
                     py="16px"
                     px="20px"
                     style={{
-                      fontSize: '16px',
+                      fontSize: '12px',
                       width: '90%',
                       borderRadius: '8px',
                       boxShadow: '0 50px 100px 0 rgba(0, 0, 0, 0.5)',
@@ -282,44 +283,35 @@ export default () => {
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      flexDirection="column"
-                      pb="10px"
-                      my="8px"
-                      // style={{
-                      //   borderBottom: '2px solid rgba(255,255,255,0.5)',
-                      // }}
+                      flexDirection="row"
+                      my="20px"
                     >
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="row"
-                        width="100%"
-                        mb="5px"
-                      >
-                        <Text mr="20px" color="white">
-                          Live Ethereum Mainnet
-                        </Text>
-                        <Image src={BandLogo} style={{ maxHeight: '40px' }} />
-                      </Flex>
+                      <Image
+                        src={BandLogo}
+                        style={{ maxHeight: '30px', maxWidth: '30px' }}
+                      />
+                      <Text ml="10px" mr="auto" color="white">
+                        Live Ethereum Mainnet
+                      </Text>
                       <A href="https://medium.com/bandprotocol" target="_blank">
                         <FlexHover
                           justifyContent="center"
                           alignItems="center"
-                          boxShadow="0 8px 16px 0 #020729"
+                          boxShadow="0 8px 16px 0 #030a3b"
                           boxShadowHover="0 8px 16px 0 #4e5799"
                           bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
                           bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
                           style={{
                             cursor: 'pointer',
-                            width: '188px',
-                            height: '40px',
+                            width: '105px',
+                            height: '30px',
                             borderRadius: '24px',
                           }}
                         >
-                          <Text mr="10px" color="#4a4a4a" fontSize="16px">
+                          <Text mr="10px" color="#4a4a4a">
                             Learn More
                           </Text>
-                          <Image src={MLogo} width="30px" />
+                          <Image src={MLogo} width="20px" />
                         </FlexHover>
                       </A>
                     </Flex>
@@ -327,27 +319,16 @@ export default () => {
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      flexDirection="column"
-                      pb="10px"
-                      mb="8px"
-                      // style={{
-                      //   borderBottom: '2px solid rgba(255,255,255,0.5)',
-                      // }}
+                      flexDirection="row"
+                      my="20px"
                     >
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="row"
-                        width="100%"
-                        mb="5px"
-                      >
-                        <Text mr="20px" color="white">
-                          Stake Token
-                        </Text>
-                        <Flex>
-                          <Image src={Plant} style={{ maxHeight: '40px' }} />
-                        </Flex>
-                      </Flex>
+                      <Image
+                        src={Plant}
+                        style={{ maxHeight: '30px', maxWidth: '30px' }}
+                      />
+                      <Text ml="10px" mr="auto" color="white">
+                        Stake Token
+                      </Text>
                       <A href="https://app.bandprotocol.com/" target="_blank">
                         <FlexHover
                           justifyContent="center"
@@ -358,37 +339,30 @@ export default () => {
                           bgImgHover="linear-gradient(52deg, #d155e0, #ffc075)"
                           style={{
                             cursor: 'pointer',
-                            width: '202px',
-                            height: '40px',
+                            width: '105px',
+                            height: '30px',
                             borderRadius: '27.5px',
                           }}
                         >
-                          <Text color="white" fontSize="16px">
-                            Stake Token
-                          </Text>
+                          <Text color="white">Stake Token</Text>
                         </FlexHover>
                       </A>
                     </Flex>
                     <Flex
+                      flexDirection="row"
                       alignItems="center"
                       justifyContent="center"
                       flex={1}
-                      pb="10px"
-                      mb="8px"
-                      flexDirection="column"
+                      my="20px"
                     >
-                      <Flex
-                        alignItems="center"
-                        justifyContent="center"
-                        flexDirection="row"
-                        width="100%"
-                        mb="5px"
-                      >
-                        <Text mr="20px" color="white">
-                          Play BitSwing
-                        </Text>
-                        <Image src={BSLogo} style={{ maxHeight: '40px' }} />
-                      </Flex>
+                      <Image
+                        src={BSLogo}
+                        style={{ maxHeight: '30px', maxWidth: '30px' }}
+                      />
+                      <Text ml="10px" mr="auto" color="white">
+                        Play BitSwing
+                      </Text>
+
                       <A href="https://bitswing.io/" target="_blank">
                         <FlexHover
                           justifyContent="center"
@@ -399,14 +373,12 @@ export default () => {
                           bgImgHover="linear-gradient(52deg, #00ffde, #ff52a3)"
                           style={{
                             cursor: 'pointer',
-                            width: '202px',
-                            height: '40px',
+                            width: '105px',
+                            height: '30px',
                             borderRadius: '27.5px',
                           }}
                         >
-                          <Text color="white" fontSize="16px">
-                            Play Now
-                          </Text>
+                          <Text color="white">Play Now</Text>
                         </FlexHover>
                       </A>
                     </Flex>
