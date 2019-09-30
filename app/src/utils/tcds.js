@@ -46,9 +46,9 @@ const getTCDType = communityName =>
 export const getTCDIntegrationURLbyName = communityName =>
   ({
     'Financial Data Feeds':
-      'https://developer.bandprotocol.com/datasets/financial-kovan.html',
+      'https://developer.bandprotocol.com/datasets/financial-mainnet.html',
     'Financial Data Token':
-      'https://developer.bandprotocol.com/datasets/financial-kovan.html',
+      'https://developer.bandprotocol.com/datasets/financial-mainnet.html',
     'Sport Data Feeds':
       'https://developer.bandprotocol.com/datasets/sport-kovan.html',
     'Lottery Data Feeds':
