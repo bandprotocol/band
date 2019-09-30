@@ -67,7 +67,7 @@ export default () => {
   const _isSmallMobile = isSmallMobile()
   const extraHeigt = window.innerHeight - 40
   const [mainnet, setMainnet] = useState(false)
-  const mainnetBeginAt = Math.ceil(Date.now() / 1000) + 5 // 1569844800
+  const mainnetBeginAt = 1569844800
 
   window.setMainnet = setMainnet
 

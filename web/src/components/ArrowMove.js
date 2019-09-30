@@ -6,7 +6,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 const Wrapper = styled(Flex)`
   width: 100%;
-  height: 60px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -32,11 +32,11 @@ const Wrapper = styled(Flex)`
   @keyframes slide {
     0% {
       opacity: 0;
-      transform: translateY(-30px);
+      transform: translateY(-20px);
     }
     20% {
       opacity: 0.5;
-      transform: translateY(-18px);
+      transform: translateY(-12px);
     }
     50% {
       opacity: 1;
@@ -44,11 +44,11 @@ const Wrapper = styled(Flex)`
     }
     80% {
       opacity: 0.5;
-      transform: translateY(18px);
+      transform: translateY(12px);
     }
     100% {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(20px);
     }
   }
 `
