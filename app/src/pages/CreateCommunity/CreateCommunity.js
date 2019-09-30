@@ -33,7 +33,7 @@ class CreateCommunity extends React.Component {
       'params:min_participation_pct': convertToChain(60, 'PERCENTAGE'),
       'params:support_required_pct': convertToChain(50, 'PERCENTAGE'),
       'curve:liqudity_fee': convertToChain(0, 'PERCENTAGE'),
-      'curve:inflation_rate': convertToChain(0, 'PERCENTAGE'),
+      'curve:inflation_rate': convertToChain(0, 'PERCENTAGE_PER_YEAR'),
       'info:logo': '',
       'info:banner': '',
     },
