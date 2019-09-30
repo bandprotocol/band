@@ -26,8 +26,8 @@ import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
 import RightHexs from 'images/rightHexs.png'
 import LeftHexs from 'images/leftHexs.png'
-import HexBottom from 'images/hexBottom.png'
-import Planet from 'images/planet.svg'
+import HexBottom from 'images/tiles.png'
+import Mainnet from 'images/mainnet.png'
 import Plant from 'images/plant.svg'
 import BSLogo from 'images/bitswinglogo.svg'
 import BandLogo from 'images/logoSmall.png'
@@ -194,12 +194,9 @@ export default () => {
               positon: 'relative',
               overflow: 'hidden',
               width: '100%',
-              backgroundImage: 'linear-gradient(to bottom, #6376b7, #587bf7)',
+              backgroundImage: 'linear-gradient(#ad42ff,#5a85ff, #587bf7)',
             }}
           >
-            <Flex style={{ position: 'absolute', top: '60px', left: '100px' }}>
-              <Image src={Planet} style={{ opacity: 1 }} />
-            </Flex>
             <Flex
               flexDirection="column"
               justifyContent="center"
@@ -208,17 +205,29 @@ export default () => {
               style={{
                 position: 'absolute',
                 top: '0%',
-                height: isMobile() ? '30%' : '50%',
+                height: isMobile() ? '40%' : '60%',
               }}
             >
+              <Box flex={2} />
               <Text
                 fontSize={['40px', '96px']}
                 color="white"
                 fontFamily="bio-sans"
                 fontWeight={700}
-                style={{ zIndex: 1 }}
+                style={{ zIndex: 1, position: 'relative' }}
               >
-                BAND PROTOCOL
+                Band Protocol
+                <Box
+                  style={{
+                    position: 'absolute',
+                    top: '30%',
+                    right: '-35%',
+                    maxWidth: 500,
+                    width: '60vw',
+                  }}
+                >
+                  <Image src={Mainnet} style={{ opacity: 1 }} />
+                </Box>
               </Text>
               <Text
                 mt="20px"
@@ -230,6 +239,7 @@ export default () => {
               >
                 OFFICIAL ETHEREUM MAINNET LAUNCH
               </Text>
+              <Box flex={1.5} />
             </Flex>
 
             {/* Hex background */}
@@ -244,7 +254,7 @@ export default () => {
                 <Flex width="100%" justifyContent="center">
                   <Flex
                     flexDirection="column"
-                    py="7px"
+                    py="16px"
                     px="20px"
                     style={{
                       fontSize: '16px',
@@ -401,7 +411,10 @@ export default () => {
                   }}
                 >
                   <Box>
-                    <Image src={HexBottom} style={{ minWidth: '100vw' }} />
+                    <Image
+                      src={HexBottom}
+                      style={{ width: '100vw', minWidth: 800 }}
+                    />
                   </Box>
                 </Flex>
               </Flex>
@@ -409,9 +422,9 @@ export default () => {
               <Flex
                 style={{
                   position: 'absolute',
-                  top: '50%',
+                  top: '55%',
                   width: '100%',
-                  height: '50%',
+                  height: '45%',
                 }}
               >
                 <Flex width="100%" justifyContent="center">
@@ -422,11 +435,11 @@ export default () => {
                       fontSize: '24px',
                       width: '90%',
                       minWidth: '760px',
-                      height: '230px',
+                      height: '200px',
                       borderRadius: '8px',
                       boxShadow: '0 50px 100px 0 rgba(0, 0, 0, 0.5)',
                       backgroundImage:
-                        'linear-gradient(to bottom, rgba(55, 81, 171, 0.8), rgba(2, 7, 41, 0.8))',
+                        'linear-gradient(rgba(32, 69, 197, 0.8), rgba(12, 2, 41, 0.8))',
                       zIndex: 1,
                     }}
                   >
@@ -445,18 +458,22 @@ export default () => {
                         width="100%"
                         style={{ maxHeight: '60px', minHeight: '60px' }}
                       >
-                        <Text mr="20px" color="white">
+                        <Text mx="20px" textAlign="center" color="white">
                           Live Ethereum Mainnet
                         </Text>
-                        <Image src={BandLogo} style={{ maxHeight: '40px' }} />
+                        <Image
+                          mr={3}
+                          src={BandLogo}
+                          style={{ maxHeight: '40px' }}
+                        />
                       </Flex>
                       <A href="https://medium.com/bandprotocol" target="_blank">
                         <FlexHover
-                          mt="30px"
+                          mt="10px"
                           justifyContent="center"
                           alignItems="center"
-                          boxShadow="0 8px 16px 0 #020729"
-                          boxShadowHover="0 8px 16px 0 #4e5799"
+                          boxShadow="0 8px 16px 0 rgba(2, 7, 41, 0.5)"
+                          boxShadowHover="0 8px 16px 0 rgba(78, 87, 153, 0.55)"
                           bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
                           bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
                           style={{
@@ -497,7 +514,7 @@ export default () => {
                       </Flex>
                       <A href="https://app.bandprotocol.com/" target="_blank">
                         <FlexHover
-                          mt="30px"
+                          mt="10px"
                           justifyContent="center"
                           alignItems="center"
                           boxShadow="0 8px 16px 0 #68356e"
@@ -532,7 +549,7 @@ export default () => {
                       </Flex>
                       <A href="https://bitswing.io/" target="_blank">
                         <FlexHover
-                          mt="30px"
+                          mt="10px"
                           justifyContent="center"
                           alignItems="center"
                           boxShadow="0 8px 16px 0 #71114c"
@@ -594,7 +611,7 @@ export default () => {
       >
         {/* Section 1 */}
         <Box
-          pt="60px"
+          pt="160px"
           style={{
             backgroundImage: 'linear-gradient(to bottom, #5A7FFD 5%, #354392)',
           }}
