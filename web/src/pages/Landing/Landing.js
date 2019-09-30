@@ -293,14 +293,17 @@ export default () => {
                       <Text ml="10px" mr="auto" color="white">
                         Live Ethereum Mainnet
                       </Text>
-                      <A href="https://medium.com/bandprotocol" target="_blank">
+                      <A
+                        href="https://medium.com/@soravis/abf1dd97c9d2"
+                        target="_blank"
+                      >
                         <FlexHover
                           justifyContent="center"
                           alignItems="center"
                           boxShadow="0 8px 16px 0 #030a3b"
                           boxShadowHover="0 8px 16px 0 #4e5799"
-                          bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
-                          bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
+                          bgImg="linear-gradient(52deg, #414e94, #668cff)"
+                          bgImgHover="linear-gradient(52deg, #414e94, #94afff)"
                           style={{
                             cursor: 'pointer',
                             width: '105px',
@@ -308,10 +311,9 @@ export default () => {
                             borderRadius: '24px',
                           }}
                         >
-                          <Text mr="10px" color="#4a4a4a">
+                          <Text mr="10px" color="white">
                             Learn More
                           </Text>
-                          <Image src={MLogo} width="20px" />
                         </FlexHover>
                       </A>
                     </Flex>
@@ -451,15 +453,18 @@ export default () => {
                           style={{ maxHeight: '40px' }}
                         />
                       </Flex>
-                      <A href="https://medium.com/bandprotocol" target="_blank">
+                      <A
+                        href="https://medium.com/@soravis/abf1dd97c9d2"
+                        target="_blank"
+                      >
                         <FlexHover
                           mt="10px"
                           justifyContent="center"
                           alignItems="center"
-                          boxShadow="0 8px 16px 0 rgba(2, 7, 41, 0.5)"
-                          boxShadowHover="0 8px 16px 0 rgba(78, 87, 153, 0.55)"
-                          bgImg="linear-gradient(52deg, #8a8a8a, #ffffff)"
-                          bgImgHover="linear-gradient(52deg, #dddddd, #ffffff)"
+                          boxShadow="0 8px 16px 0 #030a3b"
+                          boxShadowHover="0 8px 16px 0 #4e5799"
+                          bgImg="linear-gradient(52deg, #414e94, #668cff)"
+                          bgImgHover="linear-gradient(52deg, #414e94, #94afff)"
                           style={{
                             cursor: 'pointer',
                             width: '188px',
@@ -467,10 +472,9 @@ export default () => {
                             borderRadius: '24px',
                           }}
                         >
-                          <Text mr="10px" color="#4a4a4a" fontSize="18px">
+                          <Text mr="10px" color="white" fontSize="18px">
                             Learn More
                           </Text>
-                          <Image src={MLogo} width="30px" />
                         </FlexHover>
                       </A>
                     </Flex>
