@@ -223,6 +223,17 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 		arg.Key = "0x" + hex.EncodeToString([]byte(arg.Key))
 	}
 
+	// TODO: Check key for now
+	readableKey, err := hex.DecodeString(arg.Key)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	if string(readableKey) != "SPOTPX/BTC-USD" && string(readableKey) != "SPOTPX/ETH-USD" {
+		http.Error(w, "Key is not valid", http.StatusBadRequest)
+		return
+	}
+
 	if !eth.IsValidDataset(arg.Dataset) {
 		http.Error(w, "Dataset is not valid", http.StatusBadRequest)
 		return
