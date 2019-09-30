@@ -20,11 +20,10 @@ class LoginModal extends React.Component {
             event_category: 'sigin',
             event_label: accounts[0],
           })
+          localStorage.setItem('walletType', 'metamask')
         } catch (error) {
           console.error(error)
         }
-
-        localStorage.setItem('walletType', 'metamask')
         break
       case 'bandwallet':
         const { wallet } = this.props
