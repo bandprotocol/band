@@ -55,7 +55,7 @@ import { getBandUSD } from 'utils/bandPrice'
 import Web3 from 'web3'
 
 // Select network (HARDCODE)!!!
-let WALLET_ENDPOINT = 'https://wallet.kovan.bandprotocol.com'
+let WALLET_ENDPOINT = 'https://bandwallet.bandprotocol.com'
 if (process.env.NODE_ENV !== 'production')
   WALLET_ENDPOINT = 'http://localhost:3000'
 
@@ -101,10 +101,10 @@ switch (network) {
     break
   case 'local':
   default:
-      BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
-      BandProtocolClient.setGraphQlAPI(
-        'https://graphql-kovan.bandprotocol.com/graphql',
-      )
+    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    BandProtocolClient.setGraphQlAPI(
+      'https://graphql-kovan.bandprotocol.com/graphql',
+    )
     break
 }
 
