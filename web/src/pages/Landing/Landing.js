@@ -66,14 +66,16 @@ export default () => {
   const _isMobile = isMobile()
   const _isSmallMobile = isSmallMobile()
   const extraHeigt = window.innerHeight - 40
-  const [mainnet, setMainnet] = useState(false)
   const mainnetBeginAt = 1569844800
+  const [mainnet, setMainnet] = useState(
+    Math.ceil(Date.now() / 1000) >= mainnetBeginAt,
+  )
 
   window.setMainnet = setMainnet
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (Math.ceil(Date.now() / 1000) > mainnetBeginAt) {
+      if (Math.ceil(Date.now() / 1000) >= mainnetBeginAt) {
         setMainnet(true)
         clearInterval(intervalId)
       }
