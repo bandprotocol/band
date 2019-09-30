@@ -67,8 +67,9 @@ export default () => {
     const intervalId = setInterval(() => {
       if (Math.ceil(Date.now() / 1000) > mainnetBeginAt) {
         setMainnet(true)
+        clearInterval(intervalId)
       }
-    }, 1000)
+    }, 600)
     return () => clearInterval(intervalId)
   }, [])
 
