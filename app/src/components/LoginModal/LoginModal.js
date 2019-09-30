@@ -14,8 +14,16 @@ class LoginModal extends React.Component {
           console.error('Cannot find metamask provider.')
           break
         }
-        await window.ethereum.enable()
-        localStorage.setItem('walletType', 'metamask')
+        try {
+          const accounts = await window.ethereum.enable()
+          window.gtag('event', 'User', {
+            event_category: 'sigin',
+            event_label: accounts[0],
+          })
+          localStorage.setItem('walletType', 'metamask')
+        } catch (error) {
+          console.error(error)
+        }
         break
       case 'bandwallet':
         const { wallet } = this.props

@@ -13,6 +13,10 @@ import CommunityDataSetWebRequest from './CommunityDataSetWebRequest'
 
 class CommunityDataSet extends React.Component {
   render() {
+    window.gtag('event', 'click-tab', {
+      event_category: 'Dataset',
+      event_label: 'dataset',
+    })
     switch (this.props.name) {
       case 'Financial Data Feeds':
         return <CommunityDataSetPrice {...this.props} />

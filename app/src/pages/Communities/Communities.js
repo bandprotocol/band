@@ -25,7 +25,10 @@ const mapDispatchToProps = (dispatch, props) => {
       const rewardAmount = Number('0x' + result.slice(66)) / 1e18
       dispatch(setXFNRewardInfo({ hasPendingReward, rewardAmount }))
     },
-    showClaimXFNModal: () => dispatch(showModal('CLAIM_XFN')),
+    showClaimXFNModal: () => {
+      dispatch(showModal('CLAIM_XFN'))
+      window.gtag('event', 'click-airdrop', { event_category: 'User' })
+    },
   }
 }
 
