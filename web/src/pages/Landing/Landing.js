@@ -213,7 +213,7 @@ export default () => {
               style={{
                 position: 'absolute',
                 top: '0%',
-                height: isMobile() ? '20%' : '60%',
+                height: isMobile() ? '30%' : '60%',
               }}
             >
               <Box flex={2} />
@@ -225,17 +225,19 @@ export default () => {
                 style={{ zIndex: 1, position: 'relative' }}
               >
                 Band Protocol
-                <Box
-                  style={{
-                    position: 'absolute',
-                    top: '30%',
-                    right: '-35%',
-                    maxWidth: 500,
-                    width: '60vw',
-                  }}
-                >
-                  <Image src={Mainnet} style={{ opacity: 1 }} />
-                </Box>
+                {!isMobile() && (
+                  <Box
+                    style={{
+                      position: 'absolute',
+                      top: '30%',
+                      right: '-35%',
+                      maxWidth: 500,
+                      width: '60vw',
+                    }}
+                  >
+                    <Image src={Mainnet} style={{ opacity: 1 }} />
+                  </Box>
+                )}
               </Text>
               <Text
                 mt="20px"
@@ -245,7 +247,9 @@ export default () => {
                 textAlign="center"
                 style={{ zIndex: 1 }}
               >
-                OFFICIAL ETHEREUM MAINNET LAUNCH
+                {isMobile()
+                  ? 'OFFICIAL ETHEREUM MAINNET'
+                  : 'OFFICIAL ETHEREUM MAINNET LAUNCH'}
               </Text>
               <Box flex={1.5} />
             </Flex>
