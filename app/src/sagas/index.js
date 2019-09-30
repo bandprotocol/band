@@ -72,7 +72,7 @@ if (
 /**
  *  get current network
  */
-let network = localStorage.getItem('network') || 'kovan'
+let network = localStorage.getItem('network') || 'mainnet'
 
 switch (network) {
   case 'mainnet':
