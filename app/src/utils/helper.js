@@ -28,6 +28,14 @@ export const convertFromChain = (value, type) => {
         .toFixed(4),
       '%',
     ]
+  } else if (type === 'PERCENTAGE_PER_YEAR') {
+    return [
+      BigNumber(value.toString())
+        .times(BigNumber(365 * 86400))
+        .div(BigNumber(1e16))
+        .toFixed(4),
+      '%',
+    ]
   } else if (type === 'TOKEN') {
     return [
       BigNumber(value.toString())
@@ -64,6 +72,13 @@ export const convertToChain = (value, type, unit) => {
     return new BN(
       BigNumber(value)
         .times(BigNumber(1e16))
+        .toFixed(0),
+    )
+  } else if (type === 'PERCENTAGE_PER_YEAR') {
+    return new BN(
+      BigNumber(value)
+        .times(BigNumber(1e16))
+        .div(BigNumber(365 * 86400))
         .toFixed(0),
     )
   } else if (type === 'TOKEN') {
@@ -204,7 +219,7 @@ export const getParameterDetail = name =>
       description: 'Cost of ÐApps to query one data point in ETH',
     },
     inflation_rate: {
-      type: 'PERCENTAGE',
+      type: 'PERCENTAGE_PER_YEAR',
       description: 'Percentage of inflation',
     },
     curve_expression: {
