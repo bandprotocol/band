@@ -25,7 +25,7 @@ export const getCurrentNetworkOption = () => {
 
 export const getCurrentNetworkName = () => {
   const network = localStorage.getItem('network')
-  return network ? network : 'kovan'
+  return network ? network : 'mainnet'
 }
 
 export const getNetworkIndex = network => {

@@ -77,7 +77,7 @@ function* handleLoadCurrent() {
 
   // Load network
   const network = localStorage.getItem('network')
-  yield put(setNetwork(network || 'kovan'))
+  yield put(setNetwork(network || 'mainnet'))
 
   // Load balance
   const balances = localStorage.getItem('balances')
