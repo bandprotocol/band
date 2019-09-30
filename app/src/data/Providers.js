@@ -5,6 +5,7 @@ import Panda from 'images/animals/panda.svg'
 import Penguin from 'images/animals/penguin.svg'
 import Puma from 'images/animals/puma.svg'
 import Walrus from 'images/animals/walrus.svg'
+import Band from 'images/band.svg'
 
 const allProviders = {
   '0xDa7A7bd990030359e4E30E41ba0e5b33f740Db47': {
@@ -181,6 +182,40 @@ const allProviders = {
   '0xDa7A3e3214cbC27bf5e6BbED3Fb6c1779c715D77': {
     name: 'SEA node',
     image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
+  },
+
+  '0xB1CF7B512F090957cA886b626fB2Be46BA03cBce': {
+    name: '0xB1CF7B51....',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/f/fa/Flag_of_the_People%27s_Republic_of_China.svg',
+  },
+  '0x3430E76D0733E9Eb31d7f388FA3EDe31E0ABF2e3': {
+    name: '0x3430E76D....',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/6/66/Flag_of_Malaysia.svg',
+  },
+  '0xeB7e8970C261F00025672149FDC810e7c7d12112': {
+    name: 'Band Protocol',
+    image: Band,
+  },
+  '0x78A9C7aF3F7328993C12e4875C7d6f37Ba6573d7': {
+    name: '0x78A9C7aF....',
+    image:
+      'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg',
+  },
+  '0x4B8284A01Cc30644344482278eC9A713fC3C0d28': {
+    name: '0x4B8284A0....',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
+  },
+  '0x6f9907CB0574c3515AC68cfFb568751Db112AC3E': {
+    name: '0x6f9907CB....',
+    image: 'https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg',
+  },
+  '0xB70af396a557C3625cB1A8f3b52b3D960F4713A6': {
+    name: '0xB70af396....',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg',
   },
   default: { name: 'Unknown' },
 }
