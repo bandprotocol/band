@@ -86,8 +86,24 @@ type Report @entity {
 
 type DataProvider @entity {
   id: ID!
+  dataProviderOwnerships: DataProviderOwnership!
+  dataSourceAddress: Bytes!
+  detail: String
+  endpoint: String
+  owner: Bytes!
+  stake: BigInt!
+  status: String!
+  tcdAddress: Bytes!
+  tcdByTcdAddress: TCD!
+  totalOwnership: BigInt!
 }
 
 type DataProviderOwnership @entity {
   id: ID!
+  dataProvider: DataProvider!
+  dataSourceAddress: Bytes!
+  ownership: BigInt!
+  tcdAddress: Bytes!
+  tokenLock: BigInt!
+  voter: String!
 }
