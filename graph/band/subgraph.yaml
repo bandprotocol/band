@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: PriceTCD
-    network: kovan
+    network: mainnet
     source:
       address: "0xa24df0420de1f3b8d740a52aaeb9d55d6d64478e"
       abi: OffchainAggTCD

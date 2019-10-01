@@ -1,0 +1,93 @@
+type Token @entity {
+  id: ID!
+  totalSupply: BigInt!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  curve: Curve
+  parameter: Parameter
+  tcd: TCD
+}
+
+type Balance @entity {
+  id: ID!
+  token: Token!
+  user: Bytes!
+  value: BigInt!
+  lockedValue: BigInt!
+}
+
+type TokenLocked @entity {
+  id: ID!
+  locker: Bytes!
+  user: Bytes!
+  value: BigInt!
+}
+
+type Curve @entity {
+  id: ID!
+  token: Token!
+  price: BigInt!
+  collateralEquation: Bytes!
+  curveMultiplier: BigInt!
+}
+
+type Price @entity {
+  id: ID!
+}
+
+type Order @entity {
+  id: ID!
+}
+
+type Transfer @entity {
+  id: ID!
+}
+
+type Parameter @entity {
+  id: ID!
+}
+
+type Proposal @entity {
+  id: ID!
+}
+
+type ProposalVote @entity {
+  id: ID!
+}
+
+type TCD @entity {
+  id: ID!
+  tokenAddress: Bytes!
+  prefix: String!
+  maxProviderCount: Int
+  minStake: BigInt
+  queryCount: Int!
+  reportCount: Int!
+}
+
+
+type QueryCounter @entity {
+  id: ID!
+  contract: Bytes!
+  startTime: BigInt!
+  query: Int!
+}
+
+type Report @entity {
+  id: ID!
+  contract: Bytes!
+  key: Bytes!
+  value: BigInt!
+  timestamp: BigInt!
+  status: Int!
+  txHash: Bytes!
+}
+
+type DataProvider @entity {
+  id: ID!
+}
+
+type DataProviderOwnership @entity {
+  id: ID!
+}
