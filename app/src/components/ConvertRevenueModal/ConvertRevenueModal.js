@@ -108,7 +108,7 @@ class ConvertRevenueModal extends React.Component {
                   )
                 }
               >
-                Widthdraw Revenue{' '}
+                Withdraw Revenue{' '}
               </CustomButton>
             </Flex>
           </Flex>

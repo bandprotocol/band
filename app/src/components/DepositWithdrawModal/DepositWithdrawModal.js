@@ -216,7 +216,7 @@ class DepositWithdrawModal extends React.Component {
           alignItems="center"
         >
           <Text color="#4e3ca9" fontFamily="Avenir-Heavy" fontSize="14px">
-            {actionType === 'DEPOSIT' ? 'Stake' : 'Widthdraw'}
+            {actionType === 'DEPOSIT' ? 'Stake' : 'Withdraw'}
           </Text>
           <Flex
             width={1}
