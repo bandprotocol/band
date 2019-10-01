@@ -156,11 +156,11 @@ if __name__ == "__main__":
         try:
             current_day = datetime.utcnow().strftime("%Y-%m-%d")
             if today != current_day or os.stat(current.fileno()).st_ino != curino:
-                today = current_day
-                new = open(directory + today + ".log", "r")
+                new = open(directory + current_day + ".log", "r")
                 current.close()
                 current = new
                 curino = os.fstat(current.fileno()).st_ino
+                today = current_day
                 continue
         except IOError:
             pass
