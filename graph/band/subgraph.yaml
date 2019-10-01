@@ -6,7 +6,7 @@ dataSources:
     name: PriceTCD
     network: mainnet
     source:
-      address: "0xa24df0420de1f3b8d740a52aaeb9d55d6d64478e"
+      address: "0xD5D2b9e9bcd172D5fC8521AFd2C98Dd239F5b607"
       abi: OffchainAggTCD
     mapping:
       kind: ethereum/events
@@ -41,4 +41,4 @@ dataSources:
           handler: handleWithdrawReceiptUnlocked
         - event: Query(indexed address,bytes,uint8)
           handler: handleQuery
-      file: ./src/mapping.ts
+      file: ./mappings/TCD.ts

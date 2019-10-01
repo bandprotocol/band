@@ -66,7 +66,6 @@ type TCD @entity {
   reportCount: Int!
 }
 
-
 type QueryCounter @entity {
   id: ID!
   contract: Bytes!
@@ -94,7 +93,7 @@ type DataProvider @entity {
   stake: BigInt!
   status: String!
   tcdAddress: Bytes!
-  tcdByTcdAddress: TCD!
+  tcd: TCD!
   totalOwnership: BigInt!
 }
 
@@ -105,5 +104,5 @@ type DataProviderOwnership @entity {
   ownership: BigInt!
   tcdAddress: Bytes!
   tokenLock: BigInt!
-  voter: String!
+  voter: Bytes!
 }
