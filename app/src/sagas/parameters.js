@@ -10,14 +10,19 @@ import BN from 'utils/bignumber'
 const WEB_REQ_NAME = 'Web Request Oracle'
 
 function* handleLoadParameters({ address }) {
-  const { parameterByTokenAddress, name } = (yield Utils.graphqlRequest(`{
-    tokenByAddress(address: "${address}") {
-      parameterByTokenAddress{
-        currentParameters
-      }
-      name
-    }
-  }`)).tokenByAddress
+  // const { parameterByTokenAddress, name } = (yield Utils.graphqlRequest(`{
+  //   tokenByAddress(address: "${address}") {
+  //     parameterByTokenAddress{
+  //       currentParameters
+  //     }
+  //     name
+  //   }
+  // }`)).tokenByAddress
+
+  const { parameterByTokenAddress, name } = {
+    parameterByTokenAddress: {},
+    name: 'XFN',
+  }
 
   const currentParameters = parameterByTokenAddress.currentParameters
 
