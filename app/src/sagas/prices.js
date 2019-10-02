@@ -8,10 +8,9 @@ function* handleLoadPriceHistory(props) {
   const { address } = props
   if (!address) return
   const query = yield Utils.graphqlRequest(`{
-    tokenByAddress(address: "${address}") {
-      curveByTokenAddress {
-        pricesByCurveAddress(orderBy: TIMESTAMP_DESC)  {
-          nodes {
+      token(id:"${address}") {
+        curve {
+          prices (orderBy: timestamp, orderDirection: desc) {
             price
             timestamp
           }
@@ -20,12 +19,7 @@ function* handleLoadPriceHistory(props) {
     }
   }`)
 
-  yield put(
-    addPrices(
-      address,
-      query.tokenByAddress.curveByTokenAddress.pricesByCurveAddress.nodes,
-    ),
-  )
+  yield put(addPrices(address, query.token.curve.prices))
 }
 
 export default function*() {
