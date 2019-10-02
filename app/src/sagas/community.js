@@ -8,6 +8,7 @@ function* handleFetchCommunity() {
     {
       tokens {
         id
+        symbol
         curve {
           price
         }
@@ -16,11 +17,12 @@ function* handleFetchCommunity() {
   `,
   )
 
-  for (const community of communityDetails.tokens) {
-    const token = community.id
-    yield put(
-      saveCommunityPrice(token, community.curve ? community.curve.price : 0),
-    )
+  for (const token of communityDetails.tokens) {
+    if (token.symbol !== 'BAND') {
+      yield put(
+        saveCommunityPrice(token.id, parseFloat(token.curve.price) / 1e18),
+      )
+    }
   }
 }
 

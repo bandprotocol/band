@@ -4,6 +4,7 @@ import moment from 'moment'
 import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
 import { getAllPriceLabelFromType } from 'data/detail/price'
+import { toChecksumAddress } from 'utils/helper'
 
 export const CurrentPriceFetcher = withRouter(
   class extends BaseFetcher {
@@ -18,9 +19,12 @@ export const CurrentPriceFetcher = withRouter(
     async fetch() {
       const { tcdAddress, type } = this.props
 
-      const prices = await Utils.getDataRequest(`/prices/${tcdAddress}`, {
-        key: this.props.query,
-      })
+      const prices = await Utils.getDataRequest(
+        `/prices/${toChecksumAddress(tcdAddress)}`,
+        {
+          key: this.props.query,
+        },
+      )
 
       const priceLabel = getAllPriceLabelFromType(type)
       const result = prices
@@ -67,10 +71,13 @@ export const PricePairFetcher = withRouter(
     async fetch() {
       const { keyOnChain, tcdAddress } = this.props
 
-      const reports = await Utils.getDataRequest(`/${tcdAddress}/data-points`, {
-        key: keyOnChain,
-        limit: 25,
-      })
+      const reports = await Utils.getDataRequest(
+        `/${toChecksumAddress(tcdAddress)}/data-points`,
+        {
+          key: keyOnChain,
+          limit: 25,
+        },
+      )
 
       // add another report point for prevent graph's plotting problem
       if (reports.length < 2) {

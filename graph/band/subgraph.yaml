@@ -114,3 +114,37 @@ dataSources:
         - event: Query(indexed address,bytes,uint8)
           handler: handleQuery
       file: ./mappings/OffchainAggTCD.ts
+  - kind: ethereum/contract
+    name: Parameters
+    network: ropsten
+    source:
+      address: "0x78E6698398D19159E22A3D9Dd34778F2A771E9F4"
+      abi: Parameters
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      abis:
+        - name: Parameters
+          file: ./abis/Parameters.json
+      entities:
+        - ProposalProposed
+        - ProposalVoted
+        - ProposalAccepted
+        - ProposalRejected
+        - ParameterChanged
+        - ParameterProposed
+      eventHandlers:
+        - event: ProposalProposed(indexed uint256,indexed address,bytes32)
+          handler: handleProposalProposed
+        - event: ProposalVoted(indexed uint256,indexed address,bool,uint256)
+          handler: handleProposalVoted
+        - event: ProposalAccepted(indexed uint256)
+          handler: handleProposalAccepted
+        - event: ProposalRejected(indexed uint256)
+          handler: handleProposalRejected
+        - event: ParameterChanged(indexed bytes32,uint256)
+          handler: handleParameterChanged
+        - event: ParameterProposed(indexed uint256,indexed bytes32,uint256)
+          handler: handleParameterProposed
+      file: ./mappings/Parameters.ts
