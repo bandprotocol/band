@@ -84,6 +84,9 @@ dataSources:
       kind: ethereum/events
       apiVersion: 0.0.3
       language: wasm/assemblyscript
+      abis:
+        - name: OffchainAggTCD
+          file: ./abis/OffchainAggTCD.json
       entities:
         - DataUpdated
         - DataSourceRegistered
@@ -110,4 +113,4 @@ dataSources:
           handler: handleWithdrawReceiptUnlocked
         - event: Query(indexed address,bytes,uint8)
           handler: handleQuery
-      file: ./mappings/TCD.ts
+      file: ./mappings/OffchainAggTCD.ts
