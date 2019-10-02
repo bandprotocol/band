@@ -238,9 +238,22 @@ function* baseInitialize() {
       curve{
         price
         collateralEquation
+        prices(first:1, where:{timestamp_lt: ${Math.trunc(
+          new Date().getTime() / 1000 - 86400,
+        )}},orderBy: timestamp, orderDirection:desc){
+          price
+          totalSupply
+        }
       }
-      tcd{
+      tcd {
         id
+        prefix
+        maxProviderCount
+        minStake
+        providers {
+          providerAddress
+          stake
+        }
       }
     }
   }
@@ -259,58 +272,30 @@ function* baseInitialize() {
           null, // bannerCommunityFromSymbol(token.symbol),
           'XX', //community.description,
           'WWW', //community.website,
-          0,
-          // (parseFloat(token.curveByTokenAddress.price) *
-          //   parseFloat(token.totalSupply)) /
-          //   1e18,
+          (parseFloat(token.curve.price) * parseFloat(token.totalSupply)) /
+            1e36,
           parseFloat(token.curve.price / 1e18),
           new BN(token.totalSupply),
-          0,
-          // parseFloat(
-          //   token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-          //     ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price
-          //     : 0,
-          // ),
-          0,
-          // new BN(
-          //   token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-          //     ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-          //         .totalSupply
-          //     : 0,
-          // ),
+          parseFloat(token.curve.prices[0] ? token.curve.prices[0].price : 0) /
+            1e18,
+          new BN(token.curve.prices[0] ? token.curve.prices[0].totalSupply : 0),
           token.curve.collateralEquation,
-          Map(),
-          // token.tcdsByTokenAddress.nodes[0] &&
-          //   token.tcdsByTokenAddress.nodes.reduce(
-          //     (acc, each) =>
-          //       acc.set(
-          //         each.address,
-          //         Map({
-          //           prefix: each.prefix,
-          //           minStake: each.minStake,
-          //           maxProviderCount: each.maxProviderCount,
-          //           totalStake: each.dataProvidersByTcdAddress.nodes.reduce(
-          //             (c, { stake }) => c.add(new BN(stake)),
-          //             new BN(0),
-          //           ),
-          //           dataProviderCount:
-          //             each.dataProvidersByTcdAddress.nodes.length,
-          //           providers: each.dataProvidersByTcdAddress.nodes.map(
-          //             x => x.dataSourceAddress,
-          //           ),
-          //         }),
-          //       ),
-          //     Map(),
-          //   ),
+          // Map(),
+          token.tcd &&
+            Map({
+              [console.log(token.tcd.id) || token.tcd.id]: Map({
+                prefix: token.tcd.prefix,
+                minStake: token.tcd.minStake,
+                maxProviderCount: token.tcd.maxProviderCount,
+                totalStake: token.tcd.providers.reduce(
+                  (c, { stake }) => c.add(new BN(stake)),
+                  new BN(0),
+                ),
+                dataProviderCount: token.tcd.providers.length,
+                providers: token.tcd.providers.map(x => x.providerAddress),
+              }),
+            }),
           false,
-          // token.tcrsByTokenAddress.nodes[0] && {
-          //   listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,
-          //   applied: token.tcrsByTokenAddress.nodes[0].appliedEntries.totalCount,
-          //   challenged:
-          //     token.tcrsByTokenAddress.nodes[0].challengedEntries.totalCount,
-          //   rejected:
-          //     token.tcrsByTokenAddress.nodes[0].rejectedEntries.totalCount,
-          // },
           '0x',
           // token.parameterByTokenAddress.address,
         ),

@@ -84,8 +84,9 @@ type ProposalVote @entity {
 
 type TCD @entity {
   id: ID!
-  tokenAddress: Token!
+  token: Token!
   prefix: String!
+  providers: [DataProvider!] @derivedFrom(field: "tcd")
   maxProviderCount: Int
   minStake: BigInt
   queryCount: Int!
@@ -111,24 +112,23 @@ type Report @entity {
 
 type DataProvider @entity {
   id: ID!
-  dataProviderOwnerships: [DataProviderOwnership!] @derivedFrom(field: "dataProvider")
-  dataSourceAddress: Bytes!
+  tcd: TCD!
+  providerAddress: Bytes!
   detail: String
   endpoint: String
   owner: Bytes!
   stake: BigInt!
   status: String!
-  tcdAddress: Bytes!
-  tcd: TCD!
   totalOwnership: BigInt!
+  dataProviderOwnerships: [DataProviderOwnership!] @derivedFrom(field: "dataProvider")
 }
 
 type DataProviderOwnership @entity {
   id: ID!
   dataProvider: DataProvider!
-  dataSourceAddress: Bytes!
-  ownership: BigInt!
+  providerAddress: Bytes!
   tcdAddress: Bytes!
+  ownership: BigInt!
   tokenLock: BigInt!
   voter: Bytes!
 }

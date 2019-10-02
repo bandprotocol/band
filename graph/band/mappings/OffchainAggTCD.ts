@@ -1,11 +1,4 @@
-import {
-  store,
-  BigInt,
-  crypto,
-  ByteArray,
-  Address,
-  Bytes
-} from "@graphprotocol/graph-ts";
+import { store, BigInt, Address } from "@graphprotocol/graph-ts";
 import {
   OffchainAggTCD,
   DataUpdated,
@@ -18,6 +11,7 @@ import {
   Query
 } from "../generated/OffchainAggTCD/OffchainAggTCD";
 import {
+  Token,
   TCD,
   Report,
   QueryCounter,
@@ -26,9 +20,9 @@ import {
 } from "../generated/schema";
 
 function updateProvider(
-  tcdAddress: ByteArray,
-  dataSourceAddress: ByteArray,
-  participant: ByteArray
+  tcdAddress: Address,
+  dataSourceAddress: Address,
+  participant: Address
 ): void {
   let dpKey = dataSourceAddress.toHexString() + "-" + tcdAddress.toHexString();
   let dataProvider = DataProvider.load(dpKey);
@@ -53,7 +47,7 @@ function updateProvider(
 
   if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
     voterOwnership = new DataProviderOwnership(dpoKey);
-    voterOwnership.dataSourceAddress = Address.fromString(
+    voterOwnership.providerAddress = Address.fromString(
       dataSourceAddress.toHexString()
     );
     voterOwnership.tcdAddress = Address.fromString(tcdAddress.toHexString());
@@ -79,7 +73,13 @@ export function handleDataUpdated(event: DataUpdated): void {
 
   if (tcd == null) {
     tcd = new TCD(event.address.toHexString());
+    let tcdContract = OffchainAggTCD.bind(event.address);
+    let tokenAddress = tcdContract.token().toHexString();
+    tcd.token = tokenAddress;
 
+    let token = Token.load(tokenAddress);
+    token.tcd = event.address.toHexString();
+    token.save();
     tcd.queryCount = 0;
     tcd.reportCount = 0;
   }
@@ -108,10 +108,17 @@ export function handleDataSourceRegistered(event: DataSourceRegistered): void {
   let tcdContract = OffchainAggTCD.bind(event.address);
   if (tcd == null) {
     tcd = new TCD(event.address.toHexString());
-    tcd.tokenAddress = tcdContract.token();
+    let tokenAddress = tcdContract.token().toHexString();
+    tcd.token = tokenAddress;
+
+    let token = Token.load(tokenAddress);
+    token.tcd = event.address.toHexString();
+    token.save();
+
     tcd.prefix = "tcd:";
     tcd.queryCount = 0;
     tcd.reportCount = 0;
+    tcd.save();
   }
 
   let dPKey =
@@ -119,19 +126,17 @@ export function handleDataSourceRegistered(event: DataSourceRegistered): void {
   let dpoKey = dPKey + "-" + event.params.owner.toHexString();
 
   let dataProvider = new DataProvider(dPKey);
-  dataProvider.dataSourceAddress = event.params.dataSource;
+  dataProvider.providerAddress = event.params.dataSource;
   dataProvider.owner = event.params.owner;
   dataProvider.stake = event.params.stake;
   dataProvider.status = "UNLISTED";
-  dataProvider.tcdAddress = event.address;
   dataProvider.totalOwnership = event.params.stake;
   dataProvider.tcd = event.address.toHexString();
-  dataProvider.dataProviderOwnerships = dpoKey;
   dataProvider.save();
 
   let dataProviderOwnership = new DataProviderOwnership(dpoKey);
   dataProviderOwnership.dataProvider = dPKey;
-  dataProviderOwnership.dataSourceAddress = event.params.dataSource;
+  dataProviderOwnership.providerAddress = event.params.dataSource;
   dataProviderOwnership.tcdAddress = event.address;
   dataProviderOwnership.ownership = event.params.stake;
   dataProviderOwnership.tokenLock = event.params.stake;
@@ -160,7 +165,11 @@ export function handleFeeDistributed(event: FeeDistributed): void {
     event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dataProvider = DataProvider.load(dPKey);
 
-  updateProvider(event.address, event.params.dataSource, dataProvider.owner);
+  updateProvider(
+    event.address,
+    event.params.dataSource,
+    Address.fromString(dataProvider.owner.toHexString())
+  );
 }
 
 export function handleWithdrawReceiptCreated(
@@ -176,6 +185,13 @@ export function handleQuery(event: Query): void {
 
   if (tcd == null) {
     tcd = new TCD(event.address.toHexString());
+    let tcdContract = OffchainAggTCD.bind(event.address);
+    let tokenAddress = tcdContract.token().toHexString();
+    tcd.token = tokenAddress;
+
+    let token = Token.load(tokenAddress);
+    token.tcd = event.address.toHexString();
+    token.save();
 
     tcd.queryCount = 0;
     tcd.reportCount = 0;
