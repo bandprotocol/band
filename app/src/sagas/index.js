@@ -78,7 +78,7 @@ switch (network) {
   case 'mainnet':
     BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-mainnet.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-mainnet',
     )
     break
   case 'kovan':
@@ -96,7 +96,7 @@ switch (network) {
   case 'ropsten':
     BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-ropsten.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-ropsten',
     )
     break
   case 'local':
@@ -164,15 +164,13 @@ function* baseInitialize() {
   yield put(loadCurrent())
 
   const query = yield Utils.graphqlRequest(`
-    {
-      allContracts(condition: {contractType: "BAND_TOKEN"}){
-        nodes{
-          address
-        }
-      }
+  {
+    tokens(where:{symbol: "BAND"}) {
+      id
     }
+  }
   `)
-  const bandAddress = query.allContracts.nodes[0].address
+  const bandAddress = query.tokens[0].id
 
   /* get BAND-USD conversion rate from Coingecko */
   const { usd, usd_24h_change } = yield getBandUSD()
@@ -181,135 +179,143 @@ function* baseInitialize() {
   )
 
   const communityDetails = yield Utils.graphqlRequest(
+    //   `
+    //   {
+    //     allBandCommunities {
+    //       nodes {
+    //         tokenAddress
+    //         name
+    //         organization
+    //         description
+    //         website
+    //         logo
+    //         banner
+    //         tokenByTokenAddress {
+    //           address
+    //           symbol
+    //           totalSupply
+    //           curveByTokenAddress {
+    //             price
+    //             collateralEquation
+    //             pricesByCurveAddress(first: 1, filter: {timestamp: {lessThan: ${Math.trunc(
+    //               new Date().getTime() / 1000 - 86400,
+    //             )}}}, orderBy: TIMESTAMP_DESC) {
+    //               nodes {
+    //                 price
+    //                 totalSupply
+    //               }
+    //             }
+    //           }
+    //           tcdsByTokenAddress {
+    //             nodes {
+    //               address
+    //               prefix
+    //               maxProviderCount
+    //               minStake
+    //               dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
+    //                 nodes {
+    //                   stake
+    //                   dataSourceAddress
+    //                 }
+    //               }
+    //             }
+    //           }
+    //           parameterByTokenAddress {
+    //             address
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // `,
     `
-    {
-      allBandCommunities {
-        nodes {
-          tokenAddress
-          name
-          organization
-          description
-          website
-          logo
-          banner
-          tokenByTokenAddress {
-            address
-            symbol
-            totalSupply
-            curveByTokenAddress {
-              price
-              collateralEquation
-              pricesByCurveAddress(first: 1, filter: {timestamp: {lessThan: ${Math.trunc(
-                new Date().getTime() / 1000 - 86400,
-              )}}}, orderBy: TIMESTAMP_DESC) {
-                nodes {
-                  price
-                  totalSupply
-                }
-              }
-            }
-            tcdsByTokenAddress {
-              nodes {
-                address
-                prefix
-                maxProviderCount
-                minStake
-                dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
-                  nodes {
-                    stake
-                    dataSourceAddress
-                  }
-                }
-              }
-            }
-            tcrsByTokenAddress {
-              nodes {
-                listedEntries: entriesByTcrAddress(filter: {status: {equalTo: "LISTED"}}) {
-                  totalCount
-                }
-                appliedEntries: entriesByTcrAddress(filter: {status: {equalTo: "APPLIED"}}) {
-                  totalCount
-                }
-                challengedEntries: entriesByTcrAddress(filter: {status: {equalTo: "CHALLENGED"}}) {
-                  totalCount
-                }
-                rejectedEntries: entriesByTcrAddress(filter: {status: {equalTo: "REJECTED"}}) {
-                  totalCount
-                }
-              }
-            }
-            parameterByTokenAddress {
-              address
-            }
-          }
-        }
+  {
+    tokens{
+      id
+      name
+      symbol
+      totalSupply
+      curve{
+        price
+        collateralEquation
+      }
+      tcd{
+        id
       }
     }
+  }
   `,
   )
 
-  for (const community of communityDetails.allBandCommunities.nodes) {
-    const token = community.tokenByTokenAddress
-    yield put(
-      saveCommunityInfo(
-        community.name,
-        token.symbol,
-        token.address,
-        community.organization,
-        logoCommunityFromSymbol(token.symbol),
-        bannerCommunityFromSymbol(token.symbol),
-        community.description,
-        community.website,
-        (parseFloat(token.curveByTokenAddress.price) *
-          parseFloat(token.totalSupply)) /
-          1e18,
-        parseFloat(token.curveByTokenAddress.price),
-        new BN(token.totalSupply),
-        parseFloat(
-          token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-            ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price
-            : 0,
+  for (const token of communityDetails.tokens) {
+    if (token.symbol !== 'BAND') {
+      yield put(
+        saveCommunityInfo(
+          token.name,
+          token.symbol,
+          token.id,
+          'Band protocol', // community.organization,
+          null, // logoCommunityFromSymbol(token.symbol),
+          null, // bannerCommunityFromSymbol(token.symbol),
+          'XX', //community.description,
+          'WWW', //community.website,
+          0,
+          // (parseFloat(token.curveByTokenAddress.price) *
+          //   parseFloat(token.totalSupply)) /
+          //   1e18,
+          parseFloat(token.curve.price / 1e18),
+          new BN(token.totalSupply),
+          0,
+          // parseFloat(
+          //   token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
+          //     ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price
+          //     : 0,
+          // ),
+          0,
+          // new BN(
+          //   token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
+          //     ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
+          //         .totalSupply
+          //     : 0,
+          // ),
+          token.curve.collateralEquation,
+          Map(),
+          // token.tcdsByTokenAddress.nodes[0] &&
+          //   token.tcdsByTokenAddress.nodes.reduce(
+          //     (acc, each) =>
+          //       acc.set(
+          //         each.address,
+          //         Map({
+          //           prefix: each.prefix,
+          //           minStake: each.minStake,
+          //           maxProviderCount: each.maxProviderCount,
+          //           totalStake: each.dataProvidersByTcdAddress.nodes.reduce(
+          //             (c, { stake }) => c.add(new BN(stake)),
+          //             new BN(0),
+          //           ),
+          //           dataProviderCount:
+          //             each.dataProvidersByTcdAddress.nodes.length,
+          //           providers: each.dataProvidersByTcdAddress.nodes.map(
+          //             x => x.dataSourceAddress,
+          //           ),
+          //         }),
+          //       ),
+          //     Map(),
+          //   ),
+          false,
+          // token.tcrsByTokenAddress.nodes[0] && {
+          //   listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,
+          //   applied: token.tcrsByTokenAddress.nodes[0].appliedEntries.totalCount,
+          //   challenged:
+          //     token.tcrsByTokenAddress.nodes[0].challengedEntries.totalCount,
+          //   rejected:
+          //     token.tcrsByTokenAddress.nodes[0].rejectedEntries.totalCount,
+          // },
+          '0x',
+          // token.parameterByTokenAddress.address,
         ),
-        new BN(
-          token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-            ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-                .totalSupply
-            : 0,
-        ),
-        token.curveByTokenAddress.collateralEquation,
-        token.tcdsByTokenAddress.nodes[0] &&
-          token.tcdsByTokenAddress.nodes.reduce(
-            (acc, each) =>
-              acc.set(
-                each.address,
-                Map({
-                  prefix: each.prefix,
-                  minStake: each.minStake,
-                  maxProviderCount: each.maxProviderCount,
-                  totalStake: each.dataProvidersByTcdAddress.nodes.reduce(
-                    (c, { stake }) => c.add(new BN(stake)),
-                    new BN(0),
-                  ),
-                  dataProviderCount:
-                    each.dataProvidersByTcdAddress.nodes.length,
-                  providers: each.dataProvidersByTcdAddress.nodes.map(
-                    x => x.dataSourceAddress,
-                  ),
-                }),
-              ),
-            Map(),
-          ),
-        token.tcrsByTokenAddress.nodes[0] && {
-          listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,
-          applied: token.tcrsByTokenAddress.nodes[0].appliedEntries.totalCount,
-          challenged:
-            token.tcrsByTokenAddress.nodes[0].challengedEntries.totalCount,
-          rejected:
-            token.tcrsByTokenAddress.nodes[0].rejectedEntries.totalCount,
-        },
-        token.parameterByTokenAddress.address,
-      ),
-    )
+      )
+    }
   }
 
   /**

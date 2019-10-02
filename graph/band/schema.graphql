@@ -34,6 +34,7 @@ type Curve @entity {
   price: BigInt!
   collateralEquation: Bytes!
   curveMultiplier: BigInt!
+  prices: [Price!] @derivedFrom(field: "curve")
 }
 
 type Price @entity {
@@ -83,7 +84,7 @@ type ProposalVote @entity {
 
 type TCD @entity {
   id: ID!
-  tokenAddress: Bytes!
+  tokenAddress: Token!
   prefix: String!
   maxProviderCount: Int
   minStake: BigInt
@@ -110,7 +111,7 @@ type Report @entity {
 
 type DataProvider @entity {
   id: ID!
-  dataProviderOwnerships: DataProviderOwnership!
+  dataProviderOwnerships: [DataProviderOwnership!] @derivedFrom(field: "dataProvider")
   dataSourceAddress: Bytes!
   detail: String
   endpoint: String

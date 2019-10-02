@@ -11,11 +11,15 @@ import { Token, Curve, Order, Price } from "../generated/schema";
 function getOneToken(): BigInt {
   return BigInt.fromI32(1000000000).times(BigInt.fromI32(1000000000));
 }
-function findOrCreateToken(tokenAddress: Address): Token | null {
+function findOrCreateToken(
+  curveAddress: Address,
+  tokenAddress: Address
+): Token | null {
   let token = Token.load(tokenAddress.toHexString());
   if (token == null) {
     token = new Token(tokenAddress.toHexString());
   }
+  token.curve = curveAddress.toHexString();
   return token;
 }
 
@@ -49,7 +53,7 @@ function addOrder(
   let bondingContract = BondingCurve.bind(curveAddress);
   let tokenAddress = bondingContract.bondedToken();
   let curve = findOrCreateCurve(curveAddress, tokenAddress);
-  let token = findOrCreateToken(tokenAddress);
+  let token = findOrCreateToken(curveAddress, tokenAddress);
   let orderKey = blockNo.toString() + "@" + logIndex.toString();
   let order = Order.load(orderKey);
   if (order == null) {
@@ -128,7 +132,7 @@ export function handleDeflate(event: Deflate): void {
   let curve = findOrCreateCurve(event.address, tokenAddress);
   curve.curveMultiplier = bondingContract.curveMultiplier();
   curve.save();
-  let token = findOrCreateToken(tokenAddress);
+  let token = findOrCreateToken(event.address, tokenAddress);
   token.totalSupply = token.totalSupply.minus(event.params.burnedAmount);
   token.save();
 }
@@ -139,7 +143,7 @@ export function handleRevenueCollect(event: RevenueCollect): void {
   let curve = findOrCreateCurve(event.address, tokenAddress);
   curve.curveMultiplier = bondingContract.curveMultiplier();
   curve.save();
-  let token = findOrCreateToken(tokenAddress);
+  let token = findOrCreateToken(event.address, tokenAddress);
   token.totalSupply = token.totalSupply.plus(event.params.bondedTokenAmount);
   token.save();
 }

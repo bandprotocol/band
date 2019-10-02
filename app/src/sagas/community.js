@@ -6,29 +6,19 @@ function* handleFetchCommunity() {
   const communityDetails = yield Utils.graphqlRequest(
     `
     {
-      allBandCommunities {
-        nodes {
-          tokenAddress
-          tokenByTokenAddress {
-            address
-            curveByTokenAddress {
-              price
-            }
-          }
+      tokens {
+        id
+        curve {
+          price
         }
       }
     }
   `,
   )
 
-  for (const community of communityDetails.allBandCommunities.nodes) {
-    const token = community.tokenByTokenAddress
-    yield put(
-      saveCommunityPrice(
-        token.address,
-        parseFloat(token.curveByTokenAddress.price),
-      ),
-    )
+  for (const community of communityDetails.tokens) {
+    const token = community.id
+    yield put(saveCommunityPrice(token, parseFloat(community.curve.price)))
   }
 }
 
