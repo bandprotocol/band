@@ -130,6 +130,7 @@ export function handleDeflate(event: Deflate): void {
   curve.save();
   let token = findOrCreateToken(tokenAddress);
   token.totalSupply = token.totalSupply.minus(event.params.burnedAmount);
+  token.save();
 }
 
 export function handleRevenueCollect(event: RevenueCollect): void {
@@ -140,4 +141,5 @@ export function handleRevenueCollect(event: RevenueCollect): void {
   curve.save();
   let token = findOrCreateToken(tokenAddress);
   token.totalSupply = token.totalSupply.plus(event.params.bondedTokenAmount);
+  token.save();
 }
