@@ -5,6 +5,7 @@ import { communityDetailSelector } from 'selectors/communities'
 import { loadPriceHistory } from 'actions'
 import { priceHistorySelector } from 'selectors/price'
 import { getGraphColor } from 'ui/communities'
+import BN from 'utils/bignumber'
 
 class PriceGraph extends React.Component {
   componentDidMount() {
@@ -25,7 +26,7 @@ class PriceGraph extends React.Component {
 
 const transformData = rawData => {
   return rawData
-    .map(data => [data.get(0).valueOf(), data.get(1)])
+    .map(data => [data.get(0).valueOf(), data.get(1) / 1e18])
     .reverse()
     .toJS()
 }

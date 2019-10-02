@@ -283,7 +283,7 @@ function* baseInitialize() {
           // Map(),
           token.tcd &&
             Map({
-              [console.log(token.tcd.id) || token.tcd.id]: Map({
+              [token.tcd.id]: Map({
                 prefix: token.tcd.prefix,
                 minStake: token.tcd.minStake,
                 maxProviderCount: token.tcd.maxProviderCount,
