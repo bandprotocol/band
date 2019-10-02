@@ -33,7 +33,10 @@ function* handleUpdateClient({ provider }) {
   if (address) {
     // if user is exist then reload for polling user balance.
     yield put(setUserAddress(address))
-    yield put(reloadBalance())
+    console.log('sfssfsfsfsf')
+    try {
+      yield put(reloadBalance())
+    } catch (e) {}
     yield put(
       saveBandClient(
         yield BandProtocolClient.make({

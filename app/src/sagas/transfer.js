@@ -6,32 +6,31 @@ import BN from 'utils/bignumber'
 import moment from 'utils/moment'
 
 function* handleLoadTransferHistory({ address, currentPage, pageSize }) {
-  const { nodes: transfers, totalCount } = (yield Utils.graphqlRequest(
+  const { transfers, totalCount = 100 } = (yield Utils.graphqlRequest(
     `
     {
-      tokenByAddress(address: "${address}") {
-        transfersByTokenAddress(
-          orderBy: TIMESTAMP_DESC,
+      token(id: "${address}") {
+        transfers(
+          orderBy: timestamp,
           first: 10,
-          offset: ${(currentPage - 1) * pageSize}
-          filter: {
-            sender: { notEqualTo: "0x0000000000000000000000000000000000000000" }
-            receiver: { notEqualTo: "0x0000000000000000000000000000000000000000" }
+          skip: 1,
+          where: {
+            sender_not:"0x0000000000000000000000000000000000000000",
+            receiver_not:"0x0000000000000000000000000000000000000000",
           }
         ) {
-          nodes {
             sender
             receiver
             value
             txHash
             timestamp
           }
-          totalCount
+
         }
       }
     }
       `,
-  )).tokenByAddress.transfersByTokenAddress
+  )).token
 
   yield put(
     addTransfers(
