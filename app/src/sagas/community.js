@@ -18,7 +18,12 @@ function* handleFetchCommunity() {
 
   for (const community of communityDetails.tokens) {
     const token = community.id
-    yield put(saveCommunityPrice(token, parseFloat(community.curve.price)))
+    yield put(
+      saveCommunityPrice(
+        token,
+        parseFloat(community.curve ? community.curve.price : 0),
+      ),
+    )
   }
 }
 

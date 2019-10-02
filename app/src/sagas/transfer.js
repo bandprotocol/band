@@ -7,29 +7,18 @@ import moment from 'utils/moment'
 
 function* handleLoadTransferHistory({ address, currentPage, pageSize }) {
   const { transfers, totalCount = 100 } = (yield Utils.graphqlRequest(
-    `
-    {
-      token(id: "${address}") {
-        transfers(
-          orderBy: timestamp,
-          first: 10,
-          skip: 1,
-          where: {
-            sender_not:"0x0000000000000000000000000000000000000000",
-            receiver_not:"0x0000000000000000000000000000000000000000",
-          }
-        ) {
+    `{
+        token(id: "${address}") {
+          transfers(orderBy: timestamp, first: 10, skip: 1, where: {sender_not:"0x0000000000000000000000000000000000000000", receiver_not:"0x0000000000000000000000000000000000000000"}) {
             sender
             receiver
             value
             txHash
             timestamp
           }
-
         }
       }
-    }
-      `,
+    `,
   )).token
 
   yield put(
