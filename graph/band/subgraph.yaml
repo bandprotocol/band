@@ -3,7 +3,79 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: PriceTCD
+    name: BandToken
+    network: mainnet
+    source:
+      address: "0xBA11D00c5f74255f56a5E366F4F77f5A186d7f55"
+      abi: BandToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: BandToken
+          file: ./abis/BandToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./mappings/BandToken.ts
+  - kind: ethereum/contract
+    name: DatasetToken
+    network: mainnet
+    source:
+      address: "0x33d3f653c9d86dc726337cf395fab39583a35988"
+      abi: DatasetToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+        - TokenLocked
+        - TokenUnlocked
+      abis:
+        - name: DatasetToken
+          file: ./abis/DatasetToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: TokenLocked(indexed address,indexed address,uint256)
+          handler: handleTokenLocked
+        - event: TokenUnlocked(indexed address,indexed address,uint256)
+          handler: handleTokenUnlocked
+      file: ./mappings/DatasetToken.ts
+  - kind: ethereum/contract
+    name: BondingCurve
+    network: mainnet
+    source:
+      address: "0xE5f32F9B531672889C72D2BA8be73F3a33C5C73E"
+      abi: BondingCurve
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Buy
+        - Sell
+        - Deflate
+        - RevenueCollect
+      abis:
+        - name: BondingCurve
+          file: ./abis/BondingCurve.json
+      eventHandlers:
+        - event: Buy(indexed address,uint256,uint256)
+          handler: handleBuy
+        - event: Sell(indexed address,uint256,uint256)
+          handler: handleSell
+        - event: Deflate(indexed address,uint256)
+          handler: handleDeflate
+        - event: RevenueCollect(indexed address,uint256)
+          handler: handleRevenueCollect
+      file: ./mappings/BondingCurve.ts
+  - kind: ethereum/contract
+    name: OffchainAggTCD
     network: mainnet
     source:
       address: "0xD5D2b9e9bcd172D5fC8521AFd2C98Dd239F5b607"
@@ -21,9 +93,6 @@ dataSources:
         - WithdrawReceiptCreated
         - WithdrawReceiptUnlocked
         - Query
-      abis:
-        - name: OffchainAggTCD
-          file: ./abis/OffchainAggTCD.json
       eventHandlers:
         - event: DataUpdated(bytes,uint256,uint64,uint8)
           handler: handleDataUpdated
