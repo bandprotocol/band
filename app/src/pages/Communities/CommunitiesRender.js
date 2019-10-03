@@ -7,6 +7,7 @@ import { getProfileColor } from 'ui/communities'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.png'
+import {FormattedMessage} from "react-intl";
 
 const Header = styled(Card)`
   padding-top: 60px;
@@ -157,7 +158,7 @@ export default ({
           style={{ height: '100%', margin: '0 auto' }}
         >
           <H1 mb={2} py={2}>
-            Data Governance Portal
+            <FormattedMessage id="communities.dataGovernancePortal" />
           </H1>
           <Text
             my={1}
@@ -166,16 +167,14 @@ export default ({
             lineHeight="1.6"
             color="#ffffff"
           >
-            Band Protocol connects ÐApps with trusted off-chain information,
-            curated through a decentralized network of data providers. We use
-            dataset tokens to incentivize providers.
+            <FormattedMessage id="communities.description" />
           </Text>
           <Flex alignItems="center" mt={3}>
             <AbsoluteLink href="https://bandprotocol.com/">
-              <WhiteButton>Band Protocol Website</WhiteButton>
+              <WhiteButton><FormattedMessage id="communities.bandProtocolWebsite" /></WhiteButton>
             </AbsoluteLink>
             <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
-              <WhiteOutlineButton>Learn how to Stake</WhiteOutlineButton>
+              <WhiteOutlineButton><FormattedMessage id="communities.learnHowToStake" /></WhiteOutlineButton>
             </AbsoluteLink>
             {/* disable XFN airdrop */}
             {/* sdcx && (
@@ -184,7 +183,7 @@ export default ({
               </ClaimButton>
             ) */}
             <ClaimButton onClick={() => showClaimXFNModal()}>
-              XFN Airdrop
+              <FormattedMessage id="communities.xfnAirdrop" />
             </ClaimButton>
           </Flex>
         </Flex>
@@ -203,7 +202,7 @@ export default ({
               {/* TCD Communities */}
               <Flex flexDirection="row" alignItems="center" mt="15px" mb="10px">
                 <H3 color="#4a4a4a" style={{ letterSpacing: '1px' }}>
-                  Available Datasets for DApps
+                  <FormattedMessage id="communities.availableDataSets" />
                 </H3>
                 <CountBadge>{tcdCommunities.length}</CountBadge>
               </Flex>
