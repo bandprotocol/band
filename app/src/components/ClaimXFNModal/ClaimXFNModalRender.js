@@ -7,6 +7,7 @@ import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import AdtlSrc from 'images/airdropxfn_tl.svg'
 import AdcSrc from 'images/airdropcoin.svg'
 import Clouds from 'images/clouds.svg'
+import BN from 'utils/bignumber'
 
 const ClaimButton = styled(Flex).attrs({
   justifyContent: 'center',
@@ -192,7 +193,7 @@ export default props => {
           <Flex width={1} mt="20px" mb="10px" style={{ fontWeight: 700 }}>
             <Flex flex={1}>Date</Flex>
             <Flex flex={1} justifyContent="flex-end">
-              Amount
+              Amount (BAND)
             </Flex>
           </Flex>
           {snapShots.map((e, i) => {
@@ -243,7 +244,7 @@ export default props => {
                 fontSize="24px"
                 style={{ opacity: pendingTx ? 0 : 1 }}
               >
-                Get XFN {bandAvg.pretty()} Now!
+                Get XFN {bandAvg.div(new BN(10)).pretty()} Now!
               </Text>
             </ClaimButton>
           )}
