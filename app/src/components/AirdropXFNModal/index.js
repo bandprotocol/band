@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import AirdroXFNModalRender from './AirdroXFNModalRender'
+import AirdropXFNModalRender from './AirdropXFNModalRender'
 import { hideModal, claimXFN } from 'actions'
 import { dispatchAsync } from 'utils/reduxSaga'
 import { walletSelector } from 'selectors/wallet'
@@ -12,7 +12,7 @@ import {
 import { bandBalanceSelector } from 'selectors/balances'
 import xfnRewardContracts from 'utils/xfnRewardContracts'
 
-class AirdroXFNModal extends React.Component {
+class AirdropXFNModal extends React.Component {
   getXFNAmount = async () => {
     console.log('getXFNAmount')
   }
@@ -23,7 +23,7 @@ class AirdroXFNModal extends React.Component {
 
   render() {
     return (
-      <AirdroXFNModalRender
+      <AirdropXFNModalRender
         {...this.props}
         getXFNAmount={this.getXFNAmount}
         claim={this.claim}
@@ -65,4 +65,4 @@ const mapDispatchToProps = (dispatch, props) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AirdroXFNModal)
+)(AirdropXFNModal)
