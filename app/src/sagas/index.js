@@ -96,7 +96,7 @@ switch (network) {
   case 'ropsten':
     BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-ropsten',
+      'https://api.thegraph.com/subgraphs/name/yeast72/uptoyou',
     )
     break
   case 'local':
@@ -268,10 +268,10 @@ function* baseInitialize() {
           token.symbol,
           token.id,
           'Band protocol', // community.organization,
-          null, // logoCommunityFromSymbol(token.symbol),
-          null, // bannerCommunityFromSymbol(token.symbol),
-          'XX', //community.description,
-          'WWW', //community.website,
+          '/static/media/finance.82975d46.png', // logoCommunityFromSymbol(token.symbol),
+          '/static/media/finance-banner.89257026.png', // bannerCommunityFromSymbol(token.symbol),
+          'Get current prices of any trading currency pairs.', //community.description,
+          'https://data.bandprotocol.com/dataset/price', //community.website,
           (parseFloat(token.curve.price) * parseFloat(token.totalSupply)) /
             1e36,
           parseFloat(token.curve.price / 1e18),
@@ -368,6 +368,7 @@ function* metaMaskProcess() {
         yield put(setUserAddress(newUserAddress))
 
         const network = yield select(currentNetworkSelector)
+        console.log()
         if (network !== networkIdtoName(window.ethereum.networkVersion)) {
           yield put(setNetwork(networkIdtoName(window.ethereum.networkVersion)))
           yield put(updateClient(provider))

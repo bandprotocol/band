@@ -127,6 +127,8 @@ dataSources:
       abis:
         - name: Parameters
           file: ./abis/Parameters.json
+        - name: DatasetToken
+          file: ./abis/DatasetToken.json
       entities:
         - ProposalProposed
         - ProposalVoted

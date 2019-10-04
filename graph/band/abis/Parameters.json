@@ -1,15 +1,11 @@
-[
-  {
+[{
     "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "name": "",
+      "type": "uint256"
+    }],
     "name": "proposals",
-    "outputs": [
-      {
+    "outputs": [{
         "name": "changesCount",
         "type": "uint256"
       },
@@ -63,12 +59,10 @@
     "constant": true,
     "inputs": [],
     "name": "owner",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "address"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -77,27 +71,22 @@
     "constant": true,
     "inputs": [],
     "name": "isOwner",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "inputs": [{
+      "name": "",
+      "type": "bytes32"
+    }],
     "name": "params",
-    "outputs": [
-      {
+    "outputs": [{
         "name": "existed",
         "type": "bool"
       },
@@ -112,12 +101,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "name": "newOwner",
+      "type": "address"
+    }],
     "name": "transferOwnership",
     "outputs": [],
     "payable": false,
@@ -128,31 +115,26 @@
     "constant": true,
     "inputs": [],
     "name": "token",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "address"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "name": "_token",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "name": "_token",
+      "type": "address"
+    }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
+    "inputs": [{
         "indexed": true,
         "name": "proposalId",
         "type": "uint256"
@@ -173,8 +155,7 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
+    "inputs": [{
         "indexed": true,
         "name": "proposalId",
         "type": "uint256"
@@ -200,32 +181,27 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "proposalId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "indexed": true,
+      "name": "proposalId",
+      "type": "uint256"
+    }],
     "name": "ProposalAccepted",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "proposalId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "indexed": true,
+      "name": "proposalId",
+      "type": "uint256"
+    }],
     "name": "ProposalRejected",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
+    "inputs": [{
         "indexed": true,
         "name": "key",
         "type": "bytes32"
@@ -241,8 +217,7 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
+    "inputs": [{
         "indexed": true,
         "name": "proposalId",
         "type": "uint256"
@@ -263,8 +238,7 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
+    "inputs": [{
         "indexed": true,
         "name": "previousOwner",
         "type": "address"
@@ -280,8 +254,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
+    "inputs": [{
         "name": "namespace",
         "type": "bytes8"
       },
@@ -291,39 +264,32 @@
       }
     ],
     "name": "get",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "uint256"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "rawKey",
-        "type": "bytes32"
-      }
-    ],
+    "inputs": [{
+      "name": "rawKey",
+      "type": "bytes32"
+    }],
     "name": "getRaw",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "uint256"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
+    "inputs": [{
         "name": "namespace",
         "type": "bytes8"
       },
@@ -344,8 +310,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
+    "inputs": [{
         "name": "rawKeys",
         "type": "bytes32[]"
       },
@@ -362,8 +327,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
+    "inputs": [{
         "name": "proposalId",
         "type": "uint256"
       },
@@ -373,8 +337,7 @@
       }
     ],
     "name": "getProposalChange",
-    "outputs": [
-      {
+    "outputs": [{
         "name": "",
         "type": "bytes32"
       },
@@ -389,8 +352,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
+    "inputs": [{
         "name": "reasonHash",
         "type": "bytes32"
       },
@@ -411,8 +373,7 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
+    "inputs": [{
         "name": "proposalId",
         "type": "uint256"
       },
@@ -429,12 +390,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "proposalId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "name": "proposalId",
+      "type": "uint256"
+    }],
     "name": "resolve",
     "outputs": [],
     "payable": false,

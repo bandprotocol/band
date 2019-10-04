@@ -87,10 +87,41 @@ type ParameterKV @entity {
 
 type Proposal @entity {
   id: ID!
+  parameter: Parameter!
+
+  proposalId: Int!
+  proposer: String!
+  changes: [ProposalKV!] @derivedFrom(field: "proposal")
+  title: String
+  reason: String
+  reasonHash: Bytes!
+  tokenSnapShot: Int!
+  totalVotingPower: BigInt!
+  expirationTime: Int!
+  minParticipation: BigInt!
+  supportRequired: BigInt!
+  currentYesCount: BigInt!
+  currentNoCount: BigInt!
+
+  txHash: Bytes!
+  timestamp: Int!
+  status: String!
+}
+
+type ProposalKV @entity {
+  id: ID!
+  proposal: Proposal!
+  key: String!
+  value: BigInt!
 }
 
 type ProposalVote @entity {
   id: ID!
+  proposal: Proposal!
+  voter: String!
+  accepted: Boolean!
+  txHash: Bytes!
+  timestamp: Int!
 }
 
 type TCD @entity {
@@ -131,7 +162,8 @@ type DataProvider @entity {
   stake: BigInt!
   status: String!
   totalOwnership: BigInt!
-  dataProviderOwnerships: [DataProviderOwnership!] @derivedFrom(field: "dataProvider")
+  dataProviderOwnerships: [DataProviderOwnership!]
+    @derivedFrom(field: "dataProvider")
 }
 
 type DataProviderOwnership @entity {

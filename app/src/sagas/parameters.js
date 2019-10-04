@@ -10,30 +10,33 @@ import BN from 'utils/bignumber'
 const WEB_REQ_NAME = 'Web Request Oracle'
 
 function* handleLoadParameters({ address }) {
-  // const { parameterByTokenAddress, name } = (yield Utils.graphqlRequest(`{
-  //   tokenByAddress(address: "${address}") {
-  //     parameterByTokenAddress{
-  //       currentParameters
-  //     }
-  //     name
-  //   }
-  // }`)).tokenByAddress
-  // const currentParameters = parameterByTokenAddress.currentParameters
-  // let listInParams = ['bonding', 'params', 'tcd']
-  // if (name === WEB_REQ_NAME) {
-  //   listInParams = ['bonding', 'params', 'web']
-  // }
-  // const params = {}
-  // for (const [key, value] of Object.entries(currentParameters)) {
-  //   const [prefix, name] = key.split(':')
-  //   if (listInParams.includes(prefix)) {
-  //     if (!(prefix in params)) {
-  //       params[prefix] = []
-  //     }
-  //     params[prefix].push({ name, value: new BN(value) })
-  //   }
-  // }
-  // yield put(saveParameters(address, params))
+  const { parameter, name } = (yield Utils.graphqlRequest(`{
+    token(id: "${address}") {
+      name
+      parameter{
+        params{
+          key
+          value
+        }
+      }
+    }
+  }`)).token
+  const currentParameters = parameter.params
+  let listInParams = ['bonding', 'params', 'tcd']
+  if (name === WEB_REQ_NAME) {
+    listInParams = ['bonding', 'params', 'web']
+  }
+  const params = {}
+  currentParameters.map(parameter => {
+    const [prefix, name] = parameter.key.split(':')
+    if (listInParams.includes(prefix)) {
+      if (!(prefix in params)) {
+        params[prefix] = []
+      }
+      params[prefix].push({ name, value: new BN(parameter.value) })
+    }
+  })
+  yield put(saveParameters(address, params))
 }
 
 export default function*() {
