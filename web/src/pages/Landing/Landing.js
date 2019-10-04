@@ -6,9 +6,7 @@ import Subscribe from 'components/Subscribe'
 import { Flex, Text, Highlight, Image, Box, AbsoluteLink } from 'ui/common'
 import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
-import WppButton, { OutlineButton } from 'components/WppButton'
-import Countdown from 'components/Countdown'
-import Snow from 'components/Snow'
+import WppButton from 'components/WppButton'
 import Pyro from 'components/Pyro.js'
 import FlexHover from 'components/FlexHover'
 import ArrowMove from 'components/ArrowMove'
@@ -26,14 +24,11 @@ import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
-import RightHexs from 'images/rightHexs.png'
-import LeftHexs from 'images/leftHexs.png'
 import HexBottom from 'images/tiles.png'
 import Mainnet from 'images/mainnet.png'
 import Plant from 'images/plant.svg'
 import BSLogo from 'images/bitswinglogo.svg'
 import BandLogo from 'images/logoSmall.png'
-import MLogo from 'images/mediumLogo.svg'
 
 const GBG = styled(Flex)`
   background: linear-gradient(#ad42ff, #5a85ff, #587bf7),
@@ -85,109 +80,6 @@ export default () => {
 
   return (
     <>
-      {!mainnet && (
-        <Flex
-          mt="-60px"
-          style={{
-            overflow: 'hidden',
-            height: '100vh',
-          }}
-        >
-          <Snow />
-          <Flex
-            flexDirection="column"
-            justifyContent="center"
-            style={{
-              positon: 'relative',
-              overflow: 'hidden',
-              width: '100%',
-              backgroundImage:
-                'radial-gradient(circle at 50% -100%, rgb(255, 255, 255), rgb(78, 102, 236) 50%, rgb(13, 20, 63))',
-            }}
-          >
-            <Flex justifyContent="center" alignItems="center">
-              <Text fontSize={['21px', '55px']} color="white">
-                OFFICIAL MAINNET LAUNCH IN
-              </Text>
-            </Flex>
-            <Flex mt="30px">
-              <Countdown eventTime={mainnetBeginAt} />
-            </Flex>
-            <Flex my="70px" justifyContent="center">
-              <OutlineButton
-                onClick={() => window.scroll(0, window.innerHeight)}
-                style={{ zIndex: 1, cursor: 'pointer' }}
-              >
-                Continue
-              </OutlineButton>
-            </Flex>
-
-            {/* Hex background */}
-
-            {isMobile() ? (
-              <>
-                <Flex
-                  flexDirection="row"
-                  style={{
-                    position: 'absolute',
-                    bottom: '120px',
-                    left: '0px',
-                    width: '50%',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Box>
-                    <Image src={LeftHexs} />
-                  </Box>
-                </Flex>
-
-                <Flex
-                  flexDirection="row"
-                  style={{
-                    position: 'absolute',
-                    bottom: '50px',
-                    right: '0px',
-                    width: '75%',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Box>
-                    <Image src={RightHexs} />
-                  </Box>
-                </Flex>
-              </>
-            ) : (
-              <>
-                <Flex
-                  flexDirection="row"
-                  style={{
-                    position: 'absolute',
-                    bottom: '200px',
-                    left: '-20px',
-                    width: '40%',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Image src={LeftHexs} />
-                </Flex>
-
-                <Flex
-                  flexDirection="row"
-                  style={{
-                    position: 'absolute',
-                    bottom: '-50px',
-                    right: '0px',
-                    width: '75%',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Image src={RightHexs} />
-                </Flex>
-              </>
-            )}
-          </Flex>
-        </Flex>
-      )}
       {mainnet && (
         <Flex
           mt="-60px"
