@@ -25,8 +25,24 @@ const mapDispatchToProps = (dispatch, props) => {
       const rewardAmount = Number('0x' + result.slice(66)) / 1e18
       dispatch(setXFNRewardInfo({ hasPendingReward, rewardAmount }))
     },
+    isClaimed: async (user, xfnRewardContract) => {
+      const result = await window.web3.eth.call({
+        to: xfnRewardContract,
+        data: '0xc884ef83' + user.slice(2).padStart(64, '0'),
+      })
+
+      if (isNaN(result) || Number(result) > 0) {
+        dispatch(setXFNRewardInfo({ hasPendingReward: false, rewardAmount: 0 }))
+      } else {
+        dispatch(setXFNRewardInfo({ hasPendingReward: true, rewardAmount: 1 }))
+      }
+    },
     showClaimXFNModal: () => {
       dispatch(showModal('CLAIM_XFN'))
+      window.gtag('event', 'click-airdrop', { event_category: 'User' })
+    },
+    showXFNAirdropModal: () => {
+      dispatch(showModal('AIRDROP_XFN'))
       window.gtag('event', 'click-airdrop', { event_category: 'User' })
     },
   }

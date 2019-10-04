@@ -1,4 +1,4 @@
 export default {
-  rinkeby: 'xxx',
-  kovan: '0xd895FD33ce4978DBE3ce5242e2400257Cf81ceDf',
+  mainnet: '',
+  ropsten: '0xEFC36211Bdb90067f0F4Bbb433D08D46D4eE7C01',
 }

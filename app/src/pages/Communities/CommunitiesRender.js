@@ -112,13 +112,14 @@ export default ({
   user,
   xfnRewardContract,
   xfnRewardInfo,
-  getPendingReward,
+  isClaimed,
   hasPendingReward,
   rewardAmount,
   tcdCommunities,
   tcrCommunities,
   bandPrice,
   history,
+  showXFNAirdropModal,
   showClaimXFNModal,
   shouldDisplayClaimXFN,
 }) => {
@@ -128,7 +129,7 @@ export default ({
       Date.now() - window.lastXFNCallTime >= 5000
     ) {
       window.lastXFNCallTime = Date.now()
-      getPendingReward(user, xfnRewardContract)
+      isClaimed(user, xfnRewardContract)
     }
   }
 
@@ -183,9 +184,20 @@ export default ({
                 Claim Free XFN
               </ClaimButton>
             ) */}
-            <ClaimButton onClick={() => showClaimXFNModal()}>
-              XFN Airdrop
-            </ClaimButton>
+            {sdcx && (
+              <>
+                <ClaimButton onClick={() => showXFNAirdropModal()}>
+                  XFN Airdrop
+                </ClaimButton>
+
+                <ClaimButton
+                  onClick={() => showClaimXFNModal()}
+                  style={{ marginLeft: '20px' }}
+                >
+                  Claim XFN Airdrop
+                </ClaimButton>
+              </>
+            )}
           </Flex>
         </Flex>
       </Header>
