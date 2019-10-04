@@ -119,6 +119,7 @@ export default ({
   tcrCommunities,
   bandPrice,
   history,
+  isClaimPeriod,
   showXFNAirdropModal,
   showClaimXFNModal,
   shouldDisplayClaimXFN,
@@ -178,24 +179,18 @@ export default ({
             <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
               <WhiteOutlineButton>Learn how to Stake</WhiteOutlineButton>
             </AbsoluteLink>
-            {/* disable XFN airdrop */}
-            {/* sdcx && (
-              <ClaimButton onClick={() => showClaimXFNModal()}>
-                Claim Free XFN
-              </ClaimButton>
-            ) */}
+            {/* XFN Airdrop */}
             {sdcx && (
               <>
-                <ClaimButton onClick={() => showXFNAirdropModal()}>
-                  XFN Airdrop
-                </ClaimButton>
-
-                <ClaimButton
-                  onClick={() => showClaimXFNModal()}
-                  style={{ marginLeft: '20px' }}
-                >
-                  Claim XFN Airdrop
-                </ClaimButton>
+                {!isClaimPeriod ? (
+                  <ClaimButton onClick={() => showXFNAirdropModal()}>
+                    XFN Airdrop
+                  </ClaimButton>
+                ) : (
+                  <ClaimButton onClick={() => showClaimXFNModal()}>
+                    Claim XFN Airdrop
+                  </ClaimButton>
+                )}
               </>
             )}
           </Flex>
