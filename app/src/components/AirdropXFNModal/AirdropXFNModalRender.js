@@ -60,20 +60,12 @@ const MoveFlex2 = styled(Flex)`
 }`}
 `
 
-export default props => {
-  const {
-    rewardAmount,
-    claimXFNReward,
-    hideXFNRewardModal,
-    doneStep1 = false,
-    doneStep2 = false,
-    doneStep3 = false,
-  } = props
+export default ({
+  hideXFNRewardModal,
+  doneStep1 = false,
+  doneStep2 = false,
+}) => {
   const [loading, setLoading] = useState(true)
-
-  const [airDropPeriod] = useState(false)
-
-  const [pendingTx, setPendingTx] = useState(false)
 
   useEffect(() => {
     ;(async () => {
