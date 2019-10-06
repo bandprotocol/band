@@ -39,7 +39,6 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
   )
 
   const tcdClient = yield select(currentTCDClientSelector, { address: id })
-  console.log(id, tcdClient)
 
   const tcds = [
     {

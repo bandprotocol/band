@@ -76,25 +76,25 @@ let network = localStorage.getItem('network') || 'mainnet'
 
 switch (network) {
   case 'mainnet':
-    // BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
+    BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-mainnet',
     )
     break
   case 'kovan':
-    // BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-kovan.bandprotocol.com/graphql',
     )
     break
   case 'rinkeby':
-    // BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
+    BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-rinkeby.bandprotocol.com/graphql',
     )
     break
   case 'ropsten':
-    // BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
+    BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-ropsten',
     )
