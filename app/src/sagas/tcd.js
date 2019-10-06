@@ -1,10 +1,11 @@
-import { put, all } from 'redux-saga/effects'
+import { put, all, select } from 'redux-saga/effects'
 import { LOAD_TCDS, addTcds } from 'actions'
 import { Utils } from 'band.js'
 import BN from 'bn.js'
 import { takeEveryAsync } from 'utils/reduxSaga'
 
-const getLockValue = async (account, dataProviderAddress) => {}
+import { currentTCDClientSelector } from 'selectors/current'
+
 function* handleLoadTcds({ user: userRaw, tokenAddress }) {
   const user = userRaw.toLowerCase()
   const {
@@ -37,12 +38,15 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
       `,
   )
 
+  const tcdClient = yield select(currentTCDClientSelector, { address: id })
+  console.log(id, tcdClient)
+
   const tcds = [
     {
       address: id,
       minStake: new BN(minStake),
       maxProviderCount,
-      dataProviders: all(
+      dataProviders: (yield all(
         providers.map(function*({
           providerAddress: dataSourceAddress,
           detail,
@@ -64,19 +68,25 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
             userStake = new BN(voterToOwnership[user])
               .mul(new BN(stake))
               .div(new BN(totalOwnership))
-          }
-          if (voterToOwnership[owner]) {
-            ownerStake = new BN(voterToOwnership[owner])
-              .mul(new BN(stake))
-              .div(new BN(totalOwnership))
-
-            revenue = userStake.sub(yield getLockValue(user, dataSourceAddress))
+            revenue = userStake.sub(
+              tcdClient
+                ? yield tcdClient.getTokenLock({
+                    account: user,
+                    dataSource: dataSourceAddress,
+                  })
+                : new BN('0'),
+            )
             //  < -0.01 = BN(0)
             if (revenue.lt(new BN(-0.01))) {
               revenue = new BN(0)
             } else if (revenue.lt(new BN(0)) && revenue.gte(-0.01)) {
               throw new Error('Revenue greater than -0.01')
             }
+          }
+          if (voterToOwnership[owner]) {
+            ownerStake = new BN(voterToOwnership[owner])
+              .mul(new BN(stake))
+              .div(new BN(totalOwnership))
           }
           return {
             dataSourceAddress,
@@ -92,7 +102,7 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
             userRevenue: revenue,
           }
         }),
-      )
+      ))
         .sort((a, b) => {
           if (a.stake.lt(b.stake)) {
             return 1

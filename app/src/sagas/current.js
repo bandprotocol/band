@@ -19,6 +19,7 @@ import { nameAndAddressCommunitySelector } from 'selectors/communities'
 import {
   currentBandClientSelector,
   currentUserSelector,
+  bandAddressSelector,
 } from 'selectors/current'
 
 import { currentSelector } from 'selectors/basic'
@@ -29,7 +30,7 @@ import { List, Set, Map } from 'immutable'
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
   // console.log('current user address:', address)
-
+  const bandAddress = yield select(bandAddressSelector)
   if (address) {
     // if user is exist then reload for polling user balance.
     yield put(setUserAddress(address))
@@ -38,6 +39,7 @@ function* handleUpdateClient({ provider }) {
       saveBandClient(
         yield BandProtocolClient.make({
           provider,
+          bandAddress,
         }),
       ),
     )
@@ -48,6 +50,7 @@ function* handleUpdateClient({ provider }) {
       saveBandClient(
         yield BandProtocolClient.make({
           provider: window.BandWallet.ref.current.state.provider,
+          bandAddress,
         }),
       ),
     )
@@ -58,12 +61,16 @@ function* handleUpdateClient({ provider }) {
 
   for (const dapp of dapps.valueSeq()) {
     const tokenAddress = dapp.get('address')
-    const commClient = yield bandClient.at(tokenAddress)
+    const curveAddress = dapp.get('curveAddress')
+    const commClient = bandClient.newTokenClient({
+      tokenAddress,
+      curveAddress,
+    })
     yield put(saveCommunityClient(tokenAddress, commClient))
     const tcdList = dapp.get('tcds')
     if (tcdList) {
       for (const address of tcdList.keySeq()) {
-        yield put(saveTCDClient(address, commClient.tcd(address)))
+        yield put(saveTCDClient(address, bandClient.newTcdClient(address)))
       }
     }
   }

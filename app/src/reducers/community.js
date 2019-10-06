@@ -26,6 +26,7 @@ const handleSaveCommunityInfo = (
     tcds,
     tcr,
     parameterAddress,
+    curveAddress,
   },
 ) =>
   state.set(
@@ -48,6 +49,7 @@ const handleSaveCommunityInfo = (
       tcds,
       tcr,
       parameterAddress,
+      curveAddress,
     }),
   )
 

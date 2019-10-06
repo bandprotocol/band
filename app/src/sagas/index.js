@@ -76,32 +76,32 @@ let network = localStorage.getItem('network') || 'mainnet'
 
 switch (network) {
   case 'mainnet':
-    BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
+    // BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-mainnet',
     )
     break
   case 'kovan':
-    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    // BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-kovan.bandprotocol.com/graphql',
     )
     break
   case 'rinkeby':
-    BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
+    // BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-rinkeby.bandprotocol.com/graphql',
     )
     break
   case 'ropsten':
-    BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
+    // BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://api.thegraph.com/subgraphs/name/yeast72/uptoyou',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-ropsten',
     )
     break
   case 'local':
   default:
-    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    // BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-kovan.bandprotocol.com/graphql',
     )
@@ -236,6 +236,7 @@ function* baseInitialize() {
       symbol
       totalSupply
       curve{
+        id
         price
         collateralEquation
         prices(first:1, where:{timestamp_lt: ${Math.trunc(
@@ -254,6 +255,9 @@ function* baseInitialize() {
           providerAddress
           stake
         }
+      }
+      parameter{
+        id
       }
     }
   }
@@ -296,8 +300,8 @@ function* baseInitialize() {
               }),
             }),
           false,
-          '0x',
-          // token.parameterByTokenAddress.address,
+          token.parameter.id,
+          token.curve.id,
         ),
       )
     }

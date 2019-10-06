@@ -31,6 +31,7 @@ export const saveCommunityInfo = (
   tcds,
   tcr,
   parameterAddress,
+  curveAddress,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
@@ -50,6 +51,7 @@ export const saveCommunityInfo = (
   tcds,
   tcr,
   parameterAddress,
+  curveAddress,
 })
 
 export const saveCommunityClient = (address, client) => ({

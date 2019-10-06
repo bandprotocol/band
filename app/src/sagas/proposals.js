@@ -13,7 +13,7 @@ function* handleLoadProposals({ address }) {
   const currentUser = yield select(currentUserSelector)
 
   const data = yield Utils.graphqlRequest(`{
-    token(id: "0xc2b347206aa775f89906a34045b765775c63a781") {
+    token(id: "${address}") {
         parameter {
           proposals {
             reasonHash
@@ -31,7 +31,7 @@ function* handleLoadProposals({ address }) {
             timestamp
             expirationTime
             status
-           
+
           }
         }
       }
@@ -40,7 +40,7 @@ function* handleLoadProposals({ address }) {
               accepted
             }
 }
-  
+
     `)
 
   const proposalsData = data.token.parameter.proposals

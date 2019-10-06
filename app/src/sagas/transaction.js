@@ -27,6 +27,7 @@ import {
   currentCommunityClientSelector,
   currentUserSelector,
   currentNetworkSelector,
+  currentParameterClientSelector,
 } from 'selectors/current'
 import { walletSelector } from 'selectors/wallet'
 
@@ -52,7 +53,7 @@ class Transaction {
     }
   }
 
-  async sendFeeless() {
+  async send() {
     return new Promise((resolve, reject) => {
       window.web3.eth
         .sendTransaction({
@@ -70,7 +71,7 @@ function* sendTransaction({ transaction, title, type }) {
   const timestamp = new Date().getTime()
   try {
     yield put(addPendingTx(timestamp, title, type))
-    const txHash = yield transaction.sendFeeless()
+    const txHash = yield transaction.send()
     const network = yield select(currentNetworkSelector)
     const userAddress = yield select(currentUserSelector)
     yield put(addTx(txHash, title, type, network, userAddress))
@@ -155,7 +156,6 @@ function* handleTcdWithdraw({
     event_label: withdrawAmount,
     value: withdrawAmount,
   })
-  console.log(sourceAddress, ownership)
   const client = yield select(currentTCDClientSelector, { address: tcdAddress })
   const transaction = yield client.createWithdrawDataSourceTransaction({
     dataSource: sourceAddress,
@@ -260,13 +260,14 @@ function* handleProposeProposal({ address, title, reason, changes }) {
     }),
   )
 
-  const client = yield select(currentCommunityClientSelector, { address })
+  const client = yield select(currentParameterClientSelector, { address })
+  console.log(client, address)
   const wallet = yield select(walletSelector)
   wallet.setDetail({
     type: `PROPOSE`,
     title: `Propose ${title}`,
   })
-  const transaction = yield client.createProposeTransaction({
+  const transaction = yield client.createProposalTransaction({
     reasonHash,
     keys: Object.keys(changes),
     values: Object.values(changes),
@@ -286,9 +287,9 @@ function* handleVoteProposal({ address, proposalId, vote }) {
     const wallet = yield select(walletSelector)
     wallet.showWallet()
   } else {
-    const client = yield select(currentCommunityClientSelector, { address })
+    const client = yield select(currentParameterClientSelector, { address })
 
-    const transaction = yield client.createProposalVoteTransaction({
+    const transaction = yield client.createCastVoteTransaction({
       proposalId,
       isAccepted: vote,
     })

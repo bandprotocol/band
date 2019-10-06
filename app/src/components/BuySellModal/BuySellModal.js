@@ -95,9 +95,11 @@ class BuySellModal extends React.Component {
   }
 
   async getPrice(type, amount) {
-    return type === 'buy'
-      ? await this.props.communityClient.getBuyPrice(amount)
-      : await this.props.communityClient.getSellPrice(amount)
+    return new BN(
+      type === 'buy'
+        ? await this.props.communityClient.getBuyPrice(amount)
+        : await this.props.communityClient.getSellPrice(amount),
+    )
   }
 
   async updateAmount() {
@@ -139,7 +141,6 @@ class BuySellModal extends React.Component {
 
       this.setState({ loading: true })
       const price = await this.getPrice(type, adjustedAmount)
-
       // if price is more than 100M
       if (price.gt(BN.parse(100000000))) {
         this.setTypeState(type, {
