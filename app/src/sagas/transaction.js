@@ -155,6 +155,7 @@ function* handleTcdWithdraw({
     event_label: withdrawAmount,
     value: withdrawAmount,
   })
+  console.log(sourceAddress, ownership)
   const client = yield select(currentTCDClientSelector, { address: tcdAddress })
   const transaction = yield client.createWithdrawDataSourceTransaction({
     dataSource: sourceAddress,
