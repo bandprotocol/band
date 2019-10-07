@@ -184,7 +184,7 @@ export default ({
               <>
                 {!isClaimPeriod ? (
                   <ClaimButton onClick={() => showXFNAirdropModal()}>
-                    XFN Airdrop
+                    Airdrop coming soon
                   </ClaimButton>
                 ) : (
                   <ClaimButton onClick={() => showClaimXFNModal()}>

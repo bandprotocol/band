@@ -244,7 +244,7 @@ export default props => {
                 fontSize="24px"
                 style={{ opacity: pendingTx ? 0 : 1 }}
               >
-                Get XFN {bandAvg.div(new BN(10)).pretty()} Now!
+                Get {bandAvg.div(new BN(10)).pretty()} XFN Now!
               </Text>
             </ClaimButton>
           )}
