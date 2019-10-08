@@ -133,25 +133,25 @@ export default ({
     }
   }
 
-  const [isClaimPeriod, setIsClaimPeriod] = useState(false)
+  const [isClaimPeriod, setIsClaimPeriod] = useState(true)
 
-  useEffect(() => {
-    const itid = setInterval(async () => {
-      try {
-        const nowUnix = (await fetch(
-          'https://worldtimeapi.org/api/ip?t=' + Date.now(),
-        ).then(r => r.json())).unixtime
-        if (nowUnix > window.startAirdrop) {
-          setIsClaimPeriod(true)
-          clearInterval(itid)
-        }
-        // console.log(nowUnix, window.startAirdrop)
-      } catch (e) {
-        // console.log(e)
-      }
-    }, 3000)
-    return () => clearInterval(itid)
-  }, [])
+  // useEffect(() => {
+  //   const itid = setInterval(async () => {
+  //     try {
+  //       const nowUnix = (await fetch(
+  //         'https://worldtimeapi.org/api/ip?t=' + Date.now(),
+  //       ).then(r => r.json())).unixtime
+  //       if (nowUnix > window.startAirdrop) {
+  //         setIsClaimPeriod(true)
+  //         clearInterval(itid)
+  //       }
+  //       // console.log(nowUnix, window.startAirdrop)
+  //     } catch (e) {
+  //       // console.log(e)
+  //     }
+  //   }, 3000)
+  //   return () => clearInterval(itid)
+  // }, [])
 
   const sdcx =
     xfnRewardInfo &&
