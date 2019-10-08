@@ -44,12 +44,6 @@ const allParametersDescription = {
   web: {
     info: 'This parameter group governs how dataset feed is provided',
   },
-  '0xda7adB240Fb99dCD55e19a17B97ac2163d4d4509': {
-    info: 'OnchainFX',
-  },
-  '0xdA7A3C7309Bd2De2e89a554191b2d7c71125186c': {
-    info: 'Bancor Protocol',
-  },
   tcd: {
     info: 'This parameter group governs how dataset feed is provided.',
   },

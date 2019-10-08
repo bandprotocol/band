@@ -31,17 +31,15 @@ function* handleLoadProposals({ address }) {
             timestamp
             expirationTime
             status
-
-          }
-        }
-      }
-     proposalVotes(where: {voter: "0x21EaA1d6241b6863f97D919A5D9dB0bBbd7fE49B"}) {
+            proposalVotes(where: {voter: "${currentUser}"}) {
               voter
               accepted
             }
-}
-
-    `)
+          }
+        }
+      }
+    }`)
+  console.log(data)
 
   const proposalsData = data.token.parameter.proposals
   const k = data.token.parameter.proposals[0].reasonHash
@@ -82,7 +80,7 @@ function* handleLoadProposals({ address }) {
           }
         }),
       )
-      const vote = data.proposalVotes
+      const vote = proposal.proposalVotes
       if (changes.filter(c => c.deleted).length !== 0) {
         return {
           deleted: true,

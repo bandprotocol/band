@@ -101,6 +101,7 @@ type Proposal @entity {
   supportRequired: BigInt!
   currentYesCount: BigInt!
   currentNoCount: BigInt!
+  proposalVotes: [ProposalVote!] @derivedFrom(field: "proposal")
 
   txHash: Bytes!
   timestamp: Int!
