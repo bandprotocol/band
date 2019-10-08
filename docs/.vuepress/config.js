@@ -9,6 +9,8 @@ module.exports = {
     ]
   ],
   themeConfig: {
+    logo: "/assets/logo.png",
+    logoCrop: "/assets/logoCrop.png",
     sidebarDepth: 0,
     locales: {
       "/": {

@@ -174,7 +174,9 @@ export default ({
             <AbsoluteLink href="https://bandprotocol.com/">
               <WhiteButton>Band Protocol Website</WhiteButton>
             </AbsoluteLink>
-            <AbsoluteLink href="https://medium.com/bandprotocol">
+    
+            <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
+
               <WhiteOutlineButton>Learn how to Stake</WhiteOutlineButton>
             </AbsoluteLink>
             {/* disable XFN airdrop */}

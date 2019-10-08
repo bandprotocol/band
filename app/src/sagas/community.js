@@ -17,6 +17,7 @@ function* handleFetchCommunity() {
   `,
   )
 
+
   for (const token of communityDetails.tokens) {
     if (token.symbol !== 'BAND') {
       yield put(

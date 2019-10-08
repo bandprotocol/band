@@ -101,7 +101,7 @@ switch (network) {
     break
   case 'local':
   default:
-    // BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
+    BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
       'https://graphql-kovan.bandprotocol.com/graphql',
     )
@@ -372,7 +372,6 @@ function* metaMaskProcess() {
         yield put(setUserAddress(newUserAddress))
 
         const network = yield select(currentNetworkSelector)
-        console.log()
         if (network !== networkIdtoName(window.ethereum.networkVersion)) {
           yield put(setNetwork(networkIdtoName(window.ethereum.networkVersion)))
           yield put(updateClient(provider))

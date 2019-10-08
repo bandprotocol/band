@@ -8,8 +8,14 @@
     >
       <img
         class="logo"
-        v-if="$site.themeConfig.logo"
+        v-if="$site.themeConfig.logo && width > 640"
         :src="$withBase($site.themeConfig.logo)"
+        :alt="$siteTitle"
+      >
+      <img
+        class="logo"
+        v-if="$site.themeConfig.logoCrop && width <= 640"
+        :src="$withBase($site.themeConfig.logoCrop)"
         :alt="$siteTitle"
       >
       <span
@@ -47,7 +53,8 @@ export default {
 
   data () {
     return {
-      linksWrapMaxWidth: null
+      linksWrapMaxWidth: null,
+      width: window.innerWidth
     }
   },
 
