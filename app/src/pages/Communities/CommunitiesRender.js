@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
 import { Flex, Text, Box, Card, Button, H1, H3 } from 'ui/common'
@@ -112,13 +112,14 @@ export default ({
   user,
   xfnRewardContract,
   xfnRewardInfo,
-  getPendingReward,
+  isClaimed,
   hasPendingReward,
   rewardAmount,
   tcdCommunities,
   tcrCommunities,
   bandPrice,
   history,
+  showXFNAirdropModal,
   showClaimXFNModal,
   shouldDisplayClaimXFN,
 }) => {
@@ -128,9 +129,29 @@ export default ({
       Date.now() - window.lastXFNCallTime >= 5000
     ) {
       window.lastXFNCallTime = Date.now()
-      getPendingReward(user, xfnRewardContract)
+      isClaimed(user, xfnRewardContract)
     }
   }
+
+  const [isClaimPeriod, setIsClaimPeriod] = useState(true)
+
+  // useEffect(() => {
+  //   const itid = setInterval(async () => {
+  //     try {
+  //       const nowUnix = (await fetch(
+  //         'https://worldtimeapi.org/api/ip?t=' + Date.now(),
+  //       ).then(r => r.json())).unixtime
+  //       if (nowUnix > window.startAirdrop) {
+  //         setIsClaimPeriod(true)
+  //         clearInterval(itid)
+  //       }
+  //       // console.log(nowUnix, window.startAirdrop)
+  //     } catch (e) {
+  //       // console.log(e)
+  //     }
+  //   }, 3000)
+  //   return () => clearInterval(itid)
+  // }, [])
 
   const sdcx =
     xfnRewardInfo &&
@@ -177,15 +198,20 @@ export default ({
             <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
               <WhiteOutlineButton>Learn how to Stake</WhiteOutlineButton>
             </AbsoluteLink>
-            {/* disable XFN airdrop */}
-            {/* sdcx && (
-              <ClaimButton onClick={() => showClaimXFNModal()}>
-                Claim Free XFN
-              </ClaimButton>
-            ) */}
-            <ClaimButton onClick={() => showClaimXFNModal()}>
-              XFN Airdrop
-            </ClaimButton>
+            {/* XFN Airdrop */}
+            {sdcx && (
+              <>
+                {!isClaimPeriod ? (
+                  <ClaimButton onClick={() => showXFNAirdropModal()}>
+                    Airdrop coming soon
+                  </ClaimButton>
+                ) : (
+                  <ClaimButton onClick={() => showClaimXFNModal()}>
+                    Claim XFN Airdrop
+                  </ClaimButton>
+                )}
+              </>
+            )}
           </Flex>
         </Flex>
       </Header>

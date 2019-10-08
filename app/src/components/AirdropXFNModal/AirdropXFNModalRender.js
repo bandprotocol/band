@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Image, Flex, Text, Card } from 'ui/common'
+import { Image, Flex, Text, Card, AbsoluteLink } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
 // Images
 import AdtlSrc from 'images/airdropxfn_tl.svg'
 import AdcSrc from 'images/airdropcoin.svg'
 import Clouds from 'images/clouds.svg'
-import BN from 'utils/bignumber'
 
-const ClaimButton = styled(Flex).attrs({
+const AirdropButton = styled(Flex).attrs({
   justifyContent: 'center',
   alignItems: 'center',
 })`
@@ -59,8 +60,21 @@ const MoveFlex2 = styled(Flex)`
 }`}
 `
 
-export default props => {
-  const { claim, snapShots, bandAvg, loading, pendingTx } = props
+export default ({
+  hideXFNRewardModal,
+  doneStep1 = false,
+  doneStep2 = false,
+}) => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    ;(async () => {
+      await new Promise(resolve =>
+        setTimeout(resolve, 800 + Math.ceil(200 * Math.random())),
+      )
+      setLoading(false)
+    })()
+  }, [])
 
   if (loading) {
     return (
@@ -173,88 +187,73 @@ export default props => {
           bg="#74608f"
           mb="30px"
           p="20px"
-          flexDirection="column"
-          alignItems="center"
-          style={{
-            borderRadius: '20px',
-            maxWidth: '375px',
-            zIndex: 3,
-            color: 'white',
-          }}
+          style={{ borderRadius: '20px', maxWidth: '375px', zIndex: 3 }}
         >
-          <Text
-            fontWeight={300}
-            fontSize="24px"
+          <Flex
+            flexDirection="column"
             color="white"
+            fontWeight={300}
+            fontSize="18px"
             lineHeight="24px"
           >
-            Your BAND token snapshots
-          </Text>
-          <Flex width={1} mt="20px" mb="10px" style={{ fontWeight: 700 }}>
-            <Flex flex={1}>Date</Flex>
-            <Flex flex={1} justifyContent="flex-end">
-              Amount (BAND)
+            <Flex alignItems="flex-end" justifyContent="space-between">
+              <Text fontSize="24px" mr="10px">
+                Claim XFN Airdrop
+              </Text>
+              <AbsoluteLink href="https://medium.com/bandprotocol">
+                <Text
+                  fontSize="14px"
+                  color="white"
+                  px="4px"
+                  style={{ border: '1px solid #ffffff', borderRadius: '8px' }}
+                >
+                  Learn more
+                </Text>
+              </AbsoluteLink>
+            </Flex>
+            <Flex mt="10px" flexDirection="column">
+              <Text fontSize="14px" my="10px">
+                From October 1st to October 7th 2019, a snapshot of BAND token
+                balances will be taken everyday at 12 PM UTC. For each 10 BAND
+                tokens held on average across 7 days, you will be able to claim
+                1 XFN.
+              </Text>
+              <Flex alignItems="flex-start" mt="10px">
+                <Flex alignItems="center">
+                  <Text mr="10px">
+                    <FontAwesomeIcon
+                      icon={doneStep1 ? faCheckCircle : faCircle}
+                    ></FontAwesomeIcon>
+                  </Text>
+                  <Text mr="10px">1.</Text>
+                </Flex>
+                <Text fontSize="16px">Login with Metamask or BandWallet.</Text>
+              </Flex>
+              <Flex alignItems="flex-start" mt="10px">
+                <Flex alignItems="center">
+                  <Text mr="10px">
+                    <FontAwesomeIcon
+                      icon={doneStep2 ? faCheckCircle : faCircle}
+                    ></FontAwesomeIcon>
+                  </Text>
+                  <Text mr="10px">2.</Text>
+                </Flex>
+                <Text fontSize="16px">Transfer band to your account.</Text>
+              </Flex>
             </Flex>
           </Flex>
-          {snapShots.map((e, i) => {
-            return (
-              <Flex width={1} my="5px" key={i}>
-                <Flex flex={1}>
-                  {new Date(e.date * 1000)
-                    .toDateString()
-                    .split(' ')
-                    .slice(1)
-                    .join(' ')}
-                </Flex>
-                <Flex flex={1} justifyContent="flex-end">
-                  {e.bandAmount.pretty()}
-                </Flex>
-              </Flex>
-            )
-          })}
         </Flex>
-
         <Flex
           flexDirection="column"
           alignItems="center"
           justifyContent="center"
           style={{ position: 'relative' }}
         >
-          {bandAvg.isZero() ? (
-            <Flex
-              bg="rgba(255,255,255,0.5)"
-              p="20px"
-              flexDirection="column"
-              alignItems="center"
-              style={{
-                borderRadius: '20px',
-                maxWidth: '375px',
-                zIndex: 3,
-              }}
-            >
-              <Text fontSize="24px" mb="20px">
-                Oops!
-              </Text>
-              You didn't hodl any BAND from October 1st to October 7th 2019
-            </Flex>
-          ) : (
-            <ClaimButton onClick={() => claim()}>
-              <Text
-                color="white"
-                fontSize="24px"
-                style={{ opacity: pendingTx ? 0 : 1 }}
-              >
-                Get {bandAvg.div(new BN(10)).pretty()} XFN Now!
-              </Text>
-            </ClaimButton>
-          )}
-          {pendingTx && (
-            <ClaimButton
-              style={{ position: 'absolute', top: '0px', width: '100%' }}
-            >
-              <CircleLoadingSpinner radius="40px" color="white" />
-            </ClaimButton>
-          )}
+          <AirdropButton onClick={() => hideXFNRewardModal()}>
+            <Text color="white" fontSize="24px">
+              Understand
+            </Text>
+          </AirdropButton>
         </Flex>
       </Flex>
     </Card>

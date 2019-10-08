@@ -13,6 +13,7 @@ import ApplyIdentityModal from 'components/ApplyIdentityModal'
 import NewWebRequestModal from 'components/NewWebRequestModal'
 import MakeNewRequestModal from 'components/MakeNewRequestModal'
 import ConvertRevenueModal from 'components/ConvertRevenueModal'
+import AirdropXFNModal from 'components/AirdropXFNModal'
 
 export default ({ modalName, data, hideModal }) => (
   <ModalContainer hideModal={hideModal}>
@@ -20,6 +21,8 @@ export default ({ modalName, data, hideModal }) => (
       <LoginModal />
     ) : modalName === 'CLAIM_XFN' ? (
       <ClaimXFNModal />
+    ) : modalName === 'AIRDROP_XFN' ? (
+      <AirdropXFNModal />
     ) : modalName === 'BUY' ? (
       <BuySellModal type="buy" tokenAddress={data.tokenAddress} />
     ) : modalName === 'SELL' ? (
