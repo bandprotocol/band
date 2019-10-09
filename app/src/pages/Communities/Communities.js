@@ -13,7 +13,7 @@ import {
 import { showModal, setXFNRewardInfo } from 'actions'
 import xfnRewardContracts from 'utils/xfnRewardContracts'
 
-window.startAirdrop = 1570449600
+window.startAirdrop = 1570449600 + 86400
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
@@ -75,7 +75,6 @@ const mapStateToProps = (state, props) => {
   return {
     hasPendingReward,
     rewardAmount,
-    isClaimPeriod: Date.now() / 1000 > window.startAirdrop,
     user,
     xfnRewardInfo,
     xfnRewardContract,

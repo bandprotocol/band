@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PageContainer from 'components/PageContainer'
 import styled from 'styled-components'
 import { Flex, Text, Box, Card, Button, H1, H3 } from 'ui/common'
@@ -119,7 +119,6 @@ export default ({
   tcrCommunities,
   bandPrice,
   history,
-  isClaimPeriod,
   showXFNAirdropModal,
   showClaimXFNModal,
   shouldDisplayClaimXFN,
@@ -133,6 +132,26 @@ export default ({
       isClaimed(user, xfnRewardContract)
     }
   }
+
+  const [isClaimPeriod, setIsClaimPeriod] = useState(false)
+
+  useEffect(() => {
+    const itid = setInterval(async () => {
+      try {
+        const nowUnix = (await fetch(
+          'https://worldtimeapi.org/api/ip?t=' + Date.now(),
+        ).then(r => r.json())).unixtime
+        if (nowUnix > window.startAirdrop) {
+          setIsClaimPeriod(true)
+          clearInterval(itid)
+        }
+        // console.log(nowUnix, window.startAirdrop)
+      } catch (e) {
+        // console.log(e)
+      }
+    }, 3000)
+    return () => clearInterval(itid)
+  }, [])
 
   const sdcx =
     xfnRewardInfo &&
