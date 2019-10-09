@@ -1,4 +1,4 @@
-import { store, BigInt, Address } from "@graphprotocol/graph-ts";
+import { store, BigInt, Address, EthereumBlock } from "@graphprotocol/graph-ts";
 import {
   OffchainAggTCD,
   DataUpdated,
@@ -14,6 +14,8 @@ import {
   Token,
   TCD,
   Report,
+  Staking,
+  RewardDistribute,
   QueryCounter,
   DataProvider,
   DataProviderOwnership
@@ -52,9 +54,14 @@ function updateProvider(
     voterOwnership.save();
   } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
     voterOwnership.ownership = newVoterOwnership;
+
     voterOwnership.save();
   } else if (voterOwnership != null && newVoterOwnership.equals(new BigInt(0))) {
     store.remove("DataProviderOwnership", dpoKey);
+  }
+
+  if (participant.toHexString() == dataProvider.owner.toHexString()) {
+    dataProvider.ownerOwnership = newVoterOwnership;
   }
 
   dataProvider.save();
@@ -119,6 +126,7 @@ export function handleDataSourceRegistered(event: DataSourceRegistered): void {
   dataProvider.providerAddress = event.params.dataSource;
   dataProvider.owner = event.params.owner;
   dataProvider.stake = event.params.stake;
+  dataProvider.ownerOwnership = event.params.stake;
   dataProvider.status = "UNLISTED";
   dataProvider.totalOwnership = event.params.stake;
   dataProvider.tcd = event.address.toHexString();
@@ -134,12 +142,46 @@ export function handleDataSourceRegistered(event: DataSourceRegistered): void {
   dataProviderOwnership.save();
 }
 
+function _handleStaking(
+  tcdAddress: Address,
+  dataSource: Address,
+  participant: Address,
+  block: EthereumBlock
+): void {
+  let dPKey = dataSource.toHexString() + "-" + tcdAddress.toHexString();
+  let dataProvider = DataProvider.load(dPKey);
+
+  let tcdContract = OffchainAggTCD.bind(tcdAddress);
+  let voterOwnership = tcdContract.getOwnership(dataSource, participant);
+  let voterStake = tcdContract.getStake(dataSource, participant);
+
+  let sKey =
+    block.number.toString() +
+    "-" +
+    tcdAddress.toHexString() +
+    "-" +
+    dataProvider.providerAddress.toHexString() +
+    "-" +
+    participant.toHexString();
+
+  let s = new Staking(sKey);
+  s.voter = participant;
+  s.blockHeight = block.number.toI32();
+  s.tcdAddress = tcdAddress;
+  s.providerAddress = dataProvider.providerAddress;
+  s.timestamp = block.timestamp;
+  s.voterOwnership = voterOwnership;
+  s.voterStake = voterStake;
+}
+
 export function handleDataSourceStaked(event: DataSourceStaked): void {
   updateProvider(event.address, event.params.dataSource, event.params.participant);
+  _handleStaking(event.address, event.params.dataSource, event.params.participant, event.block);
 }
 
 export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
   updateProvider(event.address, event.params.dataSource, event.params.participant);
+  _handleStaking(event.address, event.params.dataSource, event.params.participant, event.block);
 }
 
 export function handleFeeDistributed(event: FeeDistributed): void {
@@ -151,6 +193,25 @@ export function handleFeeDistributed(event: FeeDistributed): void {
     event.params.dataSource,
     Address.fromString(dataProvider.owner.toHexString())
   );
+
+  let rdKey =
+    event.block.number.toString() +
+    "-" +
+    event.address.toHexString() +
+    "-" +
+    dataProvider.providerAddress.toHexString();
+
+  let rd = new RewardDistribute(rdKey);
+  rd.blockHeight = event.block.number.toI32();
+  rd.tcdAddress = event.address;
+  rd.providerAddress = dataProvider.providerAddress;
+  rd.timestamp = event.block.timestamp;
+  rd.totalStake = dataProvider.stake;
+  rd.stakeIncreased = event.params.totalReward.minus(event.params.ownerReward);
+  rd.totalOwnership = dataProvider.totalOwnership;
+  rd.ownerReward = event.params.ownerReward;
+  rd.ownerOwnership = dataProvider.ownerOwnership;
+  rd.totalReward = event.params.totalReward;
 }
 
 export function handleWithdrawReceiptCreated(event: WithdrawReceiptCreated): void {}

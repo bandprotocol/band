@@ -159,6 +159,7 @@ type DataProvider @entity {
   detail: String
   endpoint: String
   owner: Bytes!
+  ownerOwnership: BigInt!
   stake: BigInt!
   status: String!
   totalOwnership: BigInt!
@@ -174,4 +175,29 @@ type DataProviderOwnership @entity {
   ownership: BigInt!
   tokenLock: BigInt!
   voter: Bytes!
+}
+
+type Staking @entity {
+  id: ID!
+  voter: Bytes!
+  blockHeight: Int!
+  tcdAddress: Bytes!
+  providerAddress: Bytes!
+  timestamp: BigInt!
+  voterOwnership: BigInt!
+  voterStake: BigInt!
+}
+
+type RewardDistribute @entity {
+  id: ID!
+  blockHeight: Int!
+  tcdAddress: Bytes!
+  providerAddress: Bytes!
+  timestamp: BigInt!
+  totalStake: BigInt!
+  stakeIncreased: BigInt!
+  totalOwnership: BigInt!
+  ownerReward: BigInt!
+  ownerOwnership: BigInt!
+  totalReward: BigInt!
 }
