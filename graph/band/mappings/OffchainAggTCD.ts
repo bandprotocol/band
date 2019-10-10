@@ -33,8 +33,12 @@ function updateProvider(
   let dpoKey = dpKey + "-" + participant.toHexString();
   let voterOwnership = DataProviderOwnership.load(dpoKey);
 
-  let tcdContract = OffchainAggTCD.bind(Address.fromString(tcdAddress.toHexString()));
-  let dataSourceInfo = tcdContract.infoMap(Address.fromString(dataSourceAddress.toHexString()));
+  let tcdContract = OffchainAggTCD.bind(
+    Address.fromString(tcdAddress.toHexString())
+  );
+  let dataSourceInfo = tcdContract.infoMap(
+    Address.fromString(dataSourceAddress.toHexString())
+  );
 
   dataProvider.stake = dataSourceInfo.value1;
   dataProvider.totalOwnership = dataSourceInfo.value2;
@@ -46,7 +50,9 @@ function updateProvider(
 
   if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
     voterOwnership = new DataProviderOwnership(dpoKey);
-    voterOwnership.providerAddress = Address.fromString(dataSourceAddress.toHexString());
+    voterOwnership.providerAddress = Address.fromString(
+      dataSourceAddress.toHexString()
+    );
     voterOwnership.tcdAddress = Address.fromString(tcdAddress.toHexString());
     voterOwnership.voter = Address.fromString(participant.toHexString());
     voterOwnership.dataProvider = dpKey;
@@ -57,7 +63,10 @@ function updateProvider(
     voterOwnership.ownership = newVoterOwnership;
 
     voterOwnership.save();
-  } else if (voterOwnership != null && newVoterOwnership.equals(new BigInt(0))) {
+  } else if (
+    voterOwnership != null &&
+    newVoterOwnership.equals(new BigInt(0))
+  ) {
     store.remove("DataProviderOwnership", dpoKey);
   }
 
@@ -87,7 +96,8 @@ export function handleDataUpdated(event: DataUpdated): void {
   tcd.reportCount = tcd.reportCount + 1;
   tcd.save();
 
-  let key = event.transaction.hash.toHexString() + "-" + event.logIndex.toString();
+  let key =
+    event.transaction.hash.toHexString() + "-" + event.logIndex.toString();
 
   let report = Report.load(key);
   if (report == null) {
@@ -120,7 +130,8 @@ export function handleDataSourceRegistered(event: DataSourceRegistered): void {
     tcd.save();
   }
 
-  let dPKey = event.params.dataSource.toHexString() + "-" + event.address.toHexString();
+  let dPKey =
+    event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dpoKey = dPKey + "-" + event.params.owner.toHexString();
 
   let dataProvider = new DataProvider(dPKey);
@@ -177,17 +188,36 @@ function _handleStaking(
 }
 
 export function handleDataSourceStaked(event: DataSourceStaked): void {
-  updateProvider(event.address, event.params.dataSource, event.params.participant);
-  _handleStaking(event.address, event.params.dataSource, event.params.participant, event.block);
+  updateProvider(
+    event.address,
+    event.params.dataSource,
+    event.params.participant
+  );
+  _handleStaking(
+    event.address,
+    event.params.dataSource,
+    event.params.participant,
+    event.block
+  );
 }
 
 export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
-  updateProvider(event.address, event.params.dataSource, event.params.participant);
-  _handleStaking(event.address, event.params.dataSource, event.params.participant, event.block);
+  updateProvider(
+    event.address,
+    event.params.dataSource,
+    event.params.participant
+  );
+  _handleStaking(
+    event.address,
+    event.params.dataSource,
+    event.params.participant,
+    event.block
+  );
 }
 
 export function handleFeeDistributed(event: FeeDistributed): void {
-  let dPKey = event.params.dataSource.toHexString() + "-" + event.address.toHexString();
+  let dPKey =
+    event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dataProvider = DataProvider.load(dPKey);
 
   updateProvider(
@@ -218,7 +248,9 @@ export function handleFeeDistributed(event: FeeDistributed): void {
   rdep.providerAddress = dataProvider.providerAddress;
   rdep.timestamp = event.block.timestamp;
   rdep.totalStake = dataProvider.stake;
-  rdep.stakeIncreased = event.params.totalReward.minus(event.params.ownerReward);
+  rdep.stakeIncreased = event.params.totalReward.minus(
+    event.params.ownerReward
+  );
   rdep.totalOwnership = dataProvider.totalOwnership;
   rdep.ownerReward = event.params.ownerReward;
   rdep.ownerOwnership = dataProvider.ownerOwnership;
@@ -227,9 +259,13 @@ export function handleFeeDistributed(event: FeeDistributed): void {
   rdep.save();
 }
 
-export function handleWithdrawReceiptCreated(event: WithdrawReceiptCreated): void {}
+export function handleWithdrawReceiptCreated(
+  event: WithdrawReceiptCreated
+): void {}
 
-export function handleWithdrawReceiptUnlocked(event: WithdrawReceiptUnlocked): void {}
+export function handleWithdrawReceiptUnlocked(
+  event: WithdrawReceiptUnlocked
+): void {}
 
 export function handleQuery(event: Query): void {
   let tcd = TCD.load(event.address.toHexString());

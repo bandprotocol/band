@@ -1,4 +1,10 @@
-import { BigInt, Address, store, BigDecimal } from "@graphprotocol/graph-ts";
+import {
+  BigInt,
+  Address,
+  store,
+  BigDecimal,
+  Bytes
+} from "@graphprotocol/graph-ts";
 import {
   Parameters as ParameterContract,
   ProposalProposed,
@@ -11,6 +17,7 @@ import {
 
 import {
   Token,
+  Curve,
   Parameter,
   Proposal as ProposalEntity,
   ParameterKV,
@@ -60,6 +67,18 @@ export function handleParameterChanged(event: ParameterChanged): void {
   }
   newParam.value = event.params.value;
   newParam.save();
+
+  if (stringKey == "bonding:curve_expression") {
+    let token = findOrCreateToken(Address.fromString(parameter.token));
+    let curve = Curve.load(token.curve);
+    if (curve == null) {
+      curve = new Curve(token.curve);
+    }
+    curve.collateralEquation = Address.fromString(
+      event.params.value.toHexString()
+    );
+    curve.save();
+  }
 }
 
 export function handleProposalProposed(event: ProposalProposed): void {
