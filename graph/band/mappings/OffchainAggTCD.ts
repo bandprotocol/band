@@ -16,6 +16,7 @@ import {
   Report,
   Staking,
   RewardDistribute,
+  RewardDistributeEachProvider,
   QueryCounter,
   DataProvider,
   DataProviderOwnership
@@ -172,6 +173,7 @@ function _handleStaking(
   s.timestamp = block.timestamp;
   s.voterOwnership = voterOwnership;
   s.voterStake = voterStake;
+  s.save();
 }
 
 export function handleDataSourceStaked(event: DataSourceStaked): void {
@@ -194,24 +196,35 @@ export function handleFeeDistributed(event: FeeDistributed): void {
     Address.fromString(dataProvider.owner.toHexString())
   );
 
-  let rdKey =
-    event.block.number.toString() +
-    "-" +
-    event.address.toHexString() +
-    "-" +
-    dataProvider.providerAddress.toHexString();
+  let tcdContract = OffchainAggTCD.bind(event.address);
+  let tokenAddress = tcdContract.token();
 
-  let rd = new RewardDistribute(rdKey);
-  rd.blockHeight = event.block.number.toI32();
-  rd.tcdAddress = event.address;
-  rd.providerAddress = dataProvider.providerAddress;
-  rd.timestamp = event.block.timestamp;
-  rd.totalStake = dataProvider.stake;
-  rd.stakeIncreased = event.params.totalReward.minus(event.params.ownerReward);
-  rd.totalOwnership = dataProvider.totalOwnership;
-  rd.ownerReward = event.params.ownerReward;
-  rd.ownerOwnership = dataProvider.ownerOwnership;
-  rd.totalReward = event.params.totalReward;
+  let rdKey = event.block.number.toString() + "-" + event.address.toHexString();
+  let rd = RewardDistribute.load(rdKey);
+  if (rd == null) {
+    rd = new RewardDistribute(rdKey);
+    rd.blockHeight = event.block.number.toI32();
+    rd.timestamp = event.block.timestamp;
+    rd.tcdAddress = event.address;
+    rd.tokenAddress = tokenAddress;
+    rd.save();
+  }
+
+  let rdepKey = rdKey + "-" + dataProvider.providerAddress.toHexString();
+  let rdep = new RewardDistributeEachProvider(rdepKey);
+  rdep.blockHeight = event.block.number.toI32();
+  rdep.tcdAddress = event.address;
+  rdep.tokenAddress = tokenAddress;
+  rdep.providerAddress = dataProvider.providerAddress;
+  rdep.timestamp = event.block.timestamp;
+  rdep.totalStake = dataProvider.stake;
+  rdep.stakeIncreased = event.params.totalReward.minus(event.params.ownerReward);
+  rdep.totalOwnership = dataProvider.totalOwnership;
+  rdep.ownerReward = event.params.ownerReward;
+  rdep.ownerOwnership = dataProvider.ownerOwnership;
+  rdep.totalReward = event.params.totalReward;
+  rdep.rewardDistribute = rdKey;
+  rdep.save();
 }
 
 export function handleWithdrawReceiptCreated(event: WithdrawReceiptCreated): void {}

@@ -191,7 +191,17 @@ type Staking @entity {
 type RewardDistribute @entity {
   id: ID!
   blockHeight: Int!
+  timestamp: BigInt!
   tcdAddress: Bytes!
+  tokenAddress: Bytes!
+  rewardDistributeEachProviders: [RewardDistributeEachProvider!] @derivedFrom(field: "rewardDistribute")
+}
+
+type RewardDistributeEachProvider @entity {
+  id: ID!
+  blockHeight: Int!
+  tcdAddress: Bytes!
+  tokenAddress: Bytes!
   providerAddress: Bytes!
   timestamp: BigInt!
   totalStake: BigInt!
@@ -200,4 +210,5 @@ type RewardDistribute @entity {
   ownerReward: BigInt!
   ownerOwnership: BigInt!
   totalReward: BigInt!
+  rewardDistribute: RewardDistribute!
 }
