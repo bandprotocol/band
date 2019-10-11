@@ -91,7 +91,7 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
             dataSourceAddress,
             detail,
             stake: new BN(stake),
-            status,
+            status: yield tcdClient.getStatus(dataSourceAddress),
             owner,
             userStake,
             ownerStake,
@@ -115,7 +115,6 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
           return a.status === b.status ? 0 : a.status === 'ACTIVE' ? -1 : 1
         })
         .map((dataProviders, i) => ({ ...dataProviders, rank: i + 1 })),
-
     },
   ]
   yield put(addTcds(tokenAddress, tcds))
