@@ -10,9 +10,9 @@ import ModalEntry from 'components/ModalEntry'
 import Routes from 'Routes'
 import FullLoadingPage from 'pages/FullLoading'
 import { fetchSelector } from 'selectors/basic'
-import moment from 'moment'
-import Countdown from 'pages/CountdownPage'
-import { Flex } from 'rebass'
+import {IntlProvider} from 'react-intl'
+import localeMessages from 'locales'
+import bcp47 from 'bcp-47'
 
 class App extends Component {
   state = {
@@ -50,13 +50,10 @@ class App extends Component {
     clearInterval(this.countInterval)
   }
   render() {
-    const { isCountdown, duration } = this.state
-    return isCountdown ? (
-      <Flex width="100%" style={{ height: '100%' }}>
-        <Countdown isCountdown={isCountdown} duration={duration}></Countdown>
-      </Flex>
-    ) : (
-      <ThemeProvider theme={theme}>
+    const language = bcp47.parse(navigator.language).language
+    return (
+      <IntlProvider locale={navigator.language} messages={localeMessages[language] ? localeMessages[language] : localeMessages['en']}>
+        <ThemeProvider theme={theme}>
         {this.props.fetching ? (
           <FullLoadingPage />
         ) : (
@@ -69,7 +66,8 @@ class App extends Component {
             </React.Fragment>
           </Router>
         )}
-      </ThemeProvider>
+        </ThemeProvider>
+      </IntlProvider>
     )
   }
 }

@@ -20,6 +20,7 @@ import WhiteLogoSrc from 'images/logo-white.png'
 
 // Other Page
 import LogoSrc from 'images/logo-dark.png'
+import {FormattedMessage} from "react-intl";
 
 const Nav = styled.nav`
   display: flex;
@@ -395,7 +396,7 @@ export default ({
             ) : (
               <Flex alignItems="center">
                 <SignIn onClick={showLoginModal} isDashboard={isDashboard}>
-                  Sign in
+                  <FormattedMessage id="navbar.signin" />
                 </SignIn>
               </Flex>
             )}
