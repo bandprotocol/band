@@ -35,6 +35,7 @@ type Curve @entity {
   collateralEquation: Bytes!
   curveMultiplier: BigInt!
   prices: [Price!] @derivedFrom(field: "curve")
+  pricesCount: BigInt!
   orders: [Order!] @derivedFrom(field: "curve")
 }
 
@@ -44,6 +45,7 @@ type Price @entity {
   price: BigInt!
   totalSupply: BigInt!
   timestamp: BigInt!
+  nonce: BigInt!
 }
 
 type Order @entity {

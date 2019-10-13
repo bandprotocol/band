@@ -1,10 +1,4 @@
-import {
-  BigInt,
-  Address,
-  store,
-  BigDecimal,
-  Bytes
-} from "@graphprotocol/graph-ts";
+import { BigInt, Address, store, BigDecimal, Bytes } from "@graphprotocol/graph-ts";
 import {
   Parameters as ParameterContract,
   ProposalProposed,
@@ -74,9 +68,14 @@ export function handleParameterChanged(event: ParameterChanged): void {
     if (curve == null) {
       curve = new Curve(token.curve);
     }
-    curve.collateralEquation = Address.fromString(
-      event.params.value.toHexString()
-    );
+
+    let cEqAddr = event.params.value.toHexString();
+    if (cEqAddr.length < 42) {
+      cEqAddr = "0x" + cEqAddr.substr(2).padStart(40, "0");
+    } else if (cEqAddr.length > 42) {
+      cEqAddr = "0x" + cEqAddr.substr(cEqAddr.length - 40);
+    }
+    curve.collateralEquation = Address.fromString(cEqAddr);
     curve.save();
   }
 }
@@ -120,8 +119,7 @@ export function handleParameterProposed(event: ParameterProposed): void {
       event.params.proposalId.toHexString() +
       event.params.key.toHexString()
   );
-  proposalKv.proposal =
-    event.address.toHexString() + event.params.proposalId.toHexString();
+  proposalKv.proposal = event.address.toHexString() + event.params.proposalId.toHexString();
   proposalKv.key = event.params.key.toString();
   proposalKv.value = event.params.value;
   proposalKv.save();
@@ -133,13 +131,9 @@ export function handleProposalVoted(event: ProposalVoted): void {
   );
 
   if (event.params.vote) {
-    proposal.currentYesCount = proposal.currentYesCount.plus(
-      event.params.votingPower
-    );
+    proposal.currentYesCount = proposal.currentYesCount.plus(event.params.votingPower);
   } else {
-    proposal.currentNoCount = proposal.currentNoCount.plus(
-      event.params.votingPower
-    );
+    proposal.currentNoCount = proposal.currentNoCount.plus(event.params.votingPower);
   }
 
   let newVoted = new ProposalVoteEntity(

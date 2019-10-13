@@ -11,10 +11,7 @@ import { Token, Curve, Order, Price } from "../generated/schema";
 function getOneToken(): BigInt {
   return BigInt.fromI32(1000000000).times(BigInt.fromI32(1000000000));
 }
-function findOrCreateToken(
-  curveAddress: Address,
-  tokenAddress: Address
-): Token | null {
+function findOrCreateToken(curveAddress: Address, tokenAddress: Address): Token | null {
   let token = Token.load(tokenAddress.toHexString());
   if (token == null) {
     token = new Token(tokenAddress.toHexString());
@@ -23,16 +20,14 @@ function findOrCreateToken(
   return token;
 }
 
-function findOrCreateCurve(
-  curveAddress: Address,
-  tokenAddress: Address
-): Curve | null {
+function findOrCreateCurve(curveAddress: Address, tokenAddress: Address): Curve | null {
   let curve = Curve.load(curveAddress.toHexString());
   if (curve == null) {
     let bondingContract = BondingCurve.bind(curveAddress);
     curve = new Curve(curveAddress.toHexString());
     curve.token = tokenAddress.toHexString();
     curve.price = BigInt.fromI32(0);
+    curve.pricesCount = BigInt.fromI32(0);
     curve.collateralEquation = bondingContract.getCollateralExpression();
     curve.curveMultiplier = bondingContract.curveMultiplier();
   }
@@ -86,6 +81,7 @@ function addOrder(
     if (priceEntity == null) {
       priceEntity = new Price(priceKey);
       priceEntity.curve = curve.id;
+      priceEntity.nonce = curve.pricesCount;
     }
     priceEntity.price = nextPrice;
     priceEntity.totalSupply = token.totalSupply;
@@ -93,6 +89,7 @@ function addOrder(
     priceEntity.save();
 
     curve.price = nextPrice;
+    curve.pricesCount = priceEntity.nonce.plus(BigInt.fromI32(1));
     curve.curveMultiplier = bondingContract.curveMultiplier();
   }
   curve.save();

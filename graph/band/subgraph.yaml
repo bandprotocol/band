@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: BandToken
-    network: ropsten
+    network: mainnet
     source:
-      address: "0x767c597367871521F3379B193EDB6B0af838D0d3"
+      address: "0xba11d00c5f74255f56a5e366f4f77f5a186d7f55"
       abi: BandToken
     mapping:
       kind: ethereum/events
@@ -23,9 +23,9 @@ dataSources:
       file: ./mappings/BandToken.ts
   - kind: ethereum/contract
     name: DatasetToken
-    network: ropsten
+    network: mainnet
     source:
-      address: "0xb1277DEadd4428663773EE0F42E02b0483866186"
+      address: "0x33d3f653c9d86dc726337cf395fab39583a35988"
       abi: DatasetToken
     mapping:
       kind: ethereum/events
@@ -48,9 +48,9 @@ dataSources:
       file: ./mappings/DatasetToken.ts
   - kind: ethereum/contract
     name: BondingCurve
-    network: ropsten
+    network: mainnet
     source:
-      address: "0x177d3Ec468a8ce1B6D98A8e5B64005c316b96100"
+      address: "0xe5f32f9b531672889c72d2ba8be73f3a33c5c73e"
       abi: BondingCurve
     mapping:
       kind: ethereum/events
@@ -76,9 +76,9 @@ dataSources:
       file: ./mappings/BondingCurve.ts
   - kind: ethereum/contract
     name: OffchainAggTCD
-    network: ropsten
+    network: mainnet
     source:
-      address: "0xd106616684F0744859Da868b6E67f79E6f42bec8"
+      address: "0xd5d2b9e9bcd172d5fc8521afd2c98dd239f5b607"
       abi: OffchainAggTCD
     mapping:
       kind: ethereum/events
@@ -116,9 +116,9 @@ dataSources:
       file: ./mappings/OffchainAggTCD.ts
   - kind: ethereum/contract
     name: Parameters
-    network: ropsten
+    network: mainnet
     source:
-      address: "0xB38D15D66c39a447AD933716381fab4F5261d3F1"
+      address: "0x584dd3df26bd6f6cdfd9b08b85130e9c53709cec"
       abi: Parameters
     mapping:
       kind: ethereum/events
