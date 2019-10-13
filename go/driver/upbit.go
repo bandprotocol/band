@@ -16,6 +16,9 @@ type UpbitResponse struct {
 	TradePrice float64 `json:"trade_price"`
 }
 
+var krwRate float64
+var krwRateLastUpdate int64
+
 type Upbit struct{}
 
 func (*Upbit) Configure(*viper.Viper) {}
@@ -45,17 +48,21 @@ func (*Upbit) QuerySpotPrice(symbol string) (float64, error) {
 		return 0, err
 	}
 	rawPrice := result[0].TradePrice
-	if needConvert {
+	if needConvert && (krwRate == 0.0 || time.Now().Unix()-krwRateLastUpdate >= 300) {
 		res, err := grequests.Get(
-			"https://min-api.cryptocompare.com/data/price?fsym=KRW&tsyms=USD",
+			"https://api.exchangeratesapi.io/latest?symbols=USD&base=KRW",
 			&timeout5SecondOption,
 		)
 		if err != nil {
 			return 0, err
 		}
-		var output map[string]float64
+		var output map[string](map[string]float64)
 		res.JSON(&output)
-		rawPrice = rawPrice * output["USD"]
+		krwRate = output["rates"]["USD"]
+		krwRateLastUpdate = time.Now().Unix()
+	}
+	if needConvert {
+		rawPrice = rawPrice * krwRate
 	}
 	return rawPrice, nil
 }

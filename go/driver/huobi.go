@@ -28,14 +28,11 @@ func (*Huobi) QuerySpotPrice(symbol string) (float64, error) {
 	if len(pairs) != 2 {
 		return 0, fmt.Errorf("spotpx: symbol %s is not valid", symbol)
 	}
-	needConvert := false
-	if pairs[1] == "usd" {
-		pairs[1] = "usdt"
-		needConvert = true
-	}
 	timeoutDuration, _ := time.ParseDuration("5s")
 	timeout5SecondOption := grequests.RequestOptions{RequestTimeout: timeoutDuration}
-
+	if pairs[1] == "usd" {
+		pairs[1] = "usdt"
+	}
 	response, err := grequests.Get(
 		fmt.Sprintf("https://api.huobi.pro/market/detail/merged?symbol=%s%s", pairs[0], pairs[1]),
 		&timeout5SecondOption,
@@ -53,18 +50,6 @@ func (*Huobi) QuerySpotPrice(symbol string) (float64, error) {
 		return 0, fmt.Errorf("Missing ask and bid field")
 	}
 	rawPrice := (result.Tick.Ask[0] + result.Tick.Bid[0]) / 2
-	if needConvert {
-		res, err := grequests.Get(
-			"https://min-api.cryptocompare.com/data/price?fsym=USDT&tsyms=USD",
-			&timeout5SecondOption,
-		)
-		if err != nil {
-			return 0, err
-		}
-		var output map[string]float64
-		res.JSON(&output)
-		rawPrice = rawPrice * output["USD"]
-	}
 	return rawPrice, nil
 }
 

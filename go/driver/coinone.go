@@ -13,6 +13,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+var krwRateCoinone float64
+var krwRateLastUpdateCoinone int64
+
 type Coinone struct{}
 
 type CoinoneResponse struct {
@@ -44,23 +47,27 @@ func (*Coinone) QuerySpotPrice(symbol string) (float64, error) {
 	if result.Last == "" {
 		return 0, fmt.Errorf("Missing key in response")
 	}
-	res, err := grequests.Get(
-		"https://min-api.cryptocompare.com/data/price?fsym=KRW&tsyms=USD",
-		&timeout5SecondOption,
-	)
-	if err != nil {
-		return 0, err
-	}
-	var output map[string]float64
-	if res.JSON(&output) != nil {
-		return 0, err
-	}
+	if krwRate == 0.0 || time.Now().Unix()-krwRateLastUpdateCoinone >= 300 {
 
+		res, err := grequests.Get(
+			"https://api.exchangeratesapi.io/latest?symbols=USD&base=KRW",
+			&timeout5SecondOption,
+		)
+
+		if err != nil {
+			return 0, err
+		}
+
+		var output map[string](map[string]float64)
+		res.JSON(&output)
+		krwRateCoinone = output["rates"]["USD"]
+		krwRateLastUpdateCoinone = time.Now().Unix()
+	}
 	rawPrice, err := strconv.ParseFloat(result.Last, 64)
 	if err != nil {
 		return 0, err
 	}
-	return rawPrice * output["USD"], nil
+	return rawPrice * krwRateCoinone, nil
 }
 
 func (a *Coinone) Query(key []byte) dt.Answer {
