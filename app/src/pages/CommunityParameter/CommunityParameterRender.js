@@ -156,7 +156,14 @@ export default ({
               </SubmitButton>
             </Flex>
           ) : (
-            <ProposeButton onClick={logedin ? toggleEdit : signin}>
+            /* disable propose change */
+            <ProposeButton
+              onClick={() =>
+                alert(
+                  'Parameter proposal temporarily disabled. Please see our official telegram announcement for more detail.',
+                )
+              }
+            >
               <Flex
                 flexDirection="row"
                 justifyContent="center"
@@ -167,6 +174,17 @@ export default ({
                 <FormattedMessage id="Propose Change"></FormattedMessage>
               </Flex>
             </ProposeButton>
+            // <ProposeButton onClick={logedin ? toggleEdit : signin}>
+            //   <Flex
+            //     flexDirection="row"
+            //     justifyContent="center"
+            //     alignItems="center"
+            //     style={{ fontFamily: 'bio-sans' }}
+            //   >
+            //     <Image src={EditPropose} height="18px" mr={2} />
+            //     Propose Change
+            //   </Flex>
+            // </ProposeButton>
           )}
         </Flex>
       </Flex>
