@@ -8,211 +8,211 @@ import Walrus from 'images/animals/walrus.svg'
 import Band from 'images/band.svg'
 
 const allProviders = {
-  '0xDa7A7bd990030359e4E30E41ba0e5b33f740Db47': {
+  '0xda7a7bd990030359e4e30e41ba0e5b33f740db47': {
     name: 'USA_Node',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
   },
-  '0xDA7a8AFb5035045A58eeDEcC6B6F26247C8f20F5': {
+  '0xda7a8afb5035045a58eedecc6b6f26247c8f20f5': {
     name: 'EU_Node',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
   },
-  '0xDa7AfF0D0142eA8a6Df33bA9e6307922c7838489': {
+  '0xda7aff0d0142ea8a6df33ba9e6307922c7838489': {
     name: 'SEA_Node',
     image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
   },
-  '0xDA7A1dDCE143C2460Bd2536607ea38309D7c45Ca': {
+  '0xda7a1ddce143c2460bd2536607ea38309d7c45ca': {
     name: 'SPORTS_DB',
     image: 'https://i.imgur.com/GsZ6avc.png',
   },
-  '0xda7AdcB9b801952019f8d44889A9F4038443dD97': {
+  '0xda7adcb9b801952019f8d44889a9f4038443dd97': {
     name: 'DATA_NBA',
     image:
       'https://cdn.freebiesupply.com/images/large/2x/nba-logo-transparent.png',
   },
-  '0xdA7a80e66A96ae364918aE7fcf2F9cA03e2a2D5d': {
+  '0xda7a80e66a96ae364918ae7fcf2f9ca03e2a2d5d': {
     name: 'ESPN',
     image: 'https://i.imgur.com/QsU7xqB.png',
   },
-  '0xdA7af0fD57c5D2e918704f034fd9e13aEB28Ad13': {
+  '0xda7af0fd57c5d2e918704f034fd9e13aeb28ad13': {
     name: 'Coinbase',
     image: 'https://assets.coinbase.com/exchange/favicon.ico',
   },
-  '0xda7a01d6d7568868b21a6789968B06Bb3af5c191': {
+  '0xda7a01d6d7568868b21a6789968b06bb3af5c191': {
     name: 'Bitstamp',
     image: 'https://www.bitstamp.net/s/webapp/images/meta/apple-touch-icon.png',
   },
-  '0xDa7A2A9C0bB0F94f9ddF54Dde3dBE2530A8269A2': {
+  '0xda7a2a9c0bb0f94f9ddf54dde3dbe2530a8269a2': {
     name: 'Bitfinex',
     image: 'https://www.bitfinex.com/assets/favicon.ico',
   },
-  '0xDa7A90B4b2078e0446974014C319157ab02c24b7': {
+  '0xda7a90b4b2078e0446974014c319157ab02c24b7': {
     name: 'Bittrex',
     image:
       'https://raw.githubusercontent.com/Bittrex/bittrex.github.io/master/favicon.ico',
   },
-  '0xDA7A2E3d741f025010C44AfA2A6a7353F70D6b23': {
+  '0xda7a2e3d741f025010c44afa2a6a7353f70d6b23': {
     name: 'Gemini',
     image:
       'https://gemini.com/wp-content/uploads/2016/02/gemini_symbol_rgb.png',
   },
-  '0xda7A6811d4dd6A6b0f0EF1f1FE2f99ECd0cE9b7A': {
+  '0xda7a6811d4dd6a6b0f0ef1f1fe2f99ecd0ce9b7a': {
     name: 'Kraken',
     image: 'https://www.kraken.com/img/favicon.ico?v=2',
   },
-  '0xdA7af2D3f2321e815CF3841Bd0d9A889dE22E37C': {
+  '0xda7af2d3f2321e815cf3841bd0d9a889de22e37c': {
     name: 'CoinMarketCap',
     image: 'https://cryptwerk.com/upload/companies/0/coinmarketcap.jpg',
   },
-  '0xDA7a814e8B96417274466E2492298B039A854a8C': {
+  '0xda7a814e8b96417274466e2492298b039a854a8c': {
     name: 'CryptoCompare',
     image: 'https://www.cryptocompare.com/media/20567/cc-logo-vert.png',
   },
-  '0xdA7A6db349b7ae544234f91Abd01dd825b8969cD': {
+  '0xda7a6db349b7ae544234f91abd01dd825b8969cd': {
     name: 'OpenMarketCap',
     image: 'https://i.imgur.com/H9rCov0.gif',
   },
-  '0xda7adB240Fb99dCD55e19a17B97ac2163d4d4509': {
+  '0xda7adb240fb99dcd55e19a17b97ac2163d4d4509': {
     name: 'OnchainFX',
     image: 'https://i.imgur.com/LqAxlFA.jpg',
   },
-  '0xdA7A3C7309Bd2De2e89a554191b2d7c71125186c': {
+  '0xda7a3c7309bd2de2e89a554191b2d7c71125186c': {
     name: 'Bancor Protocol',
     image: 'https://www.bancor.network/static/images/favicon.ico',
   },
-  '0xDa7AeEc22311453193C55af63EF7F2df4E6A73D2': {
+  '0xda7aeec22311453193c55af63ef7f2df4e6a73d2': {
     name: 'Kyber Network',
     image: 'https://kyber.network/favicon-32x32.png',
   },
-  '0xdA7A7F095BE77012679df0744D8a163823C0558E': {
+  '0xda7a7f095be77012679df0744d8a163823c0558e': {
     name: 'Uniswap Protocol',
     image: 'https://i.imgur.com/CuqYxat.png',
   },
-  '0xdA7aa2bbA8685F9C0dDBC53aB8e19A6A32dc8b7F': {
+  '0xda7aa2bba8685f9c0ddbc53ab8e19a6a32dc8b7f': {
     name: 'Free Forex API',
     image: 'https://www.freeforexapi.com/images/logo2.png',
   },
-  '0xDA7a79196DDD8AD788a996eFaFeA15bf0879c31c': {
+  '0xda7a79196ddd8ad788a996efafea15bf0879c31c': {
     name: 'Alpha Vantage',
     image: 'https://www.alphavantage.co/static/img/favicon.ico',
   },
-  '0xDa7Af1118c2C5F2edb0d452a84bE91E7b47014cb': {
+  '0xda7af1118c2c5f2edb0d452a84be91e7b47014cb': {
     name: 'Currency Converter API',
     image: 'https://www.currencyconverterapi.com/images/logo.png',
   },
-  '0xdA7a238d208eda262505D43678b7d7f180A9Ee69': {
+  '0xda7a238d208eda262505d43678b7d7f180a9ee69': {
     name: 'Rates API',
     image: 'https://ratesapi.io/images/support.png',
   },
-  '0xDa7aE92EF9089f9093e9555B6cf2fd3E29e3D6d7': {
+  '0xda7ae92ef9089f9093e9555b6cf2fd3e29e3d6d7': {
     name: 'Financial Modeling Prep',
     image: 'https://i.imgur.com/sroTyfS.png',
   },
-  '0xda7Aa81514ae2108Da300639d46aa399abAEfA05': {
+  '0xda7aa81514ae2108da300639d46aa399abaefa05': {
     name: 'World Trading Data',
     image:
       'https://www.worldtradingdata.com/assets/main/img/favicons/favicon-96x96.png',
   },
-  '0xDA7A08e515dAb7cEc794f804Ce2B1c850FF19b7f': {
+  '0xda7a08e515dab7cec794f804ce2b1c850ff19b7f': {
     name: 'Megamillions',
     image: 'https://www.ialottery.com/images/game-logos/megamillions-large.gif',
   },
-  '0xDa7a198618105fd301958cA76548Ce9Ea5D1De42': {
+  '0xda7a198618105fd301958ca76548ce9ea5d1de42': {
     name: 'Data NY Government',
     image:
       'https://i2.wp.com/www.nysgis.net/wp-content/uploads/2016/09/nyslogo_418x200.png',
   },
-  '0xdA7Ad157EdA297C1412BBdBe0E3600670e4560F6': {
+  '0xda7ad157eda297c1412bbdbe0e3600670e4560f6': {
     name: 'Powerball',
     image:
       'https://s3.amazonaws.com/cdn.powerball.com/drupal/files/2019-03/Powerball%20Power%20Play_7.png',
   },
-  '0xDa7ABa879e90113d6E950Cb1f7908F7b4CA52d8C': {
+  '0xda7aba879e90113d6e950cb1f7908f7b4ca52d8c': {
     name: 'Band Reserved Provider',
     image: 'https://app.kovan.bandprotocol.com/favicon.png',
   },
-  '0xDa7AFDeE902A41769479349373EF24D19368a9f1': {
+  '0xda7afdee902a41769479349373ef24d19368a9f1': {
     name: 'Octopus',
     image: Octopus,
   },
-  '0xDA7afa8f087AA2571276b17dBe45A4097C380eff': {
+  '0xda7afa8f087aa2571276b17dbe45a4097c380eff': {
     name: 'Walrus',
     image: Walrus,
   },
-  '0xdA7Af7Ce7baD1454bdB96507Fb73b7478A345e3b': {
+  '0xda7af7ce7bad1454bdb96507fb73b7478a345e3b': {
     name: 'Puma',
     image: Puma,
   },
-  '0xDa7a1eD9Df0cC9dFF132d9C3FFC6d76807C14E4b': {
+  '0xda7a1ed9df0cc9dff132d9c3ffc6d76807c14e4b': {
     name: 'Penguin',
     image: Penguin,
   },
-  '0xDa7A1277D77ffE97628474dce34A903c97822cbb': {
+  '0xda7a1277d77ffe97628474dce34a903c97822cbb': {
     name: 'Antelope',
     image: Antelope,
   },
-  '0xda7a1331BD1d0283bac9Bb06a2BE0714901c22b0': {
+  '0xda7a1331bd1d0283bac9bb06a2be0714901c22b0': {
     name: 'Elephant',
     image: Elephant,
   },
-  '0xdA7A5879fd7956f3869eCD21B6f58b2aFDD1a1bc': {
+  '0xda7a5879fd7956f3869ecd21b6f58b2afdd1a1bc': {
     name: 'USA node',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
   },
-  '0xDa7a5d4F189CcB60CA5c9243348D7086e9EaD434': {
+  '0xda7a5d4f189ccb60ca5c9243348d7086e9ead434': {
     name: 'Panda',
     image: Panda,
   },
-  '0xDA7A51d45A6fA2C9ed66EB568b9F8aB34f011001': {
+  '0xda7a51d45a6fa2c9ed66eb568b9f8ab34f011001': {
     name: 'SEA node',
     image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
   },
-  '0xDa7a37EE4069b0C885615DB532D0bAE80B6DFF5c': {
+  '0xda7a37ee4069b0c885615db532d0bae80b6dff5c': {
     name: 'USA node',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/5/5b/Greater_coat_of_arms_of_the_United_States.svg',
   },
-  '0xda7A38e5645a01Fa62dD3dcc7Cf2435665503e3F': {
+  '0xda7a38e5645a01fa62dd3dcc7cf2435665503e3f': {
     name: 'EU node',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
   },
-  '0xDa7A3e3214cbC27bf5e6BbED3Fb6c1779c715D77': {
+  '0xda7a3e3214cbc27bf5e6bbed3fb6c1779c715d77': {
     name: 'SEA node',
     image: 'https://upload.wikimedia.org/wikipedia/en/4/49/Seal_of_ASEAN.svg',
   },
 
-  '0xB1CF7B512F090957cA886b626fB2Be46BA03cBce': {
+  '0xb1cf7b512f090957ca886b626fb2be46ba03cbce': {
     name: '0xB1CF7B51....',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/f/fa/Flag_of_the_People%27s_Republic_of_China.svg',
   },
-  '0x3430E76D0733E9Eb31d7f388FA3EDe31E0ABF2e3': {
+  '0x3430e76d0733e9eb31d7f388fa3ede31e0abf2e3': {
     name: '0x3430E76D....',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/6/66/Flag_of_Malaysia.svg',
   },
-  '0xeB7e8970C261F00025672149FDC810e7c7d12112': {
+  '0xeb7e8970c261f00025672149fdc810e7c7d12112': {
     name: 'Band Protocol',
     image: Band,
   },
-  '0x78A9C7aF3F7328993C12e4875C7d6f37Ba6573d7': {
+  '0x78a9c7af3f7328993c12e4875c7d6f37ba6573d7': {
     name: '0x78A9C7aF....',
     image:
       'https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg',
   },
-  '0x4B8284A01Cc30644344482278eC9A713fC3C0d28': {
+  '0x4b8284a01cc30644344482278ec9a713fc3c0d28': {
     name: '0x4B8284A0....',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg',
   },
-  '0x6f9907CB0574c3515AC68cfFb568751Db112AC3E': {
+  '0x6f9907cb0574c3515ac68cffb568751db112ac3e': {
     name: '0x6f9907CB....',
     image: 'https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg',
   },
-  '0xB70af396a557C3625cB1A8f3b52b3D960F4713A6': {
+  '0xb70af396a557c3625cb1a8f3b52b3d960f4713a6': {
     name: '0xB70af396....',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg',

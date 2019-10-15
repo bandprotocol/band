@@ -92,7 +92,8 @@ export const PricePairFetcher = withRouter(
           timestamp: 0,
         }
         const kvs = Object.entries(reportedData)
-        for (const [address, vt] of kvs) {
+        for (const [checksumAddress, vt] of kvs) {
+          const address = checksumAddress.toLowerCase()
           if (!providers[address]) {
             providers[address] = []
           }

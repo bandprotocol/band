@@ -36,6 +36,7 @@ const mapStateToProps = (state, props) => {
   const communities = communitySelector(state)
     .valueSeq()
     .toJS()
+
   const user = currentUserSelector(state)
   const currentNetwork = currentNetworkSelector(state)
   const web3 = web3Selector(state)

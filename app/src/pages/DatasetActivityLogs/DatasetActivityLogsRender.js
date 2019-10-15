@@ -230,7 +230,7 @@ const Broadcast = ({
             <Box flex="0 0 15px" style={{ borderTop: 'solid 1px #eef3ff' }} />
             <Flex flex="0 0 150px" alignItems="center">
               <Text mx={2} flex=" 0 0 auto" fontSize="14px" fontWeight="700">
-                {getProvider(k).name}
+                {getProvider(k.toLowerCase()).name}
               </Text>
               <Box flex="1" style={{ borderTop: 'solid 1px #eef3ff' }} />
             </Flex>
@@ -253,7 +253,7 @@ class RenderLogs extends React.Component {
 
   render() {
     return this.props.data
-      .map(event => ({ ...event, ...getProvider(event.actor) }))
+      .map(event => ({ ...event, ...getProvider(event.actor.toLowerCase()) }))
       .map(event =>
         event.type === 'REPORT' ? (
           <Report key={event.id} event={event} symbol={this.props.symbol} />

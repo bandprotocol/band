@@ -84,13 +84,13 @@ switch (network) {
   case 'kovan':
     BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-kovan.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-kovan',
     )
     break
   case 'rinkeby':
     BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-rinkeby.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-rinkeby',
     )
     break
   case 'ropsten':
