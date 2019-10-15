@@ -42,9 +42,6 @@ function* handleLoadProposals({ address }) {
   console.log(data)
 
   const proposalsData = data.token.parameter.proposals
-  const k = data.token.parameter.proposals[0].reasonHash
-
-  const { title, reason } = yield IPFS.get(k, true)
 
   const proposals = yield all(
     proposalsData.map(function*(proposal) {
@@ -53,6 +50,7 @@ function* handleLoadProposals({ address }) {
           deleted: true,
         }
       }
+      const { title, reason } = yield IPFS.get(proposal.reasonHash, true)
       const keys = proposal.changes[0].key
       const [prefix, name] = keys ? keys.split(':') : [null, null]
       if (!name)

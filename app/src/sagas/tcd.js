@@ -6,11 +6,10 @@ import { takeEveryAsync } from 'utils/reduxSaga'
 
 import { currentTCDClientSelector } from 'selectors/current'
 
-function* handleLoadTcds({ user: userRaw, tokenAddress }) {
-  const user = userRaw.toLowerCase()
+function* handleLoadTcds({ user, tokenAddress }) {
   const {
     token: {
-      tcd: { id, minStake, maxProviderCount, providers },
+      tcd: { id, providers },
     },
   } = yield Utils.graphqlRequest(
     `
@@ -18,8 +17,6 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
       token(id:"${tokenAddress}"){
         tcd{
           id
-          maxProviderCount
-          minStake
           providers{
             providerAddress
             detail
@@ -43,14 +40,11 @@ function* handleLoadTcds({ user: userRaw, tokenAddress }) {
   const tcds = [
     {
       address: id,
-      minStake: new BN(minStake),
-      maxProviderCount,
       dataProviders: (yield all(
         providers.map(function*({
           providerAddress: dataSourceAddress,
           detail,
           stake,
-          status,
           owner,
           totalOwnership,
           dataProviderOwnerships: voters,

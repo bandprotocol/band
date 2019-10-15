@@ -14,7 +14,7 @@ export default class ProposalItem extends React.Component {
   }
 
   render() {
-    const { prefix, title, isExpire, expiryDate } = this.props
+    const { prefix, title, expiryDate } = this.props
     return (
       <Box>
         <ProposalHeader bg="#e7ecff" pl={4} pr={3}>

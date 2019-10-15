@@ -179,55 +179,6 @@ function* baseInitialize() {
   )
 
   const communityDetails = yield Utils.graphqlRequest(
-    //   `
-    //   {
-    //     allBandCommunities {
-    //       nodes {
-    //         tokenAddress
-    //         name
-    //         organization
-    //         description
-    //         website
-    //         logo
-    //         banner
-    //         tokenByTokenAddress {
-    //           address
-    //           symbol
-    //           totalSupply
-    //           curveByTokenAddress {
-    //             price
-    //             collateralEquation
-    //             pricesByCurveAddress(first: 1, filter: {timestamp: {lessThan: ${Math.trunc(
-    //               new Date().getTime() / 1000 - 86400,
-    //             )}}}, orderBy: TIMESTAMP_DESC) {
-    //               nodes {
-    //                 price
-    //                 totalSupply
-    //               }
-    //             }
-    //           }
-    //           tcdsByTokenAddress {
-    //             nodes {
-    //               address
-    //               prefix
-    //               maxProviderCount
-    //               minStake
-    //               dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
-    //                 nodes {
-    //                   stake
-    //                   dataSourceAddress
-    //                 }
-    //               }
-    //             }
-    //           }
-    //           parameterByTokenAddress {
-    //             address
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // `,
     `
   {
     tokens{
@@ -249,8 +200,6 @@ function* baseInitialize() {
       tcd {
         id
         prefix
-        maxProviderCount
-        minStake
         providers {
           providerAddress
           stake
@@ -289,8 +238,6 @@ function* baseInitialize() {
             Map({
               [token.tcd.id]: Map({
                 prefix: token.tcd.prefix,
-                minStake: token.tcd.minStake,
-                maxProviderCount: token.tcd.maxProviderCount,
                 totalStake: token.tcd.providers.reduce(
                   (c, { stake }) => c.add(new BN(stake)),
                   new BN(0),

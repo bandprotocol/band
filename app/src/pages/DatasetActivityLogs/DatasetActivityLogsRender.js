@@ -8,7 +8,6 @@ import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 import DataHeader from 'components/DataHeader'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
-import AutocompletedSearch from 'components/AutocompletedSearch'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
@@ -144,7 +143,6 @@ const Report = ({
 )
 
 function prettyMedianPrice(reported_data) {
-
   const pxs = Object.entries(reported_data).map(([_, { value }]) => {
     return parseInt(value)
   })
@@ -206,7 +204,7 @@ const Broadcast = ({
           }}
         >
           {getFormatDataKey(symbol, dataKey)}
-          {symbol == 'XFN' ? ': ' + prettyMedianPrice(reported_data) : ''}
+          {symbol === 'XFN' ? ': ' + prettyMedianPrice(reported_data) : ''}
         </Text>
       </Flex>
       <Flex mt="10px" mb="20px" alignItems="center">

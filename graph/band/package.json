@@ -4,8 +4,8 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy-mainnet": "cp subgraph_mainnet.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ prin-r/mumum",
-    "deploy-ropsten": "cp subgraph_ropsten.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ prin-r/mumur",
+    "deploy-mainnet": "cp subgraph_mainnet.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ taobun/bandprotocol-mainnet",
+    "deploy-ropsten": "cp subgraph_ropsten.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ taobun/bandprotocol-ropsten",
     "create-local": "graph create --node http://localhost:8020/ taobun/banddataset",
     "remove-local": "graph remove --node http://localhost:8020/ taobun/banddataset",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 taobun/banddataset"

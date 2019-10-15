@@ -1,5 +1,4 @@
 const Decimal = require('decimal.js')
-const BN = 'utils/bignumber'
 
 const OPCODE_CONST = 0
 const OPCODE_VAR = 1
