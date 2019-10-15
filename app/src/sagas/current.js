@@ -29,7 +29,6 @@ import { List, Set, Map } from 'immutable'
 
 function* handleUpdateClient({ provider }) {
   const address = yield select(currentUserSelector)
-  // console.log('current user address:', address)
   const bandAddress = yield select(bandAddressSelector)
   if (address) {
     // if user is exist then reload for polling user balance.

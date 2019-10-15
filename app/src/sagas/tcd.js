@@ -85,7 +85,9 @@ function* handleLoadTcds({ user, tokenAddress }) {
             dataSourceAddress,
             detail,
             stake: new BN(stake),
-            status: yield tcdClient.getStatus(dataSourceAddress),
+            status: tcdClient
+              ? yield tcdClient.getStatus(dataSourceAddress)
+              : 'NOT_LISTED',
             owner,
             userStake,
             ownerStake,

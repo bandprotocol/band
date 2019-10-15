@@ -120,13 +120,11 @@ function* handleBandWalletChannel({ type, payload }) {
         case 'INITIALIZED':
           break
         case 'NOT_SIGNIN':
-          // console.log('not_signin')
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
           localStorage.removeItem('walletType')
           break
         case 'PROVIDER_READY': {
-          // console.log('provider ready')
           const provider = yield window.BandWallet.provider
           const web3 = new Web3(provider)
           const userAddress = yield getUser(web3)
@@ -190,6 +188,7 @@ function* baseInitialize() {
         id
         price
         collateralEquation
+        curveMultiplier
         prices(first:1, where:{timestamp_lt: ${Math.trunc(
           new Date().getTime() / 1000 - 86400,
         )}},orderBy: timestamp, orderDirection:desc){
@@ -229,6 +228,7 @@ function* baseInitialize() {
             1e36,
           parseFloat(token.curve.price / 1e18),
           new BN(token.totalSupply),
+          new BN(token.curve.curveMultiplier),
           parseFloat(token.curve.prices[0] ? token.curve.prices[0].price : 0) /
             1e18,
           new BN(token.curve.prices[0] ? token.curve.prices[0].totalSupply : 0),

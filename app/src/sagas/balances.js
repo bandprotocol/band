@@ -5,6 +5,9 @@ import { currentUserSelector } from 'selectors/current'
 
 function* handleReloadBalance() {
   const userAddress = yield select(currentUserSelector)
+  if (!userAddress) {
+    return
+  }
   const query = yield Utils.graphqlRequest(`{
     balances (where: {user:"${userAddress}"}) {
       value

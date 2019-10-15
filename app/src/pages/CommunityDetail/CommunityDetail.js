@@ -41,6 +41,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
     price: community.get('price'),
     marketCap: community.get('marketCap'),
     totalSupply: community.get('totalSupply'),
+    curveMultiplier: community.get('curveMultiplier'),
     marketCapChanged:
       ((currentMarketCap - pastMarketCap) / pastMarketCap) * 100,
     totalSupplyChanged: community

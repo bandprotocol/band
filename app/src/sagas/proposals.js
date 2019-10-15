@@ -39,7 +39,6 @@ function* handleLoadProposals({ address }) {
         }
       }
     }`)
-  console.log(data)
 
   const proposalsData = data.token.parameter.proposals
 
