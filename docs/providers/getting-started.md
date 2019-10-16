@@ -17,19 +17,10 @@ In addition, you will need to contact Band Foundation to add your node's URL to 
 
 ## Installation
 
-Clone Band Protocol's repository to your machine.
+Download the binary of provider node.
 
 ```sh
-$ git clone https://github.com/bandprotocol/band
-$ cd band
-```
-
-Build the binary of provider node.
-
-```sh
-$ cd go
-$ go build -o node.bin node/main.go
-$ ./node.bin --help  # See help message
+$ wget https://github.com/bandprotocol/band/releases/download/0.0.1/node_linux_amd64
 ```
 
 ## Setup Configuration File
@@ -48,8 +39,8 @@ drivers:
   "0xa24dF0420dE1f3b8d740A52AAEB9d55d6D64478e": # Dataset Address
     name: AggMedian # Handle the query with "AggMedian" driver
     children: # "children" arguments of "AggMedian" driver
-      uniswap:
-        name: Uniswap
+      kraken:
+        name: Kraken
       gemini:
         name: Gemini
 ```
@@ -59,7 +50,7 @@ drivers:
 Lastly, to run a provider node, simply run the binary with the full name of the configuration file (without `yaml` extension).
 
 ```sh
-$ ./node.bin node
+$ ./node_linux_amd64 node
 ```
 
 ## Available Drivers
