@@ -14,6 +14,7 @@ from sqlalchemy import (
     ForeignKey,
     JSON,
     BigInteger,
+    Index,
 )
 from sqlalchemy.orm import sessionmaker
 
@@ -35,9 +36,11 @@ class Request(Base):
     status = Column(String)
     value = Column(String)
     timestamp = Column(Integer)
-    requested_at = Column(Integer)
+    requested_at = Column(Integer, index=True)
     responsed_at = Column(Integer)
     tx_hash = Column(String)
+
+    __table_args__ = (Index("idx_key_req", "key", "requested_at"),)
 
 
 class Provider(Base):

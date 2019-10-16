@@ -11,7 +11,7 @@ class Request(db.Model):
     status = Column(String)
     value = Column(String)
     timestamp = Column(Integer)
-    requested_at = Column(Integer)
+    requested_at = Column(Integer,index=True)
     responsed_at = Column(Integer)
     tx_hash = Column(String)
 
@@ -53,3 +53,4 @@ class ProviderAggregation(db.Model):
     created_at = Column(Integer)
 
     provider = relationship("Provider", back_populates="agreements")
+
