@@ -22,6 +22,6 @@ export const numDataProviders = createSelector(
     if (!tcdsByComm || !tcdsByComm.getIn([tcdAddress, 'dataProviders']))
       return 0
 
-    return tcdsByComm.getIn([tcdAddress, 'dataProviders']).length
+    return tcdsByComm.getIn([tcdAddress, 'dataProviders']).size
   },
 )

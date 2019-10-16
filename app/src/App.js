@@ -16,40 +16,6 @@ import bcp47 from 'bcp-47'
 import moment from 'moment'
 
 class App extends Component {
-  state = {
-    duration: moment.duration(0 * 1000, 'milliseconds'),
-    isCountdown: moment.unix(moment().unix()).isBefore(moment.unix(1569844800)),
-  }
-
-  componentDidMount() {
-    const eventTime = 1569844800
-    const currentTime = moment().unix()
-
-    const diffTime = eventTime - currentTime
-    let duration = moment.duration(diffTime * 1000, 'milliseconds')
-    const interval = 1000
-
-    // set first time
-    duration = moment.duration(duration - interval, 'milliseconds')
-
-    this.countInterval = setInterval(() => {
-      duration = moment.duration(duration - interval, 'milliseconds')
-      if (duration._milliseconds <= 0) {
-        this.setState({
-          duration,
-          isCountdown: false,
-        })
-        clearInterval(this.countInterval)
-      }
-      this.setState({
-        duration,
-      })
-    }, interval)
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.countInterval)
-  }
   render() {
     const language = bcp47.parse(navigator.language).language
     return (

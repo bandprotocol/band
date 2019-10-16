@@ -53,8 +53,6 @@ const mapStateToProps = (state, props) => {
     user.length === 42 &&
     xfnRewardContract.length === 42
 
-  window.web3 = web3
-
   return {
     hasPendingReward,
     rewardAmount,

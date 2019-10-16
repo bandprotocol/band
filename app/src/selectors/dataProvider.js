@@ -37,13 +37,3 @@ export const dataProvidersSelector = createSelector(
       .slice((page - 1) * pageSize, page * pageSize)
   },
 )
-
-export const numDataProviders = createSelector(
-  [tcdSelector, addressSelector],
-  (tcds, address) => {
-    const tcdsByComm = tcds.get(address)
-    if (!tcdsByComm || tcdsByComm.length === 0 || !tcdsByComm[0].dataProviders)
-      return 0
-    return tcdsByComm[0].dataProviders.length
-  },
-)

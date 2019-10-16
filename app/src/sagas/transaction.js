@@ -1,5 +1,4 @@
 import { takeEvery, put, select } from 'redux-saga/effects'
-import { takeEveryAsync } from 'utils/reduxSaga'
 import { getProvider } from 'data/Providers'
 import { Utils } from 'band.js'
 import transit from 'transit-immutable-js'
@@ -8,7 +7,6 @@ import BN from 'utils/bignumber'
 import {
   BUY_TOKEN,
   SELL_TOKEN,
-  CLAIM_XFN,
   TCD_DEPOSIT,
   TCD_WITHDRAW,
   TCD_REVENUE_TO_STAKE,
@@ -37,35 +35,6 @@ import {
 } from 'selectors/transaction'
 
 import { IPFS } from 'band.js'
-
-class Transaction {
-  constructor(sender, to, data) {
-    this.sender = sender
-    this.to = to
-    this.data = data
-  }
-
-  getTxDetail() {
-    return {
-      sender: this.sender,
-      to: this.to,
-      data: this.data,
-    }
-  }
-
-  async send() {
-    return new Promise((resolve, reject) => {
-      window.web3.eth
-        .sendTransaction({
-          from: this.sender,
-          to: this.to,
-          data: this.data,
-        })
-        .once('transactionHash', txHash => resolve(txHash))
-        .once('error', error => reject(error))
-    })
-  }
-}
 
 function* sendTransaction({ transaction, title, type }) {
   const timestamp = new Date().getTime()
@@ -316,22 +285,6 @@ function* handleDumpTxs() {
   }
 }
 
-function* handleClaimXFN({ xfnRewardContractAddr }) {
-  const user = yield select(currentUserSelector)
-  const transaction = new Transaction(user, xfnRewardContractAddr, '0x4e71d92d')
-
-  const wallet = yield select(walletSelector)
-  wallet.setDetail({
-    type: 'CLAIM',
-    title: 'Claim XFN',
-  })
-  yield sendTransaction({
-    transaction,
-    title: 'Claim XFN',
-    type: 'CLAIM',
-  })
-}
-
 export default function*() {
   // yield takeEvery(txChannel, handleTxChannel)
   yield takeEvery(BUY_TOKEN, handleBuyToken)
@@ -342,5 +295,4 @@ export default function*() {
   yield takeEvery(PROPOSE_PROPOSAL, handleProposeProposal)
   yield takeEvery(VOTE_PROPOSAL, handleVoteProposal)
   yield takeEvery(DUMP_TXS, handleDumpTxs)
-  yield takeEveryAsync(CLAIM_XFN, handleClaimXFN)
 }
