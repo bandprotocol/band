@@ -14,6 +14,12 @@
   "XFN Airdrop": "XFN Airdrop",
   "Last 24 hrs": "Last 24 hrs.",
   "Visit Website": "Visit Website",
+  "PRICE MOVEMENT": "PRICE MOVEMENT",
+  "Current Price": "Current Price",
+  "BUY": "BUY",
+  "SELL": "SELL",
+  "Total Address": "Total Address",
+  "Token Supply": "Token Supply",
   "communities.description": "Band Protocol connects ÐApps with trusted off-chain information,\n            curated through a decentralized network of data providers. We use\n            dataset tokens to incentivize providers.",
   "communities.availableDataSets": "Available Datasets for DApps",
   "XFN.overview.datasetDescription": "Get current prices of any trading currency pairs."
