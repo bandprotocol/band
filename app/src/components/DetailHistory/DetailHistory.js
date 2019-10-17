@@ -4,6 +4,7 @@ import Richlist from 'components/Richlist'
 import TransferHistory from 'components/TransferHistory'
 import OrderHistory from 'components/OrderHistory'
 import { colors } from 'ui'
+import { FormattedMessage } from 'react-intl'
 
 export default class DetailHistory extends React.Component {
   state = {
@@ -30,7 +31,7 @@ export default class DetailHistory extends React.Component {
           color={selectedTab === tab ? colors.blue.normal : undefined}
           fontWeight={selectedTab === tab ? '600' : undefined}
         >
-          {text}
+          <FormattedMessage id={text}></FormattedMessage>
         </Text>
       </Flex>
     )
@@ -54,7 +55,7 @@ export default class DetailHistory extends React.Component {
           style={{ height: 72 }}
         >
           <H5 mr={4} color="#393939">
-            EXPLORE
+            <FormattedMessage id="EXPLORE"></FormattedMessage>
           </H5>
           {this.renderTab('Rich List', 0)}
           {this.renderTab('Token Transfers', 1)}

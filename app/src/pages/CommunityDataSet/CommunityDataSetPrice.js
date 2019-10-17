@@ -30,6 +30,7 @@ import FxSrc from 'images/dataset-fiat.png'
 import ErcSrc from 'images/dataset-erc20.png'
 import UseqSrc from 'images/dataset-stock.png'
 import CryptoSrc from 'images/dataset-crypto.png'
+import { FormattedMessage } from 'react-intl'
 
 const renderDataPoints = (pairs, tcdAddress, tcdPrefix) => (
   <React.Fragment>
@@ -151,7 +152,14 @@ export default class CommunityPricePage extends React.Component {
                 pr="20px"
               >
                 <Text fontSize="15px" fontFamily="head" fontWeight="600">
-                  {fetching ? '' : `${data.length} Pairs Available`}
+                  {fetching ? (
+                    ''
+                  ) : (
+                    <Flex>
+                      <Text mr="5px">{data.length}</Text>
+                      <FormattedMessage id="Pairs Available"></FormattedMessage>
+                    </Flex>
+                  )}
                 </Text>
                 <AutocompletedSearch
                   data={getAllPriceLabelFromType(this.state.type)}
@@ -214,7 +222,7 @@ export default class CommunityPricePage extends React.Component {
             ) : (
               <Flex mt="100px" justifyContent="center" alignItems="center">
                 <Text fontSize="28px" fontFamily="head" fontWeight="600">
-                  There is no data available.
+                  <FormattedMessage id="There is no data available."></FormattedMessage>
                 </Text>
               </Flex>
             )}

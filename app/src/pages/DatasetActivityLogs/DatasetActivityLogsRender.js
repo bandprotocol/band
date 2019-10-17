@@ -17,6 +17,7 @@ import ActivityHeader from 'images/activity-header.svg'
 import FilterSrc from 'images/filter.svg'
 import SecureSrc from 'images/activity-secure.svg'
 import CheckSrc from 'images/check.svg'
+import { FormattedMessage } from 'react-intl'
 
 const SelectionContainer = styled(Box).attrs({
   bg: '#fff',
@@ -301,14 +302,14 @@ export default props => (
             }
           >
             <FilterButton onClick={props.toggleShowFilter}>
-              Filter (
+              <FormattedMessage id="Filter"></FormattedMessage> (
               {(props.activeFilter.REPORT ? 1 : 0) +
                 (props.activeFilter.BROADCAST ? 1 : 0)}
               ) <Image ml={1} src={FilterSrc} width="14px" />
             </FilterButton>
             <SelectionContainer show={props.showFilter}>
               <Text fontSize="12px" color="#393939" fontWeight="700" ml={1}>
-                FILTER
+                <FormattedMessage id="Filter"></FormattedMessage>
               </Text>
               <Flex
                 width="100%"
@@ -330,7 +331,7 @@ export default props => (
                   )
                 }
               >
-                All
+                <FormattedMessage id="All"></FormattedMessage>
               </Choice>
               <Choice
                 selected={props.activeFilter.REPORT}
@@ -338,7 +339,7 @@ export default props => (
                   props.onSetFilter('REPORT', !props.activeFilter.REPORT)
                 }
               >
-                Reported
+                <FormattedMessage id="Reported"></FormattedMessage>
               </Choice>
               <Choice
                 selected={props.activeFilter.BROADCAST}
@@ -346,7 +347,7 @@ export default props => (
                   props.onSetFilter('BROADCAST', !props.activeFilter.BROADCAST)
                 }
               >
-                Broadcasted
+                <FormattedMessage id="Broadcasted"></FormattedMessage>
               </Choice>
             </SelectionContainer>
           </ClickOutSide>
@@ -365,7 +366,7 @@ export default props => (
     >
       <Flex pb={2} alignItems="center">
         <Text fontWeight="900" fontSize="18px" fontFamily="head">
-          Activity Logs
+          <FormattedMessage id="Activity Logs"></FormattedMessage>
         </Text>
         <Box flex={1} />
       </Flex>

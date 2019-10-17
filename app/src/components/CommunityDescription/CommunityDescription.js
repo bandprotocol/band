@@ -34,6 +34,7 @@ const mapStateToProps = (state, { tokenAddress }) => {
 
   return {
     name: community.get('name'),
+    symbol: community.get('symbol'),
     banner: community.get('banner'),
     address: community.get('address'),
     tokenAddr: community.get('tokenAddress'),

@@ -4,6 +4,7 @@ import TransferBody from './TransferBody'
 import MockProposal from 'images/mock-proposal.svg'
 import { Flex, Text, Image } from 'ui/common'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FormattedMessage } from 'react-intl'
 
 const TransferHistoryHeader = () => (
   <Flex
@@ -16,22 +17,22 @@ const TransferHistoryHeader = () => (
   >
     <Flex ml="30px" flex={5}>
       <Text fontSize="14px" fontWeight="bold">
-        From
+        <FormattedMessage id="From"></FormattedMessage>
       </Text>
     </Flex>
     <Flex ml="5px" flex={5}>
       <Text fontSize="14px" fontWeight="bold">
-        To
+        <FormattedMessage id="To"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={2} justifyContent="flex-end">
       <Text fontSize="14px" fontWeight="bold">
-        Quantity
+        <FormattedMessage id="Quantity"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={4} justifyContent="flex-end">
       <Text fontSize="14px" fontWeight="bold">
-        Timestamp
+        <FormattedMessage id="Timestamp"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={2}> </Flex>
@@ -88,10 +89,10 @@ export default ({
         <Flex flexDirection="column" alignItems="center">
           <Image src={MockProposal} />
           <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-            No Transfer right now!
+            <FormattedMessage id="No Transfer right now!"></FormattedMessage>
           </Text>
           <Text fontSize={1} py={1}>
-            Transfer token to list the first transaction of this community!
+            <FormattedMessage id="Transfer token to list the first transaction of this community!"></FormattedMessage>
           </Text>
         </Flex>
       </Flex>
