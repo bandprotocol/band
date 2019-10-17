@@ -9,6 +9,7 @@ import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons'
 import OutImg from 'images/out.svg'
 import ArrowUp from 'images/arrowUp.svg'
 import ArrowDown from 'images/arrowDown.svg'
+import { FormattedMessage } from 'react-intl'
 
 const Tab = styled(Flex).attrs(props => ({
   letterSpacing: '0.5px',
@@ -232,8 +233,9 @@ const ProvidersRow = ({
               <Image mr={1} src={ArrowDown} width="12px" height="12px" />
             </Box>
           )}
+
           <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
-            Stake
+            <FormattedMessage id="Stake"></FormattedMessage>
           </Text>
         </Flex>
       </DWButton>
@@ -268,7 +270,7 @@ const ProvidersRow = ({
             </Box>
           )}
           <Text fontFamily="head" fontSize="12px" fontWeight="700" pb={1}>
-            Withdraw
+            <FormattedMessage id="Withdraw"></FormattedMessage>
           </Text>
         </Flex>
       </DWButton>

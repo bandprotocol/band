@@ -4,6 +4,7 @@ import { Flex, Text, Image } from 'ui/common'
 import ProviderListBody from './ProviderListBody'
 import MockProposal from 'images/mock-proposal.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FormattedMessage } from 'react-intl'
 
 const ProviderListHeader = ({ symbol }) => (
   <Flex
@@ -21,7 +22,7 @@ const ProviderListHeader = ({ symbol }) => (
         lineHeight="1.4em"
         fontWeight="bold"
       >
-        Source
+        <FormattedMessage id="Source"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={12} justifyContent="center" px="10px">
@@ -32,7 +33,7 @@ const ProviderListHeader = ({ symbol }) => (
         fontWeight="bold"
         textAlign="center"
       >
-        {`Provider Stake`}
+        <FormattedMessage id="Provider Stake"></FormattedMessage>
         {symbol && (
           <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
@@ -48,7 +49,8 @@ const ProviderListHeader = ({ symbol }) => (
         fontWeight="bold"
         textAlign="center"
       >
-        {`Total Stake`}
+        <FormattedMessage id="Total Stake"></FormattedMessage>
+
         {symbol && (
           <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
@@ -64,7 +66,7 @@ const ProviderListHeader = ({ symbol }) => (
         fontWeight="bold"
         textAlign="center"
       >
-        {`Your Stake`}
+        <FormattedMessage id="Your Stake"></FormattedMessage>
         {symbol && (
           <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
@@ -80,7 +82,7 @@ const ProviderListHeader = ({ symbol }) => (
         fontWeight="bold"
         textAlign="center"
       >
-        {`Your Revenue`}
+        <FormattedMessage id="Your Revenue"></FormattedMessage>
         {symbol && (
           <Text color="#4a4a4a" fontSize="12px" fontWeight="bold">
             ({symbol})
@@ -148,10 +150,10 @@ export default ({
         <Flex flexDirection="column" alignItems="center">
           <Image src={MockProposal} />
           <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-            No data provider list right now!
+            <FormattedMessage id="No data provider list right now!"></FormattedMessage>
           </Text>
           <Text fontSize={1} py={1}>
-            Click "Become a provider" to become the first provider.
+            <FormattedMessage id="Click Become a provider to become the first provider."></FormattedMessage>
           </Text>
         </Flex>
       </Flex>
