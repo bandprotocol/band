@@ -50,8 +50,3 @@ export const web3Selector = createSelector(
   bandSelector,
   band => band.get('web3'),
 )
-
-export const xfnRewardInfoSelector = createSelector(
-  bandSelector,
-  band => band.get('xfnRewardInfo'),
-)

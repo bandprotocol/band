@@ -214,6 +214,9 @@ function* baseInitialize() {
 
   for (const token of communityDetails.tokens) {
     if (token.symbol !== 'BAND') {
+      console.log(
+        (parseFloat(token.curve.price) * parseFloat(token.totalSupply)) / 1e36,
+      )
       yield put(
         saveCommunityInfo(
           token.name,
