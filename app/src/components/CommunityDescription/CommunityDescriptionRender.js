@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Card, Box, Flex, Text, H5 } from 'ui/common'
 import TxHashLink from 'components/TxHashLink'
 import { getLink } from 'utils/etherscan'
-
+import { FormattedMessage } from 'react-intl'
 
 const Field = ({ label, children }) => (
   <Flex my={2} style={{ lineHeight: '24px' }}>
@@ -14,8 +14,8 @@ const Field = ({ label, children }) => (
       textAlign="right"
       style={{ width: 110 }}
       mr={2}
-      >
-      {label}:
+    >
+      <FormattedMessage id={`${label}`}></FormattedMessage>:
     </Text>
     <Text fontSize="14px">{children}</Text>
   </Flex>
@@ -24,15 +24,17 @@ const Field = ({ label, children }) => (
 const Address = styled(Text).attrs(() => ({
   fontFamily: 'code',
 }))`
-max-width: 160px;
-overflow: hidden;
-text-overflow: ellipsis;
-whitespace: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  whitespace: nowrap;
 `
 
 const etherscanLink = getLink()
 
 export default ({
+  name,
+  symbol,
   banner,
   organization,
   description,
@@ -44,9 +46,14 @@ export default ({
     <Flex>
       <Box mr={3}>
         <H5 mt="12px" mb={3} color="#393939">
-          DATASET INFORMATION
+          <FormattedMessage id={'DATASET INFORMATION'}></FormattedMessage>
+          {/* DATASET INFORMATION */}
         </H5>
-        <Description>{description}</Description>
+        <Description>
+          <FormattedMessage
+            id={`${symbol}.overview.datasetDescription`}
+          ></FormattedMessage>
+        </Description>
       </Box>
 
       <Box
@@ -63,10 +70,7 @@ export default ({
         <Field label="Dataset">
           <Flex flexDirection="row" alignItems="center">
             <Address>{tcdAddr}</Address>
-            <TxHashLink
-              href={`${etherscanLink}/address/${tcdAddr}`}
-              pl="5px"
-            />
+            <TxHashLink href={`${etherscanLink}/address/${tcdAddr}`} pl="5px" />
           </Flex>
         </Field>
         <Field label="ERC-20">

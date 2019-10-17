@@ -1,5 +1,10 @@
 {
-  "navbar.signin": "Sign in",
+  "Sign in": "Sign in",
+  "DATASET INFOMATION": "DATASET INFOMATION",
+  "Dataset": "Dataset",
+  "ERC-20": "ERC-20",
+  "Governance": "Governance",
+  "Data Governance Portal": "Data Governance Portal",
   "communities.dataGovernancePortal": "Data Governance Portal",
   "communities.description": "Band Protocol connects ÐApps with trusted off-chain information,\n            curated through a decentralized network of data providers. We use\n            dataset tokens to incentivize providers.",
   "communities.bandProtocolWebsite": "Band Protocol Website",
@@ -11,5 +16,6 @@
   "token.visitWebsite": "Visit Website",
   "token.marketcap": "Market Cap.",
   "token.price": "Price/Token",
-  "token.24hrChange": "Last 24 hrs."
+  "token.24hrChange": "Last 24 hrs.",
+  "XFN.overview.datasetDescription": "Get current prices of any trading currency pairs."
 }
