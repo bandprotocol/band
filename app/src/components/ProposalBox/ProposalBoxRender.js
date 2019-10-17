@@ -13,6 +13,7 @@ import { faAngleUp, faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import BN from 'utils/bignumber'
 
 import { convertFromChain, getParameterDetail } from 'utils/helper'
+import { FormattedMessage } from 'react-intl'
 
 const FlexDropDown = styled(Flex)`
   overflow: hidden;
@@ -38,7 +39,7 @@ const VotedOval = ({ width }) => (
           letterSpacing: '-0.2px',
         }}
       >
-        Voted
+        <FormattedMessage id="Voted"></FormattedMessage>
       </Text>
     </Flex>
   </Flex>
@@ -128,7 +129,7 @@ export default ({
                   px={0}
                   mr="10px"
                 >
-                  Expiry date:
+                  <FormattedMessage id="Expiry date"></FormattedMessage>:
                 </Text>
                 <Text
                   color={colors.text.normal}
@@ -185,7 +186,7 @@ export default ({
           style={{ borderRadius: '6px', border: 'solid 1px #dde5ff' }}
         >
           <Text fontWeight="900" color="#5269ff" fontSize={1}>
-            Reason for Change
+            <FormattedMessage id="Reason for Change"></FormattedMessage>
           </Text>
           <Flex mt="20px">
             <Text fontSize={0} color={colors.text.normal} lineHeight={1.43}>
@@ -195,7 +196,7 @@ export default ({
           <Flex mt="20px">
             <Flex mr="10px">
               <Text fontSize={0} fontWeight="500" color="#5269ff">
-                By:
+                <FormattedMessage id="By"></FormattedMessage>:
               </Text>
             </Flex>
             <Flex mr="10px">
