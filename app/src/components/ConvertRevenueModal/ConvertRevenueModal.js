@@ -88,7 +88,6 @@ class ConvertRevenueModal extends React.Component {
               <CustomButton
                 bg="#42c47f"
                 onClick={() =>
-                  console.log(dataSourceAddress) ||
                   dispatchRevenueToStake(
                     tcdAddress,
                     dataSourceAddress,
@@ -109,7 +108,7 @@ class ConvertRevenueModal extends React.Component {
                   )
                 }
               >
-                Widthdraw Revenue{' '}
+                Withdraw Revenue{' '}
               </CustomButton>
             </Flex>
           </Flex>
