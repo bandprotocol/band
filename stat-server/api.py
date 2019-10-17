@@ -32,6 +32,7 @@ def get_requests():
     results = []
     for req in query.offset(limit * page).limit(limit).all():
         req_obj = {
+            "requestAt": req.requested_at,
             "dataset": req.tcd_address,
             "key": bytes.fromhex(req.key[2:]).decode("utf-8"),
             "ts": req.timestamp,
@@ -137,6 +138,7 @@ def update_report():
         "update",
         [
             {
+                "requestAt": req.requested_at,
                 "dataset": req.tcd_address,
                 "key": bytes.fromhex(req.key[2:]).decode("utf-8"),
                 "ts": req.timestamp,
