@@ -13,7 +13,6 @@ import { fetchSelector } from 'selectors/basic'
 import { IntlProvider } from 'react-intl'
 import localeMessages from 'locales'
 import bcp47 from 'bcp-47'
-import moment from 'moment'
 
 class App extends Component {
   render() {

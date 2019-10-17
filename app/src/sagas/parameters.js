@@ -27,7 +27,7 @@ function* handleLoadParameters({ address }) {
     listInParams = ['bonding', 'params', 'web']
   }
   const params = {}
-  currentParameters.map(parameter => {
+  for (const parameter of currentParameters) {
     const [prefix, name] = parameter.key.split(':')
     if (listInParams.includes(prefix)) {
       if (!(prefix in params)) {
@@ -35,7 +35,7 @@ function* handleLoadParameters({ address }) {
       }
       params[prefix].push({ name, value: new BN(parameter.value) })
     }
-  })
+  }
   yield put(saveParameters(address, params))
 }
 

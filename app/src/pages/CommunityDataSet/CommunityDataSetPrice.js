@@ -15,7 +15,6 @@ import {
 
 import {
   CurrentPriceFetcher,
-  PriceCountByTCDFetcher,
   PricePairFetcher,
   formatPricePairsForGraph,
 } from 'data/fetcher/PriceFetcher'

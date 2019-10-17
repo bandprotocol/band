@@ -91,6 +91,7 @@ export function handleDataUpdated(event: DataUpdated): void {
     token.save();
     tcd.queryCount = 0;
     tcd.reportCount = 0;
+    tcd.totalFee = BigInt.fromI32(0);
   }
 
   tcd.reportCount = tcd.reportCount + 1;
@@ -127,6 +128,7 @@ export function handleDataSourceRegistered(event: DataSourceRegistered): void {
     tcd.prefix = "tcd:";
     tcd.queryCount = 0;
     tcd.reportCount = 0;
+    tcd.totalFee = BigInt.fromI32(0);
     tcd.save();
   }
 
@@ -282,8 +284,11 @@ export function handleQuery(event: Query): void {
 
     tcd.queryCount = 0;
     tcd.reportCount = 0;
+    tcd.totalFee = BigInt.fromI32(0);
   }
+  let tcdContract = OffchainAggTCD.bind(event.address);
   tcd.queryCount = tcd.queryCount + 1;
+  tcd.totalFee = tcd.totalFee.plus(tcdContract.queryPrice());
   tcd.save();
 
   let hourInterval = event.block.timestamp.div(BigInt.fromI32(3600));

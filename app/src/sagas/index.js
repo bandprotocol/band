@@ -29,11 +29,6 @@ import {
   currentNetworkSelector,
 } from 'selectors/current'
 
-import {
-  logoCommunityFromSymbol,
-  bannerCommunityFromSymbol,
-} from 'utils/communityImg'
-
 // saga
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -206,6 +201,9 @@ function* baseInitialize() {
       }
       parameter{
         id
+        params(where: { key: "bonding:liquidity_spread" }) {
+          value
+        }
       }
     }
   }
@@ -214,9 +212,6 @@ function* baseInitialize() {
 
   for (const token of communityDetails.tokens) {
     if (token.symbol !== 'BAND') {
-      console.log(
-        (parseFloat(token.curve.price) * parseFloat(token.totalSupply)) / 1e36,
-      )
       yield put(
         saveCommunityInfo(
           token.name,
@@ -232,6 +227,8 @@ function* baseInitialize() {
           parseFloat(token.curve.price / 1e18),
           new BN(token.totalSupply),
           new BN(token.curve.curveMultiplier),
+          token.parameter.params.length === 1 &&
+            new BN(token.parameter.params[0].value),
           parseFloat(token.curve.prices[0] ? token.curve.prices[0].price : 0) /
             1e18,
           new BN(token.curve.prices[0] ? token.curve.prices[0].totalSupply : 0),

@@ -135,6 +135,7 @@ type TCD @entity {
   minStake: BigInt
   queryCount: Int!
   reportCount: Int!
+  totalFee: BigInt!
 }
 
 type QueryCounter @entity {

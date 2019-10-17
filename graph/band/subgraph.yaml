@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: BandToken
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0x5EE386BCa38f21f21c800700CCFf592656F88D60"
+      address: "0xba11d00c5f74255f56a5e366f4f77f5a186d7f55"
       abi: BandToken
     mapping:
       kind: ethereum/events
@@ -23,9 +23,9 @@ dataSources:
       file: ./mappings/BandToken.ts
   - kind: ethereum/contract
     name: DatasetToken
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0xC54b023AAc7e4359fE514983194fCCEa0BAA4588"
+      address: "0x33d3f653c9d86dc726337cf395fab39583a35988"
       abi: DatasetToken
     mapping:
       kind: ethereum/events
@@ -48,9 +48,9 @@ dataSources:
       file: ./mappings/DatasetToken.ts
   - kind: ethereum/contract
     name: BondingCurve
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0xcF197e8536b6418e94fEEF4A0F0bf86Bbf48Ac3f"
+      address: "0xe5f32f9b531672889c72d2ba8be73f3a33c5c73e"
       abi: BondingCurve
     mapping:
       kind: ethereum/events
@@ -76,9 +76,9 @@ dataSources:
       file: ./mappings/BondingCurve.ts
   - kind: ethereum/contract
     name: OffchainAggTCD
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0x62FfC2FA501F5c30042feCd0587C8c680f90b58E"
+      address: "0xd5d2b9e9bcd172d5fc8521afd2c98dd239f5b607"
       abi: OffchainAggTCD
     mapping:
       kind: ethereum/events
@@ -116,9 +116,9 @@ dataSources:
       file: ./mappings/OffchainAggTCD.ts
   - kind: ethereum/contract
     name: Parameters
-    network: rinkeby
+    network: mainnet
     source:
-      address: "0xc90BcF4C94401148807A538dE6d566d7236243Ab"
+      address: "0x584dd3df26bd6f6cdfd9b08b85130e9c53709cec"
       abi: Parameters
     mapping:
       kind: ethereum/events
