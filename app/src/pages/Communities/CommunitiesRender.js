@@ -7,7 +7,7 @@ import { getProfileColor } from 'ui/communities'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
 import MegaCommunityCard from 'components/MegaCommunityCard'
 import HeaderBackgroundSrc from 'images/background-header.png'
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from 'react-intl'
 
 const Header = styled(Card)`
   padding-top: 60px;
@@ -158,7 +158,7 @@ export default ({
           style={{ height: '100%', margin: '0 auto' }}
         >
           <H1 mb={2} py={2}>
-            <FormattedMessage id="communities.dataGovernancePortal" />
+            <FormattedMessage id="Data Governance Portal" />
           </H1>
           <Text
             my={1}
@@ -171,11 +171,15 @@ export default ({
           </Text>
           <Flex alignItems="center" mt={3}>
             <AbsoluteLink href="https://bandprotocol.com/">
-              <WhiteButton><FormattedMessage id="communities.bandProtocolWebsite" /></WhiteButton>
+              <WhiteButton>
+                <FormattedMessage id="Band Protocol Website" />
+              </WhiteButton>
             </AbsoluteLink>
-    
+
             <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
-              <WhiteOutlineButton><FormattedMessage id="communities.learnHowToStake" /></WhiteOutlineButton>
+              <WhiteOutlineButton>
+                <FormattedMessage id="Learn how to Stake" />
+              </WhiteOutlineButton>
             </AbsoluteLink>
             {/* disable XFN airdrop */}
             {/* sdcx && (
@@ -184,7 +188,7 @@ export default ({
               </ClaimButton>
             ) */}
             <ClaimButton onClick={() => showClaimXFNModal()}>
-              <FormattedMessage id="communities.xfnAirdrop" />
+              <FormattedMessage id="XFN Airdrop" />
             </ClaimButton>
           </Flex>
         </Flex>
