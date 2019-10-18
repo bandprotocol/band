@@ -22,61 +22,6 @@ import {
   DataProviderOwnership
 } from "../generated/schema";
 
-function updateProvider(
-  tcdAddress: Address,
-  dataSourceAddress: Address,
-  participant: Address
-): void {
-  let dpKey = dataSourceAddress.toHexString() + "-" + tcdAddress.toHexString();
-  let dataProvider = DataProvider.load(dpKey);
-
-  let dpoKey = dpKey + "-" + participant.toHexString();
-  let voterOwnership = DataProviderOwnership.load(dpoKey);
-
-  let tcdContract = OffchainAggTCD.bind(
-    Address.fromString(tcdAddress.toHexString())
-  );
-  let dataSourceInfo = tcdContract.infoMap(
-    Address.fromString(dataSourceAddress.toHexString())
-  );
-
-  dataProvider.stake = dataSourceInfo.value1;
-  dataProvider.totalOwnership = dataSourceInfo.value2;
-
-  let newVoterOwnership = tcdContract.getOwnership(
-    Address.fromString(dataSourceAddress.toHexString()),
-    Address.fromString(participant.toHexString())
-  );
-
-  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
-    voterOwnership = new DataProviderOwnership(dpoKey);
-    voterOwnership.providerAddress = Address.fromString(
-      dataSourceAddress.toHexString()
-    );
-    voterOwnership.tcdAddress = Address.fromString(tcdAddress.toHexString());
-    voterOwnership.voter = Address.fromString(participant.toHexString());
-    voterOwnership.dataProvider = dpKey;
-    voterOwnership.ownership = newVoterOwnership;
-
-    voterOwnership.save();
-  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
-    voterOwnership.ownership = newVoterOwnership;
-
-    voterOwnership.save();
-  } else if (
-    voterOwnership != null &&
-    newVoterOwnership.equals(new BigInt(0))
-  ) {
-    store.remove("DataProviderOwnership", dpoKey);
-  }
-
-  if (participant.toHexString() == dataProvider.owner.toHexString()) {
-    dataProvider.ownerOwnership = newVoterOwnership;
-  }
-
-  dataProvider.save();
-}
-
 export function handleDataUpdated(event: DataUpdated): void {
   let tcd = TCD.load(event.address.toHexString());
 
@@ -190,11 +135,62 @@ function _handleStaking(
 }
 
 export function handleDataSourceStaked(event: DataSourceStaked): void {
-  updateProvider(
-    event.address,
-    event.params.dataSource,
-    event.params.participant
+  let dpKey =
+    event.params.dataSource.toHexString() + "-" + event.address.toHexString();
+  let dataProvider = DataProvider.load(dpKey);
+
+  let dpoKey = dpKey + "-" + event.params.participant.toHexString();
+  let voterOwnership = DataProviderOwnership.load(dpoKey);
+
+  let tcdContract = OffchainAggTCD.bind(
+    Address.fromString(event.address.toHexString())
   );
+  let dataSourceInfo = tcdContract.infoMap(
+    Address.fromString(event.params.dataSource.toHexString())
+  );
+
+  dataProvider.stake = dataSourceInfo.value1;
+  dataProvider.totalOwnership = dataSourceInfo.value2;
+
+  let newVoterOwnership = tcdContract.getOwnership(
+    Address.fromString(event.params.dataSource.toHexString()),
+    Address.fromString(event.params.participant.toHexString())
+  );
+
+  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
+    voterOwnership = new DataProviderOwnership(dpoKey);
+    voterOwnership.providerAddress = Address.fromString(
+      event.params.dataSource.toHexString()
+    );
+    voterOwnership.tcdAddress = Address.fromString(event.address.toHexString());
+    voterOwnership.voter = Address.fromString(
+      event.params.participant.toHexString()
+    );
+    voterOwnership.dataProvider = dpKey;
+    voterOwnership.ownership = newVoterOwnership;
+    voterOwnership.tokenLock = event.params.stake;
+
+    voterOwnership.save();
+  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
+    voterOwnership.ownership = newVoterOwnership;
+    voterOwnership.tokenLock = voterOwnership.tokenLock.plus(
+      event.params.stake
+    );
+    voterOwnership.save();
+  } else if (
+    voterOwnership != null &&
+    newVoterOwnership.equals(new BigInt(0))
+  ) {
+    store.remove("DataProviderOwnership", dpoKey);
+  }
+
+  if (
+    event.params.participant.toHexString() == dataProvider.owner.toHexString()
+  ) {
+    dataProvider.ownerOwnership = newVoterOwnership;
+  }
+  dataProvider.save();
+
   _handleStaking(
     event.address,
     event.params.dataSource,
@@ -204,11 +200,62 @@ export function handleDataSourceStaked(event: DataSourceStaked): void {
 }
 
 export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
-  updateProvider(
-    event.address,
-    event.params.dataSource,
-    event.params.participant
+  let dpKey =
+    event.params.dataSource.toHexString() + "-" + event.address.toHexString();
+  let dataProvider = DataProvider.load(dpKey);
+
+  let dpoKey = dpKey + "-" + event.params.participant.toHexString();
+  let voterOwnership = DataProviderOwnership.load(dpoKey);
+
+  let tcdContract = OffchainAggTCD.bind(
+    Address.fromString(event.address.toHexString())
   );
+  let dataSourceInfo = tcdContract.infoMap(
+    Address.fromString(event.params.dataSource.toHexString())
+  );
+
+  dataProvider.stake = dataSourceInfo.value1;
+  dataProvider.totalOwnership = dataSourceInfo.value2;
+
+  let newVoterOwnership = tcdContract.getOwnership(
+    Address.fromString(event.params.dataSource.toHexString()),
+    Address.fromString(event.params.participant.toHexString())
+  );
+
+  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
+    voterOwnership = new DataProviderOwnership(dpoKey);
+    voterOwnership.providerAddress = Address.fromString(
+      event.params.dataSource.toHexString()
+    );
+    voterOwnership.tcdAddress = Address.fromString(event.address.toHexString());
+    voterOwnership.voter = Address.fromString(
+      event.params.participant.toHexString()
+    );
+    voterOwnership.dataProvider = dpKey;
+    voterOwnership.ownership = newVoterOwnership;
+    voterOwnership.tokenLock = voterOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership);
+    voterOwnership.save();
+  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
+    voterOwnership.ownership = newVoterOwnership;
+    voterOwnership.tokenLock = voterOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership);
+    voterOwnership.save();
+  } else if (
+    voterOwnership != null &&
+    newVoterOwnership.equals(new BigInt(0))
+  ) {
+    store.remove("DataProviderOwnership", dpoKey);
+  }
+
+  if (
+    event.params.participant.toHexString() == dataProvider.owner.toHexString()
+  ) {
+    dataProvider.ownerOwnership = newVoterOwnership;
+  }
+  dataProvider.save();
   _handleStaking(
     event.address,
     event.params.dataSource,
@@ -221,14 +268,54 @@ export function handleFeeDistributed(event: FeeDistributed): void {
   let dPKey =
     event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dataProvider = DataProvider.load(dPKey);
+  let dpKey =
+    event.params.dataSource.toHexString() + "-" + event.address.toHexString();
 
-  updateProvider(
-    event.address,
-    event.params.dataSource,
+  let dpoKey = dpKey + "-" + dataProvider.owner.toHexString();
+  let voterOwnership = DataProviderOwnership.load(dpoKey);
+
+  let tcdContract = OffchainAggTCD.bind(
+    Address.fromString(event.address.toHexString())
+  );
+  let dataSourceInfo = tcdContract.infoMap(
+    Address.fromString(event.params.dataSource.toHexString())
+  );
+
+  dataProvider.stake = dataSourceInfo.value1;
+  dataProvider.totalOwnership = dataSourceInfo.value2;
+
+  let newVoterOwnership = tcdContract.getOwnership(
+    Address.fromString(event.params.dataSource.toHexString()),
     Address.fromString(dataProvider.owner.toHexString())
   );
 
-  let tcdContract = OffchainAggTCD.bind(event.address);
+  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
+    voterOwnership = new DataProviderOwnership(dpoKey);
+    voterOwnership.providerAddress = Address.fromString(
+      event.params.dataSource.toHexString()
+    );
+    voterOwnership.tcdAddress = Address.fromString(event.address.toHexString());
+    voterOwnership.voter = Address.fromString(dataProvider.owner.toHexString());
+    voterOwnership.dataProvider = dpKey;
+    voterOwnership.ownership = newVoterOwnership;
+
+    voterOwnership.save();
+  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
+    voterOwnership.ownership = newVoterOwnership;
+
+    voterOwnership.save();
+  } else if (
+    voterOwnership != null &&
+    newVoterOwnership.equals(new BigInt(0))
+  ) {
+    store.remove("DataProviderOwnership", dpoKey);
+  }
+
+  if (dataProvider.owner.toHexString() == dataProvider.owner.toHexString()) {
+    dataProvider.ownerOwnership = newVoterOwnership;
+  }
+  dataProvider.save();
+
   let tokenAddress = tcdContract.token();
 
   let rdKey = event.block.number.toString() + "-" + event.address.toHexString();

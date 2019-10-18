@@ -26,6 +26,7 @@ function* handleLoadTcds({ user, tokenAddress }) {
             totalOwnership
             dataProviderOwnerships{
               ownership
+              tokenLock
               voter
             }
           }
@@ -49,37 +50,30 @@ function* handleLoadTcds({ user, tokenAddress }) {
           totalOwnership,
           dataProviderOwnerships: voters,
         }) {
-          const voterToOwnership = {}
           let userStake = new BN(0)
           let ownerStake = new BN(0)
           let revenue = new BN(0)
-          for (const { voter, ownership } of voters) {
-            voterToOwnership[voter] = ownership
-          }
-
-          if (voterToOwnership[user]) {
-            userStake = new BN(voterToOwnership[user])
-              .mul(new BN(stake))
-              .div(new BN(totalOwnership))
-            revenue = userStake.sub(
-              tcdClient
-                ? yield tcdClient.getTokenLock({
-                    account: user,
-                    dataSource: dataSourceAddress,
-                  })
-                : new BN('0'),
-            )
-            //  < -0.01 = BN(0)
-            if (revenue.lt(new BN(-0.01))) {
-              revenue = new BN(0)
-            } else if (revenue.lt(new BN(0)) && revenue.gte(-0.01)) {
-              throw new Error('Revenue greater than -0.01')
+          let userOwnership = new BN(0)
+          let ownerOwnership = new BN(0)
+          for (const { voter, ownership, tokenLock } of voters) {
+            if (voter === user) {
+              userStake = new BN(ownership)
+                .mul(new BN(stake))
+                .div(new BN(totalOwnership))
+              revenue = userStake.sub(new BN(tokenLock))
+              userOwnership = new BN(ownership)
+              //  < -0.01 = BN(0)
+              if (revenue.lt(new BN(-0.01))) {
+                revenue = new BN(0)
+              } else if (revenue.lt(new BN(0)) && revenue.gte(-0.01)) {
+                throw new Error('Revenue greater than -0.01')
+              }
+            } else if (voter === owner) {
+              ownerStake = new BN(ownership)
+                .mul(new BN(stake))
+                .div(new BN(totalOwnership))
+              ownerOwnership = new BN(ownership)
             }
-          }
-          if (voterToOwnership[owner]) {
-            ownerStake = new BN(voterToOwnership[owner])
-              .mul(new BN(stake))
-              .div(new BN(totalOwnership))
           }
           return {
             dataSourceAddress,
@@ -91,8 +85,8 @@ function* handleLoadTcds({ user, tokenAddress }) {
             owner,
             userStake,
             ownerStake,
-            userOwnership: new BN(voterToOwnership[user] || '0'),
-            ownerOwnership: new BN(voterToOwnership[owner] || '0'),
+            userOwnership,
+            ownerOwnership,
             totalOwnership: new BN(totalOwnership),
             userRevenue: revenue,
           }
