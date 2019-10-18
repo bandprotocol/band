@@ -116,11 +116,10 @@ def get_report_detail():
 
 
 @scheduler.task(
-    "interval", id="update-report", seconds=3, max_instances=6, misfire_grace_time=10
+    "interval", id="update-report", seconds=3, max_instances=3, misfire_grace_time=10
 )
 def update_report():
     count = db.session.query(func.count(Request.id)).filter_by(status="OK").scalar()
-    print("Count", count, flush=True)
     global TOTAL_REPORTED
     if TOTAL_REPORTED == 0:
         TOTAL_REPORTED = count
