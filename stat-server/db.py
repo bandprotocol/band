@@ -26,8 +26,8 @@ class Provider(db.Model):
     endpoint = Column(String)
     name = Column(String)
 
-    reports = relationship("ProviderReport")
-    agreements = relationship("ProviderAggregation")
+    reports = relationship("ProviderReport", lazy="joined")
+    agreements = relationship("ProviderAggregation", lazy="joined")
 
 
 class ProviderReport(db.Model):
@@ -40,7 +40,7 @@ class ProviderReport(db.Model):
     signature = Column(JSON)
     created_at = Column(Integer)
 
-    provider = relationship("Provider", back_populates="reports")
+    provider = relationship("Provider", back_populates="reports", lazy="joined")
 
 
 class ProviderAggregation(db.Model):
@@ -53,4 +53,4 @@ class ProviderAggregation(db.Model):
     signature = Column(JSON)
     created_at = Column(Integer)
 
-    provider = relationship("Provider", back_populates="agreements")
+    provider = relationship("Provider", back_populates="agreements", lazy="joined")
