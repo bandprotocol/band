@@ -1,6 +1,6 @@
 {
   "Sign in": "登录",
-  "DATASET INFOMATION": "DATASET INFOMATION",
+  "DATASET INFORMATION": "DATASET INFORMATION",
   "Dataset": "Dataset",
   "ERC-20": "ERC-20",
   "Governance": "Governance",
@@ -9,6 +9,7 @@
   "Learn how to Stake": "学习如何进行锁仓",
   "Overview": "概述",
   "Explore Data": "探索数据",
+  "Explore data": "Explore data",
   "Market Cap.": "市值",
   "Price/Token": "价格",
   "XFN Airdrop": "XFN空投",
@@ -49,6 +50,7 @@
   "CONFIGURATIONS": "CONFIGURATIONS",
   "Parameters": "Parameters",
   "Proposals": "Proposals",
+  "Proposal": "Proposal",
   "Source": "Source",
   "Parameter Group": "Parameter Group",
   "Cancel": "Cancel",
@@ -93,6 +95,13 @@
   "Go to": "Go to",
   "No active proposal!": "No active proposal!",
   "Value": "Value",
+  "Status": "Status",
+  "Minimum participation": "Minimum participation",
+  "unreached": "unreached",
+  "reached": "reached",
+  "Result": "Result",
+  "Approved": "Approved",
+  "Rejected": "Rejected",
   "Decentralized Configurations for Smart Contract": "Decentralized Configurations for Smart Contract",
   "Community agrees on how smart contracts work though parameters.": "Community agrees on how smart contracts work though parameters.",
   "Token holders can propose a change, which initiate a community-wide vote.": "Token holders can propose a change, which initiate a community-wide vote.",
@@ -134,7 +143,11 @@
   "The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).": "The percentage of the reward pool in a challenge which is awarded to the winning party. Must be between 50% (the stake amount) to 100% (the total reward pool).",
   "The percentage of the spread between buy and sell price of community token": "The percentage of the spread between buy and sell price of community token",
   "The percentage of votes required to consider a challenge to be successful.": "The percentage of votes required to consider a challenge to be successful.",
-  "The percentage of votes required to consider a poll can conclude.": "The percentage of votes required to consider a poll can conclude."
+  "The percentage of votes required to consider a poll can conclude.": "The percentage of votes required to consider a poll can conclude.",
 
+  "tooltip.proposal.participation": "If less than {minParticipation, number}% of all voting power participate, the proposal is canceled and no parameter changes will be applied.",
+  "tooltip.proposal.result": "To approve a proposal, at least {num, number}% of participating voting power is required. Otherwise the proposal will not be successful.",
 
+  "tokens.Financial Data Token.name": "金融数据集代币",
+  "tokens.Financial Data Token.description": "获取任何货币交易对的价格"
 }

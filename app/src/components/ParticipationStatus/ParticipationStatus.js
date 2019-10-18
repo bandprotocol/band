@@ -2,6 +2,7 @@ import React from 'react'
 import { Flex, Text } from 'ui/common'
 import ProgressBar from 'components/ProgressBar'
 import ToolTip from 'components/ToolTip'
+import { FormattedMessage } from 'react-intl'
 
 export default ({
   percentParticipant,
@@ -33,8 +34,10 @@ export default ({
               textColor="#000000"
               tip={{ left: 61 }}
             >
-              {`If less than ${minParticipation}% of all voting power participate,
-              the proposal is canceled and no parameter changes will be applied.`}
+              <FormattedMessage
+                id="tooltip.proposal.participation"
+                values={{ minParticipation }}
+              ></FormattedMessage>
             </ToolTip>
             <Text fontWeight="500" mx={2} color="#5269ff">
               :
@@ -49,10 +52,14 @@ export default ({
           </Flex>
           <Flex>
             <Text fontWeight="500" mr={1} color="#5269ff">
-              Status
+              <FormattedMessage id="Status"></FormattedMessage>
             </Text>{' '}
-            : Minimum participation
-            {percentParticipant < minParticipation ? ' unreached' : ' reached'}
+            : <FormattedMessage id="Minimum participation"></FormattedMessage>{' '}
+            {percentParticipant < minParticipation ? (
+              <FormattedMessage id="unreached"></FormattedMessage>
+            ) : (
+              <FormattedMessage id="reached"></FormattedMessage>
+            )}
           </Flex>
         </Flex>
       </Flex>
@@ -60,7 +67,7 @@ export default ({
         <Flex flexDirection="column">
           <Flex alignItems="center" mb={3}>
             <Text fontWeight="500" mr={1} color="#5269ff">
-              Result
+              <FormattedMessage id="Result"></FormattedMessage>
             </Text>
             <ToolTip
               top={40}
@@ -70,10 +77,10 @@ export default ({
               textColor="#000000"
               tip={{ left: 61 }}
             >
-              {`To approve a proposal, at least ${100 - supportRequiredPct}% of
-              participating voting power is required.
-              Otherwise the proposal will not be
-              successful.`}
+              <FormattedMessage
+                id="tooltip.proposal.result"
+                values={{ num: 100 - supportRequiredPct }}
+              ></FormattedMessage>
             </ToolTip>
             <Text fontWeight="500" mx={2} color="#5269ff">
               :
@@ -88,9 +95,14 @@ export default ({
           </Flex>
           <Flex>
             <Text fontWeight="500" mr={1} color="#5269ff">
-              Status
+              <FormattedMessage id="Status"></FormattedMessage>
             </Text>
-            {percentReject < supportRequiredPct ? ': Approved' : ': Rejected'}
+            {': '}
+            {percentReject < supportRequiredPct ? (
+              <FormattedMessage id="Approved"></FormattedMessage>
+            ) : (
+              <FormattedMessage id="Rejected"></FormattedMessage>
+            )}
           </Flex>
         </Flex>
       </Flex>
