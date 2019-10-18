@@ -46,6 +46,9 @@ import communitySaga from 'sagas/community'
 import { networkIdtoName } from 'utils/network'
 import { getBandUSD } from 'utils/bandPrice'
 
+import FinanceSrc from 'images/finance.png'
+import FinanceBannerSrc from 'images/finance-banner.png'
+
 // import web3
 import Web3 from 'web3'
 
