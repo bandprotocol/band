@@ -8,6 +8,7 @@ import ToolTip from 'components/ToolTip'
 import MockProposal from 'images/mock-proposal.svg'
 
 import { proposalByStatusSelector } from 'selectors/proposal'
+import { FormattedMessage } from 'react-intl'
 
 const ProposalList = ({
   tokenAddress,
@@ -26,7 +27,8 @@ const ProposalList = ({
           fontWeight="900"
           color="#393939"
         >
-          {`${title} (${proposals ? proposals.length : 0})`}
+          <FormattedMessage id={title}></FormattedMessage> (
+          {proposals ? proposals.length : 0})
         </Text>
         {description && (
           <ToolTip
@@ -58,19 +60,20 @@ const ProposalList = ({
             pt={3}
             pb={2}
           >
-            No active proposal!
+            <FormattedMessage id="No active proposal!"></FormattedMessage>
           </Text>
           <Text fontSize="15px" py={2}>
-            Go to
+            <FormattedMessage id="Go to"></FormattedMessage>
+
             <Link
               dark="true"
               to={`/community/${tokenAddress}/parameters`}
               px="5px"
               underline
             >
-              Parameters
+              <FormattedMessage id="Parameters"></FormattedMessage>
             </Link>
-            Page to propose the new change.
+            <FormattedMessage id="Page to propose the new change."></FormattedMessage>
           </Text>
         </Flex>
       ) : null

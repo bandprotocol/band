@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom'
 import { numDataProviders } from 'selectors/tcd'
 import { loadTcds, showModal } from 'actions'
 import { dispatchAsync } from 'utils/reduxSaga'
+import { FormattedMessage } from 'react-intl'
 
 const CustomButton = styled(Button).attrs({
   variant: 'gradientBlue',
@@ -80,7 +81,7 @@ class ProviderList extends React.Component {
           alignItems="center"
         >
           <H3 flex="0 0 auto" color="#4a4a4a">
-            Data Providers
+            <FormattedMessage id="Data Providers"></FormattedMessage>
           </H3>
           <Flex width={1} justifyContent="flex-end">
             <Flex
@@ -90,7 +91,7 @@ class ProviderList extends React.Component {
               }}
             >
               <CustomButton onClick={() => showBeProvider()}>
-                Become a provider
+                <FormattedMessage id="Become a provider"></FormattedMessage>
               </CustomButton>
             </Flex>
           </Flex>

@@ -3,7 +3,7 @@ import styled from 'styled-components/macro'
 import { colors } from 'ui'
 import BN from 'utils/bignumber'
 import { Flex, Text, Box, Button, Link, H3 } from 'ui/common'
-import {FormattedMessage} from "react-intl";
+import { FormattedMessage } from 'react-intl'
 
 const WrapText = styled(H3)`
   color: #4a4a4a;
@@ -110,7 +110,7 @@ const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
   >
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <Text color="#4a4a4a" fontSize={12} fontWeight="500">
-        <FormattedMessage id="token.marketcap" />
+        <FormattedMessage id="Market Cap." />
       </Text>
       <Text color="#5269ff" fontSize={1} py="10px" fontWeight="900">
         $ {marketCap.shortPretty()}
@@ -127,7 +127,7 @@ const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
       }}
     >
       <Text color="#4a4a4a" fontSize={12} fontWeight="500">
-        <FormattedMessage id="token.price" />
+        <FormattedMessage id="Price/Token" />
       </Text>
       <Text color="#5269ff" fontSize={1} py="10px" fontWeight="900">
         $ {price.shortPretty()}
@@ -135,7 +135,7 @@ const PriceDetail = ({ marketCap, price, last24Hrs, statusBg }) => (
     </Flex>
     <Flex flexDirection="column" justifyContent="center" alignItems="center">
       <Text color="#4a4a4a" fontSize={12} fontWeight="500">
-        <FormattedMessage id="token.24hrChange" />
+        <FormattedMessage id="Last 24 hrs" />
       </Text>
       <Text
         color={last24Hrs >= 0.0 ? '#42c47f' : colors.red.normal}
@@ -189,9 +189,17 @@ export default ({
         <DisplayIcon src={logo} bgColor={borderColor} />
         <Flex flexDirection="column" ml="28px">
           <WrapText fontWeight="600" lineHeight={1.2} mt={1} mb="0.5em">
-            <FormattedMessage id={`tokens.${name}.name`} defaultMessage={name} />
+            <FormattedMessage
+              id={`tokens.${name}.name`}
+              defaultMessage={name}
+            />
           </WrapText>
-          <Description mb={2}><FormattedMessage id={`tokens.${name}.description`} defaultMessage={description} /></Description>
+          <Description mb={2}>
+            <FormattedMessage
+              id={`tokens.${name}.description`}
+              defaultMessage={description}
+            />
+          </Description>
           <PriceDetail
             marketCap={BN.parse(marketCap).bandToUSD(bandPrice)}
             price={BN.parse(price).bandToUSD(bandPrice)}
@@ -216,7 +224,7 @@ export default ({
                   fontSize: '15px',
                 }}
               >
-                <FormattedMessage id="token.overview" />
+                <FormattedMessage id="Overview" />
               </Button>
             </Link>
             <Link
@@ -235,7 +243,11 @@ export default ({
                   fontSize: '15px',
                 }}
               >
-                {isTcd ? <FormattedMessage id="token.exploreData" /> : <FormattedMessage id="token.visitWebsite" />}
+                {isTcd ? (
+                  <FormattedMessage id="Explore Data" />
+                ) : (
+                  <FormattedMessage id="Visit Website" />
+                )}
               </Button>
             </Link>
           </Flex>

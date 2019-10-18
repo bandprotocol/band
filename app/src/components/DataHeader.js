@@ -1,13 +1,14 @@
 import React from 'react'
 import { Flex, Text, H2 } from 'ui/common'
+import { FormattedMessage } from 'react-intl'
 
 export default ({ lines }) => (
   <Flex flexDirection="column" style={{ width: '100%' }}>
     <Flex flexDirection="column" m="0px 46px">
       <H2 lineHeight="32px" style={{ fontSize: '24px' }}>
-        {lines[0]}
+        <FormattedMessage id={lines[0]}></FormattedMessage>
         <br />
-        {lines[1]}
+        <FormattedMessage id={lines[1]}></FormattedMessage>
       </H2>
       <Text
         mt="10px"
@@ -16,9 +17,9 @@ export default ({ lines }) => (
         color="#ffffff"
         style={{ fontSize: '16px' }}
       >
-        {lines[2]}
+        <FormattedMessage id={lines[2]}></FormattedMessage>
         <br />
-        {lines[3]}
+        <FormattedMessage id={lines[3]}></FormattedMessage>
       </Text>
     </Flex>
   </Flex>

@@ -24,6 +24,7 @@ import DataSetInactive from 'images/datasetInactive.svg'
 import DataLogActive from 'images/dataLogActive.svg'
 import DataSetActive from 'images/datasetActive.svg'
 import IntegrationInactive from 'images/integrationInactive.svg'
+import { FormattedMessage } from 'react-intl'
 
 const Left = styled.div`
   align-self: stretch;
@@ -192,7 +193,7 @@ export default ({
               <Flex flexDirection="row" alignItems="center">
                 <Image src={BalanceWallet} width="18px" mr={2} mb={1} />
                 <Text fontSize="12px" lineHeight="20px" color="white">
-                  YOUR BALANCE
+                  <FormattedMessage id="YOUR BALANCE"></FormattedMessage>
                 </Text>
               </Flex>
               <Flex mt="20px">
@@ -224,10 +225,10 @@ export default ({
               imgSrcActive={DetailActiveSrc}
               imgSrcInactive={DetailSrc}
             >
-              Overview
+              <FormattedMessage id="Overview"></FormattedMessage>
             </Tab>
             <Bold pl="44px" pt={3} pb={3} fontSize="12px" color="#a6c1ff">
-              AVAILABLE DATA
+              <FormattedMessage id="AVAILABLE DATA"></FormattedMessage>
             </Bold>
 
             <Tab
@@ -235,7 +236,7 @@ export default ({
               imgSrcActive={DataSetActive}
               imgSrcInactive={DataSetInactive}
             >
-              Explore Data
+              <FormattedMessage id="Explore Data"></FormattedMessage>
             </Tab>
 
             <Tab
@@ -243,14 +244,14 @@ export default ({
               imgSrcActive={GovernanceActiveSrc}
               imgSrcInactive={GovernanceSrc}
             >
-              Governance
+              <FormattedMessage id="Governance"></FormattedMessage>
             </Tab>
             <Tab
               link={`/community/${address}/logs`}
               imgSrcActive={DataLogActive}
               imgSrcInactive={DataLogInactive}
             >
-              Activity Logs
+              <FormattedMessage id="Activity Logs"></FormattedMessage>
             </Tab>
 
             <Tab
@@ -258,11 +259,11 @@ export default ({
               imgSrcInactive={IntegrationInactive}
               handleClick={() => window.open(integrationURL, '_blank')}
             >
-              Integration
+              <FormattedMessage id="Integration"></FormattedMessage>
               <Image src={OutIcon} ml="10px" />
             </Tab>
             <Bold pl="44px" pt={4} pb={3} fontSize="12px" color="#a6c1ff">
-              CONFIGURATIONS
+              <FormattedMessage id="CONFIGURATIONS"></FormattedMessage>
             </Bold>
             <Tab
               link={`/community/${address}/parameters`}
@@ -270,14 +271,14 @@ export default ({
               imgSrcInactive={GovernanceSrc}
               disabled
             >
-              Parameters
+              <FormattedMessage id="Parameters"></FormattedMessage>
             </Tab>
             <Tab
               link={`/community/${address}/proposal`}
               imgSrcActive={ProposalActiveSrc}
               imgSrcInactive={ProposalSrc}
             >
-              Proposals
+              <FormattedMessage id="Proposals"></FormattedMessage>
             </Tab>
           </Flex>
         </Flex>
