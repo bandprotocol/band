@@ -1,8 +1,9 @@
 from core import app, socketio, scheduler
-from db import db, Request
+from db import db, Request, ProviderReport, ProviderAggregation
 
 from flask import request, jsonify, abort
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 
 TOTAL_REPORTED = 0
 
@@ -21,7 +22,14 @@ def get_requests():
     key = request.args.get("key")
     status = request.args.get("status")
 
-    query = db.session.query(Request).order_by(Request.requested_at.desc())
+    query = (
+        db.session.query(Request)
+        .options(
+            joinedload(Request.reports).joinedload(ProviderReport.provider),
+            joinedload(Request.agreements).joinedload(ProviderAggregation.provider),
+        )
+        .order_by(Request.requested_at.desc())
+    )
 
     if key is not None:
         query = query.filter_by(key="0x" + str.encode(key).hex())
@@ -127,6 +135,10 @@ def update_report():
     # Get new request
     new_reports = (
         db.session.query(Request)
+        .options(
+            joinedload(Request.reports).joinedload(ProviderReport.provider),
+            joinedload(Request.agreements).joinedload(ProviderAggregation.provider),
+        )
         .filter_by(status="OK")
         .order_by(Request.requested_at.desc())
         .limit(count - TOTAL_REPORTED)
