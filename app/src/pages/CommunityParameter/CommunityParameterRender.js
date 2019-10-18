@@ -200,7 +200,9 @@ export default ({
               my={2}
               style={{ lineHeight: '25px' }}
             >
-              {getDescription(currentPrefix.label).info}
+              <FormattedMessage
+                id={getDescription(currentPrefix.label).info}
+              ></FormattedMessage>
             </Text>
           </Flex>
           <ParameterList
