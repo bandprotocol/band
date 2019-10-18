@@ -68,7 +68,8 @@ function* handleLoadTcds({ user, tokenAddress }) {
               } else if (revenue.lt(new BN(0)) && revenue.gte(-0.01)) {
                 throw new Error('Revenue greater than -0.01')
               }
-            } else if (voter === owner) {
+            }
+            if (voter === owner) {
               ownerStake = new BN(ownership)
                 .mul(new BN(stake))
                 .div(new BN(totalOwnership))
