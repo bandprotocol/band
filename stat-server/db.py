@@ -2,6 +2,7 @@ from core import db
 from sqlalchemy import Column, Integer, String, ForeignKey, JSON, BigInteger
 from sqlalchemy.orm import relationship
 
+
 class Request(db.Model):
     __tablename__ = "request"
     id = Column(BigInteger, primary_key=True)
@@ -11,12 +12,12 @@ class Request(db.Model):
     status = Column(String)
     value = Column(String)
     timestamp = Column(Integer)
-    requested_at = Column(Integer,index=True)
+    requested_at = Column(Integer, index=True)
     responsed_at = Column(Integer)
     tx_hash = Column(String)
 
-    reports = relationship("ProviderReport")
-    agreements = relationship("ProviderAggregation")
+    reports = relationship("ProviderReport", lazy="joined")
+    agreements = relationship("ProviderAggregation", lazy="joined")
 
 
 class Provider(db.Model):
@@ -53,4 +54,3 @@ class ProviderAggregation(db.Model):
     created_at = Column(Integer)
 
     provider = relationship("Provider", back_populates="agreements")
-
