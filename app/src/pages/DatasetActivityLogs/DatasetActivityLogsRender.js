@@ -115,7 +115,8 @@ const Report = ({
           {name}
         </Text>
         <Text fontSize="14px" fontWeight="700" mx={2} color="#4d7dff">
-          reported {getFormat(symbol).logIdentifier}
+          <FormattedMessage id="reported"></FormattedMessage>
+          {getFormat(symbol).logIdentifier}
         </Text>
         <Text
           fontSize="14px"
