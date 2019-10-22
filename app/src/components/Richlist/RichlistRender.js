@@ -4,6 +4,7 @@ import { Flex, Text, Image } from 'ui/common'
 import RichlistBody from './RichlistBody'
 import MockProposal from 'images/mock-proposal.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FormattedMessage } from 'react-intl'
 
 const RichlistHeader = () => (
   <Flex
@@ -16,22 +17,22 @@ const RichlistHeader = () => (
   >
     <Flex ml="30px" flex={2}>
       <Text fontSize="14px" fontWeight="bold">
-        Rank
+        <FormattedMessage id="Rank"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={5} ml="10px">
       <Text fontSize="14px" fontWeight="bold">
-        Address
+        <FormattedMessage id="Address"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={3} justifyContent="flex-end">
       <Text fontSize="14px" fontWeight="bold">
-        Quantity
+        <FormattedMessage id="Quantity"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={2} justifyContent="flex-end" mr="30px">
       <Text fontSize="14px" fontWeight="bold">
-        Percentage
+        <FormattedMessage id="Percentage"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={1} />
@@ -88,10 +89,10 @@ export default ({
         <Flex flexDirection="column" alignItems="center">
           <Image src={MockProposal} />
           <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-            No rich list right now!
+            <FormattedMessage id="No rich list right now!"></FormattedMessage>
           </Text>
           <Text fontSize={1} py={1}>
-            Buy token to become the first holder.
+            <FormattedMessage id="Buy token to become the first holder."></FormattedMessage>
           </Text>
         </Flex>
       </Flex>

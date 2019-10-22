@@ -115,7 +115,7 @@ export default ({
           style={{ height: '100%', margin: '0 auto' }}
         >
           <H1 mb={2} py={2}>
-            <FormattedMessage id="communities.dataGovernancePortal" />
+            <FormattedMessage id="Data Governance Portal" />
           </H1>
           <Text
             my={1}
@@ -129,13 +129,13 @@ export default ({
           <Flex alignItems="center" mt={3}>
             <AbsoluteLink href="https://bandprotocol.com/">
               <WhiteButton>
-                <FormattedMessage id="communities.bandProtocolWebsite" />
+                <FormattedMessage id="Band Protocol Website" />
               </WhiteButton>
             </AbsoluteLink>
 
             <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
               <WhiteOutlineButton>
-                <FormattedMessage id="communities.learnHowToStake" />
+                <FormattedMessage id="Learn how to Stake" />
               </WhiteOutlineButton>
             </AbsoluteLink>
           </Flex>

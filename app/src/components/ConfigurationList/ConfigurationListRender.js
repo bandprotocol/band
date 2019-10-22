@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import ParameterCard from 'components/ParameterCard'
 import EditPropose from 'images/edit-proposal.svg'
 import { getParameterDetail } from 'utils/helper'
+import { FormattedMessage } from 'react-intl'
 
 const CustomButton = styled(Button).attrs({
   variant: 'gradientBlue',
@@ -30,7 +31,9 @@ export default ({ params, communityAddress, linkToParameter }) => (
     }}
   >
     <Flex flexDirection="row" alignItems="center" mx="11px">
-      <H3 color="#4a4a4a">Configurations</H3>
+      <H3 color="#4a4a4a">
+        <FormattedMessage id="Configurations"></FormattedMessage>
+      </H3>
       <Flex width={1} justifyContent="flex-end">
         <NavLink
           to={linkToParameter}
@@ -50,7 +53,7 @@ export default ({ params, communityAddress, linkToParameter }) => (
               style={{ fontFamily: 'bio-sans' }}
             >
               <Image src={EditPropose} height="18px" mr={2} />
-              Propose Change
+              <FormattedMessage id="Propose Change"></FormattedMessage>
             </Flex>
           </CustomButton>
         </NavLink>

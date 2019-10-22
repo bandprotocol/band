@@ -9,6 +9,7 @@ import ParameterList from 'components/ParameterList'
 import EditPropose from 'images/edit-proposal.svg'
 import GovernanceHeader from 'images/govenance-header.svg'
 import DataHeader from 'components/DataHeader'
+import { FormattedMessage } from 'react-intl'
 
 const selectStyles = {
   control: (styles, { menuIsOpen }) => ({
@@ -119,7 +120,7 @@ export default ({
         pr="20px"
       >
         <H5 mr="12px" color="#4a4a4a" fontWeight="600" pb={1}>
-          Parameter Group
+          <FormattedMessage id="Parameter Group"></FormattedMessage>
         </H5>
         <Select
           value={currentPrefix}
@@ -148,9 +149,11 @@ export default ({
                   paddingBottom: '2px',
                 }}
               >
-                Cancel
+                <FormattedMessage id="Cancel"></FormattedMessage>
               </Box>
-              <SubmitButton onClick={submitChanges}>Submit</SubmitButton>
+              <SubmitButton onClick={submitChanges}>
+                <FormattedMessage id="Submit"></FormattedMessage>
+              </SubmitButton>
             </Flex>
           ) : (
             <ProposeButton onClick={logedin ? toggleEdit : signin}>
@@ -161,7 +164,7 @@ export default ({
                 style={{ fontFamily: 'bio-sans' }}
               >
                 <Image src={EditPropose} height="18px" mr={2} />
-                Propose Change
+                <FormattedMessage id="Propose Change"></FormattedMessage>
               </Flex>
             </ProposeButton>
           )}
@@ -197,7 +200,9 @@ export default ({
               my={2}
               style={{ lineHeight: '25px' }}
             >
-              {getDescription(currentPrefix.label).info}
+              <FormattedMessage
+                id={getDescription(currentPrefix.label).info}
+              ></FormattedMessage>
             </Text>
           </Flex>
           <ParameterList

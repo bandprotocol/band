@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import ParameterInput from 'components/ParameterInput'
 
 import { convertFromChain } from 'utils/helper'
+import { FormattedMessage } from 'react-intl'
 
 const WhiteCard = styled(Card).attrs({
   border: 'solid 1px #e7ecff',
@@ -38,12 +39,12 @@ export default ({
           {name}
         </Text>
         <Text color="#4a4a4a" fontSize={0} lineHeight={1.43} mt={3}>
-          {detail.description}
+          <FormattedMessage id={detail.description}></FormattedMessage>
         </Text>
         <Flex flex={1} />
         <Flex alignItems="center" py={1} mt={3} style={{ height: '30px' }}>
           <Text fontSize={0} color="#5269ff" mr={3}>
-            Value:
+            <FormattedMessage id="Value"></FormattedMessage>:
           </Text>
           {isEdit ? (
             <ParameterInput

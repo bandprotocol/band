@@ -4,6 +4,7 @@ import { OrderPagination } from 'components/Pagination'
 import { Flex, Text, Image } from 'ui/common'
 import MockProposal from 'images/mock-proposal.svg'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
+import { FormattedMessage } from 'react-intl'
 
 const HistoryHeader = () => (
   <Flex
@@ -16,22 +17,22 @@ const HistoryHeader = () => (
   >
     <Flex ml="30px" flex={1}>
       <Text fontSize="14px" fontWeight={600}>
-        Time
+        <FormattedMessage id="Time"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={1}>
       <Text fontSize="14px" fontWeight={600}>
-        Price (BAND) / Token
+        <FormattedMessage id="Price (BAND) / Token"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={1} justifyContent="flex-end">
       <Text fontSize="14px" fontWeight={600}>
-        Amount
+        <FormattedMessage id="Amount"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={1} justifyContent="flex-end">
       <Text fontSize="14px" fontWeight={600}>
-        Type
+        <FormattedMessage id="Type"></FormattedMessage>
       </Text>
     </Flex>
     <Flex flex={1} />
@@ -88,10 +89,10 @@ export default ({
         <Flex flexDirection="column" alignItems="center">
           <Image src={MockProposal} />
           <Text fontSize={3} fontWeight="600" pt={3} pb={2}>
-            No History right now!
+            <FormattedMessage id="No History right now!"></FormattedMessage>
           </Text>
           <Text fontSize={1} py={1}>
-            Buy or sell token to list the first transaction of this community!
+            <FormattedMessage id="Buy or sell token to list the first transaction of this community!"></FormattedMessage>
           </Text>
         </Flex>
       </Flex>

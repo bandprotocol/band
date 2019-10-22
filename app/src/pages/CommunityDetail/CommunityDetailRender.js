@@ -9,6 +9,7 @@ import { calculateCollateralAt } from 'utils/equation'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import Graph from 'components/PriceGraph'
 import Breadcrumb from 'components/Breadcrumb'
+import { FormattedMessage } from 'react-intl'
 
 const Field = ({ label, children }) => (
   <Box mb="14px">
@@ -145,7 +146,7 @@ export default props => {
       <Flex flexDirection="row" mt="12px" mx="-6px">
         <Card flex={1} variant="dashboard" mx="6px">
           <H5 mt="12px" color="#393939">
-            PRICE MOVEMENT
+            <FormattedMessage id="PRICE MOVEMENT"></FormattedMessage>
           </H5>
           <Box style={{ height: 215 }}>
             <AutoSizer>
@@ -168,7 +169,7 @@ export default props => {
                 fontWeight="600"
                 color="#777777"
               >
-                Current Price
+                <FormattedMessage id="Current Price"></FormattedMessage>
               </Text>
               <Flex flexDirection="row" mt="8px" alignItems="flex-end">
                 <Text
@@ -220,12 +221,12 @@ export default props => {
             <Flex flexDirection="column" justifyContent="center" mr={2}>
               <Button onClick={showBuy} variant="gradientBlue">
                 <Text fontSize="13px" fontWeight="700">
-                  BUY
+                  <FormattedMessage id="BUY"></FormattedMessage>
                 </Text>
               </Button>
               <Button mt={2} onClick={showSell} variant="grey">
                 <Text fontSize="13px" fontWeight="700">
-                  SELL
+                  <FormattedMessage id="SELL"></FormattedMessage>
                 </Text>
               </Button>
             </Flex>
@@ -273,7 +274,7 @@ export default props => {
             style={{ boxShadow: '0 2px 9px 4px rgba(0, 0, 0, 0.04)' }}
           >
             <Text fontSize="15px" mt="12px" fontWeight="900" color="#393939">
-              DATASET INFORMATION
+              <FormattedMessage id="DATASET INFORMATION"></FormattedMessage>
             </Text>
             {/* {tcd && renderTCD(tcd, totalSupply)} */}
             {tcr && renderTCR(tcr)}
