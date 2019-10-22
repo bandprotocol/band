@@ -8,7 +8,6 @@ import ClickOutSide from 'react-click-outside'
 import moment from 'utils/moment'
 import DataHeader from 'components/DataHeader'
 import CircleLoadingSpinner from 'components/CircleLoadingSpinner'
-import AutocompletedSearch from 'components/AutocompletedSearch'
 
 import { LogFetcher } from 'data/fetcher/LogFetcher'
 import { getProvider, searchProviderAddress } from 'data/Providers'
@@ -207,7 +206,7 @@ const Broadcast = ({
           }}
         >
           {getFormatDataKey(symbol, dataKey)}
-          {symbol == 'XFN' ? ': ' + prettyMedianPrice(reported_data) : ''}
+          {symbol === 'XFN' ? ': ' + prettyMedianPrice(reported_data) : ''}
         </Text>
       </Flex>
       <Flex mt="10px" mb="20px" alignItems="center">
@@ -233,7 +232,7 @@ const Broadcast = ({
             <Box flex="0 0 15px" style={{ borderTop: 'solid 1px #eef3ff' }} />
             <Flex flex="0 0 150px" alignItems="center">
               <Text mx={2} flex=" 0 0 auto" fontSize="14px" fontWeight="700">
-                {getProvider(k).name}
+                {getProvider(k.toLowerCase()).name}
               </Text>
               <Box flex="1" style={{ borderTop: 'solid 1px #eef3ff' }} />
             </Flex>
@@ -256,7 +255,7 @@ class RenderLogs extends React.Component {
 
   render() {
     return this.props.data
-      .map(event => ({ ...event, ...getProvider(event.actor) }))
+      .map(event => ({ ...event, ...getProvider(event.actor.toLowerCase()) }))
       .map(event =>
         event.type === 'REPORT' ? (
           <Report key={event.id} event={event} symbol={this.props.symbol} />

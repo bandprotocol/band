@@ -118,28 +118,7 @@ class ConvertRevenueModal extends React.Component {
   }
 }
 
-const mapStateToProps = (
-  state,
-  {
-    userRevenue,
-    tokenAddress,
-    dataSourceAddress,
-    tcdAddress,
-    stake,
-    totalOwnership,
-  },
-) => {
-  return {
-    stake,
-    userRevenue,
-    totalOwnership,
-    tokenAddress,
-    dataSourceAddress,
-    tcdAddress,
-  }
-}
-
-const mapDispatchToProps = (dispatch, props) => ({
+const mapDispatchToProps = dispatch => ({
   hideConvertModal: () => dispatch(hideModal()),
   dispatchRevenueToStake: (tcdAddress, dataSourceAddress, revenueAmount) =>
     dispatch(tcdRevenueToStake(tcdAddress, dataSourceAddress, revenueAmount)),
@@ -148,6 +127,6 @@ const mapDispatchToProps = (dispatch, props) => ({
 })
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(ConvertRevenueModal)

@@ -1,0 +1,217 @@
+type Token @entity {
+  id: ID!
+  totalSupply: BigInt!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  curve: Curve
+  parameter: Parameter
+  tcd: TCD
+  holderCount: Int!
+  holders: [Balance!] @derivedFrom(field: "token")
+  transfers: [Transfer!] @derivedFrom(field: "token")
+}
+
+type Balance @entity {
+  id: ID!
+  token: Token!
+  user: Bytes!
+  value: BigInt!
+  lockedValue: BigInt!
+}
+
+type TokenLocked @entity {
+  id: ID!
+  token: Token!
+  locker: Bytes!
+  user: Bytes!
+  value: BigInt!
+}
+
+type Curve @entity {
+  id: ID!
+  token: Token!
+  price: BigInt!
+  collateralEquation: Bytes!
+  curveMultiplier: BigInt!
+  prices: [Price!] @derivedFrom(field: "curve")
+  pricesCount: BigInt!
+  orders: [Order!] @derivedFrom(field: "curve")
+}
+
+type Price @entity {
+  id: ID!
+  curve: Curve!
+  price: BigInt!
+  totalSupply: BigInt!
+  timestamp: BigInt!
+  nonce: BigInt!
+}
+
+type Order @entity {
+  id: ID!
+  curve: Curve!
+  blockHeight: Int!
+  logIndex: Int!
+  orderType: String!
+  user: Bytes!
+  amount: BigInt!
+  price: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+}
+
+type Transfer @entity {
+  id: ID!
+  token: Token!
+  blockHeight: Int!
+  logIndex: Int!
+  sender: Bytes!
+  receiver: Bytes!
+  value: BigInt!
+  timestamp: BigInt!
+  txHash: Bytes!
+}
+
+type Parameter @entity {
+  id: ID!
+  token: Token!
+  params: [ParameterKV!] @derivedFrom(field: "parameter")
+  proposals: [Proposal!] @derivedFrom(field: "parameter")
+}
+
+type ParameterKV @entity {
+  id: ID!
+  parameter: Parameter!
+  key: String!
+  value: BigInt!
+}
+
+type Proposal @entity {
+  id: ID!
+  parameter: Parameter!
+  proposalId: Int!
+  proposer: String!
+  changes: [ProposalKV!] @derivedFrom(field: "proposal")
+  title: String
+  reason: String
+  reasonHash: Bytes!
+  tokenSnapShot: Int!
+  totalVotingPower: BigInt!
+  expirationTime: Int!
+  minParticipation: BigInt!
+  supportRequired: BigInt!
+  currentYesCount: BigInt!
+  currentNoCount: BigInt!
+  proposalVotes: [ProposalVote!] @derivedFrom(field: "proposal")
+
+  txHash: Bytes!
+  timestamp: Int!
+  status: String!
+}
+
+type ProposalKV @entity {
+  id: ID!
+  proposal: Proposal!
+  key: String!
+  value: BigInt!
+}
+
+type ProposalVote @entity {
+  id: ID!
+  proposal: Proposal!
+  voter: String!
+  accepted: Boolean!
+  txHash: Bytes!
+  timestamp: Int!
+}
+
+type TCD @entity {
+  id: ID!
+  token: Token!
+  prefix: String!
+  providers: [DataProvider!] @derivedFrom(field: "tcd")
+  maxProviderCount: Int
+  minStake: BigInt
+  queryCount: Int!
+  reportCount: Int!
+  totalFee: BigInt!
+}
+
+type QueryCounter @entity {
+  id: ID!
+  contract: Bytes!
+  startTime: BigInt!
+  query: Int!
+}
+
+type Report @entity {
+  id: ID!
+  contract: Bytes!
+  key: Bytes!
+  value: BigInt!
+  timestamp: BigInt!
+  status: Int!
+  txHash: Bytes!
+}
+
+type DataProvider @entity {
+  id: ID!
+  tcd: TCD!
+  providerAddress: Bytes!
+  detail: String
+  endpoint: String
+  owner: Bytes!
+  ownerOwnership: BigInt!
+  stake: BigInt!
+  status: String!
+  totalOwnership: BigInt!
+  dataProviderOwnerships: [DataProviderOwnership!]
+    @derivedFrom(field: "dataProvider")
+}
+
+type DataProviderOwnership @entity {
+  id: ID!
+  dataProvider: DataProvider!
+  providerAddress: Bytes!
+  tcdAddress: Bytes!
+  ownership: BigInt!
+  tokenLock: BigInt!
+  voter: Bytes!
+}
+
+type Staking @entity {
+  id: ID!
+  voter: Bytes!
+  blockHeight: Int!
+  tcdAddress: Bytes!
+  providerAddress: Bytes!
+  timestamp: BigInt!
+  voterOwnership: BigInt!
+  voterStake: BigInt!
+}
+
+type RewardDistribute @entity {
+  id: ID!
+  blockHeight: Int!
+  timestamp: BigInt!
+  tcdAddress: Bytes!
+  tokenAddress: Bytes!
+  rewardDistributeEachProviders: [RewardDistributeEachProvider!] @derivedFrom(field: "rewardDistribute")
+}
+
+type RewardDistributeEachProvider @entity {
+  id: ID!
+  blockHeight: Int!
+  tcdAddress: Bytes!
+  tokenAddress: Bytes!
+  providerAddress: Bytes!
+  timestamp: BigInt!
+  totalStake: BigInt!
+  stakeIncreased: BigInt!
+  totalOwnership: BigInt!
+  ownerReward: BigInt!
+  ownerOwnership: BigInt!
+  totalReward: BigInt!
+  rewardDistribute: RewardDistribute!
+}

@@ -25,7 +25,7 @@ class PriceGraph extends React.Component {
 
 const transformData = rawData => {
   return rawData
-    .map(data => [data.get(0).valueOf(), data.get(1)])
+    .map(data => [data.get(0).valueOf(), data.get(1) / 1e18])
     .reverse()
     .toJS()
 }

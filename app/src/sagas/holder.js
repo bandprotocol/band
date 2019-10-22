@@ -8,28 +8,22 @@ function* handleLoadHolders({ address, currentPage, pageSize }) {
   if (!address) return
 
   const result = yield Utils.graphqlRequest(
-    `
-    {
-      tokenByAddress(address: "${address}") {
-      address
-      balancesByTokenAddress(orderBy: VALUE_DESC, first: 10, offset: ${(currentPage -
-        1) *
-        pageSize}) {
-        totalCount
-        nodes {
+    `{
+      token(id: "${address}") {
+        id
+        holderCount
+        holders (orderBy: value, orderDirection: desc, first: 10, skip: ${(currentPage -
+          1) *
+          pageSize}) {
           user
           value
-          }
         }
       }
     }`,
   )
 
   const {
-    tokenByAddress: {
-      address: tokenAddress,
-      balancesByTokenAddress: { nodes: holders, totalCount },
-    },
+    token: { id: tokenAddress, holderCount: totalCount, holders },
   } = result
 
   yield put(

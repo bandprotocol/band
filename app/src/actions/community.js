@@ -25,12 +25,15 @@ export const saveCommunityInfo = (
   marketCap,
   price,
   totalSupply,
+  curveMultiplier,
+  liquiditySpread,
   last24HrsPrice,
   last24HrsTotalSupply,
   collateralEquation,
   tcds,
   tcr,
   parameterAddress,
+  curveAddress,
 ) => ({
   type: SAVE_COMMUNITY_INFO,
   name,
@@ -44,12 +47,15 @@ export const saveCommunityInfo = (
   marketCap,
   price,
   totalSupply,
+  curveMultiplier,
+  liquiditySpread,
   last24HrsPrice,
   last24HrsTotalSupply,
   collateralEquation,
   tcds,
   tcr,
   parameterAddress,
+  curveAddress,
 })
 
 export const saveCommunityClient = (address, client) => ({

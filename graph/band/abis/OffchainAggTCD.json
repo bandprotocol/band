@@ -1,0 +1,316 @@
+[
+  {
+    "constant": false,
+    "inputs": [{ "name": "tokenAmount", "type": "uint256" }],
+    "name": "distributeFee",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "reserveCount",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "undistributedReward",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "activeCount",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "name": "dataSource", "type": "address" },
+      { "name": "prevDataSource", "type": "address" },
+      { "name": "initialStake", "type": "uint256" }
+    ],
+    "name": "register",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "name": "dataSource", "type": "address" },
+      { "name": "prevDataSource", "type": "address" },
+      { "name": "newPrevDataSource", "type": "address" },
+      { "name": "withdrawOwnership", "type": "uint256" }
+    ],
+    "name": "unstake",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{ "name": "", "type": "uint256" }],
+    "name": "withdrawReceipts",
+    "outputs": [
+      { "name": "owner", "type": "address" },
+      { "name": "amount", "type": "uint256" },
+      { "name": "withdrawTime", "type": "uint64" },
+      { "name": "isWithdrawn", "type": "bool" }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "prefix",
+    "outputs": [{ "name": "", "type": "bytes8" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "registry",
+    "outputs": [{ "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      { "name": "dataSource", "type": "address" },
+      { "name": "staker", "type": "address" }
+    ],
+    "name": "getStake",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "name": "dataSource", "type": "address" },
+      { "name": "prevDataSource", "type": "address" },
+      { "name": "newPrevDataSource", "type": "address" },
+      { "name": "value", "type": "uint256" }
+    ],
+    "name": "stake",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      { "name": "dataSource", "type": "address" },
+      { "name": "staker", "type": "address" }
+    ],
+    "name": "getOwnership",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "name": "receiptId", "type": "uint256" }],
+    "name": "unlockTokenFromReceipt",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "params",
+    "outputs": [{ "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{ "name": "", "type": "address" }],
+    "name": "infoMap",
+    "outputs": [
+      { "name": "owner", "type": "address" },
+      { "name": "stake", "type": "uint256" },
+      { "name": "totalOwnerships", "type": "uint256" }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [{ "name": "input", "type": "bytes" }],
+    "name": "query",
+    "outputs": [
+      { "name": "output", "type": "bytes32" },
+      { "name": "updatedAt", "type": "uint256" },
+      { "name": "status", "type": "uint8" }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "bondingCurve",
+    "outputs": [{ "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "token",
+    "outputs": [{ "name": "", "type": "address" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "name": "_prefix", "type": "bytes8" },
+      { "name": "_bondingCurve", "type": "address" },
+      { "name": "_params", "type": "address" },
+      { "name": "_registry", "type": "address" }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "name": "key", "type": "bytes" },
+      { "indexed": false, "name": "value", "type": "uint256" },
+      { "indexed": false, "name": "timestamp", "type": "uint64" },
+      { "indexed": false, "name": "status", "type": "uint8" }
+    ],
+    "name": "DataUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "dataSource", "type": "address" },
+      { "indexed": true, "name": "owner", "type": "address" },
+      { "indexed": false, "name": "stake", "type": "uint256" }
+    ],
+    "name": "DataSourceRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "dataSource", "type": "address" },
+      { "indexed": true, "name": "participant", "type": "address" },
+      { "indexed": false, "name": "stake", "type": "uint256" }
+    ],
+    "name": "DataSourceStaked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "dataSource", "type": "address" },
+      { "indexed": true, "name": "participant", "type": "address" },
+      { "indexed": false, "name": "unstake", "type": "uint256" }
+    ],
+    "name": "DataSourceUnstaked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "dataSource", "type": "address" },
+      { "indexed": false, "name": "totalReward", "type": "uint256" },
+      { "indexed": false, "name": "ownerReward", "type": "uint256" }
+    ],
+    "name": "FeeDistributed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "name": "receiptIndex", "type": "uint256" },
+      { "indexed": true, "name": "owner", "type": "address" },
+      { "indexed": false, "name": "amount", "type": "uint256" },
+      { "indexed": false, "name": "withdrawTime", "type": "uint64" }
+    ],
+    "name": "WithdrawReceiptCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": false, "name": "receiptIndex", "type": "uint256" },
+      { "indexed": true, "name": "owner", "type": "address" },
+      { "indexed": false, "name": "amount", "type": "uint256" }
+    ],
+    "name": "WithdrawReceiptUnlocked",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "caller", "type": "address" },
+      { "indexed": false, "name": "input", "type": "bytes" },
+      { "indexed": false, "name": "status", "type": "uint8" }
+    ],
+    "name": "Query",
+    "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "queryPrice",
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      { "name": "key", "type": "bytes" },
+      { "name": "value", "type": "uint256" },
+      { "name": "timestamp", "type": "uint64" },
+      { "name": "status", "type": "uint8" },
+      { "name": "v", "type": "uint8[]" },
+      { "name": "r", "type": "bytes32[]" },
+      { "name": "s", "type": "bytes32[]" }
+    ],
+    "name": "report",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

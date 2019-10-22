@@ -24,6 +24,7 @@ import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
+
 import HexBottom from 'images/tiles.png'
 import Mainnet from 'images/mainnet.png'
 import Plant from 'images/plant.svg'

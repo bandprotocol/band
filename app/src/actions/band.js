@@ -3,7 +3,6 @@ export const SAVE_BAND_CLIENT = 'SAVE_BAND_CLIENT'
 export const SAVE_BAND_INFO = 'SAVE_BAND_INFO'
 export const SET_WALLET = 'SET_WALLET'
 export const SET_WEB3 = 'SET_WEB3'
-export const SET_XFN_REWARD_INFO = 'SET_XFN_REWARD_INFO'
 
 export const updateClient = provider => ({
   type: UPDATE_CLIENT,
@@ -32,10 +31,3 @@ export const setWeb3 = web3 => ({
   type: SET_WEB3,
   web3: web3,
 })
-
-export const setXFNRewardInfo = xfnRewardInfo => {
-  return {
-    type: SET_XFN_REWARD_INFO,
-    xfnRewardInfo: xfnRewardInfo,
-  }
-}
