@@ -21,7 +21,7 @@
     "highcharts": "^7.0.2",
     "highcharts-react-official": "^2.0.0",
     "highlight.js": "^9.15.8",
-    "highlightjs-solidity": "^1.0.6",
+    "highlightjs-solidity": "^1.0.7",
     "hsl-to-hex": "^1.0.0",
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.24.0",
