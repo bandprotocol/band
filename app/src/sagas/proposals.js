@@ -1,5 +1,5 @@
 import { takeEvery, put, select, all } from 'redux-saga/effects'
-import { Utils } from 'band.js'
+import { Utils, IPFS } from 'band.js'
 import BN from 'utils/bignumber'
 import moment from 'utils/moment'
 
@@ -11,19 +11,16 @@ import { parameterByNameSelector } from 'selectors/parameter'
 
 function* handleLoadProposals({ address }) {
   const currentUser = yield select(currentUserSelector)
-  const {
-    tokenByAddress: {
-      parameterByTokenAddress: {
-        proposalsByParameterAddress: { nodes: rawProposals },
-      },
-    },
-  } = yield Utils.graphqlRequest(`{
-    tokenByAddress(address: "${address}") {
-      parameterByTokenAddress {
-        proposalsByParameterAddress {
-          nodes {
-            reason
-            changes
+
+  const data = yield Utils.graphqlRequest(`{
+    token(id: "${address}") {
+        parameter {
+          proposals {
+            reasonHash
+            changes {
+              key
+              value
+            }
             proposalId
             proposer
             minParticipation
@@ -34,26 +31,26 @@ function* handleLoadProposals({ address }) {
             timestamp
             expirationTime
             status
-            proposalVotesByParameterAddressAndProposalId(condition: {voter: "${currentUser}"}) {
-              nodes {
-                voter
-                accepted
-              }
+            proposalVotes(where: {voter: "${currentUser}"}) {
+              voter
+              accepted
             }
           }
         }
       }
-    }
-  }`)
+    }`)
+
+  const proposalsData = data.token.parameter.proposals
 
   const proposals = yield all(
-    rawProposals.map(function*(proposal) {
+    proposalsData.map(function*(proposal) {
       if (proposal.changes.length === 0) {
         return {
           deleted: true,
         }
       }
-      const keys = Object.keys(proposal.changes)[0]
+      const { title, reason } = yield IPFS.get(proposal.reasonHash, true)
+      const keys = proposal.changes[0].key
       const [prefix, name] = keys ? keys.split(':') : [null, null]
       if (!name)
         return {
@@ -61,7 +58,8 @@ function* handleLoadProposals({ address }) {
         }
       const changes = yield all(
         Object.entries(proposal.changes).map(function*([key, value]) {
-          const [_prefix, _name] = key.split(':')
+          const [_prefix, _name] = value.key.split(':')
+
           if (_prefix !== prefix || !_name) {
             return {
               deleted: true,
@@ -72,27 +70,24 @@ function* handleLoadProposals({ address }) {
             type: prefix,
             name: _name,
           })
-
           return {
             name: _name,
             oldValue,
-            newValue: new BN(value),
+            newValue: new BN(value.value),
           }
         }),
       )
-
-      const vote = proposal.proposalVotesByParameterAddressAndProposalId.nodes
+      const vote = proposal.proposalVotes
       if (changes.filter(c => c.deleted).length !== 0) {
         return {
           deleted: true,
         }
       }
-
       return {
         proposalId: proposal.proposalId,
         proposer: proposal.proposer,
-        title: proposal.reason && proposal.reason.title,
-        reason: proposal.reason && proposal.reason.reason,
+        title: proposal.reasonHash && title,
+        reason: proposal.reasonHash && reason,
         prefix: prefix,
         changes: changes,
         status: proposal.status,
@@ -112,7 +107,6 @@ function* handleLoadProposals({ address }) {
       }
     }),
   )
-
   yield put(saveProposals(address, proposals.filter(p => !p.deleted)))
 }
 

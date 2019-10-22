@@ -20,12 +20,15 @@ const handleSaveCommunityInfo = (
     marketCap,
     price,
     totalSupply,
+    curveMultiplier,
+    liquiditySpread,
     last24HrsPrice,
     last24HrsTotalSupply,
     collateralEquation,
     tcds,
     tcr,
     parameterAddress,
+    curveAddress,
   },
 ) =>
   state.set(
@@ -42,12 +45,15 @@ const handleSaveCommunityInfo = (
       marketCap,
       price,
       totalSupply,
+      curveMultiplier,
+      liquiditySpread,
       last24HrsPrice,
       last24HrsTotalSupply,
       collateralEquation,
       tcds,
       tcr,
       parameterAddress,
+      curveAddress,
     }),
   )
 

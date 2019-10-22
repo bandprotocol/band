@@ -110,6 +110,8 @@
   "Somebody Wants Smart Contract to Behave Differently": "Somebody Wants Smart Contract to Behave Differently",
   "Any token holder can vote to agree or disagree with a change.": "Any token holder can vote to agree or disagree with a change.",
   "communities.description": "Band Protocol 一个安全且可扩展的预言机，主要功能是弥合去中心化应⽤和现实世界数据之间的差距，利⽤经济激励模型确保数据是准确和值得信赖的。",
+  "communities.bandProtocolWebsite": "Band Protocol网站",
+  "communities.learnHowToStake": "学习如何进行锁仓",
   "communities.availableDataSets": "DApp可用的数据集",
   "XFN.overview.datasetDescription": "Get current prices of any trading currency pairs.",
 

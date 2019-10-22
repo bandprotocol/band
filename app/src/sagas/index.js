@@ -29,11 +29,6 @@ import {
   currentNetworkSelector,
 } from 'selectors/current'
 
-import {
-  logoCommunityFromSymbol,
-  bannerCommunityFromSymbol,
-} from 'utils/communityImg'
-
 // saga
 import balancesSaga from 'sagas/balances'
 import ordersSaga from 'sagas/orders'
@@ -50,6 +45,9 @@ import communitySaga from 'sagas/community'
 
 import { networkIdtoName } from 'utils/network'
 import { getBandUSD } from 'utils/bandPrice'
+
+import FinanceSrc from 'images/finance.png'
+import FinanceBannerSrc from 'images/finance-banner.png'
 
 // import web3
 import Web3 from 'web3'
@@ -78,25 +76,25 @@ switch (network) {
   case 'mainnet':
     BandProtocolClient.setAPI('https://band-mainnet.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-mainnet.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-mainnet',
     )
     break
   case 'kovan':
     BandProtocolClient.setAPI('https://band-kovan.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-kovan.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-kovan',
     )
     break
   case 'rinkeby':
     BandProtocolClient.setAPI('https://band-rinkeby.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-rinkeby.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-rinkeby',
     )
     break
   case 'ropsten':
     BandProtocolClient.setAPI('https://band-ropsten.herokuapp.com')
     BandProtocolClient.setGraphQlAPI(
-      'https://graphql-ropsten.bandprotocol.com/graphql',
+      'https://api.thegraph.com/subgraphs/name/taobun/bandprotocol-ropsten',
     )
     break
   case 'local':
@@ -120,13 +118,11 @@ function* handleBandWalletChannel({ type, payload }) {
         case 'INITIALIZED':
           break
         case 'NOT_SIGNIN':
-          // console.log('not_signin')
           yield put(setUserAddress('NOT_SIGNIN'))
           yield put(updateClient())
           localStorage.removeItem('walletType')
           break
         case 'PROVIDER_READY': {
-          // console.log('provider ready')
           const provider = yield window.BandWallet.provider
           const web3 = new Web3(provider)
           const userAddress = yield getUser(web3)
@@ -164,15 +160,13 @@ function* baseInitialize() {
   yield put(loadCurrent())
 
   const query = yield Utils.graphqlRequest(`
-    {
-      allContracts(condition: {contractType: "BAND_TOKEN"}){
-        nodes{
-          address
-        }
-      }
+  {
+    tokens(where:{symbol: "BAND"}) {
+      id
     }
+  }
   `)
-  const bandAddress = query.allContracts.nodes[0].address
+  const bandAddress = query.tokens[0].id
 
   /* get BAND-USD conversion rate from Coingecko */
   const { usd, usd_24h_change } = yield getBandUSD()
@@ -182,134 +176,85 @@ function* baseInitialize() {
 
   const communityDetails = yield Utils.graphqlRequest(
     `
-    {
-      allBandCommunities {
-        nodes {
-          tokenAddress
-          name
-          organization
-          description
-          website
-          logo
-          banner
-          tokenByTokenAddress {
-            address
-            symbol
-            totalSupply
-            curveByTokenAddress {
-              price
-              collateralEquation
-              pricesByCurveAddress(first: 1, filter: {timestamp: {lessThan: ${Math.trunc(
-                new Date().getTime() / 1000 - 86400,
-              )}}}, orderBy: TIMESTAMP_DESC) {
-                nodes {
-                  price
-                  totalSupply
-                }
-              }
-            }
-            tcdsByTokenAddress {
-              nodes {
-                address
-                prefix
-                maxProviderCount
-                minStake
-                dataProvidersByTcdAddress(filter: {status: {notEqualTo: "DISABLED"}}) {
-                  nodes {
-                    stake
-                    dataSourceAddress
-                  }
-                }
-              }
-            }
-            tcrsByTokenAddress {
-              nodes {
-                listedEntries: entriesByTcrAddress(filter: {status: {equalTo: "LISTED"}}) {
-                  totalCount
-                }
-                appliedEntries: entriesByTcrAddress(filter: {status: {equalTo: "APPLIED"}}) {
-                  totalCount
-                }
-                challengedEntries: entriesByTcrAddress(filter: {status: {equalTo: "CHALLENGED"}}) {
-                  totalCount
-                }
-                rejectedEntries: entriesByTcrAddress(filter: {status: {equalTo: "REJECTED"}}) {
-                  totalCount
-                }
-              }
-            }
-            parameterByTokenAddress {
-              address
-            }
-          }
+  {
+    tokens{
+      id
+      name
+      symbol
+      totalSupply
+      curve{
+        id
+        price
+        collateralEquation
+        curveMultiplier
+        prices(first:1, where:{timestamp_lt: ${Math.trunc(
+          new Date().getTime() / 1000 - 86400,
+        )}},orderBy: timestamp, orderDirection:desc){
+          price
+          totalSupply
+        }
+      }
+      tcd {
+        id
+        prefix
+        providers {
+          providerAddress
+          stake
+        }
+      }
+      parameter{
+        id
+        params(where: { key: "bonding:liquidity_spread" }) {
+          value
         }
       }
     }
+  }
   `,
   )
 
-  for (const community of communityDetails.allBandCommunities.nodes) {
-    const token = community.tokenByTokenAddress
-    yield put(
-      saveCommunityInfo(
-        community.name,
-        token.symbol,
-        token.address,
-        community.organization,
-        logoCommunityFromSymbol(token.symbol),
-        bannerCommunityFromSymbol(token.symbol),
-        community.description,
-        community.website,
-        (parseFloat(token.curveByTokenAddress.price) *
-          parseFloat(token.totalSupply)) /
-          1e18,
-        parseFloat(token.curveByTokenAddress.price),
-        new BN(token.totalSupply),
-        parseFloat(
-          token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-            ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0].price
-            : 0,
+  for (const token of communityDetails.tokens) {
+    if (token.symbol !== 'BAND') {
+      yield put(
+        saveCommunityInfo(
+          token.name,
+          token.symbol,
+          token.id,
+          'Band protocol', // community.organization,
+          '/static/media/finance.82975d46.png', // logoCommunityFromSymbol(token.symbol),
+          '/static/media/finance-banner.89257026.png', // bannerCommunityFromSymbol(token.symbol),
+          'Get current prices of any trading currency pairs.', //community.description,
+          'https://data.bandprotocol.com/dataset/price', //community.website,
+          (parseFloat(token.curve.price) * parseFloat(token.totalSupply)) /
+            1e36,
+          parseFloat(token.curve.price / 1e18),
+          new BN(token.totalSupply),
+          new BN(token.curve.curveMultiplier),
+          token.parameter.params.length === 1 &&
+            new BN(token.parameter.params[0].value),
+          parseFloat(token.curve.prices[0] ? token.curve.prices[0].price : 0) /
+            1e18,
+          new BN(token.curve.prices[0] ? token.curve.prices[0].totalSupply : 0),
+          token.curve.collateralEquation,
+          // Map(),
+          token.tcd &&
+            Map({
+              [token.tcd.id]: Map({
+                prefix: token.tcd.prefix,
+                totalStake: token.tcd.providers.reduce(
+                  (c, { stake }) => c.add(new BN(stake)),
+                  new BN(0),
+                ),
+                dataProviderCount: token.tcd.providers.length,
+                providers: token.tcd.providers.map(x => x.providerAddress),
+              }),
+            }),
+          false,
+          token.parameter.id,
+          token.curve.id,
         ),
-        new BN(
-          token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-            ? token.curveByTokenAddress.pricesByCurveAddress.nodes[0]
-                .totalSupply
-            : 0,
-        ),
-        token.curveByTokenAddress.collateralEquation,
-        token.tcdsByTokenAddress.nodes[0] &&
-          token.tcdsByTokenAddress.nodes.reduce(
-            (acc, each) =>
-              acc.set(
-                each.address,
-                Map({
-                  prefix: each.prefix,
-                  minStake: each.minStake,
-                  maxProviderCount: each.maxProviderCount,
-                  totalStake: each.dataProvidersByTcdAddress.nodes.reduce(
-                    (c, { stake }) => c.add(new BN(stake)),
-                    new BN(0),
-                  ),
-                  dataProviderCount:
-                    each.dataProvidersByTcdAddress.nodes.length,
-                  providers: each.dataProvidersByTcdAddress.nodes.map(
-                    x => x.dataSourceAddress,
-                  ),
-                }),
-              ),
-            Map(),
-          ),
-        token.tcrsByTokenAddress.nodes[0] && {
-          listed: token.tcrsByTokenAddress.nodes[0].listedEntries.totalCount,
-          applied: token.tcrsByTokenAddress.nodes[0].appliedEntries.totalCount,
-          challenged:
-            token.tcrsByTokenAddress.nodes[0].challengedEntries.totalCount,
-          rejected:
-            token.tcrsByTokenAddress.nodes[0].rejectedEntries.totalCount,
-        },
-        token.parameterByTokenAddress.address,
-      ),
-    )
+      )
+    }
   }
 
   /**

@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import BN from 'bn.js'
 import { Buffer } from 'buffer'
 import { Utils } from 'band.js'
+import Web3 from 'web3'
 
 export const isPositiveNumber = input => {
   if (typeof input === 'object') {
@@ -329,3 +330,6 @@ export const parametersToHex = (parameters, types) => {
   }
   return hexString
 }
+
+export const toChecksumAddress = address =>
+  Web3.utils.toChecksumAddress(address)

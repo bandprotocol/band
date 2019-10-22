@@ -5,26 +5,21 @@ import { Utils } from 'band.js'
 
 function* handleLoadHistory({ address, currentPage, pageSize }) {
   const {
-    tokenByAddress: {
-      curveByTokenAddress: {
-        ordersByCurveAddress: { nodes: orders, totalCount },
-      },
+    token: {
+      curve: { orders, totalCount = 100 },
     },
   } = yield Utils.graphqlRequest(`{
-    tokenByAddress(address: "${address}") {
-      curveByTokenAddress {
-        ordersByCurveAddress(orderBy: TIMESTAMP_DESC, first: 10, offset: ${(currentPage -
+    token(id: "${address}") {
+      curve {
+        orders (orderBy: timestamp, orderDirection: desc, first: 10, skip: ${(currentPage -
           1) *
           pageSize}) {
-          nodes {
-            amount
-            price
-            timestamp
-            txHash
-            user
-            orderType
-          }
-          totalCount
+          amount
+          price
+          timestamp
+          txHash
+          user
+          orderType
         }
       }
     }

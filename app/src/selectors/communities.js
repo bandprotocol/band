@@ -10,6 +10,7 @@ export const nameAndAddressCommunitySelector = createSelector(
     communities.map((community, address) =>
       Map({
         address,
+        curveAddress: community.get('curveAddress'),
         name: community.get('name'),
         tcds: community.get('tcds'),
       }),

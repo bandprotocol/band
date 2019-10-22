@@ -13,7 +13,8 @@ import {
 } from 'actions'
 import BN from 'utils/bignumber'
 
-const handleSetUserAddress = (state, { address }) => state.set('user', address)
+const handleSetUserAddress = (state, { address }) =>
+  state.set('user', address.toLowerCase())
 
 const handleSetNetwork = (state, { network }) => state.set('network', network)
 

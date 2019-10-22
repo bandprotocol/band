@@ -1,0 +1,20 @@
+{
+  "name": "banddataset",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy-mainnet": "cp subgraph_mainnet.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ taobun/bandprotocol-mainnet",
+    "deploy-ropsten": "cp subgraph_ropsten.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ taobun/bandprotocol-ropsten",
+    "deploy-kovan": "cp subgraph_kovan.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ taobun/bandprotocol-kovan",
+    "deploy-rinkeby": "cp subgraph_rinkeby.yaml subgraph.yaml && graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ taobun/bandprotocol-rinkeby",
+    "create-local": "graph create --node http://localhost:8020/ taobun/banddataset",
+    "remove-local": "graph remove --node http://localhost:8020/ taobun/banddataset",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 taobun/banddataset"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.15.0",
+    "@graphprotocol/graph-ts": "0.15.0",
+    "band.js": "^1.3.0"
+  }
+}

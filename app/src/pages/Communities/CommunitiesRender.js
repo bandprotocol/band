@@ -21,27 +21,6 @@ const Header = styled(Card)`
   background-position: center;
   border-bottom-right-radius: 345px;
 `
-
-const ClaimButton = styled(Flex).attrs({
-  justifyContent: 'center',
-  alignItems: 'center',
-})`
-  width: 180px;
-  height: 44px;
-  line-height: 44px;
-  color: white;
-  z-index: 9999999;
-  cursor: pointer;
-  border-radius: 24px;
-  transition: all 250ms;
-  background-image: linear-gradient(to left, #f75c9d, #8c69ff);
-  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.3);
-  &:hover {
-    background-image: linear-gradient(to left, #ff6ba9, #9f82ff);
-    box-shadow: -1px 1px 5px 0px #8c69ff, 1px 1px 5px 0px #f75c9d;
-  }
-`
-
 const AbsoluteLink = styled.a.attrs(props => ({
   href: props.to || props.href,
   target: '_blank',
@@ -111,34 +90,12 @@ const CountBadge = styled(Flex).attrs({
 
 export default ({
   user,
-  xfnRewardContract,
-  xfnRewardInfo,
-  getPendingReward,
-  hasPendingReward,
   rewardAmount,
   tcdCommunities,
   tcrCommunities,
   bandPrice,
   history,
-  showClaimXFNModal,
-  shouldDisplayClaimXFN,
 }) => {
-  if (shouldDisplayClaimXFN) {
-    if (
-      !window.lastXFNCallTime ||
-      Date.now() - window.lastXFNCallTime >= 5000
-    ) {
-      window.lastXFNCallTime = Date.now()
-      getPendingReward(user, xfnRewardContract)
-    }
-  }
-
-  const sdcx =
-    xfnRewardInfo &&
-    shouldDisplayClaimXFN &&
-    hasPendingReward &&
-    rewardAmount > 0.0
-
   return (
     <PageContainer
       fullWidth
@@ -175,20 +132,12 @@ export default ({
                 <FormattedMessage id="Band Protocol Website" />
               </WhiteButton>
             </AbsoluteLink>
+
             <AbsoluteLink href="https://medium.com/bandprotocol/financial-dataset-token-generation-event-aab9ff2801ae">
               <WhiteOutlineButton>
                 <FormattedMessage id="Learn how to Stake" />
               </WhiteOutlineButton>
             </AbsoluteLink>
-            {/* disable XFN airdrop */}
-            {/* sdcx && (
-              <ClaimButton onClick={() => showClaimXFNModal()}>
-                Claim Free XFN
-              </ClaimButton>
-            ) */}
-            <ClaimButton onClick={() => showClaimXFNModal()}>
-              <FormattedMessage id="XFN Airdrop" />
-            </ClaimButton>
           </Flex>
         </Flex>
       </Header>

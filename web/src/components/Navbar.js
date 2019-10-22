@@ -32,8 +32,6 @@ import MenuSocialMedia from 'images/menu-social-media.svg'
 import GovernancePortalImg from 'images/governancePortal.svg'
 import DatasetExplorerImg from 'images/datasetExplorer.png'
 
-const airdropLink = 'https://airdrop.bandprotocol.com/tokenholder'
-
 const LinesText = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -367,27 +365,6 @@ const Navbar = props => {
                 onClick={closeMenu}
               />
             </Flex>
-            {/* <Flex flex="0 0 60px" pr="26px" alignItems="center" pl={5}>
-              <AbsoluteLink href={airdropLink} onClick={closeMenu}>
-                <Flex flexDirection="row">
-                  <SemiBold color="#fff" fontSize="18px">
-                    Airdrop
-                  </SemiBold>
-                  <Flex
-                    bg="#ff5b84"
-                    color="white"
-                    p="3px 8px"
-                    fontSize="12px"
-                    justifyContent="center"
-                    alignItems="center"
-                    ml="5px"
-                    style={{ borderRadius: '10px' }}
-                  >
-                    Live
-                  </Flex>
-                </Flex>
-              </AbsoluteLink>
-            </Flex> */}
             <Flex
               flex="0 0 60px"
               pr="26px"
@@ -652,45 +629,8 @@ const Navbar = props => {
   }
 
   const renderDesktop = () => {
-    // const { pathname } = props.location
     return (
       <Flex alignItems="center" onMouseOver={() => selectTab(-1)}>
-        {/* Tab 1: Airdrop */}
-        {/* <Box ml={['20px', '20px', '40px']}>
-          <AbsoluteLink
-            style={{
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            target="_blank"
-            to={airdropLink}
-          >
-            <MainMenuText style={{ whiteSpace: 'nowrap' }}>
-              Airdrop
-            </MainMenuText>
-            <Flex
-              bg="#373c53"
-              color="white"
-              // bg="#ff5b84"
-              // color="white"
-              p="3px 8px"
-              fontSize="11px"
-              justifyContent="center"
-              alignItems="center"
-              ml="5px"
-              style={{ borderRadius: '10px', opacity: 0.8 }}
-              css={{
-                '&:hover': {
-                  color: 'white',
-                },
-              }}
-            >
-              Soon
-            </Flex>
-          </AbsoluteLink>
-        </Box> */}
-
         {/* Tab 2: Features */}
         <Flex
           alignItems="center"

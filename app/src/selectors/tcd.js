@@ -19,13 +19,9 @@ export const numDataProviders = createSelector(
   (tcds, address, tcdAddress) => {
     if (!tcds.get(address)) return 0
     const tcdsByComm = tcds.get(address)
-    if (
-      tcdsByComm.size === 0 ||
-      !tcdsByComm.get(tcdAddress) ||
-      !tcdsByComm.get(tcdAddress).get('dataProviders')
-    )
+    if (!tcdsByComm || !tcdsByComm.getIn([tcdAddress, 'dataProviders']))
       return 0
 
-    return tcdsByComm.get(tcdAddress).get('dataProviders').length
+    return tcdsByComm.getIn([tcdAddress, 'dataProviders']).size
   },
 )

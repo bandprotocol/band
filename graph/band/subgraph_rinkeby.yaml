@@ -1,0 +1,152 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: BandToken
+    network: rinkeby
+    source:
+      address: "0x5EE386BCa38f21f21c800700CCFf592656F88D60"
+      abi: BandToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: BandToken
+          file: ./abis/BandToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./mappings/BandToken.ts
+  - kind: ethereum/contract
+    name: DatasetToken
+    network: rinkeby
+    source:
+      address: "0xC54b023AAc7e4359fE514983194fCCEa0BAA4588"
+      abi: DatasetToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+        - TokenLocked
+        - TokenUnlocked
+      abis:
+        - name: DatasetToken
+          file: ./abis/DatasetToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: TokenLocked(indexed address,indexed address,uint256)
+          handler: handleTokenLocked
+        - event: TokenUnlocked(indexed address,indexed address,uint256)
+          handler: handleTokenUnlocked
+      file: ./mappings/DatasetToken.ts
+  - kind: ethereum/contract
+    name: BondingCurve
+    network: rinkeby
+    source:
+      address: "0xcF197e8536b6418e94fEEF4A0F0bf86Bbf48Ac3f"
+      abi: BondingCurve
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      entities:
+        - Buy
+        - Sell
+        - Deflate
+        - RevenueCollect
+      abis:
+        - name: BondingCurve
+          file: ./abis/BondingCurve.json
+      eventHandlers:
+        - event: Buy(indexed address,uint256,uint256)
+          handler: handleBuy
+        - event: Sell(indexed address,uint256,uint256)
+          handler: handleSell
+        - event: Deflate(indexed address,uint256)
+          handler: handleDeflate
+        - event: RevenueCollect(indexed address,uint256)
+          handler: handleRevenueCollect
+      file: ./mappings/BondingCurve.ts
+  - kind: ethereum/contract
+    name: OffchainAggTCD
+    network: rinkeby
+    source:
+      address: "0x62FfC2FA501F5c30042feCd0587C8c680f90b58E"
+      abi: OffchainAggTCD
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      abis:
+        - name: OffchainAggTCD
+          file: ./abis/OffchainAggTCD.json
+      entities:
+        - DataUpdated
+        - DataSourceRegistered
+        - DataSourceStaked
+        - DataSourceUnstaked
+        - FeeDistributed
+        - WithdrawReceiptCreated
+        - WithdrawReceiptUnlocked
+        - Query
+      eventHandlers:
+        - event: DataUpdated(bytes,uint256,uint64,uint8)
+          handler: handleDataUpdated
+        - event: DataSourceRegistered(indexed address,indexed address,uint256)
+          handler: handleDataSourceRegistered
+        - event: DataSourceStaked(indexed address,indexed address,uint256)
+          handler: handleDataSourceStaked
+        - event: DataSourceUnstaked(indexed address,indexed address,uint256)
+          handler: handleDataSourceUnstaked
+        - event: FeeDistributed(indexed address,uint256,uint256)
+          handler: handleFeeDistributed
+        - event: WithdrawReceiptCreated(uint256,indexed address,uint256,uint64)
+          handler: handleWithdrawReceiptCreated
+        - event: WithdrawReceiptUnlocked(uint256,indexed address,uint256)
+          handler: handleWithdrawReceiptUnlocked
+        - event: Query(indexed address,bytes,uint8)
+          handler: handleQuery
+      file: ./mappings/OffchainAggTCD.ts
+  - kind: ethereum/contract
+    name: Parameters
+    network: rinkeby
+    source:
+      address: "0xc90BcF4C94401148807A538dE6d566d7236243Ab"
+      abi: Parameters
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.3
+      language: wasm/assemblyscript
+      abis:
+        - name: Parameters
+          file: ./abis/Parameters.json
+        - name: DatasetToken
+          file: ./abis/DatasetToken.json
+      entities:
+        - ProposalProposed
+        - ProposalVoted
+        - ProposalAccepted
+        - ProposalRejected
+        - ParameterChanged
+        - ParameterProposed
+      eventHandlers:
+        - event: ProposalProposed(indexed uint256,indexed address,bytes32)
+          handler: handleProposalProposed
+        - event: ProposalVoted(indexed uint256,indexed address,bool,uint256)
+          handler: handleProposalVoted
+        - event: ProposalAccepted(indexed uint256)
+          handler: handleProposalAccepted
+        - event: ProposalRejected(indexed uint256)
+          handler: handleProposalRejected
+        - event: ParameterChanged(indexed bytes32,uint256)
+          handler: handleParameterChanged
+        - event: ParameterProposed(indexed uint256,indexed bytes32,uint256)
+          handler: handleParameterProposed
+      file: ./mappings/Parameters.ts

@@ -9,6 +9,7 @@ import {
   communityUnlockBalanceSelector,
 } from 'selectors/balances'
 import BN from 'utils/bignumber'
+import BigNumber from 'bignumber.js'
 import { Utils } from 'band.js'
 import { isPositiveNumber } from 'utils/helper'
 import { bandPriceSelector } from 'selectors/bandPrice'
@@ -95,9 +96,19 @@ class BuySellModal extends React.Component {
   }
 
   async getPrice(type, amount) {
-    return type === 'buy'
-      ? await this.props.communityClient.getBuyPrice(amount)
-      : await this.props.communityClient.getSellPrice(amount)
+    const { liquiditySpread } = this.props
+    return new BN(
+      type === 'buy'
+        ? await this.props.communityClient.getBuyPrice(
+            amount.applyPercentage(
+              100 +
+                BigNumber(liquiditySpread.toString())
+                  .div(BigNumber(10).pow(16))
+                  .toNumber(),
+            ),
+          )
+        : await this.props.communityClient.getSellPrice(amount),
+    )
   }
 
   async updateAmount() {
@@ -139,7 +150,6 @@ class BuySellModal extends React.Component {
 
       this.setState({ loading: true })
       const price = await this.getPrice(type, adjustedAmount)
-
       // if price is more than 100M
       if (price.gt(BN.parse(100000000))) {
         this.setTypeState(type, {
@@ -362,6 +372,7 @@ const mapStateToProps = (state, { type, tokenAddress }) => {
     name: community.get('name'),
     logo: community.get('logo'),
     symbol: community.get('symbol'),
+    liquiditySpread: community.get('liquiditySpread'),
     bandBalance: bandUnlockBalanceSelector(state),
     tokenBalance: communityUnlockBalanceSelector(state, {
       address: tokenAddress,

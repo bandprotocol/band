@@ -126,7 +126,7 @@ export default props => {
     totalSupply,
     totalSupplyChanged,
     collateralEquation,
-    network,
+    curveMultiplier,
     tcr,
     // tcd,
   } = props
@@ -248,12 +248,10 @@ export default props => {
             value={BN.parse(totalSupply).shortPretty()}
             unit={symbol}
             subValue={`${collateralEquation &&
-              BN.parse(
-                calculateCollateralAt(
-                  collateralEquation,
-                  BN.parse(totalSupply).toString(),
-                  network,
-                ).toFixed(0),
+              calculateCollateralAt(
+                collateralEquation,
+                totalSupply,
+                curveMultiplier,
               ).pretty()} BAND collateral`}
           />
           <MiniGraph
