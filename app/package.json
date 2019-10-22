@@ -19,7 +19,7 @@
     "chartjs-plugin-downsample": "^1.1.0",
     "decimal.js": "^10.2.0",
     "highcharts": "^7.0.2",
-    "highcharts-react-official": "^2.0.0",
+    "highcharts-react-official": "^2.2.2",
     "highlight.js": "^9.15.8",
     "highlightjs-solidity": "^1.0.6",
     "hsl-to-hex": "^1.0.0",
