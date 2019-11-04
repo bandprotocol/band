@@ -215,3 +215,8 @@ type RewardDistributeEachProvider @entity {
   totalReward: BigInt!
   rewardDistribute: RewardDistribute!
 }
+
+type Tx @entity {
+  id: ID!
+  confirmAt: BigInt!
+}

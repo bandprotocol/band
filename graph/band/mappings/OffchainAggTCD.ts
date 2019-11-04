@@ -21,8 +21,11 @@ import {
   DataProvider,
   DataProviderOwnership
 } from "../generated/schema";
+import { saveTx } from "./TxSubscriber";
 
 export function handleDataUpdated(event: DataUpdated): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let tcd = TCD.load(event.address.toHexString());
 
   if (tcd == null) {
@@ -59,6 +62,8 @@ export function handleDataUpdated(event: DataUpdated): void {
 }
 
 export function handleDataSourceRegistered(event: DataSourceRegistered): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let tcd = TCD.load(event.address.toHexString());
   let tcdContract = OffchainAggTCD.bind(event.address);
   if (tcd == null) {
@@ -135,6 +140,8 @@ function _handleStaking(
 }
 
 export function handleDataSourceStaked(event: DataSourceStaked): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let dpKey =
     event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dataProvider = DataProvider.load(dpKey);
@@ -200,6 +207,8 @@ export function handleDataSourceStaked(event: DataSourceStaked): void {
 }
 
 export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let dpKey =
     event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dataProvider = DataProvider.load(dpKey);
@@ -265,6 +274,8 @@ export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
 }
 
 export function handleFeeDistributed(event: FeeDistributed): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let dPKey =
     event.params.dataSource.toHexString() + "-" + event.address.toHexString();
   let dataProvider = DataProvider.load(dPKey);
@@ -357,6 +368,8 @@ export function handleWithdrawReceiptUnlocked(
 ): void {}
 
 export function handleQuery(event: Query): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let tcd = TCD.load(event.address.toHexString());
 
   if (tcd == null) {

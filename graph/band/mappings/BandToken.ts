@@ -8,10 +8,13 @@ import {
   Balance,
   Transfer as TransferEntity
 } from "../generated/schema";
+import { saveTx } from "./TxSubscriber";
 
 const origin = "0x0000000000000000000000000000000000000000";
 
 export function handleTransfer(event: TransferEvent): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let token = Token.load(event.address.toHexString());
 
   if (token == null) {

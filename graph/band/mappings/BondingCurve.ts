@@ -7,11 +7,15 @@ import {
   RevenueCollect
 } from "../generated/BondingCurve/BondingCurve";
 import { Token, Curve, Order, Price } from "../generated/schema";
+import { saveTx } from "./TxSubscriber";
 
 function getOneToken(): BigInt {
   return BigInt.fromI32(1000000000).times(BigInt.fromI32(1000000000));
 }
-function findOrCreateToken(curveAddress: Address, tokenAddress: Address): Token | null {
+function findOrCreateToken(
+  curveAddress: Address,
+  tokenAddress: Address
+): Token | null {
   let token = Token.load(tokenAddress.toHexString());
   if (token == null) {
     token = new Token(tokenAddress.toHexString());
@@ -20,7 +24,10 @@ function findOrCreateToken(curveAddress: Address, tokenAddress: Address): Token 
   return token;
 }
 
-function findOrCreateCurve(curveAddress: Address, tokenAddress: Address): Curve | null {
+function findOrCreateCurve(
+  curveAddress: Address,
+  tokenAddress: Address
+): Curve | null {
   let curve = Curve.load(curveAddress.toHexString());
   if (curve == null) {
     let bondingContract = BondingCurve.bind(curveAddress);
@@ -96,6 +103,8 @@ function addOrder(
 }
 
 export function handleBuy(event: BuyEvent): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   addOrder(
     event.address,
     event.params.buyer,
@@ -110,6 +119,8 @@ export function handleBuy(event: BuyEvent): void {
 }
 
 export function handleSell(event: SellEvent): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   addOrder(
     event.address,
     event.params.seller,
@@ -124,6 +135,8 @@ export function handleSell(event: SellEvent): void {
 }
 
 export function handleDeflate(event: Deflate): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let bondingContract = BondingCurve.bind(event.address);
   let tokenAddress = bondingContract.bondedToken();
   let curve = findOrCreateCurve(event.address, tokenAddress);
@@ -135,6 +148,8 @@ export function handleDeflate(event: Deflate): void {
 }
 
 export function handleRevenueCollect(event: RevenueCollect): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let bondingContract = BondingCurve.bind(event.address);
   let tokenAddress = bondingContract.bondedToken();
   let curve = findOrCreateCurve(event.address, tokenAddress);
