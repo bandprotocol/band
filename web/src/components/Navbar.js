@@ -687,7 +687,7 @@ const Navbar = props => {
         <Box ml={['20px', '20px', '40px']}>
           <Link to="/developer">
             <MainMenuText style={{ whiteSpace: 'nowrap' }}>
-              For Developer
+              For Developers
             </MainMenuText>
           </Link>
         </Box>
