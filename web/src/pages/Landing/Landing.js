@@ -7,10 +7,6 @@ import { Flex, Text, Highlight, Image, Box, AbsoluteLink } from 'ui/common'
 import { isMobile, isSmallMobile } from 'ui/media'
 import FilledButton from 'components/FilledButton'
 import WppButton from 'components/WppButton'
-import Pyro from 'components/Pyro.js'
-import FlexHover from 'components/FlexHover'
-import ArrowMove from 'components/ArrowMove'
-import A from 'components/A'
 
 import AngleArrow from 'images/angle-arrow-down.png'
 import LandingHero from 'images/landing-hero-background.svg'
@@ -24,18 +20,6 @@ import Telegram from 'images/telegram.svg'
 import Medium from 'images/medium.svg'
 import Twitter from 'images/twitter.svg'
 import Github from 'images/githubWhite.svg'
-
-import HexBottom from 'images/tiles.png'
-import Mainnet from 'images/mainnet.png'
-import Plant from 'images/plant.svg'
-import BSLogo from 'images/bitswinglogo.svg'
-import BandLogo from 'images/logoSmall.png'
-
-const GBG = styled(Flex)`
-  background: linear-gradient(#ad42ff, #5a85ff, #587bf7),
-    radial-gradient(100vw at 150vw -50vw, white, transparent);
-  background-blend-mode: screen;
-`
 
 const CircleLink = () => (
   <Flex

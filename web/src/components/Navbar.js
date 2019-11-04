@@ -225,91 +225,24 @@ const Navbar = props => {
   const { location } = props
   const { pathname } = location
 
-  const [showMenu, setShowMenu] = useState(false)
+  const [showMenu, setShowMenu] = useState(true)
   const [showTier2Index, setShowTier2Index] = useState(0)
   const [selectedTab, setSelectedTab] = useState(-1)
-  const [showNav, setShowNav] = useState(!(pathname === '/'))
-  const [navOpa, setNavOpa] = useState(0)
+  const [showNav, setShowNav] = useState(true)
+  const [navOpa, setNavOpa] = useState(100)
 
-  const scrollHistory = useRef()
-  const prevLocation = useRef()
-  const oldST = useRef()
-  const isAutoScrolling = useRef()
-  const refPathName = useRef()
-
-  useEffect(() => {
-    if (pathname === '/') {
-      setShowNav(false)
-    } else {
+  let prevScrollpos = window.pageYOffset
+  window.onscroll = function() {
+    let currentScrollPos = window.pageYOffset
+    if (prevScrollpos > currentScrollPos) {
       setShowNav(true)
-    }
-    refPathName.current = pathname
-  }, [pathname])
-
-  const handleScroll = useCallback(e => {
-    const newST = Math.floor(e.target.documentElement.scrollTop)
-    if (newST === 0) isAutoScrolling.current = false
-    if (newST < window.innerHeight && refPathName.current === '/') {
-      if (isAutoScrolling.current) return
-      if (oldST.current < newST) {
-        window.scroll(0, window.innerHeight)
-        oldST.current = window.innerHeight
-        isAutoScrolling.current = true
-        setNavOpa(1)
-        setShowNav(true)
-        return
-      } else if (oldST.current > newST) {
-        window.scroll(0, 0)
-        oldST.current = 0
-        isAutoScrolling.current = true
-        setNavOpa(0)
-        setShowNav(false)
-        return
-      }
+      setNavOpa(100)
     } else {
-      isAutoScrolling.current = false
-    }
-    oldST.current = newST
-
-    const activeTop = refPathName.current === '/' ? window.innerHeight + 80 : 80
-
-    if (newST < activeTop) return
-    if (!scrollHistory.current || scrollHistory.current.length === 0) {
-      scrollHistory.current = [0]
-    }
-    if (scrollHistory.current.length === 1) {
       setShowNav(false)
-    } else {
-      if (
-        scrollHistory.current[0] < scrollHistory.current[1] &&
-        scrollHistory.current[1] > newST
-      ) {
-        setShowNav(true)
-      } else if (
-        scrollHistory.current[0] > scrollHistory.current[1] &&
-        scrollHistory.current[1] < newST
-      ) {
-        setShowNav(false)
-      }
+      setNavOpa(0)
     }
-    scrollHistory.current = [
-      scrollHistory.current[scrollHistory.current.length - 1],
-      newST,
-    ]
-  }, [])
-
-  useEffect(() => {
-    if (props.location !== prevLocation.current) {
-      setShowMenu(false)
-      setSelectedTab(-1)
-    }
-    prevLocation.current = props.location
-  }, [props.location])
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    prevScrollpos = currentScrollPos
+  }
 
   const selectTab = tabId => {
     setSelectedTab(tabId)
