@@ -1,4 +1,10 @@
-import { BigInt, Address, store, BigDecimal, Bytes } from "@graphprotocol/graph-ts";
+import {
+  BigInt,
+  Address,
+  store,
+  BigDecimal,
+  Bytes
+} from "@graphprotocol/graph-ts";
 import {
   Parameters as ParameterContract,
   ProposalProposed,
@@ -19,6 +25,7 @@ import {
   ProposalVote as ProposalVoteEntity
 } from "../generated/schema";
 import { DatasetToken } from "../generated/DatasetToken/DatasetToken";
+import { saveTx } from "./TxSubscriber";
 
 function findOrCreateToken(tokenAddress: Address): Token | null {
   let token = Token.load(tokenAddress.toHexString());
@@ -51,6 +58,8 @@ function findOrCreateParameter(parameterAddress: Address): Parameter | null {
 }
 
 export function handleParameterChanged(event: ParameterChanged): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let parameter = findOrCreateParameter(event.address);
   let stringKey = event.params.key.toString();
   let newParam = ParameterKV.load(event.address.toHexString() + stringKey);
@@ -81,6 +90,8 @@ export function handleParameterChanged(event: ParameterChanged): void {
 }
 
 export function handleProposalProposed(event: ProposalProposed): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let parameter = findOrCreateParameter(event.address);
   let parameterContract = ParameterContract.bind(event.address);
   let proposal = parameterContract.proposals(event.params.proposalId);
@@ -111,6 +122,8 @@ export function handleProposalProposed(event: ProposalProposed): void {
 }
 
 export function handleParameterProposed(event: ParameterProposed): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let proposal = ProposalEntity.load(
     event.address.toHexString() + event.params.proposalId.toHexString()
   );
@@ -119,21 +132,28 @@ export function handleParameterProposed(event: ParameterProposed): void {
       event.params.proposalId.toHexString() +
       event.params.key.toHexString()
   );
-  proposalKv.proposal = event.address.toHexString() + event.params.proposalId.toHexString();
+  proposalKv.proposal =
+    event.address.toHexString() + event.params.proposalId.toHexString();
   proposalKv.key = event.params.key.toString();
   proposalKv.value = event.params.value;
   proposalKv.save();
 }
 
 export function handleProposalVoted(event: ProposalVoted): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let proposal = ProposalEntity.load(
     event.address.toHexString() + event.params.proposalId.toHexString()
   );
 
   if (event.params.vote) {
-    proposal.currentYesCount = proposal.currentYesCount.plus(event.params.votingPower);
+    proposal.currentYesCount = proposal.currentYesCount.plus(
+      event.params.votingPower
+    );
   } else {
-    proposal.currentNoCount = proposal.currentNoCount.plus(event.params.votingPower);
+    proposal.currentNoCount = proposal.currentNoCount.plus(
+      event.params.votingPower
+    );
   }
 
   let newVoted = new ProposalVoteEntity(
@@ -152,6 +172,8 @@ export function handleProposalVoted(event: ProposalVoted): void {
 }
 
 export function handleProposalAccepted(event: ProposalAccepted): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let proposal = ProposalEntity.load(
     event.address.toHexString() + event.params.proposalId.toHexString()
   );
@@ -160,6 +182,8 @@ export function handleProposalAccepted(event: ProposalAccepted): void {
 }
 
 export function handleProposalRejected(event: ProposalRejected): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let proposal = ProposalEntity.load(
     event.address.toHexString() + event.params.proposalId.toHexString()
   );

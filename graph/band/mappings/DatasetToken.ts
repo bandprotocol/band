@@ -11,6 +11,7 @@ import {
   Transfer as TransferEntity,
   TokenLocked as TokenLockedEntity
 } from "../generated/schema";
+import { saveTx } from "./TxSubscriber";
 
 const origin = "0x0000000000000000000000000000000000000000";
 
@@ -31,6 +32,8 @@ function findOrCreateToken(tokenAddress: Address): Token | null {
 }
 
 export function handleTransfer(event: TransferEvent): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let token = findOrCreateToken(event.address);
   let tokenAddress = token.id;
 
@@ -92,6 +95,8 @@ export function handleTransfer(event: TransferEvent): void {
 }
 
 export function handleTokenLocked(event: TokenLockedEvent): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let token = findOrCreateToken(event.address);
   let tokenLockKey =
     event.address.toHexString() +
@@ -129,6 +134,8 @@ export function handleTokenLocked(event: TokenLockedEvent): void {
 }
 
 export function handleTokenUnlocked(event: TokenUnlocked): void {
+  saveTx(event.transaction.hash, event.block.number);
+
   let token = findOrCreateToken(event.address);
   let tokenLockKey =
     event.address.toHexString() +
