@@ -135,6 +135,7 @@ type TCD @entity {
   minStake: BigInt
   queryCount: Int!
   reportCount: Int!
+  rewardDistributes: [RewardDistribute!] @derivedFrom(field: "tcdAddress")
   totalFee: BigInt!
 }
 
@@ -195,7 +196,7 @@ type RewardDistribute @entity {
   id: ID!
   blockHeight: Int!
   timestamp: BigInt!
-  tcdAddress: Bytes!
+  tcdAddress: TCD!
   tokenAddress: Bytes!
   rewardDistributeEachProviders: [RewardDistributeEachProvider!] @derivedFrom(field: "rewardDistribute")
 }

@@ -335,7 +335,7 @@ export function handleFeeDistributed(event: FeeDistributed): void {
     rd = new RewardDistribute(rdKey);
     rd.blockHeight = event.block.number.toI32();
     rd.timestamp = event.block.timestamp;
-    rd.tcdAddress = event.address;
+    rd.tcdAddress = event.address.toHexString();
     rd.tokenAddress = tokenAddress;
     rd.save();
   }
