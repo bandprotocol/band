@@ -84,6 +84,10 @@ export function handleParameterChanged(event: ParameterChanged): void {
     } else if (cEqAddr.length > 42) {
       cEqAddr = "0x" + cEqAddr.substr(cEqAddr.length - 40);
     }
+    curve.token = token.id;
+    curve.price = new BigInt(0);
+    curve.curveMultiplier = new BigInt(0);
+    curve.pricesCount = new BigInt(0);
     curve.collateralEquation = Address.fromString(cEqAddr);
     curve.save();
   }
@@ -106,7 +110,6 @@ export function handleProposalProposed(event: ProposalProposed): void {
     proposalEntity.proposalId = event.params.proposalId.toI32();
     proposalEntity.proposer = event.params.proposer.toHexString();
     proposalEntity.reasonHash = event.params.reasonHash;
-    proposalEntity.changes = [];
     proposalEntity.tokenSnapShot = proposal.value1.toI32();
     proposalEntity.expirationTime = proposal.value2.toI32();
     proposalEntity.supportRequired = proposal.value3;
