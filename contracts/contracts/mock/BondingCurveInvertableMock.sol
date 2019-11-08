@@ -20,20 +20,27 @@ contract BondingCurveInvertableMock is Ownable, BondingCurve {
     expression = collateralExpression;
   }
 
-  function getBuyPriceByCollateral(uint256 tokenCollateral) public view returns (uint256) {
-    require(tokenCollateral <= 1e26, "EXCEED_MAX_SUPPLY");
-    uint256 r = 2e25 - 1;
-    uint256 l = 0;
-    while (l < r) {
-      uint256 m = (l + r + 1) / 2;
-      uint256 val = getBuyPrice(m);
-      if (val > tokenCollateral) {
-          r = m - 1;
-      } else {
-          l = m;
-      }
+  function testEval(uint256 y) public view returns (uint256) {
+    return expression.evaluateInv(y);
+  }
+
+  function testEval2() public view returns (uint256) {
+    return expression.evaluateInv(currentCollateral);
+  }
+
+  function getSupplyAtCollateral(uint256 tokenCollateral) public view returns (uint256) {
+    uint256 supplyFromEquationAtCurrent = expression.evaluateInv(currentCollateral);
+    uint256 supplyFromEquationAtSupply = expression.evaluateInv(tokenCollateral);
+    if (supplyFromEquationAtCurrent == 0) {
+      return supplyFromEquationAtSupply;
+    } else {
+      return supplyFromEquationAtSupply.mul(currentMintedTokens).div(supplyFromEquationAtCurrent);
     }
-    return l;
+  }
+
+  function getBuyPriceByCollateral(uint256 tokenCollateral) public view returns (uint256) {
+    uint256 nextCollateral = currentCollateral.add(tokenCollateral);
+    return getSupplyAtCollateral(nextCollateral).sub(currentMintedTokens);
   }
 
   function buyWithCollateral(address buyer, uint256 priceLimit, uint256 collateralAmount)
