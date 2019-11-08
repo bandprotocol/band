@@ -6,6 +6,8 @@ import "./Equation.sol";
 interface Expression {
   /// Return the result of evaluating the expression given a variable value
   function evaluate(uint256 x) external view returns (uint256);
+
+  function evaluateInv(uint256 y) external view returns (uint256);
 }
 
 
@@ -19,6 +21,10 @@ contract EquationExpression is Expression {
 
   function evaluate(uint256 x) public view returns (uint256) {
     return equation.calculate(x);
+  }
+
+  function evaluateInv(uint256 y) external view returns (uint256) {
+    return y;
   }
 }
 

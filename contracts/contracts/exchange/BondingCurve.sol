@@ -90,11 +90,7 @@ contract BondingCurve is ERC20Acceptor {
     _;
   }
 
-  function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
-    public
-    requireToken(collateralToken, buyer, priceLimit)
-    _adjustAutoInflation
-  {
+  function buyImpl(address buyer, uint256 priceLimit, uint256 buyAmount) internal {
     uint256 liquiditySpread = getLiquiditySpreadNumerator().mulFrac(buyAmount);
     uint256 totalMintAmount = buyAmount.add(liquiditySpread);
     uint256 buyPrice = getBuyPrice(totalMintAmount);
@@ -110,6 +106,15 @@ contract BondingCurve is ERC20Acceptor {
     currentCollateral = currentCollateral.add(buyPrice);
     emit Buy(buyer, buyAmount, buyPrice);
   }
+
+  function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
+    public
+    requireToken(collateralToken, buyer, priceLimit)
+    _adjustAutoInflation
+  {
+    buyImpl(buyer, priceLimit, buyAmount);
+  }
+
 
   function sell(address seller, uint256 sellAmount, uint256 priceLimit)
     public
