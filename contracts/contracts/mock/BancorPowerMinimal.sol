@@ -47,7 +47,7 @@ library BancorPowerMinimal {
             This allows us to compute "base ^ exp" with maximum accuracy and without exceeding 256 bits in any of the intermediate computations.
             This functions assumes that "_expN < 2 ^ 256 / log(MAX_NUM - 1)", otherwise the multiplication should be replaced with a "safeMul".
     */
-    function power(uint256 _baseN, uint32 _expN, uint32 _expD) public pure returns (uint256, uint8) {
+    function power(uint256 _baseN, uint32 _expN, uint32 _expD) internal pure returns (uint256, uint8) {
         require(_baseN < MAX_NUM);
 
         uint256 baseLog;
@@ -73,7 +73,7 @@ library BancorPowerMinimal {
         Compute log(x / FIXED_1) * FIXED_1.
         This functions assumes that "x >= FIXED_1", because the output would be negative otherwise.
     */
-    function generalLog(uint256 x) public pure returns (uint256) {
+    function generalLog(uint256 x) internal pure returns (uint256) {
         uint256 res = 0;
 
         // If x >= 2, then we compute the integer part of log2(x), which is larger than 0.
@@ -100,7 +100,7 @@ library BancorPowerMinimal {
     /**
         Compute the largest integer smaller than or equal to the binary logarithm of the input.
     */
-    function floorLog2(uint256 _n) public pure returns (uint8) {
+    function floorLog2(uint256 _n) internal pure returns (uint8) {
         uint8 res = 0;
 
         if (_n < 256) {

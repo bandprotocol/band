@@ -43,7 +43,7 @@ contract BondingCurveInvertableMock is Ownable, BondingCurve {
     return getSupplyAtCollateral(nextCollateral).sub(currentMintedTokens);
   }
 
-  function buyWithCollateral(address buyer, uint256 priceLimit, uint256 collateralAmount)
+  function buyWithCollateral(address buyer, uint256 collateralAmount, uint256 priceLimit)
     public
     requireToken(collateralToken, buyer, collateralAmount)
     _adjustAutoInflation
