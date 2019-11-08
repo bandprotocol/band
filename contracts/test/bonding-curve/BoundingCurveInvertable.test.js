@@ -127,8 +127,8 @@ contract('BondingCurveInvertableMock', ([_, owner, alice, bob]) => {
         .should.eq('1000000');
       await this.curve.buyWithCollateral(
         alice,
-        '74187226942141337233439',
         '100',
+        '74187226942141337233439',
         {
           from: alice,
         },
@@ -146,8 +146,8 @@ contract('BondingCurveInvertableMock', ([_, owner, alice, bob]) => {
         .should.eq('1000000');
       await this.curve.buyWithCollateral(
         alice,
-        '74187226942141337233439',
         '100',
+        '74187226942141337233439',
         {
           from: alice,
         },
@@ -161,7 +161,7 @@ contract('BondingCurveInvertableMock', ([_, owner, alice, bob]) => {
       (await this.collateralToken.balanceOf(bob))
         .toString()
         .should.eq('1000000');
-      await this.curve.buyWithCollateral(bob, '5285223862054238094657', '100', {
+      await this.curve.buyWithCollateral(bob, '100', '5285223862054238094657', {
         from: bob,
       });
       (await this.collateralToken.balanceOf(bob))
@@ -177,7 +177,7 @@ contract('BondingCurveInvertableMock', ([_, owner, alice, bob]) => {
         .should.eq('1000000');
       await expectRevert.unspecified(
         // 74187226942141337233440 = 74187226942141337233439 + 1
-        this.curve.buyWithCollateral(alice, '74187226942141337233440', '100', {
+        this.curve.buyWithCollateral(alice, '100', '74187226942141337233440', {
           from: alice,
         }),
       );
