@@ -8,8 +8,8 @@ type Token @entity {
   parameter: Parameter
   tcd: TCD
   holderCount: Int!
-  holders: [Balance!] @derivedFrom(field: "token")
-  transfers: [Transfer!] @derivedFrom(field: "token")
+  holders: [Balance!]! @derivedFrom(field: "token")
+  transfers: [Transfer!]! @derivedFrom(field: "token")
 }
 
 type Balance @entity {
@@ -34,8 +34,8 @@ type Curve @entity {
   price: BigInt!
   collateralEquation: Bytes!
   curveMultiplier: BigInt!
-  prices: [Price!] @derivedFrom(field: "curve")
-  orders: [Order!] @derivedFrom(field: "curve")
+  prices: [Price!]! @derivedFrom(field: "curve")
+  orders: [Order!]! @derivedFrom(field: "curve")
 }
 
 type Price @entity {
@@ -76,8 +76,8 @@ type Transfer @entity {
 type Parameter @entity {
   id: ID!
   token: Token!
-  params: [ParameterKV!] @derivedFrom(field: "parameter")
-  proposals: [Proposal!] @derivedFrom(field: "parameter")
+  params: [ParameterKV!]! @derivedFrom(field: "parameter")
+  proposals: [Proposal!]! @derivedFrom(field: "parameter")
 }
 
 type ParameterKV @entity {
@@ -92,7 +92,7 @@ type Proposal @entity {
   parameter: Parameter!
   proposalId: Int!
   proposer: String!
-  changes: [ProposalKV!] @derivedFrom(field: "proposal")
+  changes: [ProposalKV!]! @derivedFrom(field: "proposal")
   title: String
   reason: String
   reasonHash: Bytes!
@@ -103,7 +103,7 @@ type Proposal @entity {
   supportRequired: BigInt!
   currentYesCount: BigInt!
   currentNoCount: BigInt!
-  proposalVotes: [ProposalVote!] @derivedFrom(field: "proposal")
+  proposalVotes: [ProposalVote!]! @derivedFrom(field: "proposal")
 
   txHash: Bytes!
   timestamp: Int!
@@ -130,12 +130,12 @@ type TCD @entity {
   id: ID!
   token: Token!
   prefix: String!
-  providers: [DataProvider!] @derivedFrom(field: "tcd")
+  providers: [DataProvider!]! @derivedFrom(field: "tcd")
   maxProviderCount: Int
   minStake: BigInt
   queryCount: Int!
   reportCount: Int!
-  rewardDistributes: [RewardDistribute!] @derivedFrom(field: "tcdAddress")
+  rewardDistributes: [RewardDistribute!]! @derivedFrom(field: "tcdAddress")
   totalFee: BigInt!
 }
 
@@ -167,7 +167,7 @@ type DataProvider @entity {
   stake: BigInt!
   status: String!
   totalOwnership: BigInt!
-  dataProviderOwnerships: [DataProviderOwnership!]
+  dataProviderOwnerships: [DataProviderOwnership!]!
     @derivedFrom(field: "dataProvider")
 }
 
@@ -198,7 +198,7 @@ type RewardDistribute @entity {
   timestamp: BigInt!
   tcdAddress: TCD!
   tokenAddress: Bytes!
-  rewardDistributeEachProviders: [RewardDistributeEachProvider!]
+  rewardDistributeEachProviders: [RewardDistributeEachProvider!]!
     @derivedFrom(field: "rewardDistribute")
 }
 
