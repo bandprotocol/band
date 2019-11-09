@@ -34,7 +34,6 @@ function findOrCreateCurve(
     curve = new Curve(curveAddress.toHexString());
     curve.token = tokenAddress.toHexString();
     curve.price = BigInt.fromI32(0);
-    curve.pricesCount = BigInt.fromI32(0);
     curve.collateralEquation = bondingContract.getCollateralExpression();
     curve.curveMultiplier = bondingContract.curveMultiplier();
   }
@@ -83,20 +82,31 @@ function addOrder(
 
   if (!tryPrice.reverted) {
     let nextPrice = tryPrice.value;
-    let priceKey = curve.id + "@" + timestamp.toString();
-    let priceEntity = Price.load(priceKey);
-    if (priceEntity == null) {
-      priceEntity = new Price(priceKey);
-      priceEntity.curve = curve.id;
-      priceEntity.nonce = curve.pricesCount;
+
+    let modders = new Array<BigInt>(3);
+    modders[0] = BigInt.fromI32(1800);
+    modders[1] = BigInt.fromI32(7200);
+    modders[2] = BigInt.fromI32(86400);
+
+    for (let idx = 0; idx < modders.length; ++idx) {
+      let modder = modders[idx];
+      let timeKey = timestamp.mod(modder);
+      let priceKey =
+        curve.id + "@" + modder.toString() + "@" + timeKey.toString();
+      let priceEntity = Price.load(priceKey);
+      if (priceEntity == null) {
+        priceEntity = new Price(priceKey);
+        priceEntity.curve = curve.id;
+        priceEntity.timeKey = timeKey;
+        priceEntity.modder = modder;
+      }
+      priceEntity.price = nextPrice;
+      priceEntity.totalSupply = token.totalSupply;
+      priceEntity.timestamp = timestamp;
+      priceEntity.save();
     }
-    priceEntity.price = nextPrice;
-    priceEntity.totalSupply = token.totalSupply;
-    priceEntity.timestamp = timestamp;
-    priceEntity.save();
 
     curve.price = nextPrice;
-    curve.pricesCount = priceEntity.nonce.plus(BigInt.fromI32(1));
     curve.curveMultiplier = bondingContract.curveMultiplier();
   }
   curve.save();

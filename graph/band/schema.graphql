@@ -35,7 +35,6 @@ type Curve @entity {
   collateralEquation: Bytes!
   curveMultiplier: BigInt!
   prices: [Price!] @derivedFrom(field: "curve")
-  pricesCount: BigInt!
   orders: [Order!] @derivedFrom(field: "curve")
 }
 
@@ -45,7 +44,8 @@ type Price @entity {
   price: BigInt!
   totalSupply: BigInt!
   timestamp: BigInt!
-  nonce: BigInt!
+  timeKey: BigInt!
+  modder: BigInt!
 }
 
 type Order @entity {
@@ -198,7 +198,8 @@ type RewardDistribute @entity {
   timestamp: BigInt!
   tcdAddress: TCD!
   tokenAddress: Bytes!
-  rewardDistributeEachProviders: [RewardDistributeEachProvider!] @derivedFrom(field: "rewardDistribute")
+  rewardDistributeEachProviders: [RewardDistributeEachProvider!]
+    @derivedFrom(field: "rewardDistribute")
 }
 
 type RewardDistributeEachProvider @entity {

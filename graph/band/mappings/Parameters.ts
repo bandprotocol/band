@@ -87,7 +87,6 @@ export function handleParameterChanged(event: ParameterChanged): void {
     curve.token = token.id;
     curve.price = new BigInt(0);
     curve.curveMultiplier = new BigInt(0);
-    curve.pricesCount = new BigInt(0);
     curve.collateralEquation = Address.fromString(cEqAddr);
     curve.save();
   }
