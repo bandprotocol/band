@@ -177,7 +177,9 @@ contract TCDBase is QueryInterface {
   }
 
   function distributeStakeReward(uint256 tokenAmount) public {
-    token.transferFrom(msg.sender, address(this), tokenAmount);
+    if (msg.sender != address(bondingCurve)) {
+      require(token.transferFrom(msg.sender, address(this), tokenAmount));
+    }
     uint256 remainingReward = tokenAmount;
     uint256 stakeReward = tokenAmount.div(activeCount);
     address dataSourceAddress = activeList[ACTIVE_GUARD];

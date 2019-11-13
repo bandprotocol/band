@@ -185,6 +185,8 @@ contract BondingCurve is ERC20Acceptor {
   function _rewardBondingCurveOwner(uint256 rewardAmount) internal {
     address beneficiary = getRevenueBeneficiary();
     require(bondedToken.mint(beneficiary, rewardAmount));
+    // If function call is failed just ignore and treat like nolmal transfer tokens.
+    beneficiary.call(abi.encodeWithSignature("distributeStakeReward(uint256)", rewardAmount));
     emit RevenueCollect(beneficiary, rewardAmount);
   }
 }
