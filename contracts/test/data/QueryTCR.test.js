@@ -31,7 +31,7 @@ contract(
         from: bob,
       });
       await this.band.transfer(owner, 100000000, { from: _ });
-      const expression = await EquationExpression.new([8, 1, 0, 2]);
+      const expression = await EquationExpression.new([8, 1, 0, 2], "19999999999999999999999999");
       const data1 = await this.commFactory.create(
         'CoinHatcher',
         'CHT',
@@ -55,35 +55,38 @@ contract(
       //    return 1e18 - (5e17 * (x-60))/60
       //  else
       //    return 5e17
-      const testDecay = await EquationExpression.new([
-        18,
-        14,
-        1,
-        0,
-        60,
-        0,
-        '1000000000000000000',
-        18,
-        14,
-        1,
-        0,
-        120,
-        5,
-        0,
-        '1000000000000000000',
-        7,
-        6,
-        0,
-        '500000000000000000',
-        5,
-        1,
-        0,
-        60,
-        0,
-        60,
-        0,
-        '500000000000000000',
-      ]);
+      const testDecay = await EquationExpression.new(
+        [
+          18,
+          14,
+          1,
+          0,
+          60,
+          0,
+          '1000000000000000000',
+          18,
+          14,
+          1,
+          0,
+          120,
+          5,
+          0,
+          '1000000000000000000',
+          7,
+          6,
+          0,
+          '500000000000000000',
+          5,
+          1,
+          0,
+          60,
+          0,
+          60,
+          0,
+          '500000000000000000',
+        ],
+        "19999999999999999999999999",
+      );
       const data2 = await this.tcrFactory.createTCR(
         web3.utils.fromAscii('tcr:'),
         this.params.address,

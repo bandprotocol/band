@@ -29,7 +29,7 @@ contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
 
-    const testCurve = await EquationExpression.new([8, 1, 0, 2]);
+    const testCurve = await EquationExpression.new([8, 1, 0, 2], "19999999999999999999999999");
     const data = await this.tcdFactory.create(
       'CoinHatcher',
       'CHT',

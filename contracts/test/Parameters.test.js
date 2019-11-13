@@ -28,7 +28,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         from: bob,
       });
 
-      const testCurve = await EquationExpression.new([8, 1, 0, 2]);
+      const testCurve = await EquationExpression.new([8, 1, 0, 2], "19999999999999999999999999");
       const data = await this.commFactory.create(
         'CoinHatcher',
         'CHT',

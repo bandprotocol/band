@@ -46,7 +46,7 @@ contract('OffchainAggTCD', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await EquationExpression.new([1]);
+    const testCurve = await EquationExpression.new([1], "19999999999999999999999999");
     const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',

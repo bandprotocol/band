@@ -6,7 +6,7 @@ import "./Equation.sol";
 interface Expression {
   /// Return the result of evaluating the expression given a variable value
   function evaluate(uint256 x) external view returns (uint256);
-  function evaluateInv(uint256 v, uint256 lower, uint256 upper) external view returns (uint256);
+  function evaluateInv(uint256 v) external view returns (uint256);
 }
 
 
@@ -14,17 +14,19 @@ contract EquationExpression is Expression {
   using Equation for Equation.Node[];
   Equation.Node[] public equation;
 
-  constructor(uint256[] memory expressionTree) public {
+  uint256 maximumSupply;
+  constructor(uint256[] memory expressionTree, uint256 _maximumSupply) public {
     equation.init(expressionTree);
+    maximumSupply = _maximumSupply;
   }
 
   function evaluate(uint256 x) public view returns (uint256) {
     return equation.calculate(x);
   }
 
-  function evaluateInv(uint256 v, uint256 lower, uint256 upper) public view returns (uint256) {
-    uint l = lower;
-    uint r = upper;
+  function evaluateInv(uint256 v) public view returns (uint256) {
+    uint l = 0;
+    uint r = maximumSupply;
     while (l < r) {
       uint256 m = (l + r + 1) / 2;
       uint256 val = evaluate(m);

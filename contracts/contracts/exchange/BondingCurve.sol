@@ -69,17 +69,17 @@ contract BondingCurve is ERC20Acceptor {
     return getCollateralAtSupply(nextSupply).sub(currentCollateral);
   }
 
-  function getExpectSupplyInEquation(uint256 bandValue, uint256 lower, uint256 upper) public view returns (uint256) {
+  function getExpectSupplyInEquation(uint256 bandValue) public view returns (uint256) {
     Expression collateralExpression = getCollateralExpression();
     if (currentCollateral == 0) {
-      return collateralExpression.evaluateInv(bandValue, lower, upper);
+      return collateralExpression.evaluateInv(bandValue);
     }
-    return collateralExpression.evaluateInv(bandValue.mul(collateralExpression.evaluate(currentMintedTokens)).div(currentCollateral), lower, upper);
+    return collateralExpression.evaluateInv(bandValue.mul(collateralExpression.evaluate(currentMintedTokens)).div(currentCollateral));
   }
 
   function getBuyPriceInv(uint256 tokenCollateral) public view returns (uint256) {
     require(tokenCollateral <= 1e26, "EXCEED_MAX_SUPPLY");
-    return getExpectSupplyInEquation(currentCollateral.add(tokenCollateral), 0, 2e25 - 1).sub(currentMintedTokens);
+    return getExpectSupplyInEquation(currentCollateral.add(tokenCollateral)).sub(currentMintedTokens);
   }
 
   function getSellPrice(uint256 tokenValue) public view returns (uint256) {
@@ -90,7 +90,7 @@ contract BondingCurve is ERC20Acceptor {
 
   function getSellPriceInv(uint256 tokenCollateral) public view returns (uint256) {
     require(tokenCollateral <= currentCollateral, "EXCEED_COLLATERAL_SUPPLY");
-    uint256 estimateNewSupply = getExpectSupplyInEquation(currentCollateral.sub(tokenCollateral), 0, currentMintedTokens);
+    uint256 estimateNewSupply = getExpectSupplyInEquation(currentCollateral.sub(tokenCollateral));
     return currentMintedTokens.sub(estimateNewSupply);
   }
 
