@@ -69,11 +69,43 @@ contract BondingCurve is ERC20Acceptor {
     return getCollateralAtSupply(nextSupply).sub(currentCollateral);
   }
 
+  function getBuyPriceInv(uint256 tokenCollateral) public view returns (uint256) {
+    require(tokenCollateral <= 1e26, "EXCEED_MAX_SUPPLY");
+    uint256 r = 2e25 - 1;
+    uint256 l = 0;
+    while (l < r) {
+      uint256 m = (l + r + 1) / 2;
+      uint256 val = getBuyPrice(m);
+      if (val > tokenCollateral) {
+          r = m - 1;
+      } else {
+          l = m;
+      }
+    }
+    return l;
+  }
+
   function getSellPrice(uint256 tokenValue) public view returns (uint256) {
     uint256 currentSupply = currentMintedTokens;
     require(currentSupply >= tokenValue);
     uint256 nextSupply = currentMintedTokens.sub(tokenValue);
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
+  }
+
+  function getSellPriceInv(uint256 tokenCollateral) public view returns (uint256) {
+    require(tokenCollateral <= currentCollateral, "EXCEED_COLLATERAL_SUPPLY");
+    uint256 r = currentMintedTokens;
+    uint256 l = 0;
+    while (l < r) {
+      uint256 m = (l + r) / 2;
+      uint256 val = getSellPrice(m);
+      if (val >= tokenCollateral) {
+          r = m;
+      } else {
+          l = m + 1;
+      }
+    }
+    return l;
   }
 
   modifier _adjustAutoInflation() {
@@ -90,11 +122,7 @@ contract BondingCurve is ERC20Acceptor {
     _;
   }
 
-  function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
-    public
-    requireToken(collateralToken, buyer, priceLimit)
-    _adjustAutoInflation
-  {
+  function buyImpl(address buyer, uint256 priceLimit, uint256 buyAmount) internal {
     uint256 liquiditySpread = getLiquiditySpreadNumerator().mulFrac(buyAmount);
     uint256 totalMintAmount = buyAmount.add(liquiditySpread);
     uint256 buyPrice = getBuyPrice(totalMintAmount);
@@ -111,11 +139,27 @@ contract BondingCurve is ERC20Acceptor {
     emit Buy(buyer, buyAmount, buyPrice);
   }
 
-  function sell(address seller, uint256 sellAmount, uint256 priceLimit)
+  function buy(address buyer, uint256 priceLimit, uint256 buyAmount)
     public
-    requireToken(bondedToken, seller, sellAmount)
+    requireToken(collateralToken, buyer, priceLimit)
     _adjustAutoInflation
   {
+    buyImpl(buyer, priceLimit, buyAmount);
+  }
+
+  function buyInv(address buyer, uint256 collateralAmount, uint256 priceLimit)
+    public
+    requireToken(collateralToken, buyer, collateralAmount)
+    _adjustAutoInflation
+  {
+    uint256 buyAmount = getBuyPriceInv(collateralAmount);
+    uint256 denominator = Fractional.getDenominator();
+    uint256 amountWithoutLiquiditySpread = buyAmount.mul(denominator).div(denominator.add(getLiquiditySpreadNumerator()));
+    require(amountWithoutLiquiditySpread > 0 && priceLimit <= amountWithoutLiquiditySpread);
+    buyImpl(buyer, collateralAmount, amountWithoutLiquiditySpread);
+  }
+
+  function sellImpl(address seller, uint256 priceLimit, uint256 sellAmount) internal {
     uint256 sellPrice = getSellPrice(sellAmount);
     require(sellPrice > 0 && sellPrice >= priceLimit);
     require(bondedToken.burn(address(this), sellAmount));
@@ -123,6 +167,27 @@ contract BondingCurve is ERC20Acceptor {
     currentMintedTokens = currentMintedTokens.sub(sellAmount);
     currentCollateral = currentCollateral.sub(sellPrice);
     emit Sell(seller, sellAmount, sellPrice);
+  }
+
+  function sell(address seller, uint256 sellAmount, uint256 priceLimit)
+    public
+    requireToken(bondedToken, seller, sellAmount)
+    _adjustAutoInflation
+  {
+    sellImpl(seller, priceLimit, sellAmount);
+  }
+
+  function sellInv(address seller, uint256 priceLimit, uint256 collateralAmount)
+    public
+    requireToken(bondedToken, seller, priceLimit)
+    _adjustAutoInflation
+  {
+    uint256 sellAmount = getSellPriceInv(collateralAmount);
+    require(sellAmount > 0 && sellAmount <= priceLimit);
+    if (priceLimit > sellAmount) {
+      bondedToken.transfer(seller, priceLimit.sub(sellAmount));
+    }
+    sellImpl(seller, collateralAmount, sellAmount);
   }
 
   function deflate(address burner, uint256 burnAmount) public requireToken(bondedToken, burner, burnAmount) {

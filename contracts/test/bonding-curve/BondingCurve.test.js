@@ -65,6 +65,215 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     });
   });
 
+  context('Invert buying/selling', () => {
+    context('Basic getter', () => {
+      it('should be able to get invert from getBuyPriceInv correctly', async () => {
+        (
+          await this.curve.getBuyPriceInv('10000', {
+            from: owner,
+          })
+        )
+          .toString()
+          .should.eq('100');
+
+        (
+          await this.curve.getBuyPriceInv('100000', {
+            from: owner,
+          })
+        )
+          .toString()
+          .should.eq('316');
+
+        (
+          await this.curve.getBuyPriceInv('1000000000000000000000000', {
+            from: owner,
+          })
+        )
+          .toString()
+          .should.eq('1000000000000');
+      });
+      it('should be able to get invert from getSellPriceInv correctly', async () => {
+        await this.collateralToken.approve(this.curve.address, 10000, {
+          from: alice,
+        });
+        await this.curve.buy(alice, 10000, 100, { from: alice });
+
+        (
+          await this.curve.getSellPriceInv('10000', {
+            from: owner,
+          })
+        )
+          .toString()
+          .should.eq('100');
+
+        (
+          await this.curve.getSellPriceInv('6400', {
+            from: owner,
+          })
+        )
+          .toString()
+          .should.eq('40');
+
+        (
+          await this.curve.getSellPriceInv('9000', {
+            from: owner,
+          })
+        )
+          .toString()
+          .should.eq('69');
+      });
+    });
+
+    context('Approve before buying/selling', () => {
+      beforeEach(async () => {
+        await this.collateralToken.approve(this.curve.address, '100000', {
+          from: alice,
+        });
+        await this.bondedToken.approve(this.curve.address, '100000', {
+          from: alice,
+        });
+        await this.collateralToken.approve(this.curve.address, '100000', {
+          from: bob,
+        });
+        await this.bondedToken.approve(this.curve.address, '100000', {
+          from: bob,
+        });
+      });
+      it('should be able to buy/sell with specific collateral token amount', async () => {
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        await this.curve.buyInv(alice, '10000', '0', {
+          from: alice,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90000');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('100');
+
+        await this.curve.sellInv(alice, '40', '6400', {
+          from: alice,
+        });
+
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('96400');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('60');
+      });
+      it('should be able to buy when liquidity spread has changed', async () => {
+        await this.curve.setLiquiditySpread('100000000000000000', {
+          from: owner,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        await this.curve.buyInv(alice, '10000', '0', {
+          from: alice,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90199');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('90');
+      });
+      it('should get less tokens than previous buyer with the same amount of collateral token', async () => {
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        await this.curve.buyInv(alice, '10000', '0', {
+          from: alice,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90000');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('100');
+
+        (await this.collateralToken.balanceOf(bob))
+          .toString()
+          .should.eq('100000');
+        await this.curve.buyInv(bob, '10000', '0', {
+          from: bob,
+        });
+        (await this.collateralToken.balanceOf(bob))
+          .toString()
+          .should.eq('90119');
+        (await this.bondedToken.balanceOf(bob)).toString().should.eq('41');
+      });
+      it('should receive payback if price limit is greater than actual sell amount', async () => {
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        await this.curve.buyInv(alice, '10000', '0', {
+          from: alice,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90000');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('100');
+
+        await this.curve.sellInv(alice, '100', '6400', {
+          from: alice,
+        });
+
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('96400');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('60');
+      });
+      it('should fail if amount of bonded token is less than price limmit', async () => {
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        await expectRevert.unspecified(
+          // 10001 = 10000 + 1
+          this.curve.buyInv(alice, '100', '10001', {
+            from: alice,
+          }),
+        );
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('0');
+      });
+    });
+
+    context('Buying/Selling with transferAndCall', () => {
+      it('should be able to buy/sell with specific collateral token amount', async () => {
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+
+        let calldata = this.curve.contract.methods
+          .buyInv(_, 10000, 0)
+          .encodeABI();
+        await this.collateralToken.transferAndCall(
+          this.curve.address,
+          10000,
+          '0x' + calldata.slice(2, 10),
+          '0x' + calldata.slice(138),
+          { from: alice },
+        );
+
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90000');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('100');
+
+        calldata = this.curve.contract.methods.sellInv(_, 40, 6400).encodeABI();
+        await this.bondedToken.transferAndCall(
+          this.curve.address,
+          40,
+          '0x' + calldata.slice(2, 10),
+          '0x' + calldata.slice(138),
+          { from: alice },
+        );
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('96400');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('60');
+      });
+    });
+  });
+
   context('Basic functionalities', () => {
     it('should allow alice to buy 100 tokens with proper change', async () => {
       const calldata = this.curve.contract.methods.buy(_, 0, 100).encodeABI();
