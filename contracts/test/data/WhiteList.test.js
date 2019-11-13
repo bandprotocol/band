@@ -9,7 +9,7 @@ const Parameters = artifacts.require('Parameters');
 const TCDBase = artifacts.require('TCDBase');
 const AggTCDFactory = artifacts.require('AggTCDFactory');
 const MockDataSource = artifacts.require('MockDataSource');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const WhiteListTCR = artifacts.require('WhiteListTCR');
 const MedianAggregator = artifacts.require('MedianAggregator');
@@ -31,7 +31,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       this.exchange.address,
       { from: owner },
     );
-    this.whiteListTCRDecay = await BondingCurveExpression.new([
+    this.whiteListTCRDecay = await EquationExpression.new([
       18,
       14,
       1,
@@ -71,7 +71,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await BondingCurveExpression.new([1]);
+    const testCurve = await EquationExpression.new([1]);
     const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',

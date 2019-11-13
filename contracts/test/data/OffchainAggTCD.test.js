@@ -8,7 +8,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const OffchainAggTCD = artifacts.require('OffchainAggTCD');
 const OffchainAggTCDFactory = artifacts.require('OffchainAggTCDFactory');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const QueryTCDMock = artifacts.require('QueryTCDMock');
 
@@ -46,7 +46,7 @@ contract('OffchainAggTCD', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await BondingCurveExpression.new([1]);
+    const testCurve = await EquationExpression.new([1]);
     const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',

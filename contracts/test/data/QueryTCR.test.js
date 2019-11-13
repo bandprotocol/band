@@ -7,7 +7,7 @@ const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
@@ -31,7 +31,7 @@ contract(
         from: bob,
       });
       await this.band.transfer(owner, 100000000, { from: _ });
-      const expression = await BondingCurveExpression.new([8, 1, 0, 2]);
+      const expression = await EquationExpression.new([8, 1, 0, 2]);
       const data1 = await this.commFactory.create(
         'CoinHatcher',
         'CHT',
@@ -55,7 +55,7 @@ contract(
       //    return 1e18 - (5e17 * (x-60))/60
       //  else
       //    return 5e17
-      const testDecay = await BondingCurveExpression.new([
+      const testDecay = await EquationExpression.new([
         18,
         14,
         1,
@@ -210,34 +210,44 @@ contract(
         );
       });
       it('verify parameters of QueryTCR', async () => {
-        (await this.params.get(
-          web3.utils.fromAscii('tcr:'),
-          web3.utils.fromAscii('dispensation_percentage'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('tcr:'),
+            web3.utils.fromAscii('dispensation_percentage'),
+          )
+        )
           .toString()
           .should.eq('300000000000000000');
-        (await this.params.get(
-          web3.utils.fromAscii('tcr:'),
-          web3.utils.fromAscii('min_deposit'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('tcr:'),
+            web3.utils.fromAscii('min_deposit'),
+          )
+        )
           .toNumber()
           .should.eq(100);
-        (await this.params.get(
-          web3.utils.fromAscii('tcr:'),
-          web3.utils.fromAscii('apply_stage_length'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('tcr:'),
+            web3.utils.fromAscii('apply_stage_length'),
+          )
+        )
           .toNumber()
           .should.eq(300);
-        (await this.params.get(
-          web3.utils.fromAscii('tcr:'),
-          web3.utils.fromAscii('support_required_pct'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('tcr:'),
+            web3.utils.fromAscii('support_required_pct'),
+          )
+        )
           .toString()
           .should.eq('500000000000000000');
-        (await this.params.get(
-          web3.utils.fromAscii('tcr:'),
-          web3.utils.fromAscii('min_participation_pct'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('tcr:'),
+            web3.utils.fromAscii('min_participation_pct'),
+          )
+        )
           .toString()
           .should.eq('700000000000000000');
       });
@@ -669,7 +679,11 @@ contract(
         (await this.comm.balanceOf(carol)).toNumber().should.eq(1000);
       });
       it('Should be the same as inconclusive if enough participant but yesCount or noCount is 0', async () => {
-        const commits = [[alice, true], [bob, false], [carol, true]];
+        const commits = [
+          [alice, true],
+          [bob, false],
+          [carol, true],
+        ];
         const challengeId = 2;
         // everyone commit
         for (const [person, voteKeep] of commits) {
@@ -767,7 +781,11 @@ contract(
           .should.eq(3);
       });
       it('Should distrubute reward correctly when keep entry', async () => {
-        const voters = [[bob, true], [carol, false], [minProposer, true]];
+        const voters = [
+          [bob, true],
+          [carol, false],
+          [minProposer, true],
+        ];
         const challengeId = 1;
         const salt = 12;
         for (const [voter, voteKeep] of voters) {
@@ -820,7 +838,11 @@ contract(
           .should.eq(300 + 70 - aliceReward - bobReward);
       });
       it('Should distrubute reward correctly when remove entry', async () => {
-        const voters = [[bob, false], [carol, false], [minProposer, true]];
+        const voters = [
+          [bob, false],
+          [carol, false],
+          [minProposer, true],
+        ];
         const challengeId = 1;
         const salt = 12;
         for (const [voter, voteKeep] of voters) {
@@ -906,7 +928,11 @@ contract(
           },
         );
         // start vote for new min_deposit
-        const votes = [[alice, true], [bob, false], [carol, true]];
+        const votes = [
+          [alice, true],
+          [bob, false],
+          [carol, true],
+        ];
         const proposeId = 0;
         // everyone commit
         for (const [person, accepted] of votes) {
@@ -917,10 +943,12 @@ contract(
         await time.increase(time.duration.seconds(60));
       });
       it('New min_deposit should have new value', async () => {
-        (await this.params.get(
-          web3.utils.fromAscii('tcr:'),
-          web3.utils.fromAscii('min_deposit'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('tcr:'),
+            web3.utils.fromAscii('min_deposit'),
+          )
+        )
           .toNumber()
           .should.eq(newMinDeposit);
       });

@@ -5,7 +5,7 @@ const BandRegistry = artifacts.require('BandRegistry');
 const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
@@ -28,7 +28,7 @@ contract('Parameters', ([_, owner, alice, bob]) => {
         from: bob,
       });
 
-      const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
+      const testCurve = await EquationExpression.new([8, 1, 0, 2]);
       const data = await this.commFactory.create(
         'CoinHatcher',
         'CHT',
@@ -53,9 +53,11 @@ contract('Parameters', ([_, owner, alice, bob]) => {
 
     context('Checking basic functionalities', () => {
       it('should allow getting existing parameters', async () => {
-        (await this.params.getRaw(
-          web3.utils.fromAscii('params:support_required_pct'),
-        ))
+        (
+          await this.params.getRaw(
+            web3.utils.fromAscii('params:support_required_pct'),
+          )
+        )
           .toString()
           .should.eq('500000000000000000');
       });
@@ -81,10 +83,12 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           },
         );
 
-        (await this.params.get(
-          web3.utils.fromAscii('test:'),
-          web3.utils.fromAscii('param1'),
-        ))
+        (
+          await this.params.get(
+            web3.utils.fromAscii('test:'),
+            web3.utils.fromAscii('param1'),
+          )
+        )
           .toNumber()
           .should.eq(30000);
       });
@@ -663,9 +667,11 @@ contract('Parameters', ([_, owner, alice, bob]) => {
           .toString()
           .should.be.eq('2');
 
-        (await this.params.getRaw(
-          web3.utils.fromAscii('params:support_required_pct'),
-        ))
+        (
+          await this.params.getRaw(
+            web3.utils.fromAscii('params:support_required_pct'),
+          )
+        )
           .toString()
           .should.eq('600000000000000000');
       });

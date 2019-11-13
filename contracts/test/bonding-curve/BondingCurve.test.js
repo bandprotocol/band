@@ -9,7 +9,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Equation = artifacts.require('Equation');
 const ERC20Base = artifacts.require('ERC20Base');
 const Parameters = artifacts.require('Parameters');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
@@ -36,7 +36,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
     this.bondedToken = await ERC20Base.new('BondedToken', 'BDT', {
       from: owner,
     });
-    this.expression = await BondingCurveExpression.new([8, 1, 0, 2]);
+    this.expression = await EquationExpression.new([8, 1, 0, 2]);
     const data = await this.tcdFactory.create(
       'CoinHatcher',
       'CHT',
@@ -455,7 +455,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
   context('Curve changing', () => {
     it('Expression should be changeable', async () => {
       (await this.expression.evaluate(10)).toString().should.eq('100');
-      this.expression = await BondingCurveExpression.new([8, 1, 0, 3]);
+      this.expression = await EquationExpression.new([8, 1, 0, 3]);
       (await this.expression.evaluate(10)).toString().should.eq('1000');
     });
     it('Should adjust curveMultiplier correctly when curve expression is changed', async () => {
@@ -480,7 +480,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
         .toString()
         .should.eq('1000000000000000000');
 
-      this.expression = await BondingCurveExpression.new([8, 1, 0, 1]);
+      this.expression = await EquationExpression.new([8, 1, 0, 1]);
       await this.params.setRaw(
         [web3.utils.fromAscii('bonding:curve_expression')],
         [web3.utils.toBN(this.expression.address)],
@@ -505,7 +505,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       (await this.commCurve.currentMintedTokens()).toString().should.eq('200');
       (await this.commCurve.currentCollateral()).toString().should.eq('20000');
 
-      this.expression = await BondingCurveExpression.new([8, 1, 0, 3]);
+      this.expression = await EquationExpression.new([8, 1, 0, 3]);
       await this.params.setRaw(
         [web3.utils.fromAscii('bonding:curve_expression')],
         [web3.utils.toBN(this.expression.address)],

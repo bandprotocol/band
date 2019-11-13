@@ -9,7 +9,7 @@ const Parameters = artifacts.require('Parameters');
 const TCDBase = artifacts.require('TCDBase');
 const AggTCDFactory = artifacts.require('AggTCDFactory');
 const MockDataSource = artifacts.require('MockDataSource');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const MedianAggregator = artifacts.require('MedianAggregator');
 
@@ -55,7 +55,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await BondingCurveExpression.new([1]);
+    const testCurve = await EquationExpression.new([1]);
     const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',
@@ -302,9 +302,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       );
     });
     it('should be able to unlist if owner stake < min_provider_stake', async () => {
-      (await this.params.getRaw(
-        web3.utils.fromAscii('data:min_provider_stake'),
-      ))
+      (
+        await this.params.getRaw(
+          web3.utils.fromAscii('data:min_provider_stake'),
+        )
+      )
         .toNumber()
         .should.eq(10);
       // not enough to unlist carol
@@ -331,9 +333,11 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       await this.params.vote(0, true, {
         from: alice,
       });
-      (await this.params.getRaw(
-        web3.utils.fromAscii('data:min_provider_stake'),
-      ))
+      (
+        await this.params.getRaw(
+          web3.utils.fromAscii('data:min_provider_stake'),
+        )
+      )
         .toNumber()
         .should.eq(20);
       // enough to unlist carol
@@ -464,20 +468,24 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
       //   .toString()
       //   .should.eq('0x0000000000000000000000000000000000000001');
 
-      (await nextActiveList(
-        this.tcd.address,
-        '0x0000000000000000000000000000000000000001',
-      )).should.eq(bob);
+      (
+        await nextActiveList(
+          this.tcd.address,
+          '0x0000000000000000000000000000000000000001',
+        )
+      ).should.eq(bob);
       (await nextActiveList(this.tcd.address, bob)).should.eq(alice);
       (await nextActiveList(this.tcd.address, alice)).should.eq(owner);
       (await nextActiveList(this.tcd.address, owner)).should.eq(
         '0x0000000000000000000000000000000000000001',
       );
 
-      (await nextReserveList(
-        this.tcd.address,
-        '0x0000000000000000000000000000000000000002',
-      )).should.eq(carol);
+      (
+        await nextReserveList(
+          this.tcd.address,
+          '0x0000000000000000000000000000000000000002',
+        )
+      ).should.eq(carol);
       (await nextReserveList(this.tcd.address, carol)).should.eq(
         '0x0000000000000000000000000000000000000002',
       );
@@ -1168,7 +1176,7 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
   });
   context('Withdraw delay', () => {
     beforeEach(async () => {
-      const testCurve = await BondingCurveExpression.new([1]);
+      const testCurve = await EquationExpression.new([1]);
       const data1 = await this.commFactory.create(
         'CoinHatcher',
         'CHT',
@@ -1454,14 +1462,18 @@ contract('TCD', ([_, owner, alice, bob, carol]) => {
     });
 
     it('Should set new parameter to data: prefix', async () => {
-      (await this.params.getRaw(
-        web3.utils.fromAscii('data:min_provider_stake'),
-      ))
+      (
+        await this.params.getRaw(
+          web3.utils.fromAscii('data:min_provider_stake'),
+        )
+      )
         .toNumber()
         .should.eq(10);
-      (await this.params.getRaw(
-        web3.utils.fromAscii('data:max_provider_count'),
-      ))
+      (
+        await this.params.getRaw(
+          web3.utils.fromAscii('data:max_provider_count'),
+        )
+      )
         .toNumber()
         .should.eq(3);
       (await this.params.getRaw(web3.utils.fromAscii('data:owner_revenue_pct')))
