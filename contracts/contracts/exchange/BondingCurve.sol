@@ -69,43 +69,29 @@ contract BondingCurve is ERC20Acceptor {
     return getCollateralAtSupply(nextSupply).sub(currentCollateral);
   }
 
+  function getExpectSupplyInEquation(uint256 bandValue, uint256 lower, uint256 upper) public view returns (uint256) {
+    Expression collateralExpression = getCollateralExpression();
+    if (currentCollateral == 0) {
+      return collateralExpression.evaluateInv(bandValue, lower, upper);
+    }
+    return collateralExpression.evaluateInv(bandValue.mul(collateralExpression.evaluate(currentMintedTokens)).div(currentCollateral), lower, upper);
+  }
+
   function getBuyPriceInv(uint256 tokenCollateral) public view returns (uint256) {
     require(tokenCollateral <= 1e26, "EXCEED_MAX_SUPPLY");
-    uint256 r = 2e25 - 1;
-    uint256 l = 0;
-    while (l < r) {
-      uint256 m = (l + r + 1) / 2;
-      uint256 val = getBuyPrice(m);
-      if (val > tokenCollateral) {
-          r = m - 1;
-      } else {
-          l = m;
-      }
-    }
-    return l;
+    return getExpectSupplyInEquation(currentCollateral.add(tokenCollateral), 0, 2e25 - 1).sub(currentMintedTokens);
   }
 
   function getSellPrice(uint256 tokenValue) public view returns (uint256) {
-    uint256 currentSupply = currentMintedTokens;
-    require(currentSupply >= tokenValue);
+    require(tokenValue <= currentMintedTokens);
     uint256 nextSupply = currentMintedTokens.sub(tokenValue);
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
   }
 
   function getSellPriceInv(uint256 tokenCollateral) public view returns (uint256) {
     require(tokenCollateral <= currentCollateral, "EXCEED_COLLATERAL_SUPPLY");
-    uint256 r = currentMintedTokens;
-    uint256 l = 0;
-    while (l < r) {
-      uint256 m = (l + r) / 2;
-      uint256 val = getSellPrice(m);
-      if (val >= tokenCollateral) {
-          r = m;
-      } else {
-          l = m + 1;
-      }
-    }
-    return l;
+    uint256 estimateNewSupply = getExpectSupplyInEquation(currentCollateral.sub(tokenCollateral), 0, currentMintedTokens);
+    return currentMintedTokens.sub(estimateNewSupply);
   }
 
   modifier _adjustAutoInflation() {
