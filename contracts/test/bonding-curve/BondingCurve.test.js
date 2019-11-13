@@ -124,7 +124,7 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       });
     });
 
-    context('Invert Buying/selling on BondingCurve', () => {
+    context('Approve before buying/selling', () => {
       beforeEach(async () => {
         await this.collateralToken.approve(this.curve.address, '100000', {
           from: alice,
@@ -159,6 +159,21 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
           .toString()
           .should.eq('96400');
         (await this.bondedToken.balanceOf(alice)).toString().should.eq('60');
+      });
+      it('should be able to buy when liquidity spread has changed', async () => {
+        await this.curve.setLiquiditySpread('100000000000000000', {
+          from: owner,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
+        await this.curve.buyInv(alice, '10000', '0', {
+          from: alice,
+        });
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90199');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('90');
       });
       it('should get less tokens than previous buyer with the same amount of collateral token', async () => {
         (await this.collateralToken.balanceOf(alice))
@@ -221,47 +236,42 @@ contract('BondingCurveMock', ([_, owner, alice, bob]) => {
       });
     });
 
-    context(
-      'Invert buying/selling on BondingCurve with transferAndCall',
-      () => {
-        it('should be able to buy/sell with specific collateral token amount', async () => {
-          (await this.collateralToken.balanceOf(alice))
-            .toString()
-            .should.eq('100000');
+    context('Buying/Selling with transferAndCall', () => {
+      it('should be able to buy/sell with specific collateral token amount', async () => {
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('100000');
 
-          let calldata = this.curve.contract.methods
-            .buyInv(_, 10000, 0)
-            .encodeABI();
-          await this.collateralToken.transferAndCall(
-            this.curve.address,
-            10000,
-            '0x' + calldata.slice(2, 10),
-            '0x' + calldata.slice(138),
-            { from: alice },
-          );
+        let calldata = this.curve.contract.methods
+          .buyInv(_, 10000, 0)
+          .encodeABI();
+        await this.collateralToken.transferAndCall(
+          this.curve.address,
+          10000,
+          '0x' + calldata.slice(2, 10),
+          '0x' + calldata.slice(138),
+          { from: alice },
+        );
 
-          (await this.collateralToken.balanceOf(alice))
-            .toString()
-            .should.eq('90000');
-          (await this.bondedToken.balanceOf(alice)).toString().should.eq('100');
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('90000');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('100');
 
-          calldata = this.curve.contract.methods
-            .sellInv(_, 40, 6400)
-            .encodeABI();
-          await this.bondedToken.transferAndCall(
-            this.curve.address,
-            40,
-            '0x' + calldata.slice(2, 10),
-            '0x' + calldata.slice(138),
-            { from: alice },
-          );
-          (await this.collateralToken.balanceOf(alice))
-            .toString()
-            .should.eq('96400');
-          (await this.bondedToken.balanceOf(alice)).toString().should.eq('60');
-        });
-      },
-    );
+        calldata = this.curve.contract.methods.sellInv(_, 40, 6400).encodeABI();
+        await this.bondedToken.transferAndCall(
+          this.curve.address,
+          40,
+          '0x' + calldata.slice(2, 10),
+          '0x' + calldata.slice(138),
+          { from: alice },
+        );
+        (await this.collateralToken.balanceOf(alice))
+          .toString()
+          .should.eq('96400');
+        (await this.bondedToken.balanceOf(alice)).toString().should.eq('60');
+      });
+    });
   });
 
   context('Basic functionalities', () => {

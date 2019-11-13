@@ -93,7 +93,7 @@ contract BondingCurve is ERC20Acceptor {
   }
 
   function getSellPriceInv(uint256 tokenCollateral) public view returns (uint256) {
-    require(tokenCollateral <= 1e26, "EXCEED_MAX_SUPPLY");
+    require(tokenCollateral <= currentCollateral, "EXCEED_COLLATERAL_SUPPLY");
     uint256 r = currentMintedTokens;
     uint256 l = 0;
     while (l < r) {
@@ -153,8 +153,10 @@ contract BondingCurve is ERC20Acceptor {
     _adjustAutoInflation
   {
     uint256 buyAmount = getBuyPriceInv(collateralAmount);
-    require(buyAmount > 0 && priceLimit <= buyAmount);
-    buyImpl(buyer, collateralAmount, buyAmount);
+    uint256 denominator = Fractional.getDenominator();
+    uint256 amountWithoutLiquiditySpread = buyAmount.mul(denominator).div(denominator.add(getLiquiditySpreadNumerator()));
+    require(amountWithoutLiquiditySpread > 0 && priceLimit <= amountWithoutLiquiditySpread);
+    buyImpl(buyer, collateralAmount, amountWithoutLiquiditySpread);
   }
 
   function sellImpl(address seller, uint256 priceLimit, uint256 sellAmount) internal {
