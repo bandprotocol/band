@@ -20,7 +20,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     this.exchange = await BandMockExchange.new(this.band.address, {
       from: owner,
     });
-    this.mtcdFactory = await OffchainAggTCDFactory.new();
+    this.tcdFactory = await OffchainAggTCDFactory.new();
     this.registry = await BandRegistry.new(
       this.band.address,
       this.exchange.address,
@@ -29,7 +29,10 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await EquationExpression.new([1]);
+    const testCurve = await EquationExpression.new(
+      [1],
+      '19999999999999999999999999',
+    );
     const data1 = await this.commFactory.create(
       'Data feed token',
       'XFN',
@@ -45,7 +48,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     this.comm = await CommunityToken.at(data1.receipt.logs[2].args.token);
     this.curve = await BondingCurve.at(data1.receipt.logs[2].args.bondingCurve);
     this.params = await Parameters.at(data1.receipt.logs[2].args.params);
-    await this.comm.addCapper(this.mtcdFactory.address, { from: owner });
+    await this.comm.addCapper(this.tcdFactory.address, { from: owner });
 
     await this.band.transfer(alice, 10000000, { from: owner });
     await this.band.transfer(bob, 10000000, { from: owner });
@@ -54,7 +57,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       this.curve.address,
-      1000000,
+      1000,
       '0x' + calldata1.slice(2, 10),
       '0x' + calldata1.slice(138),
       { from: alice },
@@ -63,7 +66,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     const calldata2 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
     await this.band.transferAndCall(
       this.curve.address,
-      3000000,
+      10000,
       '0x' + calldata2.slice(2, 10),
       '0x' + calldata2.slice(138),
       { from: bob },
@@ -88,14 +91,14 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     );
 
     // Create TCD
-    const data2 = await this.mtcdFactory.createOffchainAggTCD(
+    const data2 = await this.tcdFactory.createOffchainAggTCD(
       web3.utils.fromAscii('data:'),
       data1.receipt.logs[2].args.bondingCurve,
       this.registry.address,
       data1.receipt.logs[2].args.params,
     );
 
-    this.mtcd = await OffchainAggTCD.at(data2.receipt.logs[0].args.mtcd);
+    this.tcd = await OffchainAggTCD.at(data2.receipt.logs[0].args.mtcd);
 
     await this.params.setRaw(
       [
@@ -107,7 +110,7 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
         web3.utils.fromAscii('bonding:revenue_beneficiary'),
         web3.utils.fromAscii('bonding:inflation_rate'),
       ],
-      [10, 3, '500000000000000000', 100, 0, this.mtcd.address, 38580246914],
+      [10, 3, '500000000000000000', 100, 0, this.tcd.address, 38580246914],
       { from: owner },
     );
 
@@ -118,27 +121,237 @@ contract('BondingCurve', ([_, owner, alice, bob, carol]) => {
     });
   });
 
-  context(
-    "Tokens are transfered to TCD contract if there aren't providers",
-    () => {
-      it('should buy tokens and infaltion send to TCD', async () => {
-        await time.increase(30 * 24 * 60 * 60);
-        // Alice buy token
-        const calldata1 = this.curve.contract.methods
-          .buy(_, 0, 1000)
-          .encodeABI();
-        await this.band.transferAndCall(
+  context('Inflate tokens to TCD contract', () => {
+    it("should fail if there aren't active provider", async () => {
+      await time.increase(30 * 24 * 60 * 60);
+      // Alice buy token
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
+      await expectRevert.unspecified(
+        this.band.transferAndCall(
           this.curve.address,
-          10000000,
+          100000,
           '0x' + calldata1.slice(2, 10),
           '0x' + calldata1.slice(138),
           { from: alice },
-        );
+        ),
+      );
 
-        (await this.comm.balanceOf(this.mtcd.address))
-          .toString()
-          .should.eq('1');
-      });
-    },
-  );
+      (await this.comm.balanceOf(this.tcd.address)).toString().should.eq('0');
+
+      (await this.tcd.activeCount()).toString().should.eq('0');
+    });
+
+    it('should increase stake of provider after inflation', async () => {
+      // Register new provider
+      await this.tcd.register(
+        alice,
+        '0x0000000000000000000000000000000000000001',
+        40,
+        { from: alice },
+      );
+
+      // Increase time
+      await time.increase(30 * 24 * 60 * 60);
+
+      // Alice buy token
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
+      this.band.transferAndCall(
+        this.curve.address,
+        100000,
+        '0x' + calldata1.slice(2, 10),
+        '0x' + calldata1.slice(138),
+        { from: alice },
+      );
+
+      // Inflation must send to TCD Contract
+      (await this.comm.balanceOf(this.tcd.address)).toString().should.eq('400');
+
+      // Stake of alice must increase 400
+      (await this.tcd.getStake(alice, alice)).toString().should.eq('440');
+    });
+
+    it('should distribute stake to stakers after inflation', async () => {
+      // Register new provider
+      await this.tcd.register(
+        alice,
+        '0x0000000000000000000000000000000000000001',
+        40,
+        { from: alice },
+      );
+
+      await this.tcd.stake(
+        alice,
+        '0x0000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000',
+        60,
+        { from: bob },
+      );
+
+      // Increase time
+      await time.increase(30 * 24 * 60 * 60);
+
+      // Alice buy token
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
+      this.band.transferAndCall(
+        this.curve.address,
+        100000,
+        '0x' + calldata1.slice(2, 10),
+        '0x' + calldata1.slice(138),
+        { from: alice },
+      );
+
+      // Inflation must send to TCD Contract
+      (await this.comm.balanceOf(this.tcd.address)).toString().should.eq('400');
+
+      // Stake of alice must increase 160
+      (await this.tcd.getStake(alice, alice)).toString().should.eq('200');
+
+      // Stake of alice must increase 240
+      (await this.tcd.getStake(alice, bob)).toString().should.eq('300');
+    });
+
+    it('should distribute stake to providers after inflation', async () => {
+      // Register new provider
+      await this.tcd.register(
+        alice,
+        '0x0000000000000000000000000000000000000001',
+        40,
+        { from: alice },
+      );
+
+      await this.tcd.register(
+        bob,
+        '0x0000000000000000000000000000000000000000',
+        60,
+        { from: bob },
+      );
+
+      // Increase time
+      await time.increase(30 * 24 * 60 * 60);
+
+      // Alice buy token
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
+      this.band.transferAndCall(
+        this.curve.address,
+        100000,
+        '0x' + calldata1.slice(2, 10),
+        '0x' + calldata1.slice(138),
+        { from: alice },
+      );
+
+      // Inflation must send to TCD Contract
+      (await this.comm.balanceOf(this.tcd.address)).toString().should.eq('400');
+
+      // Stake of alice must increase 200
+      (await this.tcd.getStake(alice, alice)).toString().should.eq('240');
+
+      // Stake of alice must increase 200
+      (await this.tcd.getStake(bob, bob)).toString().should.eq('260');
+    });
+
+    it('should distribute inflated tokens correctly every inflation happen', async () => {
+      // Register new provider
+      await this.tcd.register(
+        alice,
+        '0x0000000000000000000000000000000000000001',
+        40,
+        { from: alice },
+      );
+
+      await this.tcd.register(
+        bob,
+        '0x0000000000000000000000000000000000000000',
+        60,
+        { from: bob },
+      );
+
+      await this.tcd.register(
+        carol,
+        '0x0000000000000000000000000000000000000000',
+        60,
+        { from: carol },
+      );
+
+      // Increase time
+      await time.increase(30 * 24 * 60 * 60);
+
+      // Alice buy token
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
+      this.band.transferAndCall(
+        this.curve.address,
+        100000,
+        '0x' + calldata1.slice(2, 10),
+        '0x' + calldata1.slice(138),
+        { from: alice },
+      );
+
+      // Inflation must send to TCD Contract
+      (await this.comm.balanceOf(this.tcd.address)).toString().should.eq('400');
+
+      // Stake of alice must increase 133
+      (await this.tcd.getStake(alice, alice)).toString().should.eq('173');
+
+      // Stake of bob must increase 133
+      (await this.tcd.getStake(bob, bob)).toString().should.eq('193');
+
+      // Stake of carol must increase 133
+      (await this.tcd.getStake(carol, carol)).toString().should.eq('193');
+
+      // UndistributedReward must be 1
+      (await this.tcd.undistributedReward()).toString().should.eq('1');
+
+      // Increase time 1 month again
+      await time.increase(30 * 24 * 60 * 60);
+
+      // Alice sell token
+      const sellData = this.curve.contract.methods.sell(_, 0, 1).encodeABI();
+      this.comm.transferAndCall(
+        this.curve.address,
+        1000,
+        '0x' + sellData.slice(2, 10),
+        '0x' + sellData.slice(138),
+        { from: alice },
+      );
+
+      // Inflation must distribute to providers
+      (await this.comm.balanceOf(this.tcd.address)).toString().should.eq('940');
+
+      // Stake of alice must increase 180
+      (await this.tcd.getStake(alice, alice)).toString().should.eq('353');
+
+      // Stake of bob must increase 180
+      (await this.tcd.getStake(bob, bob)).toString().should.eq('373');
+
+      // Stake of carol must increase 180
+      (await this.tcd.getStake(carol, carol)).toString().should.eq('373');
+
+      // UndistributedReward must be 1
+      (await this.tcd.undistributedReward()).toString().should.eq('1');
+    });
+  });
+
+  context('Inflate tokens to user address', () => {
+    beforeEach(async () => {
+      // Set benificiary to carol
+      await this.params.setRaw(
+        [web3.utils.fromAscii('bonding:revenue_beneficiary')],
+        [carol],
+        { from: owner },
+      );
+    });
+    it('should send inflated token to benificiary', async () => {
+      await time.increase(30 * 24 * 60 * 60);
+      // Alice buy token
+      const calldata1 = this.curve.contract.methods.buy(_, 0, 1000).encodeABI();
+      this.band.transferAndCall(
+        this.curve.address,
+        100000,
+        '0x' + calldata1.slice(2, 10),
+        '0x' + calldata1.slice(138),
+        { from: alice },
+      ),
+        // Inflation must send to Carol
+        (await this.comm.balanceOf(carol)).toString().should.eq('1400');
+    });
+  });
 });
