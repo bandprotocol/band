@@ -20,7 +20,6 @@ module.exports = function(deployer, network, accounts) {
   deployer.deploy(MultiSigTCDFactory);
   deployer.deploy(OffchainAggTCDFactory);
   deployer.deploy(TCRFactory);
-
   deployer
     .then(async () => {
       const block = await web3.eth.getBlock('latest');
@@ -37,7 +36,6 @@ module.exports = function(deployer, network, accounts) {
         band.address,
         exchange.address,
       );
-
       await deployer.deploy(CommunityFactory, bandRegistry.address);
       console.error('CommunityFactory:', CommunityFactory.address);
       console.error('bandRegistry:', bandRegistry.address);
@@ -45,7 +43,6 @@ module.exports = function(deployer, network, accounts) {
       console.error('MultiSigTCDFactory:', MultiSigTCDFactory.address);
       console.error('OffchainAggTCDFactory:', OffchainAggTCDFactory.address);
       console.error('TCRFactory:', TCRFactory.address);
-
       if (network === 'development') {
         const walletFactory = await MultiSigWalletFactory.deployed();
         await walletFactory.createNewWallet(

@@ -8,7 +8,7 @@ const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const MultiSigTCD = artifacts.require('MultiSigTCD');
 const MultiSigTCDFactory = artifacts.require('MultiSigTCDFactory');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const MedianAggregator = artifacts.require('MedianAggregator');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
@@ -47,7 +47,7 @@ contract('MultiSigTCD', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await BondingCurveExpression.new([1]);
+    const testCurve = await EquationExpression.new([1], "19999999999999999999999999");
     const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',

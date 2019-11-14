@@ -69,43 +69,29 @@ contract BondingCurve is ERC20Acceptor {
     return getCollateralAtSupply(nextSupply).sub(currentCollateral);
   }
 
+  function getExpectSupplyInEquation(uint256 bandValue) public view returns (uint256) {
+    Expression collateralExpression = getCollateralExpression();
+    if (currentCollateral == 0) {
+      return collateralExpression.evaluateInv(bandValue);
+    }
+    return collateralExpression.evaluateInv(bandValue.mul(collateralExpression.evaluate(currentMintedTokens)).div(currentCollateral));
+  }
+
   function getBuyPriceInv(uint256 tokenCollateral) public view returns (uint256) {
     require(tokenCollateral <= 1e26, "EXCEED_MAX_SUPPLY");
-    uint256 r = 2e25 - 1;
-    uint256 l = 0;
-    while (l < r) {
-      uint256 m = (l + r + 1) / 2;
-      uint256 val = getBuyPrice(m);
-      if (val > tokenCollateral) {
-          r = m - 1;
-      } else {
-          l = m;
-      }
-    }
-    return l;
+    return getExpectSupplyInEquation(currentCollateral.add(tokenCollateral)).sub(currentMintedTokens);
   }
 
   function getSellPrice(uint256 tokenValue) public view returns (uint256) {
-    uint256 currentSupply = currentMintedTokens;
-    require(currentSupply >= tokenValue);
+    require(tokenValue <= currentMintedTokens);
     uint256 nextSupply = currentMintedTokens.sub(tokenValue);
     return currentCollateral.sub(getCollateralAtSupply(nextSupply));
   }
 
   function getSellPriceInv(uint256 tokenCollateral) public view returns (uint256) {
     require(tokenCollateral <= currentCollateral, "EXCEED_COLLATERAL_SUPPLY");
-    uint256 r = currentMintedTokens;
-    uint256 l = 0;
-    while (l < r) {
-      uint256 m = (l + r) / 2;
-      uint256 val = getSellPrice(m);
-      if (val >= tokenCollateral) {
-          r = m;
-      } else {
-          l = m + 1;
-      }
-    }
-    return l;
+    uint256 estimateNewSupply = getExpectSupplyInEquation(currentCollateral.sub(tokenCollateral));
+    return currentMintedTokens.sub(estimateNewSupply);
   }
 
   modifier _adjustAutoInflation() {

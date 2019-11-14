@@ -5,7 +5,7 @@ const BondingCurve = artifacts.require('BondingCurve');
 const CommunityToken = artifacts.require('CommunityToken');
 const Parameters = artifacts.require('Parameters');
 const BandRegistry = artifacts.require('BandRegistry');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 
 require('chai').should();
@@ -29,7 +29,7 @@ contract('BondingCurve with Parameters', ([_, owner, alice, bob]) => {
     await this.band.transfer(alice, 100000, { from: owner });
     await this.band.transfer(bob, 100000, { from: owner });
 
-    const testCurve = await BondingCurveExpression.new([8, 1, 0, 2]);
+    const testCurve = await EquationExpression.new([8, 1, 0, 2], "19999999999999999999999999");
     const data = await this.tcdFactory.create(
       'CoinHatcher',
       'CHT',

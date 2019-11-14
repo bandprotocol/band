@@ -9,7 +9,7 @@ const Parameters = artifacts.require('Parameters');
 const TCDBase = artifacts.require('TCDBase');
 const AggTCDFactory = artifacts.require('AggTCDFactory');
 const MockDataSource = artifacts.require('MockDataSource');
-const BondingCurveExpression = artifacts.require('BondingCurveExpression');
+const EquationExpression = artifacts.require('EquationExpression');
 const CommunityFactory = artifacts.require('CommunityFactory');
 const WhiteListTCR = artifacts.require('WhiteListTCR');
 const MedianAggregator = artifacts.require('MedianAggregator');
@@ -31,35 +31,38 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
       this.exchange.address,
       { from: owner },
     );
-    this.whiteListTCRDecay = await BondingCurveExpression.new([
-      18,
-      14,
-      1,
-      0,
-      60,
-      0,
-      '1000000000000000000',
-      18,
-      14,
-      1,
-      0,
-      120,
-      5,
-      0,
-      '1000000000000000000',
-      7,
-      6,
-      0,
-      '500000000000000000',
-      5,
-      1,
-      0,
-      60,
-      0,
-      60,
-      0,
-      '500000000000000000',
-    ]);
+    this.whiteListTCRDecay = await EquationExpression.new(
+      [
+        18,
+        14,
+        1,
+        0,
+        60,
+        0,
+        '1000000000000000000',
+        18,
+        14,
+        1,
+        0,
+        120,
+        5,
+        0,
+        '1000000000000000000',
+        7,
+        6,
+        0,
+        '500000000000000000',
+        5,
+        1,
+        0,
+        60,
+        0,
+        60,
+        0,
+        '500000000000000000',
+      ],
+      "19999999999999999999999999",
+    );
     this.registryParams = await Parameters.new(this.band.address, {
       from: owner,
     });
@@ -71,7 +74,7 @@ contract('WhiteListTCR', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await BondingCurveExpression.new([1]);
+    const testCurve = await EquationExpression.new([1], "19999999999999999999999999");
     const data1 = await this.commFactory.create(
       'CoinHatcher',
       'CHT',
