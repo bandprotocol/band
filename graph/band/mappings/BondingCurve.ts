@@ -90,7 +90,7 @@ function addOrder(
 
     for (let idx = 0; idx < modders.length; ++idx) {
       let modder = modders[idx];
-      let timeKey = timestamp.mod(modder);
+      let timeKey = timestamp.div(modder);
       let priceKey =
         curve.id + "@" + modder.toString() + "@" + timeKey.toString();
       let priceEntity = Price.load(priceKey);
