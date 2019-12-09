@@ -10,10 +10,10 @@ contract VestingWallet is Ownable {
 
   ERC20Interface public token;
   address public beneficiary;
-  uint64 public cliffDuration;                /// Duration of the cliff, in months
+  uint64 public cliffDuration;                /// Duration of the cliff, in in vesting periods
   uint64 public endOfCliffTimestamp;          /// Timestamp when cliff ends that token starts vesting
   uint256 public totalValue;                  /// Total vesting token
-  uint256[] public eomTimestampsAfterCliff;   /// Timestamps of all vesting months
+  uint256[] public eomTimestampsAfterCliff;   /// Timestamps of all vesting timestamps after cliff
 
   constructor(
     ERC20Interface _token,
