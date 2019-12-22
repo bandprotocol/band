@@ -276,7 +276,7 @@ export default () => {
             >
               <Flex>
                 <a
-                  href="https://bitswing.bandprotocol.com"
+                  href="https://bitswing.io"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -299,7 +299,7 @@ export default () => {
           ) : (
             <Flex mt={['5px', '0px']}>
               <a
-                href="https://bitswing.bandprotocol.com"
+                href="https://bitswing.io"
                 target="_blank"
                 rel="noopener noreferrer"
               >
