@@ -110,14 +110,12 @@ function _handleStaking(
   tcdAddress: Address,
   dataSource: Address,
   participant: Address,
+  voterOwnership: BigInt,
+  voterStake: BigInt,
   block: EthereumBlock
 ): void {
   let dPKey = dataSource.toHexString() + "-" + tcdAddress.toHexString();
   let dataProvider = DataProvider.load(dPKey);
-
-  let tcdContract = OffchainAggTCD.bind(tcdAddress);
-  let voterOwnership = tcdContract.getOwnership(dataSource, participant);
-  let voterStake = tcdContract.getStake(dataSource, participant);
 
   let sKey =
     block.number.toString() +
@@ -149,22 +147,16 @@ export function handleDataSourceStaked(event: DataSourceStaked): void {
   let dpoKey = dpKey + "-" + event.params.participant.toHexString();
   let voterOwnership = DataProviderOwnership.load(dpoKey);
 
-  let tcdContract = OffchainAggTCD.bind(
-    Address.fromString(event.address.toHexString())
-  );
-  let dataSourceInfo = tcdContract.infoMap(
-    Address.fromString(event.params.dataSource.toHexString())
-  );
+  let increasedOwnerShip = event.params.stake
+    .times(dataProvider.totalOwnership)
+    .div(dataProvider.stake);
 
-  dataProvider.stake = dataSourceInfo.value1;
-  dataProvider.totalOwnership = dataSourceInfo.value2;
-
-  let newVoterOwnership = tcdContract.getOwnership(
-    Address.fromString(event.params.dataSource.toHexString()),
-    Address.fromString(event.params.participant.toHexString())
+  dataProvider.stake = dataProvider.stake.plus(event.params.stake);
+  dataProvider.totalOwnership = dataProvider.totalOwnership.plus(
+    increasedOwnerShip
   );
 
-  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
+  if (voterOwnership == null) {
     voterOwnership = new DataProviderOwnership(dpoKey);
     voterOwnership.providerAddress = Address.fromString(
       event.params.dataSource.toHexString()
@@ -174,27 +166,26 @@ export function handleDataSourceStaked(event: DataSourceStaked): void {
       event.params.participant.toHexString()
     );
     voterOwnership.dataProvider = dpKey;
-    voterOwnership.ownership = newVoterOwnership;
+    voterOwnership.ownership = increasedOwnerShip;
     voterOwnership.tokenLock = event.params.stake;
 
     voterOwnership.save();
-  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
-    voterOwnership.ownership = newVoterOwnership;
+  } else {
+    voterOwnership.ownership = voterOwnership.ownership.plus(
+      increasedOwnerShip
+    );
     voterOwnership.tokenLock = voterOwnership.tokenLock.plus(
       event.params.stake
     );
     voterOwnership.save();
-  } else if (
-    voterOwnership != null &&
-    newVoterOwnership.equals(new BigInt(0))
-  ) {
-    store.remove("DataProviderOwnership", dpoKey);
   }
 
   if (
     event.params.participant.toHexString() == dataProvider.owner.toHexString()
   ) {
-    dataProvider.ownerOwnership = newVoterOwnership;
+    dataProvider.ownerOwnership = dataProvider.ownerOwnership.plus(
+      increasedOwnerShip
+    );
   }
   dataProvider.save();
 
@@ -202,6 +193,10 @@ export function handleDataSourceStaked(event: DataSourceStaked): void {
     event.address,
     event.params.dataSource,
     event.params.participant,
+    voterOwnership.ownership,
+    voterOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership),
     event.block
   );
 }
@@ -216,22 +211,18 @@ export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
   let dpoKey = dpKey + "-" + event.params.participant.toHexString();
   let voterOwnership = DataProviderOwnership.load(dpoKey);
 
-  let tcdContract = OffchainAggTCD.bind(
-    Address.fromString(event.address.toHexString())
-  );
-  let dataSourceInfo = tcdContract.infoMap(
-    Address.fromString(event.params.dataSource.toHexString())
-  );
+  let decreasedOwnership = event.params.unstake
+    .times(dataProvider.totalOwnership)
+    .plus(dataProvider.stake)
+    .minus(BigInt.fromI32(1))
+    .div(dataProvider.stake);
 
-  dataProvider.stake = dataSourceInfo.value1;
-  dataProvider.totalOwnership = dataSourceInfo.value2;
-
-  let newVoterOwnership = tcdContract.getOwnership(
-    Address.fromString(event.params.dataSource.toHexString()),
-    Address.fromString(event.params.participant.toHexString())
+  dataProvider.stake = dataProvider.stake.minus(event.params.unstake);
+  dataProvider.totalOwnership = dataProvider.totalOwnership.minus(
+    decreasedOwnership
   );
 
-  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
+  if (voterOwnership == null) {
     voterOwnership = new DataProviderOwnership(dpoKey);
     voterOwnership.providerAddress = Address.fromString(
       event.params.dataSource.toHexString()
@@ -241,20 +232,25 @@ export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
       event.params.participant.toHexString()
     );
     voterOwnership.dataProvider = dpKey;
-    voterOwnership.ownership = newVoterOwnership;
-    voterOwnership.tokenLock = voterOwnership.ownership
-      .times(dataProvider.stake)
-      .div(dataProvider.totalOwnership);
-    voterOwnership.save();
-  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
-    voterOwnership.ownership = newVoterOwnership;
+    voterOwnership.ownership = BigInt.fromI32(0);
     voterOwnership.tokenLock = voterOwnership.ownership
       .times(dataProvider.stake)
       .div(dataProvider.totalOwnership);
     voterOwnership.save();
   } else if (
     voterOwnership != null &&
-    newVoterOwnership.equals(new BigInt(0))
+    voterOwnership.ownership.notEqual(decreasedOwnership)
+  ) {
+    voterOwnership.ownership = voterOwnership.ownership.minus(
+      decreasedOwnership
+    );
+    voterOwnership.tokenLock = voterOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership);
+    voterOwnership.save();
+  } else if (
+    voterOwnership != null &&
+    voterOwnership.ownership.equals(decreasedOwnership)
   ) {
     store.remove("DataProviderOwnership", dpoKey);
   }
@@ -262,13 +258,19 @@ export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
   if (
     event.params.participant.toHexString() == dataProvider.owner.toHexString()
   ) {
-    dataProvider.ownerOwnership = newVoterOwnership;
+    dataProvider.ownerOwnership = dataProvider.ownerOwnership.minus(
+      decreasedOwnership
+    );
   }
   dataProvider.save();
   _handleStaking(
     event.address,
     event.params.dataSource,
     event.params.participant,
+    voterOwnership.ownership,
+    voterOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership),
     event.block
   );
 }
@@ -276,56 +278,61 @@ export function handleDataSourceUnstaked(event: DataSourceUnstaked): void {
 export function handleFeeDistributed(event: FeeDistributed): void {
   saveTx(event.transaction.hash, event.block.number);
 
-  let dPKey =
-    event.params.dataSource.toHexString() + "-" + event.address.toHexString();
-  let dataProvider = DataProvider.load(dPKey);
   let dpKey =
     event.params.dataSource.toHexString() + "-" + event.address.toHexString();
+  let dataProvider = DataProvider.load(dpKey);
 
   let dpoKey = dpKey + "-" + dataProvider.owner.toHexString();
-  let voterOwnership = DataProviderOwnership.load(dpoKey);
+  let ownerOwnership = DataProviderOwnership.load(dpoKey);
 
-  let tcdContract = OffchainAggTCD.bind(
-    Address.fromString(event.address.toHexString())
-  );
-  let dataSourceInfo = tcdContract.infoMap(
-    Address.fromString(event.params.dataSource.toHexString())
-  );
+  // Unstake wrong stake provider
+  if (event.params.ownerReward.notEqual(BigInt.fromI32(0))) {
+    let decreasedOwnership = event.params.ownerReward
+      .times(dataProvider.totalOwnership)
+      .plus(dataProvider.stake)
+      .minus(BigInt.fromI32(1))
+      .div(dataProvider.stake);
 
-  dataProvider.stake = dataSourceInfo.value1;
-  dataProvider.totalOwnership = dataSourceInfo.value2;
-
-  let newVoterOwnership = tcdContract.getOwnership(
-    Address.fromString(event.params.dataSource.toHexString()),
-    Address.fromString(dataProvider.owner.toHexString())
-  );
-
-  if (voterOwnership == null && newVoterOwnership.gt(new BigInt(0))) {
-    voterOwnership = new DataProviderOwnership(dpoKey);
-    voterOwnership.providerAddress = Address.fromString(
-      event.params.dataSource.toHexString()
+    dataProvider.stake = dataProvider.stake.minus(event.params.ownerReward);
+    dataProvider.totalOwnership = dataProvider.totalOwnership.minus(
+      decreasedOwnership
     );
-    voterOwnership.tcdAddress = Address.fromString(event.address.toHexString());
-    voterOwnership.voter = Address.fromString(dataProvider.owner.toHexString());
-    voterOwnership.dataProvider = dpKey;
-    voterOwnership.ownership = newVoterOwnership;
 
-    voterOwnership.save();
-  } else if (voterOwnership != null && newVoterOwnership.gt(new BigInt(0))) {
-    voterOwnership.ownership = newVoterOwnership;
-
-    voterOwnership.save();
-  } else if (
-    voterOwnership != null &&
-    newVoterOwnership.equals(new BigInt(0))
-  ) {
-    store.remove("DataProviderOwnership", dpoKey);
+    ownerOwnership.ownership = ownerOwnership.ownership.minus(
+      decreasedOwnership
+    );
+    ownerOwnership.tokenLock = ownerOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership);
   }
 
-  if (dataProvider.owner.toHexString() == dataProvider.owner.toHexString()) {
-    dataProvider.ownerOwnership = newVoterOwnership;
+  // Add stake to pool
+  dataProvider.stake = dataProvider.stake
+    .plus(event.params.totalReward)
+    .minus(event.params.ownerReward);
+
+  // Stake with new rate
+  if (event.params.ownerReward.notEqual(BigInt.fromI32(0))) {
+    let increasedOwnerShip = event.params.ownerReward
+      .times(dataProvider.totalOwnership)
+      .div(dataProvider.stake);
+
+    dataProvider.stake = dataProvider.stake.plus(event.params.ownerReward);
+    dataProvider.totalOwnership = dataProvider.totalOwnership.plus(
+      increasedOwnerShip
+    );
+
+    ownerOwnership.ownership = ownerOwnership.ownership.plus(
+      increasedOwnerShip
+    );
+    ownerOwnership.tokenLock = ownerOwnership.ownership
+      .times(dataProvider.stake)
+      .div(dataProvider.totalOwnership);
   }
+
   dataProvider.save();
+
+  let tcdContract = OffchainAggTCD.bind(event.address);
 
   let tokenAddress = tcdContract.token();
 
