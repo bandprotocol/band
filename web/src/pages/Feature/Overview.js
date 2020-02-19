@@ -195,6 +195,7 @@ export default () => {
       </Box>
 
       {/* Section 2 : Comparing to other Frameworks */}
+      {/*
       <Box>
         <PageContainer>
           <Flex
@@ -241,6 +242,7 @@ export default () => {
           </Flex>
         </PageContainer>
       </Box>
+      */}
 
       {/* Section 3: Use cases */}
       <Box

@@ -235,13 +235,12 @@ export default () => {
       </PageContainer>
       <Box mt="60px" pb="60px" px="20px">
         <Flex justifyContent="center">
-          <AbsoluteLink to="https://angel.co/company/bandprotocol/jobs/">
-            <FilledButton
-              message="Apply Now"
-              width={['300px', '435px']}
-              arrow
-            />
-          </AbsoluteLink>
+          <FilledButton
+            href="mailto:talent@bandprotocol.com?subject=Apply for a position at Band Protocol"
+            message="Apply Now"
+            width={['300px', '435px']}
+            arrow
+          />
         </Flex>
       </Box>
     </Box>
