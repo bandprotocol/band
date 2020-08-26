@@ -12013,10 +12013,10 @@ react-themeable@^1.1.0:
   dependencies:
     object-assign "^3.0.0"
 
-react-tooltip@^3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.10.0.tgz#268b5ef519fd8a1369288d1f086f42c90d5da7ef"
-  integrity sha512-GGdxJvM1zSFztkTP7gCQbLTstWr1OOoMpJ5WZUGhimj0nhRY+MPz+92MpEnKmj0cftJ9Pd/M6FfSl0sfzmZWkg==
+react-tooltip@^3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.11.2.tgz#78972910657d6184defdcdc9a0182c1e44e01ce6"
+  integrity sha512-7EJ7Cv7lgctw02j0hyp+PpJklIP3gyDbm4CvVQvq7U6zgZtuI+bFFnRzsQB1oTiHPkkhE2NU04EIkgBDiVNzxw==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"
