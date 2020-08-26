@@ -1,6 +1,7 @@
 pragma solidity 0.5.9;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/utils/Address.sol";
 import "../token/ERC20Acceptor.sol";
 import "../token/ERC20Interface.sol";
 import "../utils/Expression.sol";
@@ -11,6 +12,7 @@ import "../Parameters.sol";
 contract BondingCurve is ERC20Acceptor {
   using SafeMath for uint256;
   using Fractional for uint256;
+  using Address for address;
 
   event Buy(address indexed buyer, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
   event Sell(address indexed seller, uint256 bondedTokenAmount, uint256 collateralTokenAmount);
@@ -185,6 +187,10 @@ contract BondingCurve is ERC20Acceptor {
   function _rewardBondingCurveOwner(uint256 rewardAmount) internal {
     address beneficiary = getRevenueBeneficiary();
     require(bondedToken.mint(beneficiary, rewardAmount));
+    if (beneficiary.isContract()) {
+      (bool ok,) = beneficiary.call(abi.encodeWithSignature("distributeStakeReward(uint256)", rewardAmount));
+      require(ok);
+    }
     emit RevenueCollect(beneficiary, rewardAmount);
   }
 }

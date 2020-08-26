@@ -1,5 +1,3 @@
-const { shouldFail } = require('openzeppelin-test-helpers');
-
 const MockDataSource = artifacts.require('MockDataSource');
 const MajorityAggregator = artifacts.require('MajorityAggregator');
 const AggTCD = artifacts.require('AggTCD');
@@ -45,7 +43,10 @@ contract('MajorityAggregator', ([_, owner, alice, bob, carol]) => {
     this.commFactory = await CommunityFactory.new(this.registry.address, {
       from: owner,
     });
-    const testCurve = await EquationExpression.new([1], "19999999999999999999999999");
+    const testCurve = await EquationExpression.new(
+      [1],
+      '19999999999999999999999999',
+    );
     const data1 = await this.commFactory.create(
       'SDD',
       'SDD',
