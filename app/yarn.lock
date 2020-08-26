@@ -6759,10 +6759,10 @@ highlight.js@^9.15.8:
   resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.15.8.tgz#f344fda123f36f1a65490e932cf90569e4999971"
   integrity sha512-RrapkKQWwE+wKdF73VsOa2RQdIoO3mxwJ4P8mhbI6KYJUraUHRKM5w5zQQKXNk0xNL4UVRdulV9SBJcmzJNzVA==
 
-highlightjs-solidity@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/highlightjs-solidity/-/highlightjs-solidity-1.0.6.tgz#59394d8a2c57013580d5bfbb62f7df98386ae7ac"
-  integrity sha512-NzdwI5gX+8H3z/YEXk01dKOY0QuffhNkUZw9umHUCXlzKB+1n2SexTTZpSGAmZYetHT/bccCm+3QqBULtTLmdA==
+highlightjs-solidity@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/highlightjs-solidity/-/highlightjs-solidity-1.0.10.tgz#4f03e6298cb914b232d531e54d589ccf906b24b8"
+  integrity sha512-frqjEl0EK89rAChdn+CpAISVH/nbC4YXPBGfpoc0n023pPDHH8dcVCqtQFrbZfQEpbsc7wGPRl2qsvGKg/NKGA==
 
 history@^4.9.0:
   version "4.10.1"
