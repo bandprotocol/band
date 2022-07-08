@@ -24,7 +24,7 @@
     "highlightjs-solidity": "^1.0.6",
     "hsl-to-hex": "^1.0.0",
     "immutable": "^4.0.0-rc.12",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "prismjs": "^1.17.1",
     "query-string": "^6.8.2",
     "react": "^16.9.0",
